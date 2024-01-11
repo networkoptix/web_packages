@@ -1,11 +1,13 @@
 import logging
 import time
+from typing import Collection
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -188,6 +190,9 @@ class Element:
 
     def find_element(self, locator: str, position: int = 1) -> 'Element':
         return Element(self._driver, f'({self._locator}{locator})[{position}]')
+
+    def find_elements(self, locator: str) -> Collection[WebElement]:
+        return self._driver.find_elements(By.XPATH, locator)
 
     def find_element_by_partial_link_text(self, text: str):
         self.wait_until_visible()

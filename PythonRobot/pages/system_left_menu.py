@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Collection
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
@@ -33,6 +34,9 @@ class SystemLeftMenu:
         self._wait_until_page_loaded()
         # Todo: find way to pass id in
         # self._location_is_correct()
+
+    def system_administration_button(self):
+        return Button(self.driver, "//a[@id='admin']")
 
     def users_dropdown(self):
         return UsersDropdown(self.driver)
@@ -181,6 +185,12 @@ class UsersDropdown(DropDown):
         dialog = AddUserModalDialog(self._driver)
         dialog.wait_until_visible()
         return dialog
+
+    def visible_users(self) -> Collection[str]:
+        user_emails = []
+        for user in self._element.find_elements("//div[@id='level3users']//a//span[contains(@class, 'user')]"):
+            user_emails.append(user.text)
+        return user_emails
 
     def get_user_link_by_id(self, user_id):
         self.open()

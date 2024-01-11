@@ -191,13 +191,7 @@ if __name__ == "__main__":
             'GlobalAccessAllMediaPermission',
             ]
         viewer_permissions = '|'.join(permissions)
-        cloud_api.share(
-            [cloud_server_second.get_cloud_owner().email, password],
-            cloud_server_second.id,
-            "viewer",
-            cloud_server_first.get_cloud_owner().email,
-            viewer_permissions,
-            )
+        cloud_server_second.api.add_cloud_user(viewer_permissions, cloud_server_first.get_cloud_owner().email)
         system_tiles_represent_actual_information(cloud_server_first)
         dummy_account = suite.create_cloud_account()
         no_systems_connected(dummy_account)

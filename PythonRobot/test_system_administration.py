@@ -63,8 +63,7 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
 def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_viewer: CloudAccount):
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
-        cloud_auth = (owner.email, owner.password)
-        CLOUD_API.share(cloud_auth, server.id, "viewer", cloud_viewer.email, viewer_permissions)
+        server.api.add_cloud_user(CloudAccount.PERMISSIONS["viewer"], cloud_viewer.email)
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(cloud_viewer.email, password)

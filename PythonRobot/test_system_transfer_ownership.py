@@ -210,13 +210,7 @@ def test_initiate_transfer_then_accept_and_check_email(
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     viewer_role_name = "viewer"
-    CloudPortalAPI().share(
-        cloud_auth,
-        server.id,
-        viewer_role_name,
-        viewer_user.email,
-        CloudAccount.PERMISSIONS[viewer_role_name],
-        )
+    server.api.add_cloud_user(CloudAccount.PERMISSIONS[viewer_role_name], viewer_user.email)
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         login_dialog = LoginDialog(driver)

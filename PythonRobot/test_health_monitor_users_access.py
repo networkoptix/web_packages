@@ -44,7 +44,7 @@ def administrator_has_access_to_health_monitoring(server: Mediaserver, rb: Robot
 
     with ExitStack() as exit_stack:
         account = exit_stack.enter_context(CloudAccount())
-        cloud_api.share(cloud_auth, server.id, 'cloudAdmin', account.email, '')
+        server.api.add_cloud_user(CloudAccount.PERMISSIONS['cloudAdmin'], account.email)
         driver = exit_stack.enter_context(get_chrome())
         driver.get(rb.ENV)
         HeaderNav(driver).log_in_button().click()
@@ -68,7 +68,7 @@ def user_does_not_have_access_to_health_monitor(server: Mediaserver, rb: RobotVa
 
     with ExitStack() as exit_stack:
         account = exit_stack.enter_context(CloudAccount())
-        cloud_api.share(cloud_auth, server.id, role, account.email, '')
+        server.api.add_cloud_user(CloudAccount.PERMISSIONS[role], account.email)
         driver = exit_stack.enter_context(get_chrome())
         driver.get(rb.ENV)
         HeaderNav(driver).log_in_button().click()

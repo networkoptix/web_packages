@@ -1,7 +1,10 @@
+import logging
 import time
 from contextlib import contextmanager
 from typing import Any
+from typing import Collection
 from typing import Mapping
+from typing import NamedTuple
 from typing import Optional
 from typing import Union
 from urllib.parse import urlparse
@@ -9,7 +12,6 @@ from uuid import UUID
 
 import requests
 import urllib3
-import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -18,6 +20,20 @@ logger = logging.getLogger(__name__)
 _DEFAULT_USERNAME = 'admin'
 INITIAL_PASSWORD = 'admin'
 DEFAULT_PASSWORD = 'qweasd 123'  # noqa
+
+
+class _MediaserverUser(NamedTuple):
+    accessible_resources: Collection[str]
+    email: str
+    full_name: str
+    id: str
+    is_enabled: bool
+    is_http_digest_enabled: bool
+    is_owner: bool
+    name: str
+    permissions: str
+    type: str
+    user_role_id: str
 
 
 class ServerApi:
@@ -50,39 +66,34 @@ class ServerApi:
     def api_connect_to_cloud(self, bind_info: Mapping[str, str]):
         self._post('rest/v1/system/cloudBind', bind_info)
 
-    def save_user(
-            self,
-            name,
-            permissions,
-            email,
-            full_name,
-            password,
-            user_id=None,
-            user_role_id=None,
-            is_cloud=True,
-            patch=False,
-            ):
+    def add_cloud_user(self, permissions: str, email: str):
+        body = {
+            'email': email,
+            'name': email,
+            'permissions': permissions,
+            'type': 'cloud',
+            }
+        return self._post('rest/v2/users', body)
+
+    def add_local_user(self, name: str, permissions: str, email: str, password: str):
         body = {
             'email': email,
             'name': name,
-            'fullName': full_name,
             'permissions': permissions,
-            'isCloud': is_cloud,
+            'type': 'local',
+            'password': password,
             }
-        if password:
-            body['password'] = password
-        if user_id:
-            body['id'] = user_id
-        if is_cloud:
-            body['fullName'] = full_name
-        else:
-            body['type'] = 'local'
-        if user_role_id:
-            body['id'] = user_role_id
-        logger.debug(f"patch={patch}, name={name}")
-        if patch:
-            return self._patch(f'rest/v1/users/{user_id}', body)
-        return self._post('rest/v1/users', body)
+        return self._post('rest/v2/users', body)
+
+    def modify_local_user(self, name: str, permissions: str, email: str, password: str, id: str):
+        body = {
+            'email': email,
+            'name': name,
+            'permissions': permissions,
+            'type': 'local',
+            'password': password,
+            }
+        return self._patch(f'rest/v2/users/{id}', body)
 
     def remove_user(self, user_id):
         self._delete(f'rest/v1/users/{user_id}')
@@ -90,26 +101,44 @@ class ServerApi:
     def get_system_settings_from_server(self):
         return self._get('rest/v1/system/settings?_keepDefault=true')
 
-    def get_users(self):
-        return self._get('rest/v1/users?_format=JSON&_keepDefault=true')
+    def get_users(self) -> Collection[_MediaserverUser]:
+        users_json = self._get('rest/v1/users?_format=JSON&_keepDefault=true')
+        users_list = []
+        for user in users_json:
+            users_list.append(
+                _MediaserverUser(
+                    accessible_resources=user["accessibleResources"],
+                    email=user["email"],
+                    full_name=user["fullName"],
+                    id=user["id"],
+                    is_enabled=user["isEnabled"],
+                    is_http_digest_enabled=user["isHttpDigestEnabled"],
+                    is_owner=user["isOwner"],
+                    name=user["name"],
+                    permissions=user["permissions"],
+                    type=user["type"],
+                    user_role_id=user["userRoleId"],
+                    ),
+                )
+        return users_list
 
     def get_user_by_email(self, email):
         users = self.get_users()
         for user in users:
-            if user['email'] == email:
+            if user.email == email:
                 return user
 
     def get_user_by_id(self, id):
         users = self.get_users()
         for user in users:
-            if user['id'].strip("{}") == id:
+            if user.id.strip("{}") == id:
                 return user
 
     def get_user_id_by_name(self, name):
         users = self.get_users()
         for user in users:
-            if user['name'] == name:
-                return user['id']
+            if user.name == name:
+                return user.id
 
     def get_storages_via_api(self):
         return self._get('rest/v1/servers/this/storages?_format=JSON')

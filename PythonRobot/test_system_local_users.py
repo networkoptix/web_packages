@@ -85,7 +85,7 @@ def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver, cloud_admi
             driver.get(url)
             SystemAdmin(driver)
             for user in server.api.get_users():
-                assert not user["id"] == deleted_user['id']
+                assert not user.id == deleted_user['id']
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -181,13 +181,13 @@ def cloud_admins_can_disable_local_viewers(server: Mediaserver, admin_user: Clou
             system_user.save_button().click()
             system_user.no_unsaved_changes_text().wait_until_visible()
             assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
-            assert not server.api.get_user_by_id(local_viewer['id'])['isEnabled']
+            assert not server.api.get_user_by_id(local_viewer.id).is_enabled
             system_user.user_switch().turn_on()
             system_user.save_button().click()
             # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
             system_user.no_unsaved_changes_text().wait_until_visible()
             assert not system_user.user_disabled_message().is_visible()
-            assert server.api.get_user_by_id(local_viewer['id'])['isEnabled']
+            assert server.api.get_user_by_id(local_viewer.id).is_enabled
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -210,11 +210,11 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
         local_state = True
         if user.get("isCloud"):
             local_state = False
-        elif user.get("type") == "cloud":
+        elif user.type == "cloud":
             local_state = False
-        if local_state and local_user in user['name']:
+        if local_state and local_user in user.name:
             locals_list.append(user)
-            _logger.debug(f"{user['name']} added to locals_list")
+            _logger.debug(f"{user.name} added to locals_list")
     if len(locals_list) == 5:
         _reset_local_users_api(locals_list, server)
     else:
@@ -237,17 +237,13 @@ def _reset_local_users_api(locals, server):
             user_type = 'liveViewer'
         elif user_type == 'advancedviewer':
             user_type = 'advancedViewer'
-        server.api.save_user(
+        server.api.modify_local_user(
             f"Local+{user_type}",
             permissions[user_type],
             f"noptixautoqa+local_{user_type}@gmail.com",
-            "Local User",
             "qweasd 123",
-            user_id=user['id'],
-            is_cloud=False,
-            patch=True,
-        )
-
+            user['id'],
+            )
 
 
 def _create_new_local_users(count, server: Mediaserver, locals_list):

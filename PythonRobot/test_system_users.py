@@ -36,7 +36,7 @@ def owner_can_remove_user(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -74,7 +74,7 @@ def cloud_admin_can_remove_user(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             url = ENV + f"/systems/{server.id}"
             try:
                 driver.get(url)
@@ -108,7 +108,7 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     """Email    C41888    cloud    smoke    ci    C30446."""
     with CloudAccount(get_random_email(sendemail=True)) as tmp_user:
         tmp_user.activate()
-        server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+        server.share_with_user(tmp_user, 'viewer')
         email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
         with EmailClient(email_alias=tmp_user.email) as client:
             client.wait_for_email_subject(email_subject)
@@ -118,7 +118,7 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """Email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445."""
     tmp_user = CloudAccount(get_random_email(sendemail=True))
-    server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+    server.share_with_user(tmp_user, 'viewer')
     owner = server.get_cloud_owner()
     subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
     subject = rb.replace_nested_variables(subject)
@@ -152,7 +152,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """Email    C41889    cloud    CLOUD-8643    smoke    ci."""
     with get_chrome() as driver:
         tmp_user = CloudAccount(get_random_email(sendemail=True))
-        server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+        server.share_with_user(tmp_user, 'viewer')
         subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
         subject = rb.replace_nested_variables(subject)
         with EmailClient(email_alias=tmp_user.email) as client:
@@ -184,7 +184,7 @@ def share_with_registered_user_works(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -213,7 +213,7 @@ def cancel_disconnect(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             url = ENV + f"/systems/{server.id}"
             try:
                 driver.get(url)
@@ -241,7 +241,7 @@ def disconnect_should_remove_system(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -415,7 +415,7 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_admin:
             tmp_admin.activate()
-            server.share_with_user(tmp_admin, 'cloudAdmin', admin_permissions)
+            server.share_with_user(tmp_admin, 'cloudAdmin')
             owner = server.get_cloud_owner()
             admin = server.get_cloud_admin()
             local_users = server.get_local_users()
@@ -485,7 +485,7 @@ def user_data_should_match_registration(server: Mediaserver):
     combo_text = "Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이"
     with get_chrome() as driver:
         with CloudAccount(get_random_email(), combo_text, combo_text) as combo_user:
-            server.share_with_user(combo_user, 'cloudAdmin', admin_permissions)
+            server.share_with_user(combo_user, 'cloudAdmin')
             url = ENV + f"/systems/{server.id}"
             try:
                 driver.get(url)
@@ -511,7 +511,7 @@ def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             server.stop()
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
@@ -550,7 +550,7 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             server.stop()
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
@@ -642,7 +642,7 @@ def change_role_for_cloud_user(server: Mediaserver):
     """
     with get_chrome() as driver:
         with CloudAccount(get_random_email(), "Tmp", "Viewer") as tmp_user:
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+            server.share_with_user(tmp_user, 'viewer')
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -686,7 +686,7 @@ def edit_permission_works_for_owner(server: Mediaserver):
     """
     with get_chrome() as driver:
         with CloudAccount(get_random_email(), "Tmp", "liveViewer") as tmp_user:
-            server.share_with_user(tmp_user, 'liveViewer', liveViewer_permissions)
+            server.share_with_user(tmp_user, 'liveViewer')
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -725,7 +725,7 @@ def edit_permission_works_for_cloud_admin(server: Mediaserver):
     """
     with get_chrome() as driver:
         with CloudAccount(get_random_email(), "Tmp", "liveViewer") as tmp_user:
-            server.share_with_user(tmp_user, 'liveViewer', liveViewer_permissions)
+            server.share_with_user(tmp_user, 'liveViewer')
             admin = server.get_cloud_admin()
             url = ENV + f"/systems/{server.id}"
             try:
@@ -847,7 +847,7 @@ def users_can_disconnect_themselves(server: Mediaserver):
         with get_chrome() as driver:
             with CloudAccount(get_random_email(), "firstname", "lastname") as tmp_user:
                 tmp_user.activate()
-                server.share_with_user(tmp_user, role, permissions[role])
+                server.share_with_user(tmp_user, role)
                 try:
                     driver.get(url)
                     LoginDialog(driver).basic_cloud_login(tmp_user.email, tmp_user.password)

@@ -3,18 +3,14 @@ import re
 import sys
 import time
 from contextlib import ExitStack
+from random import randint
 from types import MappingProxyType
 from typing import Collection
+from typing import List
 from typing import Mapping
 from typing import Optional
-from typing import List
-from random import randint
-
-from requests import HTTPError
 
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
-
-from email_access import get_random_email
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import ContainerConfiguration
 from NoptixLibrary.docker_api import DockerHTTPApi
@@ -22,6 +18,9 @@ from NoptixLibrary.docker_api import get_ports_mapping
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
+from NoptixLibrary.server_api import _MediaserverUser
+from email_access import get_random_email
+from requests import HTTPError
 
 _docker_host = "10.2.34.112"
 _vms_version = "5.1"
@@ -75,23 +74,17 @@ class Suite:
             ) -> 'Mediaserver':
         server = self.create_local_server(vms_version, suite_name)
         server.connect_to_cloud(cloud_owner)
-        cloud_owner.id = server.api.get_user_by_email(cloud_owner.email)['id'].strip("{}")
+        cloud_owner.id = server.api.get_user_by_email(cloud_owner.email).id.strip("{}")
         for user in cloud_users:
-            r = _CLOUD_API.add_user_to_cloud(
-                server.id,
-                user,
-                cloud_users[user].email,
-                [cloud_owner.email, cloud_owner.password],
-                CloudAccount.PERMISSIONS[user],
-                )
-            cloud_users[user].id = r['vmsUserId']
+            users_response = server.api.add_cloud_user(CloudAccount.PERMISSIONS[user], cloud_users[user].email)
+            cloud_users[user].id = users_response['id']
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
             started_at = time.monotonic()
             timeout_sec = 60
             requested_users = set([account.email for account in cloud_users.values()])
             while True:
-                users = [user['email'] for user in server.api.get_users()]
+                users = [user.email for user in server.api.get_users()]
                 if requested_users.issubset(users):
                     break
                 if time.monotonic() - started_at > timeout_sec:
@@ -202,6 +195,9 @@ class Mediaserver:
                 container_port = port_mapping.inner_port
                 host_port = port_mapping.outer_port
                 self._port_mapping[container_port] = f'https://{_docker_host}:{host_port}'
+
+    def get_users(self) -> Collection[_MediaserverUser]:
+        return self.api.get_users()
 
     def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
@@ -318,20 +314,18 @@ class Mediaserver:
         local_users = {}
         permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
-            r = self.api.save_user(
+            users_response = self.api.add_local_user(
                 "Local+" + permission,
                 permissions[permission],
                 f"noptixautoqa+local_{permission}@gmail.com",
-                "Local User",
                 DEFAULT_PASSWORD,
-                is_cloud=False,
                 )
             local_users.update(
                 {
                     permission: {
                         "login": f"Local+{permission}",
                         "email": f"noptixautoqa+local_{permission}@gmail.com",
-                        "id": r['id'].strip('{}'),
+                        "id": users_response['id'].strip('{}'),
                         },
                     },
                 )
@@ -339,13 +333,11 @@ class Mediaserver:
         return local_users
 
     def create_new_local_user(self, permission):
-        new_local_user = self.api.save_user(
+        new_local_user = self.api.add_local_user(
             "Local+" + permission + "_new",
             CloudAccount.PERMISSIONS[permission],
             f"noptixautoqa+local_{permission}_new@gmail.com",
-            "Local User",
-            DEFAULT_PASSWORD,
-            is_cloud=False,
+            password=DEFAULT_PASSWORD,
             )
         new_local_user['id'] = new_local_user['id'].strip('{}')
         return new_local_user
@@ -372,10 +364,12 @@ class Mediaserver:
         finally:
             self._container.delete()
 
-    def share_with_user(self, user: 'CloudAccount', access_role: str, permissions: str):
-        _auth = [self._cloud_owner.email, self._cloud_owner.password]
-        r = _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
-        user.id = r['vmsUserId']
+    def share_with_user(self, user: 'CloudAccount', access_role: str):
+        user_response = self.api.add_cloud_user(
+            user.PERMISSIONS[access_role],
+            user.email,
+            )
+        user.id = user_response['id']
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
 
     def reset_settings(self):
