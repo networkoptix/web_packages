@@ -275,7 +275,7 @@
     "SYSTEM MERGE FAILED TEXT": "システムの統合に失敗しました",
     "SYSTEM MERGE COMPLETED TEXT": "システム %PRIMARY% と %SECONDARY% の統合が完了しました",
     "MERGE COMPLETED TEXT": "システム統合完了",
-    "UNTIL MERGE IS FINISHED TEXT": "統合が完了するまで、このシステムにログインしてビデオを見ることはできますが、設定は変更できません。",
+    "UNTIL MERGE IS FINISHED TEXT": "システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません。",
     "WHEN MERGE IS FINISHED TEXT": "統合が完了すると、このシステムのすべてのユーザーとカメラが %SYSTEM% システムで利用可能になり、このシステムは削除されます。",
     "SYSTEM AND SERVER MERGE COMPLETED TEXT": "システム %SYSTEM% と %SERVER% の統合が完了しました",
     "MERGE CURRENT SYSTEM WITH TEXT": "次のシステムと統合",
