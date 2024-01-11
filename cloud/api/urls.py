@@ -48,6 +48,8 @@ urlpatterns = [
     re_path(r'^account/verify$',             account.verify_password),
     re_path(r'^account/?$',                  account.index, name='account'),
 
+    re_path(r'^ipvd_update$',                utils.ipvd_update),
+
     re_path(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),
     re_path(r'^2fa/backup$',       two_fa.BackupCode.as_view()),
     re_path(r'^2fa/updateSession$', two_fa.add_2fa_to_session),

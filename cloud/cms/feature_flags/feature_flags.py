@@ -64,6 +64,7 @@ class FLAGS(metaclass=_FlagType):
     cookie_banner = ('Cookie Banner', 'cookieBanner', '%COOKIE_BANNER%')
     s3_static = ('S3 Static Files Enabled', 's3Static', '%S3_STATIC_ENABLED%')
     db_static = ('DB Static Files Enabled', 'dbStatic', '%DB_STATIC_ENABLED%')
+    ipvd_update = ('IPVD Update', 'ipvdUpdate')
 
     layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
     layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')

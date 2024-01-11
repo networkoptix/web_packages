@@ -10,6 +10,7 @@ import logging
 import re
 import os
 
+import waffle
 from django.http import HttpResponse
 from django.urls import reverse
 from uuid import uuid4
@@ -17,6 +18,7 @@ from uuid import uuid4
 from asgiref.sync import sync_to_async
 
 from cloud.customization_context import customization_ctx
+from notifications.celery import update_ipvd
 from util.helpers import HttpxAsyncRequest
 from django.core.cache import cache, caches
 from django.conf import settings
@@ -34,7 +36,7 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras, \
-    CustomizationNameSerializer
+    CustomizationNameSerializer, ForceSyncSerializer
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
@@ -524,7 +526,11 @@ async def get_settings(request):
 
 
 IPVD_CACHE_CLEARED = 'IPVD cache cleared'
+IPVD_CACHE_ERROR = 'IPVD cache not cleared due to error'
+IPVD_CACHE_CLEARING_IS_SCHEDULED = 'IPVD cache clearing is scheduled'
 IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
+IPVD_CACHE_FORBIDDEN = 'Insufficient privileges to clear cache'
+
 IPVD_EXPIRES = 60**2 * 24
 IPVD_CACHE_HEADER = {'Cache-Control': f'max-age={IPVD_EXPIRES}'}
 
@@ -585,6 +591,35 @@ async def get_ipvd(request):
         cleared = await cache.adelete("ipvd") and await cache.adelete(current_version)
 
         return Response({IPVD_CACHE_CLEARED}) if cleared else Response({IPVD_CACHE_NOT_CLEARED}, status.HTTP_202_ACCEPTED)
+
+
+@swagger_auto_schema(method="POST",
+                     operation_description="Update the supported devices cache.",
+                     query_serializer=ForceSyncSerializer(),
+                     responses={
+                         '200': IPVD_CACHE_CLEARED,
+                         '201': IPVD_CACHE_CLEARING_IS_SCHEDULED,
+                         '202': IPVD_CACHE_NOT_CLEARED,
+                         '400': IPVD_CACHE_ERROR,
+                         '403': IPVD_CACHE_FORBIDDEN,
+                     })
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def ipvd_update(request):
+    if not waffle.flag_is_active(request, flag_name=FLAGS.ipvd_update):
+        return Response({IPVD_CACHE_FORBIDDEN}, status=status.HTTP_403_FORBIDDEN)
+    query_params = ForceSyncSerializer(data=request.query_params)
+    query_params.is_valid(raise_exception=True)
+    if query_params.validated_data.get('forceSync'):
+        try:
+            update_ipvd(force=True, ignore_errors=False)
+        except Exception as e:
+            logger.warning(f"Error occurred while updating IPVD. Exception: {e}")
+            return Response(data={IPVD_CACHE_ERROR}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={IPVD_CACHE_CLEARED}, status=status.HTTP_200_OK)
+    else:
+        update_ipvd.apply_async(args=None, kwargs={'force': True, 'ignore_errors': False})
+        return Response(data={IPVD_CACHE_CLEARING_IS_SCHEDULED}, status=status.HTTP_201_CREATED)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

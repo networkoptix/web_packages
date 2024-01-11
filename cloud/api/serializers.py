@@ -503,3 +503,7 @@ class LicenseServerSerializer(SystemIdSerializer):
 
 class CustomizationNameSerializer(serializers.Serializer):
     name = serializers.CharField(required=False, allow_null=True, read_only=True)
+
+
+class ForceSyncSerializer(serializers.Serializer):
+    forceSync = serializers.BooleanField(required=False, default=False)
