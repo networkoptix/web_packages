@@ -12,6 +12,8 @@ export interface Bookmark extends BookmarkResp {
     deviceId: string;
     systemId: string;
     timeZoneOffset: number;
+    canDownloadBookmark: boolean;
+    canViewBookmark: boolean;
 }
 
 export interface TimeRange {

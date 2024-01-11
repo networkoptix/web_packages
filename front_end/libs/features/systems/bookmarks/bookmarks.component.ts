@@ -209,7 +209,6 @@ export class NxBookmarksComponent implements OnInit {
                     this.tagFilter.select(...cssaToStrArray(queryParams.tags));
                 }
             }
-
             this.system = this.systemService.getCurrentSystem();
 
             // We'll use pageService temporarily. We'll remove this when we update TitleResolver/SystemTitleResolver for the Browser Tab criterias from design
@@ -383,14 +382,21 @@ export class NxBookmarksComponent implements OnInit {
                     this.localOffsetToUTCMs +
                     (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
+                const canViewBookmark = this.system.permissionManager.canViewDeviceArchive(
+                    deviceId as string,
+                );
                 const getLink = (transport: string): string => {
-                    return this.system.mediaserver.getExportUrl({
-                        cameraId: deviceId,
-                        duration: Math.floor(bk.durationMs / 1000),
-                        endPos: bk.startTimeMs + bk.durationMs,
-                        pos: bk.startTimeMs,
-                        transport,
-                    });
+                    // User will need viewArchives permissions to view and download bookmarks
+                    if (canViewBookmark) {
+                        return this.system.mediaserver.getExportUrl({
+                            cameraId: deviceId,
+                            duration: Math.floor(bk.durationMs / 1000),
+                            endPos: bk.startTimeMs + bk.durationMs,
+                            pos: bk.startTimeMs,
+                            transport,
+                        });
+                    }
+                    return '';
                 };
                 const aspectRatio =
                     this.system.cameraManager.cameras.find(camera => {
@@ -410,6 +416,10 @@ export class NxBookmarksComponent implements OnInit {
                         270 * dpr, // 270px is the height we want
                         0,
                     ),
+                    canDownloadBookmark:
+                        canViewBookmark &&
+                        this.system.permissionManager.canExportDeviceArchive(deviceId as string),
+                    canViewBookmark,
                     isVisible: false,
                     deviceName,
                     deviceId,

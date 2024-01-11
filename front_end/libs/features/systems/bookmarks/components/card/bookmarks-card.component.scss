@@ -36,7 +36,8 @@ nx-bookmarks-card {
             height: 153px;
             background-color: var(--bookmarks-card-video-background-color);
 
-            &:has(.thumbnailError) {
+            &:has(.thumbnailError),
+            &:has(.noPermissions) {
                 background-color: var(--bookmarks-card-thumbnail-error-background);
             }
 
@@ -55,7 +56,6 @@ nx-bookmarks-card {
                 }
 
                 .thumbnailError {
-                    position: absolute;
                     font-size: 13px;
 
                     &.noImage {
@@ -69,6 +69,18 @@ nx-bookmarks-card {
                             width: 100% !important;
                             color: var(--bookmarks-card-thumbnail-error-description) !important;
                             margin-top: 0 !important;
+                        }
+                    }
+                }
+
+                .noPermissions {
+                    
+                    .player-placeholder {
+
+                        .description {
+                            width: 73% !important;
+                            font-size: 14px !important;
+                            line-height: 1.2 !important;
                         }
                     }
                 }

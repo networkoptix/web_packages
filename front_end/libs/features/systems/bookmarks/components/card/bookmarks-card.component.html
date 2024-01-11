@@ -3,7 +3,7 @@
     class="bookmarks-tooltip"
 ></div>
 <div
-    (click)="!thumbnailError && openBookmarkModal()"
+    (click)="openBookmarkModal()"
     role="button"
     (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
     [intersectionThreshold]="0.01"
@@ -20,7 +20,7 @@
         <div class="bookmarks-image">
             <div class="bookmarks-image-loaded">
                 <ng-container *ngIf="bookmark.isVisible">
-                    <ng-container *ngIf="bookmark.deviceName; else cantViewBookmark">
+                    <ng-container *ngIf="bookmark.deviceName && bookmark.canViewBookmark">
                         <ng-template #thumbnailPreLoader>
                             <nx-pre-loader></nx-pre-loader>
                         </ng-template>
@@ -46,12 +46,23 @@
                             </ng-template>
                         </div>
                     </ng-container>
-                    <ng-template #cantViewBookmark>
+
+                    <ng-container *ngIf="!bookmark.canViewBookmark && bookmark.deviceName">
+                        <nx-player-placeholder
+                            class="noPermissions"
+                            [description]="
+                                'View Bookmarks and View Archive permissions are required to access this Bookmark.'
+                                    | translate
+                            "
+                        ></nx-player-placeholder>
+                    </ng-container>
+
+                    <ng-container *ngIf="bookmark.canViewBookmark && !bookmark.deviceName">
                         <nx-player-placeholder
                             class="thumbnailError"
                             [description]="'Device permission required.' | translate"
                         ></nx-player-placeholder>
-                    </ng-template>
+                    </ng-container>
                 </ng-container>
             </div>
         </div>
