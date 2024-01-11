@@ -207,7 +207,11 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     }
 
     showPermissionGroupSection$$ = computed(() => {
-        if (this.isTemporary$$() && this.selectedGroupsList$$().length === 0) {
+        if (
+            this.isTemporary$$() &&
+            this.selectedGroupsList$$().length === 0 &&
+            !this.user$$().hasCustomPermissions
+        ) {
             return false;
         }
         return true;
