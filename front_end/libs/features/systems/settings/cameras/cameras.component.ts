@@ -13,7 +13,15 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, from, throwError, of, Observable, combineLatest } from 'rxjs';
+import {
+    BehaviorSubject,
+    from,
+    throwError,
+    of,
+    Observable,
+    combineLatest,
+    firstValueFrom,
+} from 'rxjs';
 import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/operators';
 
 import { createPortalToken } from '@common/tokens';
@@ -422,7 +430,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                                 const selectedCamera = cameras.find(
                                     ({ id }) => id === this.camera.id,
                                 );
-                                if (selectedCamera.status !== CameraStatus.Unauthorized) {
+                                if (selectedCamera.status === CameraStatus.Unauthorized) {
                                     return throwError('Camera Unauthorized');
                                 }
                                 return of(selectedCamera);
@@ -442,6 +450,15 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                     this.credentialsUpdateInProgress = false;
                     this.showUnauthorized = this.camera.status === CameraStatus.Unauthorized;
                     this.reload$.next(this.reload$.value + 1);
+                    firstValueFrom(
+                        this.system.serverManager.mediaserver.getCamera(this.camera.id),
+                    ).then(updatedCamera => {
+                        const newNxSystemCamera =
+                            this.system.cameraManager.parseCamera(updatedCamera);
+                        this.camera = newNxSystemCamera;
+                        this.setCamera();
+                        this.immediatelyUpdateCamera();
+                    });
                 });
         };
         this.dialogService.updateCameraCredentials({
