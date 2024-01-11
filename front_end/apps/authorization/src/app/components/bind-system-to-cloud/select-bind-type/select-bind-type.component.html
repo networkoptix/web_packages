@@ -1,20 +1,22 @@
 <div
-    class="bind-btn"
+    class="bind-btn btn btn-default"
     [style.margin-right.px]="12"
-    (click)="bindSelection.emit(bindType.account)"
+    [class.active]="selectedBindType === bindType.account"
+    (click)="setBind(bindType.account)"
 >
     <svg-icon
         nx-add-svg-src
-        [src]="icons.dir + 'user_cloud.svg'"
+        [src]="icons.dirAuth + 'user_cloud.svg'"
         [svgStyle]="{ width: '64px', height: '64px' }"
     ></svg-icon>
     <div translate>My Account</div>
 </div>
 <div
-    class="bind-btn"
-    [ngClass]="{ 'option-disabled': !orgCount$$() }"
+    class="bind-btn btn btn-default"
+    [class.disabled]="!orgCount$$()"
+    [class.active]="selectedBindType === bindType.org"
     [style.pointer-events]="!orgCount$$() ? 'none' : 'unset'"
-    (click)="bindSelection.emit(bindType.org)"
+    (click)="setBind(bindType.org)"
 >
     <svg-icon
         nx-add-svg-src

@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
+import { AuthorizeState } from '@authorization/src/app/components/authorize.component.types';
 import { BindToCloudService } from '@authorization/src/app/components/bind-system-to-cloud/bind-to-cloud.service';
 import { BindResponse } from '@authorization/src/app/types/bind-service.types';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -118,6 +119,10 @@ export class BindSystemToCloudComponent implements OnInit {
     });
 
     back(): void {
+        if (this.fsmState$$() === BindDialogStates.initial) {
+            this.setCurrentState.emit(AuthorizeState.email);
+            this.cleanup();
+        }
         this.state$$.update(state => ({
             ...state,
             bindType: undefined,

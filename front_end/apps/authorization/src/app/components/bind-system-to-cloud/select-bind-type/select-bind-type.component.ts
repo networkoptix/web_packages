@@ -19,10 +19,16 @@ export class SelectBindTypeComponent {
     protected readonly bindType = BindType;
     orgs$$ = signal<Org[]>([]);
     orgCount$$ = computed(() => this.orgs$$().length);
+    protected selectedBindType: BindType | undefined;
 
     @Input() set orgs(orgs: Org[]) {
         this.orgs$$.set(orgs);
     }
 
     @Output() bindSelection = new EventEmitter<BindType>();
+
+    setBind(bindType: BindType): void {
+        this.selectedBindType = bindType;
+        this.bindSelection.emit(bindType);
+    }
 }

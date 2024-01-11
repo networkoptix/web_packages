@@ -17,7 +17,7 @@
     </div>
     <nx-auth-footer
         [bindProcess]="bindSystem"
-        [blockBack]="fsmState$$() === fsmStates.initial || fsmState$$() === fsmStates.finished"
+        [blockBack]="fsmState$$() === fsmStates.finished"
         [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
         [viewType]="viewType"
         (goBack)="back()"

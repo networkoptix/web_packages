@@ -134,6 +134,7 @@
             [viewType]="viewType"
             [code]="code"
             [redirectUri]="initialData.redirect_uri"
+            (setCurrentState)="setCurrentState($event)"
         ></nx-bind-system-to-cloud>
         <nx-show-404-authorize-component
             *ngSwitchCase="AuthorizeState.show404"
