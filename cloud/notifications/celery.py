@@ -27,7 +27,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='tue'),
                              clean_push_logs.s(), name="clean push logs", queue='celery')
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='wed'),
-                             clean_old_portal_notifications.s(), name="clean push logs", queue='celery')
+                             clean_old_portal_notifications.s(), name="clean old portal notifications", queue='celery')
     sender.add_periodic_task(crontab(hour='*/6', minute=0),
                              update_ipvd.s(kwargs={'force': False}), name="update ipvd", queue='celery')
 

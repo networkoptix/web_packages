@@ -1205,11 +1205,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
     }
 
+    updateDevicePassword(cameraId: string, user: string, password: string): Observable<unknown> {
+        return this.patch(`/rest/v1/devices/${cameraId}`, { credentials: { user, password } });
+    }
+
     @memoizeAsyncMedium
     override getDevices(params: DevicesParams = {}): Observable<DeviceV1Full[]> {
         return this.get('/rest/v1/devices', { params: params as RequestParams });
     }
-
     // Widgets aren't being used at the moment, but making this so the base getDevices() can be removed
     _getHmWidgetDevices(): Observable<{ id: string; name: string }[]> {
         return this.getWith('/rest/v1/devices', ['id', 'name']);
