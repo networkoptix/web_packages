@@ -1269,7 +1269,16 @@
             "groups": "Permission Groups"
         },
         "usersTable": {
-            "infoToolTip": "Users with access based on access to higher-level folders"
+            "infoToolTip": "Users with access based on access to higher-level folders",
+            "deleteDialog": {
+                "title": "Delete User",
+                "singleMessage": "Are you sure you want to delete {name} ?",
+                "multipleMessage": "Are you sure you want to delete {count} users?",
+                "footer": {
+                    "actionLabel": "Delete",
+                    "cancelLabel": "Cancel"
+                }
+            }
         },
         "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
     },

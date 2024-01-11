@@ -2,7 +2,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, effect, OnInit, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -56,6 +56,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     constructor(
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
+        private translateService: TranslateService,
     ) {
         this.currentPartnerId$ = this.CPService.paramStateHandler.state$.pipe(
             map(({ params: { partnerId } }) => partnerId),
@@ -139,16 +140,42 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     }
 
     deleteChannelPartnerUser(user: UserRecord): void {
-        const { email } = user;
-        this.currentPartnerId$
-            .pipe(
-                switchMap(id => this.CPService.deleteChannelPartnerUser(id, email)),
-                catchError(err => {
-                    throw err;
-                }),
-            )
-            .subscribe({
-                error: err => console.error(err),
+        this.dialogsService
+            .confirm({
+                message: this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
+                    {
+                        name: user.fullName,
+                    },
+                ),
+                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                footer: {
+                    actionLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                    cancelLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                    buttonClass: 'btn-danger',
+                },
+            })
+            .then(confirm => {
+                if (confirm) {
+                    const { email } = user;
+                    this.currentPartnerId$
+                        .pipe(
+                            switchMap(id => this.CPService.deleteChannelPartnerUser(id, email)),
+                            catchError(err => {
+                                throw err;
+                            }),
+                        )
+                        .subscribe({
+                            error: err => console.error(err),
+                            next: () => {
+                                this.records$ = this.records$.pipe(
+                                    map(users => users.filter(user => user.email !== email)),
+                                );
+                            },
+                        });
+                }
             });
     }
 }
