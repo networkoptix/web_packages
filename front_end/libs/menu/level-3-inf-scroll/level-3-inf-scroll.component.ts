@@ -20,7 +20,8 @@ export class NxLevel3InfScrollComponent {
         this.items$$.set(items ?? []);
     }
 
-    private itemsPerPage$$ = signal(50); // 50 seems like an okay number for larger screens
+    // 1000 seems like an okay number for larger screens. Around 2k performance rapidly degrades.
+    private itemsPerPage$$ = signal(1000);
     @Input() set pageSize(size: number | undefined) {
         if (size !== undefined) {
             this.itemsPerPage$$.set(size);
