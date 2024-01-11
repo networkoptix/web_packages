@@ -5,6 +5,7 @@ import uuid
 from django.conf import settings
 from django.http import HttpResponse
 
+from api.views.utils import IPVD_CACHE_CLEARING_IS_SCHEDULED, IPVD_CACHE_CLEARED, IPVD_CACHE_ERROR
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
@@ -16,7 +17,7 @@ from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core.cache import caches, cache
 
 from rest_framework import status
-
+from rest_framework.test import APIClient
 import copy
 from dateutil import parser as date_parser
 import pytest
@@ -530,3 +531,30 @@ async def test_cloud_capabilities_view(arf, mocker):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data == mocker.sentinel.capabilities
+
+
+def test_ipvd_update(mocker, superuser):
+    path = '/api/ipvd_update'
+    filename = f'{uuid4()}'
+    client = APIClient()
+    client.force_authenticate(user=superuser)
+    mocker.patch('util.ipvd_storage.IPVDS3Upload.update_ipvd_data', return_value=filename)
+    mocker.patch('waffle.flag_is_active', return_value=True)
+    response = client.post(path=path)
+    assert response.status_code == status.HTTP_201_CREATED
+    assert response.data == {IPVD_CACHE_CLEARING_IS_SCHEDULED}
+
+    # test synchronous request
+    path = '/api/ipvd_update?forceSync=true'
+    response = client.post(path=path)
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data == {IPVD_CACHE_CLEARED}
+    # test error during update
+    mocker.patch('util.ipvd_storage.IPVDS3Upload.update_ipvd_data', side_effect=ValueError)
+    response = client.post(path=path)
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.data == {IPVD_CACHE_ERROR}
+
+    mocker.patch('waffle.flag_is_active', return_value=False)
+    response = client.post(path=path)
+    assert response.status_code == status.HTTP_403_FORBIDDEN

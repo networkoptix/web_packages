@@ -692,7 +692,7 @@ if PUSH_WORKER:
 # Run celery tasks locally if set to true
 CELERY_TASK_ALWAYS_EAGER = False
 # IMPORTANT!!! This is useful to test celery task
-if LOCAL_ENVIRONMENT and os.environ.get('RUN_CELERY_LOCALLY'):
+if TESTING or (LOCAL_ENVIRONMENT and os.environ.get('RUN_CELERY_LOCALLY')):
     CELERY_TASK_ALWAYS_EAGER = True
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False

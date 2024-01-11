@@ -1,7 +1,7 @@
 import os
 import logging
 
-from celery import Celery, signals
+from celery import Celery, signals, shared_task
 from celery.schedules import crontab
 from django.conf import settings  # noqa
 from django.core.management import call_command
@@ -28,6 +28,8 @@ def setup_periodic_tasks(sender, **kwargs):
                              clean_push_logs.s(), name="clean push logs", queue='celery')
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='wed'),
                              clean_old_portal_notifications.s(), name="clean push logs", queue='celery')
+    sender.add_periodic_task(crontab(hour='*/6', minute=0),
+                             update_ipvd.s(kwargs={'force': False}), name="update ipvd", queue='celery')
 
 
 @app.task(bind=True)
@@ -65,3 +67,19 @@ def setup_logger(logger, format, *args, **kwargs):
     formatter = logging.Formatter(
         '[%(levelname)s] %(processName)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s')
     sh.setFormatter(formatter)
+
+
+@shared_task
+def update_ipvd(force=True, ignore_errors=True):
+    from util.ipvd_storage import IPVDS3Upload
+    logger.info("Updating IPVD.")
+    storage = IPVDS3Upload()
+    try:
+        filename = storage.update_ipvd_data(force=False)
+    except Exception as e:
+        if ignore_errors:
+            # Skip update on error
+            logger.warning(f"Could not update IPVD S3 upload due to: {e}")
+            return
+        raise e
+    return filename
