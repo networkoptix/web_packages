@@ -44,8 +44,11 @@
                     [ngClass]="{ 'placeholder--visible': videoError$$() }"
                     svgFileName="placeholder_camera_alert"
                     [description]="
-                        'The video format for this bookmark is not supported by your browser. Please download it to view locally'
-                            | translate
+                        !bookmark.canViewBookmark
+                            ? ('View Bookmarks and View Archive permissions are required to access this Bookmark.'
+                              | translate)
+                            : ('The video format for this bookmark is not supported by your browser. Please download it to view locally'
+                              | translate)
                     "
                 ></nx-player-placeholder>
             </div>
@@ -88,6 +91,7 @@
             View Full Recording
         </a>
         <button
+            *ngIf="bookmark.canDownloadBookmark"
             (click)="openDownloadDialog()"
             class="download-button btn-default btn"
             type="button"
