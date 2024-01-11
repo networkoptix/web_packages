@@ -88,21 +88,32 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
                         return Promise.resolve();
                     }
                     const updateHandler = async (defaultPassword?: boolean): Promise<unknown> => {
-                        if (defaultPassword && system.mediaserver instanceof NxSystemRestAPI) {
-                            await firstValueFrom(
-                                system.mediaserver.changePassword(
-                                    camera.id,
-                                    this.cameraLoginCredentials,
-                                    this.cameraPasswordCredentials,
-                                ),
-                            );
-                            return updateHandler();
+                        if (system.mediaserver instanceof NxSystemRestAPI) {
+                            if (defaultPassword) {
+                                await firstValueFrom(
+                                    system.mediaserver.changePassword(
+                                        camera.id,
+                                        this.cameraLoginCredentials,
+                                        this.cameraPasswordCredentials,
+                                    ),
+                                );
+                                return updateHandler();
+                            } else {
+                                return firstValueFrom(
+                                    system.mediaserver.updateDevicePassword(
+                                        camera.id,
+                                        this.cameraLoginCredentials || 'admin',
+                                        this.cameraPasswordCredentials,
+                                    ),
+                                );
+                            }
+                        } else {
+                            return system.serverManager.updateResource(camera.id, {
+                                credentials: `${this.cameraLoginCredentials || 'admin'}:${
+                                    this.cameraPasswordCredentials
+                                }`,
+                            });
                         }
-                        return system.serverManager.updateResource(camera.id, {
-                            credentials: `${this.cameraLoginCredentials || 'admin'}:${
-                                this.cameraPasswordCredentials
-                            }`,
-                        });
                     };
 
                     return updateHandler(this.defaultPassword).then(updateCallback);
