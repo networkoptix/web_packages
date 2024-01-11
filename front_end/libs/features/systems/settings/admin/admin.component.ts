@@ -15,7 +15,7 @@ import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -447,13 +447,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     updateAndGoToSystems = (): void => {
         this.systemsService.userDisconnectSystem = true;
-        this.systemsService.forceUpdateSystems().subscribe(() => {
-            setTimeout(() => {
-                this.router.navigate([redirect.authorised]).catch(error => {
-                    console.error(error);
+        this.systemsService
+            .forceUpdateSystems()
+            .pipe(take(1))
+            .subscribe(() => {
+                setTimeout(() => {
+                    this.router.navigate([redirect.authorised]).catch(error => {
+                        console.error(error);
+                    });
                 });
             });
-        });
     };
 
     delete() {
