@@ -203,6 +203,7 @@ export function setupConfig(): IConfig {
             ],
             backgrounds: '/static/images/developers/backgrounds/',
             dir: '/static/images/icons/standard/',
+            dirAuth: '/static/images/icons/authorization/',
             dirButtons: '/static/images/icons/buttons/',
             dirTextButtons: '/static/images/icons/text_buttons/',
             dirHeader: '/static/images/icons/header/',

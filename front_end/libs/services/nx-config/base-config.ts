@@ -496,6 +496,7 @@ export interface Icons {
     platforms: Platform[];
     backgrounds: string;
     dir: string;
+    dirAuth: string;
     dirButtons: string;
     dirTextButtons: string;
     dirHeader: string;
