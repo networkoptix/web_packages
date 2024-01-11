@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, Signal, booleanAttribute } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -74,6 +74,7 @@ export class NxOrganizationUsersComponent implements OnInit {
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
         private store: Store,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -108,15 +109,54 @@ export class NxOrganizationUsersComponent implements OnInit {
         this.dialogsService.addOrgUser(orgId);
     }
 
-    deleteSingleUser(email: string): void {
-        if (this.inGroup) {
-            this.CPService.deleteOrganizationUser(this.currentItemId$$(), email).subscribe({
-                error: err => console.error(err),
+    deleteSingleUser(user: UserRecord): void {
+        this.dialogsService
+            .confirm({
+                message: this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
+                    {
+                        name: user.fullName,
+                    },
+                ),
+                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                footer: {
+                    actionLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                    cancelLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                    buttonClass: 'btn-danger',
+                },
+            })
+            .then(confirm => {
+                if (confirm) {
+                    const { email, isOrgUser } = user;
+                    if (!isOrgUser) {
+                        if (this.inGroup) {
+                            this.CPService.deleteGroupUsers(this.currentItemId$$(), [
+                                email,
+                            ]).subscribe({
+                                error: err => console.error(err),
+                            });
+                        } else {
+                            for (const group of user.groupRoles) {
+                                const groupId = group.groupId;
+                                this.CPService.deleteGroupUsers(groupId, [email]).subscribe({
+                                    error: err => console.error(err),
+                                });
+                            }
+                        }
+                    } else {
+                        this.CPService.deleteOrganizationUser(
+                            this.currentItemId$$(),
+                            email,
+                        ).subscribe({
+                            error: err => console.error(err),
+                        });
+                    }
+                    this.records$ = this.records$.pipe(
+                        map(users => users.filter(user => user.email !== email)),
+                    );
+                }
             });
-        } else {
-            this.CPService.deleteGroupUsers(this.currentItemId$$(), [email]).subscribe({
-                error: err => console.error(err),
-            });
-        }
     }
 }

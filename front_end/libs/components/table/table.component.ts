@@ -162,7 +162,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     initPageRows(): void {
-        if (this.setAutoRows && this.tableBodyContainer && this.data.length) {
+        if (this.setAutoRows && this.tableBodyContainer && this.data?.length) {
             const autoRows = Math.floor(
                 (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) / ROW_HEIGHT,
             );
@@ -171,11 +171,11 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             this.rowsPerPage.forEach(item => {
                 this.perPageOptions.push({ name: `${item}`, value: item });
             });
-            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
+            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data?.length });
             this.perPageSelectedOption = this.perPageOptions[1]; // 10 items per page - we need to make it dynamic
         }
 
-        this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
+        this.numPages = Math.ceil(this.data?.length / this.perPageSelectedOption.value);
 
         this.sortElements(true);
     }
@@ -441,16 +441,16 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.currentPage = page;
         const startIndex = (page - 1) * this.perPageSelectedOption.value;
         const endIndex = startIndex + this.perPageSelectedOption.value;
-        this.pagedItems = this.data.slice(startIndex, endIndex);
+        this.pagedItems = this.data?.slice(startIndex, endIndex);
 
         if (this.currentPage === 1) {
-            this.nDisplayed = `1-${Math.min(this.perPageSelectedOption.value, this.data.length)}`;
+            this.nDisplayed = `1-${Math.min(this.perPageSelectedOption.value, this.data?.length)}`;
         } else {
             this.nDisplayed = `${
                 (this.currentPage - 1) * this.perPageSelectedOption.value + 1
             }-${Math.min(
                 (this.currentPage - 1) * this.perPageSelectedOption.value + this.pagedItems.length,
-                this.data.length,
+                this.data?.length,
             )}`;
         }
     }
