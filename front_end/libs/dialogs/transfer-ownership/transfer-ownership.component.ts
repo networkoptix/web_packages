@@ -26,6 +26,7 @@ import { NxChannelPartnersService } from '@pages/home/services/channel-partners.
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { UserType } from '@services/system-user.types';
@@ -71,6 +72,8 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
 
     LANG = staticLang;
     icons = icons;
+
+    channelPartnersEnabled: boolean | null = null;
 
     currentOwnerType: 'user' | 'org' = 'user'; // TODO: Add checks for this after CDB support
     transferInfo: SystemTransferInfo;
@@ -123,13 +126,16 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         });
         this.userEmails$$.set(items);
 
-        this.partnersService.getOrganizations().subscribe(orgs => {
-            const items = orgs.map(org => ({
-                name: org.name,
-                value: org.id,
-            }));
-            this.orgItems$$.set(items);
-        });
+        this.channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
+        if (this.channelPartnersEnabled) {
+            this.partnersService.getOrganizations().subscribe(orgs => {
+                const items = orgs.map(org => ({
+                    name: org.name,
+                    value: org.id,
+                }));
+                this.orgItems$$.set(items);
+            });
+        }
 
         const errorCodes = {
             userDisabled: () => {
