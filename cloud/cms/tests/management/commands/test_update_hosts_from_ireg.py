@@ -1,8 +1,8 @@
-from unittest.mock import call
 
 import pytest
-
-from cms.management.commands.update_hosts_from_ireg import *
+from cms.models import Customization
+from cms.management.commands.update_hosts_from_ireg import Command
+from nx_ireg.helpers import HDW_IREG_URL
 
 HDW_DATA = [
     {
@@ -60,9 +60,9 @@ class TestUpdateHostsFromIreg:
     @pytest.fixture(autouse=True)
     def setup(self, mocker):
         self.mocked_get_ireg = mocker.patch(
-            "cms.management.commands.update_hosts_from_ireg.get_ireg", return_value=HDW_DATA)
+            "nx_ireg.helpers.get_ireg", return_value=HDW_DATA)
         self.mocked_get_env = mocker.patch(
-            "cms.management.commands.update_hosts_from_ireg.os.getenv", return_value='dev4')
+            "nx_ireg.helpers.os.getenv", return_value='dev4')
     def test_handle_missing_env(self, mocker, db, default_customization):
         self.mocked_get_env.return_value = None
         instance = Command()
@@ -119,6 +119,3 @@ class TestUpdateHostsFromIreg:
         digitalwatchdog = Customization.objects.get(name="digitalwatchdog", host="digitalwatchdog.dev4.cloud.hdw.mx")
         assert digitalwatchdog.default_language.code == "en_US"
         assert default_customization.host == "dev4.cloud.hdw.mx"
-
-
-
