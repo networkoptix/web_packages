@@ -215,7 +215,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         return this.post('/rest/v3/login/tickets');
     }
 
-    renameServer(serverId: string, name: string): Promise<ChangedIdReturned> {
+    override renameServer(serverId: string, name: string): Promise<ChangedIdReturned> {
         return this.patch(`/rest/v3/servers/${serverId || 'this'}`, {
             name,
         })
