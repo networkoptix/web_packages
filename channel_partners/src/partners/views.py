@@ -651,15 +651,28 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         return perms
 
     def get_queryset(self):
+        cloud_user: CloudUser = self.request.user
+        cloud_host: CloudHost = self.request.cloud_host
+
         if self.detail:
-            return self.queryset.filter(channel_partner__cloud_host=self.request.cloud_host)
+            return self.queryset.filter(channel_partner__cloud_host=cloud_host)
+
+        # Validate & Extract if valud
         param_serializer = OrganizationQueryParamsSerializer(data=self.request.query_params)
-        param_serializer.is_valid(raise_exception=True)
-        query = Q(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
-        if param_serializer.validated_data.get('includeChildOrgs'):
-            query |= Q(channel_partner__channelpartnertouser__user=self.request.user)
-        queryset = self.queryset.filter(query)
-        return queryset
+        if not param_serializer.is_valid():
+            raise ValidationError(param_serializer.errors)
+        include_child_orgs: bool = param_serializer.validated_data.get('includeChildOrgs')
+
+        # Build base query
+        query: Q = Q(channel_partner__cloud_host=cloud_host, users=cloud_user)
+
+        # Add additional conditions, if needed
+        if include_child_orgs:
+            query |= Q(channel_partner__channelpartnertouser__user=cloud_user)
+
+        result = self.queryset.filter(query).distinct()
+        return result
+
 
     @extend_schema(request=CreateOrganizationSerializer, responses=OrganizationSerializer)
     def create(self, request, *args, **kwargs):
@@ -941,6 +954,7 @@ class SystemGroupViewSet(NestedViewSetMixin,
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     # pagination_class = DefaultPagination
     queryset = SystemGroup.objects.all()
+
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = filters.CreatedTsAndIdAndNameFilter
 
