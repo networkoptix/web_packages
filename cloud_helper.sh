@@ -142,7 +142,37 @@ function setup_env() {
     export_poetry_requirements
     pip install --upgrade -r cloud/requirements.txt
     source ./env/bin/activate
-    npm run node-modules --prefix cloud
+}
+
+function reinstall_virtualenv() {
+  echo "Command will remove current python virtual environment and"
+  echo "install a new one with accurate python version. You must have"
+  echo "installed 'pyenv' and 'poetry 1.5.1'."
+  read -p "Do you want to proceed? (yes/y/no/n) [no] " yn
+  case $yn in
+      yes ) echo "Installing $1";;
+      y ) echo "Installing $1";;
+      no ) echo exiting...;
+          exit;;
+      * ) echo invalid response;
+          exit 1;;
+  esac
+  echo "Removing current python in '$(pwd)/env'..."
+  rm -rf ./env
+  echo "Using python version $(cat .python-version)."
+  echo "Installing python virtual environment in '$(pwd)/env'..."
+  if ! which pyenv &> /dev/null ; then
+        echo "'pyenv' is not installed or not set up properly."
+        exit 1
+  fi
+  if ! which virtualenv &> /dev/null ; then
+        echo "'virtualenv' is not installed or not set up properly."
+        exit 1
+  fi
+  virtualenv -p $(pyenv which python) env
+  echo "Copying repositories config..."
+  cp etc/virtual_env_template/pip.conf env
+  setup_env
 }
 
 function setup_robot_env() {
@@ -699,6 +729,9 @@ do
         setup_webadmin_conan)
             setup_webadmin_conan_update_scripts
             ;;
+        reinstall_virtualenv)
+            reinstall_virtualenv
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -731,6 +764,7 @@ do
             echo 'setup_git_aliases - Sets up git aliases for cloud_portal project'
             echo 'update_py_package - Updates poetry requirements. Accepts package name. "./cloud_helper.sh update_py_package {package name}"'
             echo 'setup_webadmin_conan - Sets up the env for the conan helper script'
+            echo 'reinstall_virtualenv - Installing python virtual environment with a correct version and updating all packages"'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then
