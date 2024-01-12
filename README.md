@@ -21,12 +21,13 @@ For development set `CLOUD_PORTAL_CONF_DIR` environment variable (for example, t
 ### Installing python requirements
 1. Install poetry, https://python-poetry.org/docs/#installation. Preferred method is using system `pip`.  
 
-2. Installing python 3.8.10.
-
+2. Installing python.
+   3.8.10 for version <=23.3
+   3.11.4 for version >23.3
     Run in project root.
     ```shell
     pyenv install 3.8.10
-    pyenv local 3.8.10
+    pyenv install 3.11.4
     # Ensure that pyenv choose version correctly, command has to display path to pyenv python executable    
     pyenv which python    
     ```
@@ -40,7 +41,10 @@ For development set `CLOUD_PORTAL_CONF_DIR` environment variable (for example, t
     ./cloud_helper.sh export_poetry_requirements
     pip install -r cloud/requirements.txt    
     ```
-
+4. Simpler way.
+   ```shell
+   ./cloud_helper.sh reinstall_virtualenv
+   ```
 ### (Optional) pyenv setup for macos
 
 Add to your rc file 
