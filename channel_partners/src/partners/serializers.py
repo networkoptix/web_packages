@@ -786,10 +786,11 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
     id = serializers.CharField(required=False)
     customization = serializers.CharField()
     opaque = serializers.CharField(allow_blank=True)
+    groupId = serializers.UUIDField(required=False)
 
     class Meta:
         model = CloudSystemId
-        fields = ['id', 'name', 'customization', 'opaque', 'organization']
+        fields = ['id', 'name', 'customization', 'opaque', 'organization', 'groupId']
 
     def validate_organization(self, value: Organization):
         req = self.context.get('request')
@@ -799,12 +800,21 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
             raise exceptions.PermissionDenied(
                 detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
 
+    def validate(self, attrs):
+        organization = attrs.get('organization')
+        if groupId := attrs.get('groupId'):
+            if not SystemGroup.objects.filter(id=groupId, organization=organization).exists():
+                raise exceptions.ValidationError(
+                    detail={'groupId': [f'Group {groupId} does not exist in this organization.']}
+                )
+        return attrs
+
     def bind_system(self):
         validated_data = self.validated_data
         request = self.context.get('request')
         system_id = validated_data.get('id', '')
         organization = validated_data.get('organization')
-        name = validated_data.get('name')
+        name = validated_data.get('name', '')
         customization = validated_data.get('customization')
         opaque = validated_data.get('opaque')
 
@@ -820,12 +830,15 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         cloud_host = validated_data.get('cloud_host')
         system_id = validated_data.get('system_id')
         organization = validated_data.get('organization')
+        system_group_id = validated_data.get('groupId')
         system_state = validated_data.get('system_state')
-        name = validated_data.get('name')
+        name = validated_data.get('name', '')
         system = CloudSystemId.objects.get_or_create(
             system_id=system_id, cloud_host=cloud_host, defaults=dict(system_state=system_state))[0]
         system.name = name
         system.organization = organization
+        if system_group_id:
+            system.system_group_id = system_group_id
         system.save()
         return system
 
