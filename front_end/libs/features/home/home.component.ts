@@ -97,11 +97,11 @@ export class NxHomeComponent implements OnInit {
                     );
                 }
 
-                if (organizations.length) {
+                if (organizations?.length) {
                     const orgId = organizations[0].id;
                     redirectPath = `organization/${orgId}`;
                 }
-                if (channelPartners.length) {
+                if (channelPartners?.length) {
                     const CPid = channelPartners[0].id;
                     redirectPath = `channelPartners/${CPid}`;
                 }

@@ -1,42 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, effect } from '@angular/core';
+import { ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { cloneDeep, isEqual } from 'lodash-es';
+import { firstValueFrom } from 'rxjs';
 
+import { NxApplyComponent } from '@components/applyV2/apply.component';
 import { NxButtonComponent } from '@components/button/button.component';
-import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxValidators } from '@libs/validators/input-validators';
 import { NxInfoGroupComponent } from '@pages/home/components/information/info-form/info-form.component';
-import { CPInfo, InfoRow } from '@pages/home/components/information/information.types';
-import { selectCurrentPartnerInfo } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { CPInfoDataEvent, CPInfoType } from '@pages/home/components/information/information.types';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import {
+    selectCurrentPartnerId,
+    selectCurrentPartnerInfo,
+} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import {
+    Custom,
+    DataInfo,
+    Email,
+    InfoData,
+    InfoRow,
+    Phone,
+    SupportInformation,
+    SupportInformationSever,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-
-// import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-
-// const mockData = {
-//     description:
-//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-//     contactInfo: [
-//         {
-//             name: 'Adam Smith',
-//             number: '+7 (910) 565-54-67',
-//         },
-//         {
-//             name: 'John Right',
-//             number: '+7 (910) 565-54-68',
-//         },
-//         {
-//             name: 'John Right',
-//             email: 'test@test.com',
-//         },
-//     ],
-// };
 
 const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
 
@@ -54,56 +53,93 @@ const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
         NxButtonComponent,
         NxPagePlaceholderV2Component,
         NxInfoGroupComponent,
+        NxApplyComponent,
     ],
 })
-export class NxChannelPartnerInformationComponent implements OnInit {
-    information: CPInfo = {
-        sites: [
-            {
-                link: {
-                    value: 'www.test.com',
-                    validation: [Validators.required, this.nxValidators.URL()],
-                },
-                descr: { value: 'Main site', validation: [] },
-            },
-            {
-                link: {
-                    value: 'www.test.com/support',
-                    validation: [Validators.required, this.nxValidators.URL()],
-                },
-                descr: {
-                    value: 'Support site for suggestions, complaints and death wishes.',
-                    validation: [],
-                },
-            },
-        ],
-        phones: [
-            {
-                link: {
-                    value: '(555) 523-4567',
-                    validation: [Validators.required, this.nxValidators.phone()],
-                },
-                descr: { value: 'Main support line. Ask AI for Neil.', validation: [] },
-            },
-        ],
-        emails: [
-            {
-                link: {
-                    value: 'omg@test.com',
-                    validation: [Validators.required, this.nxValidators.email()],
-                },
-                descr: { value: 'Dead email. No one is checking it.', validation: [] },
-            },
-        ],
+export class NxChannelPartnerInformationComponent {
+    protected readonly CPInfoType = CPInfoType;
+
+    hasChanges: boolean = false;
+    allValid: boolean = true;
+    updateInfoProcess: Process;
+
+    informationData: SupportInformation;
+    information: SupportInformation = {
+        phones: [],
+        emails: [],
+        sites: [],
+        custom: [],
     };
 
-    protected readonly CONFIG_TYPE = ConfigType;
+    siteValidators: Array<ValidationErrors | null | ValidatorFn> = [
+        Validators.required,
+        this.nxValidators.URL(),
+    ];
+    phoneValidators: Array<ValidationErrors | null | ValidatorFn> = [
+        Validators.required,
+        this.nxValidators.phone(),
+    ];
+    emailValidators: Array<ValidationErrors | null | ValidatorFn> = [
+        Validators.required,
+        this.nxValidators.email(),
+    ];
+
+    validForms: Record<string, boolean> = {
+        phones: true,
+        emails: true,
+        sites: true,
+        custom: true,
+    };
+
+    validationType: Record<string, Array<ValidationErrors | null | ValidatorFn>> = {
+        phones: this.phoneValidators,
+        emails: this.emailValidators,
+        sites: this.siteValidators,
+        custom: [],
+    };
+
+    mapInfoFor(type: string, psi: InfoData[]): void {
+        delete this.information[type];
+        this.information[type] = [];
+
+        psi.forEach((item: InfoData) => {
+            const value =
+                (item as Phone).phone ||
+                (item as Email).email ||
+                (item as Custom).label ||
+                (item as DataInfo).data ||
+                item;
+            const descr = (item as DataInfo).description || (item as Custom).value || null;
+
+            this.information[type].push({
+                data: {
+                    value,
+                    validation: this.validationType[type],
+                },
+                description: {
+                    value: descr,
+                },
+            });
+        });
+    }
+
+    mapPartnerSupportInfo(psi: SupportInformationSever): void {
+        ['sites', 'phones', 'emails', 'custom'].forEach(type => {
+            this.mapInfoFor(type, psi[type]);
+        });
+    }
+
     protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
     systems = mockSystems;
     icons = icons;
 
+    currPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
+    currSupportInfoEffect = effect(() => {
+        this.mapPartnerSupportInfo(this.currPartnerSupportInfo$$());
+        this.informationData = cloneDeep(this.information);
+    });
 
     editMode: boolean = false;
 
@@ -111,54 +147,68 @@ export class NxChannelPartnerInformationComponent implements OnInit {
         private store: Store,
         private nxValidators: NxValidators,
     ) {}
-    ngOnInit(): void {
-        // effect(() => {
-        //     this.currPartnerSupportInfo$$();
-        //     // Do something
-        // });
-    }
+
+    ngOnInit(): void {}
 
     editModeToggle(): void {
         this.editMode = !this.editMode;
     }
 
-    addSiteRecord(): void {
+    addRecordTo(type: CPInfoType): void {
+        let target: string = '';
+        let description: string | null = '';
+        let validators: Array<ValidationErrors | null | ValidatorFn> = [];
+
+        switch (type) {
+            case CPInfoType.URL:
+                target = 'sites';
+                validators = this.siteValidators;
+                description = null;
+                break;
+            case CPInfoType.PHONE:
+                target = 'phones';
+                validators = this.phoneValidators;
+                break;
+            case CPInfoType.EMAIL:
+                target = 'emails';
+                validators = this.emailValidators;
+                break;
+            case CPInfoType.CUSTOM:
+                target = 'custom';
+                validators = [];
+                break;
+        }
+
+        const data = [...this.information[target]];
         const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required, this.nxValidators.URL()] },
-            descr: { value: '', validation: [] },
+            data: {
+                value: '',
+                validation: validators,
+            },
+            description: { value: description },
         };
 
-        this.addRecord('sites', newRecord);
+        data.push(newRecord); // = { ...this.information, [target]: newTargetArray };
+        this.information[target] = [...data];
+        this.hasChanges = true;
     }
 
-    addPhoneRecord(): void {
-        const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required, this.nxValidators.phone()] },
-            descr: { value: '', validation: [] },
-        };
+    updateData(e: CPInfoDataEvent): void {
+        const { formId, data, status } = e;
 
-        this.addRecord('phones', newRecord);
+        this.mapInfoFor(formId, data);
+        this.validForms[formId] = status;
+
+        this.hasChanges = !isEqual(this.informationData, this.information);
+        this.allValid = !Object.values(this.validForms).some(item => !item);
     }
 
-    addEmailRecord(): void {
-        const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required, this.nxValidators.email()] },
-            descr: { value: '', validation: [] },
-        };
+    discardDataChanges = (): void => {
+        this.information = cloneDeep(this.informationData);
+        this.hasChanges = false;
+    };
 
-        this.addRecord('emails', newRecord);
-    }
-
-    private addRecord(target: string, newRecord: InfoRow): void {
-        const newTargetArray = [...this.information[target], newRecord];
-        this.information = { ...this.information, [target]: newTargetArray };
-    }
-
-    // eslint-disable-next-line nx/no-untyped-arg
-    removeRecord(e): void {
-        const { formId, idx } = e;
-        // eslint-disable-next-line nx/no-untyped-arg
-        this.information[formId] = this.information[formId].filter((_, index) => index !== idx);
-        this.information = { ...this.information };
-    }
+    saveDataChanges = (): void => {
+        this.updateInfoProcess.run();
+    };
 }

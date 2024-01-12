@@ -1,22 +1,31 @@
 <div>
     <div *ngIf="!editMode; else itemForm">
         <div
-            *ngFor="let item of data"
-            class="mb-1 d-flex flex-column"
+            *ngFor="let item of data$$()"
+            class="mb-1 d-flex flex-row"
         >
             <a
+                *ngIf="linkPredicate; else nonLink"
                 target="_blank"
                 class="section-link"
-                href="{{ linkPredicate + item.link.value }}"
-                >{{ item.link.value }}</a
+                href="{{ linkPredicate + item.data.value }}"
+                >{{ item.data.value }}</a
             >
-            <span class="section-descr">{{ item.descr.value }}</span>
+
+            <span *ngIf="item.description?.value">
+                <span class="mx-1">&dash;</span>
+                <span class="section-descr">{{ item.description.value }}</span>
+            </span>
+
+            <ng-template #nonLink>
+                <span class="section-link">{{ item.data.value }}</span>
+            </ng-template>
         </div>
     </div>
 
     <ng-template #itemForm>
         <form
-            [formGroup]="form"
+            [formGroup]="formGroup"
             [id]="formId"
             [name]="formId"
         >
@@ -31,19 +40,18 @@
                         <input
                             class="form-control mr-1"
                             type="text"
-                            name="link"
-                            formControlName="link"
+                            formControlName="data"
                         />
                         <ng-container
                             *ngIf="
-                                row.get('link').invalid &&
-                                ((row.get('link').dirty && !row.get('link').errors?.pattern) ||
-                                    row.get('link').touched)
+                                row.get('data').invalid &&
+                                ((row.get('data').dirty && !row.get('data').errors?.pattern) ||
+                                    row.get('data').touched)
                             "
                         >
                             <p
-                                *ngIf="row.get('link').errors.required; else customError"
-                                class="error-label mt-2 mb-0"
+                                *ngIf="row.get('data').errors.required; else customError"
+                                class="error-label mt-1 mb-0"
                                 data-testid="linkRequiredError"
                                 translate
                             >
@@ -51,20 +59,23 @@
                             </p>
                             <ng-template #customError>
                                 <p
-                                    class="error-label mt-2 mb-0"
+                                    class="error-label mt-1 mb-0"
                                     data-testid="linkCustomError"
                                 >
-                                    {{ row.get('link').errors.msg }}
+                                    {{ row.get('data').errors.msg }}
                                 </p>
                             </ng-template>
                         </ng-container>
                     </div>
-                    <div class="pr-3 w-100">
+                    <div
+                        class="pr-3 w-100"
+                        *ngIf="row.get('description')?.value != null"
+                    >
                         <label translate>Description</label>
                         <input
                             class="form-control mr-1"
                             type="text"
-                            formControlName="descr"
+                            formControlName="description"
                         />
                     </div>
                     <div
