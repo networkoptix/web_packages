@@ -29,11 +29,7 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     const platformMatch = configDownloads.platformMatch;
 
     // If we cant detect the platform fall back to windows
-    if (
-        !platform ||
-        (!(releaseType === 'releases' && platform === 'mobile') &&
-            !Object.keys(configDownloads.groups).includes(platform))
-    ) {
+    if (!platform) {
         const fallbackPlatform =
             platformMatch[deviceInfo.os.toLowerCase()]?.toLowerCase() || windows;
         return router
@@ -44,8 +40,7 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     }
 
     const data = await inject(NxCloudApiService).getDownloadsReleases();
-    if (releaseType === 'releases') {
-        data[releaseType].platforms.push({ name: 'mobile', files: [] });
-    }
+
+    data[releaseType].platforms.push({ name: 'mobile', files: [] });
     return data[releaseType];
 };

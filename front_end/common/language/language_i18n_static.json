@@ -1301,7 +1301,7 @@
             "releases": "Releases",
             "betas": "Betas",
             "patches": "Patches",
-            "other": "Other"
+            "other": "Previous Versions"
         }
     },
     "tableHeaders": {
