@@ -36,32 +36,77 @@ from tools.serializers import VALUE_REPLACEMENT
 
 
 
-class TestCloudSystemViewSet:
+class TestCloudSystemViewSetBind:
 
-    def test_create_403(self, default_cp_user, default_org_user, mock_auth_with_user, arf, httpx_mock):
+    @pytest.fixture(autouse=True)
+    def setup(self, default_organization, org_user_factory, default_org_user,
+              system_group_factory, sys_group_user_factory, httpx_mock, arf):
         sys_id = f'{uuid4()}'
-        system_url = f'https://cloud-test.hdw.mx/cdb/systems/{sys_id}'
-        httpx_mock.add_response(url=system_url, json={"accessRole": "owner"})
-        data = {
-          "cloudSystemId": sys_id,
-          "organization": str(default_org_user.organization.id)
+        self.valid_data = {
+            "name": f"system {sys_id}",
+            "cloudSystemId": sys_id,
+            "organization": str(default_org_user.organization.id),
+            "customization": "default",
+            "opaque": ""
         }
+        self.group = system_group_factory(organization=default_organization)
+        self.org_admin = org_user_factory(organization=default_organization)
+        self.group_admin = sys_group_user_factory(organization=default_organization, group=self.group)
+        system_url = f'https://cloud-test.hdw.mx/cdb/systems/bind'
+        bind_response = {
+            "id": sys_id,
+            "status": "activated"
+        }
+        httpx_mock.add_response(url=system_url, json=bind_response)
+        self.view = CloudSystemViewSet.as_view({'post': 'create'})
+
+    def test_bind_403(self, default_cp_user, default_org_user, mock_auth_with_user, arf):
         # Channel partner user
         mock_auth_with_user(default_cp_user)
-        request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'create'})
+
+        valid_request = arf.post('/', data=self.valid_data, format='json')
         with transaction.atomic():
-            response = view(request)
+            response = self.view(valid_request)
         assert response.status_code == 403
         assert response.data['detail']
         # Org admin
         mock_auth_with_user(default_org_user)
-        request = arf.post('/', data=data, format='json')
+        valid_request = arf.post('/', data=self.valid_data, format='json')
+        with transaction.atomic():
+            response = self.view(valid_request)
+        assert response.status_code == 403
+        assert response.data['detail']
+
+    def test_bind_to_org_200(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+                             httpx_mock, org_user_factory, default_organization):
+        mock_auth_with_user(self.org_admin)
+        request = arf.post('/', data=self.valid_data, format='json')
+        with transaction.atomic():
+            response = self.view(request)
+        assert response.status_code == 200
+
+    def test_bind_to_group_200(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+                               httpx_mock, org_user_factory, default_organization, system_group_factory):
+        self.valid_data['groupId'] = f'{self.group.id}'
+        mock_auth_with_user(self.org_admin)
+        request = arf.post('/', data=self.valid_data, format='json')
         view = CloudSystemViewSet.as_view({'post': 'create'})
         with transaction.atomic():
             response = view(request)
-        assert response.status_code == 403
-        assert response.data['detail']
+        assert response.status_code == 200
+
+    def test_bind_to_group_400(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+                               httpx_mock, org_user_factory, default_organization, system_group_factory):
+        self.valid_data['groupId'] = f'{uuid4()}'
+        mock_auth_with_user(self.org_admin)
+        request = arf.post('/', data=self.valid_data, format='json')
+        view = CloudSystemViewSet.as_view({'post': 'create'})
+        with transaction.atomic():
+            response = view(request)
+        assert response.status_code == 400
+
+
+class TestCloudSystemViewSet:
 
     def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
                               arf, system_factory, mock_auth_with_user, cp_service_factory, service_record_factory):
