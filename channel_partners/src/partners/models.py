@@ -111,6 +111,7 @@ class CloudUser(models.Model):
     def full_name(self) -> str:
         return "John Smith"
 
+    @property
     def is_authenticated(self):
         return True
 
