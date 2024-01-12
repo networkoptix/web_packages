@@ -4,6 +4,7 @@
         [type]="PAGE_PLACEHOLDER.NO_INFO"
     >
     </nx-page-placeholder-v2>
+
     <nx-block type="tile">
         <header>
             <h4
@@ -38,7 +39,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
-                    (click)="addSiteRecord()"
+                    (click)="addRecordTo(CPInfoType.URL)"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -48,14 +49,14 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.sites.length; else noSites">
+            <ng-container *ngIf="information.sites?.length; else noSites">
                 <nx-info-form
                     [formId]="'sites'"
                     [linkCaption]="'site'"
                     [editMode]="editMode"
-                    [linkPredicate]="''"
+                    [linkPredicate]="'https://'"
                     [data]="information.sites"
-                    (recordToBeRemoved)="removeRecord($event)"
+                    (dataChanges)="updateData($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>
@@ -73,7 +74,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
-                    (click)="addPhoneRecord()"
+                    (click)="addRecordTo(CPInfoType.PHONE)"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -83,14 +84,14 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.phones.length; else noPhones">
+            <ng-container *ngIf="information.phones?.length; else noPhones">
                 <nx-info-form
                     [formId]="'phones'"
                     [linkCaption]="'phone'"
                     [editMode]="editMode"
                     [linkPredicate]="'tel:'"
                     [data]="information.phones"
-                    (recordToBeRemoved)="removeRecord($event)"
+                    (dataChanges)="updateData($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>
@@ -108,7 +109,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
-                    (click)="addEmailRecord()"
+                    (click)="addRecordTo(CPInfoType.EMAIL)"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -118,17 +119,58 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.emails.length; else noEmails">
+            <ng-container *ngIf="information.emails?.length; else noEmails">
                 <nx-info-form
                     [formId]="'emails'"
                     [linkCaption]="'email'"
                     [editMode]="editMode"
                     [linkPredicate]="'mailto:'"
                     [data]="information.emails"
-                    (recordToBeRemoved)="removeRecord($event)"
+                    (dataChanges)="updateData($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>
+        <nx-section>
+            <div
+                class="section-header"
+                [ngClass]="{ 'in-edit-mode': editMode }"
+            >
+                <div
+                    class="header-title"
+                    translate
+                >
+                    Custom
+                </div>
+                <div
+                    class="clickable"
+                    *ngIf="editMode"
+                    (click)="addRecordTo(CPInfoType.CUSTOM)"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'plus.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+            </div>
+            <ng-container *ngIf="information.custom?.length; else noCustom">
+                <nx-info-form
+                    [formId]="'custom'"
+                    [linkCaption]="'label'"
+                    [editMode]="editMode"
+                    [linkPredicate]="''"
+                    [data]="information.custom"
+                    (dataChanges)="updateData($event)"
+                ></nx-info-form>
+            </ng-container>
+        </nx-section>
+        <nx-apply
+            [visible]="hasChanges"
+            [saveDisabled]="!allValid"
+            [discard]="discardDataChanges"
+            [save]="saveDataChanges"
+        ></nx-apply>
     </nx-block>
 </div>
 
@@ -144,6 +186,6 @@
     <span translate>You have not yet added emails</span>
 </ng-template>
 
-<ng-template #noCustomInputs>
+<ng-template #noCustom>
     <span translate>You have not yet added custom inputs</span>
 </ng-template>

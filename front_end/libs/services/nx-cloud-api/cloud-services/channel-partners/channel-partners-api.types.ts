@@ -1,5 +1,7 @@
 // e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
 
+import { Validators } from '@angular/forms';
+
 export enum State {
     Active = 'active',
     Suspended = 'suspended',
@@ -43,7 +45,7 @@ export interface ChannelPartner {
     parentChannelPartner: string;
     monthlyAdditionalServiceLimit: number | null;
     attributes: Record<string, unknown>;
-    supportInformation: SupportInformation;
+    supportInformation: SupportInformationSever;
     created: string;
     ownPermissions: string[];
     ownRoles: string[];
@@ -69,26 +71,45 @@ export enum ChannelPartnerPermissions {
     FIELD_ACCESS_CP_ACCOUNTANT = 'field_access_cp_accountant',
 }
 
-export interface SupportInformation {
+export interface InfoRow {
+    data: { value: string; validation: Validators[] };
+    description?: { value: string | null; validation?: Validators[] };
+}
+
+export type InfoData = Phone | Email | Custom | DataInfo | string;
+
+export interface Phone {
+    phone: string;
+    description: string;
+}
+
+export interface DataInfo {
+    data: string;
+    description: string;
+}
+
+export interface Email {
+    email: string;
+    description: string;
+}
+
+export interface Custom {
+    label: string;
+    value: string;
+}
+
+export interface SupportInformationSever {
     sites: string[];
     phones: Phone[];
     emails: Email[];
     custom: Custom[];
 }
 
-interface Phone {
-    phone: string;
-    description: string;
-}
-
-interface Email {
-    email: string;
-    description: string;
-}
-
-interface Custom {
-    label: string;
-    value: string;
+export interface SupportInformation {
+    sites: InfoRow[]; /// API returns string[] but for simplicity we'll massage the data
+    phones: InfoRow[];
+    emails: InfoRow[];
+    custom: InfoRow[];
 }
 
 export type PaginatedChannelPartnerList = Page<ChannelPartner>;
@@ -107,6 +128,7 @@ export type UpdateChannelPartner = Partial<{
     attributes: Record<string, unknown>;
     canCreateSubChannels: boolean;
     name: string;
+    supportInformation: SupportInformationSever;
 }>;
 
 /* Organizations */

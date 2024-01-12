@@ -31,6 +31,7 @@ export const cpTabGuard: CanActivateFn = (
         if (permissions) {
             switch (path) {
                 case 'settings':
+                case 'information':
                     if (permissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)) {
                         return true;
                     }

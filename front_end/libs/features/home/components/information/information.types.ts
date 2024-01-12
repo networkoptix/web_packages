@@ -1,12 +1,14 @@
-import { Validators } from '@angular/forms';
+import type { InfoData } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-export interface InfoRow {
-    link: { value: string; validation: Validators[] };
-    descr: { value: string; validation: Validators[] };
+export enum CPInfoType {
+    URL,
+    PHONE,
+    EMAIL,
+    CUSTOM,
 }
 
-export interface CPInfo {
-    sites: InfoRow[];
-    phones: InfoRow[];
-    emails: InfoRow[];
+export interface CPInfoDataEvent {
+    formId: string;
+    data: InfoData[];
+    status: boolean;
 }

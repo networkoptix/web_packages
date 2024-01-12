@@ -73,6 +73,7 @@ const CPRoutes: Routes = [
             },
             {
                 path: 'information',
+                canActivate: [cpTabGuard],
                 component: NxChannelPartnerInformationComponent,
             },
             {

@@ -1,6 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import {
+    Component,
+    DestroyRef,
+    effect,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    AbstractControl,
     FormArray,
     FormBuilder,
     FormGroup,
@@ -8,17 +19,21 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { isEqual } from 'lodash-es';
+import { Subject, takeUntil } from 'rxjs';
 
-// import type { AuthorizeStateType } from '@authorization/src/app/components/authorize.component.types';
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { InfoRow } from '@pages/home/components/information/information.types';
+import { CPInfoDataEvent } from '@pages/home/components/information/information.types';
+import type {
+    InfoData,
+    InfoRow,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-info-form',
@@ -37,51 +52,102 @@ import { NgChanges } from '@utils/ng-changes';
         NxPagePlaceholderV2Component,
     ],
 })
-export class NxInfoGroupComponent implements OnChanges {
+export class NxInfoGroupComponent {
     @Input() formId: string;
     @Input() linkCaption: string;
     @Input() editMode: boolean;
     @Input() linkPredicate: string;
-    @Input() data: InfoRow[];
+    @Input() set data(data: InfoRow[]) {
+        this.data$$.set(data);
+    }
 
-    @Output() recordToBeRemoved = new EventEmitter<{ formId: string; idx: number }>();
+    @Output() dataChanges = new EventEmitter<CPInfoDataEvent>();
 
     LANG = staticLang;
     icons = icons;
+    destroyRef = inject(DestroyRef);
+    unsub$: Subject<boolean> = new Subject();
+
+    data$$ = signal<InfoRow[]>([], { equal: isEqual });
+    setFormEffect = effect(() => {
+        this.setForm(this.data$$());
+    });
+
     private formBuilder = inject(FormBuilder);
-    form: FormGroup = this.formBuilder.group({
+    formGroup: FormGroup = this.formBuilder.group({
         records: this.formBuilder.array([]),
     });
 
-    ngOnChanges(changes: NgChanges<NxInfoGroupComponent>): void {
-        if (changes.data?.currentValue) {
-            this.setInfoRows(changes.data.currentValue);
+    private isSameData(currValues: Array<AbstractControl>, data: InfoRow[]): boolean {
+        if (currValues.length !== data.length) {
+            return false;
+        } else {
+            for (let idx = 0; idx < currValues.length; idx++) {
+                if (
+                    currValues[idx].value.data !== data[idx].data.value ||
+                    currValues[idx].value.description !== data[idx].description.value
+                ) {
+                    return false;
+                }
+            }
         }
+        return true;
+    }
+    setForm(data: InfoRow[]): void {
+        const recs = this.records.controls;
+        // Avoid re-initialization if change was initiated by the form
+        if (this.isSameData(recs, data)) {
+            return;
+        }
+        this.unsub$.next(true);
+        this.setInfoRows(data);
+
+        this.formGroup.valueChanges
+            .pipe(takeUntil(this.unsub$), takeUntilDestroyed(this.destroyRef))
+            .subscribe(changed => {
+                this.dataChanges.emit({
+                    formId: this.formId,
+                    data: changed.records,
+                    status: this.formGroup.valid,
+                });
+            });
     }
 
     setInfoRows(data: InfoRow[]): void {
         const rows = data.map(row => {
             return this.formBuilder.group({
-                link: [row.link.value, row.link.validation],
-                descr: [row.descr.value, row.descr.validation],
+                data: [row.data.value, row.data.validation],
+                description: [row.description?.value, row.description?.validation],
             });
         });
 
         const rowsFormArray = this.formBuilder.array(rows);
-        this.form.setControl('records', rowsFormArray);
+        this.formGroup.setControl('records', rowsFormArray);
+        this.formGroup.updateValueAndValidity();
     }
 
     get records(): FormArray {
-        return this.form.get('records') as FormArray;
+        return this.formGroup.get('records') as FormArray;
     }
 
     removeRecord(idx: number): void {
-        // return formId and idx
-        this.recordToBeRemoved.emit({
+        const newInfo = this.data$$().filter((_, index) => index !== idx);
+        this.unsub$.next(true);
+        this.data$$.set(newInfo);
+        this.formGroup.updateValueAndValidity();
+
+        const newData: InfoData[] = [];
+        for (let idx = 0; idx < newInfo.length; idx++) {
+            newData.push({
+                data: newInfo[idx].data.value,
+                description: newInfo[idx].description.value,
+            });
+        }
+
+        this.dataChanges.emit({
             formId: this.formId,
-            idx,
+            data: newData,
+            status: this.formGroup.valid,
         });
     }
-
-    protected readonly Object = Object;
 }
