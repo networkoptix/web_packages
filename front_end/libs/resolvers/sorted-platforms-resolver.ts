@@ -31,11 +31,11 @@ export const SortedPlatformsResolver: ResolveFn<Promise<Platform[]>> = async (
         },
         [],
     );
-    if (releaseType === 'releases') {
-        groupPlatforms.push({
-            name: 'mobile',
-            files: [],
-        });
-    }
+
+    groupPlatforms.push({
+        name: 'mobile',
+        files: [],
+    });
+
     return groupPlatforms;
 };
