@@ -35,6 +35,7 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -123,6 +124,7 @@ export class NxHeaderComponent implements OnInit {
         private systemService: NxSystemService,
         private accountService: NxAccountService,
         private storageService: LocalStorageService,
+        private sessionService: NxSessionService,
         private router: Router,
         private store: Store,
         public headerService: NxHeaderService,
@@ -156,6 +158,13 @@ export class NxHeaderComponent implements OnInit {
                 },
                 { allowSignalWrites: true },
             );
+
+            effect(() => {
+                const isAuthorized = this.sessionService.isAuthorized$$();
+                if (isAuthorized) {
+                    this.getAccountLocal();
+                }
+            });
         }
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(window, 'resize')
@@ -436,31 +445,6 @@ export class NxHeaderComponent implements OnInit {
 
         if (this.environment.isLocal) {
             this.hideWebAdmin = true;
-            if (NxBootstrapProvider.isNewSystem) {
-                return;
-            }
-            this.accountService.get().then(account => {
-                this.hideWebAdmin = !account;
-                if (!account) {
-                    return;
-                }
-                this.system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account?.id,
-                    account?.email,
-                );
-                this.system.update().then(() => {
-                    this.singleSystem = true;
-                    this.systemCounter = 1;
-                    this.system.infoSubject
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(system => {
-                            this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
-                            this.updateActiveSystem();
-                            this.updateActive();
-                        });
-                });
-            });
         } else {
             this.systemsService.systemsSubject
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -508,6 +492,34 @@ export class NxHeaderComponent implements OnInit {
             event.stopPropagation();
             return false;
         }
+    }
+
+    getAccountLocal(): void {
+        if (NxBootstrapProvider.isNewSystem) {
+            return;
+        }
+        this.accountService.get().then(account => {
+            this.hideWebAdmin = !account;
+            if (!account) {
+                return;
+            }
+            this.system = this.systemService.createLocalSystem(
+                this.accountService.mediaServerApi,
+                account?.id,
+                account?.email,
+            );
+            this.system.update().then(() => {
+                this.singleSystem = true;
+                this.systemCounter = 1;
+                this.system.infoSubject
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(system => {
+                        this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
+                        this.updateActiveSystem();
+                        this.updateActive();
+                    });
+            });
+        });
     }
 
     logout(): void {
