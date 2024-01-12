@@ -388,6 +388,22 @@ export interface MergeInfo {
     startTime?: string;
 }
 
+export interface RemoteSystem {
+    cloudSystemId: string;
+    id: string;
+}
+
+export interface RemoteToken {
+    cloudSystemId: string;
+    token: string;
+}
+
+export interface CloudRemoteToken {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+}
+
 export type Statistics = NormalResponse<{
     statistics: {
         description: string;

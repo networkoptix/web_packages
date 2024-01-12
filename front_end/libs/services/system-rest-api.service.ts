@@ -1106,7 +1106,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         dryRun: boolean,
         password = '',
         takeRemoteSettings: boolean,
-    ): Observable<t.MergeSystems> {
+    ): Observable<MergeSystems> {
         throw new Error('Should only be using rest v3 version');
     }
 

@@ -9,12 +9,6 @@ import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/ada
 import { addUserRestV3 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
 import type {
-    CloudBindData,
-    UserSessionV3,
-    MergeSystems,
-    CloudRemoteToken,
-} from '@services/system-api.types';
-import type {
     AddUser,
     BaseNewUser,
     RestV3User,
@@ -26,12 +20,15 @@ import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxStorageService } from './storage.service';
 import type { AggregatedUsers } from './system-api.aggregated-types';
-import type {
-    ChangedIdReturned,
-    UnauthorizedCallback,
+import type { ChangedIdReturned, UnauthorizedCallback } from './system-api.types';
+import {
+    CloudBindData,
+    CloudRemoteToken,
+    MergeSystems,
     RemoteSystem,
     RemoteToken,
-} from './system-api.types';
+} from './system-api.types/system.types';
+import { UserSessionV3 } from './system-api.types/users.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { NxUriCacheService } from './uri-cache.service';
 
@@ -241,7 +238,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         return `${this.getUrlBase('wss:')}/jsonrpc?_ticket=${token}`;
     }
 
-    mergeSystems(
+    override mergeSystems(
         remoteEndpoint: string,
         remoteServerId: string,
         dryRun: boolean,
