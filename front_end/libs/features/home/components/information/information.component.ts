@@ -4,7 +4,6 @@ import { ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
-import { firstValueFrom } from 'rxjs';
 
 import { NxApplyComponent } from '@components/applyV2/apply.component';
 import { NxButtonComponent } from '@components/button/button.component';
@@ -12,12 +11,10 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
-import { ToastType } from '@components/toast-container/toast.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxValidators } from '@libs/validators/input-validators';
 import { NxInfoGroupComponent } from '@pages/home/components/information/info-form/info-form.component';
 import { CPInfoDataEvent, CPInfoType } from '@pages/home/components/information/information.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
     selectCurrentPartnerId,
     selectCurrentPartnerInfo,
@@ -32,9 +29,7 @@ import {
     SupportInformation,
     SupportInformationSever,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 
 const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
