@@ -6,7 +6,8 @@
 </ng-template>
 
 <div
-    class="nx-layout-grid-item-overlay"
+    class="nx-layout-grid-item-overlay theme-override"
+    data-theme="dark"
     [ngStyle]="getScaleStyle$ | async"
     [cdkContextMenuTriggerFor]="nodeActionMenu"
     [cdkMenuTriggerFor]="scaled$$() ? nodeActionMenu : null"
