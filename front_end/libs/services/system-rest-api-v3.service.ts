@@ -215,6 +215,14 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         return this.post('/rest/v3/login/tickets');
     }
 
+    renameServer(serverId: string, name: string): Promise<ChangedIdReturned> {
+        return this.patch(`/rest/v3/servers/${serverId || 'this'}`, {
+            name,
+        })
+            .toPromise()
+            .then(() => ({ id: serverId }));
+    }
+
     buildRpcUrl(): Observable<string> {
         return this.createTicket().pipe(map(({ token }) => this.generateRpcSocketUrl(token)));
     }
