@@ -53,7 +53,7 @@ const PermissionStrings = {
 const PermissionStringsV3 = {
     powerUser: 'powerUser',
     viewLogs: 'viewLogs',
-    systemHealth: 'systemHealth',
+    viewMetrics: 'viewMetrics',
     generateEvents: 'generateEvents',
     administrator: 'administrator',
 };
@@ -125,7 +125,7 @@ export class PermissionManager {
                 isAdmin || aggregatedPermissions.includes(PermissionStringsV3.generateEvents),
             manageBookmarks: isAdmin || deviceGroupAccessRights.manageBookmarks,
             systemHealth:
-                isAdmin || aggregatedPermissions.includes(PermissionStringsV3.systemHealth),
+                isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewMetrics),
             view: isAdmin || deviceGroupAccessRights.view,
             viewArchives: isAdmin || deviceGroupAccessRights.viewArchive,
             viewBookmarks: isAdmin || deviceGroupAccessRights.viewBookmarks,
