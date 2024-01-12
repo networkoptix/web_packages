@@ -100,7 +100,10 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
         this.store.vmsSpace =
             this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
-        this.store.freeSpace = this.store.totalSpace - this.store.vmsSpace;
+        this.store.freeSpace = Math.min(
+            this.store.freeSpace,
+            this.store.totalSpace - this.store.vmsSpace,
+        );
 
         if (this.inaccessible) {
             this.totalSpace = '&mdash;';
