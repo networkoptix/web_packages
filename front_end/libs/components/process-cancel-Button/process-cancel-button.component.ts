@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Process } from '@services/process.service/process';
 
+/** @deprecated */
 @Component({
     selector: 'nx-cancel-button',
     templateUrl: 'process-cancel-button.component.html',

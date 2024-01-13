@@ -7,6 +7,7 @@ import { NxSessionService } from '../session.service';
 
 import { ProcessSettings, Handler, logError, Process } from './process';
 
+/** @deprecated */
 @Injectable({
     providedIn: 'root',
 })
@@ -16,7 +17,8 @@ export class NxProcessService {
         public toastService: NxToastService,
     ) {}
 
-    /**
+    /** @deprecated Use `createAsyncAction()` instead
+     *
      * NxProcessService.createProcess has been updated to allow passing in either a promise or an observable.
      *
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>

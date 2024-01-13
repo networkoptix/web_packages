@@ -223,6 +223,9 @@ module.exports = {
                 'libs/dialogs/merge/stateForMergeDialog.ts',
                 'libs/dialogs/merge/stateMachine.ts',
 
+                // Deprecated
+                'libs/*/process*/**',
+
                 ...Object.keys(typeLintErrorCount),
             ],
             extends: ['plugin:@typescript-eslint/recommended'],
