@@ -1582,9 +1582,14 @@ class TestSystemTransferOffer:
         self.org_viewer = org_user_factory(organization=self.org, role=OrganizationRoles.VIEWER)
         self.comment = f'{uuid4()}'
         self.sys_id = f'{uuid4()}'
-        self.valid_request = arf.post('/', data={'organizationId': self.org.id, 'comment': self.comment}, format='json')
-        self.invalid_request = arf.post('/', data={'organizationId': self.comment, 'comment': self.comment}, format='json')
-        self.other_org_request = arf.post('/', data={'organizationId': self.other_org.id, 'comment': self.comment}, format='json')
+        self.valid_request = arf.post(
+            '/', data={'organizationId': self.org.id, 'comment': self.comment}, format='json')
+        self.no_comment_request = arf.post(
+            '/', data={'organizationId': self.org.id}, format='json')
+        self.invalid_request = arf.post(
+            '/', data={'organizationId': self.comment, 'comment': self.comment}, format='json')
+        self.other_org_request = arf.post(
+            '/', data={'organizationId': self.other_org.id, 'comment': self.comment}, format='json')
         self.view = CloudSystemViewSet.as_view(actions={'post': 'transfer_offer'}, detail=True)
         self.offer_url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0/systems/{self.sys_id}/offer'
         self.accept_url = (f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0'
@@ -1648,7 +1653,8 @@ class TestSystemTransferOffer:
         assert offer_request.headers.get('Authorization') == f'Bearer {token}'
         assert json.loads(offer_request.content) == {
             'comment': self.comment,
-            'organizationId': f'{self.org.id}'
+            'organizationId': f'{self.org.id}',
+            'systemId': f'{self.sys_id}'
         }
         accept_request = httpx_mock.get_request(url=self.accept_url)
         assert accept_request.headers.get('Authorization') == f'Bearer {token}'
@@ -1658,7 +1664,7 @@ class TestSystemTransferOffer:
         httpx_mock.add_response(url=self.accept_url, status_code=200, json=self.accept_response)
         token = f'{uuid4()}'
         mock_auth_with_user(self.org_admin, token=token)
-        response = self.view(self.valid_request, id=self.sys_id)
+        response = self.view(self.no_comment_request, id=self.sys_id)
         assert response.status_code == 200
         assert response.data['systemId'] == self.sys_id
         assert response.data['organization'] == self.org.id
@@ -1666,8 +1672,9 @@ class TestSystemTransferOffer:
         offer_request = httpx_mock.get_request(url=self.offer_url)
         assert offer_request.headers.get('Authorization') == f'Bearer {token}'
         assert json.loads(offer_request.content) == {
-            'comment': self.comment,
-            'organizationId': f'{self.org.id}'
+            'comment': '',
+            'organizationId': f'{self.org.id}',
+            'systemId': f'{self.sys_id}'
         }
 
         accept_request = httpx_mock.get_request(url=self.accept_url)

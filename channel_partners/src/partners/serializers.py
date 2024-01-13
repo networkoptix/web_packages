@@ -1383,7 +1383,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
 
 class SystemToOrgTransferSerializer(serializers.Serializer):
     organizationId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all())
-    comment = serializers.CharField()
+    comment = serializers.CharField(required=False, default='')
 
     def save(self, system_id: str | uuid.UUID, **kwargs):
         organization = self.validated_data['organizationId']
@@ -1394,7 +1394,8 @@ class SystemToOrgTransferSerializer(serializers.Serializer):
         auth = BearerTokenAuth(token=self.context["request"].auth)
         offer = {
             'organizationId': str(organization.id),
-            'comment': self.validated_data['comment']
+            'comment': self.validated_data['comment'],
+            'systemId': str(system_id),
         }
         offer_response = httpx.post(offer_url, json=offer, auth=auth)
         if offer_response.status_code != 200:
