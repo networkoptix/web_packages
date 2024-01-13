@@ -478,9 +478,10 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         # common case with filtering by cloud_host and user's channel partners
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
                 ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
-        # or channel partner is a direct child of user's channel partner
-        query |= Q(cloud_host=self.request.cloud_host, parent_channel_partner_id__in=Subquery(
-                ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
+        if self.action in ('change_state', 'confirm_state'):
+            # or channel partner is a direct child of user's channel partner
+            query |= Q(cloud_host=self.request.cloud_host, parent_channel_partner_id__in=Subquery(
+                    ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
         if self.action == 'retrieve':
             # LIC-278
             # If user is member of an organization, they should have read access to parent
