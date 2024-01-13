@@ -271,7 +271,7 @@
     "SERVER HAS AN OLDER SOFTWARE VERSION TEXT": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。対象システムを最新のビルドに更新してから、現在のシステムと統合してください",
     "SYSTEM IS BEING MERGED TEXT": "はこのシステムと統合されています",
     "THIS SYSTEM IS BEING MERGED TEXT": "このシステムは統合されています",
-    "DEPENDING ON THE SIZE OF DATABASE TEXT": "データベースのサイズによっては、数時間かかることがあります。",
+    "DEPENDING ON THE SIZE OF DATABASE TEXT": "データベースのサイズによっては、数時間かかる場合があります。",
     "SYSTEM MERGE FAILED TEXT": "システムの統合に失敗しました",
     "SYSTEM MERGE COMPLETED TEXT": "システム %PRIMARY% と %SECONDARY% の統合が完了しました",
     "MERGE COMPLETED TEXT": "システム統合完了",
