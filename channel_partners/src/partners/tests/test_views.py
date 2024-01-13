@@ -598,8 +598,7 @@ class TestChannelPartnerViewSet:
         response = view(request)
         assert response.status_code == 200
         # must contain only root_cp and its children
-        assert (set([cp['id'] for cp in response.data['results']]) ==
-                {str(root_cp.id)} | {str(cp.id) for cp in default_host_subs})
+        assert (set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)})
 
         # Test organization user retrieve parent channel partner
         org = organization_factory(channel_partner=sub_cp)
