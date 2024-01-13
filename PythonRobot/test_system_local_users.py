@@ -4,6 +4,7 @@ from pathlib import Path
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from NoptixLibrary.suite import Test
 from RobotVariables import RobotVariables
 from pages.login import LoginDialog
 from browsers.chrome import get_chrome
@@ -24,7 +25,6 @@ role_names = {
     "custom": rb.CUSTOM_TEXT,
     }
 
-
 def cloud_owner_can_change_local_user_full_name(server: Mediaserver):
     """
     26. Cloud Owner Can Change Local User Full Name
@@ -41,29 +41,21 @@ def cloud_owner_can_change_local_user_full_name(server: Mediaserver):
         # Stopped by bug https://networkoptix.atlassian.net/browse/CLOUD-11809
 
 
-def local_user_deleted_on_server_gone_from_ui(server: Mediaserver):
+def local_user_deleted_on_server_gone_from_ui(driver, server: Mediaserver):
     """32. Local User Removed on Server is Removed From UI"""
     _reset_local_users(server)
     owner = server.get_cloud_owner()
     sys_admin_url = ENV + f"/systems/{server.id}"
-    deleted_user = server.get_local_users()['viewer']
-    server.api.remove_user(deleted_user['id'])
-    with get_chrome() as driver:
-        try:
-            driver.get(sys_admin_url)
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-            SystemAdmin(driver)
-            users_menu = SystemLeftMenu(driver).users_dropdown()
-            assert not users_menu.has_user_in_menu_with_id(deleted_user['id'])
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-        else:
-            print("PASS")
+    deleted_user = server.get_local_users().get("viewer")
+    server.api.remove_user(deleted_user.id)
+    driver.get(sys_admin_url)
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    SystemAdmin(driver)
+    users_menu = SystemLeftMenu(driver).users_dropdown()
+    assert not users_menu.has_user_in_menu_with_id(deleted_user.id)
 
 
-def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver, cloud_admin: CloudAccount):
+def local_user_deleted_in_ui_deleted_from_server(driver, server: Mediaserver, cloud_admin: CloudAccount):
     """
     33. Verify Local Users Deleted On Server.
 
@@ -72,30 +64,22 @@ def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver, cloud_admi
     """
     _reset_local_users(server)
     url = ENV + f"/systems/{server.id}"
-    deleted_user = server.get_local_users()['viewer']
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
-            SystemAdmin(driver)
-            users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.get_user_link_by_id(deleted_user['id']).click()
-            user_screen = SystemUsers(driver)
-            user_screen.local_user_delete_button().click()
-            user_screen.local_user_delete_confirm_button().click()
-            driver.get(url)
-            SystemAdmin(driver)
-            for user in server.api.get_users():
-                assert not user.id == deleted_user['id']
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-        else:
-            print("PASS")
+    deleted_user = server.get_local_users().get("viewer")
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
+    SystemAdmin(driver)
+    users_menu = SystemLeftMenu(driver).users_dropdown()
+    users_menu.get_user_link_by_id(deleted_user.id).click()
+    user_screen = SystemUsers(driver)
+    user_screen.local_user_delete_button().click()
+    user_screen.local_user_delete_confirm_button().click()
+    driver.get(url)
+    SystemAdmin(driver)
+    for user in server.api.get_users():
+        assert not user.id == deleted_user.id
 
 
-def new_local_user_appears_in_cloud_portal(server: Mediaserver):
+def new_local_user_appears_in_cloud_portal(driver, server: Mediaserver):
     """
     34. Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user    webadmin    cloud
@@ -104,66 +88,42 @@ def new_local_user_appears_in_cloud_portal(server: Mediaserver):
     owner = server.get_cloud_owner()
     url = ENV + f"/systems/{server.id}"
     new_local_user = server.create_new_local_user("viewer")
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-            SystemAdmin(driver)
-            users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.get_user_link_by_id(new_local_user['id']).click()
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-        else:
-            print("PASS")
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    SystemAdmin(driver)
+    users_menu = SystemLeftMenu(driver).users_dropdown()
+    users_menu.get_user_link_by_id(new_local_user.get('id')).click()
 
 
-def owner_and_admin_see_local_users(server: Mediaserver, user: CloudAccount):
+def owner_and_admin_see_local_users(driver, server: Mediaserver, user: CloudAccount):
     """
     39. User list is available for owner and administrator
     [Tags]    C76233    local_user    webadmin    cloud
     """
     _reset_local_users(server)
     url = ENV + f"/systems/{server.id}"
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(user.email, user.password)
-            SystemAdmin(driver)
-            users_menu = SystemLeftMenu(driver).users_dropdown()
-            for permission in permissions:
-                assert users_menu.has_user_in_menu_with_id(
-                    server.get_local_users()[permission]['id']), f"{user.email} is not able to see local {permission}"
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-    print("PASS")
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(user.email, user.password)
+    SystemAdmin(driver)
+    users_menu = SystemLeftMenu(driver).users_dropdown()
+    for permission in permissions:
+        assert users_menu.has_user_in_menu_with_id(
+            server.get_local_users()[permission].id), f"{user.email} is not able to see local {permission}"
 
-
-def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
+def non_admins_cant_see_local_users(driver, server: Mediaserver, user: CloudAccount):
     """
     40. User list is not available for advanced viewer & lower
     [Tags]    C76462    webadmin    cloud
     """
     _reset_local_users(server)
     url = ENV + f"/systems/{server.id}"
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(user.email, user.password)
-            SystemAdmin(driver)
-            assert not SystemLeftMenu(driver).users_dropdown().is_visible(), \
-            f"{user.email} is able to see users"
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-    print("PASS")
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(user.email, user.password)
+    SystemAdmin(driver)
+    assert not SystemLeftMenu(driver).users_dropdown().is_visible(), \
+    f"{user.email} is able to see users"
 
-
-def cloud_admins_can_disable_local_viewers(server: Mediaserver, admin_user: CloudAccount, local_viewer):
+def cloud_admins_can_disable_local_viewers(driver, server: Mediaserver, admin_user: CloudAccount, local_viewer):
     """
     43. Cloud administrator can enable/disable any viewer local user (positive).
 
@@ -171,31 +131,24 @@ def cloud_admins_can_disable_local_viewers(server: Mediaserver, admin_user: Clou
     """
     _reset_local_users(server)
     url = ENV + f"/systems/{server.id}"
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(admin_user.email, admin_user.password)
-            SystemAdmin(driver)
-            system_left_menu = SystemLeftMenu(driver)
-            users_dropdown = system_left_menu.users_dropdown()
-            users_dropdown.get_user_link_by_id(local_viewer['id']).click()
-            system_user = SystemUsers(driver)
-            system_user.user_switch().turn_off()
-            system_user.save_button().click()
-            system_user.no_unsaved_changes_text().wait_until_visible()
-            assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
-            assert not server.api.get_user_by_id(local_viewer.id).is_enabled
-            system_user.user_switch().turn_on()
-            system_user.save_button().click()
-            # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
-            system_user.no_unsaved_changes_text().wait_until_visible()
-            assert not system_user.user_disabled_message().is_visible()
-            assert server.api.get_user_by_id(local_viewer.id).is_enabled
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-    print("PASS")
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(admin_user.email, admin_user.password)
+    SystemAdmin(driver)
+    system_left_menu = SystemLeftMenu(driver)
+    users_dropdown = system_left_menu.users_dropdown()
+    users_dropdown.get_user_link_by_id(local_viewer.id).click()
+    system_user = SystemUsers(driver)
+    system_user.user_switch().turn_off()
+    system_user.save_button().click()
+    system_user.no_unsaved_changes_text().wait_until_visible()
+    assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
+    assert not server.api.get_user_by_id(local_viewer.id).is_enabled
+    system_user.user_switch().turn_on()
+    system_user.save_button().click()
+    # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
+    system_user.no_unsaved_changes_text().wait_until_visible()
+    assert not system_user.user_disabled_message().is_visible()
+    assert server.api.get_user_by_id(local_viewer.id).is_enabled
 
 
 def _reset_local_users(server: Mediaserver, local_user='ocal+'):
@@ -223,6 +176,7 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     else:
         server.update_local_users(
             _create_new_local_users(len(locals_list), server, locals_list))
+
 
 
 def _reset_local_users_api(locals, server):
@@ -266,30 +220,32 @@ if __name__ == "__main__":
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
-        local_user_deleted_on_server_gone_from_ui(cloud_server)
-        local_user_deleted_in_ui_deleted_from_server(cloud_server, cloud_owner)
-        # The below fails due to https://networkoptix.atlassian.net/browse/CLOUD-12165
-        # local_user_deleted_in_ui_deleted_from_server(cloud_server, cloud_server.get_cloud_admin())
-        new_local_user_appears_in_cloud_portal(cloud_server)
-        owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_owner())
-        # The below fails due to https://networkoptix.atlassian.net/browse/CLOUD-12165
-        # owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_admin())
-        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_viewer())
-        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_live_viewer())
-        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_advanced_viewer())
-        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_custom_user())
-        cloud_admins_can_disable_local_viewers(
+        Test(local_user_deleted_on_server_gone_from_ui, cloud_server).run()
+        Test(local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_owner).run()
+        Test(local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_server.get_cloud_admin()).skip(
+            "Skipping due to https://networkoptix.atlassian.net/browse/CLOUD-12165"
+        )
+        Test(new_local_user_appears_in_cloud_portal, cloud_server).run()
+        Test(owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_owner()).run()
+        Test(owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_admin()).skip(
+            "Skipping due to https://networkoptix.atlassian.net/browse/CLOUD-12165"
+        )
+        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_viewer()).run()
+        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_live_viewer()).run()
+        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_advanced_viewer()).run()
+        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_custom_user()).run()
+        Test(cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['advancedViewer'],
-            )
-        cloud_admins_can_disable_local_viewers(
+            cloud_server.get_local_users()['advancedViewer']
+        ).run()
+        Test(cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['viewer'],
-            )
-        cloud_admins_can_disable_local_viewers(
+            cloud_server.get_local_users()['viewer']
+        ).run()
+        Test(cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['liveViewer'],
-            )
+            cloud_server.get_local_users()['liveViewer']
+        ).run()

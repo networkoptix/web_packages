@@ -1,6 +1,8 @@
 import time
+import json
 from contextlib import contextmanager
 from typing import ContextManager
+from pathlib import Path
 
 from selenium.webdriver import ActionChains
 from selenium.webdriver import Chrome
@@ -54,6 +56,14 @@ class ChromeBrowser(Chrome):
     def scroll_to_bottom(self):
         ActionChains(self).send_keys(Keys.END).perform()
 
+    def _save_artifacts(self, artifacts_dir: Path):
+        self.save_screenshot(f'{artifacts_dir}_screenshot.png')
+        logs = [
+            self.get_log("browser"),
+            self.get_log("driver"),
+        ]
+        with open(f'{artifacts_dir}_chrome_logs.json', 'w') as error_log:
+            json.dump(logs, error_log, ensure_ascii=False, indent=4)
 
 @contextmanager
 def get_chrome() -> ContextManager[ChromeBrowser]:
@@ -61,4 +71,13 @@ def get_chrome() -> ContextManager[ChromeBrowser]:
     try:
         yield driver
     finally:
+        driver.quit()
+
+@contextmanager
+def test_in_chrome(artifacts_dir: Path) -> ContextManager[ChromeBrowser]:
+    driver = ChromeBrowser()
+    try:
+        yield driver
+    finally:
+        driver._save_artifacts(artifacts_dir)
         driver.quit()
