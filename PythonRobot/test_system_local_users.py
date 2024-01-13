@@ -164,9 +164,7 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     users = server.api.get_users()
     for user in users:
         local_state = True
-        if user.get("isCloud"):
-            local_state = False
-        elif user.type == "cloud":
+        if user.type == "cloud":
             local_state = False
         if local_state and local_user in user.name:
             locals_list.append(user)
@@ -174,9 +172,15 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     if len(locals_list) == 5:
         _reset_local_users_api(locals_list, server)
     else:
-        server.update_local_users(
+        _update_local_users(server,
             _create_new_local_users(len(locals_list), server, locals_list))
 
+def _update_local_users(server, local_users):
+    if len(local_users) == 5:
+        server._local_users = local_users
+    else:
+        _logger.debug(local_users)
+        raise RuntimeError("Local user's list is incomplete.")
 
 
 def _reset_local_users_api(locals, server):
@@ -185,7 +189,7 @@ def _reset_local_users_api(locals, server):
     During this reset, we save it again in CamelCase.
     """
     for user in locals:
-        name = user['name'].replace("_changed", "")
+        name = user.name.replace("_changed", "")
         user_type = name[6:]
         if user_type == 'cloudadmin':
             user_type = 'cloudAdmin'
@@ -198,19 +202,20 @@ def _reset_local_users_api(locals, server):
             permissions[user_type],
             f"noptixautoqa+local_{user_type}@gmail.com",
             "qweasd 123",
-            user['id'],
+            user.id,
             )
 
 
 def _create_new_local_users(count, server: Mediaserver, locals_list):
     if count != 0:
         _delete_all_local_users_via_api(server, locals_list)
-    return server.create_local_users()
+    server.create_local_users()
+    return server.get_created_local_users()
 
 
 def _delete_all_local_users_via_api(server, locals_list):
     for user in locals_list:
-        server.api.remove_user(user['id'])
+        server.api.remove_user(user.id)
 
 
 if __name__ == "__main__":
@@ -249,3 +254,4 @@ if __name__ == "__main__":
             cloud_server.get_cloud_owner(),
             cloud_server.get_local_users()['liveViewer']
         ).run()
+

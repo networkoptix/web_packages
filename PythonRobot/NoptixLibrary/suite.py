@@ -81,7 +81,7 @@ class Suite:
         cloud_owner.id = server.api.get_user_by_email(cloud_owner.email).id.strip("{}")
         for user in cloud_users:
             users_response = server.api.add_cloud_user(CloudAccount.PERMISSIONS[user], cloud_users[user].email)
-            cloud_users[user].id = users_response['id']
+            cloud_users[user].id = users_response['id'].strip("{}")
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
             started_at = time.monotonic()
@@ -311,32 +311,31 @@ class Mediaserver:
         # Set up a local system.
         time.sleep(2)  # avoids connection errors
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
-        self._local_users = self.create_local_users()
+        self.create_local_users()
+        self._local_users = self.get_created_local_users()
         return self
 
-    def create_local_users(self) -> dict:
-        local_users = {}
+    def create_local_users(self):
         permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
-            users_response = self.api.add_local_user(
+            self.api.add_local_user(
                 "Local+" + permission,
                 permissions[permission],
                 f"noptixautoqa+local_{permission}@gmail.com",
                 DEFAULT_PASSWORD,
                 )
-            local_users.update(
-                {
-                    permission: {
-                        "login": f"Local+{permission}",
-                        "email": f"noptixautoqa+local_{permission}@gmail.com",
-                        "id": users_response['id'].strip('{}'),
-                        },
-                    },
-                )
 
-        return local_users
+    def get_created_local_users(self)-> Mapping:
+        created_local_users = {}
+        users = self.get_users()
+        for user in users:
+            if user.type != "cloud":
+                if user.name != "admin":
+                    permission = user.name.split("+")[1]
+                    created_local_users.update({permission: user})
+        return created_local_users
 
-    def create_new_local_user(self, permission):
+    def create_new_local_user(self, permission) -> Mapping:
         new_local_user = self.api.add_local_user(
             "Local+" + permission + "_new",
             CloudAccount.PERMISSIONS[permission],
@@ -345,13 +344,6 @@ class Mediaserver:
             )
         new_local_user['id'] = new_local_user['id'].strip('{}')
         return new_local_user
-
-    def update_local_users(self, local_users):
-        if len(local_users) == 5:
-            self._local_users = local_users
-        else:
-            _logger.debug(local_users)
-            raise RuntimeError("Local user's list is incomplete.")
 
     def disconnect_from_cloud(self):
         _CLOUD_API.disconnect(
@@ -374,7 +366,7 @@ class Mediaserver:
             user.PERMISSIONS[access_role],
             user.email,
             )
-        user.id = user_response['id']
+        user.id = user_response['id'].strip("{}")
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
 
     def reset_settings(self):

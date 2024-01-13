@@ -110,7 +110,7 @@ class ServerApi:
                     accessible_resources=user["accessibleResources"],
                     email=user["email"],
                     full_name=user["fullName"],
-                    id=user["id"],
+                    id=user["id"].strip("{}"),
                     is_enabled=user["isEnabled"],
                     is_http_digest_enabled=user["isHttpDigestEnabled"],
                     is_owner=user["isOwner"],
