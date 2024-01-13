@@ -41,7 +41,7 @@ export class NxUsersTableComponent {
     @Input() records: UserRecord[];
     @Input() selectedRecordId: string = '';
 
-    @Output() public onDeleteClick = new EventEmitter<string>();
+    @Output() public onDeleteClick = new EventEmitter<UserRecord>();
     @Output() public onRowClick = new EventEmitter<UserRecord>();
 
     LANG = staticLang;
