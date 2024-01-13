@@ -407,7 +407,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.locked || !nxConfig.featureFlags.layoutsEditable) {
+        if (!nxConfig.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -417,22 +417,24 @@ export class NxLayoutGridTreeComponent {
                     id: 'divider',
                     name: 'divider',
                 },
-                node.owned && {
-                    id: 'startRename',
-                    name: this.ACTIONS_LANG.rename.name,
-                    action: () => this.layoutStateService.editedLayout$$.set(node.details),
-                },
+                node.owned &&
+                    !node.locked && {
+                        id: 'startRename',
+                        name: this.ACTIONS_LANG.rename.name,
+                        action: () => this.layoutStateService.editedLayout$$.set(node.details),
+                    },
                 {
                     id: 'duplicate',
                     name: this.ACTIONS_LANG.duplicate.name,
                     action: () =>
                         this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
                 },
-                node.owned && {
-                    id: 'delete',
-                    name: this.ACTIONS_LANG.delete.name,
-                    action: () => this.layoutStateService.deleteLayout(node.details.id),
-                },
+                node.owned &&
+                    !node.locked && {
+                        id: 'delete',
+                        name: this.ACTIONS_LANG.delete.name,
+                        action: () => this.layoutStateService.deleteLayout(node.details.id),
+                    },
             ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
         ).filter(Boolean);
     };
