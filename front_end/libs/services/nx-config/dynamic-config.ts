@@ -294,6 +294,9 @@ export class DynamicConfig {
             nxConfig.docMenuMap = data?.docMenuMap;
             nxConfig.licenseTypes = data?.licenseTypes;
 
+            if (featureFlags.newHeader) {
+                nxConfig.headerHeight = 98; // Is the current height of the header (40px + 58px)
+            }
             nxConfig.dynamicMenus = data?.menus;
 
             Object.assign(nxConfig.featureFlags, featureFlags);
