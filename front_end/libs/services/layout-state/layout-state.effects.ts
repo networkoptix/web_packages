@@ -115,12 +115,14 @@ export class LayoutStateEffects {
                                   systemsToRefresh = uniq(
                                       [
                                           systemId,
-                                          ...crossSystemLayouts.flatMap(({ items }) =>
-                                              items.map(
-                                                  ({ resourcePath }) =>
-                                                      extractSystemAndResourceId(resourcePath)
-                                                          ?.systemId,
-                                              ),
+                                          ...crossSystemLayouts.flatMap(({ items, id }) =>
+                                              cleanId(id) !== layoutId
+                                                  ? []
+                                                  : items.map(
+                                                        ({ resourcePath }) =>
+                                                            extractSystemAndResourceId(resourcePath)
+                                                                ?.systemId,
+                                                    ),
                                           ),
                                       ].filter(Boolean),
                                   );

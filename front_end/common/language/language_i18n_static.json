@@ -231,8 +231,9 @@
             }
         },
         "otherSystems": {
-            "noCameras": "No Cameras available",
-            "systemOffline": "System is offline"
+            "noCameras": "No Devices available",
+            "systemOffline": "System is offline",
+            "loadingCameras": "Loading Devices..."
         },
         "removeItem": {
             "title": "Remove item from layout",

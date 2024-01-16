@@ -143,6 +143,7 @@ export class NxLayoutViewComponent {
                 otherSystemsInfo,
             ]): LayoutResourceTree => {
                 const { [currentSystemId]: currentSystem, ...otherSystems } = allSystemResources;
+                const loadedSystems = Object.keys(allSystemResources);
                 const { cameras = [], servers = [], webPages = [] } = currentSystem;
                 const {
                     cameras: otherSystemsCameras,
@@ -184,6 +185,7 @@ export class NxLayoutViewComponent {
                     otherSystemsCameras,
                     otherSystemsServers,
                     aspectRatio,
+                    loadedSystems,
                 );
 
                 const byName = alphaNumericSort<Pick<Resource, 'name'>>(r => r.name || '');
