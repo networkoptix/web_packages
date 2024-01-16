@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     Input,
     signal,
@@ -87,6 +88,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -260,6 +262,7 @@ export class NxLayoutGridTreeComponent {
         private router: Router,
         private store: Store,
         public tourService: TourService,
+        private systemsService: NxSystemsService,
     ) {
         if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
@@ -726,17 +729,23 @@ export class NxLayoutGridTreeComponent {
                         },
                     ])),
         ].filter(Boolean),
-        [ResourceType.SYSTEM]: [
-            {
-                id: 'connectToSystem',
-                name: this.ACTIONS_LANG.connectToSystem.name,
-                tooltip: this.ACTIONS_LANG.connectToSystem.tooltip,
-                action: ($event, node) =>
-                    this.layoutStateService.paramStateHandler.state$$.set({
-                        params: { systemId: node.details.id },
+        [ResourceType.SYSTEM]: (node: ResourceNodeMap[ResourceType.SYSTEM]) =>
+            [
+                {
+                    id: 'connectToSystem',
+                    name: this.ACTIONS_LANG.connectToSystem.name,
+                    tooltip: this.ACTIONS_LANG.connectToSystem.tooltip,
+                    disabled$$: computed(() => {
+                        const systems = this.systemsService.systems$$() || [];
+                        const system = systems.find(({ id }) => id === node.details.id);
+                        return system?.stateOfHealth !== 'online';
                     }),
-            },
-        ].filter(Boolean),
+                    action: ($event, node) =>
+                        this.layoutStateService.paramStateHandler.state$$.set({
+                            params: { systemId: node.details.id },
+                        }),
+                },
+            ].filter(Boolean),
     };
 
     openWindow = (id: string, isNewWindow = false): void => {
