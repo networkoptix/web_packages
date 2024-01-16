@@ -1560,7 +1560,7 @@
     "Two-factor authentication will now be forced for this system.": "このシステムでは二要素認証が強制されます。",
     "Type": "タイプ",
     "Types": "タイプ",
-    "UNAUTHORIZED": "認証が必要です",
+    "UNAUTHORIZED": "未認証",
     "UNAVAILABLE": "利用不可",
     "UP": "上",
     "UPNP port mapping enabled": "UPnPポートマッピング有効",
