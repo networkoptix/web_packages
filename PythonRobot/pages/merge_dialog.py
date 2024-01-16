@@ -108,6 +108,11 @@ class MergeDialog:
     def get_system_select_dropdown(self) -> _SystemSelectDropdown:
         return _SystemSelectDropdown(self._driver, "//nx-select")
 
+    def check_button(self) -> Button:
+        xpath = "//button[text()='{CHECK_TEXT}']"
+        translated_xpath = self._rb.replace_nested_variables(xpath)
+        return Button(self._driver, translated_xpath)
+
     def get_first_server_radio_select(self) -> Button:
         return Button(self._driver, '//nx-radio[@name="firstSystem"]')
 

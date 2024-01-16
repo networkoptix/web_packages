@@ -1,4 +1,5 @@
 import logging
+import time
 from pathlib import Path
 from typing import Sequence
 
@@ -7,6 +8,7 @@ from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
 from colorama import Fore
+from generic_elements import ElementNotVisible
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.merge_dialog import MergeDialog
@@ -111,6 +113,40 @@ def test_dropdown_has_no_valid_systems(servers: Sequence[Mediaserver], rb: Robot
         assert available_systems[0].state == 'incompatible'
 
 
+def test_online_and_offline_state_in_merge_dialog(servers: Sequence[Mediaserver], rb: RobotVariables):
+    """
+    16. Checking state for selected Cloud system - System offline / back online.
+
+    [Tags]    C70983    C70987    state_cloud    neg    should
+    """
+    with get_chrome() as driver:
+        url = rb.ENV + f"/systems/{servers[0].id}"
+        driver.get(url)
+        first_server_owner = servers[0].get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
+        sys_admin = SystemAdmin(driver)
+        sys_admin.merge_with_another_system_button().click()
+        merge_dialog = MergeDialog(driver)
+        merge_dialog.wait_until_system_is_accessible(servers[1].name)
+        merge_dialog.get_system_offline_message(servers[1].name).wait_until_visible()
+        servers[1].start()
+        system_dropdown = merge_dialog.get_system_select_dropdown()
+        system_dropdown.get_dropdown_button(servers[1].name).wait_until_visible(timeout=20)
+        system_dropdown.get_dropdown_button(servers[1].name).click()
+        started_at = time.monotonic()
+        timeout_sec = 20
+        while True:
+            try:
+                merge_dialog.get_first_server_radio_select().wait_until_visible(timeout=5)
+                break
+            except ElementNotVisible:
+                logging.log(1, "System not online yet...")
+            if time.monotonic() - started_at > timeout_sec:
+                raise TimeoutError(f"Server did not come online in {timeout_sec} seconds...")
+            if merge_dialog.check_button().is_visible():
+                merge_dialog.check_button().click()
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     suite_name = Path(__file__).stem
@@ -140,5 +176,13 @@ if __name__ == '__main__':
             suite.create_cloud_server(cloud_owner_3, f"{suite_name}", vms_version='5.0'),
             ]
         test_dropdown_has_no_valid_systems(servers_3, variables)
+
+        cloud_owner_4 = suite.create_cloud_account()
+        servers_4 = [
+            suite.create_cloud_server(cloud_owner_4, f"{suite_name}", vms_version='5.1'),
+            suite.create_cloud_server(cloud_owner_4, f"{suite_name}", vms_version='5.1'),
+            ]
+        servers_4[1].stop()
+        test_online_and_offline_state_in_merge_dialog(servers_4, variables)
 
         print(f'{Fore.WHITE}{test_dropdown_has_three_sections.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
