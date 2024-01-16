@@ -114,6 +114,7 @@ export const parseOtherSystems = (
     otherSystemsCameras: NxSystemCamera[],
     otherSystemsServers: NxSystemServer[],
     aspectRatio: number,
+    loadedSystemIds: string[],
 ) =>
     otherSystems
         .filter(({ version }) => version >= 5.1)
@@ -144,7 +145,9 @@ export const parseOtherSystems = (
                                       name:
                                           normalizedSystem.status === 'offline'
                                               ? staticLang.layouts.otherSystems.systemOffline
-                                              : staticLang.layouts.otherSystems.noCameras,
+                                              : loadedSystemIds.includes(system.id)
+                                                ? staticLang.layouts.otherSystems.noCameras
+                                                : staticLang.layouts.otherSystems.loadingCameras,
                                       details: { id: 'noResults' },
                                       type: null,
                                       aspectRatio: 0,
