@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
@@ -98,6 +99,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
+import { SystemResourcesSelectors } from '@store/system-resources';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
@@ -445,8 +447,24 @@ export class NxLayoutGridComponent {
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = combineLatest([this.initialLayout$, this.#wrapperSize$]).pipe(
-        filter(([layout]) => !!layout),
+    layout$ = combineLatest([
+        this.initialLayout$,
+        this.#wrapperSize$,
+        this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
+    ]).pipe(
+        filter(([layout, _, systemResources]) => {
+            // Delays rendering layout until all resources are loaded.
+            return (
+                !!layout &&
+                layout.items
+                    ?.map(({ resourcePath }) =>
+                        resourcePath
+                            ? extractSystemAndResourceId(resourcePath).systemId
+                            : this.system.id,
+                    )
+                    .every(systemId => systemResources[systemId])
+            );
+        }),
         map(
             ([layout, wrapperSize]) =>
                 [
@@ -862,6 +880,7 @@ export class NxLayoutGridComponent {
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
+        private store: Store,
     ) {
         if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
