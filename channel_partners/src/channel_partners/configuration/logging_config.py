@@ -11,17 +11,13 @@ def configure_logging(environment: Literal["local", "ci", "prod"]):
     # Configure structlog to wrap the loggers with a stdlib Logger
     base_structlog_processors = [
         structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
-        structlog.stdlib.filter_by_level,
-        # Perform %-style formatting.
         structlog.stdlib.PositionalArgumentsFormatter(),
-        # Add a timestamp in ISO 8601 format.
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
-        # If some value is in bytes, decode it to a unicode str.
         structlog.processors.UnicodeDecoder(),
-        # Add callsite parameters.
         structlog.processors.CallsiteParameterAdder(
             {
                 structlog.processors.CallsiteParameter.FILENAME,
@@ -76,6 +72,26 @@ def configure_logging(environment: Literal["local", "ci", "prod"]):
                     "propagate": False,
                 },
                 "django_structlog": {
+                    "handlers": ["console"],
+                    "level": "INFO",
+                },
+                "channel_partners": {
+                    "handlers": ["console"],
+                    "level": "INFO",
+                },
+                "accounts": {
+                    "handlers": ["console"],
+                    "level": "INFO",
+                },
+                "partners": {
+                    "handlers": ["console"],
+                    "level": "INFO",
+                },
+                "utils": {
+                    "handlers": ["console"],
+                    "level": "INFO",
+                },
+                "tools": {
                     "handlers": ["console"],
                     "level": "INFO",
                 },
@@ -135,7 +151,7 @@ def configure_logging(environment: Literal["local", "ci", "prod"]):
             "loggers": {
                 # DB logs
                 "django.db.backends": {
-                    "level": "DEBUG",
+                    "level": "INFO",
                 },
                 # Use structlog middleware
                 "django.server": {
@@ -152,10 +168,29 @@ def configure_logging(environment: Literal["local", "ci", "prod"]):
                     "handlers": ["null"],
                     "propagate": False,
                 },
+                "channel_partners": {
+                    "handlers": ["console", "flat_line_file", "json_file"],
+                    "level": "INFO",
+                },
+                "accounts": {
+                    "handlers": ["console", "flat_line_file", "json_file"],
+                    "level": "INFO",
+                },
+                "partners": {
+                    "handlers": ["console", "flat_line_file", "json_file"],
+                    "level": "INFO",
+                },
+                "utils": {
+                    "handlers": ["console", "flat_line_file", "json_file"],
+                    "level": "INFO",
+                },
+                "tools": {
+                    "handlers": ["console", "flat_line_file", "json_file"],
+                    "level": "INFO",
+                },
                 "django_structlog": {
                     "handlers": ["console", "flat_line_file", "json_file"],
                     "level": "INFO",
                 },
-
             }
         }

@@ -24,7 +24,7 @@ USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 DOMAIN_NAME = os.getenv('DOMAIN_NAME', '')
-TRAFFIC_RELAY_HOSTS = os.getenv('TRAFFIC_RELAY_HOSTS', '').split(',')
+TRAFFIC_RELAY_HOSTS = os.getenv('TRAFFIC_RELAY_HOSTS', 'relay.relay.cloud.hdw.mx').split(',')
 
 if LOCAL_ENV:
     ENV_NAME = 'local'
