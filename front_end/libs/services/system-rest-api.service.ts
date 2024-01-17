@@ -1309,6 +1309,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             if (user.isHttpDigestEnabled) {
                 delete user.isHttpDigestEnabled;
             }
+        } else {
+            delete user.fullName;
         }
 
         return this.patch<ChangedIdReturned>(
