@@ -20,6 +20,9 @@
 | partners | notification.py          | notification_added_organization_role              | ERROR    | Unable to resolve                                    | task_name, organization_id, organization, sharer_id, sharer, user_id, user                            |
 | partners | notification.py          | state_confirmation_task                           | ERROR    | Unable to find confirmation with id                  | id                                                                                                    |
 | partners | notification.py          | state_confirmation_task                           | ERROR    | Unable to find cloud user with email                 | email                                                                                                 |
+| partners | cloud_system_change.py   | CloudSystemService::notify_service_change         | ERROR    | No Traffic Relay Hosts found                         | N/A                                                                                                   |
+| partners | cloud_system_change.py   | CloudSystemService::notify_service_change         | ERROR    | An error occurred while sending notification         | id, system_id, status_code, response_body, request_url                                                |
+| partners | cloud_system_change.py   | CloudSystemService::notify_service_change         | INFO     | Successfully sent notification                       | id, system_id                                                                                         |
 | scripts  | check_path_migraition.py | check_parent                                      | ERROR    | Missing path or parent                               | parent, path                                                                                          |
 | scripts  | check_path_migraition.py | check_parent                                      | ERROR    | Path is invalid                                      | left, instance                                                                                        |
 | scripts  | check_path_migraition.py | check_path_upto_root                              | INFO     | Checking path                                        | instance, path                                                                                        |
@@ -31,11 +34,38 @@
 ## Examples
 
 ### JSON Log
+
 ```json
-{"request": "GET /partners/internal/grant_access", "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", "event": "request_started", "request_id": "f2f3ebf5-cd2e-4930-bdb6-660867363c07", "ip": "127.0.0.1", "logger": "django_structlog.middlewares.request", "level": "info", "timestamp": "2024-01-04T20:39:22.634122Z", "lineno": 152, "filename": "request.py", "func_name": "prepare"}
-{"code": 200, "request": "GET /partners/internal/grant_access", "event": "request_finished", "user_id": null, "request_id": "f2f3ebf5-cd2e-4930-bdb6-660867363c07", "ip": "127.0.0.1", "logger": "django_structlog.middlewares.request", "level": "info", "timestamp": "2024-01-04T20:39:22.662263Z", "lineno": 103, "filename": "request.py", "func_name": "handle_response"}
+{
+  "request": "GET /partners/internal/grant_access",
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "event": "request_started",
+  "request_id": "f2f3ebf5-cd2e-4930-bdb6-660867363c07",
+  "ip": "127.0.0.1",
+  "logger": "django_structlog.middlewares.request",
+  "level": "info",
+  "timestamp": "2024-01-04T20:39:22.634122Z",
+  "lineno": 152,
+  "filename": "request.py",
+  "func_name": "prepare"
+}
+{
+  "code": 200,
+  "request": "GET /partners/internal/grant_access",
+  "event": "request_finished",
+  "user_id": null,
+  "request_id": "f2f3ebf5-cd2e-4930-bdb6-660867363c07",
+  "ip": "127.0.0.1",
+  "logger": "django_structlog.middlewares.request",
+  "level": "info",
+  "timestamp": "2024-01-04T20:39:22.662263Z",
+  "lineno": 103,
+  "filename": "request.py",
+  "func_name": "handle_response"
+}
 
 ```
+
 ### Flat Line Log
 
 ```log
@@ -44,6 +74,7 @@ timestamp='2024-01-04T20:37:35.593484Z' level='info' event='request_finished' lo
 ```
 
 ### Console Log
+
 ```log
 2024-01-04T20:37:24.650107Z [info     ] request_started                [django_structlog.middlewares.request] filename=request.py func_name=prepare ip=127.0.0.1 lineno=152 request=POST /partners/internal/grant_access request_id=57623c30-7e65-4284-851b-b42e735ab922 user_agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
 2024-01-04T20:37:24.746176Z [info     ] request_finished               [django_structlog.middlewares.request] code=200 filename=request.py func_name=handle_response ip=127.0.0.1 lineno=103 request=POST /partners/internal/grant_access request_id=57623c30-7e65-4284-851b-b42e735ab922 user_id=None

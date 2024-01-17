@@ -1,6 +1,8 @@
 import json
 import re
 import random
+from unittest.mock import Mock
+from unittest.mock import patch
 from uuid import uuid4
 
 import httpx
@@ -22,6 +24,7 @@ from partners.models import (
     OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
     CloudSystemStates, ActionConfirmation, ChannelPartnerRoles, ServiceUsage
 )
+from partners.services.cloud_system_service import CloudSystemService
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
@@ -148,6 +151,7 @@ class TestCloudSystemViewSet:
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
+
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -156,6 +160,8 @@ class TestCloudSystemViewSet:
         service_records = [service_record_factory(service=service, cloud_system=system,
                                                   quantity=10, organization=system.organization)
                            for service in services]
+        mock_method = mocker.patch('partners.services.cloud_system_service.CloudSystemService.notify_service_change')
+        # with patch.object(CloudSystemService, 'notify_service_change', ew=Mock()) as mock_method:
         mock_auth_with_user(cp_user)
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
         # test successful request
@@ -198,8 +204,9 @@ class TestCloudSystemViewSet:
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
 
+        assert mock_method.call_count == 2
 
-    def test_service_quantity_patch_shutdown(selfself, channel_partner_factory, organization_factory, cp_user_factory,
+    def test_service_quantity_patch_not_activated(self, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
@@ -211,6 +218,7 @@ class TestCloudSystemViewSet:
         service_records = [service_record_factory(service=service, cloud_system=system,
                                                   quantity=10, organization=system.organization)
                            for service in services]
+        mock_method = mocker.patch('partners.services.cloud_system_service.CloudSystemService.notify_service_change')
         mock_auth_with_user(cp_user)
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
 
@@ -220,7 +228,8 @@ class TestCloudSystemViewSet:
 
         response = view(request, id=str(system.system_id))
         assert response.status_code == 400
-        assert "Services quantity cannot be changed." in response.data['services'][0]
+        assert "Unable to update; system is not activated" in response.data['message']
+        assert mock_method.call_count == 0
 
     def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
                       mock_auth_with_system, arf_basic_auth):

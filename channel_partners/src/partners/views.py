@@ -34,6 +34,7 @@ from .models import ChannelPartnerRoles, GroupStructure
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, \
     IsInternalToken
 from .serializers import *
+from .services.cloud_system_service import CloudSystemService
 
 VIEW_LOCK_WAIT_TIME = 2
 
@@ -1215,7 +1216,12 @@ class CloudSystemViewSet(NestedViewSetMixin,
                 caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
             return Response(data)
         elif request.method == 'PATCH':
-            return self.update_service_quantity(request, system=system)
+            if system.activated:
+                return self.update_service_quantity(request, system=system)
+            else:
+                error_message = ErrorMessageSerializer(data={"message": "Unable to update; system is not activated"})
+                error_message.is_valid()
+                return Response(error_message.data, status=status.HTTP_400_BAD_REQUEST)
 
     def update_service_quantity(self, request, system):
         lock_val = f'{uuid4()}'
@@ -1238,6 +1244,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
             serializer.is_valid(raise_exception=True)
         data = serializer.data
         caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
+        # Notify of changes
+        CloudSystemService.notify_service_change(system)
         return Response(data)
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})

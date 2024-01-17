@@ -265,6 +265,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             GinIndex(name="cloudsystemid_path_gin", fields=['path'], opclasses=['array_ops'])
         ]
 
+    @property
+    def activated(self) -> bool:
+        effectively_active: bool = self.effective_state == ChannelPartnerStates.ACTIVE
+        system_active: bool = self.system_state == CloudSystemStates.ACTIVATED
+        return effectively_active and system_active
+
     def get_security_statuses(self):
         if self.last_usage_check < timezone.now() - timedelta(days=3):
             ServiceUsage.check_excess(self)
