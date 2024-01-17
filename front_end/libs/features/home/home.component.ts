@@ -11,6 +11,7 @@ import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 
 import { NxChannelPartnersService } from './services/channel-partners.service';
 import * as CPActions from './store/channel-partners/channel-partners.actions';
@@ -43,6 +44,9 @@ export class NxHomeComponent implements OnInit {
         this.initChannelPartners();
         const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         const systems$ = this.systemsService.systemsSubject.pipe(
+            map((systems: NxSystemInfo[]) =>
+                systems.filter(({ organizationId }) => !organizationId),
+            ),
             distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         );
         const homeNode = this.headerService.nodes$.pipe(
@@ -50,7 +54,7 @@ export class NxHomeComponent implements OnInit {
         );
         const organizations$ = this.store.select(selectRootOrganizations);
         const channelPartners$ = this.store.select(selectChannelPartners);
-        let redirectPath = 'personal';
+        let redirectPath = '';
 
         combineLatest([homeNode, channelPartners$, organizations$, systems$])
             .pipe(untilDestroyed(this))
@@ -89,6 +93,7 @@ export class NxHomeComponent implements OnInit {
                     );
                 }
                 if (systems.some(sys => sys.accessRole === 'owner')) {
+                    redirectPath = 'personal';
                     nodes.push(
                         new MenuNode(
                             this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.personal.displayName,
@@ -106,10 +111,13 @@ export class NxHomeComponent implements OnInit {
                     redirectPath = `channelPartners/${CPid}`;
                 }
                 homeNode.nodes = nodes;
-                if (redirect && this.isLoading) {
+                if (redirect && redirectPath && this.isLoading) {
                     this.router.navigateByUrl(`home/${redirectPath}`);
                 }
-                this.isLoading = false;
+
+                if (redirectPath && this.isLoading) {
+                    this.isLoading = false;
+                }
             });
     }
 

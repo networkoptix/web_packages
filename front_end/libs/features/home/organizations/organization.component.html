@@ -22,6 +22,7 @@
         </ng-container>
     </div>
     <nx-tabs
+        [style.visibility]="isLoading ? 'hidden' : ''"
         animated
         [currentTabIndex]="currentTabIndex$$()"
     >
