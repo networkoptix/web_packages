@@ -1,3 +1,10 @@
-.modal-title {
-    max-width: 480px;
+:host {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: scroll;
 }

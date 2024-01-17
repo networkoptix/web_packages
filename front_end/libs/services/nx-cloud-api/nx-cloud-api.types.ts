@@ -485,6 +485,5 @@ export interface TosInfo {
     accepted: boolean;
     body: string;
     grace_period: number;
-    reviewed_date: string;
     review_id: string;
 }
