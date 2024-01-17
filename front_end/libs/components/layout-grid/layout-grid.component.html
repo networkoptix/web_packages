@@ -1,4 +1,4 @@
-@if (layoutItemLookup && (layout$ | async); as layout) {
+@if (layoutItemLookup && system.permissionManager.currentUser$$() && (layout$ | async); as layout) {
     <div
         class="sidebar-wrapper left"
         [ngStyle]="{
