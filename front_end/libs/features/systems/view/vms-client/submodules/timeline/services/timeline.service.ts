@@ -121,11 +121,10 @@ export class TimelineService {
     }
 
     extendToNow(): void {
-        const serverId = this.vms.selectedCamera.parentServerId;
-        const serverTimes = this.vms.serverTimes$$()?.find(server => (server.serverId = serverId));
-        // FIXME: Supposed to be a comparison instead of assign?
+        const serverId = this.vms.selectedCamera?.parentServerId;
+        const serverTimes = this.vms.serverTimes$$()?.find(server => server.serverId === serverId);
 
-        const now = Date.now() - serverTimes.vmsTimeOffset;
+        const now = Date.now() - (serverTimes?.vmsTimeOffset || 0);
 
         if (this._fullRange.end - this._visibleRange.end < cfg.STICK_TO_LIVE_TRESHOLD) {
             const visibleRangeDurationWas = this._visibleRange.duration;
