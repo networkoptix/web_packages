@@ -130,7 +130,6 @@ export class NxOrganizationsComponent implements OnInit {
                 if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
                     return this.router.navigate(['404']);
                 }
-                this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
                 const currOrg = this.currentOrganization$$();
                 const { ownPermissions } = currOrg;
                 await firstValueFrom(

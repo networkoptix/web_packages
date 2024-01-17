@@ -1,6 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@angular/router';
+import { Store } from '@ngrx/store';
 
+import * as CPActions from '@pages/home/store/channel-partners/channel-partners.actions';
 import { nxConfig } from '@services/nx-config/config';
 
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
@@ -14,6 +16,13 @@ import { TabResolver } from '../resolvers/tab-resolver';
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
 import { NxOrganizationsComponent } from './organization.component';
 
+const setOrgId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+    inject(Store).dispatch(
+        CPActions.setCurrentOrgId({ currentOrgId: route.params.organizationId }),
+    );
+    return true;
+};
+
 const orgRoutes: Routes = [
     {
         path: ':organizationId',
@@ -23,6 +32,7 @@ const orgRoutes: Routes = [
             parentData: WithParentDataResolver,
             inChannelPartner: CPResovler,
         },
+        canActivate: [setOrgId],
         runGuardsAndResolvers: 'always',
         children: [
             {

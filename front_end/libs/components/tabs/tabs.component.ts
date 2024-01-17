@@ -4,10 +4,11 @@ import {
     ContentChildren,
     EventEmitter,
     Input,
-    OnInit,
     Output,
     QueryList,
     booleanAttribute,
+    signal,
+    computed,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -35,25 +36,23 @@ Usage:
     standalone: true,
     imports: [TranslateModule, CommonModule],
 })
-export class NxTabsComponent implements OnInit {
+export class NxTabsComponent {
     @Input({ transform: booleanAttribute }) animated: boolean = false;
     @Input() animationSpeed: string;
-    @Input() currentTabIndex: number = 0;
+    @Input() set currentTabIndex(index: number) {
+        this.currentTabIndex$$.set(index);
+    }
     @Output() currentTabIndexChange = new EventEmitter<number>();
     @ContentChildren(NxBaseTabComponent, { descendants: true })
     tabItems: QueryList<NxBaseTabComponent>;
-    currTabTranslate = 0;
-
-    ngOnInit(): void {
-        this.currTabTranslate = this.currentTabIndex * tabWidth;
-    }
+    currentTabIndex$$ = signal<number>(0);
+    currTabTranslate$$ = computed(() => this.currentTabIndex$$() * tabWidth);
 
     handleTabClick = (tab: NxBaseTabComponent, index: number): void => {
         const childTabs = this.tabItems.toArray();
-        childTabs[this.currentTabIndex].selected = false;
+        childTabs[this.currentTabIndex$$()].selected = false;
         childTabs[index].selected = true;
-        this.currentTabIndex = index;
-        this.currTabTranslate = this.currentTabIndex * tabWidth;
+        this.currentTabIndex$$.set(index);
         tab.tabClick.emit(index);
         this.currentTabIndexChange.emit(index);
     };

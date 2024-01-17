@@ -64,19 +64,24 @@ export const orgTabGuard: CanActivateFn = (
                 const org = orgs.find(org => org.id === id);
                 const partnerId = currPartnerId$$();
                 store.dispatch(cpActions.setOrganizations({ rootOrganizations: orgs }));
-                return org
-                    ? of(org)
-                    : cpService.getPartnerOrganizations(partnerId).pipe(
-                          map(cpOrgs => {
-                              store.dispatch(
-                                  cpActions.setCurrentPartner({
-                                      currentPartnerId: id,
-                                      currentPartnerOrganizations: cpOrgs,
-                                  }),
-                              );
-                              return cpOrgs.find(org => org.id === id);
-                          }),
-                      );
+                if (org) {
+                    return of(org);
+                } else if (partnerId) {
+                    return cpService.getPartnerOrganizations(partnerId).pipe(
+                        map(cpOrgs => {
+                            store.dispatch(
+                                cpActions.setCurrentPartner({
+                                    currentPartnerId: id,
+                                    currentPartnerOrganizations: cpOrgs,
+                                }),
+                            );
+                            return cpOrgs.find(org => org.id === id);
+                        }),
+                    );
+                } else if (orgs) {
+                    return of(orgs[0]);
+                }
+                return of(null);
             }),
             map(org => checkPermissions(org?.ownPermissions)),
         );
