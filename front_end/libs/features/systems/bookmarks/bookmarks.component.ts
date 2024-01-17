@@ -415,6 +415,8 @@ export class NxBookmarksComponent implements OnInit {
                         270 * aspectRatio * dpr,
                         270 * dpr, // 270px is the height we want
                         0,
+                        '',
+                        true,
                     ),
                     canDownloadBookmark:
                         canViewBookmark &&

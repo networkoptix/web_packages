@@ -181,8 +181,17 @@ export class ServerManager {
         height: number = 480,
         rotate: number = 0,
         auth: string = '',
+        forcePrimaryStream = false,
     ): Observable<string> {
-        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
+        return this.mediaserver.previewUrl(
+            cameraId,
+            time,
+            width,
+            height,
+            rotate,
+            auth,
+            forcePrimaryStream,
+        );
     }
 
     setCameraUserSettings(

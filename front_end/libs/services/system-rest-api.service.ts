@@ -1236,6 +1236,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         height?: number | string,
         rotate?: number | string,
         auth?: string,
+        forcePrimaryStream?: boolean,
     ) {
         const data: {
             cameraId: string;
@@ -1243,6 +1244,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             width?: number | string;
             height?: number | string;
             rotate?: number | string;
+            streamSelectionMode?: string;
         } = {
             cameraId: cleanIdLegacy(cameraId),
         };
@@ -1255,6 +1257,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             endpoint += '?ignoreExternalArchive';
         } else {
             data.time = time;
+        }
+
+        if (forcePrimaryStream) {
+            data.streamSelectionMode = 'forcedPrimary';
         }
 
         if (width) {
