@@ -64,7 +64,7 @@ import {
     UnsavedState,
 } from './store/shared/types/layout-state.types';
 import { hashItem } from './store/shared/utils';
-import { UnsavedLayoutsActions } from './store/unsaved-layouts';
+import { UnsavedLayoutsActions, UnsavedLayoutsSelectors } from './store/unsaved-layouts';
 import { selectUnsavedLayoutsIds } from './store/unsaved-layouts/unsaved-layouts.selectors';
 import { incrementUntilUnique } from './store/utils/increment-until-unique';
 
@@ -385,9 +385,12 @@ export class LayoutStateService {
     }
 
     public loadUnsavedLayouts(systemId: string): Observable<UnsavedLayoutState[]> {
+        const unsavedCrossSystemLayouts = this.store
+            .selectSignal(UnsavedLayoutsSelectors.selectUnsavedLayoutsState)()
+            .filter(({ layoutType }) => layoutType === LayoutTypes.CROSS_SYSTEM);
         const unsavedLayouts$ = nxConfig.featureFlags.layoutsUnsavedSync
             ? this.cloudApi.docDbApi.unsavedLayouts.getDocHandler(systemId).list()
-            : of([] as UnsavedLayoutState[]);
+            : of(unsavedCrossSystemLayouts);
         return unsavedLayouts$.pipe(
             tap(unsavedLayouts =>
                 this.store.dispatch(UnsavedLayoutsActions.set({ unsavedLayouts })),
