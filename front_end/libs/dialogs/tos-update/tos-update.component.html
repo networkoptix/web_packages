@@ -48,7 +48,7 @@
         <ng-container *ngIf="inGracePeriod; else noGrace">
             <span>{{
                 'You have until {date} to accept the updated terms and conditions'
-                    | translate: { date: gracePeriod | date: 'longDate' }
+                    | translate: { date: gracePeriodDeadline | date: 'longDate' }
             }}</span>
         </ng-container>
     </div>

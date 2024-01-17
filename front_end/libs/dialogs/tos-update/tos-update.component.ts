@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { TosUpdate as DT } from '@dialogs/dialogs.types';
 import { PipesModule } from '@pipes/pipes.module';
-import { MS } from '@utils/general';
+import { offsetDate } from '@utils/general';
 
 @Component({
     selector: 'nx-tos-update-content',
@@ -16,19 +16,16 @@ import { MS } from '@utils/general';
 })
 export class TosUpdateModalContent {
     inGracePeriod: boolean = false;
-    gracePeriod: Date;
+    gracePeriodDeadline: Date;
     body: string;
 
     constructor(
         private dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { grace_period, body, reviewed_date }: DT['data'],
+        @Inject(DIALOG_DATA) { grace_period: gracePeriod, body }: DT['data'],
     ) {
-        const daysFromNow = new Date(reviewed_date);
-        // eslint-disable-next-line camelcase
-        daysFromNow.setTime(daysFromNow.getTime() + grace_period * MS.day);
-        this.gracePeriod = daysFromNow;
+        this.gracePeriodDeadline = offsetDate(new Date(), { day: gracePeriod });
         this.body = body;
-        this.inGracePeriod = new Date() < this.gracePeriod;
+        this.inGracePeriod = gracePeriod > 0;
     }
 
     close(status: DT['return']): void {
