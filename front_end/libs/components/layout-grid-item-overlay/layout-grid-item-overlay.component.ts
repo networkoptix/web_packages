@@ -181,8 +181,10 @@ export class NxLayoutGridItemOverlayComponent {
     layoutsItemChangeResolution: boolean;
 
     nodeName$$ = computed(() => {
-        const name = this.node$$()?.name;
-        const resourcePath = this.item$$()?.resourcePath;
+        const node = this.node$$();
+        const item = this.item$$();
+        const name = node?.name || item?.name;
+        const resourcePath = item?.resourcePath;
         const { systemId } = extractSystemAndResourceId(resourcePath || '');
         const currentSystemId =
             this.layoutStateService.paramStateHandler.state$$()?.params?.systemId;

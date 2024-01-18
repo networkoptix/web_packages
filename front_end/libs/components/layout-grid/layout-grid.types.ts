@@ -1,6 +1,8 @@
 import { Point } from '@angular/cdk/drag-drop';
+import { Signal } from '@angular/core';
 import { Observable, ObservedValueOf } from 'rxjs';
 
+import { Translatable } from '@pipes/nx-translate.types';
 import type { Layout, LayoutItem, WebPage } from '@services/system-api.types';
 import {
     NxSystemCamera,
@@ -68,6 +70,7 @@ export interface LayoutItemRenderConfig {
 }
 
 export interface ParsedLayoutItem extends LayoutItem {
+    systemStatus$$: Signal<Translatable>;
     renderConfig: LayoutItemRenderConfig;
 }
 
@@ -186,6 +189,7 @@ export type ResourceTypeAssertMap = {
 
 interface TreeNode {
     tree: BaseResourceNode[];
+    otherSystems?: BaseResourceNode[];
 }
 
 type allExceptLayouts = Exclude<ResourceType, ResourceType.LAYOUT | ResourceType.LAYOUTS>;

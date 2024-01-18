@@ -107,6 +107,32 @@
             [showTooltip$]="showTooltip$"
             [changingLayout]="changingLayout"
         ></nx-layout-grid-tree>
+        @if (layoutItemLookup.otherSystems?.length && layoutGridService.isLeftMenuOpen$$()) {
+            <details
+                #details
+                [ngClass]="{ 'details-expanded': details.open }"
+                class="other-systems"
+            >
+                <summary>
+                    @if (details.open) {
+                        <span translate>Hide Other Sites</span>
+                    } @else {
+                        <span translate>Show Other Sites</span>
+                    }
+                </summary>
+                <nx-layout-grid-tree
+                    [showSearch]="false"
+                    [layout]="layout"
+                    [system]="system"
+                    [layoutItemLookup]="layoutItemLookup"
+                    [dataSource]="layoutItemLookup.otherSystems"
+                    [treeControl]="treeControl"
+                    [errorIcons]="errorIcons"
+                    [showTooltip$]="showTooltip$"
+                    [changingLayout]="changingLayout"
+                ></nx-layout-grid-tree>
+            </details>
+        }
     </div>
 }
 
@@ -442,11 +468,13 @@
                                                 class="layout-item"
                                                 [ngClass]="{
                                                     'camera-layout-item':
+                                                        layoutItemLookup[item.resourceId] &&
                                                         layoutItemLookup[item.resourceId].type ===
-                                                        RESOURCE_TYPE.CAMERA,
+                                                            RESOURCE_TYPE.CAMERA,
                                                     'server-layout-item':
+                                                        layoutItemLookup[item.resourceId] &&
                                                         layoutItemLookup[item.resourceId].type ===
-                                                        RESOURCE_TYPE.SERVER,
+                                                            RESOURCE_TYPE.SERVER,
                                                     'full-screen-override':
                                                         layoutItemWrapper ===
                                                         window.document.fullscreenElement,
@@ -1048,11 +1076,10 @@
                                                             }
                                                         }
                                                     } @else {
-                                                        <div
-                                                            class="not-supported"
-                                                            translate
-                                                        >
-                                                            Not supported
+                                                        <div class="not-supported">
+                                                            {{
+                                                                item.systemStatus$$() | nxTranslate
+                                                            }}
                                                         </div>
                                                     }
                                                 </ng-template>

@@ -187,6 +187,7 @@ const findNode = (
     styleUrls: ['./layout-grid-tree.component.scss'],
 })
 export class NxLayoutGridTreeComponent {
+    @Input() showSearch: boolean = true;
     @Input() layout: Layout;
     @Input() system: NxSystem;
     @Input() dataSource: BaseResourceNode[];
@@ -488,6 +489,9 @@ export class NxLayoutGridTreeComponent {
         let rotation = 0;
         const resourceId = dirtyId(id);
         const unknownItem = this.layoutItemLookup$$()?.[resourceId];
+        const resourcePath = `cloud://${
+            unknownItem && 'systemId' in unknownItem ? unknownItem.systemId : this.system.id
+        }.${id}`;
 
         if (unknownItem && assertResourceOfType.camera(unknownItem)) {
             rotation = unknownItem.details.parameters?.rotation ?? 0;
@@ -509,6 +513,7 @@ export class NxLayoutGridTreeComponent {
                 xAngle: 0,
                 yAngle: 0,
             },
+            name: unknownItem?.details.name,
             displayAnalyticsObjects: false,
             displayInfo: false,
             displayRoi: false,
@@ -516,7 +521,7 @@ export class NxLayoutGridTreeComponent {
             id: uuid(),
             left: 0,
             resourceId,
-            resourcePath: '',
+            resourcePath,
             right: 0,
             rotation,
             top: 0,

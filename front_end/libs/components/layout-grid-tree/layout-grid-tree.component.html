@@ -6,7 +6,7 @@
 </ng-template>
 
 <div class="resource-tree-wrapper">
-    @if (layoutGridService.isLeftMenuOpen$$()) {
+    @if (layoutGridService.isLeftMenuOpen$$() && showSearch) {
         <nx-search
             [ngModel]="layoutStateService.paramStateHandler.state$$().queryParams.search"
             layout="search"

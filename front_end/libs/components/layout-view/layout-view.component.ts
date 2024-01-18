@@ -302,15 +302,20 @@ export class NxLayoutViewComponent {
                             type: ResourceType.WEB_PAGES,
                             children: webPagesForTree,
                         },
-                        otherSystemsInfo.length && {
-                            name: staticLang.layouts.titles.resourceTypes[
-                                ResourceType.OTHER_SYSTEMS
-                            ],
-                            details: { id: ResourceType.OTHER_SYSTEMS },
-                            type: ResourceType.OTHER_SYSTEMS,
-                            children: otherSystemsForTree,
-                        },
+                        otherSystemsInfo.length &&
+                            !nxConfig.featureFlags.layoutsUpdatedCrossSystemMenu && {
+                                name: staticLang.layouts.titles.resourceTypes[
+                                    ResourceType.OTHER_SYSTEMS
+                                ],
+                                details: { id: ResourceType.OTHER_SYSTEMS },
+                                type: ResourceType.OTHER_SYSTEMS,
+                                children: otherSystemsForTree,
+                            },
                     ].filter(item => !!item),
+                    otherSystems:
+                        otherSystemsInfo.length &&
+                        nxConfig.featureFlags.layoutsUpdatedCrossSystemMenu &&
+                        otherSystemsForTree,
                     ...parsedResources,
                 } as unknown as LayoutResourceTree;
             },

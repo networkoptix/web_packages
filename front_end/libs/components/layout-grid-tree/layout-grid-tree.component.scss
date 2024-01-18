@@ -3,6 +3,10 @@
 @use 'bootstrap_utils' as bootstrap;
 @use 'mixins';
 
+:host {
+    min-height: 0;
+}
+
 .resource-tree-wrapper {
     max-height: 100%;
     overflow-y: auto;
