@@ -264,12 +264,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
                 this.enableEdit =
                     this.system.isOnline &&
-                    (this.environment.isLocal
-                        ? this.system.permissionManager.isAdmin$$()
-                        : this.system.permissionManager.isOwner$$()) &&
+                    this.system.permissionManager.isAdmin$$() &&
                     !this.settings.renameDisabled;
-                // TODO: Restore cloud admin rename permissions
-                // See CB-1596
 
                 if (!this.applyService.locked) {
                     this.setNameAndTitle();
