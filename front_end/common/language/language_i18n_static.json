@@ -1649,7 +1649,7 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
-        "customPermissions": "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.",
+        "customPermissions": "This user has custom permissions. Use the %VMS_NAME% Client application to view and set up custom permissions.",
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",

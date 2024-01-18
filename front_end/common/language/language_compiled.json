@@ -1564,7 +1564,7 @@
     "This user does not exist.": "This user does not exist.",
     "This user has administrator permissions": "This user has administrator permissions",
     "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
-    "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.": "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.",
+    "This user has custom permissions. Use the %VMS_NAME% Client application to view and set up custom permissions.": "This user has custom permissions. Use the %VMS_NAME% Client application to view and set up custom permissions.",
     "Thu": "Thu",
     "Thumbnails/s": "Thumbnails/s",
     "Thursday": "Thursday",
