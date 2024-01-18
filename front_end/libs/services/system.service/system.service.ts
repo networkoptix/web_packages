@@ -10,6 +10,7 @@ import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
+import { ObservableValueType } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { RecordingStatus } from './camera-manager/camera-manager-types';
@@ -58,12 +59,15 @@ export class NxSystemService {
         refreshConfig: SystemResourcesTypes.LoadPartialSystemResources,
     ): Observable<Partial<SystemResourcesTypes.SystemResourcesTypeMap>> {
         const system = this.createSystem(this.systemsService.userEmail, systemId, null, true, true);
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        const errorHandler = async <T extends Observable<unknown[]>>(_: unknown, caught: T) =>
+            [] as ObservableValueType<T>;
         const update = {
             [SystemResourcesTypes.SystemResourceTypeEnums.CAMERAS]: refreshConfig.cameras
                 ? from(system.cameraManager.getCameras()).pipe(
                       switchMap(cameras =>
                           system.cameraManager.hasArchives().pipe(
-                              catchError(async () => [] as string[]),
+                              catchError(errorHandler),
                               map(camerasWithArchives =>
                                   cameras.map(({ recordingStatus, ...camera }) => ({
                                       ...camera,
@@ -74,16 +78,21 @@ export class NxSystemService {
                               ),
                           ),
                       ),
+                      catchError(errorHandler),
                   )
                 : null,
             [SystemResourcesTypes.SystemResourceTypeEnums.SERVERS]: refreshConfig.servers
-                ? system.serverManager.getServers()
+                ? system.serverManager.getServers().pipe(catchError(errorHandler))
                 : null,
             [SystemResourcesTypes.SystemResourceTypeEnums.LAYOUTS]: refreshConfig.layouts
-                ? (system.mediaserver as NxSystemRestAPI).getLayouts()
+                ? (system.mediaserver as NxSystemRestAPI)
+                      .getLayouts()
+                      .pipe(catchError(errorHandler))
                 : null,
             [SystemResourcesTypes.SystemResourceTypeEnums.WEB_PAGES]: refreshConfig.webPages
-                ? (system.mediaserver as NxSystemRestAPI).getWebPages()
+                ? (system.mediaserver as NxSystemRestAPI)
+                      .getWebPages()
+                      .pipe(catchError(errorHandler))
                 : null,
         };
 

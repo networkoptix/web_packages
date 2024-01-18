@@ -87,6 +87,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_item_status = ('Show show status in the bottom right of the layout element', 'layoutsItemStatus', '%LAYOUTS_ITEM_STATUS%')
     layouts_cross_system = ('Show cross system for layouts', 'layoutsCrossSystem', '%LAYOUTS_CROSS_SYSTEM%')
     layouts_cross_editing = ('Show other systems to allow full cross system layout editing features for layouts', 'layoutsCrossSystemEditing', '%LAYOUTS_CROSS_SYSTEM_EDITING%')
+    layouts_updated_cross_system_menu = ('Show updated cross system menu separated from the tree', 'layoutsUpdatedCrossSystemMenu')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

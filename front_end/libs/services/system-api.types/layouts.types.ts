@@ -41,6 +41,7 @@ export interface LayoutItem {
     displayRoi: boolean;
     resourceId: uuid;
     resourcePath: string;
+    name?: string;
 }
 
 export type LayoutItems = LayoutItem[];

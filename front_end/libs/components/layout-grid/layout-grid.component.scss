@@ -50,6 +50,37 @@ nx-webgl-canvas {
     bottom: 0;
 }
 
+.other-systems {
+    min-height: 0px;
+    margin-top: 16px;
+    margin-left: -16px;
+    margin-bottom: -16px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    overflow: hidden;
+
+    &.details-expanded {
+        padding-bottom: 40px;
+    }
+
+    & > summary {
+        @include typography.regular14nocolor;
+        background: var(--header-bg);
+        margin-left: -16px;
+        padding: 4px 16px 4px 16px;
+        list-style: none;
+
+        & > span {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+
+    & > nx-layout-grid-tree {
+        height: 100%;
+    }
+}
+
 .centered-anchor {
     position: absolute;
     left: calc(50% - 140px);
@@ -64,6 +95,9 @@ nx-webgl-canvas {
 .sidebar-wrapper {
     height: 100%;
     width: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     transition-property: width, background;
 
     &.resizing {

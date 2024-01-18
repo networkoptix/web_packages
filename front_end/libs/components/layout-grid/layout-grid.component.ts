@@ -95,6 +95,7 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
@@ -453,20 +454,9 @@ export class NxLayoutGridComponent {
         this.initialLayout$,
         this.#wrapperSize$,
         this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
+        this.systemsService.systemsSubject,
     ]).pipe(
-        filter(([layout, _, systemResources]) => {
-            // Delays rendering layout until all resources are loaded.
-            return (
-                !!layout &&
-                layout.items
-                    ?.map(({ resourcePath }) =>
-                        resourcePath
-                            ? extractSystemAndResourceId(resourcePath).systemId
-                            : this.system.id,
-                    )
-                    .every(systemId => systemResources[systemId])
-            );
-        }),
+        filter(([layout, _, systemResources, systems]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
                 [
@@ -877,6 +867,7 @@ export class NxLayoutGridComponent {
         private toastService: NxToastService,
         public tourService: TourService,
         private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
@@ -1250,7 +1241,11 @@ export class NxLayoutGridComponent {
                 maxPlaceholderSize: 300,
             };
 
-            const node = this.layoutItemLookup[item.resourceId];
+            const node = this.layoutItemLookup?.[item.resourceId];
+
+            if (!node) {
+                console.info('why');
+            }
 
             const updatedItem = { ...item, renderConfig };
 
@@ -1382,11 +1377,30 @@ export class NxLayoutGridComponent {
         this.#wrapperSize$.next({ height, width });
     };
 
-    filterRemovedResources = (items: LayoutItems): LayoutItems =>
-        items.filter(({ resourceId }) => !!this.layoutItemLookup?.[resourceId]);
+    filterRemovedResources = (items: LayoutItems): LayoutItems => items;
 
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
+        items: layout.items.map(item => ({
+            ...item,
+            systemStatus$$: computed(() => {
+                const systems = this.systemsService.systems$$();
+                const { systemId } = extractSystemAndResourceId(item.resourcePath);
+                const system = systems?.find(({ id }) => id === systemId) || { id: systemId };
+                const { connectingToSystem, unknownSystem, systemUnavailable } =
+                    staticLang.layouts.otherSystems;
+                const value = !('stateOfHealth' in system)
+                    ? unknownSystem
+                    : system.stateOfHealth === 'online'
+                      ? connectingToSystem
+                      : systemUnavailable;
+
+                return {
+                    value,
+                    params: system,
+                };
+            }),
+        })),
         locked:
             (!nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo) ||
             layout.locked,
@@ -1480,17 +1494,19 @@ export class NxLayoutGridComponent {
                     }
                 }
 
-                const items = swappedItems.map(item => {
-                    const dragging = item.id === id;
-                    if (dragging && !swapTarget) {
-                        const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
-                        item.top += y;
-                        item.bottom += y + resizeY;
-                        item.left += x;
-                        item.right += x + resizeX;
-                    }
-                    return item;
-                });
+                const items = this.updateItemNames(
+                    swappedItems.map(item => {
+                        const dragging = item.id === id;
+                        if (dragging && !swapTarget) {
+                            const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
+                            item.top += y;
+                            item.bottom += y + resizeY;
+                            item.left += x;
+                            item.right += x + resizeX;
+                        }
+                        return item;
+                    }),
+                );
 
                 this.layoutStateService.updateLayout({ ...this.layout, items });
                 this.updateLayout();
@@ -1723,6 +1739,12 @@ export class NxLayoutGridComponent {
         };
     };
 
+    updateItemNames = (items: LayoutItem[]): LayoutItem[] =>
+        items.map(item => ({
+            ...item,
+            name: this.layoutItemLookup[dirtyId(item.resourceId)]?.name || item.name,
+        }));
+
     addItem = (node: ResourceNode): void => {
         combineLatest([this.highlightState$, this.collisions$])
             .pipe(take(1))
@@ -1734,12 +1756,13 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                const items = [
+                const items = this.updateItemNames([
                     ...this.layout.items,
                     ...(assertResourceOfType.layout(node)
                         ? createAddedItems(this.layout.items, node.details.items)
                         : [this.generateLayoutItem(node, { x, y })]),
-                ];
+                ]);
+
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 

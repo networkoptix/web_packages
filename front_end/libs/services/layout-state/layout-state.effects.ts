@@ -12,6 +12,7 @@ import {
     interval,
     map,
     of,
+    shareReplay,
     startWith,
     switchMap,
     take,
@@ -29,7 +30,7 @@ import { LayoutStateService } from './layout-state.service';
 import { ActiveLayoutActions } from './store/active-layout';
 import { CrossSystemLayoutsActions } from './store/cross-system-layouts';
 import { LocalLayoutsActions } from './store/local-layouts';
-import { SharedLayoutsActions } from './store/shared';
+import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import { selectLayoutsState } from './store/shared/selectors';
 import {
     LayoutTypes,
@@ -111,6 +112,13 @@ export class LayoutStateEffects {
                                   const crossSystemLayouts = await firstValueFrom(
                                       this.layoutStateService.loadCrossSystemLayouts(),
                                   );
+                                  const myOnlineSystems =
+                                      this.systemsService
+                                          .systems$$()
+                                          ?.filter(
+                                              ({ stateOfHealth }) => stateOfHealth === 'online',
+                                          )
+                                          .map(({ id }) => id) || [];
 
                                   systemsToRefresh = uniq(
                                       [
@@ -124,7 +132,7 @@ export class LayoutStateEffects {
                                                                 ?.systemId,
                                                     ),
                                           ),
-                                      ].filter(Boolean),
+                                      ].filter(id => myOnlineSystems.includes(id)),
                                   );
                               }
                               return SystemResourcesActions.refreshSystemResources({
@@ -140,36 +148,54 @@ export class LayoutStateEffects {
         );
     });
 
+    syncInterval$ = interval(5 * 1000).pipe(shareReplay({ refCount: false, bufferSize: 1 }));
+
     updateOtherSystemResources$ = createEffect(() => {
         return this.layoutStateService.paramStateHandler.state$.pipe(
             map(
                 ({
-                    params: { systemId: currentSystemId },
-                    queryParams: { openNodes: openSystemIds },
+                    params: { systemId: currentSystemId, layoutId },
+                    queryParams: { openNodes: openSystemIds = [] },
                 }) => ({
                     currentSystemId,
                     openSystemIds,
+                    layoutId,
                 }),
             ),
+            filter(({ currentSystemId }) => !!currentSystemId),
             distinctUntilChanged((a, b) => isEqual(a, b)),
-            switchMap(({ currentSystemId, openSystemIds = [] }) =>
-                nxConfig.featureFlags.layoutsCrossSystemEditing && openSystemIds.length
+            switchMap(({ currentSystemId, openSystemIds }) =>
+                this.store.select(SharedLayoutsSelectors.selectOtherSystems(currentSystemId)).pipe(
+                    map(currentLayoutSystems => ({
+                        currentLayoutSystems,
+                        currentSystemId,
+                        openSystemIds,
+                    })),
+                ),
+            ),
+            switchMap(({ currentSystemId, openSystemIds, currentLayoutSystems }) => {
+                return nxConfig.featureFlags.layoutsCrossSystem && openSystemIds.length
                     ? this.systemsService.systemsSubject.pipe(
                           map(systems =>
                               systems
-                                  .map(({ id }) => id)
                                   .filter(
-                                      id => id !== currentSystemId && openSystemIds.includes(id),
-                                  ),
+                                      ({ id, stateOfHealth }) =>
+                                          id !== currentSystemId &&
+                                          stateOfHealth === 'online' &&
+                                          [...openSystemIds, ...currentLayoutSystems].includes(id),
+                                  )
+                                  .map(({ id }) => id),
                           ),
                       )
-                    : Promise.resolve([] as string[]),
-            ),
+                    : Promise.resolve([] as string[]);
+            }),
             distinctUntilChanged((a, b) => isEqual(a, b)),
-            switchMap(otherSystems =>
-                otherSystems.length
-                    ? interval(5 * 1000).pipe(
-                          startWith(60),
+            switchMap(otherSystems => {
+                const currentResources = this.store.selectSignal(
+                    SystemResourcesSelectors.selectSystemResourcesState,
+                )();
+                return otherSystems.length
+                    ? this.syncInterval$.pipe(
                           map(pollInterval => {
                               return SystemResourcesActions.refreshSystemResources({
                                   systems: otherSystems.reduce(
@@ -184,9 +210,26 @@ export class LayoutStateEffects {
                                   ),
                               });
                           }),
+                          startWith(
+                              SystemResourcesActions.refreshSystemResources({
+                                  systems: otherSystems.reduce((curr, systemId) => {
+                                      if (systemId in currentResources) {
+                                          return curr;
+                                      }
+
+                                      return {
+                                          ...curr,
+                                          [systemId]: {
+                                              cameras: true,
+                                              servers: true,
+                                          },
+                                      };
+                                  }, {}),
+                              }),
+                          ),
                       )
-                    : EMPTY,
-            ),
+                    : EMPTY;
+            }),
         );
     });
 

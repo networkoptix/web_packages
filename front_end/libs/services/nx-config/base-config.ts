@@ -210,6 +210,7 @@ const FeatureFlagKeys = [
     'tosRequired',
     'enhancedDownloads',
     'use500ErrorInterceptor',
+    'layoutsUpdatedCrossSystemMenu',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];
