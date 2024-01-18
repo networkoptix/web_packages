@@ -11,8 +11,9 @@ import { DownloadsDataResolver } from '@resolvers/downloads-data-resolver';
 import { SortedPlatformsResolver } from '@resolvers/sorted-platforms-resolver';
 
 import { NxDownloadsReleasesComponentNew } from './downloads-releases/downloads-releases.component';
+import { DownloadsService } from './downloads.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 class TitleResolver {
     resolve(route: ActivatedRouteSnapshot): string {
         const { platform } = route.params;
@@ -64,6 +65,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
+    providers: [TitleResolver, DownloadsService],
     imports: [RouterModule.forChild(appRoutes)],
 })
 export class NxDownloadsReleasesModuleNew {}
