@@ -61,7 +61,13 @@ export class NxPageTitleStrategy extends TitleStrategy {
                     }
                 }
             } catch (ex) {
-                title = `${this.translateService.instant(lang.pageTitles[title])} - ${productName}`;
+                if (lang.pageTitles[title]) {
+                    title = `${this.translateService.instant(
+                        lang.pageTitles[title],
+                    )} - ${productName}`;
+                } else {
+                    title = this.translateService.instant(lang.metaDefaults.default.title);
+                }
             }
         } else {
             title = this.translateService.instant(lang.metaDefaults.default.title);

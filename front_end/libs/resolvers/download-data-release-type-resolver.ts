@@ -4,7 +4,6 @@ import {
     createUrlTreeFromSnapshot,
     ResolveFn,
     Router,
-    RouterStateSnapshot,
 } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -14,7 +13,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = async (
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
 ) => {
     const router = inject(Router);
     const configDownloads = inject(NxConfigService).getConfig().downloads;
@@ -29,7 +27,12 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     const platformMatch = configDownloads.platformMatch;
 
     // If we cant detect the platform fall back to windows
-    if (!platform) {
+    if (
+        !platform ||
+        !Object.values(platformMatch).some(
+            (_platform: string) => _platform.toLowerCase() === platform,
+        )
+    ) {
         const fallbackPlatform =
             platformMatch[deviceInfo.os.toLowerCase()]?.toLowerCase() || windows;
         return router
@@ -40,6 +43,9 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     }
 
     const data = await inject(NxCloudApiService).getDownloadsReleases();
+    if (!data) {
+        return null;
+    }
 
     data[releaseType].platforms.push({ name: 'mobile', files: [] });
     return data[releaseType];

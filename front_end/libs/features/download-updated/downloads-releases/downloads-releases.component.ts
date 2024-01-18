@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, computed, Input, AfterViewInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, effect, Input, AfterViewInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -27,6 +26,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { images, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+
+import { DownloadsService } from '../downloads.service';
 
 @UntilDestroy()
 @Component({
@@ -53,9 +54,9 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     @Input() downloadData: DownloadReleases;
 
-    private routeParams = toSignal(this.route.firstChild.params);
-    platform = computed<string>(() => this.routeParams()?.platform);
-    activeType = computed<string>(() => this.routeParams()?.releaseType);
+    ds = inject(DownloadsService);
+    platform = this.ds.platform$$.asReadonly();
+    activeType = this.ds.type$$.asReadonly();
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -66,7 +67,6 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-        private route: ActivatedRoute,
         private menuService: NxMenuService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private appStateService: NxAppStateService,
