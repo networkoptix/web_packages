@@ -15,9 +15,10 @@
             >
                 <h2 [innerHTML]="this.swaggerMenuDescription.title | safe: 'html'"></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
-                    <p class="description-path">
-                        <markdown [data]="this.swaggerMenuDescription.description"></markdown>
-                    </p>
+                    <p
+                        class="description-path"
+                        [innerHTML]="this.singleRoutePath | safe: 'html'"
+                    ></p>
                     <div
                         class="opblock-method"
                         [ngClass]="this.singleRouteMethod"
@@ -28,8 +29,9 @@
                 <p
                     class="mt-3"
                     *ngIf="this.swaggerMenuDescription.description"
-                    [innerHTML]="this.swaggerMenuDescription.description | safe: 'html'"
-                ></p>
+                >
+                    <markdown [data]="this.swaggerMenuDescription.description"></markdown>
+                </p>
             </div>
             <nx-swagger-markdown
                 *ngIf="openAPIJSONService.isMarkdownNode"
