@@ -15,12 +15,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { IsCloudGuard } from '@guards/environment.guard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
@@ -29,6 +31,7 @@ import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { userResolver } from '@resolvers/user-resolver';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxToastService } from '@services/toast.service';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';
@@ -67,11 +70,15 @@ const cameraResolver: ResolveFn<NxSystemCamera> = async (
 ) => {
     const systemsService: NxSystemService = inject(NxSystemService);
     const router: Router = inject(Router);
+    const toastService = inject(NxToastService);
+    const LANG = staticLang;
     const currentSystem = systemsService.getCurrentSystem();
     const cameraId = route.params.cameraId;
     const ec2Camera = await currentSystem.mediaserver.getCamera(cameraId).toPromise();
     if (ec2Camera) {
         return currentSystem.cameraManager.parseCamera(ec2Camera);
+    } else {
+        toastService.notify(LANG.errorCodes.failedToAccessCamera, ToastType.Warning);
     }
     await router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../']));
     return undefined;

@@ -10,7 +10,7 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { buildTopLevelKeyMap, cleanIdLegacy } from '@utils/general';
+import { buildTopLevelKeyMap, cleanId } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
@@ -326,34 +326,38 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     private patchCameraCompatibilityV2(
         camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
-    ): RestV2CameraCompat {
-        const { serverId, options, parameters, motion, schedule, ...rest } = camera;
-        const {
-            isAudioEnabled: audioEnabled,
-            isControlEnabled: controlEnabled,
-            isDualStreamingDisabled,
-            ...backupOpts
-        } = options;
-        const { type: motionType, mask: motionMask } = motion;
-        const { isEnabled: scheduleEnabled, tasks: scheduleTasks } = schedule;
-        return {
-            ...rest,
-            parentId: serverId,
-            audioEnabled,
-            controlEnabled,
-            disableDualStreaming: isDualStreamingDisabled,
-            ...backupOpts,
-            parameters,
-            motionType,
-            motionMask,
-            scheduleEnabled,
-            scheduleTasks,
-        };
+    ): RestV2CameraCompat | undefined {
+        if (camera) {
+            const { serverId, options, parameters, motion, schedule, ...rest } = camera;
+            const {
+                isAudioEnabled: audioEnabled,
+                isControlEnabled: controlEnabled,
+                isDualStreamingDisabled,
+                ...backupOpts
+            } = options;
+            const { type: motionType, mask: motionMask } = motion;
+            const { isEnabled: scheduleEnabled, tasks: scheduleTasks } = schedule;
+            return {
+                ...rest,
+                parentId: serverId,
+                audioEnabled,
+                controlEnabled,
+                disableDualStreaming: isDualStreamingDisabled,
+                ...backupOpts,
+                parameters,
+                motionType,
+                motionMask,
+                scheduleEnabled,
+                scheduleTasks,
+            };
+        } else {
+            return undefined;
+        }
     }
 
-    getCamera(id: string): Observable<RestV2CameraCompat> {
+    getCamera(id: string): Observable<RestV2CameraCompat | undefined> {
         return this.getWith('/rest/v2/devices', cameraKeyMapV2, {
-            params: { id: cleanIdLegacy(id) },
+            params: { id: cleanId(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV2(cameras[0])));
     }
 
