@@ -78,6 +78,7 @@ export class NxChannelPartnersService {
     updateOrganizationUser = this.cpApi.updateOrganizationUser;
     getOrganizationUser = this.cpApi.getOrganizationUser;
     deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
+    deleteBulkOrganizationUsers = this.cpApi.deleteBulkOrganizationUsers;
 
     /* Systems */
     getUserSystems = this.cpApi.getUserSystems;
@@ -95,5 +96,5 @@ export class NxChannelPartnersService {
     getGroupUsers = this.cpApi.getGroupUsers;
     getGroupUsersWithAccess = this.cpApi.getGroupUsersWithAccess;
     updateGroupUser = this.cpApi.updateGroupUser;
-    deleteGroupUsers = this.cpApi.deleteGroupUsers;
+    deleteBulkGroupUsers = this.cpApi.deleteBulkGroupUsers;
 }
