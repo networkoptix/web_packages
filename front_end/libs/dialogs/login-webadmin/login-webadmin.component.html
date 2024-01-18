@@ -105,6 +105,7 @@
             customButtonClass="login-full-width"
             customClass="login-full-width"
             [form]="loginForm"
+            [clickFn]="checkFormErrors"
             [process]="login"
             [buttonDisabled]="loading"
         >
