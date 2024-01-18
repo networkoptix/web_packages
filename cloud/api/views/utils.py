@@ -460,7 +460,7 @@ async def downloads_releases(request):
                 f"Customization does not have a downloads.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
 
-        release_types = ['betas', 'patches', 'releases']
+        release_types = ['betas', 'releases']
         data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url)
                  for release_type in release_types }
         await global_cache.aset(cache_key, json.dumps(data))
