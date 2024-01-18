@@ -58,7 +58,7 @@ const appRoutes: Routes = [
             },
             {
                 path: '**',
-                redirectTo: 'releases/x',
+                redirectTo: 'releases/',
             },
         ],
     },
