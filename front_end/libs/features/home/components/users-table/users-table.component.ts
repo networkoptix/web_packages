@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    WritableSignal,
+    booleanAttribute,
+    signal,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -57,11 +65,14 @@ export class NxUsersTableComponent {
     @Output() public onDeleteClick = new EventEmitter<UserRecord>();
     @Output() public onRowClick = new EventEmitter<UserRecord>();
     @Output() public onExpandClick = new EventEmitter<UserRecord>();
+    @Output() public selectedUsersEmitter = new EventEmitter<{ [key: string]: UserRecord }>();
 
     LANG = staticLang;
 
     // headers: Record<string, Record<string, number | string>>;
     // records: Record<string, string | boolean | Record<string, string>[]>[];
+    selectedUsers: { [key: string]: UserRecord } = {};
+    selectedUsersMap$$: WritableSignal<Map<string, boolean>> = signal(new Map());
     subLevels: boolean = false;
     expandRowId: string;
     icons = icons;
@@ -114,7 +125,17 @@ export class NxUsersTableComponent {
 
     selectAll(): void {}
 
-    selectRecord(rec: UserRecord): void {}
+    selectRecord(user: UserRecord): void {
+        const userId = user.userId;
+        if (this.selectedUsers[userId]) {
+            delete this.selectedUsers[userId];
+        } else {
+            this.selectedUsers[userId] = user;
+        }
+        const map = new Map(Object.keys(this.selectedUsers).map(user => [user, true]));
+        this.selectedUsersMap$$.set(map);
+        this.selectedUsersEmitter.emit(this.selectedUsers);
+    }
 
     onRowClickAction(rec: UserRecord): void {
         this.onRowClick.emit({ ...rec });

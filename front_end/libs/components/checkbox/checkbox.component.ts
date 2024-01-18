@@ -140,8 +140,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
 
         // update the form
         this.onChangeCallback(this.value);
-
-        this.onClick.emit(this.value);
     }
 
     changeState(_event: MouseEvent): void {
@@ -152,6 +150,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.onTouchedCallback();
         this.value = !this.value;
         this.setState();
+        this.onClick.emit(this.value);
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference

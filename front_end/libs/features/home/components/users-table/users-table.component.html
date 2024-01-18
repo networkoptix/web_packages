@@ -20,6 +20,7 @@
         [set-arrange]="setHeaders"
         [set-row-expand]="subLevels"
         [set-selected-item-id]="selectedRecordId"
+        [set-multiple-selected-item-ids]="selectedUsersMap$$()"
         [set-id-prop-name]="idPropName"
         [data]="records"
         (onRowClick)="onRowClickAction($event)"
@@ -78,6 +79,7 @@
                 <nx-checkbox
                     componentId="checkBox{{ row[idPropName] }}"
                     (onClick)="selectRecord(row)"
+                    [disabled]="!canManageUsers || (inGroup && row.isOrgUser)"
                 >
                 </nx-checkbox>
                 <svg-icon
@@ -235,7 +237,7 @@
                 style="grid-area: delete"
             >
                 <svg-icon
-                    *ngIf="canManageUsers && !row.isOrgUser; else info"
+                    *ngIf="canManageUsers && (!inGroup || !row.isOrgUser); else info"
                     class="delete"
                     nx-add-svg-src
                     (click)="onDeleteClick.emit(row)"

@@ -231,6 +231,15 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email]));
     };
 
+    deleteBulkOrganizationUsers = (
+        orgId: string,
+        emails: string[],
+    ): Observable<OrganizationUser[]> => {
+        return this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', 'bulk_delete']), {
+            body: emails,
+        });
+    };
+
     /* Systems */
     getUserSystems = (): Observable<CloudSystem[]> => {
         return this.get<PaginatedCloudSystemList>('/cloud_systems/').pipe(getResults());
@@ -303,7 +312,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users']), { body });
     };
 
-    deleteGroupUsers = (groupId: string, emails: string[]): Observable<GroupUser[]> => {
+    deleteBulkGroupUsers = (groupId: string, emails: string[]): Observable<GroupUser[]> => {
         return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'bulk_delete']), {
             body: emails,
         });

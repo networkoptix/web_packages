@@ -21,6 +21,7 @@
     [headers]="headers"
     [records]="records$ | async"
     [roles]="orgRoles$$()"
-    (onDeleteClick)="deleteSingleUser($event)"
+    (selectedUsersEmitter)="updateSelectedUsers($event)"
+    (onDeleteClick)="deleteUsers($event)"
     (onExpandClick)="expandClick($event)"
 ></nx-users-table>
