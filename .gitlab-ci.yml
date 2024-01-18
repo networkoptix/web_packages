@@ -305,7 +305,7 @@ node-license-check:
         git remote show mr_origin
         git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
-        git commit -m "Node Licenses autofixed by pipeline [ci skip]"
+        git commit -m "Node Licenses autofixed by pipeline"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
         echo 'pushed node licenses fixe to branch'
       fi
@@ -344,7 +344,7 @@ frontend-lang:
         git remote show mr_origin
         git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
-        git commit -m "Language autofixed by pipeline [ci skip]"
+        git commit -m "Language autofixed by pipeline"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
         echo 'pushed lang fixes to branch'
       fi
@@ -377,7 +377,7 @@ frontend-lint:
         git remote show mr_origin
         git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
-        git commit -m "Lint autofixed by pipeline [ci skip]"
+        git commit -m "Lint autofixed by pipeline"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
         echo 'pushed lint fixes to branch'
       fi
