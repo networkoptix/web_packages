@@ -1399,11 +1399,11 @@ class SystemToOrgTransferSerializer(serializers.Serializer):
         accept_response = httpx.post(accept_url, auth=auth)
         if accept_response.status_code != 200:
             forward_cdb_resp(accept_response, via_exception=True)
-        system = CloudSystemId.objects.create(
-            system_id=system_id,
-            organization=organization,
-            cloud_host=organization.channel_partner.cloud_host
-        )
+        system = CloudSystemId.objects.update_or_create(
+            defaults={'organization': organization, 'system_state': CloudSystemStates.ACTIVATED},
+            system_id=system_id, cloud_host=organization.channel_partner.cloud_host,
+        )[0]
+
         # TODO. call background task to refresh system status from cdb
         return system
 
