@@ -2,7 +2,10 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { isPlatformBrowser, Location } from '@angular/common';
 import {
     Component,
+    DestroyRef,
+    effect,
     ElementRef,
+    inject,
     Inject,
     LOCALE_ID,
     OnDestroy,
@@ -11,10 +14,11 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual } from 'lodash-es';
-import { SubscriptionLike } from 'rxjs';
+import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -51,6 +55,8 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     CONFIG: IConfig;
 
+    destroyRef = inject(DestroyRef);
+
     placeholder: string = '';
     company: string;
     vmsName: string;
@@ -74,7 +80,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         multiselects: [],
     };
     toggleCamview: boolean = false;
-    params: IpvdParams;
+    params: IpvdParams = {};
     mobileDetailMode: boolean;
     noResult: boolean = false;
     hasNoSearch: boolean = true;
@@ -131,6 +137,11 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         };
     }
 
+    showAnalytics$ = new Subject<boolean>();
+    showAnalytics$$ = toSignal(this.showAnalytics$);
+    hasAnalytics$ = new Subject<boolean>();
+    hasAnalytics$$ = toSignal(this.hasAnalytics$);
+
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
@@ -150,7 +161,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router.events.pipe(untilDestroyed(this)).subscribe(() => {
+            this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
                 window.scroll(0, this.uri.pageOffset);
             });
         }
@@ -167,7 +178,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
 
         this.uri
             .getParams()
-            .pipe(untilDestroyed(this), debounceTime(search.debounceShortTime))
+            .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(search.debounceShortTime))
             .subscribe(params => {
                 const localParams = { ...params };
                 // remove params handled by table
@@ -177,6 +188,14 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                 if (localParams.sortBy) {
                     delete localParams.sortBy;
                 }
+
+                this.debug = localParams.debug !== undefined;
+                this.beta = localParams.beta !== undefined;
+
+                this.showAnalytics$.next(
+                    this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta,
+                );
+
                 if (isEqual(localParams, this.params)) {
                     return;
                 }
@@ -187,19 +206,10 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                 // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
                 const numParams = Object.keys(this.params).length;
                 if (numParams !== 0) {
-                    this.debug = this.params.debug !== undefined;
-                    this.beta = this.params.beta !== undefined;
                     this.hasNoSearch = numParams === 1 && !!(this.params.debug || this.params.beta);
                 } else {
                     this.hasNoSearch = true;
                     this.resetFilterModel();
-                }
-
-                this.showAnalytics =
-                    this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-
-                if (this.showAnalytics) {
-                    this.allowedParameters = [...this.allowedParameters, ...this.cmsParameters];
                 }
 
                 if (this.beta) {
@@ -213,6 +223,22 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                 this.updateFilterModel();
                 this.searchVendor();
             });
+
+        effect(() => {
+            if (this.showAnalytics$$() && this.hasAnalytics$$()) {
+                this.cameraSearchService.showAnalytics = true;
+                this.allowedParameters = [...this.allowedParameters, ...this.cmsParameters];
+
+                this.filterModel.multiselects?.push({
+                    id: 'analytics',
+                    label: this.LANG.search.analytics,
+                    searchLabel: this.LANG.search.analyticsSelected,
+                    searchLabelSingular: '',
+                    items: this.analytics.map(v => ({ id: v, label: v })),
+                    selected: [],
+                });
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -233,7 +259,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
 
         this.breakpointObserver
             .observe([this.breakpoint])
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((state: BreakpointState) => {
                 this.isMobile = state.matches;
                 this.mobileDetailMode = !!(state.matches && this.activeCamera);
@@ -362,19 +388,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         });
     }
 
-    addAnalyticsEvents(): void {
-        if (this.showAnalytics && this.analytics) {
-            this.filterModel.multiselects.push({
-                id: 'analytics',
-                label: this.LANG.search.analytics,
-                searchLabel: this.LANG.search.analyticsSelected,
-                searchLabelSingular: '',
-                items: this.analytics.map(v => ({ id: v, label: v })),
-                selected: [],
-            });
-        }
-    }
-
     setActiveCamera(): void {
         if (this.params.camera) {
             this.uri.pageOffset = this.window.pageYOffset;
@@ -386,7 +399,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     addFilterTags(): void {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
 
-        if (!this.showAnalytics) {
+        if (!this.showAnalytics$$()) {
             this.filterModel.tags = this.filterModel.tags.filter(
                 tag => tag.id !== 'isAnalyticsSupported',
             );
@@ -424,7 +437,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         if (this.debug) {
             this.cloudApi
                 .reloadIPVD()
-                .pipe(untilDestroyed(this))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(
                     () => {
                         this.activate();
@@ -440,14 +453,13 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     activate(): void {
         this.cloudApi
             .getIPVD()
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(
                 data => {
                     this.cameras = data.cameras;
                     this.analytics = data.analytics;
-                    this.cameraSearchService.showAnalytics = this.showAnalytics;
-                    this.addAnalyticsEvents();
                     this.addFilterTags();
+                    this.hasAnalytics$.next(this.analytics.length > 0);
 
                     this.vendors = data.vendors;
                     this.vendors.sort(alphabeticalSort(this.locale, elm => elm.name));

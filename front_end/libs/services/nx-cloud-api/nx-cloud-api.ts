@@ -362,7 +362,7 @@ export class NxCloudApiService {
 
     @memoizeAsyncLong
     getIPVD() {
-        return this.http.get<t.IPVDCameras>(apiBase + 'ipvd');
+        return this.http.get<t.IPVDCameras>(apiBase + '/ipvd');
     }
 
     getCode(systemId: string) {
