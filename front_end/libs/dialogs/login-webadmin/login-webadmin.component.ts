@@ -154,6 +154,12 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         }
     }
 
+    checkFormErrors = (): void => {
+        if (!this.loginForm.valid) {
+            this.wrongCredentials = true;
+        }
+    };
+
     setEmail(email: string): void {
         this.auth.email = email;
         this.storageService.email = this.auth.email;
