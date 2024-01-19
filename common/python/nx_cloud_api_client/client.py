@@ -183,7 +183,7 @@ class NxCloudAPIClient(ContextAPIMixin):
         else:
             raise TypeError("Client of _default_client_class must be defined.")
 
-        self.authentication: CdbAuthAPIClient | None = None
+        self.authentication: typing.Optional[CdbAuthAPIClient] = None
 
         if any([access_token, refresh_token, code, (username and password)]):
             self.authentication = CdbAuthAPIClient(

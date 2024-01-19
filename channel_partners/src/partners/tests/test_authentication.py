@@ -1,13 +1,18 @@
 from time import sleep
 from uuid import uuid4
 
+import pytest
 from django.conf import settings
 from mock.mock import MagicMock
+from rest_framework import exceptions
 from rest_framework.test import APIRequestFactory
 
-from partners.authentication import get_cloud_user_from_token, TokenCache, cloud_host_middleware, \
-    check_system_credentials
-from partners.models import CloudSystemStates
+from partners.authentication import (
+    NxCloudOauthIntrospectAuthentication, get_cloud_user_from_token, TokenCache,
+    cloud_host_middleware,
+    check_system_credentials,
+)
+from partners.models import CloudSystemStates, VmsRoles
 
 
 def test_get_cloud_user_from_token(httpx_mock):
@@ -137,3 +142,99 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
+
+
+class TestNxCloudOauthIntrospectAuthentication:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, httpx_mock, cloud_test_host, channel_partner_factory, organization_factory,
+              cloud_user_factory, system_factory, arf):
+        self.url = f'https://{cloud_test_host.hostname}/cdb/oauth2/introspect'
+        httpx_mock.reset(False)
+
+        cp = channel_partner_factory()
+        organization = organization_factory(channel_partner=cp)
+        self.cloud_system = system_factory(organization=organization)
+        self.cloud_user = cloud_user_factory()
+        self.request = arf.get('/')
+        self.request.parser_context = {'kwargs': {'system_id': str(self.cloud_system.system_id)}}
+        self.token = 'HERE_MIGHT_BE_TOKEN'
+
+    def test_success(self, httpx_mock):
+        data = {
+            "active": True,
+            "username": self.cloud_user.email,
+            "token_type": "bearer",
+            "system_role_ids": {
+                f"{self.cloud_system.system_id}": [str(VmsRoles.ADMINISTRATOR)]
+            }
+        }
+        httpx_mock.add_response(url=self.url, json=data, status_code=200)
+        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        assert user == self.cloud_user
+        assert token == self.token
+        assert str(self.request.introspected_system_id) == str(self.cloud_system.system_id)
+        assert self.request.introspected_system_roles_ids == [str(VmsRoles.ADMINISTRATOR)]
+        assert TokenCache.get_token(self.token) == self.cloud_user.email
+        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
+                (self.cloud_user.email, [str(VmsRoles.ADMINISTRATOR)]))
+
+    def test_viewer_role(self, httpx_mock):
+        data = {
+            "username": self.cloud_user.email,
+            "active": True,
+            "token_type": "bearer",
+            "system_role_ids": {
+                f"{self.cloud_system.system_id}": [f"{VmsRoles.VIEWER}"]
+            }
+        }
+        httpx_mock.add_response(url=self.url, json=data, status_code=200)
+        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        assert user == self.cloud_user
+        assert token == self.token
+        assert self.request.introspected_system_id == f"{self.cloud_system.system_id}"
+        assert self.request.introspected_system_roles_ids == [str(VmsRoles.VIEWER)]
+        assert TokenCache.get_token(self.token) == self.cloud_user.email
+        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
+                (self.cloud_user.email, [str(VmsRoles.VIEWER)]))
+
+    def test_no_role(self, httpx_mock):
+        data = {
+            "username": self.cloud_user.email,
+            "active": True,
+            "token_type": "bearer",
+            "system_role_ids": {
+                f"{self.cloud_system.system_id}": []
+            }
+        }
+        httpx_mock.add_response(url=self.url, json=data, status_code=200)
+        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        assert user == self.cloud_user
+        assert token == self.token
+        assert self.request.introspected_system_id == f"{self.cloud_system.system_id}"
+        assert self.request.introspected_system_roles_ids == []
+        assert TokenCache.get_token(self.token) == self.cloud_user.email
+        assert TokenCache.get_token_system(self.token, self.cloud_system.system_id) == (self.cloud_user.email, [])
+
+    def test_inactive(self, httpx_mock):
+        data = {
+            "username": self.cloud_user.email,
+            "active": False,
+            "token_type": "bearer",
+        }
+        httpx_mock.add_response(url=self.url, json=data, status_code=200)
+        try:
+            user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        except exceptions.AuthenticationFailed:
+            pass
+        else:
+            assert False, "AuthenticationFailed must be raised"
+
+    def test_401(self, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=401)
+        try:
+            user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        except exceptions.AuthenticationFailed:
+            pass
+        else:
+            assert False, "AuthenticationFailed must be raised"

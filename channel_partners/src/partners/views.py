@@ -28,12 +28,21 @@ from partners import filters
 from tools.exception import Conflict
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 from tools.utils import paginated_response
-from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
-from .forms.grant_access_form import GrantAccessForm
-from .models import ChannelPartnerRoles, GroupStructure
-from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, \
-    IsInternalToken
-from .serializers import *
+from partners.authentication import (
+    NxCloudOauthTokenAuthentication,
+    NxCloudSystemBasicAuthentication,
+    NxCloudOauthIntrospectAuthentication,
+    NxTokenAuthentication,
+)
+from partners.forms.grant_access_form import GrantAccessForm
+from partners.models import ChannelPartnerRoles, GroupStructure, VmsRoles
+from partners.permissions import (
+    IsAuthenticatedCloudUserOrSystem,
+    CanPerformChannelPartnerAction,
+    IsAuthenticatedSystem,
+    IsInternalToken,
+)
+from partners.serializers import *
 from .services.cloud_system_service import CloudSystemService
 
 VIEW_LOCK_WAIT_TIME = 2
@@ -1336,6 +1345,27 @@ def all_services(request):
     return Response(ServiceSerializer(services, many=True).data)
 
 
+def get_authorized_system(request, system_id):
+    if (cloud_system := getattr(request, 'cloud_system', None)):
+        if str(system_id) != str(cloud_system.system_id):
+            raise exceptions.PermissionDenied(detail='Insufficient permissions.')
+        return cloud_system
+    if not (hasattr(request, 'user') and request.user.is_authenticated):
+        raise exceptions.NotAuthenticated()
+
+    if cloud_system := CloudSystemId.objects.filter(system_id=system_id).first():
+        if (
+                str(getattr(request, 'introspected_system_id', None)) == str(system_id)
+                and (roles := getattr(request, 'introspected_system_roles_ids', None))
+        ):
+            allowed_roles = {str(VmsRoles.ADMINISTRATOR), str(VmsRoles.POWER_USER)}
+            if set(roles).intersection(allowed_roles):
+                return cloud_system
+        if cloud_system.has_vms_role(request.user, vms_roles=[VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER]):
+            return cloud_system
+        raise exceptions.PermissionDenied(detail='Insufficient permissions.')
+
+
 @extend_schema(
     responses=SystemMembershipSerializer(many=True),
     description='Retrieves all systems associated with a specified user email',
@@ -1343,13 +1373,12 @@ def all_services(request):
     tags=['Internal'],
 )
 @api_view(['GET'])
-# TODO: CLOUD-11974
+@authentication_classes([NxCloudOauthTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def user_systems(request, email):
-    user: CloudUser = CloudUser.objects.filter(email__iexact=email).first()
-    if not user:
-        raise exceptions.NotFound('User not found')
-
-    systems = user.systems_memberships()
+    if request.user.email.lower() != email.lower():
+        raise exceptions.PermissionDenied(detail='Insufficient permissions.')
+    systems = request.user.systems_memberships()
     serializer = SystemMembershipSerializer(systems, many=True)
     return Response(serializer.data)
 
@@ -1360,12 +1389,15 @@ def user_systems(request, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-# TODO: CLOUD-11974
+@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication])
+@permission_classes([IsAuthenticated])
 def system_user(request, system_id, email):
-    system = CloudSystemId.objects.filter(system_id=system_id).select_related('organization').first()
+    if request.user and request.user.email.lower() == email.lower():
+        system = CloudSystemId.objects.filter(system_id=system_id).first()
+    else:
+        system = get_authorized_system(request, system_id)
     if not system:
         raise exceptions.NotFound('System not found')
-
     user_rel = system.get_user_role_by_email(email=email)
     if not user_rel:
         raise exceptions.NotFound('User not found in system')
@@ -1380,10 +1412,10 @@ def system_user(request, system_id, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-# TODO: CLOUD-11974
-def system_users(request, system_id, email=None):
-    system = (CloudSystemId.objects.filter(system_id=system_id)
-              .select_related('organization').first())
+@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication])
+@permission_classes([IsAuthenticated])
+def system_users(request, system_id):
+    system = get_authorized_system(request, system_id)
     if not system:
         raise exceptions.NotFound('System not found')
     all_user_role_rels = system.get_all_users()
@@ -1395,9 +1427,12 @@ def system_users(request, system_id, email=None):
     responses=UserListSerializer,
     summary='Get all users that have access to some channel partner or organization',
     tags=['Internal'],
+    deprecated=True,
 )
 @api_view(['GET'])
-# TODO: CLOUD-11974
+@authentication_classes([NxCloudOauthTokenAuthentication])
+@permission_classes([IsAuthenticated])
+# TODO: CLOUD-12310
 def all_org_users(request):
     users_dict = {
         'users': CloudUser.objects.filter(

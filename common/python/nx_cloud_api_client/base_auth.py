@@ -409,6 +409,33 @@ class CdbOauth2APIBase(ContextAPIMixin, _BaseAPI):
         auth = httpx.BasicAuth(username=system_id, password=auth_key)
         return self.post('/stuntoken', json={'server_name': server_name}, auth=auth)
 
+    def introspect_post(
+            self,
+            token: str,
+            system_ids: typing.Optional[typing.List[str]] = None,
+            auth: AUTH_TYPES.BEARER = None,
+            headers: typing.Optional[dict] = None,
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/oauth2/introspect
+        Provides attributes associated with the token. If the token is invalid/expired/revoked, the response
+        contains {"active": false} with 200 OK. If the request contains `system_ids`, then the response contains
+        `system_role_ids` attribute.
+
+        Args:
+            token: Authorization token
+            system_ids: System IDs to check user roles
+            auth: Bearer authorization object
+            headers: request headers
+
+        Returns:
+            token introspection
+        """
+        data = {'token': token}
+        if system_ids:
+            data['system_ids'] = system_ids
+        return self.post('/introspect', json=data, auth=auth, headers=headers)
+
 
 class CdbAuthAPIClient(CdbOauth2APIBase):
     """
@@ -716,3 +743,13 @@ class CdbAuthAPIClient(CdbOauth2APIBase):
         else:
             raise TypeError(f'Cannot select authentication for {classes}')
         return auth
+
+    def introspect(
+            self,
+            system_ids: typing.Optional[typing.List[str]] = None,
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        return self.introspect_post(
+            token=self.token.access_token,
+            system_ids=system_ids,
+            auth=self.get_bearer_auth()
+        )

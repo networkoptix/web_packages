@@ -79,11 +79,11 @@ AUTH_USER_MODEL = 'accounts.account'
 MIDDLEWARE = [
     "django_structlog.middlewares.RequestMiddleware",
     'corsheaders.middleware.CorsMiddleware',
+    'partners.authentication.cloud_host_middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'partners.authentication.cloud_host_middleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
