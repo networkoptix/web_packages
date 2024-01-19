@@ -5,6 +5,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { DebugElement, reflectComponentType, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
@@ -31,27 +32,89 @@ import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { accountReducer, AccountSync } from '@store/account';
 import { SystemsSync } from '@store/systems/systems.sync';
 
+/**
+ * The testBedSetupFactory accepts additionalImports and additionalProviders
+ * required for the test bed and returns a setup function.
+ *
+ * The additionalImports and additionalProviders is a workaround for when modules
+ * and providers are expected to be provided by the parent module.
+ *
+ * In general we should be moving towards standalone components where injecting
+ * additional modules or providers is not required.
+ *
+ * Additional imports and providers would still be required when testing some
+ * services that are dependent on other services.
+ *
+ * @param additionalImports - Additional imports to add to the TestBed.
+ * @param additionalProviders - Additional providers to add to the TestBed.
+ * @returns Component setup function.
+ */
 export const testBedSetupFactory =
     (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         additionalImports: any[] = [],
         additionalProviders: any[] = [],
     ) =>
+    /**
+     * The setup function optionally accepts a TargetComponent and initial values to set on the component.
+     *
+     * The setup function can also be used to setup a TestBed without a TargetComponent for testing
+     * services and other injectables using the inject method returned from the setup function.
+     *
+     * @param TargetComponent - The component to initiailize the TestBed.
+     * @param initialValues - Initial values to set on the component.
+     * @returns Promise<ConfiguredTestBed<T>> - The configured TestBed.
+     */
     async <T>(
         TargetComponent?: Type<T>,
         initialValues: Partial<T> = {},
+        additionalImportsForComponent: any[] = [],
+        additionalProvidersForComponent: any[] = [],
         /**
          * TODO: Need to figure out how to better type this once the implementation is stable.
          */
     ): Promise<{
+        /**
+         * The test bed fixture created by TestBed.createComponent(TargetComponent)
+         */
         fixture?: ComponentFixture<T>;
+        /**
+         * The component instance.
+         */
         component?: T;
+        /**
+         * DebugElement ref for the component.
+         */
         debugElement?: DebugElement;
+        /**
+         * Getter function to inject the HttpTestingController for the TestBed.
+         *
+         * The HttpTestingController allows for mocking and flushing of requests.
+         *
+         * @returns {HttpTestingController} - The HttpTestingController for the TestBed.
+         */
         getHttpController: () => HttpTestingController;
+        /**
+         * Injects additional providers into the TestBed. Usually the services
+         * injected would be the system under
+         */
         inject: typeof TestBed.inject;
         patchWindow: typeof patchWindow;
         tick: (time?: number) => Promise<unknown>;
+        /**
+         * Runs fixture.detectChanges for components and TestBed.flushEffects for services.
+         * @returns {void}
+         */
+        detectChanges: () => void;
     }> => {
+        if (additionalImportsForComponent.length) {
+            additionalImports = [...additionalImports, ...additionalImportsForComponent];
+        }
+
+        if (additionalProvidersForComponent.length) {
+            additionalProviders = [...additionalProviders, ...additionalProvidersForComponent];
+        }
+
         NxBootstrapProvider.isLoaded = true;
 
         const isDialog = 'dialogData' in initialValues;
@@ -67,6 +130,7 @@ export const testBedSetupFactory =
          */
 
         const commonImports = [
+            BrowserModule,
             HttpClientModule,
             TranslateModule.forRoot({
                 compiler: {
@@ -141,6 +205,7 @@ export const testBedSetupFactory =
                 inject,
                 patchWindow,
                 tick,
+                detectChanges: TestBed.flushEffects,
             };
         }
 
@@ -158,5 +223,14 @@ export const testBedSetupFactory =
             await tick();
         }
 
-        return { fixture, component, debugElement, getHttpController, inject, patchWindow, tick };
+        return {
+            fixture,
+            component,
+            debugElement,
+            getHttpController,
+            inject,
+            patchWindow,
+            tick,
+            detectChanges: () => fixture.detectChanges(),
+        };
     };
