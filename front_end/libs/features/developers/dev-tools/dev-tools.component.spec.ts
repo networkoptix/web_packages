@@ -1,6 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
 import { HelperMockProvider } from '@mocks/helpers.test';
 import { devToolsNode } from '@mocks/knowledge_base_landing.mock';
@@ -36,7 +35,7 @@ const setupDevToolsComponent = (): ReturnType<typeof setupComponent<NxDevToolsCo
         'dev-tools': 'test - Developer Tools',
         knowledgebase: 'For Developers Knowledge Base',
     };
-    return testBedSetupFactory([], providers)(NxDevToolsComponent);
+    return setupComponent(NxDevToolsComponent, {}, [], providers);
 };
 
 describe('NxDevToolsComponent', () => {

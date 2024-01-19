@@ -1,5 +1,3 @@
-import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
-
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { supportNode } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';
@@ -7,8 +5,9 @@ import { images } from '@variables/static-variables';
 
 import { NxSupportComponent } from './support.component';
 
-const setupSupportComponent = (): ReturnType<typeof setupComponent<NxSupportComponent>> =>
-    testBedSetupFactory([NxAddSvgSrcDirective])(NxSupportComponent, { supportNode });
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const setupSupportComponent = () =>
+    setupComponent(NxSupportComponent, { supportNode }, [NxAddSvgSrcDirective]);
 
 const [_, expectedLeftBackground, expectedRightBackground] = supportNode.icon.split(' ');
 

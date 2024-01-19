@@ -1,6 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { HelperMockProvider } from '@mocks/helpers.test';
@@ -54,9 +53,7 @@ const providers = [
     new HelperMockProvider(NxAccountService, accountMock),
 ];
 
-const setupAboutComponent = (): ReturnType<typeof setupComponent<NxAboutComponent>> => {
-    return testBedSetupFactory([], providers)(NxAboutComponent);
-};
+const setupAboutComponent = () => setupComponent(NxAboutComponent, {}, [], providers);
 
 describe('NxAboutComponent', () => {
     it('should create the component', async () => {
