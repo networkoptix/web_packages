@@ -1,6 +1,12 @@
 import unittest
-from typing import Any, Dict
-from unittest.mock import patch, MagicMock
+from typing import (
+    Any,
+    Dict,
+)
+from unittest.mock import (
+    MagicMock,
+    patch,
+)
 
 from tools.utils import bind_system_to_cdb_organization
 

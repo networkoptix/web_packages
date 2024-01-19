@@ -7,10 +7,11 @@ import typing
 import httpx
 import structlog
 from httpx import Response
-
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from nx_cloud_api_client.client import NxCloudAPISyncClient
+
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
+
 
 logger = structlog.get_logger(__name__)
 

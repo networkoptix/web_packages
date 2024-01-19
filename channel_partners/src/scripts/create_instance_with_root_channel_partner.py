@@ -1,5 +1,18 @@
-from partners.models import *
 from django.db import transaction
+
+from partners.models import (
+    ChannelPartner,
+    ChannelPartnerRoles,
+    ChannelPartnerService,
+    ChannelPartnerToUser,
+    CloudHost,
+    CloudInstance,
+    CloudUser,
+    Organization,
+    OrganizationRoles,
+    OrganizationToUser,
+)
+
 
 users = [
     CloudUser.objects.get_or_create(email='rbarsegian@networkoptix.com')[0]

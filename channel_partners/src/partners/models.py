@@ -1,18 +1,23 @@
 import datetime
 import enum
+import queue
 import secrets
+import string
+import uuid
 from datetime import timedelta
+from enum import (
+    IntEnum,
+    StrEnum,
+)
 from math import ceil
+from typing import (
+    Dict,
+    List,
+    TypedDict,
+)
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
-from enum import Enum, StrEnum, IntEnum
-import string
-import queue
-from typing import Dict, List, TypedDict, Optional
-import uuid
-
-from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.postgres.aggregates import ArrayAgg
@@ -20,17 +25,33 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
 from django.db import models
-from django.db.models import Sum, F, QuerySet, Q, Subquery, Func, Value
+from django.db.models import (
+    F,
+    Func,
+    Q,
+    QuerySet,
+    Subquery,
+    Sum,
+    Value,
+)
 from django.db.models.functions import Greatest
 from django.utils import timezone
 from django_cte import CTEManager
 from rest_framework.authtoken.models import Token
 
-from partners.tasks.states import expire_confirmation
 from channel_partners.utils import FieldOriginalMixin
-from partners.utils.cache_keys import cache_key_cloud_system_group_children_count, cp_direct_children_count, \
-    direct_organization_children_count, cp_monthly_charges, organization_system_count
-from tools.helpers import get_period_start, get_path_from_parent
+from partners.tasks.states import expire_confirmation
+from partners.utils.cache_keys import (
+    cache_key_cloud_system_group_children_count,
+    cp_direct_children_count,
+    cp_monthly_charges,
+    direct_organization_children_count,
+    organization_system_count,
+)
+from tools.helpers import (
+    get_path_from_parent,
+    get_period_start,
+)
 
 
 class Empty:

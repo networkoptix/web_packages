@@ -4,9 +4,21 @@ from django.core.cache import caches
 from django.utils.functional import cached_property
 
 from conftest import RequestFactory
-from partners.models import ChannelPartner, CloudUser, Organization, CloudSystemId
-from partners.serializers import ChannelPartnerSerializer, OrganizationSerializer, CloudSystemSerializer
-from tools.access_matrix import UserAccessMatrix, AccessMatrixDict
+from partners.models import (
+    ChannelPartner,
+    CloudSystemId,
+    CloudUser,
+    Organization,
+)
+from partners.serializers import (
+    ChannelPartnerSerializer,
+    CloudSystemSerializer,
+    OrganizationSerializer,
+)
+from tools.access_matrix import (
+    AccessMatrixDict,
+    UserAccessMatrix,
+)
 
 
 def clean_cache():

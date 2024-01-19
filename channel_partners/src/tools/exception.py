@@ -1,5 +1,8 @@
 from rest_framework import status
-from rest_framework.exceptions import APIException, _get_error_details
+from rest_framework.exceptions import (
+    APIException,
+    _get_error_details,
+)
 
 
 class Conflict(APIException):

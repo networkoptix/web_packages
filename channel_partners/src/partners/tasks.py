@@ -1,7 +1,11 @@
 import structlog
 from celery import shared_task
 
-from partners.models import OrganizationRole, ChannelPartnerRole
+from partners.models import (
+    ChannelPartnerRole,
+    OrganizationRole,
+)
+
 
 logger = structlog.get_logger(__name__)
 

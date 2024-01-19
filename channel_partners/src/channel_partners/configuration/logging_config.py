@@ -4,6 +4,7 @@ from typing import Literal
 
 import structlog
 
+
 LOGS_DIRECTORY: str = "logs"
 
 

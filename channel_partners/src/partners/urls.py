@@ -1,6 +1,39 @@
-from django.urls import path, re_path, include, converters
+from django.urls import (
+    converters,
+    include,
+    path,
+    re_path,
+)
 from rest_framework_extensions.routers import ExtendedSimpleRouter
-from .views import *
+
+from partners.views import (
+    ChannelPartnerAvailableServiceViewset,
+    ChannelPartnerExternalIdViewset,
+    ChannelPartnerNestedViewSet,
+    ChannelPartnerOwnedServiceViewset,
+    ChannelPartnerServiceExternalIdViewset,
+    ChannelPartnerUserViewSet,
+    ChannelPartnerViewSet,
+    CloudSystemExternalIdViewset,
+    CloudSystemNestedViewSet,
+    CloudSystemViewSet,
+    OrganizationNesetedViewSet,
+    OrganizationrExternalIdViewset,
+    OrganizationServiceViewset,
+    OrganizationUserViewSet,
+    OrganizationViewSet,
+    SystemGroupUserViewSet,
+    SystemGroupViewSet,
+    all_org_users,
+    all_services,
+    channel_partner_roles,
+    organization_roles,
+    partner_events,
+    system_user,
+    system_users,
+    user_systems,
+)
+
 
 channel_partner_urls = [
     path('channel_partner_roles', channel_partner_roles, name='channel_partner_roles'),

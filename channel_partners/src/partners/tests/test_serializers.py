@@ -14,16 +14,34 @@ from django.utils import timezone
 from model_bakery import baker
 
 from partners.models import (
-    ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
-    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles,
-    CloudUser, ActionConfirmation, ServiceUsage, NotificationTypes, Organization,
+    ActionConfirmation,
+    ChannelPartnerRole,
+    ChannelPartnerService,
+    ChannelPartnerServiceRecord,
+    ChannelPartnerStates,
+    ChannelPartnerToUser,
+    CloudUser,
+    NotificationTypes,
+    Organization,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
+    ServiceUsage,
 )
 from partners.serializers import (
-    ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
-    SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
-    SystemGroupUserSerializer, ChannelPartnerRecordsParamSerializer, GroupSerializer, OrganizationStateChangeSerializer,
-    OrganizationStateConfirmationSerializer, ChannelPartnerStateChangeSerializer,
-    ChannelPartnerStateConfirmationSerializer
+    ChannelPartnerAggDataSerializer,
+    ChannelPartnerRecordsParamSerializer,
+    ChannelPartnerSerializer,
+    ChannelPartnerStateChangeSerializer,
+    ChannelPartnerStateConfirmationSerializer,
+    GroupSerializer,
+    OrganizationAggDataSerializer,
+    OrganizationSerializer,
+    OrganizationStateChangeSerializer,
+    OrganizationStateConfirmationSerializer,
+    OrganizationUserSerializer,
+    SystemGroupUserSerializer,
+    SystemServiceQuantitySerializer,
 )
 
 

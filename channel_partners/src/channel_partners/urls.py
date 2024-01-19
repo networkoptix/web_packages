@@ -3,11 +3,18 @@ URL configuration for channel_partners project.
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include, re_path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.urls import (
+    include,
+    path,
+    re_path,
+)
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
 
 from partners.views import grant_access
-from utils.views import simple_health_check
+
 
 swagger_ui = SpectacularSwaggerView.as_view(url_name='schema-internal')
 

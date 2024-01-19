@@ -1,24 +1,39 @@
 import random
 import typing
 import uuid
-from uuid import uuid4, UUID
+from uuid import (
+    UUID,
+    uuid4,
+)
 
 import httpx
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 from model_bakery import baker
-from requests.auth import  _basic_auth_str
-
+from requests.auth import _basic_auth_str
 from rest_framework.test import APIRequestFactory
 
 from partners.models import (
-    CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser,
-    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties,
-    ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService,
-    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole,
-    OrganizationRoles, SystemGroup, AuthToken, CloudSystemStates, VmsRoles,
+    AuthToken,
+    ChannelPartner,
+    ChannelPartnerRole,
+    ChannelPartnerService,
+    ChannelPartnerServiceRecord,
+    ChannelPartnerStates,
+    ChannelPartnerToUser,
+    CloudHost,
+    CloudInstance,
+    CloudSystemId,
+    CloudSystemStates,
+    CloudUser,
+    Organization,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
+    ServiceToOrganizationProperties,
+    SystemGroup,
+    VmsRoles,
 )
 
 

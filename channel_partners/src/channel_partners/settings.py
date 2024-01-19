@@ -14,6 +14,7 @@ from corsheaders.defaults import default_headers
 from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.tools.config import get_config
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_ENV = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)

@@ -6,8 +6,17 @@ import pytest
 from django.core.cache import caches
 
 from partners.models import (
-    CloudSystemId, Organization, OrganizationPermissions, ChannelPartnerStates,
-    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles, SystemGroup, CloudUser, VmsRoles,
+    ChannelPartner,
+    ChannelPartnerEvent,
+    ChannelPartnerService,
+    ChannelPartnerStates,
+    CloudSystemId,
+    CloudUser,
+    Organization,
+    OrganizationPermissions,
+    OrganizationRoles,
+    SystemGroup,
+    VmsRoles,
 )
 
 

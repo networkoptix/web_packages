@@ -1,7 +1,14 @@
 import sys
+
 import structlog
 
-from partners.models import ChannelPartner, Organization, SystemGroup, CloudSystemId
+from partners.models import (
+    ChannelPartner,
+    CloudSystemId,
+    Organization,
+    SystemGroup,
+)
+
 
 logger = structlog.get_logger(__name__)
 

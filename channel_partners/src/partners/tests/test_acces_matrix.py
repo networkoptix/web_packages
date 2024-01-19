@@ -1,14 +1,28 @@
-import os
 import json
+import os
 
 import pytest
 from django.conf import settings
 from django.core.cache import caches
 
-from partners.models import OrganizationRole, FieldAccessPermissions, OrganizationRoles
-from partners.serializers import ChannelPartnerSerializer, OrganizationSerializer, CloudSystemSerializer
-from tools.access_matrix import AccessMatrixJson, FieldPermission, AccessTypes, UserAccessMatrix, AccessMatrixDict
+from partners.models import (
+    FieldAccessPermissions,
+    OrganizationRoles,
+)
+from partners.serializers import (
+    ChannelPartnerSerializer,
+    CloudSystemSerializer,
+    OrganizationSerializer,
+)
+from tools.access_matrix import (
+    AccessMatrixDict,
+    AccessMatrixJson,
+    AccessTypes,
+    FieldPermission,
+    UserAccessMatrix,
+)
 from tools.serializers import VALUE_REPLACEMENT
+
 
 CP_ROLES_PERMISSIONS = [
     ('Administrator', 'field_access_cp_admin'),

@@ -1,8 +1,16 @@
-from django.contrib import admin
 from django.apps import apps
+from django.contrib import admin
 
-from partners.models import Organization, ChannelPartner, CloudSystemId, \
-    CloudHost, ChannelPartnerService, SystemGroup, CloudUser
+from partners.models import (
+    ChannelPartner,
+    ChannelPartnerService,
+    CloudHost,
+    CloudSystemId,
+    CloudUser,
+    Organization,
+    SystemGroup,
+)
+
 
 excluded = [
     Organization,

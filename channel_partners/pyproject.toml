@@ -36,6 +36,7 @@ django-structlog = "7.1.0"
 
 [tool.poetry.group.test.dependencies]
 django-silk = "^5.0.4"
+isort = "^5.13.2"
 mock = "^5.1.0"
 model-bakery = "^1.13.0"
 pytest = "^7.4.0"
@@ -45,6 +46,7 @@ pytest-mock = "^3.11.1"
 pytest-cov = "^4.1.0"
 pytest-env = "^0.8.2"
 pytest-httpx = "^0.23.1"
+ruff = "^0.1.14"
 
 
 [[tool.poetry.source]]

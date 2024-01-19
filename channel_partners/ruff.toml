@@ -1,0 +1,30 @@
+target-version = "py311"
+line-length = 120
+indent-width = 4
+select = [
+    "F401", # unused-import
+    "TID252", # relative-imports
+    "F403", # Checks for the use of wildcard imports
+]
+extend-select = [
+#    "E501",  # Line too long (80 > X characters)
+#    "W291",  # Trailing whitespace
+#    "W293",  # Blank line contains whitespace
+#    "E701",  # Multiple statements on one line (colon)
+#    "E702",  # Multiple statements on one line (semicolon)
+#    "E703",  # Statement ends with a semicolon
+#    "E711",  # Comparison to None should be 'if cond is None:' not 'if cond == None:'
+#    "C901",  # Function is too complex (McCabe complexity)
+#    "E731",  # Do not assign a lambda expression, use a def
+#    "E225",  # Missing whitespace around operator
+#    "E265",  # Block comment should start with '# '
+#    "E741",  # Ambiguous variable name (e.g., "l" or "O")
+#    "W605",  # Invalid escape sequence '\c'
+]
+extend-exclude = [
+    "migrations"
+]
+
+[lint.flake8-tidy-imports]
+# Disallow all relative imports.
+ban-relative-imports = "all"

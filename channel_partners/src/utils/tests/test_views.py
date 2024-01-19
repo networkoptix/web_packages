@@ -1,6 +1,7 @@
 import pytest
-from mock.mock import MagicMock
 from django.test import RequestFactory
+from mock.mock import MagicMock
+
 from utils.views import HealthCheckView
 
 
