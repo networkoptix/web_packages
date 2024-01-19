@@ -1,49 +1,151 @@
-import structlog
-
 from time import sleep
-from typing import TypedDict, Tuple
-from uuid import uuid4, UUID
+from typing import (
+    List,
+    Tuple,
+    TypedDict,
+)
+from uuid import (
+    UUID,
+    uuid4,
+)
 
 import httpx
+import structlog
+from django.conf import settings
 from django.core.cache import caches
-from django.db.models import Subquery, Q
+from django.db.models import (
+    Prefetch,
+    Q,
+    Subquery,
+)
 from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import (
+    get_object_or_404,
+    render,
+)
 from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
-from drf_spectacular.utils import extend_schema_view, OpenApiParameter
-from rest_framework import status
-from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    extend_schema,
+    extend_schema_view,
+)
+from nx_cloud_api_client.apis import CdbSystemAPIBase
+from nx_cloud_api_client.client import NxCloudAPISyncClient
+from rest_framework import (
+    exceptions,
+    serializers,
+    status,
+)
+from rest_framework.decorators import (
+    action,
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
+from rest_framework.viewsets import (
+    GenericViewSet,
+    ModelViewSet,
+    mixins,
+)
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from nx_cloud_api_client.apis import CdbSystemAPIBase
-from nx_cloud_api_client.client import NxCloudAPISyncClient
 from partners import filters
-from tools.exception import Conflict
-from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
-from tools.utils import paginated_response
 from partners.authentication import (
+    NxCloudOauthIntrospectAuthentication,
     NxCloudOauthTokenAuthentication,
     NxCloudSystemBasicAuthentication,
-    NxCloudOauthIntrospectAuthentication,
     NxTokenAuthentication,
 )
 from partners.forms.grant_access_form import GrantAccessForm
-from partners.models import ChannelPartnerRoles, GroupStructure, VmsRoles
+from partners.models import (
+    ChannelPartner,
+    ChannelPartnerEvent,
+    ChannelPartnerExternalId,
+    ChannelPartnerRole,
+    ChannelPartnerRoles,
+    ChannelPartnerService,
+    ChannelPartnerServiceExternalId,
+    ChannelPartnerToUser,
+    CloudHost,
+    CloudSystemExternalId,
+    CloudSystemId,
+    CloudSystemStates,
+    CloudUser,
+    GroupStructure,
+    Organization,
+    OrganizationExternalId,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
+    ServiceToOrganizationProperties,
+    ServiceToSubChannelProperties,
+    SystemGroup,
+    VmsRoles,
+)
 from partners.permissions import (
-    IsAuthenticatedCloudUserOrSystem,
     CanPerformChannelPartnerAction,
+    IsAuthenticatedCloudUserOrSystem,
     IsAuthenticatedSystem,
     IsInternalToken,
 )
-from partners.serializers import *
-from .services.cloud_system_service import CloudSystemService
+from partners.serializers import (
+    AvailableChannelPartnerServiceSerializer,
+    AvailableOrganizationServiceSerializer,
+    BindLocalSystemSerializer,
+    ChannelPartnerAggDataSerializer,
+    ChannelPartnerAllServicesParamSerializer,
+    ChannelPartnerEventParamSerializer,
+    ChannelPartnerEventSerializer,
+    ChannelPartnerExternalIdSerializer,
+    ChannelPartnerRecordsParamSerializer,
+    ChannelPartnerRoleSerializer,
+    ChannelPartnerSerializer,
+    ChannelPartnerServiceExternalIdSerializer,
+    ChannelPartnerServiceRecordSerializer,
+    ChannelPartnerServiceSummarySerializer,
+    ChannelPartnerStateChangeSerializer,
+    ChannelPartnerStateConfirmationSerializer,
+    ChannelPartnerUserSerializer,
+    CloudSystemIdExternalIdSerializer,
+    CloudSystemSerializer,
+    CreateChannelPartnerSerializer,
+    CreateGroupSerializer,
+    CreateOrganizationSerializer,
+    ErrorMessageSerializer,
+    GroupSerializer,
+    GroupsStructureSerializer,
+    OrganizationAggDataSerializer,
+    OrganizationExternalIdSerializer,
+    OrganizationQueryParamsSerializer,
+    OrganizationRoleSerializer,
+    OrganizationSerializer,
+    OrganizationServiceRecordSerializer,
+    OrganizationStateChangeSerializer,
+    OrganizationStateConfirmationSerializer,
+    OrganizationUserSerializer,
+    SaaSReportSerializer,
+    ServiceSerializer,
+    SystemBindResponseSerializer,
+    SystemGroupUserSerializer,
+    SystemMembershipSerializer,
+    SystemSerializer,
+    SystemServiceQuantitySerializer,
+    SystemToOrgTransferSerializer,
+    SystemUsageReportSerializer,
+    SystemUserSerializer,
+    UserListSerializer,
+)
+from partners.services.cloud_system_service import CloudSystemService
+from tools.exception import Conflict
+from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
+from tools.utils import paginated_response
+
 
 VIEW_LOCK_WAIT_TIME = 2
 

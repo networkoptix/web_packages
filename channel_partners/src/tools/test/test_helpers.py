@@ -4,7 +4,9 @@ import httpx
 import pytest
 from rest_framework.exceptions import APIException
 
-from tools.helpers import forward_cdb_resp, settings as django_settings
+from tools.helpers import forward_cdb_resp
+from tools.helpers import settings as django_settings
+
 
 class TestForwardCdbResp:
 

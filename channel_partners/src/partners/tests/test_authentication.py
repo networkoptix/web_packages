@@ -8,11 +8,16 @@ from rest_framework import exceptions
 from rest_framework.test import APIRequestFactory
 
 from partners.authentication import (
-    NxCloudOauthIntrospectAuthentication, get_cloud_user_from_token, TokenCache,
-    cloud_host_middleware,
+    NxCloudOauthIntrospectAuthentication,
+    TokenCache,
     check_system_credentials,
+    cloud_host_middleware,
+    get_cloud_user_from_token,
 )
-from partners.models import CloudSystemStates, VmsRoles
+from partners.models import (
+    CloudSystemStates,
+    VmsRoles,
+)
 
 
 def test_get_cloud_user_from_token(httpx_mock):

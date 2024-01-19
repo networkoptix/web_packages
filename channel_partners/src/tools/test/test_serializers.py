@@ -1,11 +1,14 @@
 from uuid import uuid4
 
 from django.core import validators
-from model_bakery import baker
 from rest_framework import serializers
 
-from partners.models import OrganizationToUser, CloudSystemId, CloudInstance, CloudHost, ChannelPartner, Organization
-from tools.serializers import FieldAccessSerializer, FieldAccessModelSerializer, VALUE_REPLACEMENT
+from partners.models import CloudSystemId
+from tools.serializers import (
+    VALUE_REPLACEMENT,
+    FieldAccessModelSerializer,
+    FieldAccessSerializer,
+)
 
 
 class TestFieldAccessSerializer:

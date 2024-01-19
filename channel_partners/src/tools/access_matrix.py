@@ -3,9 +3,8 @@ import dataclasses
 import json
 import os.path
 import typing as t
-import uuid
 from dataclasses import dataclass
-from enum import StrEnum, IntEnum
+from enum import StrEnum
 from uuid import UUID
 
 from django.conf import settings
@@ -13,9 +12,16 @@ from django.core.cache import caches
 from django.utils.functional import cached_property
 
 from partners.models import (
-    CloudUser, ChannelPartner, Organization, ChannelPartnerToUser, OrganizationToUser, CloudSystemId,
+    ChannelPartner,
+    ChannelPartnerRoles,
+    ChannelPartnerToUser,
+    CloudSystemId,
+    CloudUser,
+    HierarchyLevels,
+    Organization,
+    OrganizationToUser,
     get_channel_partner_roles,
-    get_organization_roles, ChannelPartnerRoles, SystemGroup, HierarchyLevels
+    get_organization_roles,
 )
 
 

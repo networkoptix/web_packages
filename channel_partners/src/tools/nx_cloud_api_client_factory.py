@@ -1,6 +1,9 @@
 import typing
 
-from nx_cloud_api_client.client import NxCloudAPISyncClient, NxCloudAPIAsyncClient
+from nx_cloud_api_client.client import (
+    NxCloudAPIAsyncClient,
+    NxCloudAPISyncClient,
+)
 
 
 class NxCloudApiClientFactory:

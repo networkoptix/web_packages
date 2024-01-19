@@ -2,7 +2,10 @@ from uuid import uuid4
 
 from django.core.cache import caches
 
-from partners.tasks.notification import get_customization, is_existing_user
+from partners.tasks.notification import (
+    get_customization,
+    is_existing_user,
+)
 
 
 def test_get_customization(mock_get_customization_request, request_host, httpx_mock):

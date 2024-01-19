@@ -4,8 +4,10 @@ import sys
 from typing import Literal
 
 import pytest
-from django.test import Client
-from django.test import override_settings
+from django.test import (
+    Client,
+    override_settings,
+)
 
 from channel_partners.configuration.logging_config import configure_logging
 

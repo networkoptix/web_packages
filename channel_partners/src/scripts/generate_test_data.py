@@ -1,7 +1,31 @@
-from partners.models import *
-from django.db import transaction
-import uuid
 import random
+import uuid
+from datetime import timedelta
+
+from django.db import transaction
+from django.utils import timezone
+
+from partners.models import (
+    ChannelPartner,
+    ChannelPartnerRoles,
+    ChannelPartnerService,
+    ChannelPartnerServiceExternalId,
+    ChannelPartnerServiceRecord,
+    CloudHost,
+    CloudInstance,
+    CloudSystemExternalId,
+    CloudSystemId,
+    CloudSystemStates,
+    CloudUser,
+    Organization,
+    OrganizationExternalId,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
+    ServiceUsage,
+    SystemGroup,
+)
+
 
 users = [
     CloudUser.objects.get_or_create(email='jcox@networkoptix.com')[0],

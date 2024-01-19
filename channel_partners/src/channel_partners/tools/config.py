@@ -1,9 +1,9 @@
 import os
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Tuple
 
 import yaml
-from pathlib import Path
-from dataclasses import dataclass, field
 
 
 @dataclass

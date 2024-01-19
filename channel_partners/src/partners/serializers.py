@@ -9,35 +9,73 @@ import httpx
 import llutil
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
-from django.db.models import Sum, Prefetch
+from django.db.models import (
+    Prefetch,
+    Sum,
+)
 from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
-from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, OpenApiExample
+from drf_spectacular.utils import (
+    OpenApiExample,
+    extend_schema_field,
+    extend_schema_serializer,
+)
 from nx_cloud_api_client.base_auth import BearerTokenAuth
-from rest_framework import serializers, exceptions
+from rest_framework import (
+    exceptions,
+    serializers,
+)
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
 
 from channel_partners.utils import NonPartialCharfield
 from partners.models import (
-    ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates,
-    LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService,
-    ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
-    CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
-    ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup,
-    get_channel_partner_roles, get_organization_roles, OrganizationRoles, ActionConfirmation, ConfirmationCodeInvalid,
-    CloudSystemStates
+    ActionConfirmation,
+    ChannelPartner,
+    ChannelPartnerEvent,
+    ChannelPartnerExternalId,
+    ChannelPartnerRole,
+    ChannelPartnerService,
+    ChannelPartnerServiceExternalId,
+    ChannelPartnerServiceRecord,
+    ChannelPartnerStates,
+    ChannelPartnerToUser,
+    CloudHost,
+    CloudSystemExternalId,
+    CloudSystemId,
+    CloudSystemStates,
+    CloudUser,
+    ConfirmationCodeInvalid,
+    LocalRecordingUsage,
+    Organization,
+    OrganizationExternalId,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
+    ServiceToOrganizationProperties,
+    ServiceToSubChannelProperties,
+    ServiceUsage,
+    SystemGroup,
+    get_channel_partner_roles,
+    get_organization_roles,
 )
-from tools.helpers import forward_cdb_resp
-from tools.helpers import get_path_from_parent
-from tools.serializers import AccessMatrixMixin
-from tools.serializers import FieldAccessModelSerializer
-from tools.utils import bind_system_to_cdb_organization
 from partners.tasks.notification import (
-    added_channel_partner_role_task, added_organization_role_task, state_confirmation_task
+    added_channel_partner_role_task,
+    added_organization_role_task,
+    state_confirmation_task,
 )
+from tools.helpers import (
+    forward_cdb_resp,
+    get_path_from_parent,
+)
+from tools.serializers import (
+    AccessMatrixMixin,
+    FieldAccessModelSerializer,
+)
+from tools.utils import bind_system_to_cdb_organization
+
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}

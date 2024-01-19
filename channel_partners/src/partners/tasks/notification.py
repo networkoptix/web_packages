@@ -3,19 +3,24 @@ import uuid
 
 import httpx
 import structlog
-from celery import Task
-from celery import shared_task
-from celery import states
+from celery import (
+    Task,
+    shared_task,
+    states,
+)
 from celery.exceptions import Ignore
 from django.conf import settings
 from django.core.cache import caches
-
 from nx_cloud_api_client.apis import CdbAccountAPIBase
-from partners.models import ActionConfirmation
-from partners.models import ChannelPartner
-from partners.models import CloudUser
-from partners.models import NotificationTypes
-from partners.models import Organization
+
+from partners.models import (
+    ActionConfirmation,
+    ChannelPartner,
+    CloudUser,
+    NotificationTypes,
+    Organization,
+)
+
 
 logger = structlog.get_logger(__name__)
 

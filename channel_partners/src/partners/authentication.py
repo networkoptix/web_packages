@@ -1,6 +1,9 @@
 import uuid
 from hashlib import sha256
-from typing import Tuple, List
+from typing import (
+    List,
+    Tuple,
+)
 
 import httpx
 from django.conf import settings
@@ -12,12 +15,25 @@ from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 from httpx import Response
-from rest_framework import exceptions, status
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication, get_authorization_header
-
 from nx_cloud_api_client.base_auth import CdbAuthAPIClient
 from nx_cloud_api_client.client import NxCloudAPISyncClient
-from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken, CloudSystemStates, VmsRoles
+from rest_framework import (
+    exceptions,
+    status,
+)
+from rest_framework.authentication import (
+    BasicAuthentication,
+    TokenAuthentication,
+    get_authorization_header,
+)
+
+from partners.models import (
+    AuthToken,
+    CloudHost,
+    CloudSystemId,
+    CloudSystemStates,
+    CloudUser,
+)
 from tools.exception import APIErrorWithoutRollback
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 

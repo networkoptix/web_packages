@@ -1,8 +1,6 @@
 import json
-import re
 import random
-from unittest.mock import Mock
-from unittest.mock import patch
+import re
 from uuid import uuid4
 
 import httpx
@@ -11,9 +9,15 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.cache import caches
 from django.db import transaction
-from django.http import HttpResponseNotFound, HttpResponseForbidden
-from django.test import Client
-from django.test import override_settings, RequestFactory
+from django.http import (
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+)
+from django.test import (
+    Client,
+    RequestFactory,
+    override_settings,
+)
 from django.utils import timezone
 from mock.mock import MagicMock
 from model_bakery import baker
@@ -23,26 +27,37 @@ from rest_framework.test import APIClient
 
 from partners.authentication import TokenCache
 from partners.models import (
-    CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
-    ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
-    OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
-    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles, VmsRoles,
+    ActionConfirmation,
+    ChannelPartnerRole,
+    ChannelPartnerRoles,
+    ChannelPartnerServiceRecord,
+    ChannelPartnerStates,
+    ChannelPartnerToUser,
+    CloudSystemId,
+    CloudSystemStates,
+    Organization,
+    OrganizationPermissions,
+    OrganizationRole,
+    OrganizationRoles,
+    OrganizationToUser,
     ServiceUsage,
+    SystemGroup,
+    VmsRoles,
 )
-from partners.services.cloud_system_service import CloudSystemService
 from partners.views import (
-    CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
-    ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet, get_authorized_system, SystemGroupViewSet,
-    organization_roles,
+    ChannelPartnerNestedViewSet,
+    ChannelPartnerUserViewSet,
+    ChannelPartnerViewSet,
+    CloudSystemViewSet,
+    OrganizationUserViewSet,
+    OrganizationViewSet,
+    SystemGroupUserViewSet,
+    SystemGroupViewSet,
+    get_authorized_system,
     grant_access,
+    organization_roles,
 )
 from tools.serializers import VALUE_REPLACEMENT
-
-
-
-
-
 
 
 class TestCloudSystemViewSetBind:

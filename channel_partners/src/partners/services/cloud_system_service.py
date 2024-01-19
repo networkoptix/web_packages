@@ -7,6 +7,7 @@ from httpx import Response
 from channel_partners.settings import TRAFFIC_RELAY_HOSTS
 from partners.models import CloudSystemId
 
+
 logger = structlog.get_logger(__name__)
 
 
