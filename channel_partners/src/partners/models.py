@@ -303,6 +303,27 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def can_set_services(self, user: CloudUser):
         return self.organization and self.organization.can_modify_service_quantities(user)
 
+    def has_vms_role(self, user: CloudUser, vms_roles: List[uuid.UUID]) -> bool:
+        allowed_roles = OrganizationRole.objects.filter(system_role_uuid__in=vms_roles).values_list('id', flat=True)
+        if not allowed_roles:
+            return False
+        if OrganizationToUser.objects.filter(
+            Q(system_group_id=None) | Q(system_group_id=self.system_group_id),
+            user_id=user.pk,
+            roles__overlap=allowed_roles,
+            organization_id=self.organization_id
+        ).exists():
+            return True
+        if not self.organization.channel_partner_access_level_id:
+            return False
+        channel_partner_manager = ChannelPartnerToUser.objects.filter(
+            user=user, channel_partner_id=self.organization.channel_partner_id,
+            roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        ).exists()
+        if channel_partner_manager:
+            return self.organization.channel_partner_access_level_id in allowed_roles
+        return False
+
     def save(self, *args, **kwargs):
         new = self._state.adding
 
@@ -494,6 +515,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def get_user_role_by_email(self, email: str) -> dict:
         # It is supposed that user have the only relation in a branch
         # without any overlap. So, the first entry is the only one
+        # TODO. Change to `.first()`
         for user in self.get_all_users(email=email):
             return user
 
@@ -961,6 +983,15 @@ class OrganizationRoles:
     LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
 
     CPAL_ROLES = [ORGANIZATION_ADMINISTRATOR, SYSTEM_HEALTH_VIEWER]
+
+
+class VmsRoles:
+    ADMINISTRATOR = uuid.UUID('00000000-0000-0000-0000-100000000000')
+    POWER_USER = uuid.UUID('00000000-0000-0000-0000-100000000001')
+    ADVANCED_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000002')
+    VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000003')
+    LIVE_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000004')
+    SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000005')
 
 
 class OrganizationRole(models.Model):

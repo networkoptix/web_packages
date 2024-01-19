@@ -17,19 +17,25 @@ from django.test import override_settings, RequestFactory
 from django.utils import timezone
 from mock.mock import MagicMock
 from model_bakery import baker
+from rest_framework import exceptions
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
+from partners.authentication import TokenCache
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
     ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
     OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
-    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles, ServiceUsage
+    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles, VmsRoles,
+    ServiceUsage,
 )
 from partners.services.cloud_system_service import CloudSystemService
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet, system_user, system_users, user_systems, SystemGroupViewSet, organization_roles,
-    grant_access
+    SystemGroupUserViewSet, get_authorized_system, SystemGroupViewSet,
+    organization_roles,
+    grant_access,
 )
 from tools.serializers import VALUE_REPLACEMENT
 
@@ -244,7 +250,8 @@ class TestCloudSystemViewSet:
         response = view(request, id=system.system_id)
         assert response.status_code == 200
         assert system.system_state == CloudSystemStates.ACTIVATED
-
+        # clear cached authorizations
+        TokenCache.cache().clear()
         request = arf_basic_auth.get('/')
         mock_auth_with_system(system, authenticated=False, status=CloudSystemStates.DELETED)
         response = view(request, id=system.system_id)
@@ -706,7 +713,7 @@ class TestChannelPartnerViewSet:
         view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
 
         for role, partner, user in zip(roles, partners, users):
-            request = arf.get(f'/partners/channel_partners/')
+            request = arf.get('/partners/channel_partners/')
             request.user = user.user
             mock_auth_with_user(user)
 
@@ -894,7 +901,7 @@ class TestOrganizationViewSet:
         view = OrganizationViewSet.as_view(actions={'get': 'list'})
 
         for role, org, user in zip(roles, orgs, users):
-            request = arf.get(f'/partners/channel_partners/')
+            request = arf.get('/partners/channel_partners/')
             request.user = user.user
             mock_auth_with_user(user)
             response = view(request)
@@ -1245,9 +1252,90 @@ class TestSystemGroupUserViewSet:
             assert data['hasAccessTo']['membershipType'] == instance._meta.model_name
 
 
-def test_system_user(channel_partner_factory, cp_user_factory, organization_factory,
-                     org_user_factory, system_group_factory, system_factory,
-                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+class TestSystemUser:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
+              org_user_factory, system_group_factory, system_factory,
+              sys_group_user_factory, cloud_user_factory, arf, cloud_test_host):
+        cp = channel_partner_factory()
+        self.org = org = organization_factory(channel_partner=cp)
+        other_org = organization_factory(channel_partner=cp)
+        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+        org.save()
+        self.org_sys = system_factory(organization=org)
+        group = system_group_factory(organization=org)
+        self.group_sys = system_factory(organization=org, system_group=group)
+        self.cp_admin = cp_user_factory(channel_partner=cp)
+        self.other_admin = org_user_factory(organization=other_org)
+        self.group_user = sys_group_user_factory(organization=org, group=group,
+                                            role_id=OrganizationRoles.VIEWER)
+        self.token = f'{uuid4()}'
+        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
+
+    def test_success_cp_admin(self):
+        self.client.force_authenticate(user=self.cp_admin.user)
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': self.group_user.user.email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 200
+        assert (response.data['vmsRoles'][0] ==
+                OrganizationRole.objects.get(pk=self.group_user.roles[0]).system_role_uuid)
+
+    def test_success_group_user(self):
+        self.client.force_authenticate(user=self.group_user.user)
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': self.group_user.user.email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 200
+        assert (response.data['vmsRoles'][0] ==
+                OrganizationRole.objects.get(pk=self.group_user.roles[0]).system_role_uuid)
+
+    def test_invalid_email(self):
+        self.client.force_authenticate(user=self.group_user.user)
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': self.cp_admin.user.email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 403
+
+    def test_permission_denied(self):
+        self.client.force_authenticate(user=self.group_user.user)
+        url_args = {
+            'system_id': str(self.org_sys.system_id),
+            'email': self.cp_admin.user.email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 403
+
+    def test_cdb_permission(self, mock_cdb_token_introspect, cloud_user_factory):
+        sys_admin = cloud_user_factory()
+        user_email = mock_cdb_token_introspect(
+            user=sys_admin, system=self.org_sys, system_role=VmsRoles.POWER_USER)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url_args = {
+            'system_id': str(self.org_sys.system_id),
+            'email': self.cp_admin.user.email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 200
+
+
+class TestUserSystems:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
+                          org_user_factory, system_group_factory, system_factory, cloud_test_host,
+                          sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
@@ -1255,74 +1343,259 @@ def test_system_user(channel_partner_factory, cp_user_factory, organization_fact
         org_sys = system_factory(organization=org)
         group = system_group_factory(organization=org)
         group_sys = system_factory(organization=org, system_group=group)
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=org)
-        group_user = sys_group_user_factory(organization=org, group=group,
+        self.cp_admin = cp_user_factory(channel_partner=cp)
+        self.org_admin = org_user_factory(organization=org)
+        self.org_viewer = org_user_factory(organization=org, role=OrganizationRoles.VIEWER)
+        self.group_user = sys_group_user_factory(organization=org, group=group,
                                             role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
 
-        request = arf.get('/')
-        mock_internal_token_auth()
+    def test_system_user_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
+        url_args = {
+            "email": self.cp_admin.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.cp_admin.user)
+        response = self.client.get(url)
+        actual_records = response.data
 
-        response = system_user(request, str(group_sys.system_id), email=cp_admin.user.email)
+        required_fields = ['system_id', 'systemId', 'vmsRoles', 'membership_type', 'membershipType']
+        results = []
+        for record in actual_records:
+            results.append(not (set(required_fields) - record.keys()))
+        assert all(results)
+
+    def test_cp_admin_ok(self):
+        url_args = {
+            "email": self.cp_admin.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.cp_admin.user)
+        response = self.client.get(url)
         assert response.status_code == 200
-        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=org.channel_partner_access_level_id).system_role_uuid
+        assert len(response.data) == 2
 
-        response = system_user(request, str(group_sys.system_id), email=group_user.user.email)
+    def test_org_admin_ok(self):
+        url_args = {
+            "email": self.org_admin.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.org_admin.user)
+        response = self.client.get(url)
         assert response.status_code == 200
-        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=group_user.roles[0]).system_role_uuid
+        assert len(response.data) == 2
+
+    def test_group_user_ok(self):
+        url_args = {
+            "email": self.group_user.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.group_user.user)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+    def test_org_viewer(self):
+        url_args = {
+            "email": self.org_viewer.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.org_viewer.user)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 2
+
+    def test_incorrect_email(self):
+        url_args = {
+            "email": self.org_viewer.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.org_admin.user)
+        response = self.client.get(url)
+        assert response.status_code == 403
+
+    def test_unauthenticated(self):
+        url_args = {
+            "email": self.org_viewer.user.email
+        }
+        url = reverse("user_systems", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 401
 
 
-def test_system_users(channel_partner_factory, cp_user_factory, organization_factory,
-                     org_user_factory, system_group_factory, system_factory,
-                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
-    cp = channel_partner_factory()
-    org = organization_factory(channel_partner=cp)
-    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
-    org.save()
-    org_sys = system_factory(organization=org)
-    group = system_group_factory(organization=org)
-    group_sys = system_factory(organization=org, system_group=group)
-    cp_admin = cp_user_factory(channel_partner=cp)
-    org_admin = org_user_factory(organization=org)
-    group_user = sys_group_user_factory(organization=org, group=group,
-                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+class TestSystemUsers:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
+              org_user_factory, system_group_factory, system_factory,
+              sys_group_user_factory, cloud_test_host, arf, mock_internal_token_auth):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+        org.save()
+        self.org_sys = system_factory(organization=org)
+        group = system_group_factory(organization=org)
+        self.group_sys = system_factory(organization=org, system_group=group)
+        self.cp_admin = cp_user_factory(channel_partner=cp)
+        self.org_admin = org_user_factory(organization=org)
+        self.org_viewer = org_user_factory(organization=org, role=OrganizationRoles.VIEWER)
+        self.group_user = sys_group_user_factory(organization=org, group=group)
+        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
 
-    request = arf.get('/')
-    mock_internal_token_auth()
+    def test_cp_admin(self):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+        self.client.force_authenticate(self.cp_admin.user)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 4
 
-    response = system_users(request, str(group_sys.system_id))
-    assert response.status_code == 200
-    assert len(response.data) == 3
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 3
 
-def test_user_systems(channel_partner_factory, cp_user_factory, organization_factory,
-                      org_user_factory, system_group_factory, system_factory,
-                      sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
-    cp = channel_partner_factory()
-    org = organization_factory(channel_partner=cp)
-    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
-    org.save()
-    org_sys = system_factory(organization=org)
-    group = system_group_factory(organization=org)
-    group_sys = system_factory(organization=org, system_group=group)
-    cp_admin = cp_user_factory(channel_partner=cp)
-    org_admin = org_user_factory(organization=org)
-    group_user = sys_group_user_factory(organization=org, group=group,
-                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+    def test_org_admin(self):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+        self.client.force_authenticate(self.org_admin.user)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 4
 
-    request = arf.get('/')
-    mock_internal_token_auth()
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 3
 
-    response = user_systems(request, cp_admin.user.email)
-    assert response.status_code == 200
-    assert len(response.data) == 2
+    def test_group_user(self):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+        self.client.force_authenticate(self.group_user.user)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 4
 
-    response = user_systems(request, org_admin.user.email)
-    assert response.status_code == 200
-    assert len(response.data) == 2
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
 
-    response = user_systems(request, group_user.user.email)
-    assert response.status_code == 200
-    assert len(response.data) == 1
+    def test_viewer(self):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+        self.client.force_authenticate(self.org_viewer.user)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
+
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
+
+    def test_system_ok(self, mock_cdb_basic_auth):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+
+        auth = mock_cdb_basic_auth(self.group_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        auth = mock_cdb_basic_auth(self.org_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+
+    def test_system_failure(self, mock_cdb_basic_auth):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+
+        auth = mock_cdb_basic_auth(self.org_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
+
+        url_args = {
+            "system_id": self.org_sys.system_id
+        }
+        auth = mock_cdb_basic_auth(self.org_sys, status='deleted')
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        # will return 200 OK as soon as cache still have authorization
+        assert response.status_code == 200
+
+        TokenCache.cache().clear()
+        response = self.client.get(url)
+        assert response.status_code == 401
+
+    def test_cdb_user_ok(self, mock_cdb_token_introspect, cloud_user_factory):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+
+        user_email = mock_cdb_token_introspect(user=cloud_user_factory(), system=self.group_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 4
+
+        user_email = mock_cdb_token_introspect(user=None, system=self.group_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 4
+
+    def test_cdb_user_failure(self, mock_cdb_token_introspect, cloud_user_factory):
+        url_args = {
+            "system_id": self.group_sys.system_id
+        }
+        # invalid role
+        user_email = mock_cdb_token_introspect(user=None, system=self.group_sys, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
+        # invalid system id
+        user_email = mock_cdb_token_introspect(user=None, system=self.org_sys)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
+        # missing system role in cdb response
+        user_email = mock_cdb_token_introspect(user=None)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url = reverse("system_users", kwargs=url_args)
+        response = self.client.get(url)
+        assert response.status_code == 403
 
 
 
@@ -1389,24 +1662,6 @@ class TestOrganizationRole:
         actual_records = response.data
 
         required_fields = ['id', 'permissions', 'systemRole', 'name', 'system_role_uuid', 'systemRoleId']
-        results = []
-        for record in actual_records:
-            results.append(not (set(required_fields) - record.keys()))
-
-        assert all(results)
-
-
-class TestSystemUser:
-    def test_system_user_has_all_fields(self,channel_partner_factory, cp_user_factory, arf):
-        cp = channel_partner_factory()
-        email = "my-test@aol.com"
-        cp_admin = cp_user_factory(email=email, channel_partner=cp)
-
-        request = arf.get(f'/internal/partners/users/{email}/systems')
-        response = user_systems(request, email=email)
-        actual_records = response.data
-
-        required_fields = ['system_id', 'systemId', 'vmsRoles', 'membership_type', 'membershipType']
         results = []
         for record in actual_records:
             results.append(not (set(required_fields) - record.keys()))
@@ -1689,3 +1944,82 @@ class TestSystemTransferOffer:
         assert accept_request.headers.get('Authorization') == f'Bearer {token}'
 
         assert CloudSystemId.objects.filter(system_id=self.sys_id, organization=self.org).exists()
+
+
+class TestGetAuthorizedSystem:
+    def test_system_auth(self, arf, channel_partner_factory, organization_factory, system_factory):
+        cp = channel_partner_factory()
+        organization = organization_factory(channel_partner=cp)
+        cloud_system = system_factory(organization=organization)
+        other_system = system_factory(organization=organization)
+        request = arf.get('/')
+        request.cloud_system = cloud_system
+        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
+
+        try:
+            get_authorized_system(request, other_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+
+    def test_token_auth(self, arf, channel_partner_factory, organization_factory, system_factory,
+                         cp_user_factory, sys_group_user_factory, org_user_factory):
+        cp = channel_partner_factory()
+        organization = organization_factory(channel_partner=cp)
+        other_organization = organization_factory(channel_partner=cp)
+        other_organization.channel_partner_access_level_id = None
+        other_organization.save()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=organization)
+        other_admin = org_user_factory(organization=other_organization)
+        group_user = sys_group_user_factory(organization=organization)
+        cloud_system = system_factory(organization=organization)
+        group_system = system_factory(organization=organization, system_group=group_user.system_group)
+        other_system = system_factory(organization=other_organization)
+        request = arf.get('/')
+        request.auth = f'{uuid4()}'
+
+        request.user = cp_admin.user
+        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
+        assert get_authorized_system(request, group_system.system_id) == group_system
+        try:
+            get_authorized_system(request, other_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+
+        request.user = org_admin.user
+        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
+        assert get_authorized_system(request, group_system.system_id) == group_system
+        try:
+            get_authorized_system(request, other_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+
+        request.user = group_user.user
+        assert get_authorized_system(request, group_system.system_id) == group_system
+        try:
+            get_authorized_system(request, cloud_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+        try:
+            get_authorized_system(request, other_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+
+        request.user = other_admin.user
+        assert get_authorized_system(request, other_system.system_id) == other_system
+        assert get_authorized_system(request, uuid4()) is None
+
+        request.introspected_system_id = str(cloud_system.system_id)
+        request.introspected_system_roles_ids = [str(VmsRoles.ADMINISTRATOR)]
+        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
+        assert get_authorized_system(request, uuid4()) is None

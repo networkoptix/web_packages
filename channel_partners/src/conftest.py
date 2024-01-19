@@ -9,14 +9,17 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from model_bakery import baker
+from requests.auth import  _basic_auth_str
 
 from rest_framework.test import APIRequestFactory
 
-from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
-    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
-    ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
-    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole, \
-    OrganizationRoles, SystemGroup, AuthToken, CloudSystemStates
+from partners.models import (
+    CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser,
+    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties,
+    ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService,
+    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole,
+    OrganizationRoles, SystemGroup, AuthToken, CloudSystemStates, VmsRoles,
+)
 
 
 @pytest.fixture()
@@ -216,6 +219,50 @@ def mock_auth_with_system(mocker):
         mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system',
                      return_value=system)
         return mocked_check
+    return mock
+
+
+@pytest.fixture()
+def mock_cdb_basic_auth(httpx_mock, cloud_test_host):
+    def mock(system, status: str = 'activated') -> str:
+        url = f'https://{cloud_test_host.hostname}/cdb/systems/{system.system_id}'
+        httpx_mock.add_response(url=url,
+                                json={'id': f'{system.system_id}', 'status': status},
+                                status_code=200)
+        auth = _basic_auth_str(f'{system.system_id}', 'password')
+        return auth
+
+    return mock
+
+@pytest.fixture()
+def cdb_introspect_url(cloud_test_host):
+    return f'https://{cloud_test_host.hostname}/cdb/oauth2/introspect'
+
+
+@pytest.fixture()
+def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
+    def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
+             system: CloudSystemId = None, active: bool = True,
+             system_role: str = VmsRoles.ADMINISTRATOR):
+        if user is None:
+            email = random_email
+        elif isinstance(user, CloudUser):
+            email = user.email
+        else:
+            email = user.user.email
+        if system:
+            roles = {"system_role_ids": {str(system.system_id): [str(system_role)]}}
+        else:
+            roles = {}
+        data = {
+            "username": email,
+            "active": active,
+            "token_type": "bearer",
+            **roles
+        }
+        httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
+        return email
+
     return mock
 
 

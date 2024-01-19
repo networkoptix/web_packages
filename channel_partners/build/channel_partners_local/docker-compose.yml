@@ -85,7 +85,7 @@ services:
 
   nginx:
     image: nginx:1.25-alpine
-    container_name: cloud_portal_nginx
+    container_name: channel_partner_nginx
     depends_on:
       - app
     ports:

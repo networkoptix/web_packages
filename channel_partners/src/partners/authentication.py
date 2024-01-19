@@ -1,10 +1,12 @@
+import uuid
 from hashlib import sha256
-from typing import Tuple
+from typing import Tuple, List
 
 import httpx
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import caches
+from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
@@ -15,7 +17,7 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 
 from nx_cloud_api_client.base_auth import CdbAuthAPIClient
 from nx_cloud_api_client.client import NxCloudAPISyncClient
-from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken, CloudSystemStates
+from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken, CloudSystemStates, VmsRoles
 from tools.exception import APIErrorWithoutRollback
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
@@ -52,23 +54,59 @@ class TokenCache:
         return caches['default']
 
     @staticmethod
-    def cache_key(token: str):
+    def token_cache_key(token: str) -> str:
         mdsum = sha256((settings.CACHE_SALT + token).encode()).hexdigest()
         return f'user-oauth-token-{mdsum}'
+
+    @staticmethod
+    def token_system_cache_key(token: str, system_id: str | uuid.UUID) -> str:
+        return f'{TokenCache.token_cache_key(token)}-sys-{system_id}'
+
+    @staticmethod
+    def system_auth_cache_key(auth_header: str) -> str:
+        mdsum = sha256((settings.CACHE_SALT + auth_header).encode()).hexdigest()
+        return f'system-authenticated-{mdsum}'
+
 
     @classmethod
     def get_token(cls, token):
         if not token:
             return None
-        return cls.cache().get(cls.cache_key(token))
+        return cls.cache().get(cls.token_cache_key(token))
+
+    @classmethod
+    def get_timeout(cls, expires_in: int = None) -> int:
+        if expires_in:
+            return min(cls.timeout, int(expires_in))
+        return cls.timeout
 
     @classmethod
     def set_token(cls, token, email, expires_in=None):
-        if expires_in:
-            timeout = min(cls.timeout, int(expires_in))
-        else:
-            timeout = cls.timeout
-        cls.cache().set(cls.cache_key(token), email, timeout=timeout)
+        cls.cache().set(
+            cls.token_cache_key(token), email,
+            timeout=cls.get_timeout(expires_in)
+        )
+
+    @classmethod
+    def get_token_system(cls, token: str, system_id: str | uuid.UUID) -> Tuple[str, List[str] | None] | None:
+        return cls.cache().get(cls.token_system_cache_key(token, system_id))
+
+    @classmethod
+    def set_token_system(cls, token: str, system_id: str | uuid.UUID,
+                         email: str, roles_ids: List[str], expires_in: int = None):
+        cls.cache().set(
+            cls.token_system_cache_key(token, system_id=system_id), (email, roles_ids),
+            timeout=cls.get_timeout(expires_in)
+        )
+
+    @classmethod
+    def get_system_auth(cls, auth_header: str) -> str | None:
+        return cls.cache().get(cls.system_auth_cache_key(auth_header))
+    @classmethod
+    def set_system_auth(cls, auth_header: str, system_id: str | uuid.UUID):
+        cls.cache().set(
+            cls.system_auth_cache_key(auth_header), system_id, timeout=cls.get_timeout()
+        )
 
 
 class NxTokenAuthentication(TokenAuthentication):
@@ -119,7 +157,6 @@ def check_system_credentials(system_id: str, system_auth_key: str, cloud_host: s
         return False, None
     response.raise_for_status()
 
-
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
 
     @staticmethod
@@ -133,13 +170,22 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
             system_id=system_id, cloud_host=request.cloud_host)[0]
 
     def authenticate_credentials(self, userid, password, request=None):
-        cloud_system_id = userid
+        auth_header = request.headers.get('authorization')
         if not request.cloud_host:
             raise exceptions.ParseError('Invalid cloud-host header or hostname.')
+        if (
+                (cloud_system_id := TokenCache.get_system_auth(auth_header))
+                and userid == cloud_system_id
+        ):
+            request.cloud_system = self.get_system(system_id=userid, request=request)
+            return get_user_model()(), None
         authenticated, system_status = check_system_credentials(
             system_id=userid, system_auth_key=password,
             cloud_host=request.cloud_host.hostname
         )
+        cloud_system_id = userid
+        if authenticated and system_status == CloudSystemStates.ACTIVATED:
+            TokenCache.set_system_auth(auth_header, userid)
         with transaction.atomic():
             if authenticated:
                 cloud_system = self.get_or_create_system(system_id=cloud_system_id, request=request)
@@ -147,7 +193,7 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
                 cloud_system = self.get_system(system_id=cloud_system_id, request=request)
             else:
                 cloud_system = None
-            if cloud_system:
+            if isinstance(cloud_system, CloudSystemId):
                 # can fail if system is not added to CPS
                 if cloud_system.system_state != system_status:
                     with transaction.atomic():
@@ -223,17 +269,35 @@ class NxCloudOauthTokenAuthentication(TokenAuthentication):
         if not request.cloud_host:
             raise exceptions.ParseError('Invalid cloud-host header or hostname.')
 
-        ret = self.authenticate_credentials(token, request.cloud_host.hostname)
+        ret = self.authenticate_credentials(token, request)
         return ret
 
-    def authenticate_credentials(self, key, cloud_host_header):
-        model = self.get_model()
+    def get_user_from_token(self, token, request=None):
+        return get_cloud_user_from_token(token, request.cloud_host.hostname)
 
-        email = get_cloud_user_from_token(key, cloud_host_header)
+    def authenticate_credentials(self, key, request=None):
+        model = self.get_model()
+        email = self.get_user_from_token(key, request)
         if email:
             return model.objects.get_or_create(email=email)[0], key
         else:
             raise exceptions.AuthenticationFailed('Invalid or expired token')
+
+
+class NxCloudOauthIntrospectAuthentication(NxCloudOauthTokenAuthentication):
+
+    def get_user_from_token(self, token, request=None):
+        system_id = request.parser_context.get('kwargs', {}).get('system_id')
+        if not system_id:
+            raise ImproperlyConfigured('NxCloudOauthIntrospectAuthentication can be '
+                                       'used with "system_id" url param only.')
+        email, system_id, system_roles_ids = CdbInternalAuthentication.introspect_with_system(
+            token, request.cloud_host.hostname, system_id
+        )
+        if email:
+            request.introspected_system_id = system_id
+            request.introspected_system_roles_ids = system_roles_ids
+        return email
 
 
 class NxCloudOauthTokenAuthenticationExtension(OpenApiAuthenticationExtension):
@@ -273,3 +337,40 @@ def system_authentication_hook(result, generator, request, public):
                             found = True
                             break
     return result
+
+
+class CdbInternalAuthentication:
+
+    @staticmethod
+    def auth_header(request) -> str:
+        return request.headers.get('Authorization') or ''
+
+    @staticmethod
+    def is_system_auth(request) -> bool:
+        return CdbInternalAuthentication.auth_header(request).lower().startswith('basic')
+
+    @staticmethod
+    def is_token_auth(request) -> bool:
+        return CdbInternalAuthentication.auth_header(request).lower().startswith('bearer')
+
+    @staticmethod
+    def introspect_with_system(
+            token, cloud_host_name, system_id
+    ) -> Tuple[None, None, None] | Tuple[str, str, List[str]]:
+        cached = TokenCache.get_token_system(token, system_id)
+        if cached:
+            return cached[0], system_id, cached[1]
+        cdb_client = NxCloudApiClientFactory.get_sync_client(
+            host=cloud_host_name,
+            access_token=token,
+            auto_refresh=False
+        )
+        response = cdb_client.authentication.introspect([str(system_id)])
+        if response.status_code == 200:
+            introspection = response.json()
+            if introspection.get('active') is True and (email := introspection.get('username')):
+                system_role_ids = introspection.get('system_role_ids', {}).get(str(system_id), [])
+                TokenCache.set_token_system(token, system_id, email, system_role_ids)
+                TokenCache.set_token(token, email)
+                return email, system_id, system_role_ids
+        return None, None, None
