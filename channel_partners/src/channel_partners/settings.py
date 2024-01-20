@@ -53,6 +53,13 @@ LANGUAGE_COOKIE_PATH = BASE_COOKIE_PATH
 SESSION_COOKIE_PATH = BASE_COOKIE_PATH
 CSRF_COOKIE_PATH = BASE_COOKIE_PATH
 
+# Cookie Names (Can be found here: https://docs.djangoproject.com/en/4.2/ref/settings/#settings)
+LANGUAGE_COOKIE_NAME = "channel_partners_django_language"
+SESSION_COOKIE_NAME = "channel_partners_sessionid"
+CSRF_COOKIE_NAME = "channel_partners_csrftoken"
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
