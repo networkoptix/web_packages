@@ -85,11 +85,10 @@ class RegisterForm:
         self.password_input()
         self.create_account_button()
 
-    def register_new_user(self, first_name, last_name, email, password, checked=False):
+    def register_new_user(self, first_name, last_name, email, password):
         self.first_name_input().input_text(first_name)
         self.last_name_input().input_text(last_name)
         self.email_input().input_text(email)
         self.password_input().input_text(password)
-        if not checked:
-            self.terms_and_conditions_checkbox().select()
+        self.terms_and_conditions_checkbox().select()
         self.create_account_button().click()
