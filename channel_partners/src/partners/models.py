@@ -1341,8 +1341,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             groups_membership = list(groups_membership)
             if len(groups_membership) == 0:
                 return []
-        user_groups = SystemGroup.objects.filter(organization=self)
-        if None not in groups_membership:
+        if None in groups_membership:
+            # User is a member of organization or channel partner
+            user_groups = SystemGroup.objects.filter(organization=self)
+        else:
+            # User is a member of groups
             user_groups = SystemGroup.objects.filter(
                 Q(path__overlap=groups_membership) | Q(id__in=groups_membership),
                 organization=self
