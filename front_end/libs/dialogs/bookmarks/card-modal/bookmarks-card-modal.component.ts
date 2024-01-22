@@ -12,6 +12,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { BookmarkDetails as DT } from '@dialogs/dialogs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -39,6 +40,7 @@ export class NxBookmarksCardModalComponent {
     fullRecordingUrl: string;
     videoError$$ = signal(false);
     videoLoaded$$ = signal(false);
+    bookmarkSharingEnabled = nxConfig.featureFlags.bookmarkSharing;
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
@@ -59,6 +61,10 @@ export class NxBookmarksCardModalComponent {
             downloadSrc: this.bookmark.downloadSrc,
         };
         this.dialogs.bookmarkDownload(dialogData);
+    }
+
+    openShareDialog(): void {
+        // TODO: Implement share dialog
     }
 
     close(): void {

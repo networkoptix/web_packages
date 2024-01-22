@@ -211,6 +211,7 @@ const FeatureFlagKeys = [
     'enhancedDownloads',
     'use500ErrorInterceptor',
     'layoutsUpdatedCrossSystemMenu',
+    'bookmarkSharing',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

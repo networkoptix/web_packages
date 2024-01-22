@@ -451,7 +451,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     canViewBookmarks(isMobile?: boolean) {
-        const bookmarksEnabled = !isMobile && nxConfig.featureFlags.bookmarks && this.version >= 5;
+        const webAdminAndNotProduction = environment.isLocal && !environment.production;
+        const bookmarksEnabled =
+            !isMobile &&
+            (nxConfig.featureFlags.bookmarks || webAdminAndNotProduction) &&
+            this.version >= 5;
         if (!bookmarksEnabled) {
             return false;
         }

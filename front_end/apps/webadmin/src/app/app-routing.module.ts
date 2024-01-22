@@ -4,6 +4,7 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
 import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
 import { NonProductionEnvironment } from '@guards/environment.guard';
+import { SystemGuard } from '@guards/systemGuard';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 
@@ -52,7 +53,9 @@ const lazyRoutes: Routes = [
         pathMatch: 'full',
     },
     {
+        canLoad: [NonProductionEnvironment],
         path: 'bookmarks',
+        canActivate: [SystemGuard],
         loadChildren: () =>
             import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
     },

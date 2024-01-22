@@ -93,7 +93,7 @@
         <button
             *ngIf="bookmark.canDownloadBookmark"
             (click)="openDownloadDialog()"
-            class="download-button btn-default btn"
+            class="action-button btn-default btn"
             type="button"
             translate
         >
@@ -104,6 +104,21 @@
                 [applyClass]="true"
             ></svg-icon>
             Download
+        </button>
+        <button
+            *ngIf="bookmarkSharingEnabled"
+            (click)="openShareDialog()"
+            class="action-button btn-default btn"
+            type="button"
+            translate
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'share.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+            Share
         </button>
     </div>
 </div>
