@@ -1,3 +1,5 @@
 .idea
 src/static
 **/stage
+# Jupyter Notebook for local testing
+src/notebooks

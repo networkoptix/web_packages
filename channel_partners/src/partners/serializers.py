@@ -108,30 +108,26 @@ class CodeChoiceField(serializers.ChoiceField):
         OpenApiExample(
             'Support Information Example',
             value={
-                'sites': ['https://www.example.com'],
-                'phones': [{'phone': '1234', 'description': 'for customer'}],
-                'emails': [{'email': '1234', 'description': 'for customer'}],
-                'custom': [{'label': 'field1', 'value': 'value1'}]
-            },
+                "sites": [{"value": "123", "description": "123"}],
+                "phones": [{"value": "123", "description": "123"}],
+                "emails": [{"value": "123", "description": "123"}],
+                "custom": [{"label": "abc", "value": "123"}]
+            }
         ),
     ]
 )
 class SupportInformationSerializer(serializers.Serializer):
-    class PhoneSerializer(serializers.Serializer):
-        phone = NonPartialCharfield(required=True)
-        description = NonPartialCharfield(required=False)
-
-    class EmailSerializer(serializers.Serializer):
-        email = NonPartialCharfield(required=True)
+    class ValueDescription(serializers.Serializer):
+        value = NonPartialCharfield(required=True)
         description = NonPartialCharfield(required=False)
 
     class CustomSerializer(serializers.Serializer):
         label = NonPartialCharfield(required=True)
         value = NonPartialCharfield(required=True)
 
-    sites = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
-    phones = PhoneSerializer(many=True, required=False, default=list)
-    emails = EmailSerializer(many=True, required=False, default=list)
+    sites = ValueDescription(many=True, required=False, default=list)
+    phones = ValueDescription(many=True, required=False, default=list)
+    emails = ValueDescription(many=True, required=False, default=list)
     custom = CustomSerializer(many=True, required=False, default=list)
 
     def to_representation(self, instance: dict):
