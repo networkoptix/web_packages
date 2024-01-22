@@ -12,7 +12,7 @@ from generic_elements import ToastNotification
 
 class LoginDialog:
 
-    def __init__(self, driver, lang="en_US", twofa=""):
+    def __init__(self, driver, lang="en_US"):
         self._driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_modal_is_visible()
