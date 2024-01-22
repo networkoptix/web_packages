@@ -19,10 +19,10 @@ class SecurityForm:
         self.rb = RobotVariables(lang)
         self._wait_until_form_is_visible()
 
-    def twofa_enable_button(self):
+    def _twofa_enable_button(self):
         return Button(self.driver, f"//button[contains(text(),'{self.rb.ENABLE_TWOFA_TEXT}')]")
 
-    def twofa_disable_button(self):
+    def _twofa_disable_button(self):
         return Button(self.driver, f"//button[contains(text(),'{self.rb.DISABLE_TWOFA_TEXT}')]")
 
     def twofa_enabled_badge(self):
@@ -31,31 +31,31 @@ class SecurityForm:
     def twofa_disabled_badge(self):
         return Button(self.driver, f"//a[@name='tag-tag' and contains(text(),'{self.rb.DISABLED_TEXT}')]")
 
-    def twofa_password_modal_input(self):
+    def _twofa_password_modal_input(self):
         return TextField(self.driver, f"{self.twofa_modal}//input[@id='login_password']")
 
-    def twofa_password_modal_next_button(self):
+    def _twofa_password_modal_next_button(self):
         return Button(self.driver, f"{self.twofa_modal}//svg-icon[contains(@data-src,'/images/icons/standard/arrow_right.svg')]")
 
-    def twofa_code_button(self):
+    def _twofa_code_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[@id='qrMode']")
 
-    def twofa_key_modal_next_button(self):
+    def _twofa_key_modal_next_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[@id='nextWizardCode']")
 
-    def twofa_key(self):
+    def _twofa_key(self):
         return PageText(self.driver, f"{self.twofa_modal}//nx-info-block//div[@class='block-section-values']//p[contains(@title,'Key')]")
 
     def twofa_totp_input(self):
         return TextField(self.driver, "//nx-2fa-code-input/input")
 
-    def twofa_verify_button(self):
+    def _twofa_verify_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[text()='{self.rb.TWOFA_VERIFY_BTN_TEXT}']")
 
-    def twofa_copy_all_button(self):
+    def _twofa_copy_all_button(self):
         return Button(self.driver, f"{self.twofa_modal}//span[text()='{self.rb.TWOFA_COPY_ALL_BTN_TEXT}']")
 
-    def twofa_ok_button(self):
+    def _twofa_ok_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[@id='wizardDone']")
 
     def twofa_backup_code_error(self):
@@ -70,7 +70,7 @@ class SecurityForm:
     def twofa_settings_modal_check(self):
         return PageText(self.driver, f"//nx-require-code-on-login//p/span[text()='{self.rb.TWOFA_SETTINGS_MODAL_DESCRIPTION_TEXT1}']")
 
-    def twofa_disable_modal_button(self):
+    def _twofa_disable_modal_button(self):
         return Button(self.driver, "//nx-disable-account-2fa//button[@type='submit']")
 
     def twofa_settings_modal_on_instructions(self):
@@ -92,22 +92,22 @@ class SecurityForm:
         return Button(self.driver, '//nx-account-security-component//nx-apply//button[@type="submit"]')
 
     def turn_on_2fa(self, account: CloudAccount, qr_code=False):
-        self.twofa_enable_button().click()
-        self.twofa_password_modal_input().input_text(account.password)
-        self.twofa_password_modal_next_button().click()
+        self._twofa_enable_button().click()
+        self._twofa_password_modal_input().input_text(account.password)
+        self._twofa_password_modal_next_button().click()
         if qr_code:
             screenshot = Image(self.driver, f'{self.twofa_modal}//qr-code').get_screenshot()
             totp = TimeBasedOtp.from_qr(screenshot)
-            self.twofa_key_modal_next_button().click()
+            self._twofa_key_modal_next_button().click()
         else:
-            self.twofa_code_button().click()
-            key = self.twofa_key().get_text().strip()
+            self._twofa_code_button().click()
+            key = self._twofa_key().get_text().strip()
             totp = TimeBasedOtp(key)
-            self.twofa_key_modal_next_button().click()
+            self._twofa_key_modal_next_button().click()
         totp_code = totp.generate_otp()
         self.twofa_totp_input().input_text(totp_code)
-        self.twofa_verify_button().click()
-        self.twofa_copy_all_button().wait_until_visible()
+        self._twofa_verify_button().click()
+        self._twofa_copy_all_button().wait_until_visible()
         account.setup_totp(totp)
         backup_code_indexes = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//span')
         backup_code_entries = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//div')
@@ -120,13 +120,13 @@ class SecurityForm:
         if len(backup_codes) != 8:
             raise RuntimeError(f"Wrong number of backup codes. Expected 8, got {len(backup_codes)}")
         account.setup_backup_codes(backup_codes)
-        self.twofa_ok_button().click()
+        self._twofa_ok_button().click()
 
     def turn_off_2fa(self, totp_code):
-        self.twofa_disable_button().click()
+        self._twofa_disable_button().click()
         self.twofa_totp_input().input_text(totp_code)
-        self.twofa_disable_modal_button().click()
+        self._twofa_disable_modal_button().click()
 
     def _wait_until_form_is_visible(self):
-        self.twofa_enable_button().wait_until_visible()
+        self._twofa_enable_button().wait_until_visible()
         self.twofa_disabled_badge().wait_until_visible()
