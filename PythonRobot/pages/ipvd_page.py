@@ -412,10 +412,7 @@ class IVPDPage:
     def table_has_rows(self) -> bool:
         table = IPVDTable(self.driver)
         table.wait_until_visible(10)
-        row_count = table.row_count()
-        if not row_count:
-            return False
-        return True
+        return bool(table.row_count())
 
     def validate_advanced_search_is_closed(self) -> bool:
         self.advanced_search_button().wait_until_visible()
