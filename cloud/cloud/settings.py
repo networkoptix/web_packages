@@ -258,6 +258,9 @@ else:
     REDIS_CACHE['LOCATION'] = 'redis://localhost:6379'
 
 CACHES = {
+    "dummy": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache"
+    },
     "default": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/0',
@@ -733,6 +736,10 @@ WAFFLE_FLAG_MODEL = 'cms.Flag'
 WAFFLE_CREATE_MISSING_FLAGS = True
 WAFFLE_CREATE_MISSING_SAMPLES = True
 WAFFLE_CREATE_MISSING_SWITCHES = True
+if 'migrate' in sys.argv:
+    WAFFLE_CACHE_NAME = 'dummy'
+    CACHES['customization'] = CACHES['dummy']
+
 # End Waffle Settings
 
 
