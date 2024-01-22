@@ -281,15 +281,15 @@ if __name__ == "__main__":
         cloud_admins_can_disable_local_viewers(
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['advancedViewer']
-        )
+            cloud_server.get_local_users()['advancedViewer'],
+            )
         cloud_admins_can_disable_local_viewers(
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['viewer']
-        )
+            cloud_server.get_local_users()['viewer'],
+            )
         cloud_admins_can_disable_local_viewers(
             cloud_server,
             cloud_server.get_cloud_owner(),
-            cloud_server.get_local_users()['liveViewer']
-        )
+            cloud_server.get_local_users()['liveViewer'],
+            )
