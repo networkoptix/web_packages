@@ -836,7 +836,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     @extend_schema(summary='Get groups structure of organization (that currrent user can access)',
                    methods=['GET'],
                    responses=GroupsStructureSerializer,
-                   extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
+                   extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['get'], detail=True)
     def groups_structure(self, request, pk=None):
         organization: Organization = self.get_object()
