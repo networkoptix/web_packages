@@ -27,18 +27,6 @@ class Footer:
             f"/span[contains(text(),{self.rb.COMPANY!r})]/parent::a",
             )
 
-    def integrations_link(self):
-        return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.INTEGRATIONS_TITLE_TEXT}')]")
-
-    def known_limits_link(self):
-        return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.KNOWN_LIMITATIONS}')]")
-
-    def about_link(self):
-        return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.ABOUT}')]")
-
-    def supported_devices_link(self):
-        return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.SUPPORTED_DEVICES}')]")
-
     def terms_link(self):
         return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.TERMS}')]")
 
