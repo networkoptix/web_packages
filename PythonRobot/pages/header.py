@@ -54,9 +54,6 @@ class HeaderNav:
             )
         return Button(self._driver, locator)
 
-    def administration_selection(self):
-        pass
-
     def log_in_button(self) -> Button:
         translated_xpath = self._rb.replace_nested_variables(
             "//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
@@ -105,10 +102,6 @@ class HeaderNav:
     def get_system_name(self) -> str:
         element = PageText(self._driver, '//nx-header//span[@class="system-name"]')
         return element.get_text().strip()
-
-    def wait_for_system_offline_text(self):
-        locator = f"//h2[@name=OFFLINE and contains(text(),{self._rb.SYSTEM_OFFLINE_TEXT})]"
-        PageText(self._driver, locator).wait_until_visible()
 
     def click_tab_by_name(self, tab_name: str):
         self._driver.find_element_by_link_text(tab_name).click()
