@@ -93,11 +93,3 @@ class RegisterForm:
         if not checked:
             self.terms_and_conditions_checkbox().select()
         self.create_account_button().click()
-        # try:
-        #     robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
-        # except selenium.common.exceptions.TimeoutException:
-        #     robot_keywords.input_text(rb.REGISTER_EMAIL_INPUT, email)
-
-        # robot_keywords.input_text(rb.REGISTER_PASSWORD_INPUT, password)
-        # if not checked:
-        #     robot_keywords.click_element(rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
