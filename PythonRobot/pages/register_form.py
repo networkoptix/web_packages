@@ -21,9 +21,6 @@ class RegisterForm:
     def email_input_locked(self):
         return TextField(self.driver, "//input[@name='registerEmailLocked']")
 
-    def locked_email_input(self):
-        return TextField(self.driver, "/form//input[@name='registerEmailLocked']")
-
     def first_name_input(self):
         return TextField(self.driver, "//form//input[@id='firstName']")
 
