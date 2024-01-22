@@ -282,12 +282,12 @@ def advanced_search():
         # Step 1
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
-        assert ipvd_page.validate_advanced_search_is_closed()
+        ipvd_page.validate_advanced_search_is_closed()
         before_color = ipvd_page.advanced_search_button().value_of_css_property('color')
         ipvd_page.advanced_search_button().click()
         after_color = ipvd_page.advanced_search_button().value_of_css_property('color')
         assert before_color != after_color
-        assert ipvd_page.validate_advanced_search_is_open()
+        ipvd_page.validate_advanced_search_is_open()
         # Step 2
         ipvd_page.advanced_features_ptz_button().click()
         ipvd_page.advanced_features_ptz_button().has_style('color', 'rgba(43, 56, 63, 1)')

@@ -414,7 +414,7 @@ class IVPDPage:
         table.wait_until_visible(10)
         return bool(table.row_count())
 
-    def validate_advanced_search_is_closed(self) -> bool:
+    def validate_advanced_search_is_closed(self):
         self.advanced_search_button().wait_until_visible()
         self.search_bar().click()
         self.minimum_resolution_dropdown().wait_until_not_visible()
@@ -426,9 +426,8 @@ class IVPDPage:
         self.advanced_features_motion_button().wait_until_not_visible()
         self.advanced_features_h265_button().wait_until_not_visible()
         self.advanced_features_multi_sensor().wait_until_not_visible()
-        return True
 
-    def validate_advanced_search_is_open(self) -> bool:
+    def validate_advanced_search_is_open(self):
         self.advanced_search_button().wait_until_visible()
         self.search_bar().click()
         self.minimum_resolution_dropdown().wait_until_visible()
@@ -440,7 +439,6 @@ class IVPDPage:
         self.advanced_features_motion_button().wait_until_visible()
         self.advanced_features_h265_button().wait_until_visible()
         self.advanced_features_multi_sensor().wait_until_visible()
-        return True
 
     def validate_device_table_has_contents(self, include_last=True) -> bool:
         """Validate IPVD Device Table Not Empty."""
