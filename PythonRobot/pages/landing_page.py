@@ -12,10 +12,6 @@ class LandingPage:
         self.driver = driver
         self.rb = RobotVariables(lang)
 
-    def create_account_button(self):
-        translated_xpath = self.rb.replace_nested_variables("//a[contains(text(), '{CREATE ACCOUNT BUTTON TEXT}')]")
-        return Button(self.driver, translated_xpath)
-
     def _session_expired_dismiss(self):
         """Deals with intermittent session expired modal after logging out."""
         try:
