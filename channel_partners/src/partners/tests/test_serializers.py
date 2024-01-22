@@ -40,6 +40,7 @@ from partners.serializers import (
     OrganizationStateChangeSerializer,
     OrganizationStateConfirmationSerializer,
     OrganizationUserSerializer,
+    SupportInformationSerializer,
     SystemGroupUserSerializer,
     SystemServiceQuantitySerializer,
 )
@@ -1091,3 +1092,26 @@ class TestChannelPartnerStateConfirmationSerializer:
             instance=self.sub_cp, data=request_data, context=self.context)
         assert serializer.is_valid() is False
         assert serializer.errors['code'][0] == "Provided confirmation code is invalid."
+
+
+class TestSupportInformationSerializer:
+
+    def test_serializer_valid_data(self):
+        valid_data = {
+            "sites": [{"value": "123", "description": "123"}],
+            "phones": [{"value": "123", "description": "123"}],
+            "emails": [{"value": "123", "description": "123"}],
+            "custom": [{"label": "abc", "value": "123"}]
+        }
+        serializer = SupportInformationSerializer(data=valid_data)
+        assert serializer.is_valid()
+
+    def test_serializer_invalid_data(self):
+        invalid_data = {
+            'sites': ['not a url'],
+            'phones': [{'phone': '1234', 'description': 'for customer'}],
+            'emails': [{'email': 'not an email', 'description': 'for customer'}],
+            'custom': [{'label': 'field1', 'value': 'value1'}]
+        }
+        serializer = SupportInformationSerializer(data=invalid_data)
+        assert not serializer.is_valid()
