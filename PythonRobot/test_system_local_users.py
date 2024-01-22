@@ -125,7 +125,7 @@ def owner_and_admin_see_local_users(server: Mediaserver, user: CloudAccount):
     """
     _reset_local_users(server)
     url = ENV + f"/systems/{server.id}"
-    with (get_chrome() as driver):
+    with get_chrome() as driver:
         try:
             driver.get(url)
             LoginDialog(driver).basic_cloud_login(user.email, user.password)
