@@ -682,6 +682,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const ldapUsers: Level3Item[] = [];
                 // TODO: Reconcile UserManager types
                 this.system.userManager.users.forEach((user: NxUser) => {
+                    if (user.attributes && user.attributes.includes('hidden')) {
+                        return;
+                    }
                     const id = cleanIdLegacy(user.id);
                     const additionalLabel = this.getUserMenuAdditionalLabel(user);
                     const svgIcon = this.getUserMenuSvgIcon(user);
