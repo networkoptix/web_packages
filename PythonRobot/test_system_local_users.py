@@ -24,6 +24,7 @@ role_names = {
     "custom": rb.CUSTOM_TEXT,
     }
 
+
 def cloud_owner_can_change_local_user_full_name(server: Mediaserver):
     """
     26. Cloud Owner Can Change Local User Full Name
@@ -140,6 +141,7 @@ def owner_and_admin_see_local_users(server: Mediaserver, user: CloudAccount):
             raise
     print("PASS")
 
+
 def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
     """
     40. User list is not available for advanced viewer & lower
@@ -159,6 +161,7 @@ def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
             driver.save_screenshot('error.png')
             raise
     print("PASS")
+
 
 def cloud_admins_can_disable_local_viewers(server: Mediaserver, admin_user: CloudAccount, local_viewer):
     """
@@ -220,7 +223,6 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     else:
         server.update_local_users(
             _create_new_local_users(len(locals_list), server, locals_list))
-
 
 
 def _reset_local_users_api(locals, server):
