@@ -93,7 +93,7 @@ class HeaderNav:
     def home_link(self):
         return Button(self._driver, f'//a[contains(text(), "{self._rb.HOME_TEXT}")]')
 
-    def resouces_link(self):
+    def resources_link(self):
         return Button(self._driver, f'//a[contains(text(), "{self._rb.RESOURCES_TEXT}")]')
 
     def for_developers_link(self):
