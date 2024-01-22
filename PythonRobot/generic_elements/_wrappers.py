@@ -364,6 +364,9 @@ class Image:
     def hover(self):
         self._element.hover()
 
+    def get_screenshot(self):
+        return self._element.get_screenshot()
+
 
 class Pane:
 
