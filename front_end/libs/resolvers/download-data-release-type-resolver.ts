@@ -18,7 +18,7 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     const configDownloads = inject(NxConfigService).getConfig().downloads;
     const { platform, releaseType } = route.params;
     // Check for releaseType if its missing redirect and set it to releases by default
-    if (!releaseType || !['releases', 'betas', 'patches'].includes(releaseType)) {
+    if (!releaseType || !['releases', 'betas'].includes(releaseType)) {
         return router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../', 'releases']));
     }
 

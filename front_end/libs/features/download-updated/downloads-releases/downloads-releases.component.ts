@@ -130,14 +130,6 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
             });
         }
 
-        if (this.downloadData.patches) {
-            this.content.level1.push({
-                id: menus.download.patches.id,
-                label: this.LANG.menu.titles.patches,
-                path: `${menus.download.patches.path}/${platform}`,
-            });
-        }
-
         this.content.level1.push({
             id: menus.download.other.id,
             label: this.LANG.menu.titles.other,
