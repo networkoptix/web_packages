@@ -1351,6 +1351,8 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         name = serializers.CharField(read_only=True)
         membershipType = serializers.ChoiceField(source='_meta.model_name', read_only=True,
                                                  choices=[Organization._meta.model_name, SystemGroup._meta.model_name])
+        groupsPath = serializers.ListField(source='groups_path', read_only=True,
+                                           child=serializers.UUIDField(), default=None)
 
     email = serializers.EmailField(source='user.email')
     fullName = serializers.CharField(source='user.full_name', read_only=True)
