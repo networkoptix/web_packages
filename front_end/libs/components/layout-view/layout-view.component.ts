@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep, uniq } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
-import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
 import {
     catchError,
     distinctUntilChanged,
@@ -302,20 +302,8 @@ export class NxLayoutViewComponent {
                             type: ResourceType.WEB_PAGES,
                             children: webPagesForTree,
                         },
-                        otherSystemsInfo.length &&
-                            !nxConfig.featureFlags.layoutsUpdatedCrossSystemMenu && {
-                                name: staticLang.layouts.titles.resourceTypes[
-                                    ResourceType.OTHER_SYSTEMS
-                                ],
-                                details: { id: ResourceType.OTHER_SYSTEMS },
-                                type: ResourceType.OTHER_SYSTEMS,
-                                children: otherSystemsForTree,
-                            },
                     ].filter(item => !!item),
-                    otherSystems:
-                        otherSystemsInfo.length &&
-                        nxConfig.featureFlags.layoutsUpdatedCrossSystemMenu &&
-                        otherSystemsForTree,
+                    otherSystems: otherSystemsInfo.length && otherSystemsForTree,
                     ...parsedResources,
                 } as unknown as LayoutResourceTree;
             },
@@ -401,6 +389,9 @@ export class NxLayoutViewComponent {
                   )
                 : this.createNewLayout(system.id);
         }),
+        switchMap(layout =>
+            timer(layout ? 0 : 2500).pipe(map(() => layout || this.createNewLayout('show404'))),
+        ),
         shareReplay({
             bufferSize: 1,
             refCount: false,
@@ -467,6 +458,12 @@ export class NxLayoutViewComponent {
                     ),
                 ),
             );
+        this.#selectedLayout$
+            .pipe(
+                switchMap(layout => timer(layout ? 0 : 2500).pipe(map(() => layout))),
+                untilDestroyed(this),
+            )
+            .subscribe(layout => !layout && this.pageService.redirect404());
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {
@@ -542,16 +539,10 @@ export class NxLayoutViewComponent {
                     skip(1),
                     map(() => 'cancel'),
                 ),
-            ).pipe(timeout({ first: 10000, with: () => Promise.resolve(false as const) })),
+            ).pipe(timeout({ first: 1000, with: () => Promise.resolve(false as const) })),
         );
 
-        if (typeof node === 'string') {
-            return;
-        }
-
-        if (!node) {
-            // Redirect to 404 if no layout or device found.
-            await this.pageService.redirect404();
+        if (typeof node === 'string' || !node) {
             return;
         }
 

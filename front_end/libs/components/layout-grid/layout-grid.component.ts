@@ -67,6 +67,7 @@ import { v4 as uuid } from 'uuid';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
@@ -102,8 +103,10 @@ import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
+import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
+import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
@@ -329,6 +332,7 @@ const calculateResize = (
         PortalModule,
         NxLayoutGridItemOverlayComponent,
         CdkContextMenuTrigger,
+        NxPagePlaceholderComponent,
     ],
 })
 export class NxLayoutGridComponent {
@@ -350,6 +354,31 @@ export class NxLayoutGridComponent {
     @ViewChild('gridSection') set gridSection(value: ElementRef) {
         this.layoutStateService.gridSection = value.nativeElement;
     }
+
+    @ViewChild('otherSystems') set otherSystems(element: ElementRef<HTMLDetailsElement>) {
+        this.detailsRef$$.set(element?.nativeElement);
+    }
+
+    detailsRef$$ = signal<HTMLDetailsElement | null>(null);
+    otherSystemsOpen$$ = computed(() => {
+        const otherSitesMenuOpen =
+            this.layoutStateService.paramStateHandler.state$$().queryParams?.otherSitesMenuOpen;
+        return !!otherSitesMenuOpen?.includes('true');
+    });
+
+    toggleOtherSystemsOpen = (open: boolean): void =>
+        this.layoutStateService.paramStateHandler.state$$.set({
+            queryParams: { otherSitesMenuOpen: [open.toString()] },
+        });
+
+    toggleSystemsEffect$$ = effect(() => {
+        const otherSystemsDetails = this.detailsRef$$();
+        const otherSystemsOpen = this.otherSystemsOpen$$();
+
+        if (otherSystemsDetails && otherSystemsOpen) {
+            otherSystemsDetails.open = true;
+        }
+    });
 
     /**
      * Configuration for grid cell spacing calculation.
@@ -936,6 +965,41 @@ export class NxLayoutGridComponent {
         [],
     );
 
+    otherSystems$$ = signal<LayoutResourceTree['otherSystems']>([]);
+
+    otherSystemsFilter$$ = computed(() => {
+        const params = this.layoutStateService.paramStateHandler.state$$();
+        return (params.queryParams?.otherSitesFilter || []).map(name => name.toLocaleLowerCase());
+    });
+
+    filteredOtherSystems$$ = computed(() => {
+        const otherSystems: ResourceNode[] = this.otherSystems$$() || [];
+        const otherSystemsFilter = this.otherSystemsFilter$$();
+
+        if (!otherSystemsFilter.length) {
+            return otherSystems;
+        }
+
+        const exactMatch = otherSystems
+            .filter(({ name }) => otherSystemsFilter.includes(name.toLocaleLowerCase()))
+            .flatMap(({ children }) => children);
+
+        if (exactMatch.length) {
+            return exactMatch;
+        }
+
+        return otherSystems.filter(({ name }) =>
+            otherSystemsFilter.find(filterName =>
+                name.toLocaleLowerCase().includes(filterName.toLocaleLowerCase()),
+            ),
+        );
+    });
+
+    suggestedSiteSearch$$ = computed(() => {
+        const otherSystems = this.otherSystems$$() || [];
+        return otherSystems.map(({ name }) => name);
+    });
+
     async ngOnChanges({
         layout,
         layoutItemLookup,
@@ -953,6 +1017,7 @@ export class NxLayoutGridComponent {
         }
 
         if (itemsChanged) {
+            this.otherSystems$$.set(layoutItemLookup.currentValue.otherSystems);
             const cameras = Object.values(layoutItemLookup.currentValue).filter(
                 assertResourceOfType.camera,
             );
@@ -1761,14 +1826,16 @@ export class NxLayoutGridComponent {
                     ...(assertResourceOfType.layout(node)
                         ? createAddedItems(this.layout.items, node.details.items)
                         : [this.generateLayoutItem(node, { x, y })]),
-                ]);
+                ]).map(ensureLayoutItemResourcePath(this.system.id));
+
+                const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
 
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
-                    // If user doesn't have permissions to edit a layout then create duplicate local layout
-                    if (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) {
-                        this.layoutStateService.duplicateLayoutAsNewLocalLayout({
+                    if (!currentUser.isAdmin || !isLocalLayout) {
+                        // If user doesn't have permissions to edit a layout then create duplicate local layout
+                        this.layoutStateService.duplicateAsNewLayout({
                             ...this.layout,
                             items,
                         });
@@ -1776,14 +1843,8 @@ export class NxLayoutGridComponent {
                         this.layoutStateService.updateLayout({ ...this.layout, items });
                     }
                 } else {
-                    const isLocalLayout = items
-                        .map(
-                            ({ resourcePath }) =>
-                                extractSystemAndResourceId(resourcePath).systemId || this.system.id,
-                        )
-                        .every(systemId => systemId === this.system.id);
                     if (isLocalLayout) {
-                        this.layoutStateService.createNewLocalLayout(items);
+                        this.layoutStateService.createNewLayout(items);
                     } else {
                         this.layoutStateService.createNewCrossSystemLayout(items);
                     }

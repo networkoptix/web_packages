@@ -16,7 +16,6 @@ import {
     animationFrameScheduler,
     combineLatest,
     distinctUntilChanged,
-    firstValueFrom,
     fromEvent,
     map,
     of,
@@ -33,6 +32,7 @@ import { v4 as uuid } from 'uuid';
 
 import { createPortalToken } from '@common/tokens';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import {
@@ -47,6 +47,7 @@ import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { cleanId, dirtyId } from '@utils/general';
+import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
@@ -99,16 +100,21 @@ export class LayoutStateService {
         }
     }
 
-    createNewLocalLayout(items?: LayoutItem[]): string;
-    createNewLocalLayout(name: string, items?: LayoutItem[]): string;
-    createNewLocalLayout(
+    createNewLayout(items?: LayoutItem[]): string;
+    createNewLayout(name: string, items?: LayoutItem[]): string;
+    createNewLayout(
         nameOrItems: string | LayoutItem[] = staticLang.layouts.newLayout,
         items: LayoutItem[] = [],
+        layoutType = LayoutTypes.LOCAL,
     ): string {
         const isName = typeof nameOrItems === 'string';
         const name = isName ? nameOrItems : this.translate.instant(staticLang.layouts.newLayout);
         items = isName ? items : nameOrItems;
         const id = uuid();
+
+        if (hasCrossSystemItems(items, this.systemService.currentSystem$$().id)) {
+            layoutType = LayoutTypes.CROSS_SYSTEM;
+        }
 
         this.store
             .select(SharedLayoutsSelectors.selectLayoutsState)
@@ -117,24 +123,39 @@ export class LayoutStateService {
                 const currentUser = this.systemService
                     .currentSystem$$()
                     .permissionManager.currentUser$$();
-                const existingNames = layouts
-                    .filter(
-                        ({ layout }) =>
-                            !('parentId' in layout) ||
-                            [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
-                                layout.parentId,
-                            ),
-                    )
-                    .map(layout => layout.layout.name);
-                LayoutStateService.runInInjectionContext(() =>
-                    this.store.dispatch(
-                        UnsavedLayoutsActions.createNewLocalLayout({
-                            id,
-                            name: incrementUntilUnique(name, existingNames),
-                            items,
-                        }),
-                    ),
-                );
+                LayoutStateService.runInInjectionContext(() => {
+                    if (layoutType === LayoutTypes.CROSS_SYSTEM) {
+                        const existingNames = layouts
+                            .filter(({ layoutType }) => layoutType === LayoutTypes.CROSS_SYSTEM)
+                            .map(layout => layout.layout.name);
+                        this.store.dispatch(
+                            UnsavedLayoutsActions.createNewCrossSystemLayout({
+                                id,
+                                name: incrementUntilUnique(name, existingNames),
+                                items,
+                            }),
+                        );
+                    } else {
+                        const existingNames = layouts
+                            .filter(
+                                ({ layout, layoutType }) =>
+                                    layoutType === LayoutTypes.LOCAL &&
+                                    (!('parentId' in layout) ||
+                                        [
+                                            currentUser?.id,
+                                            '{00000000-0000-0000-0000-000000000000}',
+                                        ].includes(layout.parentId)),
+                            )
+                            .map(layout => layout.layout.name);
+                        this.store.dispatch(
+                            UnsavedLayoutsActions.createNewLocalLayout({
+                                id,
+                                name: incrementUntilUnique(name, existingNames),
+                                items,
+                            }),
+                        );
+                    }
+                });
             });
 
         return id;
@@ -188,29 +209,54 @@ export class LayoutStateService {
         );
     }
 
-    duplicateLayoutAsNewLocalLayout(layout: Layout): string {
+    #showCloudLayoutsDialog = true;
+
+    duplicateAsNewLayout(layout: Layout, layoutType = LayoutTypes.LOCAL): string {
         const id = uuid();
 
         this.duplicatedLayouts$$.update(layouts => [...layouts, id]);
+
+        if (hasCrossSystemItems(layout.items, this.systemService.currentSystem$$().id)) {
+            const convertedToCrossSystem = layoutType !== LayoutTypes.CROSS_SYSTEM;
+            layoutType = LayoutTypes.CROSS_SYSTEM;
+            if (convertedToCrossSystem && this.#showCloudLayoutsDialog) {
+                this.dialogsService.cloudLayoutsInfo().then(showAgain => {
+                    this.#showCloudLayoutsDialog = showAgain;
+                });
+            }
+        }
 
         this.store
             .select(SharedLayoutsSelectors.selectLayoutsState)
             .pipe(take(1))
             .subscribe((layouts: LayoutState[]) => {
                 const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
-                const existingNames = layouts.map(layout => layout.layout.name);
-                LayoutStateService.runInInjectionContext(() =>
-                    this.store.dispatch(
-                        UnsavedLayoutsActions.duplicateLayout({
-                            id,
-                            layout: {
-                                ...layout,
-                                name: incrementUntilUnique(copyName, existingNames),
+                const existingNames = layouts
+                    .filter(layout => layout.layoutType === layoutType)
+                    .map(layout => layout.layout.name);
+                const name = incrementUntilUnique(copyName, existingNames);
+                LayoutStateService.runInInjectionContext(() => {
+                    if (layoutType === LayoutTypes.CROSS_SYSTEM) {
+                        this.store.dispatch(
+                            UnsavedLayoutsActions.createNewCrossSystemLayout({
                                 id,
-                            },
-                        }),
-                    ),
-                );
+                                name,
+                                items: layout.items,
+                            }),
+                        );
+                    } else {
+                        this.store.dispatch(
+                            UnsavedLayoutsActions.duplicateLayout({
+                                id,
+                                layout: {
+                                    ...layout,
+                                    name,
+                                    id,
+                                },
+                            }),
+                        );
+                    }
+                });
             });
 
         return id;
@@ -232,25 +278,22 @@ export class LayoutStateService {
         callback: () => unknown,
         deleted = false,
     ): void {
-        if (deleted) {
-            callback();
-        }
+        callback();
         this.store
             .select(selectActiveLayoutState)
             .pipe(
                 take(1),
                 switchMap(async activeLayoutId => {
-                    this.activeLayoutHistory = this.activeLayoutHistory.filter(
-                        val => !layoutIds.map(dirtyId).includes(dirtyId(val)),
-                    );
-                    const dirtyLayoutId = dirtyId(activeLayoutId);
-                    const savedLayouts = await firstValueFrom(
-                        this.store.select(SharedLayoutsSelectors.selectLayoutsSavedState),
-                    );
+                    const currentLayout = this.store.selectSignal(
+                        SharedLayoutsSelectors.selectCurrentLayoutState,
+                    )();
                     if (
-                        layoutIds.includes(dirtyLayoutId) &&
-                        (deleted || !savedLayouts.find(({ id }) => id === dirtyLayoutId))
+                        !currentLayout ||
+                        (deleted && cleanId(currentLayout.id) === activeLayoutId)
                     ) {
+                        this.activeLayoutHistory = this.activeLayoutHistory.filter(
+                            val => !layoutIds.map(dirtyId).includes(dirtyId(activeLayoutId)),
+                        );
                         const previous = this.activeLayoutHistory.pop();
                         await this.paramStateHandler.updater({
                             params: {
@@ -260,7 +303,7 @@ export class LayoutStateService {
                     }
                 }),
             )
-            .subscribe(() => !deleted && callback());
+            .subscribe();
     }
 
     discardUnsavedLayout(layoutId: string): void;
@@ -454,6 +497,8 @@ export class LayoutStateService {
         queryParams: {
             openNodes: queryParams.openNodes,
             search: queryParams.search,
+            otherSitesFilter: queryParams.otherSitesFilter,
+            otherSitesMenuOpen: queryParams.otherSitesMenuOpen,
         },
     }));
 
@@ -488,6 +533,7 @@ export class LayoutStateService {
         private paramStateService: NxParamStateService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
+        private dialogsService: NxDialogsService,
     ) {
         this.crossSystemLayoutApi = this.cloudApi.docDbApi.crossSystemLayout;
         LayoutStateService.runInInjectionContext = callback =>

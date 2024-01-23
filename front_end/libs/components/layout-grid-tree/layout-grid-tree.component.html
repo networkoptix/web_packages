@@ -6,13 +6,34 @@
 </ng-template>
 
 <div class="resource-tree-wrapper">
-    @if (layoutGridService.isLeftMenuOpen$$() && showSearch) {
-        <nx-search
-            [ngModel]="layoutStateService.paramStateHandler.state$$().queryParams.search"
-            layout="search"
-            instant
-        >
-        </nx-search>
+    @if (layoutGridService.isLeftMenuOpen$$() && searchType; as showSearchType) {
+        <div class="search-wrapper">
+            @switch (showSearchType) {
+                @case ('query') {
+                    <nx-search
+                        layout="search"
+                        instant
+                    >
+                    </nx-search>
+                }
+                @case ('filter') {
+                    <div
+                        class="sites-heading"
+                        translate
+                    >
+                        Sites
+                    </div>
+                    <nx-search
+                        [suggestedSearch]="suggestedSearch"
+                        paramBinding="otherSitesFilter"
+                        [placeholder]="'Filter by site' | translate"
+                        layout="search"
+                        instant
+                    >
+                    </nx-search>
+                }
+            }
+        </div>
     }
     <div
         cdkDropList
@@ -33,7 +54,7 @@
             >
                 <div
                     cdkDrag
-                    (click)="toggleNode(node)"
+                    (click)="toggleNode(node, $event)"
                     [cdkDragDisabled]="dragDisabled[node.type] || layout.locked"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
@@ -112,7 +133,7 @@
                     (cdkDragReleased)="layoutGridService.addItem.next(node)"
                     [alternativeTargetRef]="tooltipOffsetTarget"
                     [nxTooltip]="
-                        (showTooltip$ | async) &&
+                        showTooltip &&
                         (node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
                             : node.type === RESOURCE_TYPE.SERVER && CONFIG.featureFlags.layoutsDemo

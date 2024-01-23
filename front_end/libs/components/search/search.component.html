@@ -13,7 +13,15 @@
                     [class]="layout"
                     [ngClass]="{ 'mr-3': layout === 'full' }"
                 >
+                    @if (suggestedSearch.length) {
+                        <datalist [id]="instanceId">
+                            @for (suggestion of suggestedSearch; track suggestion) {
+                                <option>{{ suggestion }}</option>
+                            }
+                        </datalist>
+                    }
                     <input
+                        #inputElement
                         [ngModel]="localFilter.query"
                         (ngModelChange)="onSearchType($event)"
                         [ngClass]="{ 'non-empty': localFilter.query }"
@@ -26,6 +34,8 @@
                         type="text"
                         class="form-control search-input"
                         name="query"
+                        [attr.value]="searchUpdated | async"
+                        [attr.list]="toggleSuggestions$ | async"
                         autocomplete="off"
                         [placeholder]="placeholder | translate"
                     />

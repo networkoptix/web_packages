@@ -56,28 +56,40 @@ nx-webgl-canvas {
     margin-left: -16px;
     margin-bottom: -16px;
     padding-left: 16px;
-    padding-bottom: 16px;
+    padding-bottom: 0;
     overflow: hidden;
 
-    &.details-expanded {
-        padding-bottom: 40px;
+    &[open] {
+        flex-grow: 1;
+        min-height: 50%;
     }
 
     & > summary {
         @include typography.regular14nocolor;
-        background: var(--header-bg);
+        color: var(--other-sites-title);
+        background: var(--other-sites-heading-background);
         margin-left: -16px;
-        padding: 4px 16px 4px 16px;
+        padding: 16px;
         list-style: none;
+        line-height: 16px;
+        position: relative;
 
         & > span {
             white-space: nowrap;
             overflow: hidden;
         }
+
+        & > .arrow-flip > svg-icon {
+            bottom : 12px;
+            .st0 {
+                stroke: var(--other-sites-expand-stroke);
+            }
+        }
     }
 
-    & > nx-layout-grid-tree {
-        height: 100%;
+    & > div {
+        height: calc(100% - 56px);
+        overflow-x: hidden;
     }
 }
 
@@ -866,6 +878,7 @@ iframe {
     }
 }
 
+.error-404-placeholder,
 .no-camera-placeholder,
 .no-layout-placeholder {
     position: absolute;

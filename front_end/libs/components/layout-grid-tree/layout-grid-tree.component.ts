@@ -21,17 +21,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import {
-    BehaviorSubject,
-    Observable,
-    Subject,
-    combineLatest,
-    of,
-    timer,
-    firstValueFrom,
-} from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, of, timer, firstValueFrom } from 'rxjs';
 import {
     delay,
     distinctUntilChanged,
@@ -70,6 +62,7 @@ import {
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
+import { SearchParamBindings } from '@components/search/search.component.types';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -85,6 +78,7 @@ import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { LocalLayoutsSelectors } from '@services/layout-state/store/local-layouts';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
 import { MutationType } from '@services/param-state/param-state.types';
@@ -94,6 +88,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
+import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 
 const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
@@ -102,6 +97,7 @@ const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
     valueGetter: (item: DataType) => QueryType,
     childrenGetter: (item: DataType) => DataType[],
     showNodeFn: (item: DataType, matched: boolean) => boolean = (_, matched) => matched,
+    filter = false,
     compareFn: (query: QueryType, value: QueryType) => boolean = (query, value) =>
         value.toLowerCase().includes(query.toString().toLowerCase()),
 ): DataType[] => {
@@ -109,7 +105,10 @@ const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
         ? cloneDeep(dataSource).map(node => {
               node.children = node.children?.map(node => ({
                   ...node,
-                  hidden: !node.name.toLowerCase().includes(query.toLowerCase()),
+                  hidden:
+                      !filter &&
+                      !node.name.toLowerCase().includes(query.toLowerCase()) &&
+                      node.details.id !== 'noResults',
               }));
               node.hidden = node.children?.every(node => node.hidden);
               if (node.hidden) {
@@ -187,10 +186,11 @@ const findNode = (
     styleUrls: ['./layout-grid-tree.component.scss'],
 })
 export class NxLayoutGridTreeComponent {
-    @Input() showSearch: boolean = true;
+    @Input() searchType?: 'query' | 'filter' = 'query';
     @Input() layout: Layout;
     @Input() system: NxSystem;
     @Input() dataSource: BaseResourceNode[];
+    @Input() linkedDataSource?: BaseResourceNode[];
     layoutItemLookup$$ = signal<LayoutResourceTree | null>(null);
     @Input() set layoutItemLookup(value: LayoutResourceTree) {
         this.layoutItemLookup$$.set(value);
@@ -198,8 +198,9 @@ export class NxLayoutGridTreeComponent {
     @Input() treeControl: NestedTreeControl<ResourceNode, string>;
     @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
-    @Input() showTooltip$: Observable<boolean>;
+    @Input() showTooltip: boolean;
     @Input() changingLayout: string | boolean = true;
+    @Input() suggestedSearch: string[] = [];
 
     @ViewChild('currentItemContext') set currentItemContext(value: TemplateRef<unknown>) {
         this.layoutStateService.contextMenu = value;
@@ -210,8 +211,17 @@ export class NxLayoutGridTreeComponent {
     currentNode: ResourceNode;
 
     query$ = this.layoutStateService.paramStateHandler.state$.pipe(
-        map(({ queryParams: { search } }) => search?.[0] || ''),
-        distinctUntilChanged(),
+        map(({ queryParams }) => {
+            const query = queryParams?.search?.[0] || '';
+            if (this.searchType === 'filter' && queryParams.otherSitesFilter?.length) {
+                // TODO: Update search highlight component to handle array of string
+                // return [query, ...queryParams.otherSitesFilter];
+                return queryParams.otherSitesFilter[0];
+            }
+
+            return query;
+        }),
+        distinctUntilChanged((a, b) => isEqual(a, b)),
         shareReplay({ bufferSize: 1, refCount: false }),
         untilDestroyed(this),
     );
@@ -222,11 +232,19 @@ export class NxLayoutGridTreeComponent {
 
     dataSource$ = combineLatest([this.query$, this.initialDataSource$]).pipe(
         // Filter here
-        tap(([query]) => {
+        tap(([query, nodes]) => {
             if (query) {
-                this.dataSource.forEach(node => this.treeControl.expand(node));
+                if (this.searchType !== 'filter') {
+                    [...this.dataSource, ...(this.linkedDataSource || [])].forEach(node =>
+                        this.treeControl.expand(node),
+                    );
+                } else if (!this.lastQuery) {
+                    nodes.forEach(node => this.treeControl.collapse(node));
+                }
             } else if (!query && this.lastQuery) {
-                this.treeControl.collapseAll();
+                if (this.searchType !== 'filter') {
+                    this.treeControl.collapseAll();
+                }
                 this.expandNodesFromParams();
             }
             this.lastQuery = query;
@@ -238,6 +256,7 @@ export class NxLayoutGridTreeComponent {
                 node => node.name,
                 node => node.children || [],
                 (node, matched) => matched || !!node.children?.length,
+                this.searchType === 'filter',
             ),
         ),
         untilDestroyed(this),
@@ -313,10 +332,12 @@ export class NxLayoutGridTreeComponent {
         const { queryParams: { openNodes = [] } = { openNodes: [] } } =
             this.layoutStateService.paramStateHandler.state$$();
 
-        let foundNode = findNode(this.dataSource, this.layout.id);
+        const dataSource = [...this.dataSource, ...(this.linkedDataSource || [])];
+
+        let foundNode = findNode(dataSource, this.layout.id);
 
         openNodes.forEach(id => {
-            const node = findNode(this.dataSource, id);
+            const node = findNode(dataSource, id);
             if (node && !findNode(node.children, foundNode?.details?.id || '')) {
                 this.treeControl.expand(node);
             }
@@ -430,8 +451,7 @@ export class NxLayoutGridTreeComponent {
                 {
                     id: 'duplicate',
                     name: this.ACTIONS_LANG.duplicate.name,
-                    action: () =>
-                        this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
+                    action: () => this.layoutStateService.duplicateAsNewLayout(node.details),
                 },
                 node.owned &&
                     !node.locked && {
@@ -490,7 +510,9 @@ export class NxLayoutGridTreeComponent {
         const resourceId = dirtyId(id);
         const unknownItem = this.layoutItemLookup$$()?.[resourceId];
         const resourcePath = `cloud://${
-            unknownItem && 'systemId' in unknownItem ? unknownItem.systemId : this.system.id
+            unknownItem && 'systemId' in unknownItem.details
+                ? unknownItem.details.systemId
+                : this.system.id
         }.${id}`;
 
         if (unknownItem && assertResourceOfType.camera(unknownItem)) {
@@ -557,15 +579,19 @@ export class NxLayoutGridTreeComponent {
 
         const focusView = this.layout.name === this.layoutStateService.focusViewToken;
 
+        const crossSystemItemsAdded =
+            this.layout.systemId && hasCrossSystemItems(updatedLayout.items, this.layout.systemId);
+
         if (
             (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) ||
             this.layout.locked ||
-            focusView
+            focusView ||
+            crossSystemItemsAdded
         ) {
             if (focusView) {
-                this.layoutStateService.createNewLocalLayout(updatedLayout.items);
+                this.layoutStateService.createNewLayout(updatedLayout.items);
             } else {
-                this.layoutStateService.duplicateLayoutAsNewLocalLayout(updatedLayout);
+                this.layoutStateService.duplicateAsNewLayout(updatedLayout);
             }
         } else {
             this.layoutStateService.updateLayout(updatedLayout);
@@ -662,7 +688,7 @@ export class NxLayoutGridTreeComponent {
                       action: ($event, node) => {
                           $event.preventDefault();
                           $event.stopPropagation();
-                          const newLayout = this.layoutStateService.createNewLocalLayout();
+                          const newLayout = this.layoutStateService.createNewLayout();
                           this.dataSource$
                               .pipe(
                                   map(dataSource => findNode(dataSource, newLayout)),
@@ -761,10 +787,17 @@ export class NxLayoutGridTreeComponent {
                         const system = systems.find(({ id }) => id === node.details.id);
                         return system?.stateOfHealth !== 'online';
                     }),
-                    action: ($event, node) =>
-                        this.layoutStateService.paramStateHandler.state$$.set({
-                            params: { systemId: node.details.id },
-                        }),
+                    action: ($event, node) => {
+                        const isSystemLayout = !!this.store
+                            .selectSignal(LocalLayoutsSelectors.selectLocalLayoutsState)()
+                            .find(({ id }) => id === this.layout.id);
+                        this.layoutStateService.paramStateHandler.state$$.update(({ params }) => ({
+                            params: {
+                                systemId: node.details.id,
+                                layoutId: isSystemLayout || !params ? 'default' : params.layoutId,
+                            },
+                        }));
+                    },
                 },
             ].filter(Boolean),
     };
@@ -791,17 +824,31 @@ export class NxLayoutGridTreeComponent {
         this.window.open(...params);
     };
 
-    toggleNode = (node: ResourceNode): void => {
+    toggleNode = (node: ResourceNode, event: MouseEvent): void => {
         const nodeId = node.details?.id;
         if (!nodeId) {
             return;
         }
 
+        const element = event.target as HTMLElement;
+        const parent = element.parentElement;
+
+        const nameClicked = [element?.textContent, parent?.textContent].includes(node.name);
+
         this.layoutStateService.paramStateHandler.updater(() => {
             this.treeControl.toggle(node);
             const nodeOpened = this.treeControl.isExpanded(node);
+
+            const otherSitesFilter =
+                node.type === ResourceType.SYSTEM && nameClicked
+                    ? {
+                          [SearchParamBindings.OTHER_SITES_FILTER]: node.name,
+                      }
+                    : {};
+
             return {
                 queryParams: {
+                    ...otherSitesFilter,
                     openNodes: {
                         value: [nodeId],
                         mutationType: nodeOpened ? MutationType.APPEND : MutationType.REMOVE,

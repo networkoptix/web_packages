@@ -14,7 +14,13 @@
     padding-right: 24px;
 }
 
-nx-search {
+.sites-heading {
+    @include typography.regular15nocolor;
+    color: var(--other-sites-title);
+    padding: 16px 0 8px 0;
+}
+
+.search-wrapper {
     display: block;
     padding-bottom: 8px;
     margin-bottom: 8px;
