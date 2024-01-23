@@ -2,7 +2,6 @@ import logging
 import re
 import sys
 import time
-import traceback
 from contextlib import ExitStack
 from random import randint
 from types import MappingProxyType
@@ -10,9 +9,8 @@ from typing import Collection
 from typing import List
 from typing import Mapping
 from typing import Optional
-from typing import Callable
-from pathlib import Path
 
+from NoptixLibrary.test_runner import Reporter
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import ContainerConfiguration
@@ -22,7 +20,6 @@ from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
 from NoptixLibrary.server_api import _MediaserverUser
-from browsers.chrome import test_in_chrome
 from email_access import get_random_email
 from requests import HTTPError
 
@@ -40,15 +37,18 @@ _logger = logging.getLogger(__name__)
 
 class Suite:
 
-    def __init__(self):
+    def __init__(self, reporter: Optional[Reporter] = None):
         self.run_id = randint(10000, 100000)
         self._exit_stack = ExitStack()
         self._server_count = 0
+        self._reporter = reporter
 
     def __enter__(self) -> 'Suite':
         return self
 
     def __exit__(self, *exc_details):
+        if self._reporter is not None:
+            self._reporter.finalize()
         # Calling close() from context manager's __exit__ will suppress parent exceptions
         self._exit_stack.__exit__(*exc_details)
 
@@ -472,29 +472,3 @@ class PortNotMapped(Exception):
 
     def __str__(self):
         return self.msg
-
-class Test:
-
-    def __init__(self, test_function: Callable, *args, **kwargs):
-        self._callable = test_function
-        self._args = args
-        self._kwargs = kwargs
-        self._name = self._callable.__name__
-        self._artifacts_dir = Path(f'artifacts/{self._name}_{str(time.time()).split(".")[0]}_')
-
-    def run(self):
-        started_at = time.monotonic()
-        with test_in_chrome(self._artifacts_dir) as browser:
-            try:
-                self._callable(browser, *self._args, **self._kwargs)
-            except Exception:
-                print(f'FAIL____{self._name}')
-                print(traceback.format_exc())
-            else:
-                duration = time.strftime("%H:%M:%S", time.gmtime(time.monotonic() - started_at))
-                print(f'PASS____{self._name}____{duration}')
-
-    def skip(self, msg: Optional[str] = None):
-        print(f'SKIP____{self._name}')
-        if msg is not None:
-            print(msg)

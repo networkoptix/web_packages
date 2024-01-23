@@ -4,7 +4,8 @@ from pathlib import Path
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from NoptixLibrary.suite import Test
+from NoptixLibrary.test_runner import Reporter
+from NoptixLibrary.test_runner import Test
 from RobotVariables import RobotVariables
 from pages.login import LoginDialog
 from browsers.chrome import get_chrome
@@ -221,35 +222,36 @@ def _delete_all_local_users_via_api(server, locals_list):
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
-    with Suite() as suite:
+    r = Reporter()
+    with Suite(r) as suite:
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
-        Test(local_user_deleted_on_server_gone_from_ui, cloud_server).run()
-        Test(local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_owner).run()
-        Test(local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_server.get_cloud_admin()).skip(
+        Test(r, local_user_deleted_on_server_gone_from_ui, cloud_server).run()
+        Test(r, local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_owner).run()
+        Test(r, local_user_deleted_in_ui_deleted_from_server, cloud_server, cloud_server.get_cloud_admin()).skip(
             "Skipping due to https://networkoptix.atlassian.net/browse/CLOUD-12165"
         )
-        Test(new_local_user_appears_in_cloud_portal, cloud_server).run()
-        Test(owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_owner()).run()
-        Test(owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_admin()).skip(
+        Test(r, new_local_user_appears_in_cloud_portal, cloud_server).run()
+        Test(r, owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_owner()).run()
+        Test(r, owner_and_admin_see_local_users, cloud_server, cloud_server.get_cloud_admin()).skip(
             "Skipping due to https://networkoptix.atlassian.net/browse/CLOUD-12165"
         )
-        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_viewer()).run()
-        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_live_viewer()).run()
-        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_advanced_viewer()).run()
-        Test(non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_custom_user()).run()
-        Test(cloud_admins_can_disable_local_viewers,
+        Test(r, non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_viewer()).run()
+        Test(r, non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_live_viewer()).run()
+        Test(r, non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_advanced_viewer()).run()
+        Test(r, non_admins_cant_see_local_users, cloud_server, cloud_server.get_cloud_custom_user()).run()
+        Test(r, cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
             cloud_server.get_local_users()['advancedViewer']
         ).run()
-        Test(cloud_admins_can_disable_local_viewers,
+        Test(r, cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
             cloud_server.get_local_users()['viewer']
         ).run()
-        Test(cloud_admins_can_disable_local_viewers,
+        Test(r, cloud_admins_can_disable_local_viewers,
             cloud_server,
             cloud_server.get_cloud_owner(),
             cloud_server.get_local_users()['liveViewer']

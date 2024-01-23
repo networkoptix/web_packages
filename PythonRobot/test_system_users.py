@@ -4,7 +4,8 @@ from pathlib import Path
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from NoptixLibrary.suite import Test
+from NoptixLibrary.test_runner import Reporter
+from NoptixLibrary.test_runner import Test
 from RobotVariables import RobotVariables
 from email_access import EmailClient
 from email_access import get_random_email
@@ -742,36 +743,37 @@ def disable_enable_correctly_affects_user(driver, server: Mediaserver, user: Clo
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
-    with Suite() as suite:
+    r = Reporter()
+    with Suite(r) as suite:
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         cloud_owner_2 = suite.create_cloud_account()
         cloud_server_2 = suite.create_cloud_server(cloud_owner_2)
-        Test(owner_can_remove_user, cloud_server).run()
-        Test(cloud_admin_can_remove_user,cloud_server).run()
-        Test(share_with_registered_user_works,cloud_server).run()
-        Test(share_with_registered_user_sends_notification, cloud_server).run()
-        Test(share_with_unregistered_user_sends_notification, cloud_server).run()
-        Test(email_is_locked_when_unregistered_user_is_invited,cloud_server).run()
-        Test(cancel_disconnect,cloud_server).run()
-        Test(disconnect_should_remove_system,cloud_server).run()
-        Test(owner_cannot_edit_users_via_share,cloud_server).run()
-        Test(cloud_admin_cannot_edit_users_via_share,cloud_server).run()
-        Test(cloud_admin_cannot_delete_or_edit_self,cloud_server).run()
-        Test(cloud_admin_cannot_delete_admins_or_owner,cloud_server).run()
-        Test(cloud_admin_cannot_invite_admin,cloud_server).run()
-        Test(user_data_should_match_registration,cloud_server).run()
-        Test(owner_can_unlink_offline_system_from_cloud,cloud_server_2).run()
-        Test(viewer_can_remove_offline_system_from_account,cloud_server_2).run()
-        Test(add_user_button_opens_cancellable_modal,cloud_server).run()
-        Test(verify_special_hints_on_permissions_dropdown,cloud_server).run()
-        Test(change_role_for_cloud_user,cloud_server).run()
-        Test(edit_permission_works_for_owner,cloud_server).run()
-        Test(edit_permission_works_for_cloud_admin,cloud_server).run()
-        Test(test_email_validation,cloud_server).run()
-        Test(users_can_disconnect_themselves,cloud_server).run()
-        Test(disable_enable_correctly_affects_user,
+        Test(r, owner_can_remove_user, cloud_server).run()
+        Test(r, cloud_admin_can_remove_user,cloud_server).run()
+        Test(r, share_with_registered_user_works,cloud_server).run()
+        Test(r, share_with_registered_user_sends_notification, cloud_server).run()
+        Test(r, share_with_unregistered_user_sends_notification, cloud_server).run()
+        Test(r, email_is_locked_when_unregistered_user_is_invited,cloud_server).run()
+        Test(r, cancel_disconnect,cloud_server).run()
+        Test(r, disconnect_should_remove_system,cloud_server).run()
+        Test(r, owner_cannot_edit_users_via_share,cloud_server).run()
+        Test(r, cloud_admin_cannot_edit_users_via_share,cloud_server).run()
+        Test(r, cloud_admin_cannot_delete_or_edit_self,cloud_server).run()
+        Test(r, cloud_admin_cannot_delete_admins_or_owner,cloud_server).run()
+        Test(r, cloud_admin_cannot_invite_admin,cloud_server).run()
+        Test(r, user_data_should_match_registration,cloud_server).run()
+        Test(r, owner_can_unlink_offline_system_from_cloud,cloud_server_2).run()
+        Test(r, viewer_can_remove_offline_system_from_account,cloud_server_2).run()
+        Test(r, add_user_button_opens_cancellable_modal,cloud_server).run()
+        Test(r, verify_special_hints_on_permissions_dropdown,cloud_server).run()
+        Test(r, change_role_for_cloud_user,cloud_server).run()
+        Test(r, edit_permission_works_for_owner,cloud_server).run()
+        Test(r, edit_permission_works_for_cloud_admin,cloud_server).run()
+        Test(r, test_email_validation,cloud_server).run()
+        Test(r, users_can_disconnect_themselves,cloud_server).run()
+        Test(r, disable_enable_correctly_affects_user,
                            cloud_server, cloud_server.get_cloud_owner()).run()
-        Test(disable_enable_correctly_affects_user,
+        Test(r, disable_enable_correctly_affects_user,
                            cloud_server, cloud_server.get_cloud_admin()).run()
