@@ -29,9 +29,8 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
     // If we cant detect the platform fall back to windows
     if (
         !platform ||
-        !Object.values(platformMatch).some(
-            (_platform: string) => _platform.toLowerCase() === platform,
-        )
+        (!(releaseType === 'releases' && platform === 'mobile') &&
+            !Object.keys(configDownloads.groups).includes(platform))
     ) {
         const fallbackPlatform =
             platformMatch[deviceInfo.os.toLowerCase()]?.toLowerCase() || windows;
