@@ -43,6 +43,7 @@
             (onChange)="logOnChange($event)"
         >
             <nx-simple-dropdown-item *ngIf="selectedComplicatedObject !== undefined">
+                None
             </nx-simple-dropdown-item>
             <nx-simple-dropdown-item
                 *ngFor="let complicatedObject of complicatedObjectArray"

@@ -31,6 +31,8 @@ export class NxMultiDropdownComponent<T>
     extends BaseDropdownComponent<T, true>
     implements OnChanges
 {
+    override ariaMultiselectable = true;
+
     constructor(
         overlay: Overlay,
         domSanitizer: DomSanitizer,
@@ -104,4 +106,8 @@ export class NxMultiDropdownComponent<T>
     }
 
     LANG = staticLang;
+
+    // TODO: Add keyboard navigation
+    override onKeyDown(event: KeyboardEvent): void {}
+    override onBlur(event: FocusEvent): void {}
 }
