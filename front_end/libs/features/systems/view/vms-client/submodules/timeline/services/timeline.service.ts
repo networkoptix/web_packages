@@ -245,8 +245,7 @@ export class TimelineService {
             this.scrollAnimationStartTime = Date.now();
             this.initialScrollMs = this._visibleRange.start;
             this._targetScrollMs = targetT;
-        } else {
-            return this.stepScrollToStartTime(targetT, 1.0);
         }
+        return this.stepScrollToStartTime(targetT, 1.0);
     }
 }

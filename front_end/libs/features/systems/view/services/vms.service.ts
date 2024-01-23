@@ -85,7 +85,7 @@ export class VideoManagementSystemService {
     get timeZoneOffset(): ms {
         const serverTimes = this.serverTimes$$();
         let result = 0;
-        if (serverTimes?.length) {
+        if (!serverTimes?.length) {
             // console.warn('TZO no server times data');
         } else if (this.state$$().mode !== VMS_MODE.CAMERA_SELECTED) {
             // console.warn('TZO no camera selected');
