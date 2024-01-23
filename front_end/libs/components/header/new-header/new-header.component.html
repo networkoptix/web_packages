@@ -10,6 +10,7 @@
     <nx-header-level-two
         [subNodes]="selectedNode?.nodes"
         (systemNav)="navigateToSystemsList()"
+        [systemCount]="systemCount$ | async"
     >
     </nx-header-level-two>
     <nx-theme-generator generatorLayout="test"></nx-theme-generator>

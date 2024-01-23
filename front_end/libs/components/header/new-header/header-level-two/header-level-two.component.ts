@@ -44,6 +44,7 @@ export class NxHeaderLevelTwoComponent {
     @ViewChild('menuItems', { static: true }) menuItemsRef: ElementRef<HTMLElement>;
     @ViewChild('contextButton') contextButtonRef: ElementRef<HTMLElement>;
     @Input() subNodes: MenuNode[];
+    @Input() systemCount: number;
     @Output() systemNav = new EventEmitter<boolean>();
     logoState = logoAreaState.LOGO;
     menuItemsWidth: number;
@@ -59,7 +60,7 @@ export class NxHeaderLevelTwoComponent {
     icons = icons;
     images = images;
     mainActionWidth = 0;
-    optimisticSelectedSubNode: MenuNode; // The selected node is typically controlled by the headerServices currentLocation,
+    optimisticSelectedSubNode: MenuNode | undefined; // The selected node is typically controlled by the headerServices currentLocation,
     // but this property is used to make the UI smooth when navigating between nodes while the currentLocation is changing
 
     constructor(
@@ -79,7 +80,7 @@ export class NxHeaderLevelTwoComponent {
                 filter(value => !!value),
             )
             .subscribe(() => {
-                this.optimisticSelectedSubNode = null;
+                this.optimisticSelectedSubNode = undefined;
             });
     }
 
@@ -142,8 +143,8 @@ export class NxHeaderLevelTwoComponent {
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderLevelTwoComponent>): void {
-        if (changes.subNodes.currentValue) {
-            this.optimisticSelectedSubNode = null;
+        if (changes.subNodes?.currentValue) {
+            this.optimisticSelectedSubNode = undefined;
             const menuItemsEl = this.menuItemsRef?.nativeElement;
             if (menuItemsEl) {
                 menuItemsEl.scrollLeft = 0;
