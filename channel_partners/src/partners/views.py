@@ -16,6 +16,7 @@ from django.core.cache import caches
 from django.db.models import (
     Prefetch,
     Q,
+    QuerySet,
     Subquery,
 )
 from django.http import HttpResponseForbidden
@@ -117,6 +118,7 @@ from partners.serializers import (
     CreateChannelPartnerSerializer,
     CreateGroupSerializer,
     CreateOrganizationSerializer,
+    DeletedEmailsSerializer,
     ErrorMessageSerializer,
     GroupSerializer,
     GroupsStructureSerializer,
@@ -966,6 +968,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     @extend_schema(summary='Remove multiple users form an organization.',
                    methods=['post'],
                    request=serializers.ListSerializer(child=serializers.EmailField()),
+                   responses={'200': DeletedEmailsSerializer},
                    extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Organization'})
     @action(name='bulk_delete', methods=['post'], detail=False)
     def bulk_delete(self, request, *args, **kwargs):
@@ -980,12 +983,19 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
             organization=organization,
             roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
         )
-        if org_admin_qs.exists() and not org_admin_qs.exclude(user__email__in=serializer.validated_data).exists():
+        if org_admin_qs.exists() and not org_admin_qs.exclude(
+                user__email__in=serializer.validated_data).exists():
             raise Conflict(f'You are trying to remove all organization administrators.')
 
-        OrganizationToUser.objects.filter(
-            organization=organization, user__email__in=serializer.validated_data).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        to_delete_qs: QuerySet = OrganizationToUser.objects.filter(
+            organization=organization,
+            user__email__in=serializer.validated_data)
+        deleted_emails = OrganizationToUser.bulk_delete(to_delete_qs)
+
+        deleted_emails_serializer = DeletedEmailsSerializer(data={'emails': deleted_emails})
+        deleted_emails_serializer.is_valid(raise_exception=True)
+
+        return Response(deleted_emails_serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(summary='Remove a user form multiple groups belonging to an organization.',
                    methods=['post'],
@@ -1160,6 +1170,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
     @extend_schema(summary='Remove multiple users form a group.',
                    methods=['post'],
                    request=serializers.ListSerializer(child=serializers.EmailField()),
+                   responses={'200': DeletedEmailsSerializer},
                    extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
     @action(name='bulk_delete', methods=['post'], detail=False)
     def bulk_delete(self, request, *args, **kwargs):
@@ -1168,8 +1179,15 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
             child=serializers.EmailField()
         )
         serializer.is_valid(raise_exception=True)
-        self.get_queryset().filter(user__email__in=request.data).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        to_delete_qs: QuerySet = self.get_queryset().filter(
+            user__email__in=request.data)
+        deleted_emails: List[str] = OrganizationToUser.bulk_delete(to_delete_qs)
+
+        deleted_emails_serializer = DeletedEmailsSerializer(data={'emails': deleted_emails})
+        deleted_emails_serializer.is_valid(raise_exception=True)
+
+        return Response(deleted_emails_serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(summary='Return list of users with access to a group.',
                    methods=['get'],
