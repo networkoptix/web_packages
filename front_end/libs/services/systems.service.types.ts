@@ -11,3 +11,14 @@ export interface NxSystemInfo extends Omit<System, 'version'> {
     useRest: boolean;
     version: number; // Converted to number
 }
+
+export interface NxOrgSystemInfo
+    extends Omit<NxSystemInfo, 'ownerAccountEmail' | 'ownerAccountId' | 'ownerFullName'> {
+    organizationId: string;
+}
+
+export interface NxUserSystemInfo extends Omit<NxSystemInfo, 'organizationId'> {
+    ownerAccountEmail: string;
+    ownerAccountId: string;
+    ownerFullName: string;
+}

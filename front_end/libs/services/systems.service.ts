@@ -36,7 +36,7 @@ import { NxStorageService } from './storage.service';
 import type { MergeInfo } from './system-api.types';
 import type { NxSystem } from './system.service/system';
 import { NxSystemService } from './system.service/system.service';
-import type { NxSystemInfo } from './systems.service.types';
+import type { NxOrgSystemInfo, NxSystemInfo, NxUserSystemInfo } from './systems.service.types';
 import { NxUriService } from './uri.service';
 
 @UntilDestroy()
@@ -69,16 +69,19 @@ export class NxSystemsService {
 
     // Todo: Partition these from systemsSubject
     splitSystems = this.systemsSubject.pipe(
-        map(systems => {
-            const map = new Map<'personal' | 'shared', Map<string, NxSystemInfo>>([
+        map((systems: NxSystemInfo[]) => {
+            const map = new Map<'personal' | 'shared', Map<string, NxUserSystemInfo>>([
                 ['personal', new Map()],
                 ['shared', new Map()],
             ]);
             for (const system of systems) {
                 if (system.isMine) {
-                    map.set('personal', map.get('personal').set(system.id, system));
+                    map.set(
+                        'personal',
+                        map.get('personal').set(system.id, system as NxUserSystemInfo),
+                    );
                 } else {
-                    map.set('shared', map.get('shared').set(system.id, system));
+                    map.set('shared', map.get('shared').set(system.id, system as NxUserSystemInfo));
                 }
             }
             return map;
@@ -86,11 +89,13 @@ export class NxSystemsService {
     );
     orgSystems = this.systemsSubject.pipe(
         map((systems: NxSystemInfo[]) => {
-            const newSystems = systems.filter(sys => sys.organizationId);
-            const map = new Map<string, Map<string, NxSystemInfo>>();
+            const newSystems: NxOrgSystemInfo[] = systems
+                .filter(sys => sys.organizationId)
+                .map(sys => sys as NxOrgSystemInfo);
+            const map = new Map<string, Map<string, NxOrgSystemInfo>>();
             for (const system of newSystems) {
                 if (!map.has(system.organizationId)) {
-                    map.set(system.organizationId, new Map<string, NxSystemInfo>());
+                    map.set(system.organizationId, new Map<string, NxOrgSystemInfo>());
                 }
                 map.set(
                     system.organizationId,

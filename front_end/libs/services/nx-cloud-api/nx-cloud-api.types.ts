@@ -171,9 +171,6 @@ export interface System {
     lastLoginTime: string;
     name: string;
     opaque: string;
-    ownerAccountEmail: string;
-    ownerFullName: string;
-    organizationId?: string;
     registrationTime: string;
     sharingPermissions: { accessRole: string }[];
     stateOfHealth: string;
@@ -182,6 +179,10 @@ export interface System {
     systemSequence: string;
     usageFrequency: number;
     version: string;
+    ownerAccountEmail?: string;
+    ownerAccountId?: string;
+    ownerFullName?: string;
+    organizationId?: string;
 }
 
 /** Cached user when system cannot be reached */
