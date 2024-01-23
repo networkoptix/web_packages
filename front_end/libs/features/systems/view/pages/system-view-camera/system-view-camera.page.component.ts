@@ -250,6 +250,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 errorState = CameraError.unauthorized;
             }
         }
+
         return {
             error,
             errorState,
