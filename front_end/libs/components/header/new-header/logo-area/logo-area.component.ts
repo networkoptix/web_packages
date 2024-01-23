@@ -17,7 +17,6 @@ import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem } from '@services/system.service/system';
-import { NxSystemsService } from '@services/systems.service';
 import { icons, images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -41,13 +40,13 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isMobile = false;
     @Input() menuOpen = false;
     @Input() isProfile = false;
+    @Input() singleSystem = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     readonly environment = environment;
     CONFIG = nxConfig;
     loggedIn: boolean;
     LANG = staticLang;
     logoState = logoAreaState.LOGO;
-    singleSystem = false;
     icons = icons;
     images = images;
     mainUrl$ = combineLatest([
@@ -65,7 +64,6 @@ export class NxHeaderLogoAreaComponent implements OnInit {
 
     constructor(
         public headerService: NxHeaderService,
-        systemsService: NxSystemsService,
         private store: Store,
         private cookieService: CookieService,
     ) {
