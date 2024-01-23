@@ -8,7 +8,7 @@ import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
@@ -23,7 +23,6 @@ import { ModalBase } from '@dialogs/modal-base';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
@@ -36,10 +35,6 @@ import { icons, servers } from '@static-variables';
 import type { TransferOwnership as DT } from '../dialogs.types';
 
 import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.component';
-
-interface UserItem extends SearchableDropdownItem {
-    userEnabled: boolean;
-}
 type OrgItem = SearchableDropdownItem;
 
 @Component({
@@ -84,15 +79,13 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     userSearch: string = '';
     userEmails = new Set<string>();
     userEmails$$ = signal<string[] | null>(null);
-    selectedUser: UserItem;
     usersInSystem$$ = computed<boolean>(() => !!this.userEmails$$()?.length);
 
-    orgItems$$ = signal<OrgItem[]>(undefined);
+    orgItems$$ = signal<OrgItem[] | null>(null);
     selectedOrg: OrgItem;
     isOrgMember$$ = computed<boolean>(() => !!this.orgItems$$()?.length);
 
     newOwner: string = '';
-    isOrgAdmin: boolean;
 
     transferTargetType$$ = signal<'user' | 'org'>('user');
 
@@ -109,7 +102,6 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         private toastService: NxToastService,
         private dialogService: NxDialogsService,
         private partnersService: NxChannelPartnersService,
-        private accountService: NxAccountService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
@@ -126,13 +118,21 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         });
         this.userEmails$$.set(items);
 
-        this.channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
+        this.channelPartnersEnabled = nxConfig.featureFlags.channelPartners || false;
         if (this.channelPartnersEnabled) {
             this.partnersService.getOrganizations().subscribe(orgs => {
-                const items = orgs.map(org => ({
-                    name: org.name,
-                    value: org.id,
-                }));
+                const items = orgs.reduce((orgs, org) => {
+                    if (org.ownPermissions.includes('manage_systems')) {
+                        orgs.push({
+                            name: org.name,
+                            value: org.id,
+                        });
+                    }
+                    return orgs;
+                }, [] as OrgItem[]);
+                if (items.length) {
+                    this.transferTargetType$$.set('org');
+                }
                 this.orgItems$$.set(items);
             });
         }
@@ -180,22 +180,10 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         this.transferToOrg = this.processService.createProcess(
             async () => {
                 this.lock();
-                const transfer = Promise.resolve(); // TODO: No CDB support yet
-                // const addToOrg = this.partnersService.bindSystemToOrg({
-                //     cloudSystemId: this.system.id,
-                //     organization: this.selectedOrg.value,
-                // });
-                // Add after transfer support is available
-                const checkIfAdmin = new Promise<void>(resolve => {
-                    this.partnersService
-                        .getOrganizationUsers(this.selectedOrg.value)
-                        .pipe(map(users => users.find(u => u.email === this.accountService.email)))
-                        .subscribe(user => {
-                            this.isOrgAdmin = user.roles.includes('Organization Administrator');
-                            resolve();
-                        });
-                });
-                return Promise.all([transfer, /* addToOrg, */ checkIfAdmin]);
+                const orgId = this.selectedOrg.value;
+                return firstValueFrom(
+                    this.partnersService.transferSystemToOrg(orgId, this.system.id),
+                );
             },
             { errorCodes, ignoreError: true },
             async (res: unknown) => {
@@ -236,7 +224,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     }
 
     checkOrg(input: string): void {
-        if (input !== '' && !this.orgItems$$().some(el => el.value === input)) {
+        if (input !== '' && !this.orgItems$$()?.some(el => el.name === input)) {
             this.form.control.setErrors({ orgNotFound: true });
         }
     }

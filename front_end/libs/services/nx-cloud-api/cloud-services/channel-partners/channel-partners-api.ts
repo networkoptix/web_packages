@@ -26,7 +26,6 @@ import {
     UpdateOrganization,
     UpdateOrganizationUser,
     CloudSystem,
-    BindSystemToOrganization,
     PaginatedChannelPartnerList,
     PaginatedOrganizationList,
     PaginatedCloudSystemList,
@@ -245,8 +244,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get<PaginatedCloudSystemList>('/cloud_systems/').pipe(getResults());
     };
 
-    bindSystemToOrg = (body: BindSystemToOrganization): Observable<CloudSystem> => {
-        return this.post('/cloud_systems/', { body });
+    transferSystemToOrg = (orgId: string, systemId: string): Observable<CloudSystem> => {
+        return this.post(`/cloud_systems/${systemId}/transfer_offer/`, {
+            body: { organizationId: orgId },
+        });
     };
 
     getOrgSystems = (orgId: string, rootOnly = false): Observable<CloudSystem[]> => {

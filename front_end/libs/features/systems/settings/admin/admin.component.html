@@ -49,7 +49,7 @@
                         </ng-container>
                     </span>
                     <a
-                        *ngIf="canSendTransferRequest"
+                        *ngIf="canSendTransferRequest && !cdbSystemInfo$$()?.organizationId"
                         id="change-ownership"
                         class="ml-1 btn-text"
                         (click)="$event.preventDefault(); transferOwnership()"
