@@ -23,7 +23,15 @@
         </button>
     </div>
 
-    <nx-pre-loader *ngIf="!(userEmails$$() && orgItems$$()); else content"></nx-pre-loader>
+    <nx-pre-loader
+        *ngIf="
+            !(
+                userEmails$$() &&
+                (channelPartnersEnabled === false || (channelPartnersEnabled && orgItems$$()))
+            );
+            else content
+        "
+    ></nx-pre-loader>
 
     <ng-template #content>
         <nx-transfer-stepper [(selectedIndex)]="selectedIndex">

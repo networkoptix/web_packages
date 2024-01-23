@@ -67,7 +67,9 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
 
     LANG = staticLang;
     icons = icons;
-    channelPartnersEnabled = false;
+
+    channelPartnersEnabled: boolean | null = null;
+
     currentOwnerType: 'user' | 'org' = 'user'; // TODO: Add checks for this after CDB support
     transferInfo: SystemTransferInfo;
     hideErrors: boolean = false;
@@ -116,7 +118,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         });
         this.userEmails$$.set(items);
 
-        this.channelPartnersEnabled = nxConfig.featureFlags.channelPartners || false;
+        this.channelPartnersEnabled = !!nxConfig.featureFlags.channelPartners;
         if (this.channelPartnersEnabled) {
             this.partnersService.getOrganizations().subscribe(orgs => {
                 const items = orgs.reduce((orgs, org) => {
