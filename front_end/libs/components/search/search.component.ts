@@ -16,8 +16,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual, cloneDeep } from 'lodash-es';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject, from } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
@@ -32,6 +33,7 @@ import { NxUriService } from '@services/uri.service';
 import { icons, search } from '@static-variables';
 
 import type { SearchFilter } from './search.component.types';
+import { SearchParamBindings } from './search.component.types';
 
 /* Usage
  <nx-search
@@ -89,6 +91,8 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     @Input() layoutMod: boolean; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: string;
     @Input({ transform: booleanAttribute }) instant: boolean;
+    @Input() paramBinding: `${SearchParamBindings}` = SearchParamBindings.SEARCH;
+    @Input() suggestedSearch: string[] = [];
 
     @Output() onFocus = new EventEmitter<void>();
     @Output() onFocusOut = new EventEmitter<void>();
@@ -98,14 +102,20 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     public filtersSelected: string = '';
     public localFilter: SearchFilter = { query: '' };
 
+    instanceId = uuid();
+
     Direction: Direction;
     LANG = staticLang;
 
     private debounceShortTime: number;
     private debounceTime: number;
     private params: Record<string, string> = {};
-    private searchUpdated = new Subject<string>();
+    public searchUpdated = new Subject<string>();
     private modelUpdated = new Subject<void>();
+
+    toggleSuggestions$ = this.searchUpdated.pipe(
+        switchMap(() => from(['emptyDataList', this.instanceId])),
+    );
 
     showAdvancedOptions: boolean;
     buttonArrowTypeUp: ButtonArrowType = ButtonArrowType.up;
@@ -172,10 +182,10 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     }
 
     updateFilter(): void {
-        this.localFilter.query = this.localFilter.search || '';
+        this.localFilter.query = this.localFilter[this.paramBinding] || '';
 
-        if (this.params.search?.length) {
-            this.localFilter.query = this.params.search;
+        if (this.params[this.paramBinding]?.length) {
+            this.localFilter.query = this.params[this.paramBinding];
 
             this.searchService.getMatchPatterns(this.localFilter);
         }
@@ -378,9 +388,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             }
         }
 
-        queryParams.search = undefined;
+        queryParams[this.paramBinding] = undefined;
         if (this.localFilter.query !== '') {
-            queryParams.search = this.localFilter.query;
+            queryParams[this.paramBinding] = this.localFilter.query;
         }
 
         this.localFilter.selects?.forEach(select => {

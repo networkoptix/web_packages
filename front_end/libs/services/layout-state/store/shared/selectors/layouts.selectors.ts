@@ -1,5 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { alphabeticalSort } from '@utils/general';
 
@@ -22,7 +23,10 @@ export const selectLayoutsState = createSelector(
             .filter(({ id }) => !unsaved.includes(id))
             .map(toCrossSystemLayoutState);
         return [...unsavedLayouts, ...savedLocalLayouts, ...savedCrossSystemLayouts].sort(
-            alphabeticalSort(({ layout }) => layout.name),
+            // TODO: Need to find out why this is needed, removing it creates a circular dependency for some reason
+            LayoutStateService.runInInjectionContext(() =>
+                alphabeticalSort(({ layout }) => layout.name),
+            ),
         );
     },
 );

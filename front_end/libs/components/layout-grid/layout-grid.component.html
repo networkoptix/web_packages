@@ -64,7 +64,7 @@
                             }
                             @if (layout.items.length) {
                                 <button
-                                    (click)="layoutStateService.createNewLocalLayout()"
+                                    (click)="layoutStateService.createNewLayout()"
                                     class="btn btn-primary"
                                     translate
                                 >
@@ -102,35 +102,47 @@
             [system]="system"
             [layoutItemLookup]="layoutItemLookup"
             [dataSource]="layoutItemLookup.tree"
+            [linkedDataSource]="layoutItemLookup.otherSystems"
             [treeControl]="treeControl"
             [errorIcons]="errorIcons"
-            [showTooltip$]="showTooltip$"
+            [showTooltip]="showTooltip$ | async"
             [changingLayout]="changingLayout"
         ></nx-layout-grid-tree>
         @if (layoutItemLookup.otherSystems?.length && layoutGridService.isLeftMenuOpen$$()) {
             <details
-                #details
-                [ngClass]="{ 'details-expanded': details.open }"
+                #otherSystems
+                (toggle)="toggleOtherSystemsOpen(otherSystems.open)"
+                [ngClass]="{ 'details-expanded': otherSystemsOpen$$() }"
                 class="other-systems"
             >
-                <summary>
-                    @if (details.open) {
-                        <span translate>Hide Other Sites</span>
+                <summary [ngClass]="{ 'dropdown-show': !otherSystemsOpen$$() }">
+                    @if (otherSystemsOpen$$()) {
+                        <span translate>Hide All Sites</span>
                     } @else {
-                        <span translate>Show Other Sites</span>
+                        <span translate>Show All Sites</span>
                     }
+                    <div class="arrow-flip">
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                        ></svg-icon>
+                    </div>
                 </summary>
-                <nx-layout-grid-tree
-                    [showSearch]="false"
-                    [layout]="layout"
-                    [system]="system"
-                    [layoutItemLookup]="layoutItemLookup"
-                    [dataSource]="layoutItemLookup.otherSystems"
-                    [treeControl]="treeControl"
-                    [errorIcons]="errorIcons"
-                    [showTooltip$]="showTooltip$"
-                    [changingLayout]="changingLayout"
-                ></nx-layout-grid-tree>
+                <div>
+                    <nx-layout-grid-tree
+                        [searchType]="
+                            CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu ? 'filter' : undefined
+                        "
+                        [layout]="layout"
+                        [system]="system"
+                        [layoutItemLookup]="layoutItemLookup"
+                        [dataSource]="filteredOtherSystems$$()"
+                        [treeControl]="treeControl"
+                        [errorIcons]="errorIcons"
+                        [showTooltip]="showTooltip$ | async"
+                        [changingLayout]="changingLayout"
+                    ></nx-layout-grid-tree>
+                </div>
             </details>
         }
     </div>
@@ -373,29 +385,39 @@
                             ></div>
                         }
                         @if (!changingLayout) {
-                            @if (!dragging$$() && !layout?.items?.length) {
-                                <div class="no-camera-placeholder">
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [svgStyle]="{
-                                            'width.px': '64',
-                                            'height.px': '64'
-                                        }"
-                                        [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
-                                    ></svg-icon>
-                                    <h3 translate>No Cameras</h3>
-                                    @if (
-                                        CONFIG.featureFlags.layoutsEditable ||
-                                        CONFIG.featureFlags.layoutsDemo
-                                    ) {
-                                        <p translate>
-                                            Drag and drop any item here to add it to the layout or
-                                            double click on item
-                                        </p>
-                                    } @else {
-                                        <p translate>Add them in the %VMS_NAME% client</p>
-                                    }
-                                </div>
+                            @if (
+                                !dragging$$() &&
+                                !layout?.items?.length &&
+                                !layoutStateService.editedLayout$$()?.isNew
+                            ) {
+                                @if (layout?.systemId === 'show404') {
+                                    <div class="error-404-placeholder">
+                                        <nx-page-placeholder type="404"></nx-page-placeholder>
+                                    </div>
+                                } @else {
+                                    <div class="no-camera-placeholder">
+                                        <svg-icon
+                                            nx-add-svg-src
+                                            [svgStyle]="{
+                                                'width.px': '64',
+                                                'height.px': '64'
+                                            }"
+                                            [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
+                                        ></svg-icon>
+                                        <h3 translate>No Cameras</h3>
+                                        @if (
+                                            CONFIG.featureFlags.layoutsEditable ||
+                                            CONFIG.featureFlags.layoutsDemo
+                                        ) {
+                                            <p translate>
+                                                Drag and drop any item here to add it to the layout
+                                                or double click on item
+                                            </p>
+                                        } @else {
+                                            <p translate>Add them in the %VMS_NAME% client</p>
+                                        }
+                                    </div>
+                                }
                             }
                             @if (
                                 layout?.items.length === 1 &&

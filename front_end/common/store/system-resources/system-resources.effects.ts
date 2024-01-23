@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Observable, forkJoin, map, switchMap, tap } from 'rxjs';
+import { Observable, concatMap, forkJoin, map, tap } from 'rxjs';
 
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -26,7 +26,7 @@ export class SystemResourcesEffects {
     updateSystemResources$ = createEffect(() => {
         return this.actions.pipe(
             ofType(SystemResourcesActions.refreshSystemResources),
-            switchMap(({ systems }) =>
+            concatMap(({ systems }) =>
                 forkJoin(
                     Object.entries(systems)
                         .map(

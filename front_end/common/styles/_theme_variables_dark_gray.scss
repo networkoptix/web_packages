@@ -770,7 +770,10 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --overlay-action-svg: rgba(var(--light1--rgb), 0.8);
     --overlay-action-text: var(--light1);
     --overlay-text: var(--light1);
-    --overlay-status-title: var(--light_gray_10);
+    --overlay-status-title: var(--light10);
+    --other-sites-title: var(--light10);
+    --other-sites-heading-background: var(--dark6);
+    --other-sites-expand-stroke: var(--light16);
 
     --no-systems-description-color: var(--dark17);
 }

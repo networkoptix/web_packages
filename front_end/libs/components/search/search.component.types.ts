@@ -35,3 +35,8 @@ export interface SearchFilter extends SearchModel {
     }>;
     search?: string;
 }
+
+export const enum SearchParamBindings {
+    SEARCH = 'search',
+    OTHER_SITES_FILTER = 'otherSitesFilter',
+}

@@ -242,6 +242,13 @@ landing-display-component {
     }
 }
 
+nx-layout-grid-item-overlay:hover nx-monitoring-graph[noframe] .chart-legend {
+    right: 0;
+    top: 60px;
+    position: absolute;
+    height: fit-content;
+}
+
 pre,
 code {
     color: var(--body-text-color);

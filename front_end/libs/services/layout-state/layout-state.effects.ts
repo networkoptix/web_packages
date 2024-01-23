@@ -150,6 +150,8 @@ export class LayoutStateEffects {
 
     syncInterval$ = interval(5 * 1000).pipe(shareReplay({ refCount: false, bufferSize: 1 }));
 
+    lastUpdateLookup: Record<string, number> = {};
+
     updateOtherSystemResources$ = createEffect(() => {
         return this.layoutStateService.paramStateHandler.state$.pipe(
             map(
@@ -194,11 +196,24 @@ export class LayoutStateEffects {
                 const currentResources = this.store.selectSignal(
                     SystemResourcesSelectors.selectSystemResourcesState,
                 )();
-                return otherSystems.length
+                const currentTime = Date.now();
+
+                const systemsToUpdate = otherSystems.filter(
+                    id =>
+                        !this.lastUpdateLookup[id] ||
+                        this.lastUpdateLookup[id] < currentTime - 30 * 1000,
+                );
+
+                systemsToUpdate.forEach(id => {
+                    this.lastUpdateLookup[id] = currentTime;
+                });
+
+                return systemsToUpdate.length
                     ? this.syncInterval$.pipe(
+                          startWith(60),
                           map(pollInterval => {
                               return SystemResourcesActions.refreshSystemResources({
-                                  systems: otherSystems.reduce(
+                                  systems: systemsToUpdate.reduce(
                                       (curr, systemId) => ({
                                           ...curr,
                                           [systemId]: {
@@ -212,7 +227,7 @@ export class LayoutStateEffects {
                           }),
                           startWith(
                               SystemResourcesActions.refreshSystemResources({
-                                  systems: otherSystems.reduce((curr, systemId) => {
+                                  systems: systemsToUpdate.reduce((curr, systemId) => {
                                       if (systemId in currentResources) {
                                           return curr;
                                       }
@@ -361,14 +376,35 @@ export class LayoutStateEffects {
                         mediaserver.deleteLayout(layoutId).pipe(
                             map(() => layoutId),
                             catchError(() => of(null)),
-                            filter(Boolean),
                         ),
                     ),
                 );
 
-                const removedLayouts = await Promise.all(deletedLocalLayouts);
-                return LocalLayoutsActions.remove({ layoutIds: removedLayouts });
+                const deletedCrossSystemLayouts = layoutIds.map(layoutId => {
+                    const cleanedLayoutId = cleanId(layoutId);
+                    return firstValueFrom(
+                        this.layoutStateService.crossSystemLayoutApi
+                            .delete(`${cleanedLayoutId}.json`)
+                            .pipe(
+                                map(() => cleanedLayoutId),
+                                catchError(() => of(null)),
+                            ),
+                    );
+                });
+
+                const removedLocalLayouts = await Promise.all(deletedLocalLayouts);
+                const removedCrossSystemLayouts = await Promise.all(deletedCrossSystemLayouts);
+
+                return [
+                    LocalLayoutsActions.remove({
+                        layoutIds: removedLocalLayouts.filter(Boolean),
+                    }),
+                    CrossSystemLayoutsActions.remove({
+                        layoutIds: removedCrossSystemLayouts.filter(Boolean),
+                    }),
+                ];
             }),
+            switchMap(actions => from(actions)),
         );
     });
 
