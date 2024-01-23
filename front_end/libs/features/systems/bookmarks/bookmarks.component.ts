@@ -160,6 +160,7 @@ export class NxBookmarksComponent implements OnInit {
 
     private queryParams: BookmarkParams;
     private locale: string;
+    deviceIdsWithArchive: string[];
 
     constructor(
         configService: NxConfigService,
@@ -283,10 +284,14 @@ export class NxBookmarksComponent implements OnInit {
                     mediaserver.getBookmarkTags(),
                     mediaserver.getDevices(),
                     mediaserver.getServerTimes(),
+                    this.system.cameraManager.hasArchives(),
                 ]),
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
-            map(([bks, tags, devices, serverTimes]) => {
+            map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
+                this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
+                    return cleanIdLegacy(deviceId) as string;
+                });
                 this.tags$.next(tags);
                 this.devices$.next(devices);
                 this.offsetTimes = new Map(
@@ -339,7 +344,11 @@ export class NxBookmarksComponent implements OnInit {
             map(bks => this.processBookmarks(bks).sort(paramSortFunc(b => b.startTimeMs, false))),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
             map(bks => {
-                this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
+                // We should only be displaying Bookmarks with Devices that have an archive (Same behavior as VMS)
+                const bookmarksWithDeviceArchive = bks.filter(bk => {
+                    return this.deviceIdsWithArchive.includes(bk.deviceId);
+                });
+                this._bookmarks = this.mergeBookmarks(this._bookmarks, bookmarksWithDeviceArchive);
                 if (this._bookmarks.length) {
                     pollParams.creationStartTimeMs =
                         this.findNewestBookmark(this._bookmarks)?.creationTimeMs + 1;
