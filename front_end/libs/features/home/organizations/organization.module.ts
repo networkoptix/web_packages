@@ -51,6 +51,11 @@ const orgRoutes: Routes = [
                 component: NxOrganizationUsersComponent,
             },
             {
+                path: 'users/:email',
+                canActivate: [orgTabGuard],
+                component: NxOrganizationsComponent,
+            },
+            {
                 path: 'settings',
                 canActivate: [orgTabGuard],
                 data: {
@@ -68,6 +73,11 @@ const orgRoutes: Routes = [
                 component: NxOrganizationUsersComponent,
                 canActivate: [orgTabGuard],
                 data: { inGroup: true },
+            },
+            {
+                path: 'group/:groupId/users/:email',
+                component: NxOrganizationsComponent,
+                canActivate: [orgTabGuard],
             },
             {
                 path: '**',

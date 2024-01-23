@@ -3,8 +3,9 @@ import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partner
 export interface UserRecord {
     email: string;
     userId: string;
-    fullName: string;
+    fullName?: string;
     userType: UserType;
+    groupId?: string;
     roles?: string[];
     groupRoles?: GroupRole[];
     isOrgUser?: boolean;

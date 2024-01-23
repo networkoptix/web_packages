@@ -63,6 +63,7 @@ enum OrgRoleIds {
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
     icons = icons;
+    emailDisabled = false;
 
     userEmail$$ = signal('');
     roles: OrganizationRole[];
@@ -134,7 +135,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { organization, roles, users, groups }: DT['data'],
+        @Inject(DIALOG_DATA) { organization, roles, users, groups, email }: DT['data'],
         processService: NxProcessService,
         private translate: TranslateService,
         private cpService: NxChannelPartnersService,
@@ -145,8 +146,12 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         this.selectedRole$$ = signal(roles[0].id);
         this.users = users as OrganizationUser[];
         this.groups = groups;
+        if (email) {
+            this.userEmail$$.set(email);
+            this.emailDisabled = true;
+        }
         users.forEach(user => {
-            if (user.roles[0]) {
+            if (user.roles && user.roles[0]) {
                 // Has org role, is org user
                 this.userRoles.set(user.email, new Map([[organization.id, user.roles[0]]]));
             } else {

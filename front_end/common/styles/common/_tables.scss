@@ -340,6 +340,26 @@
     }
 }
 
+.access-table {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 42px 1fr 0.5fr 42px;
+        }
+        .big-row {
+            grid-template-columns: 42px 1fr 0.5fr 42px;
+
+            div {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+        .header, .body {
+            width: 100% !important;
+        }
+    }
+}
+
 .services-table {
     .nx-new-table {
         .header {

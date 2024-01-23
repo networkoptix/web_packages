@@ -164,6 +164,7 @@ export type AddOrgUserV2 = DialogType<
         roles: OrganizationRole[];
         users: OrganizationUser[] | UserRecord[];
         groups: GroupItem[];
+        email?: string;
     },
     OrganizationUser | GroupUser
 >;

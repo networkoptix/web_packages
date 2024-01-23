@@ -1,0 +1,32 @@
+.body {
+  padding: 1rem;
+  padding-top: .5rem;
+  height: 85%;
+}
+.header {
+  padding: 1rem;
+  padding-bottom: 0;
+  padding-top: 1.25rem;
+
+  .path {
+    color: var(--light16);
+    display: flex;
+    gap: 0.75rem;
+
+    .item {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--light16);
+    }
+
+    a:hover {
+      cursor: pointer;
+    }
+    
+  }
+}

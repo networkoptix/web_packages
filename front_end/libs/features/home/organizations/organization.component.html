@@ -39,6 +39,7 @@
 <div
     id="groups"
     cdkDropListGroup
+    *ngIf="!showAccessTable; else accessTable"
 >
     <div
         class="sidebar-toggling-ear-wrapper"
@@ -92,3 +93,7 @@
         <!-- eslint-disable-next-line nx/template/no-untranslated -->
     </div>
 </div>
+
+<ng-template #accessTable>
+    <nx-access-table [email]="accessTableUser"></nx-access-table>
+</ng-template>

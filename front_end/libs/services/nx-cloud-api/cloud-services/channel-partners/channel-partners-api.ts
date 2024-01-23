@@ -304,6 +304,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     /* Group Users */
+    getGroupUser = (groupId: string, email: string): Observable<GroupUserCanAccess> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users', email]));
+    };
+
     getGroupUsers = (groupId: string): Observable<GroupUser[]> => {
         return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users']));
     };
