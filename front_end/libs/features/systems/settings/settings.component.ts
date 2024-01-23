@@ -793,34 +793,36 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             node => node.id === menus.systemSettings.admin.id,
         );
 
-        adminNode.level3 = [
-            {
-                id: menus.systemSettings.general.id,
-                svg: menus.systemSettings.general.icon,
-                label: this.LANG.menu.titles.general,
-                path: menus.systemSettings.general.path,
-            },
-        ];
+        if (adminNode) {
+            adminNode.level3 = [
+                {
+                    id: menus.systemSettings.general.id,
+                    svg: menus.systemSettings.general.icon,
+                    label: this.LANG.menu.titles.general,
+                    path: menus.systemSettings.general.path,
+                },
+            ];
 
-        if (
-            this.system.permissionManager.isAdmin$$() ||
-            this.system.permissionManager.isOwner$$()
-        ) {
-            adminNode.level3.push({
-                id: menus.systemSettings.licenses.id,
-                svg: menus.systemSettings.licenses.icon,
-                label: this.LANG.menu.titles.licenses,
-                path: menus.systemSettings.licenses.path,
-            });
-        }
+            if (
+                this.system.permissionManager.isAdmin$$() ||
+                this.system.permissionManager.isOwner$$()
+            ) {
+                adminNode.level3.push({
+                    id: menus.systemSettings.licenses.id,
+                    svg: menus.systemSettings.licenses.icon,
+                    label: this.LANG.menu.titles.licenses,
+                    path: menus.systemSettings.licenses.path,
+                });
+            }
 
-        if (this.system.canUserViewCloudStorage()) {
-            adminNode.level3.push({
-                id: menus.systemSettings.cloudStorage.id,
-                svg: '',
-                label: this.LANG.dialogs.cloudStorage.title,
-                path: menus.systemSettings.cloudStorage.path,
-            });
+            if (this.system.canUserViewCloudStorage()) {
+                adminNode.level3.push({
+                    id: menus.systemSettings.cloudStorage.id,
+                    svg: '',
+                    label: this.LANG.dialogs.cloudStorage.title,
+                    path: menus.systemSettings.cloudStorage.path,
+                });
+            }
         }
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
