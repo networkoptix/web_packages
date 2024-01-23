@@ -1,0 +1,51 @@
+<div class="header">
+    <div
+        class="path"
+        *ngIf="currentPath$$() as currentPath"
+    >
+        @for (path of currentPath; track $index) {
+            <div class="item">
+                @if (path.type === OrgCardItem.GROUP) {
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'folder2.svg'"
+                        [svgStyle]="{ 'width.px': '10px', 'height.px': '10px' }"
+                    ></svg-icon>
+                }
+                <a (click)="onPathItemClick(path)">{{ path.name }}</a>
+            </div>
+            @if ($index !== currentPath.length - 1 && currentPath.length !== 1) {
+                /
+            }
+        }
+    </div>
+    <h2>{{ fullName$$() }}, {{ email }}</h2>
+</div>
+<div class="body">
+    <div class="actions py-3">
+        <button
+            class="btn btn-default"
+            translate
+            (click)="addAccess()"
+        >
+            Add Access
+        </button>
+        <div class="input px-2">
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <input
+                class="pl-2"
+                [placeholder]="'Search' | translate"
+            />
+        </div>
+    </div>
+
+    <nx-users-table
+        [userType]="UserType.ORGANIZATION"
+        [accessTable]="true"
+        [headers]="headers"
+        [records]="records$ | async"
+        [roles]="orgRoles$$()"
+        (onDeleteClick)="deleteUser($event)"
+        (selectedUsersEmitter)="updateSelectedUsers($event)"
+    ></nx-users-table>
+</div>

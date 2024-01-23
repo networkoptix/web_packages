@@ -28,6 +28,7 @@ export class NxChannelPartnersService {
             organizationId: params.organizationId,
             partnerId: params.partnerId,
             groupId: params.groupId,
+            email: params.email,
         },
     }));
 
@@ -93,6 +94,7 @@ export class NxChannelPartnersService {
     patchGroup = this.cpApi.patchGroup;
 
     /* Group Users */
+    getGroupUser = this.cpApi.getGroupUser;
     getGroupUsers = this.cpApi.getGroupUsers;
     getGroupUsersWithAccess = this.cpApi.getGroupUsersWithAccess;
     updateGroupUser = this.cpApi.updateGroupUser;

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, Signal, booleanAttribute } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { map, Observable, take, zip } from 'rxjs';
@@ -49,7 +49,7 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         ...user,
         groupRoles: user?.groupRoles?.map(group => ({
             ...group,
-            name: groups.find(groupItem => groupItem.id === group.groupId)?.name,
+            name: groups?.find(groupItem => groupItem.id === group.groupId)?.name,
         })),
         userId: user.email,
         isOrgUser: isOrgUser(user),
@@ -87,6 +87,8 @@ export class NxOrganizationUsersComponent implements OnInit {
         private CPService: NxChannelPartnersService,
         private store: Store,
         private translateService: TranslateService,
+        private router: Router,
+        private route: ActivatedRoute,
     ) {}
 
     ngOnInit(): void {
@@ -275,9 +277,10 @@ export class NxOrganizationUsersComponent implements OnInit {
             });
     }
 
-    expandClick(user: UserRecord): void {}
-
     updateSelectedUsers(users: { [key: string]: UserRecord }): void {
         this.selectedUsers = users;
+    }
+    expandClick(user: UserRecord): void {
+        this.router.navigate([user.email], { relativeTo: this.route });
     }
 }

@@ -38,7 +38,9 @@ export const orgTabGuard: CanActivateFn = (
                     }
                     break;
                 case 'users':
+                case 'users/:email':
                 case 'group/:groupId/users':
+                case 'group/:groupId/users/:email':
                     if (permissions?.includes(OrgPermissions.MANAGE_USERS)) {
                         return true;
                     }

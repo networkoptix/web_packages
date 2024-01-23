@@ -222,6 +222,7 @@ export interface OrganizationUser {
 }
 
 export interface GroupRole {
+    name: string;
     groupId: string;
     roles: string[];
     roleIds: string[];
@@ -272,6 +273,7 @@ export interface SystemItem {
 export enum OrgCardItem {
     SYSTEM = 'system',
     GROUP = 'group',
+    ORG = 'org',
 }
 
 export interface GetGroupItem extends GroupItem {
@@ -291,6 +293,7 @@ export interface PatchGroup {
 
 /* Group Users */
 export interface GroupUser {
+    fullName: string;
     email: string;
     roles: string[];
     roleIds: string[];

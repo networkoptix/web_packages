@@ -12,7 +12,7 @@
 
 <div class="nx-new-table-container">
     <nx-table
-        [ngClass]="userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users'"
+        [ngClass]="tableType"
         [style.height]="'calc(100% - 12px)'"
         set-pagination
         set-sorting
@@ -21,7 +21,7 @@
         [set-row-expand]="subLevels"
         [set-selected-item-id]="selectedRecordId"
         [set-multiple-selected-item-ids]="selectedUsersMap$$()"
-        [set-id-prop-name]="idPropName"
+        [set-id-prop-name]="accessTable ? groupPropName : idPropName"
         [data]="records"
         (onRowClick)="onRowClickAction($event)"
     >
@@ -97,6 +97,7 @@
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: email"
                 [ngClass]="row.userId === expandRowId ? 'expanded' : ''"
+                *ngIf="!accessTable"
             >
                 {{ row.email }}
             </div>
@@ -104,6 +105,7 @@
             <div
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: fullName"
+                *ngIf="!accessTable"
             >
                 {{ row.fullName }}
             </div>
@@ -257,7 +259,7 @@
             <div
                 class="div-container-wrapper icon"
                 style="grid-area: expand"
-                *ngIf="userType === UserType.ORGANIZATION"
+                *ngIf="userType !== UserType.CHANNEL_PARTNER && !accessTable"
             >
                 <svg-icon
                     [src]="icons.dirTextButtons + 'arrow_right.svg'"

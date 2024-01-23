@@ -16,6 +16,8 @@ export const selectHasGroups = createSelector(selectGroupItems, items => items.l
 
 export const selectCurrentGroupId = createSelector(selectGroupState, items => items.currentGroupId);
 
+export const selectInGroup = createSelector(selectCurrentGroupId, id => !!id);
+
 export const selectRootGroups = createSelector(
     selectGroupItems,
     groups => groups?.filter(group => !group.parentId),
@@ -32,4 +34,25 @@ export const selectCurrentGroups = createSelector(
     selectRootGroups,
     (group, rootGroups) =>
         (group?.children || rootGroups)?.map(group => ({ ...group, type: OrgCardItem.GROUP })),
+);
+
+export const selectCurrentPath = createSelector(
+    selectCurrentGroup,
+    selectGroupItems,
+    (group, groups) => {
+        if (!group) {
+            return [];
+        }
+        const res = [group];
+        let { parentId } = group;
+        if (parentId) {
+            const groupsMap = new Map(groups?.map(group => [group.id, group]));
+            while (parentId) {
+                const parentGroup = groupsMap.get(parentId);
+                res.push(parentGroup);
+                parentId = parentGroup?.parentId;
+            }
+        }
+        return res;
+    },
 );

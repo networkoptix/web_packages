@@ -56,6 +56,7 @@ export class NxUsersTableComponent {
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
 
     @Input({ transform: booleanAttribute }) inGroup: boolean;
+    @Input({ transform: booleanAttribute }) accessTable: boolean;
     @Input({ required: true }) userType: UserType;
     @Input() headers: HEADER_ITEM[];
     @Input() records: UserRecord[];
@@ -82,6 +83,7 @@ export class NxUsersTableComponent {
     rowsPerPage: Array<number>;
 
     public idPropName = 'userId';
+    public groupPropName = 'groupId';
 
     constructor(
         private store: Store,
@@ -102,6 +104,9 @@ export class NxUsersTableComponent {
         if (this.userType === UserType.CHANNEL_PARTNER) {
             this.setHeaders.splice(3, 1);
             this.setHeaders.pop();
+        }
+        if (this.accessTable) {
+            this.setHeaders = ['userId', 'accessLevel', 'roles', 'delete'];
         }
         this.canManageUsers =
             this.userType === UserType.CHANNEL_PARTNER
@@ -126,7 +131,10 @@ export class NxUsersTableComponent {
     selectAll(): void {}
 
     selectRecord(user: UserRecord): void {
-        const userId = user.userId;
+        let userId = user.userId;
+        if (this.accessTable) {
+            userId = user.groupRoles[0].groupId;
+        }
         if (this.selectedUsers[userId]) {
             delete this.selectedUsers[userId];
         } else {
@@ -143,7 +151,9 @@ export class NxUsersTableComponent {
 
     getDisplayRole(user: UserRecord): string {
         let displayRole = user.roles[0];
-        if (!this.inGroup && !user.isOrgUser && user.userType !== UserType.CHANNEL_PARTNER) {
+        if (this.accessTable) {
+            return displayRole;
+        } else if (!this.inGroup && !user.isOrgUser && user.userType !== UserType.CHANNEL_PARTNER) {
             displayRole = user.groupRoles?.length > 1 ? 'Multiple' : user.groupRoles[0].roles[0];
         }
         return displayRole;
@@ -154,7 +164,7 @@ export class NxUsersTableComponent {
     }
 
     getRowRoleId(user: UserRecord): string {
-        return this.roles.find(role => role.name === this.getDisplayRole(user))?.id.toString();
+        return this.roles?.find(role => role.name === this.getDisplayRole(user))?.id.toString();
     }
 
     isUserRole(role: OrganizationRole, user: UserRecord): boolean {
@@ -171,5 +181,12 @@ export class NxUsersTableComponent {
                 .updateGroupUser(user.groupRoles[0].groupId, { roleId, email: user.email })
                 .subscribe();
         }
+    }
+
+    get tableType(): string {
+        if (this.accessTable) {
+            return 'access-table';
+        }
+        return this.userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users';
     }
 }

@@ -28,6 +28,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
+import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
 import { GroupsItem, Crumb, OpenGroups } from '../home.types';
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
@@ -67,6 +68,7 @@ interface SidebarSettings {
         NxAddSvgSrcDirective,
         DragDropModule,
         NxTabsModule,
+        NxAccessTableComponent,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -80,7 +82,9 @@ export class NxOrganizationsComponent implements OnInit {
     userEmail: string;
     destroyRef = inject(DestroyRef);
     isChannelPartnerUser$$ = signal<boolean | undefined>(undefined);
-    @Input() inChannelPartner: boolean;
+    showAccessTable = false;
+    accessTableUser: string = '';
+    @Input() inChannelPartner: boolean = false;
     @Input() currentTabRoute: string;
 
     account = this.store.selectSignal<Account>(selectCurrentUser);
@@ -116,6 +120,20 @@ export class NxOrganizationsComponent implements OnInit {
         if (!this.inChannelPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
+        this.cpService.paramStateHandler.state$
+            .pipe(
+                map(({ params }) => params.email),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(email => {
+                if (email) {
+                    this.accessTableUser = email;
+                    this.showAccessTable = true;
+                } else {
+                    this.showAccessTable = false;
+                }
+            });
 
         this.cpService.paramStateHandler.state$
             .pipe(
