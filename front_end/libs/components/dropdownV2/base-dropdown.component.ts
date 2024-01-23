@@ -11,11 +11,16 @@ import {
     ViewChild,
     EventEmitter,
     Output,
+    signal,
+    computed,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { take } from 'rxjs';
 
 import { icons } from '@static-variables';
+import { scrollItemIntoView } from '@utils/general';
 
+import { DropdownState } from './dropdown.types';
 import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
 
 type SelectedType<Value, Multiple extends boolean> = Multiple extends true
@@ -34,18 +39,30 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     @Input() search: boolean = false;
     @Input('aria-label') ariaLabel: string = '';
 
-    @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLButtonElement>;
     @ViewChild('select') select: ElementRef<HTMLDivElement>;
-    @ContentChildren(BaseDropdownItem, { descendants: true }) dropdownItems: QueryList<
+    @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
+    @ContentChildren(BaseDropdownItem, { descendants: true }) dropdownItems = new QueryList<
         BaseDropdownItem<T>
-    > = new QueryList<BaseDropdownItem<T>>();
+    >();
     @ViewChild(CdkPortal) contentTemplate: CdkPortal;
 
     overlayRef: OverlayRef;
     displayText: SafeHtml;
     // TODO: refactor to signals/computed when signal inputs are ready https://github.com/angular/angular/discussions/49682
-    dropdownOpen: boolean = false;
     showPlaceholder: boolean = true;
+    // Using a Symbol here to avoid undefined/null value clash
+    private readonly NO_HIGHLIGHT = Symbol('No dropdown highlight');
+    highlightValue$$ = signal<T | symbol>(this.NO_HIGHLIGHT);
+    ariaMultiselectable: boolean = false;
+
+    openState$$ = signal(DropdownState.Closed);
+    dropdownClosed$$ = computed(() => this.openState$$() === DropdownState.Closed);
+    dropdownOpen$$ = computed(() => this.openState$$() === DropdownState.Open);
+    dropdownSettled$$ = computed(() => this.dropdownClosed$$() || this.dropdownOpen$$());
+    dropdownOpening$$ = computed(() => this.openState$$() === DropdownState.Opening);
+    dropdownClosing$$ = computed(() => this.openState$$() === DropdownState.Closing);
+    dropdownAbortingOpen$$ = computed(() => this.openState$$() === DropdownState.AbortingOpen);
 
     constructor(
         public overlay: Overlay,
@@ -60,33 +77,87 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     abstract handleSelectionChange(): void;
 
     showDropdown(): void {
-        if (!this.disabled) {
-            this.overlayRef = this.overlay.create(this.getOverlayConfig());
-            this.overlayRef.attach(this.contentTemplate);
-            this.setOverlayWidth();
-            this.overlayRef.outsidePointerEvents().subscribe(event => {
-                event.stopPropagation();
-                this.hideDropdown();
-            });
-            this.dropdownOpen = true;
+        if (!this.dropdownClosed$$()) {
+            return;
         }
+        this.openState$$.set(DropdownState.Opening);
+        this.overlayRef = this.overlay.create(this.getOverlayConfig());
+        this.overlayRef
+            .attachments()
+            .pipe(take(1))
+            .subscribe(() => {
+                if (this.openState$$() === DropdownState.AbortingOpen) {
+                    this.hideDropdown();
+                    return;
+                }
+                this.openState$$.set(DropdownState.Open);
+                this.setOverlayWidth();
+            });
+        this.overlayRef.attach(this.contentTemplate);
     }
     hideDropdown(): void {
+        if (
+            !(
+                this.openState$$() === DropdownState.Open ||
+                this.openState$$() === DropdownState.AbortingOpen
+            )
+        ) {
+            return;
+        }
+        this.openState$$.set(DropdownState.Closing);
+        this.overlayRef
+            .detachments()
+            .pipe(take(1))
+            .subscribe(() => {
+                this.openState$$.set(DropdownState.Closed);
+            });
         this.overlayRef.detach();
-        this.dropdownOpen = false;
     }
-
-    // TODO: Add keyboard navigation
-    onKeyDown(event: KeyboardEvent): void {}
-    onBlur(): void {}
-
-    onDropMenuIconClick(event: UIEvent): void {
-        if (!this.disabled) {
-            event.stopPropagation();
-            this.select.nativeElement.focus();
-            this.select.nativeElement.click();
+    toggleDropdown(): void {
+        if (this.disabled) {
+            // eslint-disable-next-line no-useless-return
+            return;
+        } else if (this.dropdownClosed$$()) {
+            this.showDropdown();
+        } else if (this.dropdownOpen$$()) {
+            this.hideDropdown();
         }
     }
+
+    getFirstEnabled(): BaseDropdownItem<T> | undefined {
+        return this.dropdownItems.find(item => !item.disabled);
+    }
+
+    getPrevEnabled(currentValue: T): BaseDropdownItem<T> | undefined {
+        let prevEnabled: BaseDropdownItem<T> | undefined;
+        for (const item of this.dropdownItems) {
+            if (item.value === currentValue) {
+                return prevEnabled;
+            } else if (!item.disabled) {
+                prevEnabled = item;
+            }
+        }
+    }
+
+    getNextEnabled(currentValue: T): BaseDropdownItem<T> | undefined {
+        let pastCurrent = false;
+        for (const item of this.dropdownItems) {
+            if (!pastCurrent) {
+                if (item.value === currentValue) {
+                    pastCurrent = true;
+                }
+            } else if (!item.disabled) {
+                return item;
+            }
+        }
+    }
+
+    scrollOptionIntoView(item: BaseDropdownItem<T>): void {
+        scrollItemIntoView(item.self.nativeElement, this.dropdown.nativeElement);
+    }
+
+    abstract onKeyDown(event: KeyboardEvent): void;
+    abstract onBlur(event: FocusEvent): void;
 
     handleOptionSelected(option: BaseDropdownItem<T>): void {
         // Set the selected option(s) stored in the component

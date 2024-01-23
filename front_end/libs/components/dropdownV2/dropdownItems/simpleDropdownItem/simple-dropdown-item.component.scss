@@ -19,7 +19,8 @@
     &.active,
     &:focus {}
 
-    &:hover:not([disabled]):not(.disabled):not([selected]):not(.selected) {
+    &:hover:not([disabled]):not(.disabled):not([selected]):not(.selected),
+    &.highlighted {
         background-color: var(--dropdown-item-hover-bg);
         color: var(--dropdown-item-hover-color);
     }

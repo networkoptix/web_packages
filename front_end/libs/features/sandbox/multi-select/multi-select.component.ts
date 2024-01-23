@@ -182,7 +182,7 @@ export class MultiSelectComponent {
             created: '2023-08-24T19:14:46.748Z',
         },
     ];
-    selectedComplicatedObject: ComplicatedObject = {} as ComplicatedObject;
+    selectedComplicatedObject: ComplicatedObject = undefined;
 
     logOnChange(event: unknown): void {
         console.log('onChange', event);

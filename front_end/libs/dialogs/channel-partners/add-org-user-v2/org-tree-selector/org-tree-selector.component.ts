@@ -21,7 +21,7 @@ import type {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
 
 import type { SelectedFolder, TreeItem } from './org-tree-selector.types';
 
@@ -230,18 +230,8 @@ export class NxOrgTreeSelectorComponent implements OnInit {
         if (index === this.lastVisibleIndex) {
             // Bottom out if going to last element
             this.orgTreeRef.nativeElement.scrollTop = this.orgTreeRef.nativeElement.scrollHeight;
-            return;
-        }
-
-        const folderTop = folder.offsetTop;
-        const folderBottom = folderTop + folder.offsetHeight;
-        const visibleTop = this.orgTreeRef.nativeElement.scrollTop;
-        const visibleBottom = visibleTop + this.orgTreeRef.nativeElement.offsetHeight;
-
-        if (folderTop < visibleTop) {
-            folder.scrollIntoView(true); // alignToTop
-        } else if (folderBottom > visibleBottom) {
-            folder.scrollIntoView(false);
+        } else {
+            scrollItemIntoView(folder, this.orgTreeRef.nativeElement);
         }
     }
 
