@@ -90,17 +90,17 @@
                         name="transfertarget"
                         [ngModel]="transferTargetType$$()"
                         (ngModelChange)="transferTargetType$$.set($event)"
-                        componentId="user"
-                        value="user"
-                        [label]="'To User' | translate"
+                        componentId="org"
+                        value="org"
+                        [label]="'To Organization' | translate"
                     ></nx-radio>
                     <nx-radio
                         name="transfertarget"
                         [ngModel]="transferTargetType$$()"
                         (ngModelChange)="transferTargetType$$.set($event)"
-                        componentId="org"
-                        value="org"
-                        [label]="'To Organization' | translate"
+                        componentId="user"
+                        value="user"
+                        [label]="'To User' | translate"
                     ></nx-radio>
                 </div>
                 <ng-container *ngIf="transferTargetType$$() === 'user'">
@@ -190,7 +190,10 @@
                     ><strong>{{ aboutToTransfer | translateCut: 1 }}</strong></span
                 ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
             </p>
-            <div class="warning-block">
+            <div
+                *ngIf="transferTargetType$$() !== 'org'"
+                class="warning-block"
+            >
                 <div class="warning-block__header mb-1">
                     <svg-icon
                         [src]="icons.dirNonStandard + 'warning.svg'"
@@ -247,7 +250,7 @@
                 [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
             ></svg-icon>
             <p
-                *ngIf="transferTargetType$$() === 'org' && isOrgAdmin; else normaResult"
+                *ngIf="transferTargetType$$() === 'org' && selectedOrg?.value; else normaResult"
                 id="request-sent"
                 class="mt-1"
                 translate

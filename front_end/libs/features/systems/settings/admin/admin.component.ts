@@ -128,6 +128,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         return accessRole;
     });
 
+    cdbSystemInfo$$ = computed<NxSystemInfo | null>(() => {
+        const systems = this.systemsService.systems$$();
+        return systems?.find(({ id }) => this.system.id === id) || null;
+    });
+
     get permissionGroupsCount(): number {
         return this.system.permissionManager.currentUser$$()?.groupIds?.length;
     }
