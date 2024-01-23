@@ -141,6 +141,10 @@ class ErrorMessageSerializer(serializers.Serializer):
     message = serializers.CharField()
 
 
+class DeletedEmailsSerializer(serializers.Serializer):
+    emails = serializers.ListField(child=serializers.EmailField())
+
+
 class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'channelpartner'
 

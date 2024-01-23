@@ -1514,6 +1514,11 @@ class OrganizationToUser(models.Model):
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)
 
+    @classmethod
+    def bulk_delete(cls, queryset: QuerySet)-> List[str]:
+        deleted_emails = list(queryset.values_list('user__email', flat=True))
+        queryset.delete()
+        return deleted_emails
 
     @property
     def roles_name(self):

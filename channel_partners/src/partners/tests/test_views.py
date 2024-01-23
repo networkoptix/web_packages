@@ -440,7 +440,9 @@ class TestOrganizationUserViewSet:
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(admin)
         response = view(request, parent_lookup_organization=org.id)
-        assert response.status_code == 204
+
+        assert response.status_code == 200
+        assert 'emails' in response.data
 
     def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
                            sys_group_user_factory, arf, mock_auth_with_user, cloud_user_factory):
@@ -1230,7 +1232,9 @@ class TestSystemGroupUserViewSet:
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(self.org_user)
         response = view(request, parent_lookup_system_group=self.group.id)
-        assert response.status_code == 204
+
+        assert response.status_code == 200
+        assert "emails" in response.data
 
     def test_can_access(self, system_group_factory, sys_group_user_factory, arf, mock_auth_with_user):
         caches['default'].clear()
