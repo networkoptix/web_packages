@@ -689,6 +689,8 @@ class TestSystemGroupUserSerializer:
         self.users = [sys_group_user_factory(organization=self.org, group=self.group) for _ in range(5)]
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
+        self.sub_group = system_group_factory(organization=self.org, parent=self.group)
+        self.sub_group_admin = sys_group_user_factory(organization=self.org, group=self.sub_group)
         self.org_adm_name = 'Organization Administrator'
         self.org_power_user_name = 'Power User'
         self.request = arf.post('/')
@@ -699,11 +701,31 @@ class TestSystemGroupUserSerializer:
 
     def test_data(self):
         serializer = SystemGroupUserSerializer(instance=self.users[0])
-
         assert serializer.data
         assert serializer.data['email'] == self.users[0].user.email
         assert serializer.data['fullName'] == self.users[0].user.full_name
         assert serializer.data['roles'] == self.users[0].roles_name
+        assert serializer.data['hasAccessTo']['id'] == str(self.group.id)
+        assert (serializer.data['hasAccessTo']['groupsPath'] ==
+                [str(group_id) for group_id in self.group.groups_path])
+
+        serializer = SystemGroupUserSerializer(instance=self.sub_group_admin)
+        assert serializer.data
+        assert serializer.data['email'] == self.sub_group_admin.user.email
+        assert serializer.data['fullName'] == self.sub_group_admin.user.full_name
+        assert serializer.data['roles'] == self.sub_group_admin.roles_name
+        assert serializer.data['hasAccessTo']['id'] == str(self.sub_group.id)
+        assert (serializer.data['hasAccessTo']['groupsPath'] ==
+                [str(group_id) for group_id in self.sub_group.groups_path])
+
+        serializer = SystemGroupUserSerializer(instance=self.org_admin)
+        assert serializer.data
+        assert serializer.data['email'] == self.org_admin.user.email
+        assert serializer.data['fullName'] == self.org_admin.user.full_name
+        assert serializer.data['roles'] == self.org_admin.roles_name
+        assert serializer.data['hasAccessTo']['id'] == str(self.org.id)
+        assert serializer.data['hasAccessTo']['groupsPath'] == None
+
 
         serializer = SystemGroupUserSerializer(instance=self.users, many=True)
 
