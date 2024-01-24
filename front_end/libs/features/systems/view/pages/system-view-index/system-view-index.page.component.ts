@@ -273,7 +273,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         archiveRanges: Record<string, BaseTimeRange>,
     ): ViewCamera {
         this.hasCameras = true;
-        const { canEditDevice } = this.system?.permissionManager;
         const result = new ViewCamera(
             c.id,
             c.parentId,
@@ -300,7 +299,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.system.info?.system2faEnabled,
             c.mediaStreams,
             c.rotation,
-            canEditDevice(c.id),
         );
         return result;
     }
