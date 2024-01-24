@@ -156,8 +156,6 @@ export class CameraManager {
                 ? camera.deviceType
                 : this.camerasHealth[cleanIdLegacy(camera.id)]?.info.type ?? DeviceType.Camera;
 
-        const canEdit = id ? this.system?.permissionManager.canEditDevice(id) : false;
-
         const {
             name,
             vendor,
@@ -212,8 +210,6 @@ export class CameraManager {
             recordingSettings,
             recordingStatus,
             webRtcUrl,
-
-            canEdit,
         };
     };
 

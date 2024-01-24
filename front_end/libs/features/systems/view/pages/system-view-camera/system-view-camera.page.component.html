@@ -200,7 +200,7 @@
                                 *ngSwitchCase="CameraError.unauthorized"
                                 svgFileName="placeholder_camera_unauthorized"
                                 [heading]="LANG.common.cameraStates.unauthorized"
-                                [showSettingsLink]="camera.canEdit"
+                                [showSettingsLink]="canEditCamera$$()"
                                 [camera]="camera"
                                 [system]="system"
                                 description=""

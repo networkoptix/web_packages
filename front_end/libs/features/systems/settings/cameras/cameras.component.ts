@@ -99,6 +99,9 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     @Input() camera: NxSystemCamera;
 
     cameraId$$ = signal<string>('');
+    canEditCamera$$ = computed<boolean>(() =>
+        this.system.permissionManager.canEditDevice(this.cameraId$$()),
+    );
 
     LANG = staticLang;
     defaultAspectRatio: number | null = null;

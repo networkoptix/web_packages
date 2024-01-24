@@ -100,7 +100,6 @@ export class PermissionManager {
     private readonly LANG = staticLang;
     private user$$ = signal<SystemUser>(undefined);
     private currentUserPermissions$$ = signal<string>('');
-    private resourceAccessRights$$ = signal<ResourceAccessRights>({});
     private type$$ = computed<string>(() => coerceUserType(this.user$$()));
     private permissionsFromGroups$$ = computed<Permissions>(() => {
         const user = this.user$$();
@@ -132,6 +131,7 @@ export class PermissionManager {
             viewLogs: isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewLogs),
         });
     });
+    resourceAccessRights$$ = signal<ResourceAccessRights>({});
     groups$$ = signal<UserGroup[]>([]);
     roles$$ = signal<Role[]>([]);
     currentUser$$ = computed<CurrentUser>(() => {
