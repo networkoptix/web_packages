@@ -671,7 +671,7 @@ def test_email_validation(driver, server: Mediaserver):
     assert not add_user_dialog.has_error()
 
 
-def users_can_disconnect_themselves(driver, server: Mediaserver):
+def users_can_disconnect_themselves(driver, server: Mediaserver, role):
     """
     21. Users should be able to disconnect themselves from cloud.
 
@@ -679,26 +679,19 @@ def users_can_disconnect_themselves(driver, server: Mediaserver):
     the toast.
     https://networkoptix.atlassian.net/browse/CLOUD-11867
     """
-    role_names = {
-        "cloudAdmin": rb.ADMIN_TEXT,
-        "viewer": rb.VIEWER_TEXT,
-        "liveViewer": rb.LIVE_VIEWER_TEXT,
-        "advancedViewer": rb.ADV_VIEWER_TEXT,
-        "custom": rb.CUSTOM_TEXT}
     url = ENV + f"/systems/{server.id}"
-    for role in role_names:
-        with CloudAccount(get_random_email(), "firstname", "lastname") as tmp_user:
-            tmp_user.activate()
-            server.share_with_user(tmp_user, role)
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(tmp_user.email, tmp_user.password)
-            system_admin = SystemAdmin(driver)
-            system_admin.disconnect_from_account_button().click()
-            system_admin.disconnect_modal_warning().wait_until_visible()
-            system_admin.disconnect_modal_generic_button().click()
-            message = system_admin.disconnect_from_account_toast_notification(server.name)
-            message.wait_until_visible()
-            message.wait_until_not_visible(10)
+    with CloudAccount(get_random_email(), "firstname", "lastname") as tmp_user:
+        tmp_user.activate()
+        server.share_with_user(tmp_user, role)
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(tmp_user.email, tmp_user.password)
+        system_admin = SystemAdmin(driver)
+        system_admin.disconnect_from_account_button().click()
+        system_admin.disconnect_modal_warning().wait_until_visible()
+        system_admin.disconnect_modal_generic_button().click()
+        message = system_admin.disconnect_from_account_toast_notification(server.name)
+        message.wait_until_visible()
+        message.wait_until_not_visible(10)
 
 
 def disable_enable_correctly_affects_user(driver, server: Mediaserver, user: CloudAccount):
@@ -772,7 +765,14 @@ if __name__ == "__main__":
         Test(r, edit_permission_works_for_owner,cloud_server).run()
         Test(r, edit_permission_works_for_cloud_admin,cloud_server).run()
         Test(r, test_email_validation,cloud_server).run()
-        Test(r, users_can_disconnect_themselves,cloud_server).run()
+        role_names = {
+            "cloudAdmin": rb.ADMIN_TEXT,
+            "viewer": rb.VIEWER_TEXT,
+            "liveViewer": rb.LIVE_VIEWER_TEXT,
+            "advancedViewer": rb.ADV_VIEWER_TEXT,
+            "custom": rb.CUSTOM_TEXT}
+        for role in role_names:
+            Test(r, users_can_disconnect_themselves,cloud_server, role).run()
         Test(r, disable_enable_correctly_affects_user,
                            cloud_server, cloud_server.get_cloud_owner()).run()
         Test(r, disable_enable_correctly_affects_user,
