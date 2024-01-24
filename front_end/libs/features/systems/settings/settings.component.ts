@@ -310,7 +310,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         };
 
         // avoid delay in Camera node creation if we know we have some cameras.
-        if (this.system.cameraManager.cameras?.some(({ canEdit }) => canEdit)) {
+        if (
+            this.system.cameraManager.cameras?.some(({ id }) =>
+                this.system.permissionManager.canEditDevice(id),
+            )
+        ) {
             this.content.level1.push({
                 id: menus.systemSettings.cameras.id,
                 svg: menus.systemSettings.cameras.icon,
@@ -835,7 +839,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const cameras = this.system.cameraManager.cameras;
         if (
             this.system.permissionManager.permissions$$().editCameras ||
-            cameras?.some(({ canEdit }) => canEdit)
+            cameras?.some(({ id }) => this.system.permissionManager.canEditDevice(id))
         ) {
             let camerasNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.cameras.id,
@@ -855,8 +859,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.cameraManager.cameras.sort(
                     alphabeticalSort(this.locale, camera => camera.name),
                 );
-                const camerasInMenu = this.system.cameraManager.cameras.filter(
-                    camera => camera.canEdit,
+                const camerasInMenu = this.system.cameraManager.cameras.filter(camera =>
+                    this.system.permissionManager.canEditDevice(camera.id),
                 );
                 const getCameraIP = cameraUrl =>
                     cameraUrl.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)?.[0];
