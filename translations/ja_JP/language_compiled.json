@@ -537,7 +537,7 @@
     "Enable mandatory two-factor authentication": "強制二要素認証の有効化",
     "Enable relaying for cloud connect": "クラウド接続の中継を有効化",
     "Enables RTSP traffic encryption.": "RTSPトラフィックの暗号化を有効にします。",
-    "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.": "これを有効にすると、「モーションのみ」および「モーション+低解像度」の録画タイプを設定できますが、CPU使用率が増加する可能性があります。",
+    "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.": "これを有効にすると、「モーションのみ」および「モーション + 低解像度」の録画タイプを設定できますが、CPU使用率が増加する可能性があります。",
     "Encoder": "エンコーダー",
     "Encoders": "エンコーダー",
     "Encoding speed": "エンコード速度",
