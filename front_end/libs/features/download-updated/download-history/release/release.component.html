@@ -9,7 +9,10 @@
 <h4 class="mb-3 subtitle">
     {{ LANG.pages.downloadHistory.published | translate: { date: release.date } }}
 </h4>
-
+<a
+    [id]="release.version"
+    [href]="'#' + release.version"
+></a>
 <div>
     <h4 translate>Release Notes</h4>
     <div [innerHTML]="release.releaseNotes | safe: 'html'"></div>
