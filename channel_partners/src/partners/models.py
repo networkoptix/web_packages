@@ -700,10 +700,11 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             user=user, roles__overlap=allowed_role_uuid, channel_partner=self).exists()
 
     def can_access(self, user: CloudUser):
-        return ((self.users.filter(pk=user.pk).exists()
-                or OrganizationToUser.objects.filter(organization__channel_partner=self, user=user).exists()
-                or (self.parent_channel_partner and self.parent_channel_partner.can_access(user)))
-                or self.organizations.filter(users=user))
+        partners_ids = get_path_from_parent(self)
+        return (ChannelPartnerToUser.objects.filter(
+            channel_partner_id__in=partners_ids, user=user).exists() or
+                OrganizationToUser.objects.filter(
+                    organization__channel_partner=self, user=user).exists())
 
     def can_manage(self, user: CloudUser):
         if self.parent_channel_partner:
