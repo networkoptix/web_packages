@@ -592,16 +592,19 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         # common case with filtering by cloud_host and user's channel partners
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
                 ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
-        if self.action in ('change_state', 'confirm_state'):
-            # or channel partner is a direct child of user's channel partner
-            query |= Q(cloud_host=self.request.cloud_host, parent_channel_partner_id__in=Subquery(
-                    ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
+
         if self.action == 'retrieve':
             # LIC-278
             # If user is member of an organization, they should have read access to parent
             query |= Q(id__in=Subquery(
                 OrganizationToUser.objects.filter(user=self.request.user).values('organization__channel_partner_id')))
+
         if self.detail:
+            # Channel partner is a direct child of user's channel partner. For root channel partner's
+            # children host may be different. Other partners cannot create child with a different host
+            query |= Q(parent_channel_partner_id__in=Subquery(
+                ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
+
             # LIC-277 Map channel partners to cloud host instead of cloud instance
             # If channel partner’s parent has no parent (so it is the direct child of root channel partner)
             #   and current user is member of root channel partner:
@@ -1459,8 +1462,8 @@ def all_services(request):
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
 
-    cloud_host: CloudHost = data.get('cloudHost')
-    services = ChannelPartnerService.objects.filter(created_by_channel_partner__cloud_host__instance=cloud_host.instance)
+    # A soon as we have single instance it returns all services.
+    services = ChannelPartnerService.objects.all()
 
     return Response(ServiceSerializer(services, many=True).data)
 

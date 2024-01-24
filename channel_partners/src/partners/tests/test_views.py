@@ -30,7 +30,6 @@ from partners.models import (
     ActionConfirmation,
     ChannelPartnerRole,
     ChannelPartnerRoles,
-    ChannelPartnerServiceRecord,
     ChannelPartnerStates,
     ChannelPartnerToUser,
     CloudSystemId,
@@ -560,16 +559,21 @@ class TestChannelPartnerNestedViewSet:
                           cloud_test_host, cloud_host_factory, mock_auth_with_user,
                           default_cp_admin, cp_user_factory, arf):
         gen_count = 3
-        host = cloud_host_factory(hostname=f'{uuid4()}')
+        host = cloud_test_host
         other_host = cloud_host_factory(hostname=f'{uuid4()}')
-        root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
-                                          cloud_host=host)
+        root_cp = default_channel_partner
         root_cp_user = cp_user_factory(channel_partner=root_cp)
-        other_root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
+        other_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
                                                 cloud_host=other_host)
-        default_subs = [channel_partner_factory(parent_channel_partner=root_cp, cloud_host=host) for _ in range(gen_count)]
-        default_subs += [channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}')) for _ in range(gen_count)]
-        other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
+        default_subs = [
+            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=host)
+            for _ in range(gen_count)
+        ]
+        default_subs += [
+            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}'))
+            for _ in range(gen_count)
+        ]
+        other_subs = [channel_partner_factory(parent_channel_partner=other_cp) for _ in range(gen_count)]
         for sub in default_subs + other_subs:
             channel_partner_factory(parent_channel_partner=sub, cloud_host=host)
             channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host)
@@ -595,21 +599,28 @@ class TestChannelPartnerViewSet:
     def test_get_queryset(self, default_channel_partner, channel_partner_factory,
                           cloud_test_host, cloud_host_factory, mock_auth_with_user,
                           default_cp_admin, arf, cp_user_factory, organization_factory,
-                          org_user_factory):
+                          org_user_factory, root_nx_channel_partner):
         gen_count = 3
-        host = cloud_host_factory(hostname=f'{uuid4()}')
+        host = cloud_test_host
         other_host = cloud_host_factory(hostname=f'{uuid4()}')
-        root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
-                                          cloud_host=host)
+        root_cp = default_channel_partner
         root_cp_user = cp_user_factory(channel_partner=root_cp)
-        other_root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
-                                                cloud_host=other_host)
-        default_host_subs = [channel_partner_factory(parent_channel_partner=root_cp,
-                                                     cloud_host=host) for _ in range(gen_count)]
+        other_cp = channel_partner_factory(name='other cp', parent_channel_partner=root_nx_channel_partner,
+                                           cloud_host=other_host)
+        default_host_subs = [
+            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=host,
+                                    name=f'default sub {i}')
+            for i in range(gen_count)
+        ]
         other_host_subs = [
-            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}')) for _
-            in range(gen_count)]
-        other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
+            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}'),
+                                    name=f'other host sub {i}')
+            for i in range(gen_count)
+        ]
+        other_subs = [
+            channel_partner_factory(parent_channel_partner=other_cp)
+            for _ in range(gen_count)
+        ]
 
         # Test root channel partner's users request for a different host sub channel partner
         mock_auth_with_user(root_cp_user)
@@ -630,8 +641,8 @@ class TestChannelPartnerViewSet:
         request.cloud_host = host
         response = view(request)
         assert response.status_code == 200
-        # must contain only root_cp and its children
-        assert (set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)})
+        # must contain only root_cp
+        assert set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)}
 
         # Test organization user retrieve parent channel partner
         org = organization_factory(channel_partner=sub_cp)
@@ -647,7 +658,8 @@ class TestChannelPartnerViewSet:
         assert response.data['parentChannelPartner'] == VALUE_REPLACEMENT
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
-                       system_factory, arf, mock_auth_with_user, cp_user_factory):
+                       system_factory, arf, mock_auth_with_user, cp_user_factory, service_record_factory,
+                       cp_service_factory):
         gen_count = 3
         target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         other_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -661,8 +673,12 @@ class TestChannelPartnerViewSet:
                          for i in range(len(target_partners) * gen_count)]
         systems = [system_factory(organization=organizations[int(i/gen_count)])
                    for i in range(len(organizations) * gen_count)]
-        services = [baker.make(ChannelPartnerServiceRecord, cloud_system=systems[i], quantity=gen_count)
-                    for i in range(len(organizations))]
+        services = [
+            service_record_factory(
+                service=cp_service_factory(channel_partner=systems[i].organization.channel_partner),
+                cloud_system=systems[i], quantity=gen_count)
+            for i in range(len(organizations))
+        ]
 
         view = ChannelPartnerViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
         cp_user = cp_user_factory(channel_partner=target_cp)
@@ -834,7 +850,8 @@ class TestChannelPartnerViewSet:
 
 class TestOrganizationViewSet:
 
-    def test_aggregate(self, organization_factory, system_factory, arf, default_cp_admin, mock_auth_with_user):
+    def test_aggregate(self, organization_factory, system_factory, arf, default_cp_admin, mock_auth_with_user,
+                       service_record_factory, cp_service_factory):
         org = organization_factory()
         view = OrganizationViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
         mock_auth_with_user(default_cp_admin)
@@ -853,7 +870,8 @@ class TestOrganizationViewSet:
         usage = 0
         for sys in systems:
             qty = random.randint(0, 10)
-            baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=qty)
+            service_record_factory(service=cp_service_factory(channel_partner=sys.organization.channel_partner),
+                                   cloud_system=sys, quantity=qty)
             usage += qty
 
         response = view(arf.get('/'), pk=org.id)
@@ -1290,7 +1308,7 @@ class TestSystemUser:
         self.group_user = sys_group_user_factory(organization=org, group=group,
                                             role_id=OrganizationRoles.VIEWER)
         self.token = f'{uuid4()}'
-        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
     def test_success_cp_admin(self):
         self.client.force_authenticate(user=self.cp_admin.user)
@@ -1367,7 +1385,7 @@ class TestUserSystems:
         self.org_viewer = org_user_factory(organization=org, role=OrganizationRoles.VIEWER)
         self.group_user = sys_group_user_factory(organization=org, group=group,
                                             role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
-        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
     def test_system_user_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
         url_args = {
@@ -1458,7 +1476,9 @@ class TestSystemUsers:
         self.org_admin = org_user_factory(organization=org)
         self.org_viewer = org_user_factory(organization=org, role=OrganizationRoles.VIEWER)
         self.group_user = sys_group_user_factory(organization=org, group=group)
-        self.client = APIClient(headers={'cloud-host': cloud_test_host.hostname})
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        caches['local'].clear()
+
 
     def test_cp_admin(self):
         url_args = {

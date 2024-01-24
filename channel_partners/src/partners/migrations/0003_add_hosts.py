@@ -2,22 +2,8 @@
 
 from django.db import migrations
 
+# Removed as not necessary anymore
 instances = {
-    'cloud-test': [
-        'cloud-test.hdw.mx'
-    ],
-    'test': [
-        'test.cloud.hdw.mx'
-    ],
-    'test2': [
-        'test2.cloud.hdw.mx'
-    ],
-    'stage': [
-        'stage.nxvms.com'
-    ],
-    'prod': [
-        'nxvms.com'
-    ]
 }
 
 

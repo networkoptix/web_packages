@@ -3,15 +3,12 @@ from uuid import uuid4
 
 import pytest
 from django.conf import settings
-from mock.mock import MagicMock
 from rest_framework import exceptions
-from rest_framework.test import APIRequestFactory
 
 from partners.authentication import (
     NxCloudOauthIntrospectAuthentication,
     TokenCache,
     check_system_credentials,
-    cloud_host_middleware,
     get_cloud_user_from_token,
 )
 from partners.models import (
@@ -65,23 +62,6 @@ def test_token_cache(mocker):
     cache_get_mock = mocker.patch("django.core.cache.backends.redis.RedisCache.get", return_value=None)
     assert TokenCache.get_token(None) is None
     cache_get_mock.assert_not_called()
-
-
-def test_cloud_host_middleware(cloud_test_host):
-    get_response = MagicMock()
-    hostname = f"{uuid4()}"
-    request = APIRequestFactory(SERVER_NAME=hostname).get('/')
-    middleware = cloud_host_middleware(get_response)
-    response = middleware(request)
-    assert request.cloud_host is None
-
-    request = APIRequestFactory(SERVER_NAME=cloud_test_host.hostname).get('/')
-    response = middleware(request)
-    assert request.cloud_host == cloud_test_host
-
-    request = APIRequestFactory(headers={"cloud-host": cloud_test_host.hostname}).get('/')
-    response = middleware(request)
-    assert request.cloud_host == cloud_test_host
 
 
 def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,

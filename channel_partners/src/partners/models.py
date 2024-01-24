@@ -24,6 +24,7 @@ from django.contrib.postgres.aggregates import ArrayAgg
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import (
     F,
@@ -208,16 +209,8 @@ class CloudUser(models.Model):
         ).distinct()
 
 
-class CloudInstance(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
 class CloudHost(models.Model):
-    hostname = models.CharField(max_length=255)
-    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE)
+    hostname = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.hostname
@@ -789,6 +782,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             self.cloud_host = self.parent_channel_partner.cloud_host
 
         if new:
+            if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
+                if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
+                    raise ValidationError({'parent_channel_partner_id': 'Only one root channel partner is allowed.'})
             if self.parent_channel_partner:
                 self.invalidate_cache(str(self.parent_channel_partner.id))
 

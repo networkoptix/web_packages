@@ -135,7 +135,7 @@ class TestChannelPartner:
         assert sub_partner.cloud_host == cloud_test_host
 
 
-    def test_get_ancestors(self, channel_partner_factory):
+    def test_get_ancestors(self, channel_partner_factory, root_nx_channel_partner):
         count = 10
         partners = []
         parent = None
@@ -145,9 +145,9 @@ class TestChannelPartner:
 
         ancestors = ChannelPartner.get_ancestors(successor_id=partners[4].id)
 
-        assert ancestors.count() == 4
+        assert ancestors.count() == 4 + 1 # 4 channel partners and root nx channel partner
         partners_ids = [channel_partner.id for channel_partner in ancestors]
-        assert set(partners_ids) == set([p.id for p in partners[:4]])
+        assert set(partners_ids) == set([p.id for p in partners[:4] + [root_nx_channel_partner]])
 
     def test_get_successors(self, channel_partner_factory):
         count = 10

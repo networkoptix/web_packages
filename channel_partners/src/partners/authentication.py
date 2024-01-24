@@ -11,7 +11,6 @@ from django.contrib.auth import get_user_model
 from django.core.cache import caches
 from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
-from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 from httpx import Response
@@ -29,37 +28,12 @@ from rest_framework.authentication import (
 
 from partners.models import (
     AuthToken,
-    CloudHost,
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
 )
 from tools.exception import APIErrorWithoutRollback
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
-
-
-def get_host(request: HttpRequest) -> str:
-    return request.get_host().split(':')[0]
-
-
-def get_cloud_host(cloud_host_name: str) -> CloudHost:
-    cache_key = f'cloud-host-{cloud_host_name}'
-    if cloud_host := caches['local'].get(cache_key):
-        if isinstance(cloud_host, CloudHost):
-            return cloud_host
-    if cloud_host := CloudHost.objects.filter(hostname=cloud_host_name).first():
-        caches['local'].set(cache_key, cloud_host, timeout=7200)
-    return cloud_host
-
-
-def cloud_host_middleware(get_response):
-    def middleware(request: HttpRequest):
-        cloud_host_name = request.headers.get('cloud-host', get_host(request))
-        request.cloud_host = get_cloud_host(cloud_host_name)
-        response = get_response(request)
-        return response
-
-    return middleware
 
 
 class TokenCache:
@@ -173,6 +147,7 @@ def check_system_credentials(system_id: str, system_auth_key: str, cloud_host: s
         return False, None
     response.raise_for_status()
 
+
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
 
     @staticmethod
@@ -188,7 +163,7 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, userid, password, request=None):
         auth_header = request.headers.get('authorization')
         if not request.cloud_host:
-            raise exceptions.ParseError('Invalid cloud-host header or hostname.')
+            raise exceptions.ParseError('Invalid hostname.')
         if (
                 (cloud_system_id := TokenCache.get_system_auth(auth_header))
                 and userid == cloud_system_id

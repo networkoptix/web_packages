@@ -767,6 +767,7 @@ cp-checks:
   stage: check
   variables:
     PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+    INSTANCE_NAME: test
   script:
     - cd channel_partners/src
     - echo "Running safety check in $(pwd)"
@@ -796,6 +797,8 @@ cp-checks:
     POSTGRES_PASSWORD: partners
     POSTGRES_DB: channel_partners
     POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+    INSTANCE_NAME: test
+
 
 
 .cp-unit-test:

@@ -8,6 +8,7 @@ do
     case "$command" in
         migratedb)
             python manage.py migrate && python manage.py collectstatic --no-input
+            python manage.py runscript create_root_channel_partner --script-args ${INSTANCE_NAME}
         ;;
         web)
             exec gunicorn channel_partners.asgi:application --capture-output --workers ${WEB_WORKERS} --bind :8000 --log-level=debug --timeout 300 -k uvicorn.workers.UvicornWorker
