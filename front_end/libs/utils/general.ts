@@ -333,6 +333,24 @@ export function assignFrom<S extends Pick<T, K[number]>, K extends readonly (key
 }
 
 /* DOM */
+/**
+ * Scroll an item into view inside in a container like a dropdown
+ *
+ * @param item The item element to scroll to
+ * @param container The container element of the item
+ */
+export function scrollItemIntoView(item: HTMLElement, container: HTMLElement): void {
+    const itemTop = item.offsetTop;
+    const itemBottom = itemTop + item.offsetHeight;
+    const containerVisibleTop = container.scrollTop;
+    const containerVisibleBottom = containerVisibleTop + container.offsetHeight;
+
+    if (itemTop < containerVisibleTop) {
+        item.scrollIntoView(true); // alignToTop
+    } else if (itemBottom > containerVisibleBottom) {
+        item.scrollIntoView(false);
+    }
+}
 
 /* Async */
 /**

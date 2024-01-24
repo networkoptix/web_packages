@@ -57,15 +57,16 @@
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Select a user"
-            [(selected)]="selectedComplicatedObject"
+            [(selected)]="selectedComplicatedObjectV2"
             (onChange)="logOnChange($event)"
         >
-            <nx-simple-dropdown-item *ngIf="selectedComplicatedObject !== undefined">
+            <nx-simple-dropdown-item *ngIf="selectedComplicatedObjectV2 !== undefined">
+                None
             </nx-simple-dropdown-item>
             <nx-simple-dropdown-item
                 *ngFor="let complicatedObject of complicatedObjectArray"
                 [value]="complicatedObject"
-                [selected]="complicatedObject?.userId === selectedComplicatedObject?.userId"
+                [selected]="complicatedObject?.userId === selectedComplicatedObjectV2?.userId"
                 [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
             >
                 {{ complicatedObject.fullName }}

@@ -1,5 +1,9 @@
 @use "typography";
 
+:host {
+    width: 100%;
+}
+
 .select-wrapper {
     height: 2rem;
     display: flex;
@@ -7,15 +11,20 @@
     background-color: var(--btn-dropdown-toggle-bg);
     box-shadow: var(--btn-dropdown-toggle-shadow-color);
     @include typography.medium13nocolor;
-}
 
-.select-wrapper:not(.disabled) {
-    cursor: pointer;
-}
+    &:not(.disabled) {
+        cursor: pointer;
 
-.select-wrapper:hover:not(.disabled) {
-    background-color: var(--btn-dropdown-toggle-hover-bg);
-    box-shadow: var(--btn-dropdown-toggle-hover-shadow);
+        &:hover {
+            background-color: var(--btn-dropdown-toggle-hover-bg);
+            box-shadow: var(--btn-dropdown-toggle-hover-shadow);
+        }
+
+        &:active {
+            background-color: var(--btn-dropdown-toggle-active-bg);
+            box-shadow: var(--btn-dropdown-toggle-active-shadow);
+        }
+    }
 }
 
 svg-icon svg g polyline {
@@ -35,6 +44,7 @@ $paddingBottom: 5px;
     padding: $paddingTop 0px $paddingBottom 10px;
     flex-grow: 1;
     line-height: calc(2rem - $paddingTop - $paddingBottom);
+    text-align: left;
 }
 
 .dropdown-arrow {
@@ -64,10 +74,6 @@ $paddingBottom: 5px;
 
 // TODO: Add error styling
 .error {}
-
-:host {
-    width: 100%;
-}
 
 .rotationTransition {
     -webkit-transition: .2s ease-in-out;

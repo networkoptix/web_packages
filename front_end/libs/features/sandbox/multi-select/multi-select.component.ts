@@ -182,6 +182,7 @@ export class MultiSelectComponent {
             created: '2023-08-24T19:14:46.748Z',
         },
     ];
+    selectedComplicatedObjectV2: ComplicatedObject | undefined = undefined;
     selectedComplicatedObject: ComplicatedObject | undefined = {} as ComplicatedObject;
     selectedComplicatedObjects: ComplicatedObject[] = [];
     isSelected(item: ComplicatedObject): boolean {
