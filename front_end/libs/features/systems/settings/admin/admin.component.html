@@ -96,28 +96,34 @@
                         class="system-owner"
                         *ngIf="!environment.isLocal"
                     >
-                        <ng-template
-                            *ngIf="
-                                !transferInfo ||
-                                (transferInfo &&
-                                    !system.permissionManager.isOwner$$() &&
-                                    transferInfo.toAccount !==
-                                        system.permissionManager.currentUser$$().email)
-                            "
-                            [ngTemplateOutlet]="ownerText"
-                        ></ng-template>
-                        <ng-template
-                            *ngIf="transferInfo && system.permissionManager.isOwner$$()"
-                            [ngTemplateOutlet]="cancelTransferText"
-                        ></ng-template>
-                        <ng-template
-                            *ngIf="
-                                transferInfo &&
-                                transferInfo.toAccount ===
-                                    system.permissionManager.currentUser$$().email
-                            "
-                            [ngTemplateOutlet]="systemOfferedText"
-                        ></ng-template>
+                        <ng-container *ngIf="orgName$$(); else notInOrg">
+                            {{ orgName$$() }}
+                        </ng-container>
+
+                        <ng-template #notInOrg>
+                            <ng-template
+                                *ngIf="
+                                    !transferInfo ||
+                                    (transferInfo &&
+                                        !system.permissionManager.isOwner$$() &&
+                                        transferInfo.toAccount !==
+                                            system.permissionManager.currentUser$$().email)
+                                "
+                                [ngTemplateOutlet]="ownerText"
+                            ></ng-template>
+                            <ng-template
+                                *ngIf="transferInfo && system.permissionManager.isOwner$$()"
+                                [ngTemplateOutlet]="cancelTransferText"
+                            ></ng-template>
+                            <ng-template
+                                *ngIf="
+                                    transferInfo &&
+                                    transferInfo.toAccount ===
+                                        system.permissionManager.currentUser$$().email
+                                "
+                                [ngTemplateOutlet]="systemOfferedText"
+                            ></ng-template>
+                        </ng-template>
                     </span>
                 </div>
                 <div

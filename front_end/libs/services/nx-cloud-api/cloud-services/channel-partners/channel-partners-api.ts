@@ -39,6 +39,7 @@ import {
     GroupUser,
     UpdateGroupUser,
     GroupUserCanAccess,
+    SassReport,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -261,7 +262,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     getSystem = (id: string): Observable<unknown> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
     };
-    getSystemSassReport = (id: string): Observable<unknown> => {
+    getSystemSassReport = (id: string): Observable<SassReport> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'saas_report']));
     };
 
