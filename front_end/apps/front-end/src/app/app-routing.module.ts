@@ -3,6 +3,7 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { AuthGuard } from '@guards/authGuard';
+import { BuildGuard } from '@guards/buildGuard';
 import { FeatureGuardMatch } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -140,7 +141,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'downloads',
-        canMatch: [() => !nxConfig.featureFlags.enhancedDownloads],
+        canMatch: [BuildGuard],
         loadChildren: () =>
             import('@pages/download-history/download-history.module').then(
                 m => m.DownloadHistoryModule,
