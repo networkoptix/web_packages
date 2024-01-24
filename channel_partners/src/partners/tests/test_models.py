@@ -10,11 +10,13 @@ from partners.models import (
     ChannelPartnerEvent,
     ChannelPartnerService,
     ChannelPartnerStates,
+    ChannelPartnerToUser,
     CloudSystemId,
     CloudUser,
     Organization,
     OrganizationPermissions,
     OrganizationRoles,
+    OrganizationToUser,
     SystemGroup,
     VmsRoles,
 )
@@ -337,6 +339,55 @@ class TestChannelPartner:
 
         for tid, tname in ChannelPartnerService.SERVICE_TYPES:
             assert changes[tid] == len(sub_cp_orgs) * 2 * 2
+
+
+class TestChannelPartnerCanAccess:
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory):
+        # Channel Partner
+        self.cp_root: ChannelPartner = channel_partner_factory(
+            parent_channel_partner=None,
+            name="Root CP")
+        self.cp_child_lvl1: ChannelPartner = channel_partner_factory(
+            parent_channel_partner=
+            self.cp_root,
+            name="Child CP - lvl1")
+        self.cp_child_lvl2: ChannelPartner = channel_partner_factory(
+            parent_channel_partner=self.cp_child_lvl1,
+            name="Child CP - lvl2")
+
+        # Users & Assignments
+        self.cptu_root: ChannelPartnerToUser = cp_user_factory(
+            email="root@example.com",
+            channel_partner=self.cp_root)
+        self.cptu_child: ChannelPartnerToUser = cp_user_factory(
+            email="child@example.com",
+            channel_partner=self.cp_child_lvl1)
+        self.cptu_unrelated: ChannelPartnerToUser = cp_user_factory(
+            email="unrelated@example.com")
+
+        # Organization
+        self.org_lvl1: Organization = organization_factory(
+            name="Child Org - lvl1",
+            channel_partner=self.cp_child_lvl1)
+
+    def test_user_can_access_own_channel_partner(self):
+        assert self.cp_root.can_access(self.cptu_root.user)
+        assert self.cp_child_lvl1.can_access(self.cptu_child.user)
+
+    def test_user_can_access_descendant_channel_partner(self):
+        assert self.cp_child_lvl1.can_access(self.cptu_root.user)
+
+    def test_user_cannot_access_ancestor_channel_partner(self):
+        assert not self.cp_root.can_access(self.cptu_child.user)
+
+    def test_unrelated_user_cannot_access_channel_partner(self):
+        assert not self.cp_root.can_access(self.cptu_unrelated.user)
+        assert not self.cp_child_lvl1.can_access(self.cptu_unrelated.user)
+
+    def test_user_can_access_via_organization(self):
+        OrganizationToUser.objects.create(organization=self.org_lvl1, user=self.cptu_child.user)
+        assert self.cp_child_lvl1.can_access(self.cptu_root.user)
 
 
 class TestOrganization:
