@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
@@ -68,7 +68,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         private cookieService: CookieService,
     ) {
         this.headerService.currentLocation$
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed())
             .subscribe(currentLocation => {
                 this.checkLogoState(currentLocation);
             });
@@ -90,6 +90,10 @@ export class NxHeaderLogoAreaComponent implements OnInit {
 
     ngOnInit(): void {
         // this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemsList;
+    }
+
+    goBack(): void {
+        window.history.back();
     }
 
     emitClick(clickType: logoClickType): void {
