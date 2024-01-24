@@ -1550,8 +1550,8 @@ def system_users(request, system_id):
     deprecated=True,
 )
 @api_view(['GET'])
-@authentication_classes([NxCloudOauthTokenAuthentication])
-@permission_classes([IsAuthenticated])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsInternalToken])
 # TODO: CLOUD-12310
 def all_org_users(request):
     users_dict = {
