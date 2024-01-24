@@ -54,7 +54,12 @@ enum CameraError {
     noData = 'noData',
     noFormat = 'noFormat',
     offline = 'offline',
+    tooManyConnections = 'tooManyConnections',
     unauthorized = 'unauthorized',
+}
+
+enum CameraErrorResponse {
+    tooManyConnections = 'Too many opened connections',
 }
 
 @UntilDestroy()
@@ -229,14 +234,21 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const noAccess = (!canPlayLive && isLive) || (!canPlayArchive && !isLive);
 
         let errorState: CameraError | undefined;
-        if (!isOffline && !isUnauthorized && isVirtual) {
-            errorState = CameraError.noData;
-        } else if (!isOffline && !isUnauthorized && !isVirtual) {
-            errorState = CameraError.noFormat;
-        } else if (isOffline && !isUnauthorized) {
-            errorState = CameraError.offline;
-        } else if (!isOffline && isUnauthorized) {
-            errorState = CameraError.unauthorized;
+
+        if (!noAccess) {
+            if (!isOffline && !isUnauthorized && isVirtual) {
+                errorState = CameraError.noData;
+            } else if (!isOffline && !isUnauthorized && !isVirtual) {
+                if (error === CameraErrorResponse.tooManyConnections) {
+                    errorState = CameraError.tooManyConnections;
+                } else {
+                    errorState = CameraError.noFormat;
+                }
+            } else if (isOffline && !isUnauthorized) {
+                errorState = CameraError.offline;
+            } else if (!isOffline && isUnauthorized) {
+                errorState = CameraError.unauthorized;
+            }
         }
         return {
             error,
@@ -251,6 +263,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.playback.stop();
         }
     });
+
+    clearErrorOnCameraChange = effect(
+        () => {
+            this.cameraId$$();
+            this.playerError$$.set('');
+        },
+        { allowSignalWrites: true },
+    );
 
     ngOnInit(): void {
         this.initSubscriptions();
