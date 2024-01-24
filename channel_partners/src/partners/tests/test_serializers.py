@@ -11,18 +11,15 @@ from dateutil import relativedelta
 from django.core.cache import caches
 from django.db.models import Prefetch
 from django.utils import timezone
-from model_bakery import baker
 
 from partners.models import (
     ActionConfirmation,
     ChannelPartnerRole,
     ChannelPartnerService,
-    ChannelPartnerServiceRecord,
     ChannelPartnerStates,
     ChannelPartnerToUser,
     CloudUser,
     NotificationTypes,
-    Organization,
     OrganizationRole,
     OrganizationRoles,
     OrganizationToUser,
@@ -53,7 +50,8 @@ class TestChannelPartnerAggDataSerializer:
         pass
 
     def test_data(self, default_channel_partner, channel_partner_factory, organization_factory,
-                  system_factory, arf, mock_auth_with_user, default_cp_admin):
+                  system_factory, arf, mock_auth_with_user, default_cp_admin, service_record_factory,
+                  cp_service_factory):
         gen_count = 3
         target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         other_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -90,9 +88,12 @@ class TestChannelPartnerAggDataSerializer:
         assert ser.data['organizations'] == len(target_partners) * gen_count
         assert ser.data['systems'] == len(organizations) * gen_count
         assert ser.data['serviceUsageQuantity'] == 0
-
-        services = [baker.make(ChannelPartnerServiceRecord, cloud_system=systems[i], quantity=gen_count, organization=systems[i].organization)
-                    for i in range(len(organizations))]
+        services = [
+            service_record_factory(
+                service=cp_service_factory(channel_partner=systems[i].organization.channel_partner),
+                cloud_system=systems[i], quantity=gen_count,
+                organization=systems[i].organization
+            ) for i in range(len(organizations))]
 
         ser = ChannelPartnerAggDataSerializer(instance=target_cp)
 
@@ -118,7 +119,10 @@ class TestChannelPartnerAggDataSerializer:
                 for _ in range(2):
                     sys = system_factory(organization=org)
                     for _ in range(2):
-                        baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=1, organization=sys.organization)
+                        service_record_factory(
+                            service=cp_service_factory(channel_partner=sys.organization.channel_partner),
+                            cloud_system=sys, quantity=1, organization=sys.organization
+                        )
 
 
         ser = ChannelPartnerAggDataSerializer(instance=other_cp)
@@ -135,7 +139,7 @@ class TestChannelPartnerAggDataSerializer:
 
 class TestOrganizationAggDataSerializer:
 
-    def test_data(self, organization_factory, system_factory):
+    def test_data(self, organization_factory, system_factory, cp_service_factory, service_record_factory):
         org = organization_factory()
         ser = OrganizationAggDataSerializer(org)
 
@@ -151,7 +155,10 @@ class TestOrganizationAggDataSerializer:
         usage = 0
         for sys in systems:
             qty = random.randint(0, 10)
-            baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=qty, organization=sys.organization)
+            service_record_factory(
+                service=cp_service_factory(channel_partner=sys.organization.channel_partner),
+                cloud_system=sys, quantity=qty, organization=sys.organization
+            )
             usage += qty
 
         ser = OrganizationAggDataSerializer(org)
@@ -356,7 +363,7 @@ class TestOrganizationSerializer:
         self.context = context
 
     @pytest.mark.django_db
-    def test_fields_existence(self, arf, default_cp_admin):
+    def test_fields_existence(self, arf, default_cp_admin, organization_factory):
         """
         Test that all expected fields exist in the serialized data of an Organization object.
         """
@@ -365,7 +372,7 @@ class TestOrganizationSerializer:
         request.user = default_cp_admin.user
 
         # Build out Organizational instance
-        organization = baker.make(Organization)
+        organization = organization_factory(channel_partner=default_cp_admin.channel_partner)
 
         # Serialize with request for context and Organization
         serializer = OrganizationSerializer(organization, context={'request': request})

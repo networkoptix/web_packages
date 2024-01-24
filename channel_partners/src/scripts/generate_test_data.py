@@ -11,8 +11,8 @@ from partners.models import (
     ChannelPartnerService,
     ChannelPartnerServiceExternalId,
     ChannelPartnerServiceRecord,
+    ChannelPartnerToUser,
     CloudHost,
-    CloudInstance,
     CloudSystemExternalId,
     CloudSystemId,
     CloudSystemStates,
@@ -65,7 +65,6 @@ def add_random_users_to_organization(organization: Organization):
 
 def run():
     with transaction.atomic():
-        cloud_test_instance = CloudInstance.objects.get_or_create(name='cloud-test')[0]
         cloud_test_host = CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
         nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(name='Network Optix', cloud_host=cloud_test_host)[0]
 

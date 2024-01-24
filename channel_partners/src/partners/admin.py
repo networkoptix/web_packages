@@ -131,4 +131,4 @@ class CloudSystemIdAdmin(admin.ModelAdmin):
 
 @admin.register(CloudHost)
 class CloudHostAdmin(admin.ModelAdmin):
-    list_display = ('hostname', 'instance')
+    list_display = ('hostname',)

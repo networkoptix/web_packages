@@ -444,7 +444,7 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         relation.save()
         added_channel_partner_role_task.apply_async(args=[
             relation.channel_partner_id, created_by.id, relation.user_id,
-            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+            channel_partner.cloud_host.hostname
         ])
         return relation
 
@@ -575,7 +575,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         relation.save()
         added_organization_role_task.apply_async(args=[
             relation.organization_id, created_by.id, relation.user_id,
-            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+            organization.channel_partner.cloud_host.hostname
         ])
         OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=False).delete()
         user = CloudUser.objects.prefetch_related(
@@ -1414,7 +1414,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         relation.save()
         added_organization_role_task.apply_async(args=[
             relation.organization_id, created_by.id, relation.user_id,
-            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+            organization.channel_partner.cloud_host.hostname
         ])
         # Delete User's Organization Roles
         OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=True).delete()

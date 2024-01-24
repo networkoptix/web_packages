@@ -6,12 +6,13 @@ services:
     domainname: redis_cp
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6380"
     expose:
-      - "6379"
+      - "6380"
     command:
       - redis-server
       - --databases 32
+      - --port 6380
 
   postgres:
     image: postgres:15.3-bullseye
@@ -44,6 +45,7 @@ services:
     environment:
       - LOCAL_ENV=1
       - LOCAL_DOCKER=1
+      - INSTANCE_NAME=test
 
   celery:
     build:
@@ -61,6 +63,7 @@ services:
     environment:
       - LOCAL_ENV=1
       - LOCAL_DOCKER=1
+      - INSTANCE_NAME=test
 
   app:
     container_name: app
@@ -80,6 +83,7 @@ services:
     environment:
       - LOCAL_ENV=1
       - LOCAL_DOCKER=1
+      - INSTANCE_NAME=test
 
 
 

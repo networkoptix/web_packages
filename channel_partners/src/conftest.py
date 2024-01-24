@@ -23,7 +23,6 @@ from partners.models import (
     ChannelPartnerStates,
     ChannelPartnerToUser,
     CloudHost,
-    CloudInstance,
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
@@ -53,33 +52,29 @@ def cloud_user_factory(db, random_email):
 
 
 @pytest.fixture()
-def cloud_test_instance(db):
-    return CloudInstance.objects.get_or_create(name='cloud-test')[0]
+def cloud_test_host(db):
+    return CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
 
 
 @pytest.fixture()
-def cloud_test_host(cloud_test_instance):
-    return CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx', instance=cloud_test_instance)[0]
-
-@pytest.fixture()
-def cloud_host_factory(db, cloud_test_instance):
+def cloud_host_factory(db):
     def factory(hostname=None) -> CloudHost:
         if not hostname:
             hostname = f'{uuid4()}.ut.test.hdw.mx'
-        return CloudHost.objects.get_or_create(hostname=hostname, instance=cloud_test_instance)[0]
+        return CloudHost.objects.get_or_create(hostname=hostname)[0]
 
     return factory
 
 
 @pytest.fixture()
-def cloud_test_nx_channel_partner(cloud_test_host):
+def root_nx_channel_partner(cloud_test_host):
     return ChannelPartner.objects.get_or_create(name='Network Optix', cloud_host=cloud_test_host)[0]
 
 
 @pytest.fixture()
-def default_channel_partner(cloud_test_host, cloud_test_nx_channel_partner):
+def default_channel_partner(cloud_test_host, root_nx_channel_partner):
     return ChannelPartner.objects.get_or_create(
-        name='Default CP', cloud_host=cloud_test_host, parent_channel_partner=cloud_test_nx_channel_partner)[0]
+        name='Default CP', cloud_host=cloud_test_host, parent_channel_partner=root_nx_channel_partner)[0]
 
 
 @pytest.fixture()
@@ -103,15 +98,17 @@ def organization_factory(default_channel_partner):
 
 
 @pytest.fixture()
-def channel_partner_factory(default_channel_partner, cloud_test_host):
+def channel_partner_factory(default_channel_partner, cloud_test_host, root_nx_channel_partner):
     def factory(name=None,
                 parent_channel_partner=default_channel_partner,
                 cloud_host=cloud_test_host,
                 # acs=False
                 ) -> ChannelPartner:
+        cp_id = uuid4()
         return ChannelPartner.objects.create(
-            name=name or f"Channel Partner {uuid4()}",
-            parent_channel_partner=parent_channel_partner,
+            name=name or f"Channel Partner {cp_id}",
+            id=cp_id,
+            parent_channel_partner=parent_channel_partner or root_nx_channel_partner,
             cloud_host=cloud_host,
             # allow_changing_services=acs,
         )
@@ -383,7 +380,7 @@ def random_email():
 
 @pytest.fixture()
 def request_host():
-    return settings.INSTANCE_CONFIG.get_instance_host(None)
+    return settings.INSTANCE_CONFIG.default_host
 
 @pytest.fixture()
 def mock_get_customization_request(httpx_mock, request_host):

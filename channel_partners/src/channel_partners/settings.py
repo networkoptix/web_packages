@@ -27,10 +27,10 @@ MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 DOMAIN_NAME = os.getenv('DOMAIN_NAME', '')
 TRAFFIC_RELAY_HOSTS = os.getenv('TRAFFIC_RELAY_HOSTS', 'relay.relay.cloud.hdw.mx').split(',')
 
-if LOCAL_ENV:
-    ENV_NAME = 'local'
-elif CI:
+if CI:
     ENV_NAME = 'ci'
+elif LOCAL_ENV:
+    ENV_NAME = 'local'
 else:
     ENV_NAME = 'prod'
 
@@ -87,7 +87,7 @@ AUTH_USER_MODEL = 'accounts.account'
 MIDDLEWARE = [
     "django_structlog.middlewares.RequestMiddleware",
     'corsheaders.middleware.CorsMiddleware',
-    'partners.authentication.cloud_host_middleware',
+    'partners.middleware.cloud_host_middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -147,7 +147,7 @@ DATABASES = {
 # Cache
 
 REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
-REDIS_CACHE_LOCATION = f'redis://{INSTANCE_CONFIG.redis_host}:6379'
+REDIS_CACHE_LOCATION = f'redis://{INSTANCE_CONFIG.redis_host}:{INSTANCE_CONFIG.redis_port}'
 
 CACHES = {
     "local": {
@@ -162,7 +162,7 @@ CACHES = {
     'celery': {
         # RESERVED FOR CELERY
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": REDIS_CACHE_LOCATION + '/15',
+        "LOCATION": REDIS_CACHE_LOCATION + f'/{INSTANCE_CONFIG.celery_db_index}',
         "TIMEOUT": None
     },
 }
@@ -228,9 +228,6 @@ SPECTACULAR_SETTINGS = {
             'url': f'https://{DOMAIN_NAME}/partners/api/v2' if DOMAIN_NAME else '/partners/api/v2'
         }
     ],
-    'POSTPROCESSING_HOOKS': [
-        'partners.authentication.system_authentication_hook'
-    ],
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True,
         'showExtensions': True,
@@ -241,7 +238,6 @@ SPECTACULAR_SETTINGS = {
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'cloud-host',
     'requestinterceptorrequest'
 ]
 
