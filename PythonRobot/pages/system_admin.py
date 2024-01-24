@@ -188,7 +188,7 @@ class SystemAdmin:
         # There are two variants of the locator, one for the active tab and another for the inactive tab
         locator = (
             f'//header//nx-header-level-two//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]'
-            f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
+            f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]'
             )
         self._wait_for_tab_loaded(locator)
         return TabSettings(self.driver, locator, self.rb)
