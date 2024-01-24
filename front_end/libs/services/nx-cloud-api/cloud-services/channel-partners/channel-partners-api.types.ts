@@ -311,3 +311,27 @@ export interface GroupUserCanAccess extends GroupUser {
         membershipType: string;
     };
 }
+
+export interface Security {
+    checkPeriodS: number;
+    lastCheck: string;
+    status: {
+        analytics: string[];
+        cloud_storage: string[];
+        local_recording: string[];
+    };
+    tmpExpirationDate: string;
+}
+
+export interface SassReport {
+    channelPartner: ChannelPartner;
+    cloudSystemId: string;
+    organization: {
+        id: string;
+        name: string;
+    };
+    security: Security;
+    services: SystemServices;
+    signature: string;
+    state: string;
+}

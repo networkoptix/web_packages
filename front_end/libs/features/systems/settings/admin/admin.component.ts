@@ -8,6 +8,7 @@ import {
     LOCALE_ID,
     OnDestroy,
     OnInit,
+    signal,
     Signal,
     ViewChild,
     ViewContainerRef,
@@ -16,7 +17,7 @@ import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, take } from 'rxjs';
+import { firstValueFrom, Observable, Subscription, take } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -79,6 +80,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     connectToCloudProcess: Process;
     disconnectProcess: Process;
     showNewText: boolean;
+    orgName$$ = signal('');
 
     settingsForSystem$: Observable<t.Settings>;
     systemName: string;
@@ -244,12 +246,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     ngAfterViewInit(): void {
-        this.systemName = this.systemsService.systems?.find(
-            s => s.id === this.route.snapshot.params.systemId,
-        )?.name;
+        const { name, organizationId } =
+            this.systemsService.systems?.find(s => s.id === this.route.snapshot.params.systemId) ||
+            {};
+        this.systemName = name;
+
         this.accountService.get().then((account?: Account) => {
             this.user = account;
         });
+
+        if (organizationId) {
+            firstValueFrom(
+                this.cloudApiService.cloudChannelPartnersApi.getSystemSassReport(this.system.id),
+            ).then(report => {
+                if (report.organization) {
+                    this.orgName$$.set(report.organization.name);
+                }
+            });
+        }
 
         this.settings = {
             disconnectDisabled: false,
