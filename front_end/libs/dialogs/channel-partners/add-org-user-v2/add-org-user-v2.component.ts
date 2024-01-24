@@ -77,7 +77,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
 
     addOrgUserProcess: Process;
 
-    organization: Pick<Organization, 'id' | 'name'>;
+    organization: Organization;
     groups: GroupItem[];
 
     selectedFolder$$: WritableSignal<SelectedFolder>;
