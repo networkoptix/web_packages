@@ -416,7 +416,7 @@ export interface LicenseServerInfo {
 
 export type ReleasesTypes = keyof typeof staticLang.downloads.releasesTypes;
 
-export type BuildHistory = { [type in ReleasesTypes]?: Downloads[] } & { updatesPrefix: string };
+export type BuildHistory = { [type in ReleasesTypes]?: Downloads[] } & { updatesPrefix?: string };
 
 export interface Build extends Downloads {
     updatesPrefix: string;

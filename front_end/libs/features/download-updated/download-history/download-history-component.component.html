@@ -34,13 +34,6 @@
                     >
                         <div *ngFor="let release of activeBuilds">
                             <nx-release
-                                [build]="
-                                    build ||
-                                    (release.backwardsCompatible
-                                        ? release.version
-                                        : release.buildNumber
-                                    ).toString()
-                                "
                                 [linkbase]="linkbase"
                                 [release]="release"
                             ></nx-release>
