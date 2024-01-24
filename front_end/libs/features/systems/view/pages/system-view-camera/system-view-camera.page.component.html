@@ -179,6 +179,12 @@
                     <ng-template #unreachable>
                         <ng-container [ngSwitch]="state$$().errorState">
                             <nx-player-placeholder
+                                *ngSwitchCase="CameraError.tooManyConnections"
+                                svgFileName="placeholder_camera_alert"
+                                [heading]="LANG.common.cameraStates.error"
+                                [description]="LANG.common.cameraStates.tooManyConnections"
+                            ></nx-player-placeholder>
+                            <nx-player-placeholder
                                 *ngSwitchCase="CameraError.noData"
                                 svgFileName="placeholder_camera_alert"
                                 [heading]="LANG.common.cameraStates.noData"

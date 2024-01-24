@@ -62,7 +62,12 @@ enum CameraError {
     noData = 'noData',
     noFormat = 'noFormat',
     offline = 'offline',
+    tooManyConnections = 'tooManyConnections',
     unauthorized = 'unauthorized',
+}
+
+enum CameraErrorResponse {
+    tooManyConnections = 'Too many opened connections',
 }
 
 @UntilDestroy()
@@ -244,7 +249,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             if (!isOffline && !isUnauthorized && isVirtual) {
                 errorState = CameraError.noData;
             } else if (!isOffline && !isUnauthorized && !isVirtual) {
-                errorState = CameraError.noFormat;
+                if (error === CameraErrorResponse.tooManyConnections) {
+                    errorState = CameraError.tooManyConnections;
+                } else {
+                    errorState = CameraError.noFormat;
+                }
             } else if (isOffline && !isUnauthorized) {
                 errorState = CameraError.offline;
             } else if (!isOffline && isUnauthorized) {
@@ -265,6 +274,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.playback.stop();
         }
     });
+
+    clearErrorOnCameraChange = effect(
+        () => {
+            this.cameraId$$();
+            this.playerError$$.set('');
+        },
+        { allowSignalWrites: true },
+    );
 
     ngOnInit(): void {
         this.initSubscriptions();
