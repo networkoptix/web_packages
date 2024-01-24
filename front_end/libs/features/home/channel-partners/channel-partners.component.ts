@@ -82,22 +82,9 @@ export class NxChannelPartnersComponent implements OnInit {
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
     @Input() currentTabRoute: string;
-    @Input() partnerId: string;
     currentTabIndex$$ = signal<number>(0);
-    tabs: Tab[] = [
-        {
-            displayName: this.LANG.channelPartners.tabNames.organizations,
-            route: '',
-        },
-        {
-            displayName: this.LANG.channelPartners.tabNames.partners,
-            route: 'subchannels',
-        },
-        {
-            displayName: this.LANG.channelPartners.tabNames.information,
-            route: 'information',
-        },
-    ];
+    tabs: Tab[];
+    processedTabs = false;
     searchConfig = searchConfig;
 
     search = { value: '' };
@@ -119,6 +106,11 @@ export class NxChannelPartnersComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
                 combineLatestWith(this.channelPartners$),
                 switchMap(([id, partners]) => {
+                    if (id !== this.currentPartnerId) {
+                        this.processedTabs = false;
+                        this.tabs = this.defaultTabs;
+                    }
+
                     this.currentPartnerId = id;
                     const currPartner = partners.find(
                         partner => partner.id === this.currentPartnerId,
@@ -127,19 +119,25 @@ export class NxChannelPartnersComponent implements OnInit {
                         return throwError(() => 'Partner not found');
                     }
                     const { ownPermissions } = currPartner;
-                    if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
-                        this.tabs.push({
-                            displayName: this.LANG.channelPartners.tabNames.users,
-                            route: 'users',
-                        });
-                    }
-                    if (
-                        ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)
-                    ) {
-                        this.tabs.push({
-                            displayName: this.LANG.channelPartners.tabNames.settings,
-                            route: 'settings',
-                        });
+
+                    if (!this.processedTabs) {
+                        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+                            this.tabs.push({
+                                displayName: this.LANG.channelPartners.tabNames.users,
+                                route: 'users',
+                            });
+                        }
+                        if (
+                            ownPermissions.includes(
+                                ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER,
+                            )
+                        ) {
+                            this.tabs.push({
+                                displayName: this.LANG.channelPartners.tabNames.settings,
+                                route: 'settings',
+                            });
+                        }
+                        this.processedTabs = true;
                     }
                     for (const [index, tab] of this.tabs.entries()) {
                         if (tab.route === this.currentTabRoute) {
@@ -147,7 +145,6 @@ export class NxChannelPartnersComponent implements OnInit {
                             break;
                         }
                     }
-
                     return this.CPService.getPartnerOrganizations(id);
                 }),
             )
@@ -157,7 +154,7 @@ export class NxChannelPartnersComponent implements OnInit {
                     this.currentPartnerOrgs = orgs;
                     this.store.dispatch(
                         CPActions.setCurrentPartner({
-                            currentPartnerId: this.partnerId,
+                            currentPartnerId: this.currentPartnerId,
                             currentPartnerOrganizations: orgs,
                         }),
                     );
@@ -181,10 +178,10 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     newOrgDialog(): void {
-        this.dialogsService.createOrganization(this.partnerId).then((org: Organization) => {
+        this.dialogsService.createOrganization(this.currentPartnerId).then((org: Organization) => {
             this.store.dispatch(
                 CPActions.setCurrentPartner({
-                    currentPartnerId: this.partnerId,
+                    currentPartnerId: this.currentPartnerId,
                     currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
                 }),
             );
@@ -219,5 +216,22 @@ export class NxChannelPartnersComponent implements OnInit {
     setSearch(model: { query: string }): void {
         this.search.value = model.query;
         this.searchChanged.next();
+    }
+
+    get defaultTabs(): Tab[] {
+        return [
+            {
+                displayName: this.LANG.channelPartners.tabNames.organizations,
+                route: '',
+            },
+            {
+                displayName: this.LANG.channelPartners.tabNames.partners,
+                route: 'subchannels',
+            },
+            {
+                displayName: this.LANG.channelPartners.tabNames.information,
+                route: 'information',
+            },
+        ];
     }
 }
