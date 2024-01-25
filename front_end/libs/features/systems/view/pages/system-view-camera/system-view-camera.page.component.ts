@@ -235,7 +235,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         let errorState: CameraError | undefined;
 
-        if (!noAccess) {
+        if (isOffline || isUnauthorized || isVirtual) {
             if (!isOffline && !isUnauthorized && isVirtual) {
                 errorState = CameraError.noData;
             } else if (!isOffline && !isUnauthorized && !isVirtual) {
