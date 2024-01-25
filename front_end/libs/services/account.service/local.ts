@@ -144,7 +144,7 @@ export class LocalAccount extends BaseAccount {
             });
         } else {
             return this.loginService.login(true).then(result => {
-                this.loginDialogActive = false;
+                this.loginDialogActive = !result;
                 if (result === 'newSystem') {
                     return;
                 }

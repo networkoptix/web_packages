@@ -65,9 +65,9 @@ export class NxLoginService {
             .catch(() => Promise.resolve(false));
     }
 
-    login(keepPage: boolean = true): Promise<'newSystem' | void> {
+    login(keepPage: boolean = true): Promise<'newSystem' | boolean> {
         if (this.CONFIG.browserNotSupported) {
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
 
         if (environment.isLocal && NxBootstrapProvider.isNewSystem) {
