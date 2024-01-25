@@ -1,0 +1,24 @@
+.background-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  width: 100%;
+  // TODO: dark6 move this out
+  background-color: #1C2327;
+}
+
+.hero-logo {
+    max-width: 110px;
+    margin-top: 25px;
+
+    img {
+        width: 100%;
+    }
+}
+
+.view-container {
+    max-width: 67%;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}

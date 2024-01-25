@@ -244,6 +244,13 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module), // It's a dummy load. Route guard actually redirect to the oauth app
     },
     {
+        path: 'share',
+        loadChildren: () =>
+            import('@pages/shared-bookmark/shared-bookmark.module').then(
+                m => m.SharedBookmarkModule,
+            ),
+    },
+    {
         path: '500',
         loadChildren: () => import('@pages/500/500.module').then(m => m.Nx500Module),
     },

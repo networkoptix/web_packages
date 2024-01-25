@@ -13,7 +13,7 @@ import { icons } from '@static-variables';
 })
 export class ClipComponent {
     @Input() sourceUrl: string;
-    @Input() posterUrl: string;
+    @Input({ required: false }) posterUrl: string | undefined;
     @Input({ transform: booleanAttribute }) disableDownload: boolean;
     @Input({ transform: booleanAttribute }) disablePictureInPicture: boolean;
     @Input({ transform: booleanAttribute }) autoplay: boolean;

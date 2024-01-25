@@ -1,0 +1,12 @@
+<div>
+    <nx-clip
+        [sourceUrl]="videoSource"
+        (error)="onError()"
+        (loadeddata)="onLoadedData()"
+    />
+    <div class="title-text">{{ title }}</div>
+    <div class="date-text">
+        <span>{{ dateText }} • {{ timeText }}</span>
+    </div>
+    <div class="description-text">{{ description }}</div>
+</div>

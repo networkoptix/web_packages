@@ -1,0 +1,26 @@
+.title-text {
+    // TODO: move font out to mixins
+    font-size: 18px;
+    font-weight: 500;
+    // TODO: move this out - light3
+    color: #EBEFF1;
+    margin-top: 15px;
+}
+
+.date-text {
+    // TODO: move font out to mixins
+    font-size: 15px;
+    font-weight: 500;
+    // TODO: move this out - light3
+    color: #EBEFF1;
+    margin-top: 20px;
+}
+
+.description-text {
+    // TODO: move font out to mixins
+    font-size: 14px;
+    font-weight: 400;
+    // TODO: move this out - light3
+    color: #EBEFF1;
+    margin-top: 20px;
+}
