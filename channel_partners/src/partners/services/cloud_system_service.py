@@ -1,10 +1,9 @@
-from typing import List
 
 import httpx
 import structlog
+from django.conf import settings
 from httpx import Response
 
-from channel_partners.settings import TRAFFIC_RELAY_HOSTS
 from partners.models import CloudSystemId
 
 
@@ -14,30 +13,32 @@ logger = structlog.get_logger(__name__)
 class CloudSystemService:
 
     @staticmethod
-    def notify_service_change(cloud_system: CloudSystemId) -> None:
-
-        hosts: List[str] = TRAFFIC_RELAY_HOSTS
-
-        # Confirming there's at least 1 host
-        if len(hosts) == 0:
-            logger.error("No Traffic Relay Hosts found")
-            raise Exception("No Traffic Relay Hosts found")
+    def notify_service_change(cloud_system: CloudSystemId) -> bool:
 
         # Construct url
         url_path: str = "/rest/v3/system/cloud/sync"
-        traffic_relay_host: str = hosts[0].strip()
         system_id: str = cloud_system.system_id
-        relay_host: str = f"https://{system_id}.{traffic_relay_host}{url_path}"
+        relay_host: str = f"https://{system_id}.relay.{settings.TRAFFIC_RELAY_DOMAIN}{url_path}"
 
         # Make request and handle response
-        response: Response = httpx.post(relay_host, json={"waitForDone": False})
+        try:
+            response: Response = httpx.post(relay_host, json={"waitForDone": False})
+        except Exception as ex:
+            logger.error("Got exception during relay request.",
+                         relay_hosts=settings.TRAFFIC_RELAY_DOMAIN,
+                         relay_host=relay_host,
+                         system_id=cloud_system.system_id,
+                         exception=ex)
+            return False
 
         if response.is_success:
             logger.info(
                 "Successfully sent notification",
                 id=cloud_system.pk,
-                system_id=cloud_system.system_id
+                system_id=cloud_system.system_id,
+                relay_host=relay_host,
             )
+            return True
         else:
             logger.info(
                 "An issue occurred while sending notification",
@@ -46,3 +47,4 @@ class CloudSystemService:
                 status_code=response.status_code,
                 response_body=response.text,
                 request_url=relay_host)
+            return False

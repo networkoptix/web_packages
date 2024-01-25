@@ -1,22 +1,17 @@
 import logging
-import uuid
-from unittest.mock import Mock
 
+import httpx
 import pytest
-from django.test import override_settings
 
-from partners.models import CloudSystemId
 from partners.services.cloud_system_service import CloudSystemService
 
 
 class TestCloudSystemService:
     @pytest.fixture(autouse=True)
-    @override_settings(ENV_NAME='local')
-    def setUp(self):
-        self.cloud_system = Mock(spec=CloudSystemId)
-        self.cloud_system.activated = True
-        self.cloud_system.system_id = uuid.uuid4()
-        self.cloud_system.pk = 1
+    def setUp(self, organization_factory, system_factory):
+        self.organization = organization_factory()
+        self.cloud_system = system_factory(organization=self.organization)
+
 
     def test_notify_service_change(self, httpx_mock, caplog):
         caplog.set_level(logging.INFO)
@@ -27,7 +22,7 @@ class TestCloudSystemService:
             json={"success": True}, status_code=200)
 
         # Call the method
-        CloudSystemService.notify_service_change(self.cloud_system)
+        ret = CloudSystemService.notify_service_change(self.cloud_system)
 
         # Filter logs for function only
         logs = list(filter(lambda log: log.funcName == "notify_service_change", caplog.records))
@@ -35,6 +30,7 @@ class TestCloudSystemService:
         # Test assertions
         assert len(logs) == 1
         assert "Successfully sent notification" in logs[0].message
+        assert ret is True
 
     def test_notify_service_change_failure_response(self, httpx_mock, caplog):
         caplog.set_level(logging.INFO)
@@ -45,7 +41,7 @@ class TestCloudSystemService:
             json={"error": "Bad Request"}, status_code=400)
 
         # Call the method
-        CloudSystemService.notify_service_change(self.cloud_system)
+        ret = CloudSystemService.notify_service_change(self.cloud_system)
 
         # Filter logs for function only
         logs = list(filter(lambda log: log.funcName == "notify_service_change", caplog.records))
@@ -53,3 +49,21 @@ class TestCloudSystemService:
         # Test assertions
         assert len(logs) == 1
         assert "An issue occurred while sending notification" in logs[0].message
+        assert ret is False
+
+    def test_connection_error_handling(self, httpx_mock):
+        error_text = 'TEST Connection Error'
+        httpx_mock.add_exception(
+            url=f"https://{self.cloud_system.system_id}.relay.relay.cloud.hdw.mx/rest/v3/system/cloud/sync",
+            exception=httpx.ConnectError(error_text))
+
+        # Call the method
+        assert not CloudSystemService.notify_service_change(self.cloud_system)
+
+        httpx_mock.add_exception(
+            url=f"https://{self.cloud_system.system_id}.relay.relay.cloud.hdw.mx/rest/v3/system/cloud/sync",
+            exception=ValueError(error_text))
+
+        # Call the method
+        assert not CloudSystemService.notify_service_change(self.cloud_system)
+
