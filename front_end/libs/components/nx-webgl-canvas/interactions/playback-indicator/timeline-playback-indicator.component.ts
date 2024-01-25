@@ -3,9 +3,9 @@ import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/cor
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 
 // const MARGIN = 5;
 const ARROW_WIDTH = 10;

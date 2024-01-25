@@ -3,9 +3,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
 import { BehaviorSubject } from 'rxjs';
 
-import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
-import { DATA } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
-import { ZOOM_DIRECTIONS } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
+import { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
+import { DATA } from '@components/nx-webgl-canvas/webgl-canvas.types';
+import { ZOOM_DIRECTIONS } from '@components/nx-webgl-canvas/zoom/zoom.types';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
 

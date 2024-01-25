@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { cloneDeep, uniq } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
 import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
 import {
@@ -396,18 +396,6 @@ export class NxLayoutViewComponent {
             bufferSize: 1,
             refCount: false,
         }),
-        untilDestroyed(this),
-    );
-
-    cameras$ = this.layoutAndItems$.pipe(
-        map(([{ items }, lookup]) =>
-            uniq(
-                items
-                    .filter(({ resourceId }) => assertResourceOfType.camera(lookup[resourceId]))
-                    .map(({ resourceId }) => resourceId)
-                    .sort(),
-            ),
-        ),
         untilDestroyed(this),
     );
 

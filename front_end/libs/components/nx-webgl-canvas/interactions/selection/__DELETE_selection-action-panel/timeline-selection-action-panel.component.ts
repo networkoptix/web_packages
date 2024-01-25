@@ -9,6 +9,9 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
+import { SELECTION_DATE_RANGE } from '@components/nx-webgl-canvas/services/webgl.types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -17,9 +20,6 @@ import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-import { SELECTION_DATE_RANGE } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 // import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 // import { TimeRange } from '../../services/TimeRange';

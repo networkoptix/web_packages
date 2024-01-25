@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    effect,
     inject,
     Input,
     OnChanges,
@@ -18,35 +19,31 @@ import isEqual from 'lodash-es/isEqual';
 import { animationFrameScheduler, interval, Subject, takeUntil, timer } from 'rxjs';
 
 import { ButtonAction } from '@components/button/button.component.types';
-import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { nxConfig } from '@services/nx-config/config';
-import { Layout } from '@services/system-api.types/layouts.types';
-import {
-    NxSystemCamera,
-    TimeDetail,
-} from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystem } from '@services/system.service/system';
-import { cleanIdLegacy } from '@utils/general';
-import { NgChanges } from '@utils/ng-changes';
-import { WebGlTimelineActionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.component';
-import {
-    ACTIONS,
-    MODE,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.types';
-import { WebGlTimelineInteractionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/timeline-interactions.component';
+import { WebGlTimelineActionsComponent } from '@components/nx-webgl-canvas/actions/timeline-actions.component';
+import { ACTIONS, MODE } from '@components/nx-webgl-canvas/actions/timeline-actions.types';
+import { WebGlTimelineInteractionsComponent } from '@components/nx-webgl-canvas/interactions/timeline-interactions.component';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
     SCROLL_DIRECTION,
     SCROLL_FACTOR_PX,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
-import { TimelineScrollComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
+} from '@components/nx-webgl-canvas/scroll/scroll.types';
+import { TimelineScrollComponent } from '@components/nx-webgl-canvas/scroll/timeline-scroll.component';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import {
     CHUNK_TYPE,
     DATA,
     RECORD_DATA,
     TICK_BREAKPOINTS,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
+} from '@components/nx-webgl-canvas/webgl-canvas.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { nxConfig } from '@services/nx-config/config';
+import {
+    NxSystemCamera,
+    TimeDetail,
+} from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystem } from '@services/system.service/system';
+import { cleanIdLegacy, dirtyId } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 // import {
 //     CONSTANT_ZOOM_FACTOR,
 //     FORCE_ZOOM_FACTOR,
@@ -77,16 +74,43 @@ const TEN_SEC_IN_MS = 10 * 1000;
     ],
 })
 export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
-    @Input() selectedCameraId: string;
-    @Input() system: NxSystem;
-    @Input() cameras: string[];
-    @Input() selectedLayout: Layout;
-
-    @Input() showData: Record<string, boolean> = {
+    SHOW_DATA_INITIAL = {
         records: true,
         bookmarks: true,
         analytics: true,
     };
+
+    selectedCameraIdFromInput$$ = signal<string>('');
+    cameras$$ = signal<NxSystemCamera[]>([]);
+    showData$$ = signal<NxWebGLCanvasComponent['SHOW_DATA_INITIAL']>(this.SHOW_DATA_INITIAL);
+
+    @Input() set selectedCameraId(id: string) {
+        this.selectedCameraIdFromInput$$.set(id);
+    }
+
+    get selectedCameraId(): string {
+        return this.selectedCameraIdFromInput$$();
+    }
+
+    @Input() system: NxSystem;
+    @Input({ transform: (cameras: NxSystemCamera[]) => cameras.map(({ id }) => dirtyId(id)) })
+    cameras: string[];
+
+    @Input({ alias: 'showData' }) set showDataInput(
+        showData: NxWebGLCanvasComponent['SHOW_DATA_INITIAL'],
+    ) {
+        this.showData$$.set(showData);
+    }
+
+    get showData(): NxWebGLCanvasComponent['SHOW_DATA_INITIAL'] {
+        return this.showData$$();
+    }
+
+    redrawEffect = effect(() => {
+        if (this.showData$$()) {
+            this.redraw();
+        }
+    });
 
     protected readonly Math = Math;
 
@@ -318,10 +342,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         // if (changes.analyticsData?.currentValue?.length) {
         //     this.addData(this.analyticsData, CHUNK.ANALYTICS);
         // }
-
-        if (changes.showData?.currentValue) {
-            this.redraw();
-        }
     }
 
     ngAfterViewInit(): void {

@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-import { ZOOM_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
+import { ZOOM_DIRECTION } from '@components/nx-webgl-canvas/zoom/zoom.types';
 
 @UntilDestroy()
 @Component({

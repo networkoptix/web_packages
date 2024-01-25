@@ -4,7 +4,7 @@ import dateFormat from 'dateformat';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { FULL_TIME_FORMAT } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
+import { FULL_TIME_FORMAT } from '@components/nx-webgl-canvas/webgl-canvas.types';
 
 @Component({
     selector: 'nx-time',

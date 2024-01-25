@@ -3,10 +3,10 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { timeDays } from 'd3';
 
-import { WebGlTimelineActionsSoundComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/actions-sound/actions-sound.component';
-import { WebGlTimelinePlaybackModeComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/playback-mode/playback-mode.component';
-import { WebGlTimelineTimeNavComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/time-nav/time-nav.component';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
+import { WebGlTimelineActionsSoundComponent } from '@components/nx-webgl-canvas/actions/actions-sound/actions-sound.component';
+import { WebGlTimelinePlaybackModeComponent } from '@components/nx-webgl-canvas/actions/playback-mode/playback-mode.component';
+import { WebGlTimelineTimeNavComponent } from '@components/nx-webgl-canvas/actions/time-nav/time-nav.component';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 
 @UntilDestroy()
 @Component({

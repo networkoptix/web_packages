@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
+import { SCROLL_DIRECTION } from '@components/nx-webgl-canvas/scroll/scroll.types';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { images } from '@static-variables';
-import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
-import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 
 @UntilDestroy()
 @Component({

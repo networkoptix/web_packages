@@ -66,6 +66,7 @@ import { v4 as uuid } from 'uuid';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
+import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -107,12 +108,12 @@ import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
-import { NxWebGLCanvasComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
 
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
     LayoutRenderConfig,
     LayoutResourceTree,
+    NxSystemCameraWithMappedFields,
     ParsedLayout,
     ParsedLayoutItem,
     ParsedLayoutItems,
@@ -337,7 +338,6 @@ export class NxLayoutGridComponent {
     @Input() layout: Layout;
     @Input() layoutItemLookup: LayoutResourceTree;
     @Input() system: NxSystem;
-    @Input() cameras: string[];
 
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
@@ -399,6 +399,15 @@ export class NxLayoutGridComponent {
     editItems$$: Signal<boolean> = computed(() => {
         const layout = this.layout$$?.();
         return !layout?.locked && layout?.name !== this.layoutStateService.focusViewToken;
+    });
+
+    cameras$$ = signal<NxSystemCameraWithMappedFields[]>([]);
+
+    currentLayoutCameras$$ = computed(() => {
+        const layoutItems = this.layout$$?.()?.items || [];
+        const cameraIds = layoutItems.map(({ resourceId }) => resourceId);
+        const allCameras = this.cameras$$();
+        return [allCameras.filter(({ id }) => cameraIds.includes(id))];
     });
 
     #lastWidth: number = Infinity;
@@ -1021,6 +1030,8 @@ export class NxLayoutGridComponent {
             const cameras = Object.values(layoutItemLookup.currentValue).filter(
                 assertResourceOfType.camera,
             );
+
+            this.cameras$$.set(cameras.map(({ details }) => details));
 
             const cameraTranscodingDisabled = cameras.map(({ details: { id, parameters } }) => {
                 const streams = parameters.mediaStreams?.streams ?? [];

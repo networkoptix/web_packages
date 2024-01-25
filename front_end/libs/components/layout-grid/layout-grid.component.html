@@ -484,6 +484,13 @@
                                                     updateBackground($event, item, 'move')
                                                 "
                                                 class="layout-item"
+                                                (click)="
+                                                    layoutItemLookup[item.resourceId].type ===
+                                                        RESOURCE_TYPE.CAMERA &&
+                                                        layoutStateService.selectedCameraId$$.set(
+                                                            item.resourceId
+                                                        )
+                                                "
                                                 [ngClass]="{
                                                     'camera-layout-item':
                                                         layoutItemLookup[item.resourceId] &&
@@ -496,7 +503,10 @@
                                                     'full-screen-override':
                                                         layoutItemWrapper ===
                                                         window.document.fullscreenElement,
-                                                    collided: (collisions$ | async)[item.id]
+                                                    collided: (collisions$ | async)[item.id],
+                                                    focus:
+                                                        item.resourceId ===
+                                                        layoutStateService.selectedCameraId$$()
                                                 }"
                                                 [ngStyle]="
                                                     (collisions$ | async)[item.id]
@@ -1166,9 +1176,9 @@
 
                 @if (CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo) {
                     <nx-webgl-canvas
-                        [cameras]="cameras"
-                        [system]="system"
-                        [selectedLayout]="layout"
+                        [selectedCameraId]="layoutStateService.selectedCameraId$$()"
+                        [cameras]="cameras$$()"
+                        [system]="this.system"
                     ></nx-webgl-canvas>
                 }
             </div>

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 
+import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxWebGLCanvasComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
 
 // SOFIA
 const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';

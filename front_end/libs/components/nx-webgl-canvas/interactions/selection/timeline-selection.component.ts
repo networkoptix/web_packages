@@ -14,14 +14,11 @@ import dateFormat from 'dateformat';
 import { isEqual } from 'lodash-es';
 import { distinctUntilChanged } from 'rxjs';
 
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
+import { DATE_FORMAT, TIME_FORMAT } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-import {
-    DATE_FORMAT,
-    TIME_FORMAT,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 
 import { ExportSelection, SELECTION_ACTION } from './selection.types';
 

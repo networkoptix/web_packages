@@ -3,12 +3,9 @@ import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/cor
 import { UntilDestroy } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
+import { DATE_FORMAT, TIME_FORMAT } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
-import {
-    DATE_FORMAT,
-    TIME_FORMAT,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 
 import { NxWebGLService } from '../../services/webgl.service';
 
