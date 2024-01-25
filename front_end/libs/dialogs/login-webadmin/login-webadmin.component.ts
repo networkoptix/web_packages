@@ -29,8 +29,6 @@ import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, redirect } from '@static-variables';
 
-import { loginWebAdminService } from './login-webadmin.service';
-
 /**
  * Parse url string to:
  *
@@ -120,7 +118,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         private toastService: NxToastService,
         private router: Router,
         private cookieService: CookieService,
-        private loginWebAdminService: loginWebAdminService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private keepPage: DT['data'],
         @Inject(DOCUMENT) private document: Document,
@@ -198,7 +195,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
             return;
         } else {
-            this.loading = this.loginWebAdminService.processingToken;
+            this.loading = false;
         }
         // remove any leftovers  *****************************
         this.cookieService.delete('x-runtime-guid');
@@ -321,7 +318,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
     }
 
     oauthLogin(code: string): void {
-        this.loginWebAdminService.processingToken = true;
         this.account.mediaServerApi.loginOauth(code).subscribe(res => {
             this.storageService.system2faEnabled = false;
             this.accountNotOnSystem = res.scope === '';
@@ -363,7 +359,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                         },
                     )
                     .finally(() => {
-                        this.loginWebAdminService.processingToken = false;
+                        this.close(true);
                     });
             }
         });
