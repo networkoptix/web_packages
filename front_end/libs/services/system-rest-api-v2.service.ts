@@ -10,7 +10,7 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { buildTopLevelKeyMap, cleanId } from '@utils/general';
+import { cleanId } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
@@ -345,7 +345,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     /** End of Health Monitoring **/
 
     private patchCameraCompatibilityV2(
-        camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
+        camera: NxRecursivePick<DeviceV2Full, typeof cameraKeyMapV2>,
     ): RestV2CameraCompat | undefined {
         if (camera) {
             const { serverId, options, parameters = {}, motion, schedule, ...rest } = camera;
