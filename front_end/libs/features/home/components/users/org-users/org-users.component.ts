@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Signal, booleanAttribute } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    booleanAttribute,
+    inject,
+    signal,
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -10,15 +18,8 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    selectCurrentOrgId,
-    selectCurrentOrganization,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
-import {
-    selectCurrentGroupId,
-    selectCurrentGroups,
-    selectGroupItems,
-} from '@pages/home/store/groups/groups.selectors';
+import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { selectCurrentGroups, selectGroupItems } from '@pages/home/store/groups/groups.selectors';
 import {
     GroupItem,
     GroupUser,
@@ -76,12 +77,13 @@ export class NxOrganizationUsersComponent implements OnInit {
     headers: HEADER_ITEM[];
     records$: Observable<UserRecord[]>;
 
-    currentItemId$$: Signal<string>;
+    currentItemId$$ = signal<string>('');
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
     orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     selectedUsers: { [key: string]: UserRecord } = {};
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -93,9 +95,12 @@ export class NxOrganizationUsersComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.currentItemId$$ = this.store.selectSignal(
-            this.inGroup ? selectCurrentGroupId : selectCurrentOrgId,
-        );
+        this.CPService.paramStateHandler.state$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ params }) => {
+                this.currentItemId$$.set(params.groupId || params.organizationId);
+            });
+
         this.records$ = this.inGroup
             ? this.CPService.getGroupUsersWithAccess(this.currentItemId$$()).pipe(
                   map(users => mapGroupUsers(users)),
