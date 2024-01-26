@@ -1511,6 +1511,7 @@
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.": "시스템에 액세스 가능한 카메라가 없습니다. <br><br>몇 대의 카메라를 서버의 로컬 네트워크에 연결하여 검색 가능하게하거나 시스템 관리자에게 문의하여 액세스 수준을 변경하십시오.",
     "There are no other users on the system besides you.": "There are no other users on the system besides you.",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "There are no other users on the system besides you. Add them to system to be able to transfer rights",
+    "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "There are too many attempts to connect to this camera. Please wait for a minute and try again.",
     "There are unsaved changes on the layout": "There are unsaved changes on the layout",
     "There is a another layout with the same name. Overwrite existing layout?": "There is a another layout with the same name. Overwrite existing layout?",
     "There was a problem restarting the server.": "서버에 연결하는 중에 문제가 발생했습니다.",

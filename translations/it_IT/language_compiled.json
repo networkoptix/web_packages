@@ -1511,6 +1511,7 @@
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.": "Non ci sono telecamere accessibili nel sistema. <br><br>Collegare alcune telecamere alla rete locale del server per renderle rilevabili o chiedere all'amministratore di sistema di modificare il livello di accesso.",
     "There are no other users on the system besides you.": "There are no other users on the system besides you.",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "There are no other users on the system besides you. Add them to system to be able to transfer rights",
+    "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "There are too many attempts to connect to this camera. Please wait for a minute and try again.",
     "There are unsaved changes on the layout": "There are unsaved changes on the layout",
     "There is a another layout with the same name. Overwrite existing layout?": "There is a another layout with the same name. Overwrite existing layout?",
     "There was a problem restarting the server.": "Si è verificato un problema durante il riavvio del server.",

@@ -1511,6 +1511,7 @@
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.": "Không có máy ảnh có thể truy cập cho bạn trong hệ thống. <br><br>Kết nối một vài camera với mạng cục bộ của máy chủ để có thể phát hiện ra chúng hoặc yêu cầu quản trị viên hệ thống thay đổi cấp độ truy cập của bạn.",
     "There are no other users on the system besides you.": "Không có người dùng nào khác trên hệ thống ngoài bạn.",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "Không có người dùng nào khác trong hệ thống ngoài bạn. Thêm người dùng vào hệ thống để có thể chuyển quyền",
+    "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "There are too many attempts to connect to this camera. Please wait for a minute and try again.",
     "There are unsaved changes on the layout": "There are unsaved changes on the layout",
     "There is a another layout with the same name. Overwrite existing layout?": "There is a another layout with the same name. Overwrite existing layout?",
     "There was a problem restarting the server.": "Có một vấn đề khởi động lại máy chủ.",
