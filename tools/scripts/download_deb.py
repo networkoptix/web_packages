@@ -7,7 +7,7 @@ import shutil
 import sys
 import urllib3
 
-from platform import processor
+from platform import processor, platform
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logging.basicConfig()
@@ -35,10 +35,14 @@ def get_downloads_json_data(build_number, customization):
 
 
 def find_deb(installers, build_number, customization):
-    platform = 'linux_x64' if processor() == 'i386' else 'linux_arm64'
+    x86_64_linux = platform().startswith('Linux') and processor() == 'x86_64'
+    intel_macos = processor() == 'i386'
+    # Final option: ARM MacOS (Apple silicon)
+
+    deb_platform = 'linux_x64' if x86_64_linux or intel_macos else 'linux_arm64'
     appType = 'server'
     for installer in installers:
-        if installer['platform'] == platform and installer['appType'] == appType:
+        if installer['platform'] == deb_platform and installer['appType'] == appType:
             return f"{DOWNLOADS_BASE}/{customization}/{build_number}/{installer['path']}"
     return ''
 
