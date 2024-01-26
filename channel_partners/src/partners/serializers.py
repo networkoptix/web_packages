@@ -622,6 +622,11 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
     services = serializers.DictField(default={})
     security = SecuritySerializer(source='*')
     signature = serializers.CharField(default='')
+    requestId = serializers.SerializerMethodField(read_only=True, required=False, default='')
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_requestId(self, obj) -> str:
+        return self.context.get('requestId', '')
 
 
 class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
