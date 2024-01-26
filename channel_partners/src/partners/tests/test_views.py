@@ -258,8 +258,9 @@ class TestCloudSystemViewSet:
         system = system_factory(organization=org)
         system.system_state = CloudSystemStates.NOT_ACTIVATED
         system.save()
+
         view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
-        request = arf_basic_auth.get('/')
+        request = arf_basic_auth.get('/', {'requestId': 'test-id-1'})
         mock_auth_with_system(system)
         response = view(request, id=system.system_id)
         assert response.status_code == 200
@@ -267,11 +268,35 @@ class TestCloudSystemViewSet:
         # clear cached authorizations
         TokenCache.cache().clear()
         request = arf_basic_auth.get('/')
+
+        response_data = response.data
+        assert response_data.get("requestId") == "test-id-1"
+
+        request = arf_basic_auth.get('/', {'requestId': 'test-id-2'})
         mock_auth_with_system(system, authenticated=False, status=CloudSystemStates.DELETED)
         response = view(request, id=system.system_id)
         assert response.status_code == 401
         assert system.system_state == CloudSystemStates.DELETED
 
+    def test_saas_report_empty_requestId(self, channel_partner_factory, organization_factory, system_factory,
+                                         mock_auth_with_system, arf_basic_auth):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+
+        system.system_state = CloudSystemStates.NOT_ACTIVATED
+        system.save()
+
+        view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
+        request = arf_basic_auth.get('/')
+
+        mock_auth_with_system(system)
+        response = view(request, id=system.system_id)
+        assert response.status_code == 200
+        assert system.system_state == CloudSystemStates.ACTIVATED
+
+        response_data = response.data
+        assert response_data.get("requestId") == ""
 
 class TestOrganizationUserViewSet:
 

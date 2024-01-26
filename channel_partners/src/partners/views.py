@@ -1322,11 +1322,19 @@ class CloudSystemViewSet(NestedViewSetMixin,
     @extend_schema(responses=SaaSReportSerializer,
                    summary='Get SaaS report',
                    description="Retrieves a SaaS report for a specific cloud system",
-                   extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
+                   extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'},
+                   parameters=[
+                       OpenApiParameter(
+                           name='requestId',
+                           type=OpenApiTypes.STR,
+                           description="The request id of the request")])
     @action(methods=['GET'], detail=True)
     def saas_report(self, request, id):
         system: CloudSystemId = self.get_object()
-        serializer = SaaSReportSerializer(system)
+
+        request_id: str = request.query_params.get('requestId', '')
+        serializer = SaaSReportSerializer(system, context={'requestId': request_id})
+
         return Response(serializer.data)
 
     @extend_schema(summary='Get service quantities for a System', methods=['GET'],
