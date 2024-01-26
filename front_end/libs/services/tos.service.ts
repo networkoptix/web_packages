@@ -75,20 +75,9 @@ export class TosService {
     }
 
     private async showDeclinedTos(tosInfo: TosInfo): Promise<void> {
-        const message = this.LANG.dialogs.tosUpdate.warning;
-        const title = this.LANG.dialogs.titles.tosUpdate;
-        const res = await this.dialogService.confirm({
-            message,
-            title,
-            footer: { actionLabel: this.LANG.dialogs.buttons.goBack },
-        });
+        const res = await this.dialogService.tosRejected();
         if (res) {
             return this.showUpdatedTos(tosInfo);
-        }
-        try {
-            await this.cloudApiService.logout();
-        } finally {
-            window.location.reload();
         }
     }
 }

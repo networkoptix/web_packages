@@ -160,6 +160,11 @@ export class NxDialogsService {
         { disableClose: true, width: DIALOG_SIZE.LARGE },
     );
 
+    tosRejected = this.dialogV2Factory<Dt.TosRejected>(
+        () => import('./tos-update/tos-rejected.component').then(m => m.TosRejectedModalContent),
+        { disableClose: true, width: DIALOG_SIZE.NORMAL },
+    );
+
     /* WebAdmin */
     wizard = this.dialogV2Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),

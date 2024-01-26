@@ -224,6 +224,7 @@ export type RemoveUser = DialogType<
 export type DeleteCloudUser = DialogType<void, CloudResponse>;
 export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, boolean>;
 export type TosUpdate = DialogType<TosInfo, 'accepted' | 'deferred' | 'rejected'>;
+export type TosRejected = DialogType<void, 'goBack'>;
 
 /* Servers */
 interface ServerData {

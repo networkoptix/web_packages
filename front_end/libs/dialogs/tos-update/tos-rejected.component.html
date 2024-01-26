@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h1 class="modal-title">
+        <span
+            class="ellipsis"
+            translate
+            >Update on Terms and Conditions</span
+        >
+    </h1>
+</div>
+
+<div class="modal-body">
+    <p>
+        {{ 'You will be logged out in {countdown}' | translate: { countdown: logoutCountdown } }}
+    </p>
+    <p
+        class="mt-3"
+        translate
+    >
+        To continue using cloud services, please read and accept the updated terms and conditions
+    </p>
+</div>
+
+<div
+    class="modal-footer"
+    style="flex-wrap: unset"
+>
+    <button
+        type="button"
+        class="btn btn-primary"
+        (click)="close('goBack')"
+        translate
+    >
+        Go Back
+    </button>
+</div>
