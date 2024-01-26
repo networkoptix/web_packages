@@ -12,10 +12,7 @@ import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as cpActions from '../store/channel-partners/channel-partners.actions';
-import {
-    selectCurrentPartner,
-    selectCurrentPartnerId,
-} from '../store/channel-partners/channel-partners.selectors';
+import { selectCurrentPartner } from '../store/channel-partners/channel-partners.selectors';
 
 export const cpTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -26,7 +23,6 @@ export const cpTabGuard: CanActivateFn = (
     const cpService: NxChannelPartnersService = inject(NxChannelPartnersService);
     const path = route.routeConfig?.path;
     const currPartner$$ = store.selectSignal(selectCurrentPartner);
-    const currPartnerId$$ = store.selectSignal(selectCurrentPartnerId);
     const checkPermissions = (permissions: string[] | undefined): boolean => {
         if (permissions) {
             switch (path) {
@@ -56,10 +52,10 @@ export const cpTabGuard: CanActivateFn = (
     if (currPartner) {
         return checkPermissions(currPartner.ownPermissions);
     } else {
-        const id = currPartnerId$$();
         return cpService.getChannelPartners().pipe(
             map(partners => {
                 const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
+                const id = route.parent?.params.partnerId;
                 store.dispatch(
                     cpActions.setChannelPartners({
                         channelPartners: partners.filter(
