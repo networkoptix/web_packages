@@ -255,7 +255,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             error,
             errorState,
             noAccess,
-            playerError: !!error || noAccess || !isOnline || !isAuthorized,
+            playerError: !!error || noAccess || (!isOnline && isLive) || !isAuthorized,
         };
     });
 
