@@ -1461,6 +1461,7 @@
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.": "システムにアクセス可能なカメラがありません。 <br><br>カメラをサーバーのローカルネットワークに接続して検出可能にするか、システム管理者にアクセスレベルの変更を依頼してください。",
     "There are no other users on the system besides you.": "システムにはあなた以外のユーザーはいません。",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "このシステムにはあなた以外のユーザーはいません。権利を譲渡するためには、他のユーザーをシステムに追加してください",
+    "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "このカメラへの接続試行が多すぎます。しばらく待ってからもう一度お試しください。",
     "There was a problem restarting the server.": "サーバーの再起動中に問題が発生しました。",
     "There will be more than <strong>{maxServers}</strong> servers in the merged System.": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。",
     "These settings are accessible at:": "これらの設定は次の場所からアクセスできます",

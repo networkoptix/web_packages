@@ -1461,6 +1461,7 @@
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.": "Brak dostępnych kamer w systemie. <br><br>Połącz kilka kamer z siecią lokalną serwera, aby je wykryć, lub poproś administratora systemu o zmianę poziomu uprawnień.",
     "There are no other users on the system besides you.": "There are no other users on the system besides you.",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "There are no other users on the system besides you. Add them to system to be able to transfer rights",
+    "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "There are too many attempts to connect to this camera. Please wait for a minute and try again.",
     "There was a problem restarting the server.": "Wystąpił problem podczas ponownego uruchomienia serwera.",
     "There will be more than <strong>{maxServers}</strong> servers in the merged System.": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów.",
     "These settings are accessible at:": "Te ustawienia są dostępne tutaj:",
