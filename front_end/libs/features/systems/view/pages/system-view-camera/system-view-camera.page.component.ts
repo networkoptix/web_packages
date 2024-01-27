@@ -393,9 +393,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     rtsp: 'video/webm',
                 };
                 const video = this.document.createElement('video');
-                const isHlsSupported = this.window.MediaSource.isTypeSupported(
-                    'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
-                );
+                const isHlsSupported =
+                    this.window.MediaSource?.isTypeSupported(
+                        'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
+                    ) || false;
                 this.transports = <PlaybackTransport[]>(
                     Object.keys(transportsAndResolutions).filter(transport =>
                         transport === 'hls' && !this.isMobile
