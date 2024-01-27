@@ -65,8 +65,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
 
         let videoJsAutoRetry = 0;
-        let stallTimer: number;
-        const waitingTime = 8 * 1000;
+        let stallTimer: number | null;
+        const waitingTime = 60 * 1000;
         const nativeSupport = this.supportsNativeHls();
         const options = {
             autoplay: true,
@@ -79,6 +79,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 nativeAudioTracks: !nativeSupport,
                 nativeTextTracks: !nativeSupport,
             },
+            children: [],
         };
 
         const resetTimer = (): void => {
@@ -140,7 +141,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             }
         });
 
-        this.player.tech(true).on('retryplaylist', () => {
+        this.player.tech(true)?.on('retryplaylist', () => {
             ++videoJsAutoRetry;
             if (videoJsAutoRetry > 2) {
                 this.bufferingChange.emit(2);
