@@ -36,7 +36,7 @@ async def send_ownership_transfer_email(request, system_id, new_owner_email):
         "user_full_name": user_full_name
     }
 
-    await sync_to_async(notifications_api.send, thread_sensitive=False)(
+    await sync_to_async(notifications_api.send)(
         new_owner_email,
         'ownership_transfer_invite',
         message,
@@ -52,7 +52,7 @@ async def send_ownership_transfer_response_email(request, system_info, status):
         "user_email": request.user.email
     }
 
-    await sync_to_async(notifications_api.send, thread_sensitive=False)(
+    await sync_to_async(notifications_api.send)(
         system_info.get('ownerAccountEmail'),
         'ownership_transfer_response',
         message,
