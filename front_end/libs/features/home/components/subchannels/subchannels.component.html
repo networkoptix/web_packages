@@ -1,5 +1,11 @@
-<div [ngClass]="{ 'subchannels-placeholder': subchannels$$().length === 0 }">
-    <div *ngIf="subchannels$$().length > 0; else subchannelsEmpty">
+<div
+    class="body"
+    [ngClass]="{ 'subchannels-placeholder': subchannels$$().length === 0 }"
+>
+    <div
+        class="body"
+        *ngIf="subchannels$$().length > 0; else subchannelsEmpty"
+    >
         <div *ngIf="!(inSubchannels$ | async); else outlet">
             <div class="actions p-3">
                 <button

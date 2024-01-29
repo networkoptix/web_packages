@@ -64,6 +64,9 @@ const CPRoutes: Routes = [
                             },
                             {
                                 path: 'users',
+                                data: {
+                                    inSubchannel: true,
+                                },
                                 canActivate: [cpTabGuard],
                                 component: NxChannelPartnerUsersComponent,
                             },
