@@ -1,4 +1,16 @@
-import { Component, computed, effect, Input, OnDestroy, OnInit, Signal } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    EnvironmentInjector,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    runInInjectionContext,
+    Signal,
+} from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
@@ -22,7 +34,6 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUser, UserType } from '@services/system-user.types';
 import {
     RecordingStatus,
@@ -58,12 +69,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() callShare;
     #system: NxSystem;
     unsubscribe$ = new Subject();
+    injector = inject(EnvironmentInjector);
     @Input() set system(system: NxSystem) {
         this.#system = system;
         this.unsubscribe$.next('unsubscribe');
-        combineLatest([this.system.cameraManager.cameras$, this.system.serverManager.servers$])
-            .pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
-            .subscribe(() => this.updateMenu());
+        runInInjectionContext(this.injector, () => {
+            combineLatest([
+                toObservable(this.system.permissionManager.permissions$$),
+                this.system.cameraManager.cameras$,
+                this.system.serverManager.servers$,
+            ])
+                .pipe(debounceTime(1000), takeUntil(this.unsubscribe$), untilDestroyed(this))
+                .subscribe(() => this.updateMenu());
+        });
     }
 
     get system(): NxSystem {
@@ -73,6 +91,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     editCameras: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions$$().editCameras,
     );
+
     editUsers: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions$$().editUsers,
     );
@@ -154,7 +173,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
-    private async updateContent(skipPermissions = false): Promise<string> {
+    private updateContent(skipPermissions = false): string {
+        // hide search if no permissions for potentially long list ... cameras, servers and users
+        this.menuSearchable =
+            this.editCameras() && this.system.permissionManager.isAdmin$$() && this.editUsers();
         /**
          * This isn't ideal since it's pretty dependent on the menu structure implementation
          * but the alternative is to refactor the settings component and menu service
@@ -212,11 +234,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
     ) {
         this.setupDefaults();
-
-        effect(() => {
-            this.system.permissionManager.permissions$$();
-            this.updateMenu();
-        });
 
         effect(() => {
             this.canNavMenu(
@@ -464,8 +481,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             .pipe(untilDestroyed(this))
                             .subscribe();
                     }
-
-                    this.updateMenu();
                 });
             if (this.connectionSubscription) {
                 this.connectionSubscription.unsubscribe();
@@ -506,7 +521,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     .subscribe(() => {
                         this.updateArchivesPresent();
                         this.updateAlert();
-                        this.updateMenu();
                     });
                 this.system.update();
             }
@@ -625,12 +639,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // }
 
         this.systemNoAccess = false;
-        if (!(this.system.mediaserver instanceof NxSystemRestAPI3)) {
-            await Promise.allSettled([
-                this.system.serverManager.getServers().toPromise(),
-                this.system.cameraManager.getCameras(),
-            ]);
-        }
         this.updateCameraSettingsMenu();
 
         if (this.editUsers()) {
@@ -808,9 +816,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         }
 
-        // hide search if no permissions for potentially long list ... cameras, servers and users
-        this.menuSearchable =
-            this.editCameras() && this.system.permissionManager.isAdmin$$() && this.editUsers();
         this.updateContent();
     }
 
@@ -855,8 +860,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 camerasNode.level3 = [];
             }
-
-            this.updateContent();
         } else {
             this.content.level1 = this.content.level1.filter(
                 node => node.id !== menus.systemSettings.cameras.id,
