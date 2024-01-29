@@ -1,11 +1,11 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, effect, OnInit, Signal, signal } from '@angular/core';
+import { Component, effect, Input, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
@@ -44,15 +44,17 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
 
+    @Input() inSubchannel: boolean = false;
     searchModel: SearchFilter = { query: '' };
     currentPartnerId$: Observable<string>;
+    subchannelId$: Observable<string>;
     headers: HEADER_ITEM[] | undefined;
     records$: Observable<UserRecord[]>;
-    records$$: Signal<UserRecord[] | undefined>;
     roles$$ = toSignal(this.CPService.getChannelPartnerRoles());
     searchQuery$$ = signal<string>('');
     filteredRecords: UserRecord[] | undefined = undefined;
     selectedUserEmail: string | undefined;
+
     constructor(
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
@@ -63,31 +65,24 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             distinctUntilChanged(),
         );
 
-        this.records$ = this.currentPartnerId$.pipe(
-            switchMap(id => this.CPService.getChannelPartnerUsers(id)),
-            map(users =>
-                users.map(user => ({
-                    ...user,
-                    userId: user.email,
-                    userType: UserType.CHANNEL_PARTNER,
-                })),
-            ),
+        this.subchannelId$ = this.CPService.paramStateHandler.state$.pipe(
+            map(({ params: { subchannelId } }) => subchannelId),
+            distinctUntilChanged(),
         );
 
-        this.records$$ = toSignal(this.records$);
         this.searchQuery$$.set(this.searchModel.query);
 
         effect(() => {
-            const records = this.records$$();
             const searchQuery = this.searchQuery$$();
-
-            if (!records) {
-                this.filteredRecords = undefined; // avoid showing "No data" msg.
-            } else if (searchQuery?.length) {
-                this.filteredRecords = this.getUsersByModel(records, searchQuery);
-            } else {
-                this.filteredRecords = records;
-            }
+            this.records$.pipe(take(1)).subscribe(records => {
+                if (!records) {
+                    this.filteredRecords = undefined; // avoid showing "No data" msg.
+                } else if (searchQuery?.length) {
+                    this.filteredRecords = this.getUsersByModel(records, searchQuery);
+                } else {
+                    this.filteredRecords = records;
+                }
+            });
         });
     }
 
@@ -129,10 +124,33 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             },
             { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
         ];
+
+        const currentItem = this.inSubchannel ? this.subchannelId$ : this.currentPartnerId$;
+        this.records$ = currentItem.pipe(
+            switchMap(id => this.CPService.getChannelPartnerUsers(id)),
+            map(users =>
+                users.map(user => ({
+                    ...user,
+                    userId: user.email,
+                    userType: UserType.CHANNEL_PARTNER,
+                })),
+            ),
+        );
     }
 
     newUserDialog(partnerId: string): void {
-        this.dialogsService.addPartnerUser(partnerId);
+        if (this.inSubchannel) {
+            this.CPService.paramStateHandler.state$
+                .pipe(
+                    map(({ params }) => params.subchannelId),
+                    take(1),
+                )
+                .subscribe(id => {
+                    this.dialogsService.addPartnerUser(id);
+                });
+        } else {
+            this.dialogsService.addPartnerUser(partnerId);
+        }
     }
 
     selectUser(rec: UserRecord): void {
