@@ -20,6 +20,9 @@ from partners.models import (
     SystemGroup,
     VmsRoles,
 )
+from partners.utils.cache_keys import (
+    cache_key_cloud_system_group_children_count,
+)
 
 
 # class TestCloudSystemId:
@@ -735,26 +738,105 @@ class TestEffectiveStates:
 
 class TestSystemGroup:
 
-    def test_has_overlap(self, organization_factory, system_group_factory, sys_group_user_factory, cloud_user_factory):
-        organization = organization_factory()
-        user = cloud_user_factory()
-        group_0 = system_group_factory(organization=organization)
-        group_1 = system_group_factory(organization=organization)
-        group_0_0 = system_group_factory(organization=organization, parent=group_0)
-        group_1_1 = system_group_factory(organization=organization, parent=group_1)
-        group_0_1 = system_group_factory(organization=organization, parent=group_0)
-        group_1_1 = system_group_factory(organization=organization, parent=group_1)
-        rel_0_0 = sys_group_user_factory(organization=organization, group=group_0_0, cloud_user=user)
-        rel_1_0 = sys_group_user_factory(organization=organization, group=group_1_1, cloud_user=user)
+    @pytest.fixture(autouse=True)
+    def setup(self, organization_factory, system_group_factory,
+              sys_group_user_factory, cloud_user_factory, system_factory):
+        self.organization = organization_factory()
+        self.user = cloud_user_factory()
+        groups = []
+        self.group_0 = system_group_factory(organization=self.organization)
+        groups.append(self.group_0)
+        self.group_1 = system_group_factory(organization=self.organization)
+        groups.append(self.group_1)
+        self.group_0_0 = system_group_factory(organization=self.organization, parent=self.group_0)
+        groups.append(self.group_0_0)
+        self.group_1_0 = system_group_factory(organization=self.organization, parent=self.group_1)
+        self.group_0_1 = system_group_factory(organization=self.organization, parent=self.group_0)
+        groups.append(self.group_0_1)
+        self.group_1_1 = system_group_factory(organization=self.organization, parent=self.group_1)
+        self.rel_0_0 = sys_group_user_factory(organization=self.organization,
+                                              group=self.group_0_0, cloud_user=self.user)
+        self.rel_1_1 = sys_group_user_factory(organization=self.organization,
+                                              group=self.group_1_1, cloud_user=self.user)
+        for group in groups:
+            system_factory(organization=self.organization, system_group=group)
 
-        has_overlap = group_0_1.has_overlaps(user)
+
+    def test_has_overlap(self):
+        has_overlap = self.group_0_1.has_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = group_1_1.has_overlaps(user)
+        has_overlap = self.group_1_1.has_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = group_0.has_overlaps(user)
+        has_overlap = self.group_0.has_overlaps(self.user)
         assert has_overlap is True
-        has_overlap = group_1.has_overlaps(user)
+        has_overlap = self.group_1.has_overlaps(self.user)
         assert has_overlap is True
+
+    def test_system_count(self):
+        assert self.group_0_0.system_count == 1
+        assert self.group_1_0.system_count == 0
+        assert self.group_0_1.system_count == 1
+        assert self.group_1_1.system_count == 0
+        assert self.group_0.system_count == 3
+        assert self.group_1.system_count == 1
+
+    def test_system_count_invalidation_on_create(self, system_factory):
+        group_key_1 = cache_key_cloud_system_group_children_count(self.group_1.id)
+        group_key_1_0 = cache_key_cloud_system_group_children_count(self.group_1_0.id)
+        group_key_1_1 = cache_key_cloud_system_group_children_count(self.group_1_1.id)
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 0
+        assert self.group_1.system_count == 1
+        assert caches['default'].get(group_key_1) == 1
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == 0
+
+        # Create new system
+        sys = system_factory(organization=self.organization, system_group=self.group_1)
+        assert caches['default'].get(group_key_1) == None
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == 0
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 0
+        assert self.group_1.system_count == 2
+        assert caches['default'].get(group_key_1) == 2
+
+        # Create new system
+        sys = system_factory(organization=self.organization, system_group=self.group_1_1)
+        assert caches['default'].get(group_key_1) == None
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == None
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 1
+        assert self.group_1.system_count == 3
+        assert caches['default'].get(group_key_1) == 3
+        assert caches['default'].get(group_key_1_1) == 1
+
+    def test_system_count_invalidation_on_change(self, system_factory):
+        group_key_1 = cache_key_cloud_system_group_children_count(self.group_1.id)
+        group_key_1_0 = cache_key_cloud_system_group_children_count(self.group_1_0.id)
+        group_key_1_1 = cache_key_cloud_system_group_children_count(self.group_1_1.id)
+        sys = system_factory(organization=self.organization, system_group=self.group_1_1)
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 1
+        assert self.group_1.system_count == 2
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == 1
+        assert caches['default'].get(group_key_1) == 2
+
+        # Change group
+        sys.system_group = self.group_1_0
+        sys.save()
+        assert caches['default'].get(group_key_1) == None
+        assert caches['default'].get(group_key_1_0) == None
+        assert caches['default'].get(group_key_1_1) == None
+        assert self.group_1_0.system_count == 1
+        assert self.group_1_1.system_count == 0
+        assert self.group_1.system_count == 2
+
+        assert caches['default'].get(group_key_1_0) == 1
+        assert caches['default'].get(group_key_1_1) == 0
+        assert caches['default'].get(group_key_1) == 2
 
 
 class TestCloudSystemId:

@@ -534,13 +534,14 @@ class TestChannelPartnerRecordsParamSerializer:
 
 class TestGroupSerializer:
     @pytest.fixture(autouse=True)
-    def setup(self, organization_factory, system_group_factory):
+    def setup(self, organization_factory, system_group_factory, system_factory):
         self.organization = organization_factory()
         self.groups = []
         parent_group = None
         for _ in range(5):
             parent_group = system_group_factory(organization=self.organization, parent=parent_group)
             self.groups.append(parent_group)
+            system = system_factory(organization=self.organization, system_group=parent_group)
         self.other_org = organization_factory()
         self.other_group = system_group_factory(organization=self.other_org)
 
@@ -569,6 +570,13 @@ class TestGroupSerializer:
             self.groups[-1], data={"parentId": self.groups[2].id, **common_data}
         )
         assert serializer.is_valid() is True
+
+    def test_systemCount(self):
+        serializer = GroupSerializer(instance=self.other_group)
+        assert serializer.data["systemCount"] == 0
+        for i in range(5):
+            serializer = GroupSerializer(instance=self.groups[i])
+            assert serializer.data["systemCount"] == 5 - i
 
 
 class TestOrganizationUserSerializer:

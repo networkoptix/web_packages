@@ -1278,10 +1278,11 @@ class GroupSerializer(serializers.ModelSerializer):
     parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(), allow_null=True)
     organizationId = serializers.UUIDField(source='organization_id', read_only=True)
     path = serializers.ListField(child=serializers.UUIDField(), source='visible_path', default=list)
+    systemCount = serializers.IntegerField(source='system_count', read_only=True)
 
     class Meta:
         model = SystemGroup
-        fields = ['id', 'name', 'systems', 'children', 'parentId', 'organizationId', 'path']
+        fields = ['id', 'name', 'systems', 'children', 'parentId', 'organizationId', 'path', 'systemCount']
 
     def validate_parentId(self, value: SystemGroup):
         if value:
