@@ -346,16 +346,8 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
         # Check if the system group associated with the instance has changed
         system_groups_are_different: bool = self.system_group_id != self._original_system_group_id
-
-        # If this is a new record, invalidate the cache for the organization of the new record
-        if new:
-            CloudSystemId.invalidate_cache(str(self.organization_id))
-
-        # If this is not a new record and the organization has changed,
-        # invalidate the cache for both the original and new organizations
-        elif orgs_are_different:
-            CloudSystemId.invalidate_cache(str(self._original_organization_id))
-            CloudSystemId.invalidate_cache(str(self.organization_id))
+        if system_groups_are_different:
+            old_path = [self._original_system_group_id] + (self.path or [])
 
         # Convert system_id to a UUIDField type
         self.system_id = models.UUIDField().to_python(self.system_id)
@@ -369,6 +361,24 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             else:
                 self.path = None
 
+        # If this is a new record, invalidate the cache for the organization of the new record
+        if new:
+            CloudSystemId.invalidate_cache(str(self.organization_id))
+            CloudSystemId.invalidate_groups_system_counters(self.groups_path)
+
+        # If this is not a new record and the organization has changed,
+        # invalidate the cache for both the original and new organizations
+        elif orgs_are_different:
+            CloudSystemId.invalidate_cache(str(self._original_organization_id))
+            CloudSystemId.invalidate_cache(str(self.organization_id))
+
+        # System group is changed
+        elif system_groups_are_different:
+            # Invalidate counters for a new group
+            CloudSystemId.invalidate_groups_system_counters(self.groups_path)
+            # Invalidate counters for an old group
+            CloudSystemId.invalidate_groups_system_counters(old_path)
+
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -378,6 +388,14 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def invalidate_cache(organization_id: str) -> None:
         cache_key: str = organization_system_count(organization_id)
         caches['default'].delete(cache_key)
+
+    @staticmethod
+    def invalidate_groups_system_counters(path: List[uuid.UUID]) -> None:
+        if not path:
+            return
+        for gid in path:
+            cache_key: str = cache_key_cloud_system_group_children_count(gid)
+            caches['default'].delete(cache_key)
 
     def negate_all_service(self, organization_id):
         """
@@ -1488,6 +1506,10 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         ids_arr = user_groups().annotate(ids=models.Func('id', function='array_agg')).values('ids')
         overlaps = user_groups().filter(path__overlap=Subquery(ids_arr))
         return overlaps.exists()
+
+    @property
+    def system_count(self) -> int:
+        return CloudSystemId.get_systems_in_group_and_children_count(self.id)
 
 
 class OrganizationToUser(models.Model):
