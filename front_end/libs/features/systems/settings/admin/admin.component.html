@@ -2,7 +2,7 @@
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
 <div
-    *ngIf="systemName; else systemNotReady"
+    *ngIf="systemName !== undefined; else systemNotReady"
     class="row d-flex align-items-start"
 >
     <div class="col-12 system-settings">
