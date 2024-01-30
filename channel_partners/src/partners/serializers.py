@@ -828,7 +828,7 @@ class AvailableOrganizationServiceSerializer(serializers.ModelSerializer):
 class BindLocalSystemSerializer(serializers.ModelSerializer):
     id = serializers.CharField(required=False)
     customization = serializers.CharField()
-    opaque = serializers.CharField(allow_blank=True)
+    opaque = serializers.CharField(allow_blank=True, required=False)
     groupId = serializers.UUIDField(required=False)
 
     class Meta:
@@ -859,7 +859,7 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         organization = validated_data.get('organization')
         name = validated_data.get('name', '')
         customization = validated_data.get('customization')
-        opaque = validated_data.get('opaque')
+        opaque = validated_data.get('opaque', '')
 
         system_bind_response, status_code = bind_system_to_cdb_organization(
             access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=str(organization.id),
