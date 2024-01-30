@@ -23,7 +23,7 @@ def bind_system_to_cdb_organization(
         system_id: str,
         name: str,
         customization: str,
-        opaque: str
+        opaque: str | None
 ) -> typing.Tuple[typing.Any, int]:
     client: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
 
@@ -31,7 +31,7 @@ def bind_system_to_cdb_organization(
         id=system_id,
         name=name,
         customization=customization,
-        opaque=opaque,
+        opaque=opaque or '',
         organization_id=organization_id,
         auth=BearerTokenAuth(token=access_token))
 
