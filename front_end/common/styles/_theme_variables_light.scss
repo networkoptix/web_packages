@@ -798,4 +798,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --other-sites-expand-stroke: var(--dark16);
 
     --no-systems-description-color: var(--dark17);
+
+	/* Merge */
+    --merge-unmerged-error-text: unset;
+    --merge-unmerged-system-message: var(--dark17);
 }
