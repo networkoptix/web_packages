@@ -11,7 +11,12 @@
                 *ngIf="!node.invisible && !(systemCount < 2 && node.url === '/systems')"
                 class="menu-item"
             >
-                <div class="node-name">{{ node.display_name | translate }}</div>
+                <ng-container
+                    *ngTemplateOutlet="
+                        node.new_window ? externalNodeName : internalNodeName;
+                        context: { node: node }
+                    "
+                ></ng-container>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
                 ></ng-container>
@@ -42,6 +47,30 @@
         </a>
     </div>
 </div>
+
+<ng-template
+    #internalNodeName
+    let-node="node"
+>
+    <a
+        class="node-name"
+        *ngIf="!node.new_window; else externalNodeName; context: { node: node }"
+        (click)="nodeClick(node, $event)"
+        [routerLink]="node.url"
+        >{{ node.display_name | translate }}</a
+    >
+</ng-template>
+
+<ng-template
+    #externalNodeName
+    let-node="node"
+>
+    <a
+        class="node-name"
+        [href]=""
+        >{{ node.display_name | translate }}</a
+    >
+</ng-template>
 
 <ng-template #profile>
     <div class="menu-items">
