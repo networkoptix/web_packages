@@ -680,4 +680,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --sidebar-background: var(--light4);
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
+
+    /* Merge */
+    --merge-unmerged-error-text: unset;
+    --merge-unmerged-error-text: var(--dark17);
 }

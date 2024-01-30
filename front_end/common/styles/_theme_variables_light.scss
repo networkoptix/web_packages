@@ -724,4 +724,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --sidebar-background: var(--light4);
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
+
+    /* Merge */
+    --merge-unmerged-error-text: unset;
+    --merge-unmerged-system-message: var(--dark17);
 }

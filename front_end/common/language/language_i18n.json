@@ -490,6 +490,7 @@
     "Please select or add a customization": "Please select or add a customization",
     "Please select recording mode.": "Please select recording mode.",
     "Please select recording quality": "Please select recording quality",
+    "Please try and fix the issues and repeat the merge.": "Please try and fix the issues and repeat the merge.",
     "Popularity": "Popularity",
     "Port": "Port",
     "Port is busy": "Port is busy",
@@ -644,6 +645,7 @@
     "Terms of Use": "Terms of Use",
     "The System cannot be configured.": "The System cannot be configured.",
     "The length of this bookmark will be slightly increased to maintain video quality": "The length of this bookmark will be slightly increased to maintain video quality",
+    "The merge is complete. Merge was unsuccessful for the following severs:": "The merge is complete. Merge was unsuccessful for the following severs:",
     "The page you are looking for does not exist or another error has occured": "The page you are looking for does not exist or another error has occured",
     "The recommended maximum user session lifetime is 30 days.": "The recommended maximum user session lifetime is 30 days.",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.",
@@ -678,6 +680,7 @@
     "URL is required": "URL is required",
     "Unable to connect to selected system": "Unable to connect to selected system",
     "Unlimited user session lifetime threatens overall system security": "Unlimited user session lifetime threatens overall system security",
+    "Unmerged Systems": "Unmerged Systems",
     "Update": "Update",
     "Update Channel Partner": "Update Channel Partner",
     "Update Channel Partner User": "Update Channel Partner User",
@@ -765,5 +768,6 @@
     "see organizations": "see organizations",
     "you": "you",
     "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.",
-    "{n} of {m}": "{n} of {m}"
+    "{n} of {m}": "{n} of {m}",
+    "{serverName} , error:": "{serverName} , error:"
 }

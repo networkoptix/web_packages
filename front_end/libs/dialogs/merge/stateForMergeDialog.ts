@@ -129,7 +129,8 @@ export const State: {
             adminPasswordWrong: '',
             passwordRequired: '',
             passwordWrong: '',
-            unknownError: ''
-        }
-    }
+            unknownError: '',
+        },
+    },
+    unmergedServers: { show: {}, showUpdates: {}, template: {}, errorText: {} },
 });

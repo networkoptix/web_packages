@@ -27,6 +27,29 @@
             margin: 0.5rem 0 0 !important;
         }
     }
+
+    .unmergedServers {
+        width: 460px;
+
+        .message {
+            color: var(--merge-unmerged-system-text);
+            margin-bottom: 10px;
+        }
+
+        .server {
+            margin-bottom: 10px;
+
+            &-name {
+                @include typography.bold13dark9nocolor;
+                margin-bottom: 5px;
+                color: var(--merge-unmerged-system-text) !important;
+            }
+
+            &-message { 
+                color: var(--merge-unmerged-system-message);
+            }
+        }
+    }
 }
 
 .modal-footer {

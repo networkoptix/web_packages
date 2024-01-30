@@ -103,6 +103,7 @@ export class MergeModalContent {
     readonly confirmPasswordError: string = 'confirmPasswordError';
     readonly serverUrlErrors: string = 'serverUrlErrors';
     readonly confirmMerge: string = 'confirmMerge';
+    readonly unmergedServers: string = 'unmergedServers';
 
     readonly knownBothSystemsConnectedToCloud: string = 'knownBothSystemsConnectedToCloud';
     readonly unknownBothSystemsConnectedToCloud: string = 'unknownBothSystemsConnectedToCloud';
@@ -130,6 +131,7 @@ export class MergeModalContent {
     @ViewChild('primaryRadio') primaryRadio: any;
     @ViewChild('confirmMergeForm') confirmMergeForm: HTMLFormElement;
     @ViewChild('confirmMergeInput') confirmMergeInput: ElementRef;
+    @ViewChild('unmergedServersDialog') unmergedServersDialog: ElementRef;
 
     constructor(
         configService: NxConfigService,
@@ -648,17 +650,23 @@ export class MergeModalContent {
             })
             .then(res => {
                 if (
-                    res.mergeInProgress ||
-                    res.error === '0' ||
-                    res.resultCode === this.LANG.errorCodes.ok ||
-                    !res.failedServers.length
+                    (res.mergeInProgress ||
+                        res.error === '0' ||
+                        res.resultCode === this.LANG.errorCodes.ok ||
+                        !res.failedServers.length) &&
+                    !res.unmergedServers
                 ) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.environment.isLocal) {
-                        const template =
-                            `<div class="my-1">
-                            <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.translateService.instant(this.LANG.ribbon.beingMerged.to)}</div>
-                            <div class="mt-2">${this.translateService.instant(this.LANG.ribbon.beingMerged.mayTake)}</div>
+                        const template = `<div class="my-1">
+                            <div class="larger"><strong>${
+                                this.secondarySystem.name
+                            }</strong> ${this.translateService.instant(
+                            this.LANG.ribbon.beingMerged.to,
+                        )}</div>
+                            <div class="mt-2">${this.translateService.instant(
+                                this.LANG.ribbon.beingMerged.mayTake,
+                            )}</div>
                         </div>`;
                         this.ribbonService.hide();
                         this.ribbonService.show(template, [], 'alert');
@@ -668,30 +676,42 @@ export class MergeModalContent {
                     this.close({
                         secondary: {
                             id: this.secondarySystem.id,
-                            name: this.secondaryName
+                            name: this.secondaryName,
                         },
                         primary: {
                             id: this.primarySystem.id,
-                            name: this.primaryName
+                            name: this.primaryName,
                         },
                         anotherSystemId: this.targetSystem.id,
-                        role: this.primarySystem.id === this.system.id
-                            ? this.CONFIG.system.status.master
-                            : this.CONFIG.system.status.slave
+                        role:
+                            this.primarySystem.id === this.system.id
+                                ? this.CONFIG.system.status.master
+                                : this.CONFIG.system.status.slave,
                     });
                     // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
-                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
-                    this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({
+                        passwordWrong: true,
+                    });
+                    this.updateShow(this.confirmPasswordError, {
+                        passwordErrorText: this.passwordWrong,
+                    });
                     this.confirmMergeInput.nativeElement.focus();
                     // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
-                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
-                    this.updateShow(this.confirmPasswordError, { passwordErrorText: 'adminPasswordWrong' });
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({
+                        passwordWrong: true,
+                    });
+                    this.updateShow(this.confirmPasswordError, {
+                        passwordErrorText: 'adminPasswordWrong',
+                    });
                     this.confirmMergeInput.nativeElement.focus();
                 } else if (res.errorString) {
                     res.resultCode = res.errorString.toLowerCase();
                     this.handleMergeError(res);
+                } else if (res.unmergedServers) {
+                    this.machine.transition(this.unmergedServers);
+                    this.machine.state.unmergedServers = res.unmergedServers;
                 }
             }, error => {
                 if (error.errorString === this.wrongLogin) {

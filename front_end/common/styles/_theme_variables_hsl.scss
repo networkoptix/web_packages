@@ -876,4 +876,8 @@ html[data-theme="hsl"] {
 
     /* System Admin */
     --system-admin-info-text: var(--new-light4);
+
+    /* Merge */
+    --merge-unmerged-error-text: var(--light10);
+    --merge-unmerged-system-message: var(--light10);
 }
