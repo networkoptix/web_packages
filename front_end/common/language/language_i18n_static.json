@@ -394,6 +394,14 @@
                 "recordingOff": {
                     "name": "Recording off",
                     "tooltip": "Recording off"
+                },
+                "openNewTab": {
+                    "name": "Open in New Tab",
+                    "tooltip": "Open in a new tab"
+                },
+                "openNewWindow": {
+                    "name": "Open in New Window",
+                    "tooltip": "Open in a new window"
                 }
             }
         }

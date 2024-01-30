@@ -355,6 +355,9 @@ h2.auto-save-overlay {
 }
 
 .saving-ribbon {
+    // prevent grid resize while animation is taking place
+    position: absolute;
+    width: 100%;
     z-index: var(--z-index-status-ribbon);
     .animated {
         background-color: #0d3959;

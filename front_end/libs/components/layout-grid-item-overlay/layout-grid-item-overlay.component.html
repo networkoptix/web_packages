@@ -91,7 +91,7 @@
                 *ngTemplateOutlet="svgIcon; context: { menuItem: fullscreenAction$$() }"
             />
         </div>
-        @if (removeAction$$()) {
+        @if (removeAction$$() && !removeAction$$()?.disabled$$()) {
             <div class="remove">
                 <ng-container
                     *ngTemplateOutlet="svgIcon; context: { menuItem: removeAction$$() }"

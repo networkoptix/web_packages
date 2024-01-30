@@ -7,7 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuItem, MenuItemsFactoryCallback } from '@components/context-menu/context-menu.types';
+import { MenuItem, MenuItemsOrMenuItemsFactory } from '@components/context-menu/context-menu.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 
@@ -35,7 +35,7 @@ export class NxContextMenu<Context> implements OnInit {
 
     @Input() isSubMenu: boolean = false;
     @Input() context: Context;
-    @Input() menuItems: MenuItemsFactoryCallback<Context> | MenuItem<Context>[];
+    @Input() menuItems: MenuItemsOrMenuItemsFactory<Context>;
 
     @HostListener('document:fullscreenchange')
     closeMenuOnFullscreenChange(): void {

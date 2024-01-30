@@ -6,15 +6,18 @@ export type MenuItemsFactoryCallback<Context> = (
     context: Context,
 ) => MenuItem<Context>[] | Promise<MenuItem<Context>[] | undefined> | undefined;
 
-export type MenuItemsOrMenuItemsCallback<T> = MenuItem<T>[] | MenuItemsFactoryCallback<T>;
+export type MenuItemsOrMenuItemsFactory<T> = MenuItem<T>[] | MenuItemsFactoryCallback<T>;
 
-export type MenuItem<T> = {
+export interface BaseMenuItem {
     id?: string;
     name: string | 'divider';
     tooltip?: string;
     icon?: string;
-    action?: MenuItemAction<T>;
-    subMenu?: MenuItemsOrMenuItemsCallback<T>;
     disabled$$?: Signal<boolean>;
     checked$$?: Signal<boolean>;
-};
+}
+
+export interface MenuItem<T> extends BaseMenuItem {
+    action?: MenuItemAction<T>;
+    subMenu?: MenuItemsOrMenuItemsFactory<T>;
+}
