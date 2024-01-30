@@ -134,12 +134,14 @@ export class NxHeaderLevelTwoComponent {
         this.checkNavArrowsVisible();
     }
 
-    nodeClick(node: MenuNode, event: MouseEvent): false {
-        this.headerService.handleNav(node, event);
-        if (!node.new_window) {
-            this.optimisticSelectedSubNode = node;
+    nodeClick(node: MenuNode, event: MouseEvent): void {
+        event.preventDefault();
+        if (node.url !== undefined) {
+            this.headerService.handleNav(node, event);
+            if (!node.new_window) {
+                this.optimisticSelectedSubNode = node;
+            }
         }
-        return false;
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderLevelTwoComponent>): void {

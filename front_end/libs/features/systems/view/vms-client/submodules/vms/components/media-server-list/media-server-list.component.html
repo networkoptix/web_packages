@@ -97,7 +97,8 @@
                             class="fs-exclude"
                             *ngIf="
                                 isCameraVisible[camera.id] &&
-                                (camera.thumbnailUrl | async) !== undefined
+                                (camera.thumbnailUrl | async) !== undefined &&
+                                (camera.thumbnailUrl | async) !== null
                             "
                             [src]="camera.thumbnailUrl | async | safe: 'resourceUrl'"
                             (load)="handlePreviewLoaded(camera.id)"

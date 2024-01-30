@@ -14,7 +14,7 @@ import {
     signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -120,6 +120,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined);
 
     drawQualityDivider$ = new BehaviorSubject<string>('');
+    interrptPlayback$ = new Subject<boolean>();
 
     controlsShown: boolean = false;
     private unsub$ = new Subject<string>();
@@ -290,6 +291,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.updateAvailableTransportsAndResolutions();
 
         this.$self.classList.add('animated');
+
+        this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
+            if (event instanceof NavigationStart && !event.url.includes('/view/')) {
+                this.playback.save();
+                // Playback stop will remove play position preventing continuance playback
+                // this.playback.stop();
+                this.interrptPlayback$.next(true);
+            }
+        });
     }
 
     ngAfterViewInit(): void {
@@ -324,7 +334,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     private initSubscriptions(): void {
         this.playback.subject
-            .pipe(throttleTime(TIMESTAMP_UPDATE_THROTTLE_MS), untilDestroyed(this))
+            .pipe(
+                takeUntil(this.interrptPlayback$),
+                throttleTime(TIMESTAMP_UPDATE_THROTTLE_MS),
+                untilDestroyed(this),
+            )
             .subscribe(s => {
                 const uriPlaybackMode = this.time$$();
                 if (uriPlaybackMode === 'live' && s.mode === PLAYBACK_MODE.LIVE) {
@@ -342,7 +356,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     default:
                         return;
                 }
-                this.router.navigate([], { queryParamsHandling: 'merge', queryParams: { time } });
+
+                this.router.navigate([], {
+                    queryParamsHandling: 'merge',
+                    queryParams: { time },
+                });
             });
 
         this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
