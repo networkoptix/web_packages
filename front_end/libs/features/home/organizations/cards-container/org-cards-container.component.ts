@@ -50,6 +50,7 @@ import {
     selectCurrentSystems,
     selectGroupItems,
     selectHasGroups,
+    selectOpenGroups,
 } from '../../store/groups/groups.selectors';
 @Component({
     selector: 'nx-org-cards-container',
@@ -88,6 +89,7 @@ export class NxOrganizationCardContainerComponent {
         );
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
+    openGroups$$ = this.store.selectSignal(selectOpenGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroup$$ = this.store.selectSignal<GroupItem>(selectCurrentGroup);
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
@@ -215,7 +217,11 @@ export class NxOrganizationCardContainerComponent {
 
     handleGroupClick(group: GroupItem): void {
         const route = ['group', group.id];
-        this.router.navigate(route, { relativeTo: this.route.parent });
+        this.router.navigate(route, { relativeTo: this.route.parent }).then(_ => {
+            const groups = { ...this.openGroups$$() };
+            groups[group.id] = true;
+            this.store.dispatch(GroupActions.setOpenGroups({ openGroups: groups }));
+        });
     }
 
     handleSystemClick(system: CloudSystem | SystemItem): void {
