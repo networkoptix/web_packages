@@ -148,6 +148,7 @@ export interface DeviceV1Full {
         useMedia2ToFetchProfiles: string;
         userEnabledAnalyticsEngines: unknown[]; // No examples found
         virtualCameraIgnoreTimeZone: string;
+        customGroupId: string;
     }>;
     pysicalId: string;
     schedule: {
@@ -208,6 +209,7 @@ export const cameraKeyMapV1 = {
         rotation: true,
         supportedMotion: true,
         VideoLayout: true,
+        customGroupId: true,
     },
     motion: {
         mask: true,
