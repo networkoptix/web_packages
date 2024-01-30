@@ -41,8 +41,8 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
     public email: string;
     title: string;
 
-    roles: DropdownItem<number>[] = [];
-    selectedRole: DropdownItem<number>;
+    roles: DropdownItem<string>[] = [];
+    selectedRole: DropdownItem<string>;
 
     createUserProcess: Process;
 
@@ -57,7 +57,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         // There's probably a smarter place to put this so we only have
         // to fetch once, but putting here for now
         cpService.getChannelPartnerRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<number>>(role => ({
+            this.roles = roles.map<DropdownItem<string>>(role => ({
                 name: role.name,
                 value: role.id,
             }));
@@ -70,7 +70,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
                 return firstValueFrom(
                     cpService.createChannelPartnerUser(partnerId, {
                         email: this.email,
-                        role: this.selectedRole.name,
+                        roleId: this.selectedRole.value,
                         title: this.title,
                     }),
                 );

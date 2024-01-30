@@ -172,7 +172,14 @@ export class NxUsersTableComponent {
     }
 
     updateRole(user: UserRecord, roleId: string): void {
-        if (user.isOrgUser) {
+        if (user.userType === UserType.CHANNEL_PARTNER) {
+            this.cpService
+                .updateChannelPartnerUser(this.currentPartner$$()?.id, {
+                    roleId,
+                    email: user.email,
+                })
+                .subscribe();
+        } else if (user.isOrgUser) {
             this.cpService
                 .updateOrganizationUser(this.currentOrg$$()?.id, { roleId, email: user.email })
                 .subscribe();

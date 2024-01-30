@@ -7,9 +7,12 @@
         *ngIf="subchannels$$().length > 0; else subchannelsEmpty"
     >
         <div *ngIf="!(inSubchannels$ | async); else outlet">
-            <div class="actions p-3">
+            <div
+                class="actions p-3"
+                [ngClass]="{ search: !canCreatePartners$$() }"
+            >
                 <button
-                    [disabled]="!canCreatePartners$$()"
+                    *ngIf="canCreatePartners$$()"
                     class="btn btn-default"
                     translate
                     (click)="newPartnerDialog()"
@@ -75,7 +78,7 @@
                 Drag video files or images to the client window, or add local media folder through
                 the Local Settings dialog.'
             </div>
-            <div>
+            <div *ngIf="canCreatePartners$$()">
                 <nx-button
                     [type]="buttonType"
                     (onClick)="newPartnerDialog()"

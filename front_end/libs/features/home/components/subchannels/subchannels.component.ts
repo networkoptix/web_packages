@@ -58,8 +58,8 @@ export class NxSubchannelsComponent {
     buttonType = ButtonType.brand;
     icons = icons;
     canCreatePartners$$ = computed(() => {
-        const currPartner = this.store.selectSignal(selectCurrentPartner);
-        return currPartner()?.ownPermissions.includes(
+        const currPartner$$ = this.store.selectSignal(selectCurrentPartner);
+        return currPartner$$()?.ownPermissions.includes(
             ChannelPartnerPermissions.ADD_REMOVE_SUB_CHANNEL_PARTNERS,
         );
     });

@@ -17,7 +17,7 @@ export type Page<Results> = {
 
 /* Channel Partner Users */
 export interface ChannelPartnerRole {
-    id: number;
+    id: string;
     permissions: string[];
     name: string;
 }
@@ -32,7 +32,7 @@ export interface ChannelPartnerUser {
 
 export interface CreateChannelPartnerUser {
     email: string;
-    role: string;
+    roleId: string;
     title?: string;
 }
 
