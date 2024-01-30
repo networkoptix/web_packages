@@ -240,7 +240,11 @@ export class NxBookmarksComponent implements OnInit {
         const searchParams: ReturnType<NxBookmarksComponent['buildSearch']> = {};
 
         if (search || tags) {
-            searchParams.text = tags && search ? `${search} ${tags}` : search || tags;
+            const tagArray = tags
+                .split(',')
+                .map(tag => `"${tag}"`)
+                .join(' ');
+            searchParams.text = tags && search ? `"${search}" ${tagArray}` : search || tagArray;
         }
         if (startDatetime) {
             searchParams.startTimeMs = startDatetime;
