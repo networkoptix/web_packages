@@ -16,6 +16,7 @@ from django.views.static import serve
 from cloud.helpers.exceptions import APINotFoundException
 from cms.controllers.static_files import get_template, get_customizable_static, TemplatesCache, get_languages_json
 from cms.models import get_cloud_portal_asset, Asset, AssetType
+from util.helpers import detect_language_by_request
 
 logger = getLogger(__name__)
 
@@ -53,11 +54,12 @@ async def customizable_files(request, *args):
     """
     Return file content from DB or 404 if it does not exist. Flag must be enabled.
     Args:
-        request:
+        request: django Request object
 
     """
     static_path = re.sub(r'^/', '', request.path)
-    content = await get_customizable_static(request.CUSTOMIZATION, static_path)
+    language_code = await sync_to_async(detect_language_by_request)(request)
+    content = await get_customizable_static(request.CUSTOMIZATION, static_path, language_code=language_code)
     if content is None:
         logger.info(f'Empty content for {static_path}')
         return HttpResponse(status=404)
