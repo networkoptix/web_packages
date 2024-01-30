@@ -1,7 +1,10 @@
 <div class="modal-header">
     <h1 class="modal-title">
         <span
-            *ngIf="machine.currentState !== 'failedToFindAnySystem'"
+            *ngIf="
+                machine.currentState !== 'failedToFindAnySystem' &&
+                machine.currentState !== 'unmergedServers'
+            "
             translate
             >Merge Systems</span
         >
@@ -9,6 +12,11 @@
         <span *ngIf="machine.currentState === 'failedToFindAnySystem'">{{
             LANG.dialogs.merge.failedToFindAnySystemHeader | translate
         }}</span>
+        <span
+            *ngIf="machine.currentState === 'unmergedServers'"
+            translate
+            >Unmerged Systems</span
+        >
     </h1>
     <button
         type="button"
@@ -424,3 +432,44 @@
         ></nx-process-button>
     </div>
 </form>
+<div
+    *ngIf="machine.currentState === 'unmergedServers'"
+    #unmergedServersDialog
+    class="unmergedServers"
+    name="unmergedServersDialog"
+>
+    <div class="modal-body">
+        <div class="unmergedServers">
+            <p
+                class="message"
+                translate
+            >
+                The merge is complete. Merge was unsuccessful for the following severs:
+            </p>
+            <div *ngFor="let error of machine.state.unmergedServers">
+                <div class="server">
+                    <p class="server-name">
+                        {{ '{serverName} , error:' | translate: { serverName: error.serverName } }}
+                    </p>
+                    <p class="server-message">{{ error.errorMessage | translate }}</p>
+                </div>
+            </div>
+
+            <p
+                class="message"
+                translate
+            >
+                Please try and fix the issues and repeat the merge.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer float-right">
+        <button
+            class="btn btn-primary m-0"
+            (click)="close()"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</div>
