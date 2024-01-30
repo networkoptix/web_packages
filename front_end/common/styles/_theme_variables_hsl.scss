@@ -950,4 +950,8 @@ html[data-theme="hsl"] {
     --other-sites-heading-background: var(--new-dark6);
     --other-sites-expand-stroke: var(--new-light16);
     --tree-editable-selection-override: var(--new-light10);
+
+    /* Merge */
+    --merge-unmerged-error-text: var(--light10);
+    --merge-unmerged-system-message: var(--light10);
 }

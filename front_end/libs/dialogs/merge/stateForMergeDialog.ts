@@ -132,4 +132,5 @@ export const State: {
             unknownError: '',
         },
     },
+    unmergedServers: { show: {}, showUpdates: {}, template: {}, errorText: {} },
 });

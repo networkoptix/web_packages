@@ -128,6 +128,7 @@ export class MergeModalContent {
     readonly confirmPasswordError: string = 'confirmPasswordError';
     readonly serverUrlErrors: string = 'serverUrlErrors';
     readonly confirmMerge: string = 'confirmMerge';
+    readonly unmergedServers: string = 'unmergedServers';
 
     readonly knownBothSystemsConnectedToCloud: string = 'knownBothSystemsConnectedToCloud';
     readonly unknownBothSystemsConnectedToCloud: string = 'unknownBothSystemsConnectedToCloud';
@@ -155,6 +156,7 @@ export class MergeModalContent {
     @ViewChild('primaryRadio') primaryRadio: any;
     @ViewChild('confirmMergeForm') confirmMergeForm: HTMLFormElement;
     @ViewChild('confirmMergeInput') confirmMergeInput: ElementRef;
+    @ViewChild('unmergedServersDialog') unmergedServersDialog: ElementRef;
 
     constructor(
         configService: NxConfigService,
@@ -790,10 +792,11 @@ export class MergeModalContent {
             .then(
                 res => {
                     if (
-                        res.mergeInProgress ||
-                        res.error === '0' ||
-                        res.resultCode === this.LANG.errorCodes.ok ||
-                        !res.failedServers.length
+                        (res.mergeInProgress ||
+                            res.error === '0' ||
+                            res.resultCode === this.LANG.errorCodes.ok ||
+                            !res.failedServers.length) &&
+                        !res.unmergedServers
                     ) {
                         // handles telling the app which systems are getting merged and the proper messaging
                         if (this.environment.isLocal) {
@@ -848,6 +851,9 @@ export class MergeModalContent {
                     } else if (res.errorString) {
                         res.resultCode = res.errorString.toLowerCase();
                         this.handleMergeError(res);
+                    } else if (res.unmergedServers) {
+                        this.machine.transition(this.unmergedServers);
+                        this.machine.state.unmergedServers = res.unmergedServers;
                     }
                 },
                 error => {
