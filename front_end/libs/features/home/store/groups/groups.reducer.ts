@@ -6,7 +6,7 @@ import type { GroupsState } from './groups.state';
 const initialState: GroupsState = {
     groups: null,
     currentGroupId: undefined,
-    openGroups: {},
+    openGroups: undefined,
     systems: [],
 };
 

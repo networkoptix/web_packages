@@ -278,7 +278,7 @@ export interface CreateGroup {
 
 export interface PatchGroup {
     name?: string;
-    parentId: string;
+    parentId: string | null;
 }
 
 /* Group Users */

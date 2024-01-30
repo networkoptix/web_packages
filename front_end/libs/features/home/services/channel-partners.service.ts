@@ -84,6 +84,7 @@ export class NxChannelPartnersService {
 
     /* Systems */
     getUserSystems = this.cpApi.getUserSystems;
+    patchSystem = this.cpApi.patchSystem;
     getOrgSystems = this.cpApi.getOrgSystems;
     transferSystemToOrg = this.cpApi.transferSystemToOrg;
     updateSystemGroup = this.cpApi.updateSystemGroup;

@@ -7,7 +7,7 @@ import type { OpenGroups } from '../../home.types';
 
 export interface GroupsState {
     groups: GroupItem[] | null;
-    currentGroupId: string;
-    openGroups: OpenGroups;
+    currentGroupId: string | undefined;
+    openGroups: OpenGroups | undefined;
     systems: SystemItem[];
 }

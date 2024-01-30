@@ -1,4 +1,3 @@
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -16,7 +15,7 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
 
-import { GroupsItem, OpenGroups } from '../../home.types';
+import { OpenGroups } from '../../home.types';
 import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.component';
 
 @Component({
@@ -31,7 +30,6 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
         AngularSvgIconModule,
         TranslateModule,
         NxAddSvgSrcDirective,
-        DragDropModule,
     ],
 })
 export class NxSystemGroupsSidebarComponent {
@@ -48,12 +46,6 @@ export class NxSystemGroupsSidebarComponent {
         private dialogsService: NxDialogsService,
         private store: Store,
     ) {}
-
-    // Todo: Add opening all nested groups upon loading a group page
-
-    moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
-        // this.groupsService.onDrop(event.item.data, null);
-    }
 
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup({

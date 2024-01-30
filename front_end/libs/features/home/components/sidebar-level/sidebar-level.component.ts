@@ -1,7 +1,7 @@
 import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -20,6 +20,7 @@ import { icons } from '@static-variables';
 import { OpenGroups } from '../../home.types';
 import * as GroupActions from '../../store/groups/groups.actions';
 import {
+    selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentSystems,
     selectGroupItems,
@@ -41,13 +42,14 @@ import {
         NxTooltipDirective,
     ],
 })
-export class NxGroupsSidebarLevelComponent {
+export class NxGroupsSidebarLevelComponent implements OnInit {
     @Input() groups: GroupItem[];
     @Input() openGroups: OpenGroups;
     @Input() groupId: string;
     @Input() rootOrg: Organization;
 
-    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
+    currentGroup$$ = this.store.selectSignal(selectCurrentGroup);
     groupItems$$ = this.store.selectSignal<GroupItem[]>(selectGroupItems);
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
 
@@ -58,6 +60,26 @@ export class NxGroupsSidebarLevelComponent {
         private route: ActivatedRoute,
         private cpService: NxChannelPartnersService,
     ) {}
+
+    ngOnInit(): void {
+        if (!this.openGroups) {
+            const openOrg: { [key: string]: boolean } = {};
+            openOrg[this.rootOrg.id] = true;
+            const groupsMap = new Map<string, GroupItem>(
+                this.groupItems$$().map(group => [group.id, group]),
+            );
+            const currentGroup = this.currentGroup$$();
+            if (currentGroup) {
+                openOrg[currentGroup.id] = true;
+                let { parentId } = currentGroup;
+                while (parentId) {
+                    openOrg[parentId] = true;
+                    parentId = groupsMap.get(parentId)?.parentId;
+                }
+            }
+            this.store.dispatch(GroupActions.setOpenGroups({ openGroups: openOrg }));
+        }
+    }
 
     trackItem(_index: number, item: GroupItem): string {
         return item.id;
@@ -104,6 +126,29 @@ export class NxGroupsSidebarLevelComponent {
                     );
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
+        }
+    }
+
+    moveToRoot(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
+        if (!event.isPointerOverContainer || event.previousContainer === event.container) {
+            return;
+        }
+        const dragged = event.item.data;
+        if (dragged.type === OrgCardItem.SYSTEM) {
+            this.cpService.patchSystem(dragged.systemId, { groupId: null }).subscribe(_ => {
+                const currSystems = [...this.currentSystems$$()];
+                const updatedSystems = currSystems.filter(sys => sys.systemId !== dragged.systemId);
+                this.store.dispatch(GroupActions.setSystems({ systems: updatedSystems }));
+            });
+        } else {
+            this.cpService.patchGroup(dragged.id, { parentId: null }).subscribe(_ => {
+                const groups: GroupItem[] = [...this.groupItems$$()];
+                const currGroup = groups.findIndex(group => group.id === dragged.id);
+                const updatedGroup = structuredClone(groups[currGroup]);
+                updatedGroup.parentId = null;
+                groups[currGroup] = updatedGroup;
+                this.store.dispatch(GroupActions.setGroups({ groups }));
+            });
         }
     }
 

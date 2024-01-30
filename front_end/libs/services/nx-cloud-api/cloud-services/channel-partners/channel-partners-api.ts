@@ -262,6 +262,14 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     getSystem = (id: string): Observable<unknown> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
     };
+
+    patchSystem = (
+        id: string,
+        body: { state?: string; groupId: string | null },
+    ): Observable<CloudSystem> => {
+        return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body });
+    };
+
     getSystemSassReport = (id: string): Observable<SassReport> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'saas_report']));
     };
