@@ -184,5 +184,9 @@
   "62156":{
     "name": "Pillow",
     "note": "CVE-2023-44271: It is a Denial of Service that uncontrollably allocates memory to process a given task, potentially causing a service to crash by having it run out of memory. This occurs for true type in ImageFont when text length in an ImageDraw instance operates on a long text argument.https://github.com/python- pillow/Pillow/pull/7244 CVE-2023-44271 For more information, please visit https://data.safetycli.com/v/62156/f17"
+  },
+  "63154": {
+    "name": "jwcrypto",
+    "note": "PVE-2023-63154: Jwcrypto version 1.5.1 addresses a potential DoS issue with p2c headers, limiting the default maximum to 16384 to prevent excessive resource usage. For applications requiring more iterations, the jwa default max needs to be adjusted manually.https://github.com/latchset/jwcrypto/commit/d2655d370586cb830e49acfb450f87598da60be8"
   }
 }
