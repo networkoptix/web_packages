@@ -152,7 +152,8 @@ export class NxLanguageProviderService {
             '%VMS_NAME%': this.CONFIG.vmsName,
             '%CLIENT_PROTOCOL%': this.CONFIG.clientProtocol,
             '%PRIVACY_LINK%': this.CONFIG.company.links.privacy,
-            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
+            '%SUPPORT_LINK%':
+                this.CONFIG.company.links.support || this.CONFIG.company.links.website,
             '%COMPANY_NAME%': this.CONFIG.company.name,
             '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks?.android_application_link,
             '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks?.ios_application_link,
