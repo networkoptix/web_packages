@@ -27,10 +27,16 @@
 
             .node-name {
                 padding-top: 32px;
+                display: block;
                 @include typography.regular12nocolor;
                 margin: 0 0 12px 16px;
                 color: var(--mobile-level-one-color);
                 text-transform: uppercase;
+                text-decoration: none;
+
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
     }
