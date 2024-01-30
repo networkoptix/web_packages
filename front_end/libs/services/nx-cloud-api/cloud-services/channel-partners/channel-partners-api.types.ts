@@ -74,38 +74,28 @@ export enum ChannelPartnerPermissions {
     FIELD_ACCESS_CP_ACCOUNTANT = 'field_access_cp_accountant',
 }
 
+export interface InfoRowServer {
+    value: string;
+    description: string;
+}
+
+export interface CustomRowServer {
+    label: string;
+    value: string | null;
+}
+
 export interface InfoRow {
-    data: { value: string; validation: Validators[] };
+    data: { value: string; validation?: Validators[] };
     description?: { value: string | null; validation?: Validators[] };
 }
 
-export type InfoData = Phone | Email | Custom | DataInfo | string;
-
-export interface Phone {
-    phone: string;
-    description: string;
-}
-
-export interface DataInfo {
-    data: string;
-    description: string;
-}
-
-export interface Email {
-    email: string;
-    description: string;
-}
-
-export interface Custom {
-    label: string;
-    value: string;
-}
+export type InfoDataServer = InfoRowServer | CustomRowServer;
 
 export interface SupportInformationSever {
-    sites: string[];
-    phones: Phone[];
-    emails: Email[];
-    custom: Custom[];
+    sites: InfoRowServer[];
+    phones: InfoRowServer[];
+    emails: InfoRowServer[];
+    custom: CustomRowServer[];
 }
 
 export interface SupportInformation {
