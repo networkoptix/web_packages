@@ -379,20 +379,22 @@ def get_static_files_links(request, customization):
     return {o: o for o, n in names_translation}
 
 
-async def get_customizable_static(customization_name: str, static_path: str):
+async def get_customizable_static(customization_name: str, static_path: str, language_code: str = None):
     """
     Get customizable static content from DB data record.
     Args:
         customization_name: customization name
         static_path: static path, same as data structure name
+        language_code: language code
 
     Returns:
 
     """
 
     asset = await sync_to_async(get_cloud_portal_asset)(customization=customization_name)
+    skin = await sync_to_async(asset.read_global_value)('%SKIN%')
     data = await sync_to_async(read_cached_file)(asset=asset, customization_name=customization_name,
-                                                 filename=static_path, language_code=None, skin=None,
+                                                 filename=static_path, language_code=language_code, skin=skin,
                                                  version_id=None)
     return data
 

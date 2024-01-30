@@ -67,11 +67,11 @@ def detect_language_by_request(request):
     default_language, languages = get_languages(request.CUSTOMIZATION)
 
     # 1. Try account value - top priority
-    if request.user.is_authenticated:
+    if hasattr(request, 'user') and request.user.is_authenticated:
         lang = request.user.language
 
     # 2. try session value
-    if not lang:
+    if not lang and hasattr(request, 'session'):
         lang = request.session.get('language', None)
 
     # 3. Try cookie value (saved in browser some time ago)
