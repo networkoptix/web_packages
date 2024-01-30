@@ -42,6 +42,7 @@ import {
     TimeDetail,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
+import { NxTimelineService } from '@services/timeline.service';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 // import {
@@ -220,6 +221,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     // *******************************
 
     public webglService = inject(NxWebGLService);
+
+    public timelineService = inject(NxTimelineService);
 
     // check if new chunk starting time is within previous chunk duration
     private checkChunkInProgress(newChunk: DATA): DATA {

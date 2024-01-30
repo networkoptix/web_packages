@@ -24,6 +24,7 @@ import {
     Output,
     signal,
     Signal,
+    untracked,
     ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -104,7 +105,7 @@ import { SystemResourcesSelectors } from '@store/system-resources';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
-import { cleanIdLegacy, dirtyId } from '@utils/general';
+import { cleanId, cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
@@ -407,8 +408,25 @@ export class NxLayoutGridComponent {
         const layoutItems = this.layout$$?.()?.items || [];
         const cameraIds = layoutItems.map(({ resourceId }) => resourceId);
         const allCameras = this.cameras$$();
-        return [allCameras.filter(({ id }) => cameraIds.includes(id))];
+        return allCameras.filter(({ id }) => cameraIds.includes(id));
     });
+
+    updateSelectedCameraEffect = effect(
+        () => {
+            const layoutItems = this.layout$$?.()?.items || [];
+            const cameraIds = layoutItems.map(({ resourceId }) => cleanId(resourceId));
+            const selectedCamera = untracked(() => this.layoutStateService.selectedCameraId$$());
+            if (
+                cameraIds.length &&
+                (!selectedCamera || !cameraIds.includes(cleanId(selectedCamera)))
+            ) {
+                this.layoutStateService.updateSelectedCameraId(cameraIds[0]);
+            }
+        },
+        {
+            allowSignalWrites: true,
+        },
+    );
 
     #lastWidth: number = Infinity;
 

@@ -524,6 +524,10 @@ export class LayoutStateService {
 
     activeLayoutHistory: string[] = [];
 
+    updateSelectedCameraId(cameraId: string): void {
+        this.selectedCameraId$$.set(cleanId(cameraId));
+    }
+
     constructor(
         private cloudApi: NxCloudApiService,
         private injector: Injector,

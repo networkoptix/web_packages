@@ -487,7 +487,7 @@
                                                 (click)="
                                                     layoutItemLookup[item.resourceId].type ===
                                                         RESOURCE_TYPE.CAMERA &&
-                                                        layoutStateService.selectedCameraId$$.set(
+                                                        layoutStateService.updateSelectedCameraId(
                                                             item.resourceId
                                                         )
                                                 "
@@ -505,8 +505,10 @@
                                                         window.document.fullscreenElement,
                                                     collided: (collisions$ | async)[item.id],
                                                     focus:
-                                                        item.resourceId ===
-                                                        layoutStateService.selectedCameraId$$()
+                                                        layoutStateService.selectedCameraId$$() &&
+                                                        item.resourceId.includes(
+                                                            layoutStateService.selectedCameraId$$()
+                                                        )
                                                 }"
                                                 [ngStyle]="
                                                     (collisions$ | async)[item.id]

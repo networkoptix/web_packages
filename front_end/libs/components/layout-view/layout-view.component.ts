@@ -52,6 +52,7 @@ import { alphaNumericSort, cleanIdLegacy, dirtyId, extractVideoLayout } from '@u
 import { generateTour, translateStep } from '@utils/nx';
 
 import { parseCameras, parseOtherSystems, parseServers, parseWebPages } from './layout-view-utils';
+import { registerDemoLogger } from './timeline-service-demo';
 
 interface Resource {
     name: string;
@@ -413,7 +414,9 @@ export class NxLayoutViewComponent {
         private translate: TranslateService,
         private store: Store,
         public layoutStateService: LayoutStateService,
-    ) {}
+    ) {
+        registerDemoLogger(this);
+    }
 
     ngOnInit(): void {
         this.selectedSystem$
