@@ -115,6 +115,7 @@ urlpatterns = [
     re_path(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
     # Serving DB static for local development
     re_path(r'^static/styles/skin.css', static_serve.skin_styles),
+    re_path(r'^static/503.html', static_serve.customizable_files),
     re_path(r'^static(/\d+/|/)languages.json', static_serve.languages_json),
     re_path(r'^static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$',
             static_serve.customizable_files, name="customizable_static"),

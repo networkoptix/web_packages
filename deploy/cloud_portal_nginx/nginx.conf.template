@@ -140,6 +140,20 @@ http {
             proxy_pass http://app_server/static/styles/skin.css;
         }
 
+        location = /static/503.html {
+            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
+            proxy_cache static_cache;
+            proxy_cache_valid 200 302 5m;
+            proxy_cache_lock on;
+            proxy_cache_background_update on;
+            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
+            proxy_ignore_headers Cache-Control;
+            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            add_header Cache-Control 'max-age=31449600'; # one year
+            include proxy.conf;
+            proxy_pass http://app_server/static/503.html;
+        }
+
         location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$|.*\.otf$|.*\.ttf$|.*\.woff$|.*\.woff2$|.*\.eot$ {
             root /app/app/static;
             add_header Cache-Control 'max-age=31449600'; # one year
