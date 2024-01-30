@@ -837,7 +837,5 @@
     "see organizations": "see organizations",
     "width": "width",
     "you": "you",
-    "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.",
-    "{n} of {m}": "{n} of {m}",
     "{serverName} , error:": "{serverName} , error:"
 }
