@@ -4,7 +4,16 @@ import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer, forkJoin } from 'rxjs';
+import {
+    EMPTY,
+    of,
+    from,
+    BehaviorSubject,
+    throwError,
+    defer,
+    forkJoin,
+    firstValueFrom,
+} from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
@@ -496,8 +505,8 @@ export class NxCloudApiService {
         return this.cloudDbApi.removeUser(systemId, userEmail);
     }
 
-    authKey() {
-        return this.http.post<t.AuthKey>(apiBase + '/account/authKey', {}).toPromise();
+    authKey(): Promise<t.AuthKey> {
+        return firstValueFrom(this.http.post<t.AuthKey>(apiBase + '/account/authKey', {}));
     }
 
     visitedKey(key: string) {

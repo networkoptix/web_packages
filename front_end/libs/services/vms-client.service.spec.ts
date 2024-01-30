@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 
 import { environment } from '@environments/environment';
 
-import { NxAccountService } from './account.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import { nxConfig as CONFIG } from './nx-config/config';
 import { setupTestBed } from './src/setup';
@@ -23,7 +22,7 @@ const setupVmsClientService = async (): Promise<{
         }>,
         [systemId: string]
     >;
-    authKeySpy: jest.SpyInstance<Promise<string>, []>;
+    authKeySpy: jest.SpyInstance<Promise<{ auth_key: string }>, []>;
 }> => {
     const { inject } = await setupTestBed();
     const systemId = uuid();
@@ -31,9 +30,10 @@ const setupVmsClientService = async (): Promise<{
     const code = uuid();
     const clientService = inject(NxVmsClientService);
     const cloudApiService = inject(NxCloudApiService);
-    const accountService = inject(NxAccountService);
     const getCodeSpy = jest.spyOn(cloudApiService, 'getCode').mockReturnValue(of({ code }));
-    const authKeySpy = jest.spyOn(accountService, 'authKey').mockReturnValue(Promise.resolve(auth));
+    const authKeySpy = jest
+        .spyOn(cloudApiService, 'authKey')
+        .mockReturnValue(Promise.resolve({ auth_key: auth }));
     return {
         clientService,
         clientProtocol,

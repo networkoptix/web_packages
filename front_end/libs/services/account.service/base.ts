@@ -165,11 +165,6 @@ export abstract class BaseAccount {
         this.sessionService.loginState = state;
     }
 
-    async authKey() {
-        const { auth_key: auth } = await this.cloudApi.authKey();
-        return auth;
-    }
-
     protected clearLoginState(): void {
         this.sessionService.invalidateSession();
     }

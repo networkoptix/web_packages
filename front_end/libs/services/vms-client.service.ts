@@ -46,8 +46,9 @@ export class NxVmsClientService {
         return url.toString();
     }
 
-    private getLinkLegacy(systemId: string): Promise<string> {
-        return this.accountService.authKey().then(auth => this.generateLink(systemId, auth, ''));
+    private async getLinkLegacy(systemId: string): Promise<string> {
+        const { auth_key } = await this.cloudApiService.authKey();
+        return this.generateLink(systemId, auth_key, '');
     }
 
     private async getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
