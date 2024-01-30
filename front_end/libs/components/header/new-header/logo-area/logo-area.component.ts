@@ -92,10 +92,6 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         // this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemsList;
     }
 
-    goBack(): void {
-        window.history.back();
-    }
-
     emitClick(clickType: logoClickType): void {
         this.logoClick.emit(clickType);
     }
