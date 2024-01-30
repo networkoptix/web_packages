@@ -20,7 +20,7 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
-import { Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -30,7 +30,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { CPInfoDataEvent } from '@pages/home/components/information/information.types';
 import type {
-    InfoData,
+    InfoDataServer,
     InfoRow,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
@@ -103,11 +103,15 @@ export class NxInfoGroupComponent {
         this.setInfoRows(data);
 
         this.formGroup.valueChanges
-            .pipe(takeUntil(this.unsub$), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                distinctUntilChanged(),
+                takeUntil(this.unsub$),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe(changed => {
                 this.dataChanges.emit({
                     formId: this.formId,
-                    data: changed.records,
+                    formData: changed.records,
                     status: this.formGroup.valid,
                 });
             });
@@ -136,17 +140,27 @@ export class NxInfoGroupComponent {
         this.data$$.set(newInfo);
         this.formGroup.updateValueAndValidity();
 
-        const newData: InfoData[] = [];
+        const newData: InfoDataServer[] = [];
         for (let idx = 0; idx < newInfo.length; idx++) {
-            newData.push({
-                data: newInfo[idx].data.value,
-                description: newInfo[idx].description.value,
-            });
+            let data: InfoDataServer;
+            if (this.formId === 'custom') {
+                data = {
+                    label: newInfo[idx].data.value,
+                    value: newInfo[idx].description.value,
+                };
+            } else {
+                data = {
+                    value: newInfo[idx].data.value,
+                    description: newInfo[idx].description.value,
+                };
+            }
+
+            newData.push(data);
         }
 
         this.dataChanges.emit({
             formId: this.formId,
-            data: newData,
+            formData: newData,
             status: this.formGroup.valid,
         });
     }
