@@ -356,9 +356,12 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Create without attributes
         validated_data_filtered = validated_data.copy()
         validated_data_filtered.pop('attributes', None)
+        # Create
         instance: Organization = super().create(validated_data_filtered)
+        # Use model method to set original validated data's attributes
         instance.set_attributes(validated_data.get('attributes', {}))
         return instance
 
@@ -411,10 +414,13 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         queryset=OrganizationRole.objects.all(), write_only=True, required=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     title = serializers.CharField(required=False, default='', allow_blank=True)
+    attributes = serializers.DictField(
+        allow_empty=True, allow_null=True, required=False,
+        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
 
     class Meta:
         model = ChannelPartnerToUser
-        fields = ['email', 'fullName', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId']
+        fields = ['email', 'fullName', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId', 'attributes']
 
     def validate_email(self, value: str):
         user, created = CloudUser.objects.get_or_create(email=value)
@@ -426,12 +432,23 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
                                              f" and cannot be added to channel partner {channel_partner.name}.")
         return user
 
+    def update(self, instance: ChannelPartnerToUser, validated_data):
+
+        updated_attributes: dict = validated_data.get('attributes', {})
+        instance.set_attributes(updated_attributes, partial=self.partial)
+
+        validated_data_copied: dict = validated_data.copy()
+        validated_data_copied.pop('attributes', None)
+
+        return super().update(instance, validated_data_copied)
+
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
         role = validated_data.get('roleId') or validated_data.get('role')
         title = validated_data.get('title')
         channel_partner = self.context.get('channel_partner')
         created_by = getattr(self.context.get('request'), 'user', None)
+
         # In case of some situation with multiple user records for same entity
         try:
             relation, _ = ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
@@ -440,6 +457,10 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
                 'created_ts')
             relation = relations.first()
             relations.exclude(id=relation.id).delete()
+
+        # Set attributes
+        attributes = validated_data.get('attributes', {})
+        relation.set_attributes(attributes)
 
         relation.title = title
         relation.roles = [role.id]
