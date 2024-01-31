@@ -72,6 +72,30 @@
     </div>
 </form>
 
+<form *ngIf="machine.currentState === 'secondarySystemOffline'">
+    <div class="modal-body">
+        <p
+            [innerHTML]="
+                LANG.dialogs.merge.secondarySystemOffline
+                    | translate
+                        : {
+                              primarySystem: primaryName,
+                              secondarySystem: secondaryName
+                          }
+            "
+        ></p>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-primary m-0"
+            (click)="close()"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</form>
+
 <form
     *ngIf="machine.currentState === 'checkMerge'"
     #checkMergeForm="ngForm"

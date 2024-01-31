@@ -888,6 +888,9 @@ export class MergeModalContent {
                     if (!errorCode && error.name === 'TimeoutError') {
                         errorCode = 'fail';
                     }
+                    if (!this.targetSystem.isOnline) {
+                        return this.machine.transition('secondarySystemOffline');
+                    }
 
                     /** Get the names of the primary and secondary system.
                     Next try to figure out which system caused the problem.
