@@ -159,10 +159,10 @@ class TestNxCloudOauthIntrospectAuthentication:
         assert user == self.cloud_user
         assert token == self.token
         assert str(self.request.introspected_system_id) == str(self.cloud_system.system_id)
-        assert self.request.introspected_system_roles_ids == [str(VmsRoles.ADMINISTRATOR)]
+        assert self.request.introspected_system_roles_ids == [VmsRoles.ADMINISTRATOR]
         assert TokenCache.get_token(self.token) == self.cloud_user.email
         assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
-                (self.cloud_user.email, [str(VmsRoles.ADMINISTRATOR)]))
+                (self.cloud_user.email, [VmsRoles.ADMINISTRATOR]))
 
     def test_viewer_role(self, httpx_mock):
         data = {
@@ -177,11 +177,11 @@ class TestNxCloudOauthIntrospectAuthentication:
         user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
         assert user == self.cloud_user
         assert token == self.token
-        assert self.request.introspected_system_id == f"{self.cloud_system.system_id}"
-        assert self.request.introspected_system_roles_ids == [str(VmsRoles.VIEWER)]
+        assert self.request.introspected_system_id == self.cloud_system.system_id
+        assert self.request.introspected_system_roles_ids == [VmsRoles.VIEWER]
         assert TokenCache.get_token(self.token) == self.cloud_user.email
         assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
-                (self.cloud_user.email, [str(VmsRoles.VIEWER)]))
+                (self.cloud_user.email, [VmsRoles.VIEWER]))
 
     def test_no_role(self, httpx_mock):
         data = {
@@ -196,7 +196,7 @@ class TestNxCloudOauthIntrospectAuthentication:
         user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
         assert user == self.cloud_user
         assert token == self.token
-        assert self.request.introspected_system_id == f"{self.cloud_system.system_id}"
+        assert self.request.introspected_system_id == self.cloud_system.system_id
         assert self.request.introspected_system_roles_ids == []
         assert TokenCache.get_token(self.token) == self.cloud_user.email
         assert TokenCache.get_token_system(self.token, self.cloud_system.system_id) == (self.cloud_user.email, [])

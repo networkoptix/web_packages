@@ -71,3 +71,16 @@ def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
         data=detail,
         status=response.status_code,
         content_type=response.headers.get('content-type'))
+
+
+def cast_uuid(uid: str | uuid.UUID | None) -> str | uuid.UUID | None:
+    if uid is None:
+        return None
+    if isinstance(uid, uuid.UUID):
+        return uid
+    if isinstance(uid, str):
+        try:
+            return uuid.UUID(uid)
+        except ValueError:
+            return uid
+    raise TypeError(f"Expected UUID or str, got {type(uid)}, value {uid}.")

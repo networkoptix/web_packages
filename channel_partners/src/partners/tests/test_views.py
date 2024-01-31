@@ -59,6 +59,92 @@ from partners.views import (
 from tools.serializers import VALUE_REPLACEMENT
 
 
+class TestCloudSystemViewSetRetrieve:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, system_factory, org_user_factory, cloud_test_host,
+              system_group_factory, sys_group_user_factory, httpx_mock, arf,
+              channel_partner_factory, cp_user_factory, organization_factory):
+        self.cp = channel_partner_factory()
+        self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.organization = organization_factory(channel_partner=self.sub_cp)
+        self.other_org = organization_factory(channel_partner=self.sub_cp)
+        self.group = system_group_factory(organization=self.organization)
+        self.other_group = system_group_factory(organization=self.organization)
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.sub_cp_user = cp_user_factory(channel_partner=self.sub_cp)
+        self.org_admin = org_user_factory(organization=self.organization)
+        self.other_org_admin = org_user_factory(organization=self.other_org)
+        self.group_admin = sys_group_user_factory(organization=self.organization, group=self.group)
+        self.other_group_admin = sys_group_user_factory(organization=self.organization, group=self.other_group)
+        self.org_system = system_factory(organization=self.organization)
+        self.group_system = system_factory(organization=self.organization, system_group=self.group)
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.token = f'{uuid4()}'
+        self.auth_cred = f'Bearer {self.token}'
+        self.url = reverse('cloudsystem-detail', kwargs={'id': self.group_system.system_id})
+        caches['default'].clear()
+        caches['local'].clear()
+
+    def test_token_200_group_user(self, mock_cdb_token_introspect):
+        mock_cdb_token_introspect(user=self.group_admin.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+        assert response.data['name'] == self.group_system.name
+        assert response.data['organizationName'] == self.organization.name
+
+    def test_token_200_org_user(self, mock_cdb_token_introspect):
+        mock_cdb_token_introspect(user=self.org_admin.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+        assert response.data['name'] == self.group_system.name
+        assert response.data['organizationName'] == self.organization.name
+
+    def test_token_200_cp_user(self, mock_cdb_token_introspect):
+        mock_cdb_token_introspect(user=self.sub_cp_user.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+        assert response.data['name'] == self.group_system.name
+        assert response.data['organizationName'] == self.organization.name
+
+    def test_token_200_top_cp_user(self, mock_cdb_token_introspect):
+        mock_cdb_token_introspect(user=self.cp_user.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 403
+
+    def test_token_200_system_user(self, mock_cdb_token_introspect, cloud_user_factory):
+        vms_user = cloud_user_factory()
+        mock_cdb_token_introspect(user=vms_user, system=self.group_system, system_role=VmsRoles.POWER_USER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+        assert response.data['name'] == self.group_system.name
+        assert response.data['organizationName'] == self.organization.name
+
+    def test_token_403_system_user(self, mock_cdb_token_introspect, cloud_user_factory):
+        vms_user = cloud_user_factory()
+        mock_cdb_token_introspect(user=vms_user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 403
+
+    def test_token_403_org_user(self, mock_cdb_token_introspect, cloud_user_factory):
+        mock_cdb_token_introspect(user=self.other_org_admin.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 403
+
+    def test_token_403_group_user(self, mock_cdb_token_introspect, cloud_user_factory):
+        mock_cdb_token_introspect(user=self.other_group_admin.user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 403
+
+
 class TestCloudSystemViewSetBind:
 
     @pytest.fixture(autouse=True)
@@ -2083,7 +2169,7 @@ class TestGetAuthorizedSystem:
         assert get_authorized_system(request, other_system.system_id) == other_system
         assert get_authorized_system(request, uuid4()) is None
 
-        request.introspected_system_id = str(cloud_system.system_id)
-        request.introspected_system_roles_ids = [str(VmsRoles.ADMINISTRATOR)]
+        request.introspected_system_id = cloud_system.system_id
+        request.introspected_system_roles_ids = [VmsRoles.ADMINISTRATOR]
         assert get_authorized_system(request, cloud_system.system_id) == cloud_system
         assert get_authorized_system(request, uuid4()) is None

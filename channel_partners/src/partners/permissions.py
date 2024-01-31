@@ -47,7 +47,13 @@ class CanPerformChannelPartnerAction(BasePermission):
     def has_object_permission(self, request, view, obj: CloudSystemId):
         if system := getattr(request, 'cloud_system', None):
             return system == obj and self.system_allowed
-        elif request.user and request.user.is_authenticated and request.auth:
+        if introspected_system_id := getattr(request, 'introspected_system_id', None):
+            if (
+                str(introspected_system_id) == str(obj.system_id)
+                and getattr(request, 'introspected_system_roles_ids', None)
+            ):
+                return True
+        if request.user and request.user.is_authenticated and request.auth:
             if self.check_function:
                 return self.check_function(obj, request.user)
         return False

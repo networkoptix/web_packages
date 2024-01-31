@@ -255,7 +255,7 @@ def cdb_introspect_url(cloud_test_host):
 def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
     def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
              system: CloudSystemId = None, active: bool = True,
-             system_role: str = VmsRoles.ADMINISTRATOR):
+             system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR):
         if user is None:
             email = random_email
         elif isinstance(user, CloudUser):
@@ -263,7 +263,8 @@ def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
         else:
             email = user.user.email
         if system:
-            roles = {"system_role_ids": {str(system.system_id): [str(system_role)]}}
+            system_roles = [str(system_role)] if system_role else []
+            roles = {"system_role_ids": {str(system.system_id): system_roles}}
         else:
             roles = {}
         data = {
@@ -314,9 +315,10 @@ def system_factory(cloud_test_host, default_organization):
 
     def factory(organization=default_organization, cloud_host=cloud_test_host,
                 system_id=None, state=ChannelPartnerStates.ACTIVE, system_group=None):
-        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}', system_group=system_group,
+        sys_id = system_id or f'{uuid4()}'
+        return baker.make(CloudSystemId, system_id=sys_id, system_group=system_group,
                           organization=organization, cloud_host=cloud_host, state=state,
-                          system_state=CloudSystemStates.ACTIVATED)
+                          system_state=CloudSystemStates.ACTIVATED, name=f'System {sys_id}')
 
     return factory
 

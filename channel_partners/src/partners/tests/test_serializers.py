@@ -31,6 +31,7 @@ from partners.serializers import (
     ChannelPartnerSerializer,
     ChannelPartnerStateChangeSerializer,
     ChannelPartnerStateConfirmationSerializer,
+    CloudSystemSerializer,
     GroupSerializer,
     OrganizationAggDataSerializer,
     OrganizationSerializer,
@@ -41,6 +42,7 @@ from partners.serializers import (
     SystemGroupUserSerializer,
     SystemServiceQuantitySerializer,
 )
+from tools.serializers import VALUE_REPLACEMENT
 
 
 class TestChannelPartnerAggDataSerializer:
@@ -1152,3 +1154,31 @@ class TestSupportInformationSerializer:
         }
         serializer = SupportInformationSerializer(data=invalid_data)
         assert not serializer.is_valid()
+
+class TestCloudSystemSerializer:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, cp_user_factory,
+              org_user_factory, system_factory, arf):
+        self.cp = channel_partner_factory()
+        self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.organization = organization_factory(channel_partner=self.sub_cp)
+        self.system = system_factory(organization=self.organization)
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.sub_cp_user = cp_user_factory(channel_partner=self.sub_cp)
+        self.org_user = org_user_factory(organization=self.organization)
+        self.request = arf.get('/')
+        self.request.user = self.sub_cp_user.user
+        self.context = {'request': self.request}
+
+    def test_organizationName(self):
+        # Test organization parent partner user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['organizationName'] == self.organization.name
+        # Test organization user
+        self.request.user = self.org_user.user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['organizationName'] == self.organization.name
+        # Test organization top partner user
+        self.request.user = self.cp_user.user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['organizationName'] == VALUE_REPLACEMENT

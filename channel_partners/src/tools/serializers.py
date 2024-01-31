@@ -135,7 +135,9 @@ class AccessMatrixMixin:
 
     @cached_property
     def user_access_matrix(self):
-        return UserAccessMatrix(cloud_user=self.request_user, content_type=self._content_type)
+        return UserAccessMatrix(cloud_user=self.request_user,
+                                content_type=self._content_type,
+                                request=self.context.get('request'))
 
     def get_write_perm_method(self, field):
         explicit_method = getattr(self, f'can_write_{field.field_name}', None)
@@ -148,5 +150,4 @@ class AccessMatrixMixin:
         explicit_method = getattr(self, f'can_read_{field.field_name}', None)
         if explicit_method:
             return explicit_method
-
         return field_perm_method_wrapper(self, field, AccessTypes.read)

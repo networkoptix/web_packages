@@ -126,6 +126,8 @@ class ExternalIdTargetManager(models.Manager):
 class CloudUser(models.Model):
     email = models.EmailField(unique=True)
 
+    is_system_user = False
+
     def __str__(self):
         return self.email
 
@@ -312,6 +314,8 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.organization and self.organization.can_manage_systems(user)
 
     def can_access(self, user: CloudUser):
+        if self.system_group and self.system_group.can_access(user):
+            return True
         return self.organization and self.organization.can_access_systems(user)
 
     def can_set_services(self, user: CloudUser):
@@ -1480,7 +1484,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
             .filter(user=user)
             .filter(
                 Q(organization_id=self.organization_id, system_group__isnull=True)
-                | Q(system_group_id__in=self.visible_path)
+                | Q(system_group_id__in=[self.id] + self.visible_path)
             ).exists()
         ):
             return True

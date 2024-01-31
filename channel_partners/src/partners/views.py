@@ -1224,7 +1224,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
                          GenericViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     serializer_class = CloudSystemSerializer
-    authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
+    authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication)
     pagination_class = DefaultPagination
     queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     filter_backends = [DjangoFilterBackend]
@@ -1489,7 +1489,7 @@ def get_authorized_system(request, system_id):
                 str(getattr(request, 'introspected_system_id', None)) == str(system_id)
                 and (roles := getattr(request, 'introspected_system_roles_ids', None))
         ):
-            allowed_roles = {str(VmsRoles.ADMINISTRATOR), str(VmsRoles.POWER_USER)}
+            allowed_roles = {VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER}
             if set(roles).intersection(allowed_roles):
                 return cloud_system
         if cloud_system.has_vms_role(request.user, vms_roles=[VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER]):
