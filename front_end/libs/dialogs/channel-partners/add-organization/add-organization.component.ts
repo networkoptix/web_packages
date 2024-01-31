@@ -13,6 +13,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { NxAccountService } from '@services/account.service';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -62,8 +63,7 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
                 this.cpService
                     .createOrganizationUser(res.id, {
                         email: this.accountService.email,
-                        roleId: '00000000-0000-4000-8000-000000000001',
-                        // TOOD: Make a enum of base roles
+                        roleId: OrgRoleIds.OrgAdmin,
                     })
                     .subscribe();
                 this.close(res);

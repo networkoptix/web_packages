@@ -9,9 +9,8 @@
             >
             <input
                 id="name"
-                [placeholder]="item?.name"
                 [(ngModel)]="name"
-                (change)="updateName.emit(name)"
+                (input)="updateName.emit(name)"
             />
         </div>
         <div

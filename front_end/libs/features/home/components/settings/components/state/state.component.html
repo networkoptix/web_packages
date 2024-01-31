@@ -13,7 +13,7 @@
         <div class="body state-body">
             <mat-button-toggle-group
                 name="state"
-                [(value)]="newState"
+                [(value)]="currState"
             >
                 <mat-button-toggle
                     [name]="State.Active"
@@ -46,7 +46,7 @@
             </mat-button-toggle-group>
 
             <ul
-                [ngSwitch]="newState"
+                [ngSwitch]="currState"
                 class="status-info"
             >
                 <ng-container *ngSwitchCase="State.Active">

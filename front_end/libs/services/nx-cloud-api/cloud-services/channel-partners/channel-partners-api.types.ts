@@ -8,6 +8,16 @@ export enum State {
     ShutDown = 'shutdown',
 }
 
+export enum OrgRoleIds {
+    OrgAdmin = '00000000-0000-4000-8000-000000000001',
+    Admin = '00000000-0000-4000-8000-000000000002',
+    PowerUser = '00000000-0000-4000-8000-000000000003',
+    SysHealthViewer = '00000000-0000-4000-8000-000000000004',
+    AdvancedViewer = '00000000-0000-4000-8000-000000000005',
+    Viewer = '00000000-0000-4000-8000-000000000006',
+    LiveViewer = '00000000-0000-4000-8000-000000000007',
+}
+
 export type Page<Results> = {
     count: number;
     next: string | null;

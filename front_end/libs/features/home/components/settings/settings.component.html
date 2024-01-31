@@ -2,28 +2,32 @@
     #channelPartnersView
     let-state
 >
-    <nx-settings-general
-        [view]="settingsViews.CHANNEL_PARTNERS"
-        [item]="state.item"
-        (updateName)="handleUpdate(updatedName, $event)"
-    ></nx-settings-general>
+    <ng-container *ngIf="state.item">
+        <nx-settings-general
+            [view]="settingsViews.CHANNEL_PARTNERS"
+            [item]="state.item"
+            (updateName)="handleNameUpdate($event)"
+        ></nx-settings-general>
+    </ng-container>
 </ng-template>
 
 <ng-template
     #extendedView
     let-state
 >
-    <nx-settings-general
-        [view]="state.view"
-        [item]="state.item"
-        (updateName)="handleUpdate(updatedName, $event)"
-        (updateAccess)="handleUpdate(updatedPartnerAccess, $event)"
-    ></nx-settings-general>
-    <nx-settings-state
-        (updateState)="handleUpdate(updatedState, $event)"
-        [currState]="State.Active"
-        [canChange]="state.canUpdateStatus"
-    ></nx-settings-state>
+    <ng-container *ngIf="state.item">
+        <nx-settings-general
+            [view]="state.view"
+            [item]="state.item"
+            (updateName)="handleNameUpdate($event)"
+            (updateAccess)="handleAccessUpdate($event)"
+        ></nx-settings-general>
+        <nx-settings-state
+            (updateState)="handleStateUpdate($event)"
+            [currState]="state.item.state"
+            [canChange]="state.canUpdateStatus"
+        ></nx-settings-state>
+    </ng-container>
 </ng-template>
 
 <div
@@ -39,7 +43,7 @@
     </ng-container>
     <div
         class="footer"
-        *ngIf="hasUpdate"
+        *ngIf="hasChange"
     >
         <nx-process-button
             [process]="updateStateProcess"
