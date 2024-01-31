@@ -1903,6 +1903,11 @@ class TestCloudSystemViewSetDelete:
         assert response.status_code == 204
         request = httpx_mock.get_request(url=self.url)
         assert request.headers.get('Authorization') == f'Bearer {self.token}'
+        self.system.refresh_from_db()
+        assert self.system.state == ChannelPartnerStates.SHUTDOWN
+        assert self.system.system_state == CloudSystemStates.DELETED
+        assert self.system.organization is None
+        assert self.system.system_group is None
 
     def test_empty_json(self, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=401)
@@ -1954,22 +1959,26 @@ class TestCloudSystemViewSetDelete:
         response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 403
 
-    def test_destroy_ignored_errors(self, httpx_mock):
+    def test_destroy_cdb_errors_502(self, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=502, content=b'some text content')
         with transaction.atomic():
             response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 204
-        httpx_mock.reset(True)
+
+    def test_destroy_cdb_errors_504(self, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=504)
         with transaction.atomic():
             response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 204
+
+    def test_destroy_cdb_errors_401(self, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=401, content=b'not authorized')
         with transaction.atomic():
             response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 401
         assert response.data['detail'] == 'not authorized'
-        httpx_mock.reset(True)
+
+    def test_destroy_cdb_errors_exception(self, httpx_mock):
         httpx_mock.add_exception(exception=httpx.ReadTimeout('timeout'), url=self.url)
         with transaction.atomic():
             response = self.view(self.request, id=self.system.system_id)
