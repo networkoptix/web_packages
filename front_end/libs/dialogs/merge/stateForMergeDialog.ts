@@ -10,6 +10,7 @@ export const State: {
 } = Object.assign({
     thisSystemHasOutdatedServerError: { show: {}, showUpdates: {}, template: {}, errorText: {} },
     failedToFindAnySystem: { show: {}, showUpdates: {}, template: {}, errorText: {} },
+    secondarySystemOffline: { show: {}, showUpdates: {}, template: {}, errorText: {} },
     checkMerge: {
         show: {
             systemDropdown: true,
