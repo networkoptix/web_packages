@@ -1303,12 +1303,11 @@ class CloudSystemViewSet(NestedViewSetMixin,
         except httpx.TransportError as ex:
             # ignoring transport errors, DecodingError and TooManyRedirects are still raised
             logger.warning("Got transport error.",
-                           exception=ex)
+                           exception=str(ex))
             ignored_errors = True
 
         if ignored_errors or response.status_code in [200, 502, 504]:
-            instance.system_state = CloudSystemStates.DELETED
-            instance.save()
+            instance.disconnect_system()
             return
 
         if response.headers.get('content-type') == 'application/json':

@@ -372,12 +372,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
         # If this is not a new record and the organization has changed,
         # invalidate the cache for both the original and new organizations
-        elif orgs_are_different:
+        if orgs_are_different:
             CloudSystemId.invalidate_cache(str(self._original_organization_id))
             CloudSystemId.invalidate_cache(str(self.organization_id))
 
         # System group is changed
-        elif system_groups_are_different:
+        if system_groups_are_different:
             # Invalidate counters for a new group
             CloudSystemId.invalidate_groups_system_counters(self.groups_path)
             # Invalidate counters for an old group
@@ -387,6 +387,13 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         super().save(*args, **kwargs)
 
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
+
+    def disconnect_system(self):
+        self.state = ChannelPartnerStates.SHUTDOWN
+        self.system_state = CloudSystemStates.DELETED
+        self.organization = None
+        self.system_group = None
+        self.save()
 
     @staticmethod
     def invalidate_cache(organization_id: str) -> None:
@@ -494,10 +501,13 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         # TODO | NOTE: Talked with Kyrylo and he said to leave and it and he'll know where to place invalidations.
         cache_key: str = cache_key_cloud_system_group_children_count(system_group_id)
         cached_result = caches['default'].get(cache_key)
-        if cached_result:
+        if cached_result is not None:
             return cached_result
         else:
-            count = CloudSystemId.objects.filter(path__contains=[system_group_id]).count()
+            count = CloudSystemId.objects.filter(
+                path__contains=[system_group_id],
+                system_state=CloudSystemStates.ACTIVATED,
+            ).count()
             caches['default'].set(cache_key, count, timeout=3600)
         return count
 
@@ -1152,10 +1162,13 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def system_count(self) -> int:
         cache_key: str = organization_system_count(str(self.id))
         cached_result = caches['default'].get(cache_key)
-        if cached_result:
+        if cached_result is not None:
             return cached_result
         else:
-            count = CloudSystemId.objects.filter(organization=self).count()
+            count = CloudSystemId.objects.filter(
+                organization=self,
+                system_state=CloudSystemStates.ACTIVATED,
+            ).count()
             caches['default'].set(cache_key, count, timeout=3600)
             return count
 

@@ -22,6 +22,7 @@ from partners.models import (
 )
 from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
+    organization_system_count,
 )
 
 
@@ -480,6 +481,27 @@ class TestOrganization:
         check_all(org_struct)
         assert count == SystemGroup.objects.filter(organization=org).count()
 
+    def test_system_count(self, channel_partner_factory, organization_factory,
+                          system_group_factory, system_factory):
+
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        system_group = system_group_factory(organization=org)
+        org_system = system_factory(organization=org)
+        group_system = system_factory(organization=org, system_group=system_group)
+        cache_key = organization_system_count(org.id)
+        assert org.system_count == 2
+        assert caches['default'].get(cache_key) == 2
+        group_system.disconnect_system()
+        assert caches['default'].get(cache_key) is None
+        assert org.system_count == 1
+        assert caches['default'].get(cache_key) == 1
+        org_system.disconnect_system()
+        assert caches['default'].get(cache_key) is None
+        assert org.system_count == 0
+        assert caches['default'].get(cache_key) == 0
+
+
 
 class TestEffectiveStates:
 
@@ -785,6 +807,25 @@ class TestSystemGroup:
         assert caches['default'].get(group_key_1_0) == 1
         assert caches['default'].get(group_key_1_1) == 0
         assert caches['default'].get(group_key_1) == 2
+
+    def test_disconnected_system(self, system_factory):
+        group_key_1 = cache_key_cloud_system_group_children_count(self.group_1.id)
+        group_key_1_0 = cache_key_cloud_system_group_children_count(self.group_1_0.id)
+        group_key_1_1 = cache_key_cloud_system_group_children_count(self.group_1_1.id)
+        sys = system_factory(organization=self.organization, system_group=self.group_1_1)
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 1
+        assert self.group_1.system_count == 2
+        sys.disconnect_system()
+        assert caches['default'].get(group_key_1) == None
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == None
+        assert self.group_1_0.system_count == 0
+        assert self.group_1_1.system_count == 0
+        assert self.group_1.system_count == 1
+        assert caches['default'].get(group_key_1_0) == 0
+        assert caches['default'].get(group_key_1_1) == 0
+        assert caches['default'].get(group_key_1) == 1
 
 
 class TestCloudSystemId:

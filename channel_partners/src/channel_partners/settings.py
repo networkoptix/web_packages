@@ -148,6 +148,9 @@ DATABASES = {
 # Cache
 
 REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
+if MIGRATING:
+    # Avoid issues with redis on migrations
+    REDIS_CACHE_BACKEND = "django.core.cache.backends.dummy.DummyCache"
 REDIS_CACHE_LOCATION = f'redis://{INSTANCE_CONFIG.redis_host}:{INSTANCE_CONFIG.redis_port}'
 
 CACHES = {
