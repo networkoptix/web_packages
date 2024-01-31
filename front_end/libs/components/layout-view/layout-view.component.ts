@@ -143,6 +143,15 @@ export class NxLayoutViewComponent {
         filter(([resources]) => Object.values(resources).every(Boolean)),
         map(cloneDeep),
         filter(([allSystemResources, currentSystemId]) => !!allSystemResources[currentSystemId]),
+        switchMap(lookupState =>
+            this.layoutStateService.paramStateHandler.state$.pipe(
+                map(({ queryParams }) => ({
+                    hasQuery: !!queryParams?.search?.[0],
+                    openNodes: queryParams?.openNodes || [],
+                })),
+                map(search => [...lookupState, search] as const),
+            ),
+        ),
         map(
             ([
                 allSystemResources,
@@ -152,6 +161,7 @@ export class NxLayoutViewComponent {
                 currentUser,
                 editedLayout,
                 otherSystemsInfo,
+                queryInfo,
             ]): LayoutResourceTree => {
                 const { [currentSystemId]: currentSystem, ...otherSystems } = allSystemResources;
                 const loadedSystems = Object.keys(allSystemResources);
@@ -197,6 +207,8 @@ export class NxLayoutViewComponent {
                     otherSystemsServers,
                     aspectRatio,
                     loadedSystems,
+                    queryInfo.hasQuery,
+                    queryInfo.openNodes,
                 );
 
                 const byName = alphaNumericSort<Pick<Resource, 'name'>>(
@@ -313,7 +325,6 @@ export class NxLayoutViewComponent {
             bufferSize: 1,
             refCount: false,
         }),
-        untilDestroyed(this),
     );
 
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(

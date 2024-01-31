@@ -259,6 +259,25 @@ export class NxLayoutGridTreeComponent {
                 this.searchType === 'filter',
             ),
         ),
+        switchMap(dataSource =>
+            this.searchType !== 'filter'
+                ? Promise.resolve(dataSource)
+                : this.layoutStateService.paramStateHandler.state$.pipe(
+                      map(({ queryParams }) => queryParams.search?.[0]),
+                      map(query => {
+                          if (query) {
+                              return filterSearch(
+                                  dataSource,
+                                  query,
+                                  node => node.name,
+                                  node => node.children || [],
+                                  (node, matched) => matched || !!node.children?.length,
+                              );
+                          }
+                          return dataSource;
+                      }),
+                  ),
+        ),
         untilDestroyed(this),
     );
 
@@ -497,11 +516,21 @@ export class NxLayoutGridTreeComponent {
 
     doubleClick$ = new Subject<true>();
 
-    handleSingleClick = (node: ResourceNode): void => {
+    handleSingleClick = (node: ResourceNode, parent: ResourceNode): void => {
+        const parentId = parent.details?.id;
         if (node.type) {
             of(node)
                 .pipe(delay(250), takeUntil(this.doubleClick$))
                 .subscribe(node => this.layoutGridService.changeView.next(node));
+        } else if (parentId && node.name === staticLang.layouts.otherSystems.searchCameras) {
+            this.layoutStateService.paramStateHandler.updater(() => ({
+                queryParams: {
+                    openNodes: {
+                        value: [parentId],
+                        mutationType: MutationType.APPEND,
+                    },
+                },
+            }));
         }
     };
 
