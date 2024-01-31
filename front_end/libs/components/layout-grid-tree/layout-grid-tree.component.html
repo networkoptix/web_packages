@@ -88,13 +88,17 @@
                     >No Items</span
                 > -->
                     <ng-container
-                        *ngTemplateOutlet="renderChildren; context: { nodes: node.children }"
+                        *ngTemplateOutlet="
+                            renderChildren;
+                            context: { nodes: node.children, parent: node }
+                        "
                     ></ng-container>
                 </div></div
         ></ng-template>
         <ng-template
             #leafNode
             let-node="node"
+            let-parent="parent"
         >
             <!-- This is the tree node template for leaf nodes -->
             <div
@@ -120,7 +124,7 @@
                         !node.type ||
                         node.details?.id === layout.id
                     "
-                    (click)="handleSingleClick(node)"
+                    (click)="handleSingleClick(node, parent)"
                     (dblclick)="handleDoubleClick(node)"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
@@ -245,12 +249,13 @@
         <ng-template
             #renderChildren
             let-nodes="nodes"
+            let-parent="parent"
         >
             @for (node of nodes; track nodeId($index, node)) {
                 <ng-container
                     *ngTemplateOutlet="
                         node?.children?.length ? expandableNode : leafNode;
-                        context: { node: node }
+                        context: { node: node, parent: parent }
                     "
                 ></ng-container>
             }
