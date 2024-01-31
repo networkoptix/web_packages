@@ -16,11 +16,12 @@ import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import type {
-    GroupItem,
-    Organization,
-    OrganizationRole,
-    OrganizationUser,
+import {
+    OrgRoleIds,
+    type GroupItem,
+    type Organization,
+    type OrganizationRole,
+    type OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
@@ -28,17 +29,6 @@ import { icons } from '@static-variables';
 
 import { NxOrgTreeSelectorComponent } from './org-tree-selector/org-tree-selector.component';
 import { SelectedFolder } from './org-tree-selector/org-tree-selector.types';
-
-// Potential TODO: Move if needed elsewhere
-enum OrgRoleIds {
-    OrgAdmin = '00000000-0000-4000-8000-000000000001',
-    Admin = '00000000-0000-4000-8000-000000000002',
-    PowerUser = '00000000-0000-4000-8000-000000000003',
-    SysHealthViewer = '00000000-0000-4000-8000-000000000004',
-    AdvancedViewer = '00000000-0000-4000-8000-000000000005',
-    Viewer = '00000000-0000-4000-8000-000000000006',
-    LiveViewer = '00000000-0000-4000-8000-000000000007',
-}
 
 @Component({
     selector: 'nx-add-org-user-v2',

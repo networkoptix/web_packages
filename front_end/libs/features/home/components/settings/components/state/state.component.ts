@@ -28,13 +28,7 @@ export class NxSettingsStateComponent {
     icons = icons;
     LANG = LANG;
     State = State;
-    newState: State;
     @Input() canChange: boolean;
     @Input() currState: State;
     @Output() updateState = new EventEmitter<State>();
-
-    constructor() {
-        this.currState = State.Active;
-        this.newState = this.currState;
-    }
 }

@@ -8,19 +8,50 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { settingsViews } from '@pages/home/home.types';
 import {
     ChannelPartner,
+    OrgRoleIds,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-const partnerAccess: DropdownItem<boolean>[] = [
+const partnerAccess: DropdownItem<string>[] = [
     {
-        name: 'Yes',
-        value: true,
+        name: 'Administrator',
+        value: OrgRoleIds.Admin,
     },
     {
-        name: 'No',
-        value: false,
+        name: 'Organization Administrator',
+        value: OrgRoleIds.OrgAdmin,
+    },
+    {
+        name: 'Advanced Viewer',
+        value: OrgRoleIds.AdvancedViewer,
+    },
+    {
+        name: 'Live Viewer',
+        value: OrgRoleIds.LiveViewer,
+    },
+    {
+        name: 'Power User',
+        value: OrgRoleIds.PowerUser,
+    },
+    {
+        name: 'System Health Viewer',
+        value: OrgRoleIds.SysHealthViewer,
+    },
+    {
+        name: 'Viewer',
+        value: OrgRoleIds.Viewer,
     },
 ];
+
+const accessMap: { [key: string]: DropdownItem<string> } = {
+    [OrgRoleIds.Admin]: partnerAccess[0],
+    [OrgRoleIds.OrgAdmin]: partnerAccess[1],
+    [OrgRoleIds.AdvancedViewer]: partnerAccess[2],
+    [OrgRoleIds.LiveViewer]: partnerAccess[3],
+    [OrgRoleIds.PowerUser]: partnerAccess[4],
+    [OrgRoleIds.SysHealthViewer]: partnerAccess[5],
+    [OrgRoleIds.Viewer]: partnerAccess[6],
+};
 
 @Component({
     selector: 'nx-settings-general',
@@ -36,15 +67,18 @@ export class NxSettingsGeneralComponent implements OnInit {
     @Input() view: string;
     @Input() item: Organization | ChannelPartner | undefined;
     @Output() updateName = new EventEmitter<string>();
-    @Output() updateAccess = new EventEmitter<boolean>();
+    @Output() updateAccess = new EventEmitter<string>();
     extId: string;
     name: string;
-    currAccess: DropdownItem<boolean>;
+    initialName: string;
+    currAccess: DropdownItem<string>;
     changeService: boolean;
 
     ngOnInit(): void {
-        // this.currRole = this.roles.find(role => role.value === this.CProle);
-        // For dev purposes. curr access isn't set up yet so default to Yes/true
-        this.currAccess = partnerAccess[0];
+        if ('channelPartnerAccessLevel' in this.item) {
+            this.currAccess = accessMap[this.item.channelPartnerAccessLevel];
+        }
+        this.name = this.item?.name;
+        this.initialName = this.item?.name;
     }
 }

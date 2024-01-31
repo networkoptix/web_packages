@@ -52,9 +52,9 @@ export class NxOrganizationSettingsComponent implements OnInit {
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    updatedName = new BehaviorSubject<string>(null);
-    updatedPartnerAccess = new BehaviorSubject<boolean>(null);
-    updatedState = new BehaviorSubject<State>(null);
+    updatedName = new BehaviorSubject<string | null>(null);
+    updatedPartnerAccess = new BehaviorSubject<string | null>(null);
+    updatedState = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
 
     @Input() cpSettings: boolean;
@@ -121,11 +121,39 @@ export class NxOrganizationSettingsComponent implements OnInit {
         );
     }
 
-    handleUpdate = (
-        subject: BehaviorSubject<string | State | boolean>,
-        val: string | boolean | State,
-    ): void => {
-        this.hasUpdate = true;
-        subject.next(val);
+    handleNameUpdate = (name: string): void => {
+        if (name === this.currentState$$().item?.name) {
+            this.updatedName.next(null);
+        } else {
+            this.updatedName.next(name);
+        }
     };
+
+    handleAccessUpdate = (id: string): void => {
+        const item = this.currentState$$().item;
+        if ('channelPartnerAccessLevel' in item) {
+            if (id === item.channelPartnerAccessLevel) {
+                this.updatedPartnerAccess.next(null);
+            } else {
+                this.updatedPartnerAccess.next(id);
+            }
+        }
+    };
+
+    handleStateUpdate = (state: State): void => {
+        const currState = this.currentState$$().item?.effectiveState;
+        if (currState === state) {
+            this.updatedState.next(null);
+        } else {
+            this.updatedState.next(state);
+        }
+    };
+
+    get hasChange(): boolean {
+        return !!(
+            this.updatedName.value ||
+            this.updatedPartnerAccess.value ||
+            this.updatedState.value
+        );
+    }
 }
