@@ -688,7 +688,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return ChannelPartner.get_direct_organization_children_count(channel_partner=self)
 
     @django.db.transaction.atomic()
-    def set_attributes(self, attributes, partial=False):
+    def set_attributes(self, attributes: Dict[str, any], partial=False):
         obj = ChannelPartner.objects.filter(id=self.id).select_for_update().get()
         if partial:
             for key, val in attributes.items():
@@ -979,8 +979,10 @@ class ChannelPartnerToUser(models.Model):
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
     roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
+    attributes = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
 
+    
     class Meta:
         constraints = [
             models.constraints.UniqueConstraint(fields=['channel_partner', 'user'], name='unique_channel_partner_user')
@@ -996,6 +998,24 @@ class ChannelPartnerToUser(models.Model):
     def roles_name(self):
         roles = get_channel_partner_roles()
         return [roles[r]['name'] for r in self.roles]
+
+    @django.db.transaction.atomic()
+    def set_attributes(self, attributes: Dict[str, any], partial: bool = False) -> None:
+        # Lock row until transaction is complete
+        obj: ChannelPartnerToUser = ChannelPartnerToUser.objects.filter(
+            pk=self.pk
+        ).select_for_update().get()
+
+        if partial:
+            for key, val in attributes.items():
+                if val == '*unset*':
+                    obj.attributes.pop(key, None)
+                else:
+                    obj.attributes[key] = val
+        else:
+            obj.attributes = attributes
+        obj.save()
+        self.refresh_from_db()
 
     def get_hierarchy_level(self, instance) -> None | int:
         # instance is relation's channel partner
