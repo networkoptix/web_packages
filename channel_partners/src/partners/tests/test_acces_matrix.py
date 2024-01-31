@@ -301,8 +301,8 @@ class TestChannelPartnerSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is True
         assert ser.get_read_perm_method(ser.fields["effectiveState"])(instance=instance) is True
         assert ser.get_read_perm_method(ser.fields["monthlyAdditionalServiceLimit"])(instance=instance) is True
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
-        assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
+        assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is True
 
         #  Check user's  grand child
         ser = ChannelPartnerSerializer(instance=self.partners[4], context=ctx)
@@ -316,7 +316,7 @@ class TestChannelPartnerSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["effectiveState"])(instance=instance) is True
         assert ser.get_read_perm_method(ser.fields["monthlyAdditionalServiceLimit"])(instance=instance) is True
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
     def test_org_admin(self, organization_factory, org_user_factory, arf):
@@ -457,8 +457,8 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is True
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
-        assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
+        assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is True
 
         #  Check user child cp organization
         ser = OrganizationSerializer(instance=self.organizations[2], context=ctx)
@@ -470,7 +470,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
         #  Check levels down
@@ -483,7 +483,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
         #  Check user's  grand child
@@ -496,7 +496,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
     def test_org_admin(self, organization_factory, org_user_factory, arf):
@@ -555,7 +555,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
 
@@ -619,7 +619,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is False
+        assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
 
 

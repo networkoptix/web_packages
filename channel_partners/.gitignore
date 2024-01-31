@@ -3,3 +3,4 @@ src/static
 **/stage
 # Jupyter Notebook for local testing
 src/notebooks
+channel_partners.iml
