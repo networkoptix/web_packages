@@ -378,11 +378,13 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(),
                                                  allow_null=True)
+    organizationName = serializers.CharField(source='organization.name', read_only=True)
 
     class Meta:
         model = CloudSystemId
         fields = ['id', 'state', 'effectiveState', 'systemId', 'name',
-                  'organization', 'services', 'created', 'system_state', 'groupId']
+                  'organization', 'services', 'created', 'system_state',
+                  'groupId', 'organizationName']
         read_only_fields = ['users', 'organization', 'system_state', 'name']
 
     def validate_groupId(self, value: SystemGroup):

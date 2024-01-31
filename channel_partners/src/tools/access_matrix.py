@@ -271,11 +271,12 @@ class AccessMatrixDict(AccessMatrixBase):
 class UserAccessMatrix:
     matrix_class = AccessMatrixJson
 
-    def __init__(self, cloud_user: CloudUser, content_type: str):
+    def __init__(self, cloud_user: CloudUser, content_type: str, request=None):
         self.content_type = content_type
         # for list views organizations and channel partner must be prefetched
         self.cloud_user = cloud_user
         self.access_matrix = self.matrix_class.load_matrix(content_type=content_type)
+        self.request = request
 
     @cached_property
     def user_channel_partners(self):
@@ -370,6 +371,16 @@ class UserAccessMatrix:
         if field_name not in self.access_matrix.fields:
             # if field not explicitly defined in json access is always allowed
             return True
+
+        # check if authenticated user is a VMS user with some roles
+        if (
+            (introspected_system_id := getattr(self.request, 'introspected_system_id', None))
+            and getattr(self.request, 'introspected_system_roles_ids', None)
+            and (system_id := getattr(target_instance, 'system_id', None))
+        ):
+            if introspected_system_id == system_id:
+                return True
+
         levels_permissions = self.access_matrix.fields.allowed_field_levels(field_name=field_name,
                                                                             access_type=access_type)
         for level, user_rel in self.get_instance_hierarchy_level(instance=target_instance):

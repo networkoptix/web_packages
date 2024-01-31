@@ -9,7 +9,6 @@ import httpx
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import caches
-from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
@@ -33,6 +32,7 @@ from partners.models import (
     CloudUser,
 )
 from tools.exception import APIErrorWithoutRollback
+from tools.helpers import cast_uuid
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 
@@ -83,7 +83,7 @@ class TokenCache:
 
     @classmethod
     def set_token_system(cls, token: str, system_id: str | uuid.UUID,
-                         email: str, roles_ids: List[str], expires_in: int = None):
+                         email: str, roles_ids: List[str| uuid.UUID], expires_in: int = None):
         cls.cache().set(
             cls.token_system_cache_key(token, system_id=system_id), (email, roles_ids),
             timeout=cls.get_timeout(expires_in)
@@ -278,10 +278,8 @@ class NxCloudOauthTokenAuthentication(TokenAuthentication):
 class NxCloudOauthIntrospectAuthentication(NxCloudOauthTokenAuthentication):
 
     def get_user_from_token(self, token, request=None):
-        system_id = request.parser_context.get('kwargs', {}).get('system_id')
-        if not system_id:
-            raise ImproperlyConfigured('NxCloudOauthIntrospectAuthentication can be '
-                                       'used with "system_id" url param only.')
+        kwargs = request.parser_context.get('kwargs', {})
+        system_id = (kwargs.get('system_id') or kwargs.get('id'))
         email, system_id, system_roles_ids = CdbInternalAuthentication.introspect_with_system(
             token, request.cloud_host.hostname, system_id
         )
@@ -347,7 +345,7 @@ class CdbInternalAuthentication:
     @staticmethod
     def introspect_with_system(
             token, cloud_host_name, system_id
-    ) -> Tuple[None, None, None] | Tuple[str, str, List[str]]:
+    ) -> Tuple[None, None, None] | Tuple[str, uuid.UUID, List[uuid.UUID]]:
         cached = TokenCache.get_token_system(token, system_id)
         if cached:
             return cached[0], system_id, cached[1]
@@ -356,11 +354,14 @@ class CdbInternalAuthentication:
             access_token=token,
             auto_refresh=False
         )
-        response = cdb_client.authentication.introspect([str(system_id)])
+        system_id = cast_uuid(system_id)
+        system_ids = [str(system_id)] if system_id else []
+        response = cdb_client.authentication.introspect(system_ids)
         if response.status_code == 200:
             introspection = response.json()
             if introspection.get('active') is True and (email := introspection.get('username')):
                 system_role_ids = introspection.get('system_role_ids', {}).get(str(system_id), [])
+                system_role_ids = [cast_uuid(system_role_id) for system_role_id in system_role_ids]
                 TokenCache.set_token_system(token, system_id, email, system_role_ids)
                 TokenCache.set_token(token, email)
                 return email, system_id, system_role_ids
