@@ -1,15 +1,19 @@
 .selected-scroll-item {
-    background-color: var(--dark12);
+    background-color: var(--dropdown-item-selected-bg) !important;
+    color: var(--dropdown-item-selected-color) !important;
 }
 
 .scroll-area {
-    background-color: var(--dark10);
+    background-color: var(--dropdown-menu-bg);
+    border: var(--dropdown-menu-border);
+    border-radius: 2px;
     height: 167px;
     width: 320px;
     margin-top: 8px;
 }
 
 .scroll-item {
+    color: var(--dropdown-item-color);
     height: 28px;
     padding: 6px 8px;
 }
