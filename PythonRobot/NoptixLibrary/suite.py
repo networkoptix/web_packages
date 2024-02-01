@@ -356,6 +356,7 @@ class Mediaserver:
             self.id,
             self._cloud_owner.get_otp(),
             )
+        self._cloud_owner = None
 
     def tear_down(self):
         try:
