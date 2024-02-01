@@ -1025,6 +1025,11 @@ class OrganizationRoles:
     LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
 
     CPAL_ROLES = [ORGANIZATION_ADMINISTRATOR, SYSTEM_HEALTH_VIEWER]
+    CPAL_CHOICES = [
+        (ORGANIZATION_ADMINISTRATOR, 'Organization Administrator'),
+        (SYSTEM_HEALTH_VIEWER, 'System Health Viewer'),
+        (None, 'Service Management Only'),
+    ]
 
 
 class VmsRoles:
