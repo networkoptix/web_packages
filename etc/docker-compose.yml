@@ -71,6 +71,7 @@ services:
 #    volumes:
 #      - ../cloud/static:/app/app/static
 #      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+#      - ./nginx/static_caching.conf:/etc/nginx/static_caching.conf
 #      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
 #      - ./nginx/run_nginx.sh:/run_nginx.sh
 #    command: sh /run_nginx.sh
