@@ -168,22 +168,22 @@
         },
         "lint": {},
         "serve": {
-            "executor": "@nx/angular:webpack-dev-server",
+            "executor": "@nx/angular:dev-server",
             "options": {
                 "publicHost": "localhost:9000",
                 "host": "0.0.0.0",
                 "port": 9000,
-                "browserTarget": "front-end:build",
                 "sslKey": "ssl_keys/server.key",
                 "sslCert": "ssl_keys/server.crt",
-                "ssl": true
+                "ssl": true,
+                "buildTarget": "front-end:build"
             },
             "configurations": {
                 "development": {
-                    "browserTarget": "front-end:build:dev"
+                    "buildTarget": "front-end:build:dev"
                 },
                 "production": {
-                    "browserTarget": "front-end:build:production"
+                    "buildTarget": "front-end:build:production"
                 }
             },
             "defaultConfiguration": "development"
@@ -191,7 +191,7 @@
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
-                "browserTarget": "front-end:build"
+                "buildTarget": "front-end:build"
             }
         },
         "test": {}

@@ -1,5 +1,5 @@
 diff --git a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
-index dda2385..a1ecee1 100755
+index 8430939..111cfb8 100755
 --- a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
 +++ b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
 @@ -6,6 +6,7 @@
@@ -20,10 +20,10 @@ index dda2385..a1ecee1 100755
          error: error => {
              if (options?.rejectErrors) {
 diff --git a/node_modules/@angular/core/index.d.ts b/node_modules/@angular/core/index.d.ts
-index 85284ab..d3ad5da 100755
+index a0386fe..32462b3 100755
 --- a/node_modules/@angular/core/index.d.ts
 +++ b/node_modules/@angular/core/index.d.ts
-@@ -12,6 +12,7 @@ import { SIGNAL } from '@angular/core/primitives/signals';
+@@ -13,6 +13,7 @@ import { SignalNode } from '@angular/core/primitives/signals';
  import { Subject } from 'rxjs';
  import { Subscribable } from 'rxjs';
  import { Subscription } from 'rxjs';
@@ -31,15 +31,7 @@ index 85284ab..d3ad5da 100755
  
  /**
   * @description
-@@ -8183,6 +8184,7 @@ export declare type Signal<T> = (() => T) & {
-     [SIGNAL]: unknown;
- };
- 
-+
- /**
-  * Create a `Signal` that can be set or updated directly.
-  */
-@@ -10571,8 +10573,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
+@@ -11067,8 +11068,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
      /**
       * Update the value of the signal based on its current value, and
       * notify any dependents.

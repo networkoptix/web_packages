@@ -60,7 +60,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
         StoreModule.forRoot({ account: accountReducer }),
-        ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
+        ...(!environment.production
+            ? [StoreDevtoolsModule.instrument({ connectInZone: true })]
+            : []),
         HttpClientModule,
         PopoverModule,
         RouterModule,

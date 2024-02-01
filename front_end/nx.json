@@ -6,11 +6,7 @@
         "default": {
             "runner": "nx-cloud",
             "options": {
-                "cacheableOperations": [
-                    "build",
-                    "lint",
-                    "test"
-                ],
+                "cacheableOperations": ["build", "lint", "test"],
                 "accessToken": "MjA3Y2M4ZDgtZmY0Yi00NWExLWI1ODYtOGZkNWI2MDRmMzAzfHJlYWQtb25seQ==",
                 "encryptionKey": "6B51BDCDE73E5C1AB5DFE2DF8BFC4"
             }
@@ -18,9 +14,7 @@
     },
     "targetDefaults": {
         "build": {
-            "dependsOn": [
-                "^build"
-            ],
+            "dependsOn": ["^build"],
             "inputs": [
                 "default",
                 "production",
@@ -64,10 +58,7 @@
             "executor": "@nrwl/linter:eslint",
             "options": {
                 "eslintConfig": "./.eslintrc.js",
-                "lintFilePatterns": [
-                    "{projectRoot}/**/*.ts",
-                    "{projectRoot}/**/*.component.html"
-                ]
+                "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/**/*.component.html"]
             },
             "inputs": [
                 "default",
@@ -77,9 +68,7 @@
                 "{workspaceRoot}/tsconfig*.json",
                 "{projectRoot}/tsconfig*.json"
             ],
-            "outputs": [
-                "{projectRoot}"
-            ]
+            "outputs": ["{projectRoot}"]
         }
     },
     "workspaceLayout": {
@@ -116,12 +105,8 @@
         }
     },
     "namedInputs": {
-        "default": [
-            "{projectRoot}/**/*"
-        ],
-        "sharedGlobals": [
-            "{workspaceRoot}/common/**/*"
-        ],
+        "default": ["{projectRoot}/**/*"],
+        "sharedGlobals": ["{workspaceRoot}/common/**/*"],
         "production": [
             "default",
             "sharedGlobals",

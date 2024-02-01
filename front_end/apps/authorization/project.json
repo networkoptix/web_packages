@@ -213,29 +213,29 @@
         },
         "lint": {},
         "serve": {
-            "executor": "@nx/angular:webpack-dev-server",
+            "executor": "@nx/angular:dev-server",
             "options": {
-                "browserTarget": "authorization:build:development",
                 "host": "0.0.0.0",
                 "port": 9002,
                 "sslKey": "ssl_keys/server.key",
                 "sslCert": "ssl_keys/server.crt",
-                "ssl": true
+                "ssl": true,
+                "buildTarget": "authorization:build:development"
             },
+            "defaultConfiguration": "development",
             "configurations": {
                 "development": {
-                    "browserTarget": "authorization:build:development"
+                    "buildTarget": "authorization:build:development"
                 },
                 "production": {
-                    "browserTarget": "authorization:build:production"
-                },
-                "defaultConfiguration": "development"
+                    "buildTarget": "authorization:build:production"
+                }
             }
         },
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
-                "browserTarget": "authorization:build"
+                "buildTarget": "authorization:build"
             }
         },
         "server": {
@@ -289,7 +289,7 @@
             }
         },
         "serve-ssr": {
-            "executor": "@nguniversal/builders:ssr-dev-server",
+            "executor": "@angular-devkit/build-angular:ssr-dev-server",
             "configurations": {
                 "development": {
                     "browserTarget": "authorization:build-ssr:development",
@@ -303,7 +303,7 @@
             "defaultConfiguration": "development"
         },
         "prerender": {
-            "executor": "@nguniversal/builders:prerender",
+            "executor": "@angular-devkit/build-angular:prerender",
             "options": {
                 "routes": ["/"]
             },
