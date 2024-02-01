@@ -648,7 +648,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         const time = this.time$$();
         if (canViewLive && (!canViewArchive || !archiveAvailable || time === 'live' || !time)) {
-            this.playback.playLive();
+            if (this.camera.isOnline) {
+                this.playback.playLive();
+            } else {
+                this.playback.stop();
+            }
         } else if (canViewArchive && archiveAvailable) {
             if (time) {
                 this.playback.playArchive(parseInt(time));
