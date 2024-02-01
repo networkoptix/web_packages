@@ -203,6 +203,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     if (this.camera?.id !== state.selectedCamera.id) {
                         this.camera = state.selectedCamera;
                         this.updateAvailableTransportsAndResolutions();
+                        this.getRecords(true);
                     } else {
                         // handle specific status change
                         if (
@@ -647,7 +648,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    getRecordsInProgress: string; // cameraId
+    getRecordsInProgress: string | undefined; // cameraId
 
     private updateAvailableTransportsAndResolutions(): void {
         this.availableTransportsAndResolutions = this.camera
@@ -710,8 +711,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     const records = this.extractPeriodsFromServerResponse(ar);
                     if (!ar.error || ar.error !== '0' || !records.length) {
                         this.restorePlayback();
-                        // @ts-expect-error FIXME: Probably 0 being used as falsy value instead of null
-                        this.vms.setCameraRecords(0, []);
+                        this.vms.setCameraRecords(newBaseTimeRange(0, 0), []);
                     } else {
                         try {
                             const firstRecordStartTimeMs = parseInt(records[0].startTimeMs);
@@ -771,7 +771,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         timer(0, 10 * 1000)
             .pipe(takeUntil(this.unsub$))
             .subscribe(() => {
-                const since = this.vms.selectedCamera.archiveRange.end;
+                const since = this.vms.selectedCamera?.archiveRange.end;
                 const now = Date.now();
                 this.system.mediaserver.getRecords(this.id, since, now, 1).subscribe(async ar => {
                     const records = this.extractPeriodsFromServerResponse(ar);
