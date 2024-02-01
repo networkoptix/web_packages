@@ -151,6 +151,20 @@ def cloud_admins_can_disable_local_viewers(driver, server: Mediaserver, admin_us
     assert not system_user.user_disabled_message().is_visible()
     assert server.api.get_user_by_id(local_viewer.id).is_enabled
 
+def local_users_not_visible_for_offline_server(driver, server: Mediaserver):
+    """
+    46. Local user list is not available for offline system
+    [Tags]    C76234    local_user    System-offline    cloud
+    """
+    driver.get(ENV + f"/systems/{server.id}")
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    users_dropdown = SystemLeftMenu(driver).users_dropdown()
+    users_dropdown.click()
+    SystemUsers(driver).no_unsaved_changes_text().wait_until_visible()
+    local_users = server.get_local_users()
+    for role in role_names:
+        users_dropdown.user_link(local_users[role].id).wait_until_not_visible()
 
 def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     """
@@ -256,4 +270,8 @@ if __name__ == "__main__":
             cloud_server.get_cloud_owner(),
             cloud_server.get_local_users()['liveViewer']
         ).run()
-
+        offline_cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
+        offline_cloud_server.stop()
+        Test(r, local_users_not_visible_for_offline_server,
+             offline_cloud_server,
+        ).run()

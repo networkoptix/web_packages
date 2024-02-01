@@ -196,6 +196,9 @@ class UsersDropdown(DropDown):
         self.open()
         return Link(self._driver, f'//a[@id="{user_id}"]')
 
+    def user_link(self, user_id: str) -> Link:
+        return Link(self._driver, f'//a[@id="{user_id}"]')
+
     def has_user_in_menu_with_id(self, user_id):
         try:
             self.get_user_link_by_id(user_id).wait_until_visible()
