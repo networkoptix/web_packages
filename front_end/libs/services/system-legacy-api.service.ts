@@ -908,6 +908,24 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         );
     }
 
+    /**
+     * @deprecated Setting resource params is deprecated and should not be used with 5.1+ systems.
+     *
+     * The `/rest/v#/devices/{deviceId}` and `rest/v#/servers/{serverId}` endpoints should be used instead.
+     *
+     * ResourceParams are now included on the parameters property of both these endpoints.
+     *
+     * Parameters are incrementally being moved out of the parameters property. We can't really
+     * use the generic way of setting parameters anymore because the permissions for this endpoint
+     * are different and a lot of times throws a 403 on newer systems even if you have the correct
+     * credentials.
+     *
+     * We probably need to update the type signature of the parameters property to omit any key within
+     * the parent type.
+     *
+     * @param params - An array of ResourceParams to update
+     * @returns EmptyObjectReturned
+     */
     setResourceParams(params: t.ResourceParam[]) {
         return this.post<t.EmptyObjectReturned>('/ec2/setResourceParams', params);
     }
