@@ -1044,11 +1044,11 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
         if root_only:
             return super().get_queryset().filter(
                 organization__channel_partner__cloud_host=self.request.cloud_host,
-                system_state=True, system_group=None
+                system_state=CloudSystemStates.ACTIVATED, system_group=None
             )
         return super().get_queryset().filter(
             organization__channel_partner__cloud_host=self.request.cloud_host,
-            system_state=True
+            system_state=CloudSystemStates.ACTIVATED
         )
 
     def get_permissions(self):
