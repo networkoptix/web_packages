@@ -1,5 +1,13 @@
 @use "typography";
 
+.body {
+  height: 100%;
+
+  .cards-container {
+    height: calc(100% - 32px);
+  }
+}
+
 .actions {
   align-items: center;
 
