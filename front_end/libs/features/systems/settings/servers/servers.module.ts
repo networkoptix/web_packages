@@ -16,6 +16,7 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -53,6 +54,7 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
+        NxSwitchComponent,
     ],
     providers: [],
     declarations: [
