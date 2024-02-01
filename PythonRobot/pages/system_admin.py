@@ -179,7 +179,7 @@ class SystemAdmin:
         """
         locator = (
             f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
-            f' | //header//div[contains(text(),"{self.rb.INFORMATION_TEXT}")]',
+            f' | //header//div[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
             )
         self._wait_for_tab_loaded(locator)
         return TabInformation(self.driver, locator, self.rb)

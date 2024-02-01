@@ -13,11 +13,9 @@ rb = RobotVariables("en_US")
 
 def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
     with get_chrome() as driver:
-        driver.get(rb.ENV)
-        owner = server.get_cloud_owner()
-        HeaderNav(driver).log_in_button().click()
-        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         system_administration = SystemAdmin(driver)
         tab_info = system_administration.get_information_tab()
         tab_info.click()
