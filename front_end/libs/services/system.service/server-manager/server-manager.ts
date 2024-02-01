@@ -213,11 +213,24 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].getAnalyticsEngines();
     }
 
+    /**
+     * @deprecated see deprecation notice on NxSystemAPI.setResourceParams
+     *
+     * @param resourceId Server or device id
+     * @param params Record of params to update
+     * @returns EmptyObjectReturned
+     */
     updateResource(
         resourceId: string,
         params: Record<string, string>,
     ): Promise<EmptyObjectReturned> {
-        if (this.mediaserver instanceof NxSystemRestAPI) {
+        /**
+         * Only use the new API for 5.1+ systems. Ran into some unexpected behavior on 5.0 when setting metadataStorageId
+         * on a server that caused it to disconnect from cloud. Need to investigate further but this seems to be a mediaserver
+         * bug. For now, we'll use the old API for 5.0 since it's working as expected, it's only on 5.1+ systems that some
+         * parameters are not being set correctly using this method.
+         */
+        if (this.mediaserver instanceof NxSystemRestAPI2) {
             const isServer = dirtyId(resourceId) in this.mediaserverConnections;
             const updater = isServer
                 ? this.mediaserver.updateServerParams
