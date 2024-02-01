@@ -480,13 +480,12 @@ class TestOrganizationSerializer:
         data = {'channelPartnerAccessLevel': None}
         serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
         assert serializer.is_valid()
-        assert serializer.validated_data['channel_partner_access_level'] is None
+        assert serializer.validated_data['channel_partner_access_level_id'] is None
 
         data = {'channelPartnerAccessLevel': OrganizationRoles.SYSTEM_HEALTH_VIEWER}
         serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
         assert serializer.is_valid()
-        assert (serializer.validated_data['channel_partner_access_level'] ==
-                OrganizationRole.objects.get(id=OrganizationRoles.SYSTEM_HEALTH_VIEWER))
+        assert serializer.validated_data['channel_partner_access_level_id'] == OrganizationRoles.SYSTEM_HEALTH_VIEWER
 
         data = {'channelPartnerAccessLevel': OrganizationRoles.POWER_USER}
         serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
@@ -495,7 +494,7 @@ class TestOrganizationSerializer:
         data = {'name': 'new name'}
         serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
         assert serializer.is_valid()
-        assert 'channel_partner_access_level' not in serializer.validated_data
+        assert 'channel_partner_access_level_id' not in serializer.validated_data
 
 
 class TestChannelPartnerRecordsParamSerializer:

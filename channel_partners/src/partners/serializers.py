@@ -266,6 +266,8 @@ class OrganizationQueryParamsSerializer(serializers.Serializer):
 class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'organization'
 
+
+
     class CloudSystemsField(serializers.HyperlinkedRelatedField):
         view_name = 'organizations-cloudsystem-list'
 
@@ -280,10 +282,10 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', read_only=True)
-    channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(
-        queryset=OrganizationRole.objects.filter(id__in=OrganizationRoles.CPAL_ROLES),
+    channelPartnerAccessLevel = serializers.ChoiceField(
+        choices=OrganizationRoles.CPAL_CHOICES,
         required=False, allow_null=True,
-        source='channel_partner_access_level')
+        source='channel_partner_access_level_id')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(source='current_services', read_only=True)
