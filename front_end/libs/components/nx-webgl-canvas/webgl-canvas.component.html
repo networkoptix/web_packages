@@ -1,11 +1,12 @@
-<nx-pre-loader
-    *ngIf="cameras.length && (!data$$()?.length || !dataAllCameras$$()?.length)"
-    [minHeight]="115"
-></nx-pre-loader>
-
+<ng-template #showPlaceholder>
+    <nx-pre-loader [minHeight]="115"></nx-pre-loader>
+</ng-template>
 <div
     class="d-flex flex-column timeline-container"
-    *ngIf="data$$()?.length || dataAllCameras$$()?.length"
+    *ngIf="
+        dataModel.state$$()?.camerasCount && dataModel.state$$().allCamerasData?.length;
+        else showPlaceholder
+    "
 >
     <!--    <div>-->
     <!--        <nx-timeline-zoom-->
@@ -18,27 +19,33 @@
         <div id="nx-x-axis-major"></div>
         <div id="nx-x-axis-minor"></div>
         <div
-            [ngClass]="{ 'multi-layer': cameras.length > 1 }"
-            (mousemove)="mouseMoveHandler($event)"
-            (mouseleave)="mouseLeaveHandler()"
+            [ngClass]="{ 'multi-layer': dataModel.state$$().camerasCount > 1 }"
+            (mousemove)="renderStateModel.mouseMoveHandler($event)"
+            (mouseleave)="renderStateModel.mouseLeaveHandler()"
             id="chart"
             use-device-pixel-ratio
         ></div>
         <div
-            *ngIf="cameras.length > 1"
-            (mousemove)="mouseMoveHandler($event)"
-            (mouseleave)="mouseLeaveHandler()"
+            *ngIf="dataModel.state$$().camerasCount > 1"
+            (mousemove)="renderStateModel.mouseMoveHandler($event)"
+            (mouseleave)="renderStateModel.mouseLeaveHandler()"
             id="chartAll"
             use-device-pixel-ratio
         ></div>
 
         <div
             class="canvas-camera-last-minute"
-            *ngIf="lastMinuteWidth > 2"
+            *ngIf="renderStateModel.lastMinuteWidth > 2"
             [style.right.px]="
-                Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0)
+                Math.trunc(
+                    -(
+                        renderStateModel.canvasVirtualWidth -
+                        webglService.canvasWidth$.value +
+                        renderStateModel.xPos
+                    ) || 0
+                )
             "
-            [style.width.px]="lastMinuteWidth"
+            [style.width.px]="renderStateModel.lastMinuteWidth"
             [style.max-width.px]="webglService.canvasWidth$.value"
         >
             <svg
@@ -70,14 +77,14 @@
                             <rect
                                 x="0"
                                 y="0"
-                                [style.width.px]="lastMinuteWidth"
+                                [style.width.px]="renderStateModel.lastMinuteWidth"
                                 height="20"
                                 fill="rgba(var(--green_l2--rgb), 0.1)"
                             ></rect>
                             <rect
                                 x="0"
                                 y="10"
-                                [style.width.px]="lastMinuteWidth"
+                                [style.width.px]="renderStateModel.lastMinuteWidth"
                                 height="20"
                                 fill="rgba(106, 155, 64, .5)"
                             ></rect>
@@ -96,76 +103,35 @@
 
         <div
             class="canvas-camera-name"
-            [ngClass]="{ short: cameras.length > 1 }"
+            [ngClass]="{ short: dataModel.state$$().camerasCount > 1 }"
         >
-            {{ selectedCamera?.name || selectedCamera?.model }}
+            {{
+                dataModel.state$$().selectedCamera?.name ||
+                    dataModel.state$$().selectedCamera?.model
+            }}
         </div>
 
         <nx-timeline-interactions
-            [actions]="timelineActions"
-            [chart]="chart"
-            [zoomInProcess]="zoomInProcess"
-            (scrollToPos)="scrollToPos($event)"
+            [zoomInProcess]="renderStateModel.zoomInProcess"
+            (scrollToPos)="renderStateModel.scrollToPos($event)"
         ></nx-timeline-interactions>
 
         <nx-timeline-scroll
-            [barWidth]="scrollBarWidth$$()"
-            [barPos]="scrollBarPos$$()"
-            [playbackPos]="scrollPlaybackPosition"
-            (scrollToPos)="scrollToPos($event)"
-            (scrollEnd)="scrollEnd()"
-            (singleScroll)="singleScroll($event)"
-            (constantScroll)="constantScroll($event)"
+            [barWidth]="renderStateModel.scrollBarWidth$$()"
+            [barPos]="renderStateModel.scrollBarPos$$()"
+            [playbackPos]="renderStateModel.scrollPlaybackPosition"
+            (scrollToPos)="renderStateModel.scrollToPos($event)"
+            (scrollEnd)="renderStateModel.scrollEnd()"
+            (singleScroll)="renderStateModel.singleScroll($event)"
+            (constantScroll)="renderStateModel.constantScroll($event)"
         >
         </nx-timeline-scroll>
     </div>
 
-    <nx-timeline-actions (onActions)="onActions($event)"></nx-timeline-actions>
+    <nx-timeline-actions (onActions)="renderStateModel.onActions($event)"></nx-timeline-actions>
 </div>
 
-<div
-    *ngIf="nxConfig.timelineDebugData && data$$()?.length"
-    style="
-        position: absolute;
-        width: 700px;
-        left: 100px;
-        bottom: 300px;
-        background-color: grey;
-        color: white;
-        padding: 1rem;
-    "
->
-    <div class="row mt-3">
-        <div class="col-3">
-            <span>{{ 'zLevel' | translate }}</span> : {{ webglService.levelZoom$.value }} <br />
-            <span>{{ 'xPos' | translate }}</span> : {{ xPos }} <br />
-            <span>{{ 'canvas' | translate }}</span> : {{ webglService.canvasWidth$.value }} <br />
-            <span>{{ 'width' | translate }}</span> : {{ canvasVirtualWidth }} <br />
-            <span>{{ 'LMPos' | translate }}</span> :
-            {{ Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0) }}
-            <br />
-            <span>{{ 'BarPos' | translate }}</span> : {{ scrollBarPos$$() }} <br />
-            <span>{{ 'BarWidth' | translate }}</span> : {{ scrollBarWidth$$() }} <br />
-            <span>{{ 'Sel' | translate }}</span> : {{ this.webglService.selectionDrag$.value }} /
-            {{ this.webglService.selection$.value.drag }} <br />
-        </div>
-        <div class="col-9">
-            <span>{{ 'px/60s' | translate }}</span> :
-            {{ (canvasVirtualWidth / timeFrameInS) * 60 }} <br />
-            <span>{{ 'lastMinuteWidth' | translate }}</span> : {{ lastMinuteWidth }} <br />
-            <span>{{ 'timeFrameInS' | translate }}</span> : {{ timeFrameInS }} <br />
-            <span>{{ 'CurrPointer' | translate }}</span> :
-            {{ webglService.currentPointer$.value }} / {{ timeLabelPosition }} <br />
-            <span>{{ 'PlaybackPointer' | translate }}</span> : {{ playbackPointer?.getTime() }} /
-            {{ playbackLabelPosition }}<br />
-            <span>{{ 'lastChunkStart' | translate }}</span> : {{ lastDataDateStart }}<br />
-            <span>{{ 'lastChunkEnd' | translate }}</span> : {{ lastDataDateEnd }}<br />
-            <span>{{ 'Selection start' | translate }}</span> :
-            {{ webglService.selection$.value.startDisplay }}<br />
-            <span>{{ 'Selection end' | translate }}</span> :
-            {{ webglService.selection$.value.endDisplay }}<br />
-            <span>{{ 'Overall days' | translate }}</span> : {{ overallDays }} <br />
-            <span>{{ 'Domain' | translate }}</span> : {{ xScale?.domain()[0] }} <br />
-        </div>
-    </div>
-</div>
+<nx-timeline-debug
+    [dataState]="dataModel"
+    [renderState]="renderStateModel"
+></nx-timeline-debug>

@@ -27,10 +27,11 @@ import { WebGlTimeUnderMouseComponent } from './time-under-mouse/time-under-mous
 })
 export class WebGlTimelineInteractionsComponent implements OnChanges {
     // eslint-disable-next-line nx/explicit-angular-boundary-types
-    @Input() chart;
-    // eslint-disable-next-line nx/explicit-angular-boundary-types
     @Input() zoomInProcess: boolean;
-    @Input() actions: ACTIONS;
+    @Input() actions: ACTIONS = {
+        mode: MODE.DRAG,
+        jumpTo: 0,
+    };
 
     @Output() scrollToPos = new EventEmitter<{
         direction: SCROLL_DIRECTION;

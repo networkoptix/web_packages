@@ -5,11 +5,6 @@ export enum CHUNK_TYPE {
     IN_PROGRESS,
 }
 
-export interface RECORD_DATA {
-    startTimeMs: string;
-    durationMs: string;
-}
-
 export interface DATA {
     width: number;
     x: number;

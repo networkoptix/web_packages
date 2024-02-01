@@ -1181,8 +1181,7 @@
                 @if (CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo) {
                     <nx-webgl-canvas
                         [selectedCameraId]="layoutStateService.selectedCameraId$$()"
-                        [cameras]="cameras$$()"
-                        [system]="this.system"
+                        [cameras]="currentLayoutCameras$$()"
                     ></nx-webgl-canvas>
                 }
             </div>

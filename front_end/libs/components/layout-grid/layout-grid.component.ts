@@ -406,7 +406,7 @@ export class NxLayoutGridComponent {
 
     currentLayoutCameras$$ = computed(() => {
         const layoutItems = this.layout$$?.()?.items || [];
-        const cameraIds = layoutItems.map(({ resourceId }) => resourceId);
+        const cameraIds = layoutItems.map(({ resourceId }) => cleanId(resourceId));
         const allCameras = this.cameras$$();
         return allCameras.filter(({ id }) => cameraIds.includes(id));
     });
