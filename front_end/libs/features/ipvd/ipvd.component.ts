@@ -192,7 +192,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta,
                 );
 
-                if (isEqual(localParams, this.params)) {
+                if (Object.keys(this.params).length && isEqual(localParams, this.params)) {
                     return;
                 }
                 // this.setDebugAndBetaMode();
