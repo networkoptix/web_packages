@@ -1,3 +1,4 @@
+import datetime
 import random
 import typing
 import uuid
@@ -9,9 +10,9 @@ from uuid import (
 import httpx
 import pytest
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.utils import timezone
 from model_bakery import baker
-from requests.auth import _basic_auth_str
+from requests.auth import _basic_auth_str  # noqa
 from rest_framework.test import APIRequestFactory
 
 from partners.models import (
@@ -31,6 +32,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
     ServiceToOrganizationProperties,
+    ServiceUsage,
     SystemGroup,
     VmsRoles,
 )
@@ -212,11 +214,9 @@ def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker):
 
 @pytest.fixture()
 def mock_internal_token_auth(mocker):
-    def mock():
-        token = AuthToken.objects.create(key=f'{uuid4()}', internal=True)
-        mock_auth = mocker.patch('partners.authentication.NxTokenAuthentication.authenticate',
-                                 return_value=(get_user_model()(), token))
-        return mock_auth
+    def mock(token=None):
+        token = AuthToken.objects.create(key=str(token) or f"{uuid4()}", internal=True)
+        return token
 
     return mock
 
@@ -336,6 +336,7 @@ def cp_service_factory(default_channel_partner):
 
     return factory
 
+
 @pytest.fixture()
 def org_service_factory(cp_service_factory):
     def factory(organization, service=None, price=10):
@@ -345,11 +346,13 @@ def org_service_factory(cp_service_factory):
 
     return factory
 
+
 @pytest.fixture()
 def service_record_factory():
     def factory(service, cloud_system, organization=None, quantity=1):
         return baker.make(ChannelPartnerServiceRecord, service=service,
-                          cloud_system=cloud_system, quantity=quantity, organization=organization or cloud_system.organization)
+                          cloud_system=cloud_system, quantity=quantity,
+                          organization=organization or cloud_system.organization)
 
     return factory
 
@@ -361,6 +364,7 @@ def system_group_factory():
         return baker.make(SystemGroup, id=uid, name=str(uid), organization=organization, parent=parent)
 
     return factory
+
 
 @pytest.fixture()
 def sys_group_user_factory(system_group_factory, cloud_user_factory):
@@ -419,3 +423,47 @@ def mock_post_notification(httpx_mock, request_host):
 def mox_tasks_retries(mocker):
     mocker.patch('partners.tasks.notification.MAX_RETRIES', 1)
     mocker.patch('partners.tasks.notification.RETRY_TIMEOUT', 1)
+
+
+@pytest.fixture()
+def service_usage_factory():
+    def factory(system: CloudSystemId, service: ChannelPartnerService = None,
+                service_type: int = None, usage: int = 0,
+                from_ts: datetime.datetime = None, to_ts: datetime.datetime = None) -> ServiceUsage:
+        if not to_ts:
+            raise ValueError("to_ts must be set")
+        if not from_ts:
+            from_ts = to_ts - datetime.timedelta(minutes=5)
+        if service_type is None:
+            service_type = service.type
+        return ServiceUsage.objects.create(
+            service=service,
+            service_type=service_type,
+            cloud_system=system,
+            usage=usage,
+            from_ts=from_ts,
+            to_ts=to_ts
+        )
+
+    return factory
+
+
+@pytest.fixture()
+def cloud_storage_usage_factory():
+    def factory(system: CloudSystemId, service: ChannelPartnerService = None,
+                service_type: int = None, usage: int = 0,
+                ts: datetime.datetime = None) -> ServiceUsage:
+        if not ts:
+            ts = timezone.now()
+        if service_type is None:
+            service_type = service.type
+        return ServiceUsage.objects.create(
+            service=service,
+            service_type=service_type,
+            cloud_system=system,
+            usage=usage,
+            from_ts=ts,
+            to_ts=ts
+        )
+
+    return factory

@@ -5,8 +5,10 @@ import re
 import uuid
 from datetime import timedelta
 from math import ceil
+from uuid import uuid4
 
 import pytest
+import pytz
 from dateutil import relativedelta
 from django.core.cache import caches
 from django.db.models import Prefetch
@@ -31,6 +33,7 @@ from partners.serializers import (
     ChannelPartnerSerializer,
     ChannelPartnerStateChangeSerializer,
     ChannelPartnerStateConfirmationSerializer,
+    CloudStorageUsageReportSerializer,
     CloudSystemSerializer,
     GroupSerializer,
     OrganizationAggDataSerializer,
@@ -41,6 +44,7 @@ from partners.serializers import (
     SupportInformationSerializer,
     SystemGroupUserSerializer,
     SystemServiceQuantitySerializer,
+    SystemUsageReportSerializer,
 )
 from tools.serializers import VALUE_REPLACEMENT
 
@@ -283,7 +287,7 @@ class TestSystemServiceQuantitySerializer:
         to_ts = timezone.now() - timedelta(hours=1)
         for idx, service in enumerate(cp_services):
             ServiceUsage.objects.create(
-                usage=idx, cloud_system=systems[0],
+                usage=idx, cloud_system=systems[0], service_type=service.type,
                 service_id=service.id, from_ts=from_ts, to_ts=to_ts)
 
         serializer = SystemServiceQuantitySerializer(instance=systems[0])
@@ -1182,3 +1186,410 @@ class TestCloudSystemSerializer:
         self.request.user = self.cp_user.user
         serializer = CloudSystemSerializer(instance=self.system, context=self.context)
         assert serializer.data['organizationName'] == VALUE_REPLACEMENT
+
+
+
+class TestSystemUsageReportSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_service_factory, organization_factory, system_factory,
+              service_record_factory):
+        self.cp = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=self.cp)
+        self.system = system_factory(organization=self.organization)
+        self.service_quantity = 10
+        self.local_recording_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.LOCAL_RECORDING)
+        self.local_recording_service_record = service_record_factory(self.local_recording_service,
+                                                                     cloud_system=self.system,
+                                                                     organization=self.organization,
+                                                                     quantity=self.service_quantity)
+        self.cloud_storage_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.CLOUD_STORAGE)
+        self.cloud_storage_service_record = service_record_factory(self.local_recording_service,
+                                                                   cloud_system=self.system,
+                                                                   organization=self.organization,
+                                                                   quantity=self.service_quantity)
+        self.analytics_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.ANALYTICS)
+        self.analytics_service_record = service_record_factory(self.analytics_service,
+                                                               cloud_system=self.system,
+                                                               organization=self.organization,
+                                                               quantity=self.service_quantity)
+        self.services = [
+            self.local_recording_service,
+            self.analytics_service
+        ]
+        self.fromTs = datetime.datetime(year=2024, month=1, day=10, hour=10, tzinfo=pytz.UTC)
+        self.toTs = self.fromTs + timedelta(minutes=5)
+        self.usage_data_base = {
+            "from": self.fromTs.isoformat(),
+            "to": self.toTs.isoformat(),
+            "usages": []
+        }
+        self.service_types = {v: k for k, v in ChannelPartnerService.SERVICE_TYPE_CODES}
+
+    def get_service_usages(self,
+                           service_id: str | uuid.UUID,
+                           usage_quantity: int,
+                           service_type: int | None = None) -> dict:
+        data = {
+            "service": str(service_id),
+            "devices": [
+                {
+                    "id": f"{uuid4()}",
+                    "usage": usage_quantity
+                },
+                {
+                    "id": f"{uuid4()}",
+                    "usage": usage_quantity
+                },
+            ]
+        }
+        if service_type is not None:
+            data["serviceType"] = self.service_types[service_type]
+        return data
+
+    def get_services(self, usage_quantity: int):
+        return [self.get_service_usages(service.id, usage_quantity) for service in self.services]
+
+    def test_valid_data(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": self.get_services(usage_quantity)
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data['usages'][0]['service'] == self.local_recording_service
+        assert serializer.validated_data['usages'][1]['service'] == self.analytics_service
+
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(self.local_recording_service.id,
+                                               usage_quantity=usage_quantity,
+                                               service_type=ChannelPartnerService.LOCAL_RECORDING)]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data['usages'][0]['service'] == self.local_recording_service
+
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(ServiceUsage.UNALLOCATED_SERVICE,
+                                               usage_quantity=usage_quantity,
+                                               service_type=ChannelPartnerService.LOCAL_RECORDING),
+                       self.get_service_usages(service_id=self.cloud_storage_service.id,
+                                               usage_quantity=usage_quantity,
+                                               service_type=ChannelPartnerService.CLOUD_STORAGE)
+                       ]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert len(serializer.validated_data['usages']) == 1
+        assert serializer.validated_data['usages'][0]['service'] is None
+        assert serializer.validated_data['usages'][0]['service_type'] == ChannelPartnerService.LOCAL_RECORDING
+
+    def test_invalid_data(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(self.local_recording_service.id,
+                                               usage_quantity=usage_quantity,
+                                               service_type=ChannelPartnerService.ANALYTICS)]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        assert not serializer.is_valid()
+
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(ServiceUsage.UNALLOCATED_SERVICE,
+                                               usage_quantity=usage_quantity)]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        assert not serializer.is_valid()
+
+    def test_save_single_service(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(self.local_recording_service.id,
+                                               usage_quantity=usage_quantity,
+                                               service_type=ChannelPartnerService.LOCAL_RECORDING)]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics(self.system)
+        assert ServiceUsage.objects.all().count() == 1
+        service_usage = ServiceUsage.objects.first()
+        assert service_usage.service == self.local_recording_service
+        assert service_usage.usage == usage_quantity * 2
+        assert service_usage.service_type == ChannelPartnerService.LOCAL_RECORDING
+
+    def test_save_single_service_two_entries(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": [
+                self.get_service_usages(self.local_recording_service.id,
+                                        usage_quantity=usage_quantity,
+                                        service_type=ChannelPartnerService.LOCAL_RECORDING),
+                self.get_service_usages(self.local_recording_service.id,
+                                        usage_quantity=usage_quantity),
+            ]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics(self.system)
+        assert ServiceUsage.objects.all().count() == 1
+        service_usage = ServiceUsage.objects.first()
+        assert service_usage.service == self.local_recording_service
+        assert service_usage.usage == usage_quantity * 4
+        assert service_usage.service_type == ChannelPartnerService.LOCAL_RECORDING
+
+    def test_two_services(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": [
+                self.get_service_usages(self.local_recording_service.id,
+                                        usage_quantity=usage_quantity,
+                                        service_type=ChannelPartnerService.LOCAL_RECORDING),
+                self.get_service_usages(self.analytics_service.id,
+                                        usage_quantity=usage_quantity),
+            ]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics(self.system)
+        assert ServiceUsage.objects.all().count() == 2
+        service_usage = ServiceUsage.objects.get(service_type=ChannelPartnerService.LOCAL_RECORDING)
+        assert service_usage.service == self.local_recording_service
+        assert service_usage.usage == usage_quantity * 2
+        service_usage = ServiceUsage.objects.get(service_type=ChannelPartnerService.ANALYTICS)
+        assert service_usage.service == self.analytics_service
+        assert service_usage.usage == usage_quantity * 2
+
+    def test_two_services_and_unallocated(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
+        data = {
+            **self.usage_data_base,
+            "usages": [
+                self.get_service_usages(self.local_recording_service.id,
+                                        usage_quantity=usage_quantity,
+                                        service_type=ChannelPartnerService.LOCAL_RECORDING),
+                self.get_service_usages(self.analytics_service.id,
+                                        usage_quantity=usage_quantity),
+                self.get_service_usages(service_id=ServiceUsage.UNALLOCATED_SERVICE,
+                                        usage_quantity=usage_quantity,
+                                        service_type=ChannelPartnerService.ANALYTICS),
+            ]
+        }
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics(self.system)
+        assert ServiceUsage.objects.all().count() == 3
+        service_usage = ServiceUsage.objects.get(service_type=ChannelPartnerService.LOCAL_RECORDING)
+        assert service_usage.service == self.local_recording_service
+        assert service_usage.usage == usage_quantity * 2
+        service_usage = ServiceUsage.objects.get(service_type=ChannelPartnerService.ANALYTICS,
+                                                 service_id=self.analytics_service.id)
+        assert service_usage.service == self.analytics_service
+        assert service_usage.usage == usage_quantity * 2
+        service_usage = ServiceUsage.objects.get(service_type=ChannelPartnerService.ANALYTICS,
+                                                 service_id__isnull=True)
+        assert service_usage.service == None
+        assert service_usage.service_type == ChannelPartnerService.ANALYTICS
+        assert service_usage.usage == usage_quantity * 2
+
+
+class TestCloudStorageUsageReportSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_service_factory, organization_factory, system_factory,
+              service_record_factory):
+        self.cp = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=self.cp)
+        self.system = system_factory(organization=self.organization)
+        self.service_quantity = 10
+        self.local_recording_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.LOCAL_RECORDING)
+        self.local_recording_service_record = service_record_factory(self.local_recording_service,
+                                                                     cloud_system=self.system,
+                                                                     organization=self.organization,
+                                                                     quantity=self.service_quantity)
+        self.cloud_storage_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.CLOUD_STORAGE)
+        self.cloud_storage_service_record = service_record_factory(self.cloud_storage_service,
+                                                                   cloud_system=self.system,
+                                                                   organization=self.organization,
+                                                                   quantity=self.service_quantity)
+        self.cloud_storage_service_2 = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.CLOUD_STORAGE)
+        self.cloud_storage_service_record_2 = service_record_factory(self.cloud_storage_service_2,
+                                                                   cloud_system=self.system,
+                                                                   organization=self.organization,
+                                                                   quantity=self.service_quantity)
+        self.non_system_service = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.CLOUD_STORAGE)
+        self.service_types = {v: k for k, v in ChannelPartnerService.SERVICE_TYPE_CODES}
+
+    def device_data(self, service_id):
+        return {
+            'id': f'{uuid4()}',
+            'serviceId': str(service_id),
+        }
+
+    def test_valid_data(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [self.device_data(self.cloud_storage_service.id)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data["usedDevices"]['devices'][0]['service'] == self.cloud_storage_service
+        assert serializer.validated_data["usedDevices"]['cloud_system'] == self.system
+
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [self.device_data(ServiceUsage.UNALLOCATED_SERVICE)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data["usedDevices"]['devices'][0]['service'] == None
+        assert serializer.validated_data["usedDevices"]['cloud_system'] == self.system
+
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [self.device_data(self.non_system_service.id)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data["usedDevices"]['devices'][0]['service'] == self.non_system_service
+        assert serializer.validated_data["usedDevices"]['cloud_system'] == self.system
+
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": []
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        assert not serializer.errors
+        assert serializer.validated_data["usedDevices"]['devices'] == []
+
+    def test_invalid_data(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(uuid4()),
+                "devices": [self.device_data(self.non_system_service.id)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        assert not serializer.is_valid()
+        assert serializer.errors["usedDevices"]["cloudSystemId"]
+
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [self.device_data(self.local_recording_service.id)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        assert not serializer.is_valid()
+        assert serializer.errors["usedDevices"]["devices"][0]["serviceId"]
+
+    def test_save_single_device(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [self.device_data(self.cloud_storage_service.id)]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics()
+        assert ServiceUsage.objects.all().count() == 1
+        service_usage = ServiceUsage.objects.first()
+        assert service_usage.service == self.cloud_storage_service
+        assert service_usage.usage == 1
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
+
+    def test_save_multiple_devices_single_service(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [
+                    self.device_data(self.cloud_storage_service.id),
+                    self.device_data(self.cloud_storage_service.id),
+                    self.device_data(self.cloud_storage_service.id),
+                ]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics()
+        assert ServiceUsage.objects.all().count() == 1
+        service_usage = ServiceUsage.objects.first()
+        assert service_usage.service == self.cloud_storage_service
+        assert service_usage.usage == 3
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
+
+    def test_save_multiple_devices_multiple_services(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [
+                    self.device_data(self.cloud_storage_service.id),
+                    self.device_data(self.cloud_storage_service.id),
+                    self.device_data(self.cloud_storage_service_2.id),
+                ]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics()
+        assert ServiceUsage.objects.all().count() == 2
+        service_usage = ServiceUsage.objects.get(service=self.cloud_storage_service)
+        assert service_usage.service == self.cloud_storage_service
+        assert service_usage.usage == 2
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
+        service_usage = ServiceUsage.objects.get(service=self.cloud_storage_service_2)
+        assert service_usage.service == self.cloud_storage_service_2
+        assert service_usage.usage == 1
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
+
+    def test_unallocated_services(self):
+        data = {
+            "usedDevices": {
+                "cloudSystemId": str(self.system.id),
+                "devices": [
+                    self.device_data(self.non_system_service.id),
+                    self.device_data(ServiceUsage.UNALLOCATED_SERVICE),
+                    self.device_data(ServiceUsage.UNALLOCATED_SERVICE),
+                ]
+            }
+        }
+        serializer = CloudStorageUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics()
+        assert ServiceUsage.objects.all().count() == 2
+        service_usage = ServiceUsage.objects.get(service__isnull=True)
+        assert service_usage.usage == 2
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
+        service_usage = ServiceUsage.objects.get(service=self.non_system_service)
+        assert service_usage.usage == 1
+        assert service_usage.service_type == ChannelPartnerService.CLOUD_STORAGE
