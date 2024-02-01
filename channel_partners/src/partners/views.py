@@ -113,6 +113,7 @@ from partners.serializers import (
     ChannelPartnerStateChangeSerializer,
     ChannelPartnerStateConfirmationSerializer,
     ChannelPartnerUserSerializer,
+    CloudStorageUsageReportSerializer,
     CloudSystemIdExternalIdSerializer,
     CloudSystemSerializer,
     CreateChannelPartnerSerializer,
@@ -1571,6 +1572,23 @@ def all_org_users(request):
         .distinct().values_list('email', flat=True)
     }
     serializer = UserListSerializer(users_dict)
+    return Response(serializer.data)
+
+
+
+@extend_schema(
+    summary='Submit a cloud storage usage report',
+    request=CloudStorageUsageReportSerializer,
+    responses=CloudStorageUsageReportSerializer)
+@api_view(['POST'])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def cloud_storage_usage_report(request):
+    serializer = CloudStorageUsageReportSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    cloud_system = serializer.validated_data['usedDevices']['cloud_system']
+    caches['default'].delete(CloudSystemViewSet.get_service_quantity_cache_key(cloud_system))
+    serializer.save_security_metrics()
     return Response(serializer.data)
 
 

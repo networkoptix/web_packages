@@ -104,7 +104,7 @@ class NxTokenAuthentication(TokenAuthentication):
     keyword = 'Bearer'
 
     def authenticate(self, request):
-        if request.META.get('HTTP_X_FORWARDED_PROTO', None) != 'https' and not settings.DEBUG:
+        if request.META.get('HTTP_X_FORWARDED_PROTO', None) != 'https' and not (settings.DEBUG or settings.TESTING):
             raise exceptions.AuthenticationFailed('Must use https for the API')
         return super().authenticate(request)
 

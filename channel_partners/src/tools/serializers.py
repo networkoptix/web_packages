@@ -151,3 +151,18 @@ class AccessMatrixMixin:
         if explicit_method:
             return explicit_method
         return field_perm_method_wrapper(self, field, AccessTypes.read)
+
+
+class NullValuePKField(serializers.PrimaryKeyRelatedField):
+    def __init__(self, **kwargs):
+        self.null_value = kwargs.pop('null_value', None)
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        """
+        Replace field data with null if value equals `null_value`.
+        """
+        if self.null_value:
+            if data == self.null_value:
+                return None
+        return super().to_internal_value(data)

@@ -48,7 +48,6 @@ from partners.models import (
     CloudSystemStates,
     CloudUser,
     ConfirmationCodeInvalid,
-    LocalRecordingUsage,
     Organization,
     OrganizationExternalId,
     OrganizationRole,
@@ -73,6 +72,7 @@ from tools.helpers import (
 from tools.serializers import (
     AccessMatrixMixin,
     FieldAccessModelSerializer,
+    NullValuePKField,
 )
 from tools.utils import bind_system_to_cdb_organization
 
@@ -626,11 +626,11 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
         checkPeriodS = serializers.SerializerMethodField()
 
         def get_tmpExpirationDate(self, obj: CloudSystemId) -> str:
-            ret_ts = obj.last_usage_report + datetime.timedelta(seconds=LocalRecordingUsage.CHECK_PERIOD * 30)
+            ret_ts = obj.last_usage_report + datetime.timedelta(seconds=ServiceUsage.CHECK_PERIOD * 30)
             return ret_ts.strftime('%Y-%m-%d %H:%M:%S')
 
         def get_checkPeriodS(self, obj: CloudSystemId) -> int:
-            return LocalRecordingUsage.CHECK_PERIOD
+            return ServiceUsage.CHECK_PERIOD
 
     class ChannelPartneNestedSerializer(serializers.ModelSerializer):
         supportInformation = SupportInformationSerializer(source='support_information')
@@ -658,14 +658,33 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
         return self.context.get('requestId', '')
 
 
-class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
-    class UsageSerializer(serializers.Serializer):
-        class DeviceSerializer(serializers.Serializer):
-            id = serializers.CharField()
-            usage = serializers.IntegerField()
+class UsageSerializer(serializers.Serializer):
+    class DeviceSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        usage = serializers.IntegerField()
 
-        service = serializers.PrimaryKeyRelatedField(source='serviceId', queryset=ChannelPartnerService.objects.all())
-        devices = DeviceSerializer(many=True)
+    service = NullValuePKField(queryset=ChannelPartnerService.objects.all(),
+                               null_value=ServiceUsage.UNALLOCATED_SERVICE)
+    serviceType = CodeChoiceField(source='service_type', choices=ChannelPartnerService.SERVICE_TYPE_CODES, required=False,
+                                  allow_null=True)
+    devices = DeviceSerializer(many=True)
+
+    def validate(self, data):
+        if not data.get('service') and data.get('service_type') is None:
+            raise serializers.ValidationError({
+                'service_type': ['One of service or service_type must be provided.'],
+                'service': ['One of service or service_type must be provided.'],
+            })
+        if (service := data.get('service')) and (service_type := data.get('service_type')) is not None:
+            if service.type != service_type:
+                raise serializers.ValidationError({
+                    'service_type': ['service_type must be equal to the type of service.'],
+                })
+        return data
+
+
+class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
+
 
     usages = UsageSerializer(required=False, many=True)
     locals()['from'] = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
@@ -674,7 +693,7 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
 
     def validate_timestamp(self, value):
         timestamp_seconds = int(value.timestamp())
-        interval_seconds = LocalRecordingUsage.CHECK_PERIOD
+        interval_seconds = ServiceUsage.CHECK_PERIOD
         if timestamp_seconds % interval_seconds != 0:
             raise serializers.ValidationError(f'Timestamp must be divisible by {interval_seconds} seconds')
         return value
@@ -688,9 +707,20 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
     def validate(self, data):
         from_ts = data.get('from')
         to_ts = data.get('to')
-        if to_ts - from_ts != datetime.timedelta(seconds=LocalRecordingUsage.CHECK_PERIOD):
+        if to_ts - from_ts != datetime.timedelta(seconds=ServiceUsage.CHECK_PERIOD):
             raise serializers.ValidationError(
-                f'Time range must cover exactly {LocalRecordingUsage.CHECK_PERIOD} seconds')
+                f'Time range must cover exactly {ServiceUsage.CHECK_PERIOD} seconds')
+        usages = []
+        for usage in data.get('usages', []):
+            if usage.get('service_type') is None:
+                usage['service_type'] = usage['service'].type
+            # CLOUD-12459: ignoring cloud storage
+            if usage.get('service_type') == ChannelPartnerService.CLOUD_STORAGE:
+                continue
+            if usage.get('service') and usage['service'].type == ChannelPartnerService.CLOUD_STORAGE:
+                continue
+            usages.append(usage)
+        data['usages'] = usages
         return data
 
     def save_security_metrics(self, cloud_system: CloudSystemId):
@@ -701,13 +731,57 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         service_usage_dict = defaultdict(int)
         for usage in usages:
             device_list = usage.get('devices')
-            service_id = usage.get('serviceId').id
+            service_id = usage.get('service').id if usage.get('service') else None
+            service_type = usage.get('service_type')
             for device in device_list:
-                service_usage_dict[service_id] += device.get('usage', 0)
+                service_usage_dict[service_id, service_type] += device.get('usage', 0)
+
+        for (service_id, service_type), usage in service_usage_dict.items():
+            ServiceUsage.objects.create(
+                usage=usage, cloud_system=cloud_system,
+                service_id=service_id, service_type=service_type,
+                from_ts=from_ts, to_ts=to_ts)
+
+        ServiceUsage.check_excess(cloud_system)
+        cloud_system.last_usage_report = timezone.now()
+        cloud_system.save()
+
+
+class CloudStorageUsageSerializer(serializers.Serializer):
+    class DeviceSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        serviceId = NullValuePKField(
+            source='service', null_value=ServiceUsage.UNALLOCATED_SERVICE,
+            queryset=ChannelPartnerService.objects.filter(type=ChannelPartnerService.CLOUD_STORAGE),
+        )
+
+    cloudSystemId = serializers.PrimaryKeyRelatedField(source='cloud_system', queryset=CloudSystemId.objects.all())
+    devices = DeviceSerializer(many=True)
+
+
+class CloudStorageUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
+
+    usedDevices = CloudStorageUsageSerializer(required=True)
+    signature = serializers.CharField(default='', read_only=True)
+
+    def save_security_metrics(self):
+        if not self.validated_data.get('usedDevices'):
+            return
+        cloud_system: CloudSystemId = self.validated_data['usedDevices']['cloud_system']
+        devices = self.validated_data['usedDevices'].get('devices', [])
+        service_type = ChannelPartnerService.CLOUD_STORAGE
+        now = timezone.now()
+        service_usage_dict = defaultdict(int)
+        for device in devices:
+            service = device['service']
+            service_id = service.id if service else None
+            service_usage_dict[service_id] += 1
 
         for service_id, usage in service_usage_dict.items():
             ServiceUsage.objects.create(
-                usage=usage, cloud_system=cloud_system, service_id=service_id, from_ts=from_ts, to_ts=to_ts)
+                usage=usage, cloud_system=cloud_system,
+                service_id=service_id, service_type=service_type,
+                from_ts=now, to_ts=now)
 
         ServiceUsage.check_excess(cloud_system)
         cloud_system.last_usage_report = timezone.now()
