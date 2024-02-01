@@ -7,6 +7,7 @@ RUN apk add --no-cache apache2-utils tini curl jq netcat-openbsd
 
 COPY nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
 COPY proxy.conf /etc/nginx/proxy.conf
+COPY static_caching.conf /etc/nginx/static_caching.conf
 COPY run_nginx.sh /run_nginx.sh
 
 ENV BUILD="${BUILD_NUMBER}"

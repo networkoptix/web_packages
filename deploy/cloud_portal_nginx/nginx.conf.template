@@ -108,7 +108,15 @@ http {
             try_files /static/authorization/index.html =404;
         }
 
-        location ~* /(?=ngsw\.json|apple-app-site-association|\.well-known) {
+        # Must be on a first place to override paths
+        location ~* ^/static/(503.html|apple-app-site-association|styles/skin.css)$ {
+            include static_caching.conf;
+            add_header Cache-Control 'max-age=31449600'; # one year
+            include proxy.conf;
+            proxy_pass http://app_server/static/${DOLLAR}1;
+        }
+
+        location ~* /(?=ngsw\.json|\.well-known) {
             root /app/app/static/_source/blue/static;
             try_files ${DOLLAR}uri ${DOLLAR}uri/ =404;
         }
@@ -124,34 +132,6 @@ http {
 
         location /static/ipvd/ipvd.json {
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com/ipvd/cameras.json;
-        }
-
-        location = /static/styles/skin.css {
-            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
-            proxy_cache static_cache;
-            proxy_cache_valid 200 302 5m;
-            proxy_cache_lock on;
-            proxy_cache_background_update on;
-            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
-            proxy_ignore_headers Cache-Control;
-            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
-            add_header Cache-Control 'max-age=31449600'; # one year
-            include proxy.conf;
-            proxy_pass http://app_server/static/styles/skin.css;
-        }
-
-        location = /static/503.html {
-            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
-            proxy_cache static_cache;
-            proxy_cache_valid 200 302 5m;
-            proxy_cache_lock on;
-            proxy_cache_background_update on;
-            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
-            proxy_ignore_headers Cache-Control;
-            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
-            add_header Cache-Control 'max-age=31449600'; # one year
-            include proxy.conf;
-            proxy_pass http://app_server/static/503.html;
         }
 
         location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$|.*\.otf$|.*\.ttf$|.*\.woff$|.*\.woff2$|.*\.eot$ {
@@ -218,14 +198,7 @@ http {
         }
 
         location ~* /static(/\d+/|/)languages.json {
-            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
-            proxy_cache static_cache;
-            proxy_cache_valid 200 302 5m;
-            proxy_cache_lock on;
-            proxy_cache_background_update on;
-            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
-            proxy_ignore_headers Cache-Control;
-            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            include static_caching.conf;
             add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
             include proxy.conf;
             proxy_intercept_errors on;
@@ -234,14 +207,7 @@ http {
         }
 
         location ~* ^/static/lang_(.*)$ {
-            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
-            proxy_cache static_cache;
-            proxy_cache_valid 200 302 5m;
-            proxy_cache_lock on;
-            proxy_cache_background_update on;
-            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
-            proxy_ignore_headers Cache-Control;
-            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            include static_caching.conf;
             add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
             include proxy.conf;
             proxy_intercept_errors on;
@@ -251,14 +217,7 @@ http {
 
         # Data structure images and files
         location ~* ^/static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$ {
-            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
-            proxy_cache static_cache;
-            proxy_cache_valid 200 302 5m;
-            proxy_cache_lock on;
-            proxy_cache_background_update on;
-            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
-            proxy_ignore_headers Cache-Control;
-            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            include static_caching.conf;
             add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
             include proxy.conf;
             proxy_intercept_errors on;
