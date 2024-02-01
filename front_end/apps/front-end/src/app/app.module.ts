@@ -86,7 +86,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             SystemResourcesSync,
             SystemResourcesEffects,
         ]),
-        ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
+        ...(!environment.production
+            ? [StoreDevtoolsModule.instrument({ connectInZone: true })]
+            : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',

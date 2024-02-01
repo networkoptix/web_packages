@@ -28,7 +28,7 @@ if (environment.production) {
 } else {
     // Development and test
     Error.stackTraceLimit = Infinity;
-    require('zone.js/dist/long-stack-trace-zone');
+    // require('zone.js/dist/long-stack-trace-zone');
 }
 
 // Needs to be registered before the app is bootstrapped to work with vms in client api.

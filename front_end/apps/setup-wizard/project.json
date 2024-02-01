@@ -143,28 +143,28 @@
             }
         },
         "serve": {
-            "executor": "@nx/angular:webpack-dev-server",
+            "executor": "@nx/angular:dev-server",
             "options": {
-                "browserTarget": "setup-wizard:build",
                 "host": "0.0.0.0",
                 "port": 9003,
                 "sslKey": "ssl_keys/server.key",
                 "sslCert": "ssl_keys/server.crt",
-                "ssl": true
+                "ssl": true,
+                "buildTarget": "setup-wizard:build"
             },
             "configurations": {
                 "production": {
-                    "browserTarget": "setup-wizard:build:production"
+                    "buildTarget": "setup-wizard:build:production"
                 },
                 "development": {
-                    "browserTarget": "setup-wizard:build:development"
+                    "buildTarget": "setup-wizard:build:development"
                 }
             }
         },
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
-                "browserTarget": "setup-wizard:build"
+                "buildTarget": "setup-wizard:build"
             }
         },
         "lint": {},
