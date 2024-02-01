@@ -18,26 +18,22 @@
         "noUnusedLocals": true,
         "baseUrl": "",
         "paths": {
-            "//": [
-                "NOTE: The path order is important. Paths should be ordered from specific to general for autocomplete"
-            ],
+            "//": ["NOTE: The path order is important. Paths should be ordered from specific to general for autocomplete"],
             "@authorization/*": ["apps/authorization/*"],
-            "@common/*": ["common/*"],
             "@components/*": [
                 "libs/components/*",
                 "libs/components-buildable/src/*",
                 "libs/components-buildable/src/lib/*"
             ],
-            "@db/*": ["libs/db/*"],
             "@decorators/*": ["libs/decorators/*"],
+            "@db/*": ["libs/db/*"],
             "@dialogs/*": ["libs/dialogs/*"],
             "@directives/*": ["libs/directives/*"],
             "@environments/*": ["common/environments/*"],
             "@guards/*": ["libs/routeGuards/*"],
             "@interceptors/*": ["libs/interceptors/*"],
-            "@language/*": ["common/language/*"],
             "@language_static": ["common/language/language_i18n_static.json"],
-            "@libs/*": ["libs/*"],
+            "@language/*": ["common/language/*"],
             "@menu/*": ["libs/menu/*"],
             "@mocks/*": ["common/_mocks/*"],
             "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"],
@@ -45,21 +41,23 @@
                 "node_modules/nx-open-web/packages/*",
                 "node_modules/nx-open-web-candidate/packages/*"
             ],
-            "@packages/*": ["packages/*"],
             "@pages/*": ["libs/features/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@resolvers/*": ["libs/resolvers/*"],
             "@routeGuards/*": ["libs/routeGuards/*"],
             "@services/*": ["libs/services/*"],
             "@setup-wizard/*": ["apps/setup-wizard/*"],
-            "@static-variables": ["libs/variables/static-variables.ts"],
             "@store/*": ["common/store/*"],
             "@styles/*": ["common/styles/*"],
             "@utils/*": ["libs/utils/*"],
+            "@static-variables": ["libs/variables/static-variables.ts"],
             "@variables/*": ["libs/variables/*"],
             "@view/*": ["libs/features/systems/view/*"],
             "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
-            "components-buildable-build": ["libs/components-buildable-build/src/index.ts"]
+            "components-buildable-build": ["libs/components-buildable-build/src/index.ts"],
+            "@common/*": ["common/*"],
+            "@libs/*": ["libs/*"],
+            "@packages/*": ["packages/*"]
         },
         "typeRoots": ["node_modules/@types"]
     },
