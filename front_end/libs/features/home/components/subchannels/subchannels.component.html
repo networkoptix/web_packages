@@ -6,7 +6,10 @@
         class="body"
         *ngIf="subchannels$$().length > 0; else subchannelsEmpty"
     >
-        <div *ngIf="!(inSubchannels$ | async); else outlet">
+        <div
+            class="body"
+            *ngIf="!(inSubchannels$ | async); else outlet"
+        >
             <div
                 class="actions p-3"
                 [ngClass]="{ search: !canCreatePartners$$() }"
