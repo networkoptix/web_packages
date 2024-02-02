@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Nie można odłączyć systemu od %CLOUD_NAME%.",
     "Failed to find any system to merge with": "Nie udało się znaleźć żadnego systemu do połączenia",
     "Failed to login to {systemName}": "Nie udało się zalogować do {systemName}",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Nie udało się złączyć systemów {primarySystem} i {secondarySystem}.",

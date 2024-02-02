@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Не удалось отключить систему от %CLOUD_NAME%.",
     "Failed to find any system to merge with": "Не удалось найти какую-либо систему для объединения",
     "Failed to login to {systemName}": "Не удалось войти в {systemName}",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Не удалось объединить <strong>{primarySystem}</strong> и <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> не в сети.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Не удалось объединить системы <strong>{primarySystem}</strong> и <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Не удалось объединить {primarySystem} и {secondarySystem}.",

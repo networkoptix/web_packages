@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Không thể ngắt kết nối hệ thống khỏi %CLOUD_NAME%.",
     "Failed to find any system to merge with": "Không tìm thấy hệ thống nào để hợp nhất",
     "Failed to login to {systemName}": "Không đăng nhập được vào {systemName}",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Không thể hợp nhất Hệ thống <strong>{primarySystem}</strong> và <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Không thể hợp nhất { primarySystem } và { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Không hợp nhất được {primarySystem} và {secondarySystem}.",

@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "无法从 %CLOUD_NAME%断开系统。",
     "Failed to find any system to merge with": "找不到要合并的系统",
     "Failed to login to {systemName}": "无法连接到 {systemName}",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "无法合并系统 <strong>{primarySystem}</strong> 和 <strong>{secondarySystem}</strong>",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "无法合并系统 {primarySystem} 和 {secondarySystem}",

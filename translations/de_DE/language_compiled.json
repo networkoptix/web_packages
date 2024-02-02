@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Die Verbindung zwischen dem System und %CLOUD_NAME% konnte nicht getrennt werden.",
     "Failed to find any system to merge with": "Es wurde kein System gefunden, mit dem es zusammengeführt werden kann",
     "Failed to login to {systemName}": "Anmeldung bei {systemName} fehlgeschlagen",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Fehler beim Zusammenführen der Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Zusammenführung von {primarySystem} und {secondarySystem} fehlgeschlagen.",

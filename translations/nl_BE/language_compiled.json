@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Kan systeem niet loskoppelen van %CLOUD_NAME%.",
     "Failed to find any system to merge with": "Kan geen systeem vinden om mee samen te voegen",
     "Failed to login to {systemName}": "Inloggen op {systemName} is mislukt",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Kan {primarySystem} en {secondarySystem} niet samenvoegen.",

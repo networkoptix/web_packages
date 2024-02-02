@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Sistemin %CLOUD_NAME% bağlantısı kesilemedi.",
     "Failed to find any system to merge with": "Birleştirilecek herhangi bir sistem bulunamadı",
     "Failed to login to {systemName}": "{systemName} e bağlanırken hata oluştu",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "<strong>{primarySystem}</strong> ve <strong>{secondarySystem}</strong> Sistemleri birleştirilemedi.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "{primarySystem} ve {secondarySystem} birleştirilemedi.",

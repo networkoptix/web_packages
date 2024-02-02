@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Falha ao desconectar o sistema de %CLOUD_NAME%.",
     "Failed to find any system to merge with": "Falha ao encontrar qualquer sistema para mesclar com",
     "Failed to login to {systemName}": "Falha ao fazer login em {systemName}",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Falha ao mesclar {primarySystem} e {secondarySystem}.",

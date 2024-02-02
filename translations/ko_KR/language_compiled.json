@@ -631,6 +631,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "%CLOUD_NAME%에서 시스템을 분리하지 못했습니다.",
     "Failed to find any system to merge with": "Failed to find any system to merge with",
     "Failed to login to {systemName}": "{systemName}에 로그인 하지 못했습니다.",
+    "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.": "Failed to merge <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>. <strong>{secondarySystem}</strong> is offline.",
     "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "{primarySystem} 시스템과 {secondarySystem} 시스템을 병합하지 못했습니다.",
