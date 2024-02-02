@@ -8,7 +8,11 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 
-import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartner,
+    ChannelPartnerPermissions,
+    ChannelPartnerRoles,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as cpActions from '../store/channel-partners/channel-partners.actions';
@@ -23,22 +27,27 @@ export const cpTabGuard: CanActivateFn = (
     const cpService: NxChannelPartnersService = inject(NxChannelPartnersService);
     const path = route.routeConfig?.path;
     const currPartner$$ = store.selectSignal(selectCurrentPartner);
-    const checkPermissions = (permissions: string[] | undefined): boolean => {
-        if (permissions) {
+    const checkPermissions = (partner: ChannelPartner): boolean => {
+        const { ownPermissions, ownRoles } = partner;
+        if (path === 'subchannels') {
+            return ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR);
+        } else if (ownPermissions) {
             switch (path) {
                 case 'settings':
                 case 'information':
-                    if (permissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)) {
+                    if (
+                        ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)
+                    ) {
                         return true;
                     }
                     break;
                 case 'users':
-                    if (permissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+                    if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
                         return true;
                     }
                     break;
                 case 'reports':
-                    if (permissions.includes(ChannelPartnerPermissions.VIEW_SERVICE_REPORTS)) {
+                    if (ownPermissions.includes(ChannelPartnerPermissions.VIEW_SERVICE_REPORTS)) {
                         return true;
                     }
                     break;
@@ -50,7 +59,7 @@ export const cpTabGuard: CanActivateFn = (
 
     const currPartner = currPartner$$();
     if (currPartner) {
-        return checkPermissions(currPartner.ownPermissions);
+        return checkPermissions(currPartner);
     } else {
         return cpService.getChannelPartners().pipe(
             map(partners => {
@@ -66,7 +75,7 @@ export const cpTabGuard: CanActivateFn = (
                     }),
                 );
                 const fetchedPartner = partners.find(partner => partner.id === id);
-                return checkPermissions(fetchedPartner?.ownPermissions);
+                return checkPermissions(fetchedPartner);
             }),
         );
     }

@@ -44,6 +44,7 @@ const CPRoutes: Routes = [
             {
                 path: 'subchannels',
                 component: NxSubchannelsComponent,
+                canActivate: [cpTabGuard],
                 children: [
                     {
                         path: ':subchannelId',
