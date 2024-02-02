@@ -173,7 +173,17 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                                 );
                             }
 
-                            return Promise.reject({ resultCode: result.errorText });
+                            /* 200 {
+                                "resultCode": "invalidTotp",
+                                "errorText": "Wrong totp",
+                                "errorData": {
+                                    "errorClass": "internalError",
+                                    "errorDetail": "119",
+                                    "errorText": "Wrong totp",
+                                    "resultCode": "invalidTotp"
+                                }
+                            } */
+                            return Promise.reject({ resultCode: result.resultCode });
                         },
                         err => {
                             return Promise.reject({ resultCode: err.error.resultCode });
