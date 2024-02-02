@@ -21,6 +21,7 @@ class AccountPage:
         self.delete_account_button().wait_until_visible()
         self.save_button().wait_until_not_visible()
         self.cancel_button().wait_until_not_visible()
+        self.no_unsaved_changes().wait_until_visible()
 
     def delete_account_button(self):
         return Button(
@@ -45,6 +46,9 @@ class AccountPage:
 
     def email(self):
         return PageText(self._driver, "//a[@id='settings']")
+
+    def no_unsaved_changes(self):
+        return PageText(self._driver, "//div[contains(text(), 'No unsaved changes')]")
 
     def save_button(self):
         return Button(

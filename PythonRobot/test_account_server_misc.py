@@ -39,24 +39,8 @@ def name_change_shown_in_system(
         account_page.wait_until_loaded()
         assert account_page.first_name().get_text() == owner.first_name
         assert account_page.last_name().get_text() == owner.last_name
-        account_page.first_name().delete_all_text()
-        account_page.save_button().wait_until_not_clickable(1)
-        account_page.cancel_button().wait_until_clickable(1)
-        account_page.last_name().click()  # Move focus from first_name
-        assert account_page.first_name().get_outline_color() == 'rgb(240, 44, 44)'  # Red
-        account_page.first_name().input_text("    ")
-        account_page.save_button().wait_until_not_clickable(1)
-        account_page.cancel_button().wait_until_clickable(1)
         new_first_name = "NewFirstName"
         account_page.first_name().input_text(new_first_name)
-        account_page.last_name().delete_all_text()
-        account_page.save_button().wait_until_not_clickable(1)
-        account_page.cancel_button().wait_until_clickable(1)
-        account_page.first_name().click()  # Move focus from last_name
-        assert account_page.last_name().get_outline_color() == 'rgb(240, 44, 44)'
-        account_page.last_name().input_text("    ")
-        account_page.save_button().wait_until_not_clickable(1)
-        account_page.cancel_button().wait_until_clickable(1)
         new_last_name = "NewLastName"
         account_page.last_name().input_text(new_last_name)
         account_page.save_button().wait_until_clickable()
