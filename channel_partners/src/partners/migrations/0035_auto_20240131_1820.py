@@ -5,13 +5,22 @@ from django.db import migrations
 DELETED = 6
 SHUTDOWN = 2
 
+
 def check_deleted_sytems(apps, schema_editor):
     CloudSystemId = apps.get_model('partners', 'CloudSystemId')
     deleted_systems = CloudSystemId.objects.filter(system_state=6)
     for system in deleted_systems:
         # cache won't be cleared, so counters need to be
-        # invalidated by changes or timeout
-        system.disconnect_system()
+        # invalidated by changes or timeout. services
+        # are not negated.
+        # TODO. CLOUD-12609 Implement services negation check
+        system.state = SHUTDOWN
+        system.effective_state = SHUTDOWN
+        system.system_state = DELETED
+        system.organization = None
+        system.system_group = None
+        system.save()
+
 
 class Migration(migrations.Migration):
     dependencies = [
