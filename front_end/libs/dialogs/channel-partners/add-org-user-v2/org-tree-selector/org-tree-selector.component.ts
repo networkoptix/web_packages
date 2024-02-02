@@ -23,7 +23,7 @@ import type {
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
 
-import type { SelectedFolder, TreeItem } from './org-tree-selector.types';
+import type { OrgTreeStatuses, TreeItem } from './org-tree-selector.types';
 
 @Component({
     selector: 'nx-org-tree-selector',
@@ -45,6 +45,7 @@ export class NxOrgTreeSelectorComponent implements OnInit {
 
     @Input({ required: true }) organization: Organization;
     @Input({ required: true }) groups: GroupItem[];
+    @Input() statuses: OrgTreeStatuses = new Map();
 
     private _selected: string;
     get selected(): string {
@@ -52,19 +53,10 @@ export class NxOrgTreeSelectorComponent implements OnInit {
     }
     set selected(folder: string) {
         this._selected = folder;
-        let parents: SelectedFolder['parents'] = null;
-        if (folder !== this.organization.id) {
-            parents = [];
-            let current = this.groupInfoMap.get(folder)!;
-            while (current.parent) {
-                parents.push(current.parent);
-                current = this.groupInfoMap.get(current.parent)!;
-            }
-        }
-        this.select.emit({ folder, parents });
+        this.select.emit(folder);
     }
 
-    @Output() select = new EventEmitter<SelectedFolder>();
+    @Output() select = new EventEmitter<string>();
 
     private flatGroups: TreeItem[] = [];
     private groupInfoMap = new Map<
@@ -110,8 +102,11 @@ export class NxOrgTreeSelectorComponent implements OnInit {
         });
     }
 
-    selectFolder(id: string): void {
+    selectFolder(id: string, index: number = this.highlightIndex): void {
         this.selected = id;
+        if (index !== this.highlightIndex) {
+            this.highlightIndex = index;
+        }
     }
 
     selectHighlighted(): void {

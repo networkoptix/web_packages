@@ -4,9 +4,5 @@ export interface TreeItem {
     level: number;
 }
 
-export interface SelectedFolder {
-    /** Id of org/group */
-    folder: string;
-    /** null if folder is org, otherwise ancestors going up */
-    parents: string[] | null;
-}
+export type OrgTreeStatuses = Map<string, { type: 'warn' | 'error'; msg: string }>;
+// Could be expanded to also include info later on

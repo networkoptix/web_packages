@@ -75,31 +75,33 @@
         <nx-org-tree-selector
             [organization]="organization"
             [groups]="groups"
+            [statuses]="orgTreeStatuses$$()"
             (select)="selectedFolder$$.set($event)"
         ></nx-org-tree-selector>
-        <div
-            class="mt-1"
-            *ngrxLet="errorState$$() as state"
-        >
-            <div
-                *ngIf="!state.error && state.warning"
-                class="warning"
-            >
-                {{ state.warning }}
-            </div>
-            <div
-                *ngIf="state.error"
-                class="error-label"
-            >
-                {{ state.error }}
-            </div>
+        <div class="mt-2 error-container">
+            <ng-container *ngIf="orgTreeStatuses$$().get(selectedFolder$$()) as status">
+                <div
+                    *ngIf="status.type === 'warn'"
+                    class="warning"
+                >
+                    {{ status.msg }}
+                </div>
+                <div
+                    *ngIf="status.type === 'error'"
+                    class="error-label"
+                >
+                    {{ status.msg }}
+                </div>
+            </ng-container>
         </div>
     </div>
     <div class="modal-footer">
         <nx-process-button
             [process]="addOrgUserProcess"
             [buttonText]="'Confirm' | translate"
-            [buttonDisabled]="!!errorState$$().error || !userEmail$$() || userEmail.errors?.pattern"
+            [buttonDisabled]="
+                !!selectedFolderError$$() || !userEmail$$() || userEmail.errors?.pattern
+            "
             [form]="addOrgUserForm"
         ></nx-process-button>
         <!-- Role and folder are defined on construct -->
