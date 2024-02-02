@@ -43,7 +43,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         this.userRoleForm = NxFormBuilder<UserRoleFormControls>({
             email: {
                 value: user.email,
-                disabled: !this.editPermissions$$().changeInfo || !this.isLdap$$(),
+                disabled: !this.editPermissions$$().changeInfo || this.isLdap$$(),
             },
             isEnabled: {
                 value: user.isEnabled,
@@ -51,7 +51,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             },
             fullName: {
                 value: user.fullName,
-                disabled: !this.editPermissions$$().changeInfo || !this.isLdap$$(),
+                disabled: !this.editPermissions$$().changeInfo || this.isLdap$$(),
             },
             role: {
                 value: this.selectedUser.role,
