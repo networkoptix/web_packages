@@ -1,11 +1,15 @@
 .selected-scroll-item {
     background-color: var(--dropdown-item-selected-bg) !important;
     color: var(--dropdown-item-selected-color) !important;
+
+    &:hover {
+        background-color: var(--dropdown-item-hover-bg) !important;
+    }
 }
 
 .scroll-area {
     background-color: var(--dropdown-menu-bg);
-    border: var(--dropdown-menu-border);
+    border: 1px solid var(--input-border-color);
     border-radius: 2px;
     height: 167px;
     width: 320px;
