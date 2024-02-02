@@ -334,7 +334,11 @@ export function assignFrom<S extends Pick<T, K[number]>, K extends readonly (key
 
 /* DOM */
 /**
- * Scroll an item into view inside in a container like a dropdown
+ * Scroll an item into view inside in a list container like a dropdown
+ *
+ * The list container element must be the ancestor the browser uses for calculating coordinates.
+ *
+ * https://javascript.info/size-and-scroll#offsetparent-offsetleft-top
  *
  * @param item The item element to scroll to
  * @param container The container element of the item

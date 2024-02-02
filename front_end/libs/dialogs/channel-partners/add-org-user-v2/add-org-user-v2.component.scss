@@ -1,6 +1,10 @@
 @use "typography";
 :host {
+    .error-container {
+        min-height: 3rem;
+    }
+
     .warning {
-        color: #e1a700;
+        color: var(--yellow-d1);
     }
 }

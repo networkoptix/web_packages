@@ -7,6 +7,7 @@ import { LetDirective, PushPipe } from '@ngrx/component';
 import { NxChannelPartnerComponent } from './channel-partner/channel-partner.component';
 import { NxChannelPartnerModule } from './channel-partner/channel-partner.module';
 import { NxChannelPartnersComponent } from './channel-partners.component';
+import { NxCpOfflineDataComponent } from './offline-data/offline-data.component';
 import { NxOrganizationComponent } from './organization/organization.component';
 import { NxOrganizationModule } from './organization/organization.module';
 import { NxSystemGroupComponent } from './system-group/system-group.component';
@@ -16,6 +17,11 @@ const appRoutes: Routes = [
         path: '',
         pathMatch: 'full',
         component: NxChannelPartnersComponent,
+    },
+    {
+        path: 'offline',
+        pathMatch: 'full',
+        component: NxCpOfflineDataComponent,
     },
     {
         path: ':partnerId',

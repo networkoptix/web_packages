@@ -16,6 +16,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxAccountService } from '@services/account.service';
 import {
     OrgRoleIds,
     type GroupItem,
@@ -28,7 +29,7 @@ import type { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
 
 import { NxOrgTreeSelectorComponent } from './org-tree-selector/org-tree-selector.component';
-import { SelectedFolder } from './org-tree-selector/org-tree-selector.types';
+import { OrgTreeStatuses } from './org-tree-selector/org-tree-selector.types';
 
 @Component({
     selector: 'nx-add-org-user-v2',
@@ -71,56 +72,81 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
     organization: Organization;
     groups: GroupItem[];
 
-    selectedFolder$$: WritableSignal<SelectedFolder>;
+    selectedFolder$$: WritableSignal<string>;
 
-    errorState$$ = computed<{ warning?: string; error?: string }>(() => {
-        const [email, role, _folder] = [
-            this.userEmail$$(),
-            this.selectedRole$$(),
-            this.selectedFolder$$(),
-        ];
-        const { folder, parents } = _folder;
+    private selfAddMsg = this.translate.instant(staticLang.dialogs.channelPartners.selfAdd);
+    private parentAccessMsg = this.translate.instant(
+        staticLang.dialogs.channelPartners.parentAccess,
+    );
+    private restrictedRoleMsg: string;
 
-        const state: { warning?: string; error?: string } = {};
+    orgTreeStatuses$$ = computed<OrgTreeStatuses>(() => {
+        const [email, role] = [this.userEmail$$(), this.selectedRole$$()];
 
-        if (folder !== this.organization.id && role === OrgRoleIds.OrgAdmin) {
-            state.error = this.translate.instant(
-                staticLang.dialogs.channelPartners.restrictedRole,
-                {
-                    roleName: 'Organization Administrator',
-                    orgName: this.organization.name,
-                },
-            );
+        const statuses: OrgTreeStatuses = new Map();
+
+        function cascadeGroupErrors(group: GroupItem, msg: string): void {
+            statuses.set(group.id, {
+                type: 'error',
+                msg,
+            });
+            group.children.forEach(group => cascadeGroupErrors(group, msg));
         }
 
-        if (!email || !this.userRoles.has(email)) {
-            return state;
+        if (this.account.email === email) {
+            statuses.set(this.organization.id, {
+                type: 'error',
+                msg: this.selfAddMsg,
+            });
+
+            this.groups.forEach(group => cascadeGroupErrors(group, this.selfAddMsg));
+            return statuses;
         }
-        const existingUserRoles = this.userRoles.get(email) as Map<string, string>;
-        if (existingUserRoles.has(folder)) {
-            // User is already in folder
-            state.warning = this.translate.instant(
-                staticLang.dialogs.channelPartners.directAccess,
-                {
-                    role: existingUserRoles.get(folder),
-                },
-            );
-        } else if (existingUserRoles.has(this.organization.id)) {
-            // User in parent org
-            state.error = this.translate.instant(staticLang.dialogs.channelPartners.parentAccess);
-        } else if (folder !== this.organization.id) {
-            // Check if user in any parent groups
-            for (const parent of parents as string[]) {
-                if (existingUserRoles.has(parent)) {
-                    state.error = this.translate.instant(
-                        staticLang.dialogs.channelPartners.parentAccess,
-                    );
-                    break;
-                }
+
+        const existingUserRoles = this.userRoles.get(email);
+        if (existingUserRoles) {
+            if (existingUserRoles.has(this.organization.id)) {
+                statuses.set(this.organization.id, {
+                    type: 'warn',
+                    msg: this.translate.instant(staticLang.dialogs.channelPartners.directAccess, {
+                        role: existingUserRoles.get(this.organization.id),
+                    }),
+                });
+                this.groups.forEach(group => cascadeGroupErrors(group, this.parentAccessMsg));
+            } else if (role !== OrgRoleIds.OrgAdmin) {
+                const findDirectAccessGroups = (groups: GroupItem[]): void => {
+                    for (const group of groups) {
+                        if (existingUserRoles.has(group.id)) {
+                            statuses.set(group.id, {
+                                type: 'warn',
+                                msg: this.translate.instant(
+                                    staticLang.dialogs.channelPartners.directAccess,
+                                    {
+                                        role: existingUserRoles.get(group.id),
+                                    },
+                                ),
+                            });
+                            group.children.forEach(group =>
+                                cascadeGroupErrors(group, this.parentAccessMsg),
+                            );
+                        } else {
+                            findDirectAccessGroups(group.children);
+                        }
+                    }
+                };
+                findDirectAccessGroups(this.groups);
             }
         }
 
-        return state;
+        if (role === OrgRoleIds.OrgAdmin) {
+            this.groups.forEach(group => cascadeGroupErrors(group, this.restrictedRoleMsg));
+        }
+
+        return statuses;
+    });
+    selectedFolderError$$ = computed(() => {
+        const [orgTreeErrors, folder] = [this.orgTreeStatuses$$(), this.selectedFolder$$()];
+        return orgTreeErrors.get(folder)?.type === 'error';
     });
 
     constructor(
@@ -129,6 +155,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         processService: NxProcessService,
         private translate: TranslateService,
         private cpService: NxChannelPartnersService,
+        private account: NxAccountService,
     ) {
         super(dialogRef);
         this.organization = organization;
@@ -153,7 +180,15 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
             }
         });
 
-        this.selectedFolder$$ = signal({ folder: organization.id, parents: null });
+        this.restrictedRoleMsg = translate.instant(
+            staticLang.dialogs.channelPartners.restrictedRole,
+            {
+                roleName: 'Organization Administrator',
+                orgName: organization.name,
+            },
+        );
+
+        this.selectedFolder$$ = signal(organization.id);
 
         this.addOrgUserProcess = processService.createProcess(
             () => {
@@ -161,7 +196,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                     email: this.userEmail$$(),
                     roleId: this.selectedRole$$(),
                 };
-                const { folder } = this.selectedFolder$$();
+                const folder = this.selectedFolder$$();
                 if (folder === this.organization.id) {
                     return firstValueFrom(this.cpService.createOrganizationUser(folder, newUser));
                 } else {
