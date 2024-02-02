@@ -127,6 +127,9 @@ export class NxSystemsListComponent implements OnInit {
                     const [system] = this.systems;
                     if (!system.system2faEnabled || account.sessionVerified) {
                         this.openSystem(system);
+                    } else {
+                        this.showList = true;
+                        this.searchSystems();
                     }
                 } else {
                     this.showList = true;
@@ -162,7 +165,6 @@ export class NxSystemsListComponent implements OnInit {
 
     searchSystems(): void {
         const search = this.search.value;
-
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
                 const ownerText = this.systemsService.getSystemOwnerName(system);
