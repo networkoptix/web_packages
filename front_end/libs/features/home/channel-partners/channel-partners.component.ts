@@ -28,6 +28,7 @@ import {
     ChannelPartner,
     Organization,
     ChannelPartnerPermissions,
+    ChannelPartnerRoles,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
@@ -118,9 +119,15 @@ export class NxChannelPartnersComponent implements OnInit {
                     if (partners.length && !currPartner) {
                         return throwError(() => 'Partner not found');
                     }
-                    const { ownPermissions } = currPartner;
+                    const { ownPermissions, ownRoles } = currPartner;
 
                     if (!this.processedTabs) {
+                        if (ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR)) {
+                            this.tabs.splice(1, 0, {
+                                displayName: this.LANG.channelPartners.tabNames.partners,
+                                route: 'subchannels',
+                            });
+                        }
                         if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
                             this.tabs.push({
                                 displayName: this.LANG.channelPartners.tabNames.users,
@@ -223,10 +230,6 @@ export class NxChannelPartnersComponent implements OnInit {
             {
                 displayName: this.LANG.channelPartners.tabNames.organizations,
                 route: '',
-            },
-            {
-                displayName: this.LANG.channelPartners.tabNames.partners,
-                route: 'subchannels',
             },
             {
                 displayName: this.LANG.channelPartners.tabNames.information,

@@ -84,6 +84,12 @@ export enum ChannelPartnerPermissions {
     FIELD_ACCESS_CP_ACCOUNTANT = 'field_access_cp_accountant',
 }
 
+export enum ChannelPartnerRoles {
+    ADMINISTRATOR = 'Administrator',
+    MANAGER = 'Manager',
+    ACCOUNTANT = 'Accountant',
+}
+
 export interface InfoRowServer {
     value: string;
     description: string;
