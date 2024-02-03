@@ -106,12 +106,11 @@ def auto_refresh_token(no_refresh=False):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
             from api.account_backend import BearerAuthentication
-            if hasattr(request, "_authenticator") and isinstance(request._authenticator, TokenAuthentication):
+            if hasattr(request, "session") and (access_token := request.session.get("access_token")):
+                refresh_token = request.session.get("refresh_token")
+            elif hasattr(request, "_authenticator") and isinstance(request._authenticator, TokenAuthentication):
                 access_token = request.auth
                 refresh_token = None
-            elif hasattr(request, "session"):
-                access_token = request.session.get("access_token")
-                refresh_token = request.session.get("refresh_token")
             elif type(request) is dict:
                 access_token = request.get("access_token")
                 refresh_token = request.get("refresh_token")
