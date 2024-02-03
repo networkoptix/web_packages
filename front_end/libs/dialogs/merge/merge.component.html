@@ -3,7 +3,8 @@
         <span
             *ngIf="
                 machine.currentState !== 'failedToFindAnySystem' &&
-                machine.currentState !== 'unmergedServers'
+                machine.currentState !== 'unmergedServers' &&
+                machine.currentState !== 'secondarySystemOffline'
             "
             translate
             >Merge Systems</span
@@ -12,11 +13,12 @@
         <span *ngIf="machine.currentState === 'failedToFindAnySystem'">{{
             LANG.dialogs.merge.failedToFindAnySystemHeader | translate
         }}</span>
-        <span
-            *ngIf="machine.currentState === 'unmergedServers'"
-            translate
-            >Unmerged Systems</span
-        >
+        <span *ngIf="machine.currentState === 'unmergedServers'">
+            {{ LANG.dialogs.merge.unmergedServers | translate }}
+        </span>
+        <span *ngIf="machine.currentState === 'secondarySystemOffline'">
+            {{ LANG.dialogs.merge.systemsFailedToMerge | translate }}
+        </span>
     </h1>
     <button
         type="button"
