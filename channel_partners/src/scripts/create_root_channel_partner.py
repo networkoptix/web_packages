@@ -41,13 +41,24 @@ def run(instance_name):
             else:
                 logger.info(f'Channel partner host is already up to date.')
 
-        ChannelPartnerService.objects.create(
+        regular_recording = ChannelPartnerService.objects.get_or_create(
             created_by_channel_partner=nx_channel_partner, name='Local Recording',
             type=ChannelPartnerService.LOCAL_RECORDING
+        )[0]
+
+        ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=nx_channel_partner, name='Local Recording Demo',
+            type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1
+        )
+
+        ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=nx_channel_partner, name='Local Recording Trial',
+            type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.TRIAL, duration=1,
+            conversion_service=regular_recording
         )
 
         for mp in [0, 2, 5, 10]:
-            ChannelPartnerService.objects.create(
+            ChannelPartnerService.objects.get_or_create(
                 created_by_channel_partner=nx_channel_partner, name=f'Cloud Storage - {mp} MP',
                 type=ChannelPartnerService.CLOUD_STORAGE, parameters={
                     'days': 30,
@@ -55,13 +66,13 @@ def run(instance_name):
                 }
             )
 
-        ChannelPartnerService.objects.create(
+        ChannelPartnerService.objects.get_or_create(
             created_by_channel_partner=nx_channel_partner, name='Nx Analytics Plugin',
             type=ChannelPartnerService.ANALYTICS,
             parameters={"integrationId": "nx.analytics.plugin"}
         )
 
-        ChannelPartnerService.objects.create(
+        ChannelPartnerService.objects.get_or_create(
             created_by_channel_partner=nx_channel_partner, name='Nx Stub Object Detection',
             type=ChannelPartnerService.ANALYTICS,
             parameters={"integrationId": "nx.stub.object_detection"}
