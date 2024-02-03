@@ -472,7 +472,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private tryToRedirectToCamera(): void {
         const cid = this.getCameraFromCookies() || this.findOnlineCamera() || this.getFirstCamera();
-        if (cid) {
+        // prevent re-directing to /view/cameraId if already navigated to another page\
+        // i.e. fast clicks on nav menu
+        if (cid && this.router.url.includes('/view')) {
             this.router
                 .navigate([cid], {
                     relativeTo: this.route,
