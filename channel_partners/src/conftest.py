@@ -254,17 +254,20 @@ def cdb_introspect_url(cloud_test_host):
 @pytest.fixture()
 def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
     def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
-             system: CloudSystemId = None, active: bool = True,
-             system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR):
+             system: CloudSystemId = None, system_id: uuid.UUID = None,
+             active: bool = True, system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR):
+        if system and system_id:
+            raise ValueError('Cannot specify both system and system_id.')
         if user is None:
             email = random_email
         elif isinstance(user, CloudUser):
             email = user.email
         else:
             email = user.user.email
-        if system:
+        if system or system_id:
+            system_id = system_id or system.system_id
             system_roles = [str(system_role)] if system_role else []
-            roles = {"system_role_ids": {str(system.system_id): system_roles}}
+            roles = {"system_role_ids": {str(system_id): system_roles}}
         else:
             roles = {}
         data = {

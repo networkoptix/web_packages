@@ -1,6 +1,6 @@
-from rest_framework.permissions import BasePermission
+from typing import Any
 
-from partners.models import CloudSystemId
+from rest_framework.permissions import BasePermission
 
 
 class IsInternalToken(BasePermission):
@@ -44,12 +44,12 @@ class CanPerformChannelPartnerAction(BasePermission):
         # Allow access if user is system administrator of the system (directly, not org-level)
         self.direct_access_allowed = direct_access_allowed
 
-    def has_object_permission(self, request, view, obj: CloudSystemId):
+    def has_object_permission(self, request, view, obj: Any):
         if system := getattr(request, 'cloud_system', None):
             return system == obj and self.system_allowed
         if introspected_system_id := getattr(request, 'introspected_system_id', None):
             if (
-                str(introspected_system_id) == str(obj.system_id)
+                introspected_system_id == getattr(obj, 'system_id', None)
                 and getattr(request, 'introspected_system_roles_ids', None)
             ):
                 return True
