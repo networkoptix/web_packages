@@ -277,7 +277,8 @@ def logout(request):
 
     # At this point it doesn't matter if the call fails since the refresh token is dead.
     try:
-        Auth.delete_token(request, cloud_access_token)
+        # If we cant delete the token because its unathorized the token is dead already.
+        Auth.delete_token({"access_token": cloud_access_token}, cloud_access_token)
     # Handles the rare case where the access token expires after killing the refresh
     except (APILogicException, APINotAuthorisedException):
         pass
