@@ -805,6 +805,8 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 copy._state.adding = True
                 copy.created_by_channel_partner = self
                 copy.parent_service = service
+                if service.conversion_service:
+                    copy.conversion_service = service.conversion_service.channelpartnerservice_set.get(created_by_channel_partner=self)
                 copy.save()
 
     @staticmethod
@@ -964,7 +966,7 @@ class ChannelPartnerToUser(models.Model):
     attributes = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
 
-    
+
     class Meta:
         constraints = [
             models.constraints.UniqueConstraint(fields=['channel_partner', 'user'], name='unique_channel_partner_user')
@@ -1613,6 +1615,22 @@ class ChannelPartnerService(models.Model):
         ('active', ACTIVE),
         ('obsolete', OBSOLETE)
     )
+
+    # Subtypes
+    REGULAR = 0
+    DEMO = 1
+    TRIAL = 2
+    SUB_TYPES = (
+        (REGULAR, 'Regular'),
+        (DEMO, 'Demo'),
+        (TRIAL, 'Trial')
+    )
+    SUB_TYPES_CODES = (
+        ('regular', REGULAR),
+        ('demo', DEMO),
+        ('trial', TRIAL)
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.IntegerField(choices=SERVICE_TYPES)
     created_by_channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.PROTECT, related_name='services')
@@ -1622,10 +1640,12 @@ class ChannelPartnerService(models.Model):
     parameters = models.JSONField(default=dict, blank=True)
     parent_service = models.ForeignKey('ChannelPartnerService', blank=True, null=True, on_delete=models.CASCADE)
     created_ts = models.DateTimeField(auto_now_add=True)
+    sub_type = models.IntegerField(choices=SUB_TYPES, default=REGULAR)
+    duration = models.PositiveIntegerField(default=0)
+    conversion_service = models.ForeignKey('ChannelPartnerService', null=True, blank=True, on_delete=models.PROTECT, related_name='converting_services')
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
-
 
     def __str__(self):
         return f'{self.name} - {self.created_by_channel_partner.name}'
@@ -1642,6 +1662,9 @@ class ChannelPartnerService(models.Model):
                 copy._state.adding = True
                 copy.created_by_channel_partner = channel_partner
                 copy.parent_service = self
+                # If we make this asyncronous it could cause some race conditions
+                if self.conversion_service:
+                    copy.conversion_service = self.conversion_service.channelpartnerservice_set.get(created_by_channel_partner=channel_partner)
                 copy.save()
 
 
