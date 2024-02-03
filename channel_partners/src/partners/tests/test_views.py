@@ -2135,6 +2135,16 @@ class TestSystemTransferOffer:
 
         assert CloudSystemId.objects.filter(system_id=self.sys_id, organization=self.org).exists()
 
+    def test_success_with_system_auth(self, mock_cdb_token_introspect, httpx_mock):
+        mock_cdb_token_introspect(user=self.org_admin, system_id=self.sys_id)
+        httpx_mock.add_response(url=self.offer_url, status_code=200, json=self.offer_response)
+        httpx_mock.add_response(url=self.accept_url, status_code=200, json=self.accept_response)
+        response = self.view(self.no_comment_request, id=self.sys_id)
+        assert response.status_code == 200
+        assert response.data['systemId'] == self.sys_id
+        assert response.data['organization'] == self.org.id
+
+
 
 class TestGetAuthorizedSystem:
     def test_system_auth(self, arf, channel_partner_factory, organization_factory, system_factory):
