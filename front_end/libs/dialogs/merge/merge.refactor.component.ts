@@ -447,7 +447,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.checkedMergeabilityOnce = false;
                     this.currentSystemIsPrimary.set(true);
                     // covers case where system (cloud & non-cloud) is not set up yet
-                    if (res.isNew) {
+                    if (res.isNew || this.targetSystem.isNew) {
                         if (this.serverUrl) {
                             this.serverUrl = strSplice(
                                 this.serverUrl,
@@ -504,7 +504,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                             this.targetSystem.id,
                             true,
                             this.adminPassword,
-                            !!this.system.serverManager.moduleInfo.cloudOwnerId,
+                            !!this.system.serverManager.moduleInfo.cloudOwnerId &&
+                                !this.targetSystem.isNew,
                         ),
                     );
                 }
@@ -607,7 +608,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 if (
                     res.mergeInProgress ||
                     res.error === '0' ||
-                    res.resultCode === this.LANG.errorCodes.ok
+                    res.resultCode === this.LANG.errorCodes.ok ||
+                    !res.failedServers.length
                 ) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.isLocal) {
@@ -703,7 +705,14 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     if (this.system.useRest) {
                         secondarySystem = await (this.system.mediaserver as NxSystemRestAPI)
                             .getRemoteServerInfo(this.serverUrl)
-                            .toPromise();
+                            .toPromise()
+                            .catch(err => {
+                                if ([0, 504].includes(err.status)) {
+                                    throw Error(ResponseStrings.noServerFound);
+                                } else {
+                                    throw err;
+                                }
+                            });
                     } else {
                         secondarySystem = (
                             await this.system.serverManager
@@ -743,7 +752,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.targetSystem.id,
                     true,
                     '',
-                    !!this.targetSystem.cloudOwnerId,
+                    !!this.targetSystem.cloudOwnerId && !this.targetSystem.isNew,
                 ),
             );
             if (res.error && res.error !== '0') {

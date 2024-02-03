@@ -54,4 +54,20 @@ export type HiddenParams = Partial<{
     // Single string = array of one string
 }>;
 
+export interface RemoteSystem {
+    cloudSystemId: string;
+    id: string;
+}
+
+export interface RemoteToken {
+    cloudSystemId: string;
+    token: string;
+}
+
+export interface CloudRemoteToken {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+}
+
 export type UnauthorizedCallback = (force: boolean) => Promise<string | boolean | void>;
