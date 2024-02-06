@@ -53,19 +53,35 @@
             </div>
             <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
             <ng-template #cards>
-                <div class="px-3 cards-container">
-                    <ng-container *ngFor="let organization of filteredOrganizations$ | async">
-                        <nx-card
-                            class="card-content"
-                            (click)="handleOrgClick(organization.id)"
-                            [icon]="icons.dir + 'organization.svg'"
-                            [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
-                        >
-                            <h3>{{ organization.name }}</h3>
-                            <div>{{ organization.systemCount }}</div>
-                        </nx-card>
-                    </ng-container>
-                </div>
+                <ng-container *ngIf="(filteredOrganizations$ | async)?.length > 0; else noOrgs">
+                    <div class="px-3 cards-container">
+                        <ng-container *ngFor="let organization of filteredOrganizations$ | async">
+                            <nx-card
+                                class="card-content"
+                                (click)="handleOrgClick(organization.id)"
+                                [icon]="icons.dir + 'organization.svg'"
+                                [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
+                            >
+                                <h3>{{ organization.name }}</h3>
+                                <div>{{ organization.systemCount }}</div>
+                            </nx-card>
+                        </ng-container>
+                    </div>
+                </ng-container>
+                <ng-template #noOrgs>
+                    <div class="no-orgs-placeholder">
+                        <svg-icon
+                            nx-add-svg-src
+                            [svgStyle]="{
+                                'width.px': '64',
+                                'height.px': '64'
+                            }"
+                            [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                        ></svg-icon>
+                        <h3 translate>No Results</h3>
+                        <p translate>Try changing the search string</p>
+                    </div>
+                </ng-template>
             </ng-template>
         </ng-container>
         <ng-template #tabOutlet>

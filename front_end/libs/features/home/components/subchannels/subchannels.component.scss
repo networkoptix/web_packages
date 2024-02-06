@@ -1,4 +1,5 @@
 @use "typography";
+@use "theme_variables_common" as *;
 
 .body {
   height: 100%;
@@ -59,3 +60,15 @@
     overflow: hidden;
   }
 }
+
+  .no-partners-placeholder {
+    margin: auto;
+    text-align: center;
+    h3 {
+      color: var(--placehoder-v2-title-color)!important;
+    }
+
+    p {
+      color: var(--placehoder-v2-message-color)!important;
+    }
+  }
