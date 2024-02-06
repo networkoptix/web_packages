@@ -88,7 +88,8 @@
                             for="fullName"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': editPermissions$$().changeInfo
+                                'disabled-input-label':
+                                    !editPermissions$$().changeInfo || isLdap$$()
                             }"
                             translate
                             >Name</label
@@ -107,7 +108,8 @@
                             for="email"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': editPermissions$$().changeInfo
+                                'disabled-input-label':
+                                    !editPermissions$$().changeInfo || isLdap$$()
                             }"
                             translate
                             >Email</label
