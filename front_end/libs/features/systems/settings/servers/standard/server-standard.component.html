@@ -214,6 +214,7 @@
                             class="{{ storagesLoading ? 'storages-loading' : '' }}"
                             [ellipsisMargin]="true"
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"
+                            [disabled]="saveSettings.processing || checkingForDataAnalytics"
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
                             (onSelected)="changeAnalyticsStorage($event)"
