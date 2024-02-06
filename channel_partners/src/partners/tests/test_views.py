@@ -945,7 +945,7 @@ class TestChannelPartnerViewSet:
         notification_request = httpx_mock.get_request(url=notification_url)
         assert notification_request
 
-        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.ACCOUNTANT)
+        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
         request = arf.post('/', data=request_data, format='json')
         mock_auth_with_user(accountant)
         response = view(request, pk=sub_cp.id)
@@ -1221,7 +1221,7 @@ class TestOrganizationViewSet:
         assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
         notification_request = httpx_mock.get_request(url=notification_url)
         assert notification_request
-        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.ACCOUNTANT)
+        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
         request = arf.post('/', data=request_data, format='json')
         mock_auth_with_user(accountant)
         response = view(request, pk=org.id)
