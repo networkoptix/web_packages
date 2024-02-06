@@ -92,7 +92,8 @@ def run():
                     for service in services:
                         ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys,
                                                     quantity=random.randint(1, 10), effective_ts=from_ts).save()
-                        ServiceUsage.objects.create(service=service, cloud_system=sys, usage=1, from_ts=from_ts, to_ts=to_ts)
+                        ServiceUsage.objects.create(service=service, cloud_system=sys, service_type=service.type,
+                                                    usage=1, from_ts=from_ts, to_ts=to_ts)
                     systems.append(sys)
                 root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
                 for sys in systems[:10]:

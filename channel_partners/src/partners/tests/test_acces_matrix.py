@@ -146,7 +146,7 @@ class TestUserAccessMatrix:
         MatrixClass = UserAccessMatrix
         cp_admin = cp_user_factory(channel_partner=self.partners[0], role='Administrator')
         cp_manager = cp_user_factory(channel_partner=self.partners[0], role='Manager')
-        cp_accountant = cp_user_factory(channel_partner=self.partners[0], role='Accountant')
+        cp_accountant = cp_user_factory(channel_partner=self.partners[0], role='Reports Viewer')
         cp_admin_access_matrix = MatrixClass(cloud_user=cp_admin.user, content_type='channelpartner')
         cp_manager_access_matrix = MatrixClass(cloud_user=cp_manager.user, content_type='channelpartner')
         cp_accountant_access_matrix = MatrixClass(cloud_user=cp_accountant.user, content_type='channelpartner')
@@ -199,7 +199,7 @@ class TestUserAccessMatrix:
         MatrixClass = UserAccessMatrix
         cp_admin = cp_user_factory(channel_partner=self.partners[0], role='Administrator')
         cp_manager = cp_user_factory(channel_partner=self.partners[0], role='Manager')
-        cp_accountant = cp_user_factory(channel_partner=self.partners[0], role='Accountant')
+        cp_accountant = cp_user_factory(channel_partner=self.partners[0], role='Reports Viewer')
         cp_admin_access_matrix = MatrixClass(cloud_user=cp_admin.user, content_type='channelpartner')
         cp_manager_access_matrix = MatrixClass(cloud_user=cp_manager.user, content_type='channelpartner')
         cp_accountant_access_matrix = MatrixClass(cloud_user=cp_accountant.user, content_type='channelpartner')
