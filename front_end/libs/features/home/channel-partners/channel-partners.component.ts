@@ -186,12 +186,14 @@ export class NxChannelPartnersComponent implements OnInit {
 
     newOrgDialog(): void {
         this.dialogsService.createOrganization(this.currentPartnerId).then((org: Organization) => {
-            this.store.dispatch(
-                CPActions.setCurrentPartner({
-                    currentPartnerId: this.currentPartnerId,
-                    currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
-                }),
-            );
+            if (org) {
+                this.store.dispatch(
+                    CPActions.setCurrentPartner({
+                        currentPartnerId: this.currentPartnerId,
+                        currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
+                    }),
+                );
+            }
         });
     }
 
