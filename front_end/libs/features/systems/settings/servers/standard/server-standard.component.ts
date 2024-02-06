@@ -539,7 +539,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
-            this.dialogs.changeStorage(this.system).then(async closeRes => {
+            await this.dialogs.changeStorage(this.system).then(async closeRes => {
                 if (closeRes === 'changeOk') {
                     this.selectedStorage = newStorage;
                     this.saveStorageWatcher.originalValue = false;
