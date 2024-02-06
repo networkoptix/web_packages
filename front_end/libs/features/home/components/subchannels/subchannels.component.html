@@ -34,23 +34,39 @@
                     instant
                 ></nx-search>
             </div>
-            <div class="px-3 cards-container">
-                <ng-container *ngFor="let channel of filteredSubchannels$$()">
-                    <nx-card
-                        class="card-content"
-                        (click)="handleChannelClick(channel.id)"
-                        [icon]="icons.dir + 'partner.svg'"
-                    >
-                        <h3>{{ channel.name }}</h3>
-                        <div>
-                            <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
-                            {{ channel.organizationCount }}
-                            <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
-                            {{ channel.partnerCount }}
-                        </div>
-                    </nx-card>
-                </ng-container>
-            </div>
+            <ng-container *ngIf="filteredSubchannels$$().length > 0; else noPartners">
+                <div class="px-3 cards-container">
+                    <ng-container *ngFor="let channel of filteredSubchannels$$()">
+                        <nx-card
+                            class="card-content"
+                            (click)="handleChannelClick(channel.id)"
+                            [icon]="icons.dir + 'partner.svg'"
+                        >
+                            <h3>{{ channel.name }}</h3>
+                            <div>
+                                <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+                                {{ channel.organizationCount }}
+                                <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+                                {{ channel.partnerCount }}
+                            </div>
+                        </nx-card>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <ng-template #noPartners>
+                <div class="no-partners-placeholder">
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '64',
+                            'height.px': '64'
+                        }"
+                        [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                    ></svg-icon>
+                    <h3 translate>No Results</h3>
+                    <p translate>Try changing the search string</p>
+                </div>
+            </ng-template>
         </div>
         <ng-template #outlet>
             <router-outlet></router-outlet>

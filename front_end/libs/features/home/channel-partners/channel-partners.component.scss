@@ -1,3 +1,4 @@
+@use "theme_variables_common" as *;
 .channel-partner {
   height: 100%;
 
@@ -26,6 +27,18 @@
 
   .hidden{
     visibility: none;
+  }
+
+  .no-orgs-placeholder {
+    margin: auto;
+    text-align: center;
+    h3 {
+      color: var(--placehoder-v2-title-color)!important;
+    }
+
+    p {
+      color: var(--placehoder-v2-message-color)!important;
+    }
   }
 
   .card-content {
