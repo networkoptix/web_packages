@@ -37,6 +37,7 @@ from partners.models import (
     ChannelPartnerEvent,
     ChannelPartnerExternalId,
     ChannelPartnerRole,
+    ChannelPartnerRoles,
     ChannelPartnerService,
     ChannelPartnerServiceExternalId,
     ChannelPartnerServiceRecord,
@@ -108,7 +109,7 @@ class CodeChoiceField(serializers.ChoiceField):
         OpenApiExample(
             'Support Information Example',
             value={
-                "sites": [{"value": "123", "description": "123"}],
+                "sites": [{"value": "123", "description": ""}],
                 "phones": [{"value": "123", "description": "123"}],
                 "emails": [{"value": "123", "description": "123"}],
                 "custom": [{"label": "abc", "value": "123"}]
@@ -119,7 +120,7 @@ class CodeChoiceField(serializers.ChoiceField):
 class SupportInformationSerializer(serializers.Serializer):
     class ValueDescription(serializers.Serializer):
         value = NonPartialCharfield(required=True)
-        description = NonPartialCharfield(required=False)
+        description = NonPartialCharfield(required=False, allow_blank=True, default='')
 
     class CustomSerializer(serializers.Serializer):
         label = NonPartialCharfield(required=True)
@@ -239,12 +240,17 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
-
+    supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False)
+    firstAdminEmail = serializers.EmailField(required=False)
     class Meta:
         model = ChannelPartner
-        fields = ['name', 'parentChannelPartner', 'attributes', 'monthlyAdditionalServiceLimit']
+        fields = [
+            'name', 'parentChannelPartner', 'attributes',
+            'monthlyAdditionalServiceLimit', 'supportInformation',
+            'firstAdminEmail',
+        ]
 
-    def validate_parent_channel_partner(self, value: ChannelPartner):
+    def validate_parentChannelPartner(self, value: ChannelPartner):
         req = self.context.get('request')
         if not value.can_add_or_remove_sub_chanel_partners(req.user):
             raise exceptions.PermissionDenied(
@@ -254,8 +260,17 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data_filtered = validated_data.copy()
         validated_data_filtered.pop('attributes', None)
+        admin_email = validated_data_filtered.pop('firstAdminEmail', None)
         instance: ChannelPartner = super().create(validated_data_filtered)
         instance.set_attributes(validated_data.get('attributes', {}))
+        if admin_email:
+            cloud_user, created = CloudUser.objects.get_or_create(email=admin_email)
+            user_rel = ChannelPartnerToUser.objects.create(user=cloud_user, channel_partner=instance,
+                                                roles=[ChannelPartnerRoles.ADMINISTRATOR])
+            added_channel_partner_role_task.apply_async(args=[
+                user_rel.channel_partner_id, cloud_user.id, user_rel.user_id,
+                instance.cloud_host.hostname
+            ])
         return instance
 
 
@@ -345,10 +360,14 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    firstAdminEmail = serializers.EmailField(required=False)
 
     class Meta:
         model = Organization
-        fields = ['name', 'channelPartner', 'attributes']
+        fields = [
+            'name', 'channelPartner',
+            'attributes', 'firstAdminEmail'
+        ]
 
     def validate_channelPartner(self, value: ChannelPartner):
         req = self.context.get('request')
@@ -361,10 +380,22 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
         # Create without attributes
         validated_data_filtered = validated_data.copy()
         validated_data_filtered.pop('attributes', None)
+        admin_email = validated_data_filtered.pop('firstAdminEmail', None)
         # Create
         instance: Organization = super().create(validated_data_filtered)
         # Use model method to set original validated data's attributes
         instance.set_attributes(validated_data.get('attributes', {}))
+        # Creating Admin
+        if admin_email:
+            cloud_user, created = CloudUser.objects.get_or_create(email=admin_email)
+            user_rel = OrganizationToUser.objects.create(user=cloud_user, organization=instance,
+                                              roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
+            added_organization_role_task.apply_async(args=[
+                user_rel.organization_id,
+                cloud_user.id,
+                user_rel.user_id,
+                instance.channel_partner.cloud_host.hostname
+            ])
         return instance
 
 

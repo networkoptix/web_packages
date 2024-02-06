@@ -1140,7 +1140,7 @@ class TestSupportInformationSerializer:
 
     def test_serializer_valid_data(self):
         valid_data = {
-            "sites": [{"value": "123", "description": "123"}],
+            "sites": [{"value": "123", "description": ""}],
             "phones": [{"value": "123", "description": "123"}],
             "emails": [{"value": "123", "description": "123"}],
             "custom": [{"label": "abc", "value": "123"}]
