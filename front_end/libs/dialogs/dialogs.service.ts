@@ -298,10 +298,12 @@ export class NxDialogsService {
         ),
     );
 
-    addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(() =>
-        import('./channel-partners/add-partner-user/add-partner-user.component').then(
-            m => m.AddPartnerUserModalContent,
-        ),
+    addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(
+        () =>
+            import('./channel-partners/add-partner-user/add-partner-user.component').then(
+                m => m.AddPartnerUserModalContent,
+            ),
+        { width: '360px' },
     );
 
     updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(() =>
