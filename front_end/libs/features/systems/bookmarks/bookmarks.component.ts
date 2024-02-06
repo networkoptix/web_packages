@@ -35,7 +35,6 @@ import { icons } from '@static-variables';
 import {
     alphabeticalSort,
     cleanIdLegacy,
-    MS,
     msToParts,
     offsetDate,
     paramSortFunc,
@@ -98,7 +97,6 @@ export class NxBookmarksComponent implements OnInit {
         bookmarkWidth: 272,
         gridPadding: 15,
     };
-    readonly localOffsetToUTCMs: number = new Date().getTimezoneOffset() * MS.min;
     readonly bookmarksQuery: BookmarksParams = {
         order: 'desc',
         _orderBy: 'startTimeMs',
@@ -149,7 +147,6 @@ export class NxBookmarksComponent implements OnInit {
         }),
     );
 
-    offsetTimes: Map<string, number>;
     deviceMap: Map<string, BookmarksDevice>;
 
     dateFilter: DateRange<Date> = null;
@@ -283,12 +280,11 @@ export class NxBookmarksComponent implements OnInit {
                     mediaserver.getBookmarks(pollParams),
                     mediaserver.getBookmarkTags(),
                     mediaserver.getDevices(),
-                    mediaserver.getServerTimes(),
                     this.system.cameraManager.hasArchives(),
                 ]),
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
-            map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
+            map(([bks, tags, devices, devicesWithArchive]) => {
                 // Check to see if no bookmarks are returned and there are no filters applied
                 this.noMatchingResults =
                     !bks.length && Object.values(this.queryParams).some(Boolean);
@@ -297,12 +293,6 @@ export class NxBookmarksComponent implements OnInit {
                 });
                 this.tags$.next(tags);
                 this.devices$.next(devices);
-                this.offsetTimes = new Map(
-                    serverTimes.reply.map(reply => [
-                        reply.serverId,
-                        Number(reply.timeZoneOffset) ?? 0,
-                    ]),
-                );
                 this.deviceMap = new Map(devices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
@@ -390,9 +380,6 @@ export class NxBookmarksComponent implements OnInit {
             .map<Bookmark>(bk => {
                 const deviceId = cleanIdLegacy(bk.deviceId);
                 const systemId = cleanIdLegacy(this.system.id);
-                const timeZoneOffset =
-                    this.localOffsetToUTCMs +
-                    (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
                 const canViewBookmark = this.system.permissionManager.canViewDeviceArchive(
                     deviceId as string,
@@ -436,7 +423,6 @@ export class NxBookmarksComponent implements OnInit {
                     deviceName,
                     deviceId,
                     systemId,
-                    timeZoneOffset,
                 };
             });
     }
