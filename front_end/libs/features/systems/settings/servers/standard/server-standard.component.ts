@@ -680,15 +680,20 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     ): DropdownStorage | false {
         const [curCriteria, ...remainingCriteria] = criteria;
         const filteredStorages = storages.filter(storage => storage[curCriteria]);
+        const findSystem = this.system.version >= 5.1 ? this.highestFreeSpace : this.firstNonSystem;
         if (filteredStorages.length === 1) {
             return filteredStorages[0];
         } else if (filteredStorages.length === 0 || storages.length === filteredStorages.length) {
-            return this.highestFreeSpace(storages);
+            return findSystem(storages);
         } else if (remainingCriteria.length === 0) {
-            return lastSetOfCriteria ? this.highestFreeSpace(filteredStorages) : false;
+            return lastSetOfCriteria ? findSystem(filteredStorages) : false;
         } else {
             return this.selectDefaultStorageRecursion(filteredStorages, remainingCriteria);
         }
+    }
+
+    firstNonSystem(storage: DropdownStorage[]): DropdownStorage {
+        return storage.find(({ isNotSystem }) => isNotSystem) || storage[0];
     }
 
     highestFreeSpace(storage: DropdownStorage[]): DropdownStorage {

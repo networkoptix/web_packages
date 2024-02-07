@@ -78,6 +78,7 @@ const setupSystemServerComponent = async (): ReturnType<
     setup.component.dropdownStorages = JSON.parse(
         JSON.stringify(dropdownsMock),
     ) as typeof setup.component.dropdownStorages;
+    setup.component.system.version = 6;
     setup.fixture.detectChanges();
     return setup;
 };
