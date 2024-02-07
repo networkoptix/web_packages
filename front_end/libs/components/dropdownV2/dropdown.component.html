@@ -35,10 +35,12 @@
     #overlayTemplate="cdkPortal"
     class="dropdown"
 >
+    <!-- Do resizing/scrolling stuff before showing -->
     <div
         *ngIf="!this.dropdownAbortingOpen$$()"
         #dropdown
         class="custom-dropdown-menu"
+        [style.visibility]="dropdownOpening$$() ? 'hidden' : undefined"
     >
         <ng-content></ng-content>
     </div>

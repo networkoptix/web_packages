@@ -68,18 +68,23 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
         super.handleOptionSelected(option);
     }
 
-    override showDropdown(): void {
-        super.showDropdown();
-        if (typeof this.highlightValue$$() === 'symbol') {
+    override onOverlayAttach(): void {
+        // Timeout for dropdown element to become accessible
+        setTimeout(() => {
+            this.setOverlayWidth();
             if (this.selected !== undefined) {
                 this.highlightValue$$.set(this.selected);
+                this.scrollOptionIntoView(
+                    this.dropdownItems.find(item => item.value === this.selected),
+                );
             } else {
                 const first = this.getFirstEnabled();
                 if (first) {
                     this.highlightValue$$.set(first.value);
                 }
             }
-        }
+            this.openState$$.set(DropdownState.Open);
+        });
     }
 
     protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
