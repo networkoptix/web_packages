@@ -63,7 +63,7 @@
                         >
                         </svg-icon>
                         <div
-                            *ngIf="(creationCutOffTimeMS$ | async) > 1; else noBookmarksText"
+                            *ngIf="noMatchingResults; else noBookmarksText"
                             class="no-bookmarks-content"
                         >
                             <nx-page-placeholder
