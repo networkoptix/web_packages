@@ -115,6 +115,7 @@ export class NxBookmarksComponent implements OnInit {
     bookmarks$: Observable<Bookmark[]>;
     creationCutOffTimeMS$ = new BehaviorSubject<number>(0);
     newCreationCutOffTimeMS$ = new BehaviorSubject<number>(0);
+    noMatchingResults: boolean;
 
     search: string = '';
     loadMore$ = new Subject<boolean>();
@@ -288,6 +289,9 @@ export class NxBookmarksComponent implements OnInit {
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
             map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
+                // Check to see if no bookmarks are returned and there are no filters applied
+                this.noMatchingResults =
+                    !bks.length && Object.values(this.queryParams).some(Boolean);
                 this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
                     return cleanIdLegacy(deviceId) as string;
                 });
