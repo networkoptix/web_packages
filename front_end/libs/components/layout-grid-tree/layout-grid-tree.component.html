@@ -156,10 +156,10 @@
                             : ''
                     "
                     [ngClass]="{
-                        selected:
-                            layout?.id &&
-                            cleanIdLegacy(changingLayout || layout?.id) ===
-                                cleanIdLegacy(node?.details?.id),
+                        selected: layout?.id
+                            ? cleanIdLegacy(changingLayout || layout?.id) ===
+                              cleanIdLegacy(node?.details?.id)
+                            : node?.details?.id === 'noLayouts',
                         offline:
                             node.type !== RESOURCE_TYPE.LAYOUT &&
                             !node.details.unauthorized &&

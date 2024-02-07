@@ -1,6 +1,7 @@
 import { Point } from '@angular/cdk/drag-drop';
 import { Signal } from '@angular/core';
 import { Observable, ObservedValueOf } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
 import { Translatable } from '@pipes/nx-translate.types';
 import type { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
@@ -213,3 +214,13 @@ export type ServerStatsObservable = Observable<
         } | null>
     >
 >;
+
+export enum LayoutPlaceholder {
+    NO_LAYOUTS = 'noLayouts',
+    SHOW_404 = 'show404',
+}
+
+export const placeholderNameLookup = {
+    [LayoutPlaceholder.NO_LAYOUTS]: uuid(),
+    [LayoutPlaceholder.SHOW_404]: uuid(),
+} as const;

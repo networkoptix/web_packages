@@ -125,6 +125,7 @@ import {
     ResourceType,
     Setting,
     Size,
+    placeholderNameLookup,
 } from './layout-grid.types';
 
 const SETTINGS_CONFIG: Setting[] = [
@@ -392,6 +393,7 @@ export class NxLayoutGridComponent {
 
     LANG = staticLang;
     CONFIG = nxConfig;
+    readonly PLACEHOLDER_NAME_LOOKUP = placeholderNameLookup;
 
     ngOnDestroy(): void {
         this.layoutStateService.portal = null;
@@ -1388,20 +1390,27 @@ export class NxLayoutGridComponent {
         originX: number;
         originY: number;
     } {
+        if (!items.length) {
+            return { width: 1, height: 1, originX: 0, originY: 0 };
+        }
+
         const initialValues = {
             top: Infinity,
             bottom: -Infinity,
             left: Infinity,
             right: -Infinity,
         };
+
         const {
             top: originY,
             bottom,
             left: originX,
             right,
         } = items.reduce(this.calculateEdges, initialValues);
+
         const height = Math.floor(bottom - originY);
         const width = Math.floor(right - originX);
+
         return { width, height, originY, originX };
     }
 
@@ -1844,6 +1853,21 @@ export class NxLayoutGridComponent {
         combineLatest([this.highlightState$, this.collisions$])
             .pipe(take(1))
             .subscribe(([{ x, y, resize }, collisions]) => {
+                const isPlaceholder = Object.values(placeholderNameLookup).includes(
+                    this.layout.name,
+                );
+
+                if (isPlaceholder) {
+                    const items = [this.generateLayoutItem(node, { x: 0, y: 0 })];
+                    const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
+                    if (isLocalLayout) {
+                        this.layoutStateService.createNewLayout(items);
+                    } else {
+                        this.layoutStateService.createNewCrossSystemLayout(items);
+                    }
+                    return;
+                }
+
                 const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
                 const notMoved = [x, y, resize.x, resize.y].every(change => !change);
                 this.addingItem$$.set(false);

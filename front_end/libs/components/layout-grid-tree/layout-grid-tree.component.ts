@@ -512,7 +512,7 @@ export class NxLayoutGridTreeComponent {
     doubleClick$ = new Subject<true>();
 
     handleSingleClick = (node: ResourceNode, parent: ResourceNode): void => {
-        const parentId = parent.details?.id;
+        const parentId = parent?.details?.id;
         if (node.type) {
             of(node)
                 .pipe(delay(250), takeUntil(this.doubleClick$))

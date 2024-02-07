@@ -26,6 +26,8 @@ import {
     ResourceNode,
     ResourceType,
     SharableResourceLeafNode,
+    LayoutPlaceholder,
+    placeholderNameLookup,
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
@@ -260,7 +262,7 @@ export class NxLayoutViewComponent {
                     tree: [
                         {
                             name: staticLang.layouts.titles.resourceTypes[ResourceType.LAYOUTS],
-                            details: { id: ResourceType.LAYOUTS },
+                            details: { id: 'noLayouts' },
                             type: ResourceType.LAYOUTS,
                             children: layoutsForTree,
                         },
@@ -308,16 +310,16 @@ export class NxLayoutViewComponent {
                 .children.find(
                     ({ details }: ResourceNode<Layout>) => details?.items.length,
                 ) as ResourceNode<Layout>;
-            const camera = tree
-                .find(assertResourceOfType.cameras)
-                .children.shift() as ResourceNode<NxSystemCamera>;
-            const layoutId = cleanIdLegacy((layout || camera)?.details?.id);
+            // const camera = tree
+            //     .find(assertResourceOfType.cameras)
+            //     .children.shift() as ResourceNode<NxSystemCamera>;
+            const layoutId = cleanIdLegacy(layout?.details?.id);
             if (layoutId) {
                 await this.layoutStateService.paramStateHandler.state$$.set({
                     params: { layoutId },
                 });
             }
-            return layoutId || '';
+            return layoutId || 'noLayouts';
         }),
         distinctUntilChanged(),
         untilDestroyed(this),
@@ -368,6 +370,11 @@ export class NxLayoutViewComponent {
                     return { systemId: system.id, ...existingLayout };
                 }
             }
+
+            if (layoutId === LayoutPlaceholder.NO_LAYOUTS) {
+                return this.createPlaceholder(LayoutPlaceholder.NO_LAYOUTS);
+            }
+
             return layoutId
                 ? this.createFocusLayout(system.id, layoutId).catch(() =>
                       this.createNewLayout(system.id),
@@ -375,7 +382,9 @@ export class NxLayoutViewComponent {
                 : this.createNewLayout(system.id);
         }),
         switchMap(layout =>
-            timer(layout ? 0 : 2500).pipe(map(() => layout || this.createNewLayout('show404'))),
+            timer(layout ? 0 : 2500).pipe(
+                map(() => layout || this.createPlaceholder(LayoutPlaceholder.SHOW_404)),
+            ),
         ),
         shareReplay({
             bufferSize: 1,
@@ -498,6 +507,13 @@ export class NxLayoutViewComponent {
         systemId,
         parentId: parentId || this.accountService.account.id,
     });
+
+    createPlaceholder = (id: LayoutPlaceholder): Layout =>
+        this.createNewLayout(
+            this.systemService.currentSystem$$().id || '',
+            '',
+            placeholderNameLookup[id],
+        );
 
     createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
         const node = await firstValueFrom(

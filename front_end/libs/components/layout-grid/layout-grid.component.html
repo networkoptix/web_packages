@@ -390,33 +390,76 @@
                                 !layout?.items?.length &&
                                 !layoutStateService.editedLayout$$()?.isNew
                             ) {
-                                @if (layout?.systemId === 'show404') {
-                                    <div class="error-404-placeholder">
-                                        <nx-page-placeholder type="404"></nx-page-placeholder>
-                                    </div>
-                                } @else {
-                                    <div class="no-camera-placeholder">
-                                        <svg-icon
-                                            nx-add-svg-src
-                                            [svgStyle]="{
-                                                'width.px': '64',
-                                                'height.px': '64'
-                                            }"
-                                            [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
-                                        ></svg-icon>
-                                        <h3 translate>No Cameras</h3>
-                                        @if (
-                                            CONFIG.featureFlags.layoutsEditable ||
-                                            CONFIG.featureFlags.layoutsDemo
-                                        ) {
-                                            <p translate>
-                                                Drag and drop any item here to add it to the layout
-                                                or double click on item
-                                            </p>
-                                        } @else {
-                                            <p translate>Add them in the %VMS_NAME% client</p>
-                                        }
-                                    </div>
+                                @switch (layout?.name) {
+                                    @case (PLACEHOLDER_NAME_LOOKUP.show404) {
+                                        <div class="error-404-placeholder">
+                                            <nx-page-placeholder type="404"></nx-page-placeholder>
+                                        </div>
+                                    }
+                                    @case (PLACEHOLDER_NAME_LOOKUP.noLayouts) {
+                                        <div class="no-layouts-placeholder">
+                                            <h3 translate>Layouts</h3>
+                                            @if (
+                                                CONFIG.featureFlags.layoutsEditable ||
+                                                CONFIG.featureFlags.layoutsDemo
+                                            ) {
+                                                <p translate>
+                                                    A layout is an arrangement of items placed on
+                                                    the Viewing Grid. Up to 64 items can be
+                                                    contained in a layout. Each layout is displayed
+                                                    in a separate tab, so multiple layouts can be
+                                                    open at once.
+                                                </p>
+                                                <ul>
+                                                    <li translate>
+                                                        You can click on the "+" button next to the
+                                                        group name to create first layout.
+                                                    </li>
+                                                    <li translate>
+                                                        You can also select several items in the
+                                                        Resource tree and simply move them to the
+                                                        area on the right side of the tree
+                                                    </li>
+                                                </ul>
+                                                <button
+                                                    class="btn btn-primary"
+                                                    (click)="layoutStateService.createNewLayout()"
+                                                    translate
+                                                >
+                                                    Create First
+                                                </button>
+                                            } @else {
+                                                <p translate>
+                                                    You don't currently have any layouts, create
+                                                    them in %VMS_NAME% client
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                    @default {
+                                        <div class="no-camera-placeholder">
+                                            <svg-icon
+                                                nx-add-svg-src
+                                                [svgStyle]="{
+                                                    'width.px': '64',
+                                                    'height.px': '64'
+                                                }"
+                                                [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
+                                            ></svg-icon>
+                                            <h3 translate>No Cameras</h3>
+                                            @if (
+                                                CONFIG.featureFlags.layoutsEditable ||
+                                                CONFIG.featureFlags.layoutsDemo
+                                            ) {
+                                                <p translate>
+                                                    Drag and drop any item here to add it to the
+                                                    layout or double click on item
+                                                </p>
+                                            } @else {
+                                                <p translate>Add them in the %VMS_NAME% client</p>
+                                            }
+                                        </div>
+                                    }
                                 }
                             }
                             @if (
@@ -424,7 +467,7 @@
                                 !layoutItemLookup[layout.items[0].resourceId] &&
                                 layout.items[0].resourceId === layout.items[0].id
                             ) {
-                                <div class="no-layout-placeholder">
+                                <div class="deleted-layout-placeholder">
                                     <svg-icon
                                         nx-add-svg-src
                                         [svgStyle]="{
