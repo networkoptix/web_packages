@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, OnInit, Injector, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
         ReleaseComponent,
     ],
 })
-export class DownloadHistoryComponent implements OnInit {
+export class DownloadHistoryComponent implements OnInit, AfterViewInit {
     readonly releases = 'releases';
     LANG = staticLang;
 
@@ -62,6 +62,14 @@ export class DownloadHistoryComponent implements OnInit {
             })
             .reverse();
     }
+
+    ngAfterViewInit(): void {
+        const hash = window.location.hash;
+        if (hash) {
+            document.getElementById(hash.replace('#', ''))?.scrollIntoView();
+        }
+    }
+
     public switchTabs(name: string): false {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
