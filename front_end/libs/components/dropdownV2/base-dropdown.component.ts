@@ -76,6 +76,11 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
 
     abstract handleSelectionChange(): void;
 
+    onOverlayAttach(): void {
+        this.setOverlayWidth();
+        this.openState$$.set(DropdownState.Open);
+    }
+
     showDropdown(): void {
         if (!this.dropdownClosed$$()) {
             return;
@@ -90,8 +95,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
                     this.hideDropdown();
                     return;
                 }
-                this.openState$$.set(DropdownState.Open);
-                this.setOverlayWidth();
+                this.onOverlayAttach();
             });
         this.overlayRef.attach(this.contentTemplate);
     }
