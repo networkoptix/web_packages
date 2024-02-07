@@ -34,6 +34,7 @@ stages:
   - build
   - deploy
   - test
+  - ft (#ask-ft)
   - fail-fast
 
 # Rules
@@ -503,7 +504,7 @@ cloud-deploy:
     - runJenkinsJob.sh gitlab.cloud.deploy
         "CLOUD_PORTAL_IMAGE_TAG=${CI_PIPELINE_ID}.gitlab"
         "CLOUD_BACKEND_IMAGE_TAG=${CLOUD_BACKEND_IMAGE_TAG}"
-        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}" 
+        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}"
         "CUSTOMIZATIONS=default" 2>&1 | tee "deploy.log"
     - |
       JENKINS_JOB_URL="$(grep 'Job Url:' "deploy.log" | \
@@ -755,7 +756,7 @@ fail-on-python-license-check:
           echo "Attempt $i Successfully connected to postgres server"
           break
         fi
-      
+
         sleep 5
       done
 
@@ -847,3 +848,5 @@ cp-lint:
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
         echo 'pushed lint fixes to branch'
       fi
+
+test-system-users: {stage: 'ft (#ask-ft)', needs: [ 'cloud-deploy' ], script: [ 'test-system-users' ], tags: [ 'cloud_portal_tests' ], timeout: '180m'}
