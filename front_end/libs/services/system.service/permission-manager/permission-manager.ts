@@ -17,7 +17,7 @@ import {
     RestV3User,
     CloudUserCompat,
 } from '@services/system-user.types';
-import { cleanIdLegacy } from '@utils/general';
+import { cleanId, cleanIdLegacy } from '@utils/general';
 
 import { coerceUserType } from '../../helpers/coerce-user-type';
 
@@ -274,6 +274,17 @@ export class PermissionManager {
         const user = await this.mediaserver.getCurrentUser(true);
         if (user) {
             this.user$$.set(user);
+            // Pre 6.0 systems use accessibleResources to effectively give the 'view' permission to the resourceId.
+            // 6.0 has groups and resourceAccessRights so we skip this for them.
+            if ('accessibleResources' in user) {
+                const _resourceAccessRights: ResourceAccessRights = Object.fromEntries(
+                    user.accessibleResources.map(id => [
+                        cleanId(id),
+                        this.convertAccessRightsStringToObj('view'),
+                    ]),
+                );
+                this.resourceAccessRights$$.set(_resourceAccessRights);
+            }
         } else {
             return Promise.reject();
         }
