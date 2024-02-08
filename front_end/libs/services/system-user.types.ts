@@ -119,6 +119,7 @@ export interface RestV1User {
     userRoleId?: string;
     type: string; // v1
     isOwner: boolean; // v1
+    accessibleResources?: string[]; // v1, v2
 }
 
 export interface RestV3User {
