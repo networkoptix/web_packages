@@ -48,16 +48,18 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { SystemResourcesSelectors } from '@store/system-resources';
 import { SystemResourceTypeEnums } from '@store/system-resources/system-resources.types';
-import { alphaNumericSort, cleanIdLegacy, dirtyId, extractVideoLayout } from '@utils/general';
+import { cleanIdLegacy, dirtyId, extractVideoLayout } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
-import { parseCameras, parseOtherSystems, parseServers, parseWebPages } from './layout-view-utils';
+import {
+    parseCameras,
+    parseOtherSystems,
+    parseServers,
+    parseWebPages,
+    sortByName,
+    generateCamerasForTree,
+} from './layout-view-utils';
 import { registerDemoLogger } from './timeline-service-demo';
-
-interface Resource {
-    name: string;
-    id: string;
-}
 
 enum CloudLayoutTours {
     DEFAULT = 'default',
@@ -201,8 +203,6 @@ export class NxLayoutViewComponent {
                     queryInfo.openNodes,
                 );
 
-                const byName = alphaNumericSort<Pick<Resource, 'name'>>(r => r.name || '');
-
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
                     .filter(
@@ -229,7 +229,7 @@ export class NxLayoutViewComponent {
                                 details,
                             }) as SharableResourceLeafNode<Layout>,
                     )
-                    .sort((a, b) => (a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1));
+                    .sort((a, b) => (a.shared === b.shared ? sortByName(a, b) : a.shared ? -1 : 1));
 
                 const parsedResources = Object.entries({
                     ...parsedOtherSystems,
@@ -248,19 +248,13 @@ export class NxLayoutViewComponent {
                     return newObject;
                 }, {});
 
-                const serversForTree = Object.values(parsedServers).sort(byName);
+                const serversForTree = Object.values(parsedServers).sort(sortByName);
 
-                const camerasForTree = Object.values(parsedCameras)
-                    .sort(byName)
-                    .filter(
-                        ({ type }) =>
-                            nxConfig.featureFlags.layoutsIoDevices ||
-                            type !== ResourceType.IO_DEVICE,
-                    );
+                const camerasForTree = generateCamerasForTree(parsedCameras);
 
-                const webPagesForTree = Object.values(parsedWebPages).sort(byName);
+                const webPagesForTree = Object.values(parsedWebPages).sort(sortByName);
 
-                const otherSystemsForTree = Object.values(parsedOtherSystems).sort(byName);
+                const otherSystemsForTree = Object.values(parsedOtherSystems).sort(sortByName);
 
                 return {
                     tree: [
@@ -480,10 +474,6 @@ export class NxLayoutViewComponent {
             WebRTCStreamManager.updatePosition();
             this.ptzControlTarget = null;
         }
-    }
-
-    layoutToDropdown({ name, id }: Resource): DropdownItem<string> {
-        return { name, value: cleanIdLegacy(id) };
     }
 
     createNewLayout = (

@@ -100,6 +100,7 @@ export enum ResourceType {
     IO_DEVICE = 'iodevice',
     SYSTEM = 'system_cloud',
     OTHER_SYSTEMS = 'other_systems',
+    CAMERAS_GROUP = 'cameras_group',
 }
 
 export interface BaseResourceNode {
@@ -108,7 +109,7 @@ export interface BaseResourceNode {
 }
 
 export interface ResourceParentNode<T = { id: string }> extends BaseResourceNode {
-    children: ResourceLeafNode<T>[];
+    children: (ResourceLeafNode<T> | ResourceParentNode<T>)[];
     hidden?: boolean;
     details: T;
 }
@@ -138,6 +139,7 @@ export interface NxSystemCameraWithMappedFields extends NxSystemCamera {
     recordingStatus: RecordingStatus;
     online: boolean;
     unauthorized: boolean;
+    requiresTranscoding: boolean;
 }
 
 export interface NxSystemServerWithMappedFields extends NxSystemServer {
@@ -150,6 +152,7 @@ export interface ResourceParentNodeMap {
     [ResourceType.SERVERS]: ResourceParentNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGES]: ResourceParentNode<WebPage>;
     [ResourceType.OTHER_SYSTEMS]: ResourceParentNode<NxSystemInfo>;
+    [ResourceType.CAMERAS_GROUP]: ResourceParentNode<NxSystemCameraWithMappedFields>;
 }
 
 export interface ResourceLeafNodeMap {

@@ -33,6 +33,7 @@
     "layoutsItemStatus": false,
     "layoutsChangeResolution": false,
     "layoutsItemChangeResolution": false,
+    "layoutsCameraGroups": false,
     "useJsonRpc": false,
     "systemGroups": true,
     "channelPartners": false,

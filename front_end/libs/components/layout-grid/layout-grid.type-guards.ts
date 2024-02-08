@@ -63,6 +63,7 @@ const parentNodeTypes = [
     ResourceType.CAMERAS,
     ResourceType.SERVERS,
     ResourceType.WEB_PAGES,
+    ResourceType.CAMERAS_GROUP,
 ] as const;
 
 const leafNodeTypes = [
