@@ -35,6 +35,7 @@ nx-bookmarks-card {
             width: 272px;
             height: 153px;
             background-color: var(--bookmarks-card-video-background-color);
+            border: 1px solid var(--border-color);
 
             &:has(.thumbnailError),
             &:has(.noPermissions) {
