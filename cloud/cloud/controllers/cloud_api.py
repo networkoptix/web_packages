@@ -723,6 +723,16 @@ class Account(object):
 
     @staticmethod
     @validate_response
+    def check_activated(request, email=None, password=None, headers=None, cloud_db_url=None):
+        if cloud_db_url is None:
+            cloud_db_url = CloudDbConfig.url(customization_ctx.get())
+        auth = None
+        if email and password:
+            auth = {"email": email, "password": password}
+        return get_wrapper(f'{cloud_db_url}/account/get', headers=headers, auth=auth)
+
+    @staticmethod
+    @validate_response
     @auto_refresh_token
     def get_2fa_settings(request, headers=None):
         return get_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/account/self/settings/security", headers=headers)
