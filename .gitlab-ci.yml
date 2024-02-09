@@ -848,5 +848,3 @@ cp-lint:
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
         echo 'pushed lint fixes to branch'
       fi
-
-test-system-users: {stage: 'ft (#ask-ft)', needs: [ 'cloud-deploy' ], script: [ 'test-system-users' ], tags: [ 'cloud_portal_tests' ], timeout: '180m'}
