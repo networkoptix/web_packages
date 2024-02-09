@@ -53,7 +53,7 @@
         @include mixins.ellipsis;
         display: flex;
 
-        &.selected:not(:hover) {
+        &.selected {
             .node-name {
                 color: var(--brand-core);
             }
@@ -86,7 +86,6 @@
 
         & .cdk-tree-node {
             & > .cdk-drag {
-                padding-left: 24px;
                 align-items: center;
 
                 &:not(:hover) > .action-button {
@@ -101,40 +100,32 @@
                 }
 
                 &:hover:not(:has(.editable-edit)) {
-                    background: var(--left-menu-l3-hover-bg);
-                    color: var(--left-menu-l3-hover-color);
-
-                    & > .action-button {
-                        border-color: transparent !important;
-                        background: transparent !important;
-
-                        &:active {
-                            .st0 {
-                                stroke: var(--left-menu-l3-selected-bg);
-                                fill: var(--left-menu-l3-selected-bg);
-                            }
-                            path {
-                                fill: var(--left-menu-l3-selected-bg);
-                                stroke: var(--left-menu-l3-selected-bg);
-                            }
-                        }
-                        path {
-                            fill: var(--left-menu-l3-hover-color);
-                            stroke: var(--left-menu-l3-hover-color);
-                        }
-                    }
-
-                    .st0 {
-                        stroke: var(--left-menu-l3-hover-color);
-                        fill: var(--left-menu-l3-hover-color);
-                    }
-
+                    background: var(--left-menu-l1-bg-hover);
                     .node-editable {
                         max-width: calc(100% - 60px);
                     }
                 }
             }
         }
+    }
+}
+
+.cdk-tree {
+    .expanded-tree {
+        --offset-tree-node: 0px;
+
+        .root-node,
+        .leaf-node {
+            padding-left: var(--offset-tree-node);
+        }
+    }
+}
+
+$sel: '.cdk-tree';
+@for $i from 1 through 10 {
+    $sel: selector-nest($sel, '> .tree-node > .expanded-tree') !global;
+    #{$sel} {
+        --offset-tree-node: #{24px * $i};
     }
 }
 
@@ -169,7 +160,6 @@ cdk-tree {
         background: var(--tree-new-layout-background);
     }
 }
-
 
 .override-selection {
     --selection-text-color-override: var(--tree-editable-selection-override);
@@ -349,10 +339,6 @@ cdk-tree {
 
     & .st1 {
         fill: var(--svg-path-accent-color);
-    }
-
-    &:hover .st1 {
-        fill: var(--left-menu-l3-selected-bg);
     }
 }
 

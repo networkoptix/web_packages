@@ -288,6 +288,10 @@ export class NxLayoutGridTreeComponent {
         ResourceType.WEB_PAGES,
         ResourceType.SYSTEM,
         ResourceType.OTHER_SYSTEMS,
+        // Disable group drag for now.
+        // In general, it should be possible to drop all cameras from a group to the layout.
+        // It should also be possible to drag and drop a camera into a group
+        ResourceType.CAMERAS_GROUP,
     ].reduce((acc, type) => ({ ...acc, [type]: true }), {} as Record<ResourceType, boolean>);
 
     ServerStats: ServerStats;

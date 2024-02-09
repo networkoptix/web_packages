@@ -50,7 +50,7 @@
             <!-- This is the tree node template for expandable nodes -->
             <div
                 class="tree-node cdk-tree-node"
-                [tourAnchor]="'cloud-layouts_' + node.type"
+                [tourAnchor]="'cloud-layouts_' + node.details.id"
             >
                 <div
                     cdkDrag
@@ -165,7 +165,7 @@
                             !node.details.unauthorized &&
                             !node.details.online
                     }"
-                    class="tooltip-offset-parent"
+                    class="tooltip-offset-parent leaf-node"
                 >
                     <div
                         #tooltipOffsetTarget
