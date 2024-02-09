@@ -1,4 +1,5 @@
 import inspect
+import logging
 import typing
 from functools import wraps
 
@@ -13,6 +14,8 @@ from .base_auth import BearerTokenAuth, QueryParamAuth, CdbAuthAPIClient
 
 RESPONSES_TYPE = typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]
 CLIENTS_TYPES = typing.Union[httpx.Client, httpx.AsyncClient]
+
+logger = logging.getLogger(__name__)
 
 
 def auto_auth_method(method):

@@ -97,9 +97,15 @@ def get_customization(cloud_host_name: str):
 def added_channel_partner_role_task(
         self: TaskWithLogging,
         channel_partner_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str):
-    notification_added_channel_partner_role(channel_partner_id=channel_partner_id, sharer_id=sharer_id,
-                                            user_id=user_id, cloud_host_name=cloud_host_name, task=self)
+        user_id: str, cloud_host_name: str
+) -> None:
+
+    notification_added_channel_partner_role(
+        channel_partner_id=channel_partner_id,
+        sharer_id=sharer_id,
+        user_id=user_id,
+        cloud_host_name=cloud_host_name,
+        task=self)
 
 
 def notification_added_channel_partner_role(
@@ -140,9 +146,14 @@ def notification_added_channel_partner_role(
 def added_organization_role_task(
         self: TaskWithLogging,
         organization_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str):
-    notification_added_organization_role(organization_id=organization_id, sharer_id=sharer_id,
-                                         user_id=user_id, cloud_host_name=cloud_host_name, task=self)
+        user_id: str, cloud_host_name: str
+) -> None:
+    notification_added_organization_role(
+        organization_id=organization_id,
+        sharer_id=sharer_id,
+        user_id=user_id,
+        cloud_host_name=cloud_host_name,
+        task=self)
 
 
 def notification_added_organization_role(

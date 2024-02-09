@@ -9,6 +9,7 @@ import os
 import sys
 from pathlib import Path
 
+import structlog
 from corsheaders.defaults import default_headers
 
 from channel_partners.configuration.logging_config import configure_logging
@@ -26,6 +27,8 @@ INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 DOMAIN_NAME = os.getenv('DOMAIN_NAME', '')
 TRAFFIC_RELAY_DOMAIN = os.getenv('TRAFFIC_RELAY_DOMAIN', 'relay.cloud.hdw.mx')
+
+MIN_LOGGING_LEVEL = logging.INFO
 
 if CI:
     ENV_NAME = 'ci'
@@ -59,8 +62,6 @@ LANGUAGE_COOKIE_NAME = "channel_partners_django_language"
 SESSION_COOKIE_NAME = "channel_partners_sessionid"
 CSRF_COOKIE_NAME = "channel_partners_csrftoken"
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -83,6 +84,35 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.account'
+
+# LOGGING
+DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = MIN_LOGGING_LEVEL
+DJANGO_STRUCTLOG_CELERY_ENABLED = True
+
+"""
+NOTE: 
+- Until we are certain everything we want is being logged, let's not switch
+  `disable_existing_loggers` to `True`
+"""
+
+LOGGING = configure_logging(ENV_NAME, MIN_LOGGING_LEVEL)
+
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=True,
+)
 
 MIDDLEWARE = [
     "django_structlog.middlewares.RequestMiddleware",
@@ -117,18 +147,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'channel_partners.wsgi.application'
-
-# LOGGING
-DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = logging.INFO
-DJANGO_STRUCTLOG_CELERY_ENABLED = True
-
-"""
-NOTE: 
-- Until we are certain everything we want is being logged, let's not switch
-  `disable_existing_loggers` to `True`
-"""
-
-LOGGING = configure_logging(ENV_NAME)
 
 # Database
 

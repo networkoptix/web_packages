@@ -28,7 +28,7 @@ class CloudSystemService:
                          relay_hosts=settings.TRAFFIC_RELAY_DOMAIN,
                          relay_host=relay_host,
                          system_id=cloud_system.system_id,
-                         exception=ex)
+                         exception=str(ex))
             return False
 
         if response.is_success:

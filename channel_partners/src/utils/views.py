@@ -42,7 +42,7 @@ class HealthCheckView(View):
         except Exception as ex:
             logger.error(
                 "Cannot retrieve cache server info.",
-                exception=ex)
+                exception=str(ex))
             errors = True
         return errors
 
