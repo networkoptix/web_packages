@@ -19,7 +19,7 @@
     [userType]="inGroup ? UserType.GROUP : UserType.ORGANIZATION"
     [inGroup]="inGroup"
     [headers]="headers"
-    [records]="records$ | async"
+    [records]="userStore.entities()"
     [roles]="orgRoles$$()"
     (selectedUsersEmitter)="updateSelectedUsers($event)"
     (onDeleteClick)="deleteUsers($event)"

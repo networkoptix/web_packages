@@ -43,7 +43,7 @@
         [userType]="UserType.ORGANIZATION"
         [accessTable]="true"
         [headers]="headers"
-        [records]="records$ | async"
+        [records]="groupStore.entities()"
         [roles]="orgRoles$$()"
         (onDeleteClick)="deleteUser($event)"
         (selectedUsersEmitter)="updateSelectedUsers($event)"
