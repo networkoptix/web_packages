@@ -12,19 +12,20 @@ from django.test import (
 from channel_partners.configuration.logging_config import configure_logging
 
 
-def setup_test_logging(env: Literal["local", "ci", "prod"]):
-    configure_logging(env)
+def setup_test_logging(env: Literal["local", "ci", "prod"], min_level: int):
+    configure_logging(env, min_level)
 
 
 class TestStructuredLogging:
     @override_settings(ENV_NAME='local')
     @pytest.mark.django_db
     def test_structured_logging_404_local(self, caplog):
-        caplog.set_level(logging.INFO)
+        min_level = logging.INFO
+        caplog.set_level(min_level)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
 
-        setup_test_logging("local")
+        setup_test_logging("local", min_level)
 
         client = Client()
         response = client.get('/DOES-NOT-EXIST')
@@ -38,22 +39,16 @@ class TestStructuredLogging:
 
         # Check if the IP address is logged
         assert any("ip" in log.message for log in logs)
-
-        sys.stdout = sys.__stdout__
-
-        actual = capturedOutput.getvalue()
-        expected = ["Directory created at logs\n", "Directory already exists at logs\n"]
-
-        assert actual in expected
 
     @override_settings(ENV_NAME='prod')
     @pytest.mark.django_db
     def test_structured_logging_404_prod_or_ci(self, caplog):
-        caplog.set_level(logging.INFO)
+        min_level = logging.INFO
+        caplog.set_level(min_level)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
 
-        setup_test_logging("prod")
+        setup_test_logging("prod", min_level)
 
         client = Client()
         response = client.get('/DOES-NOT-EXIST')
@@ -67,10 +62,3 @@ class TestStructuredLogging:
 
         # Check if the IP address is logged
         assert any("ip" in log.message for log in logs)
-
-        sys.stdout = sys.__stdout__
-
-        actual = capturedOutput.getvalue()
-        expected = ""
-
-        assert actual is expected

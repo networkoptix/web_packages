@@ -1,7 +1,6 @@
-import logging
 import os
+from logging.config import dictConfig
 
-import structlog
 from celery import Celery
 from celery.schedules import crontab
 from celery.signals import setup_logging
@@ -22,14 +21,13 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 @setup_logging.connect
 def receiver_setup_logging(loglevel, logfile, format, colorize, **kwargs):
-    logging.config.dictConfig(settings.LOGGING)
-
-
-logger = structlog.getLogger(__name__)
+    dictConfig(settings.LOGGING)
 
 
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
+    import structlog
+    logger = structlog.getLogger(__name__)
     logger.info("Setting up periodic tasks")
     sender.add_periodic_task(
         crontab(minute='*/10'),
@@ -40,4 +38,6 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @app.task
 def heartbeat(task_name):
+    import structlog
+    logger = structlog.getLogger(__name__)
     logger.info(f"Heartbeat {task_name}")

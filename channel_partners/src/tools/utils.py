@@ -45,7 +45,7 @@ def bind_system_to_cdb_organization(
                      response_status_code=response.status_code,
                      response_headers=response.headers,
                      response_content=response.content,
-                     exception=exception)
+                     exception=str(exception))
         raise exception
 
 
