@@ -159,22 +159,27 @@ export class NxChannelPartnerUsersComponent implements OnInit {
 
     deleteChannelPartnerUser(user: UserRecord): void {
         this.dialogsService
-            .confirm({
-                message: this.translateService.instant(
-                    this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
-                    {
-                        name: user.fullName,
+            .confirm(
+                {
+                    message: this.translateService.instant(
+                        this.LANG.channelPartners.usersTable.deleteDialog.channelPartner
+                            .singleMessage,
+                        {
+                            email: user.email,
+                            permission: user.roles[0],
+                        },
+                    ),
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    footer: {
+                        actionLabel:
+                            this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                        cancelLabel:
+                            this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                        buttonClass: 'btn-danger',
                     },
-                ),
-                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
-                footer: {
-                    actionLabel:
-                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
-                    cancelLabel:
-                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
-                    buttonClass: 'btn-danger',
                 },
-            })
+                { width: '313px' },
+            )
             .then(confirm => {
                 if (confirm) {
                     const { email } = user;

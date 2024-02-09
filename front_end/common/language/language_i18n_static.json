@@ -1276,9 +1276,12 @@
         "usersTable": {
             "infoToolTip": "Users with access based on access to higher-level folders",
             "deleteDialog": {
-                "title": "Delete User",
-                "singleMessage": "Are you sure you want to delete {name} ?",
-                "multipleMessage": "Are you sure you want to delete {count} users?",
+                "title": "Delete",
+                "singleMessage": "Are you sure you want to delete <span class=\"text-white\">{name}</span>?",
+                "multipleMessage": "Are you sure you want to delete <span class=\"text-white\">{count} users</span>?",
+                "channelPartner": {
+                    "singleMessage": "Are you sure you want to delete user <span class=\"text-white\">{email}</span> with permission <span class=\"text-white\">{permission}</span>?"
+                },
                 "footer": {
                     "actionLabel": "Delete",
                     "cancelLabel": "Cancel"
