@@ -120,8 +120,9 @@ class AccountManager(models.Manager):
         activated = False
         try:
             # try to authenticate with clouddb to check if activated
-            cloud_api_account.get(request, email, password)
-            activated = True
+            response = cloud_api_account.check_activated(request, email=email, password=password)
+            if response.status_code == 200:
+                activated = True
         except (APILogicException, APINotAuthorisedException) as exception:
             if exception.error_code != ErrorCodes.account_not_activated:
                 raise exception

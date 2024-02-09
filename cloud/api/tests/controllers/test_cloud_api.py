@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
+import responses
 from rest_framework import status
 
 import cloud.controllers.cloud_api as cloud_api
@@ -543,3 +544,43 @@ class TestOwnershipTransfer:
             headers=self.headers
         )
 
+
+class TestAccountApi:
+
+    @responses.activate
+    def test_check_activated_ok(self, arf, default_portal, default_customization):
+        username = f'{uuid4()}@netwrokoptix.com'
+        password = f'{uuid4()}'
+        data = {'username': username}
+        request = arf.post(f'/api/account/register', data=data, format='json')
+        responses.get(
+            f'{CLOUD_DB_URL}/account/get',
+            status=200,
+            json=data
+        )
+        resp = cloud_api.Account.check_activated(request, username, password)
+        assert resp == data
+
+    @responses.activate
+    def test_check_activated_fail(self, arf, default_portal, default_customization):
+        username = f'{uuid4()}@netwrokoptix.com'
+        password = f'{uuid4()}'
+        data = {'username': username}
+        request = arf.post(f'/api/account/register', data=data, format='json')
+        responses.reset()
+        responses.get(
+            f'{CLOUD_DB_URL}/account/get',
+            status=403,
+            json={
+                'errorClass': 'unauthorized',
+                'errorDetail': '102',
+                'errorText': 'accountNotActivated',
+                'resultCode': 'accountNotActivated'
+            }
+        )
+        try:
+            resp = cloud_api.Account.check_activated(request, username, password)
+        except APILogicException as ex:
+            assert str(ex) == 'accountNotActivated'
+            return
+        assert False, 'Internal Server Error must be raised'
