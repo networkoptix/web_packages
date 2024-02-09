@@ -14,43 +14,18 @@ import {
 
 const partnerAccess: DropdownItem<string>[] = [
     {
-        name: 'Administrator',
-        value: OrgRoleIds.Admin,
-    },
-    {
         name: 'Organization Administrator',
         value: OrgRoleIds.OrgAdmin,
-    },
-    {
-        name: 'Advanced Viewer',
-        value: OrgRoleIds.AdvancedViewer,
-    },
-    {
-        name: 'Live Viewer',
-        value: OrgRoleIds.LiveViewer,
-    },
-    {
-        name: 'Power User',
-        value: OrgRoleIds.PowerUser,
     },
     {
         name: 'System Health Viewer',
         value: OrgRoleIds.SysHealthViewer,
     },
-    {
-        name: 'Viewer',
-        value: OrgRoleIds.Viewer,
-    },
 ];
 
 const accessMap: { [key: string]: DropdownItem<string> } = {
-    [OrgRoleIds.Admin]: partnerAccess[0],
-    [OrgRoleIds.OrgAdmin]: partnerAccess[1],
-    [OrgRoleIds.AdvancedViewer]: partnerAccess[2],
-    [OrgRoleIds.LiveViewer]: partnerAccess[3],
-    [OrgRoleIds.PowerUser]: partnerAccess[4],
-    [OrgRoleIds.SysHealthViewer]: partnerAccess[5],
-    [OrgRoleIds.Viewer]: partnerAccess[6],
+    [OrgRoleIds.OrgAdmin]: partnerAccess[0],
+    [OrgRoleIds.SysHealthViewer]: partnerAccess[1],
 };
 
 @Component({
