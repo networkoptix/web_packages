@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { switchMap } from 'rxjs';
 
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -12,16 +13,18 @@ import {
     selectSubchannelPartner,
 } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { icons } from '@variables/static-variables';
 
 @Component({
     selector: 'nx-subchannel',
     templateUrl: 'subchannel.component.html',
     styleUrls: ['subchannel.component.scss'],
     standalone: true,
-    imports: [RouterOutlet, CommonModule, NxTabsModule],
+    imports: [RouterOutlet, CommonModule, NxTabsModule, AngularSvgIconModule],
 })
 export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
+    icons = icons;
 
     inSubChannel = this.route.params;
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);

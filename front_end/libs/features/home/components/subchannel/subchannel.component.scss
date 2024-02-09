@@ -1,3 +1,13 @@
 .cards {
   height: 85%;
+
+  a {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+      transform: rotate(180deg);
+    }
+  }
 }
