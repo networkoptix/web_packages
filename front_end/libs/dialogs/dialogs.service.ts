@@ -129,11 +129,15 @@ export class NxDialogsService {
         return this.openV2(component, dialogConfig);
     }
 
-    async confirm(data: Dt.Confirm['data']): Promise<Dt.Confirm['return']> {
+    async confirm(
+        data: Dt.Confirm['data'],
+        instanceConfig: DialogConfig<never> = {},
+    ): Promise<Dt.Confirm['return']> {
         const component = await import('./generic/generic.component').then(
             m => m.GenericModalContent,
         );
         const dialogConfig: DialogConfig<Dt.Generic['data']> = {
+            ...instanceConfig,
             data: { ...data, footer: { actionable: true, ...data.footer } },
             // With action/cancel buttons
         };
