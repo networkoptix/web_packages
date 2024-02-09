@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, computed, signal } from '@angular/core';
+import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { patchState, signalStore, withMethods } from '@ngrx/signals';
+import {
+    addEntity,
+    removeEntities,
+    removeEntity,
+    setAllEntities,
+    withEntities,
+} from '@ngrx/signals/entities';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -28,6 +36,16 @@ import { icons } from '@static-variables';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
 
+const GroupStore = signalStore(
+    withEntities<UserRecord>(),
+    withMethods(store => ({
+        addGroup: group => patchState(store, addEntity(group, { idKey: 'groupId' })),
+        removeGroup: group => patchState(store, removeEntity(group)),
+        removeGroups: groups => patchState(store, removeEntities(groups)),
+        setGroups: groups => patchState(store, setAllEntities(groups, { idKey: 'groupId' })),
+    })),
+);
+
 @Component({
     selector: 'nx-access-table',
     templateUrl: 'access-table.component.html',
@@ -42,6 +60,7 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
     ],
+    providers: [GroupStore],
     standalone: true,
 })
 export class NxAccessTableComponent implements OnInit {
@@ -49,12 +68,12 @@ export class NxAccessTableComponent implements OnInit {
     UserType = UserType;
     OrgCardItem = OrgCardItem;
     icons = icons;
+    groupStore = inject(GroupStore);
 
     @Input() email: string = '';
 
     inGroup$$ = this.store.selectSignal(selectInGroup);
     orgRoles$$ = toSignal(this.cpService.getOrganizationRoles());
-    records$: Observable<UserRecord[]>;
     headers: HEADER_ITEM[];
     fullName$$ = signal('');
     selectedGroups: { [key: string]: UserRecord } = {};
@@ -92,8 +111,10 @@ export class NxAccessTableComponent implements OnInit {
             { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
         ];
 
+        let request: Observable<UserRecord[]>;
         if (this.inGroup$$()) {
-            this.records$ = this.cpService.getGroupUser(this.currentGroupId$$(), this.email).pipe(
+            request = this.cpService.getGroupUser(this.currentGroupId$$(), this.email).pipe(
+                take(1),
                 map(res => {
                     this.fullName$$.set(res.fullName);
                     // Issue with API calls from groups user isn't directly added to
@@ -105,36 +126,39 @@ export class NxAccessTableComponent implements OnInit {
                 }),
             );
         } else {
-            this.records$ = this.cpService
-                .getOrganizationUser(this.currentOrg$$()?.id, this.email)
-                .pipe(
-                    map(({ groupRoles, fullName }) => {
-                        this.fullName$$.set(fullName);
-                        // TODO: bug with groupItems being undefined when loading directly into access table
-                        const groupItems = this.groupItems$$();
-                        const groupMap = new Map(groupItems?.map(group => [group.id, group]));
-                        return groupRoles.map(group => {
-                            // Todo, add path once API updated
-                            const currGroup = groupMap.get(group.groupId);
-                            const groupItem: GroupRole = {
-                                ...currGroup,
-                                name: currGroup?.name,
-                                groupId: currGroup?.id,
-                                roleIds: [],
-                            };
+            request = this.cpService.getOrganizationUser(this.currentOrg$$()?.id, this.email).pipe(
+                take(1),
+                map(({ groupRoles, fullName }) => {
+                    this.fullName$$.set(fullName);
+                    // TODO: bug with groupItems being undefined when loading directly into access table
+                    // Todo: if user only added as org user, groupRoles will be empty & so will table. Clarify what to show on access table for user only added to org
+                    const groupItems = this.groupItems$$();
+                    const groupMap = new Map(groupItems?.map(group => [group.id, group]));
+                    return groupRoles.map(group => {
+                        // Todo, add path once API updated
+                        const currGroup = groupMap.get(group.groupId);
+                        const groupItem: GroupRole = {
+                            ...currGroup,
+                            name: currGroup?.name,
+                            groupId: currGroup?.id,
+                            roleIds: [],
+                        };
 
-                            return {
-                                userType: UserType.GROUP,
-                                roles: [],
-                                groupId: group.groupId,
-                                groupRoles: [groupItem],
-                                userId: this.email,
-                                email: this.email,
-                            };
-                        });
-                    }),
-                );
+                        return {
+                            userType: UserType.GROUP,
+                            roles: [],
+                            groupId: group.groupId,
+                            groupRoles: [groupItem],
+                            userId: this.email,
+                            email: this.email,
+                        };
+                    });
+                }),
+            );
         }
+        request.subscribe((groups: UserRecord[]) => {
+            this.groupStore.setGroups(groups);
+        });
     }
 
     onPathItemClick(item: { type: OrgCardItem; name: string; id: string }): void {
@@ -150,25 +174,16 @@ export class NxAccessTableComponent implements OnInit {
         const org = this.currentOrg$$();
         const groups = this.currentGroups$$();
         if (org) {
-            this.records$.pipe(take(1)).subscribe(users => {
-                this.dialogService
-                    .addOrgUserV2({ organization: org, roles, groups, users, email: this.email })
-                    .then(user => {
-                        this.records$ = this.records$.pipe(
-                            map(records => {
-                                const newRecords = [
-                                    ...records,
-                                    {
-                                        ...user,
-                                        userId: user.email,
-                                        userType: UserType.GROUP,
-                                    },
-                                ];
-                                return newRecords;
-                            }),
-                        );
+            const users = this.groupStore.entities();
+            this.dialogService
+                .addOrgUserV2({ organization: org, roles, groups, users, email: this.email })
+                .then(user => {
+                    this.groupStore.addGroup({
+                        ...user,
+                        userId: user.email,
+                        userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
                     });
-            });
+                });
         }
     }
 
@@ -203,16 +218,9 @@ export class NxAccessTableComponent implements OnInit {
             .then(confirm => {
                 if (confirm) {
                     if (deleteMultiple) {
-                        const groupMap = new Map<string, boolean>(
-                            Object.keys(this.selectedGroups).map(group => [group, true]),
-                        );
-                        this.records$ = this.records$.pipe(
-                            map(rows => rows.filter(row => !groupMap.has(row.groupId))),
-                        );
+                        this.groupStore.removeGroups(Object.keys(this.selectedGroups));
                     } else {
-                        this.records$ = this.records$.pipe(
-                            map(rows => rows.filter(r => r.groupId !== row.groupId)),
-                        );
+                        this.groupStore.removeGroup(row.groupId);
                     }
                 }
             });

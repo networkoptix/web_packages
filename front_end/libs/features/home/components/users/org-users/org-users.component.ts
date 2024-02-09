@@ -10,9 +10,17 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { patchState, signalStore, withMethods } from '@ngrx/signals';
+import {
+    addEntity,
+    removeEntities,
+    removeEntity,
+    setAllEntities,
+    withEntities,
+} from '@ngrx/signals/entities';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { map, Observable, take, zip } from 'rxjs';
+import { iif, map, Observable, zip } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
@@ -29,6 +37,16 @@ import {
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
+
+const UserStore = signalStore(
+    withEntities<UserRecord>(),
+    withMethods(store => ({
+        addUser: user => patchState(store, addEntity(user, { idKey: 'userId' })),
+        removeUser: user => patchState(store, removeEntity(user)),
+        removeUsers: user => patchState(store, removeEntities(user)),
+        setUsers: users => patchState(store, setAllEntities(users, { idKey: 'userId' })),
+    })),
+);
 
 const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
     return users.map(user => ({
@@ -67,15 +85,16 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
+    providers: [UserStore],
     imports: [CommonModule, NxUsersTableComponent, TranslateModule],
 })
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
+    userStore = inject(UserStore);
 
     @Input({ transform: booleanAttribute }) inGroup: boolean;
     headers: HEADER_ITEM[];
-    records$: Observable<UserRecord[]>;
 
     currentItemId$$ = signal<string>('');
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -100,14 +119,15 @@ export class NxOrganizationUsersComponent implements OnInit {
             .subscribe(({ params }) => {
                 this.currentItemId$$.set(params.groupId || params.organizationId);
             });
-
-        this.records$ = this.inGroup
-            ? this.CPService.getGroupUsersWithAccess(this.currentItemId$$()).pipe(
-                  map(users => mapGroupUsers(users)),
-              )
-            : this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
-                  map(users => mapOrgUsers(users, this.groupItems$$())),
-              );
+        iif(
+            () => this.inGroup,
+            this.CPService.getGroupUsersWithAccess(this.currentItemId$$()).pipe(
+                map(users => mapGroupUsers(users)),
+            ),
+            this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
+                map(users => mapOrgUsers(users, this.groupItems$$())),
+            ),
+        ).subscribe(users => this.userStore.setUsers(users));
         this.headers = [
             {
                 name: 'email',
@@ -130,21 +150,16 @@ export class NxOrganizationUsersComponent implements OnInit {
         // Currently only shows child groups in dialog
         const groups: GroupItem[] = this.currentGroups$$();
         if (org) {
-            this.records$.pipe(take(1)).subscribe(users => {
-                this.dialogsService
-                    .addOrgUserV2({ organization: org, roles, users, groups })
-                    .then(user => {
-                        const userRecord = this.inGroup
-                            ? mapGroupUsers([user as GroupUserCanAccess])
-                            : mapOrgUsers([user as OrganizationUser], this.groupItems$$());
-                        this.records$ = this.records$.pipe(
-                            map(records => {
-                                records.push(...userRecord);
-                                return records;
-                            }),
-                        );
-                    });
-            });
+            const users = this.userStore.entities();
+            this.dialogsService
+                .addOrgUserV2({ organization: org, roles, users, groups })
+                .then(user => {
+                    const userRecord =
+                        'groupRoles' in user
+                            ? mapOrgUsers([user], this.groupItems$$())
+                            : mapGroupUsers([user as GroupUserCanAccess]);
+                    this.userStore.addUser(userRecord[0]);
+                });
         }
     }
 
@@ -208,7 +223,7 @@ export class NxOrganizationUsersComponent implements OnInit {
                             requests.push(
                                 this.CPService.deleteBulkOrganizationUsers(
                                     this.currentItemId$$(),
-                                    orgUsers.map(user => `${user.email}asd`),
+                                    orgUsers.map(user => user.email),
                                 ),
                             );
                         }
@@ -236,12 +251,9 @@ export class NxOrganizationUsersComponent implements OnInit {
                                 requests.push(this.CPService.deleteBulkGroupUsers(id, users)),
                             );
                         }
-                        const usersMap = new Map<string, boolean>(
-                            Object.keys(this.selectedUsers).map(user => [user, true]),
-                        );
                         zip(requests).subscribe(_ => {
-                            this.records$ = this.records$.pipe(
-                                map(users => users.filter(user => !usersMap.has(user.email))),
+                            this.userStore.removeUsers(
+                                Object.values(this.selectedUsers).map(({ userId }) => userId),
                             );
                         });
                     } else {
@@ -270,9 +282,7 @@ export class NxOrganizationUsersComponent implements OnInit {
                         }
                         zip(requests).subscribe({
                             next: _ => {
-                                this.records$ = this.records$.pipe(
-                                    map(users => users.filter(user => user.email !== email)),
-                                );
+                                this.userStore.removeUser(email);
                             },
                             error: err => {
                                 console.error(err);
