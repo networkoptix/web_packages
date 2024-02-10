@@ -20,7 +20,6 @@
             class="input-overlay"
             [style.width.px]="searchConfig.channelPartners.searchWidth"
             [ngModel]="search"
-            (ngModelChange)="setSearch($event)"
             layout="compact"
             [placeholder]="'Search' | translate"
             instant
@@ -41,7 +40,7 @@
 >
     <div class="px-3 cards-container">
         <div
-            *ngFor="let group of filteredGroups; trackBy: trackGroup"
+            *ngFor="let group of filteredGroups$$(); trackBy: trackGroup"
             class="group-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -57,7 +56,9 @@
                     class="card-content"
                     [icon]="icons.dir + 'folder2.svg'"
                     [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
-                    (click)="handleGroupClick(group)"
+                    [routerLink]="['group', group.id]"
+                    [relativeTo]="route.parent"
+                    [dropdownItems]="groupActions$$()[group.id]"
                 >
                     <h3>{{ group.name }}</h3>
                     <div>{{ group.systemCount }}</div>
@@ -66,7 +67,7 @@
             </div>
         </div>
         <div
-            *ngFor="let system of filteredSystems$; trackBy: trackSystem"
+            *ngFor="let system of filteredSystems$$(); trackBy: trackSystem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -80,7 +81,8 @@
                 <div *cdkDragPlaceholder></div>
                 <nx-card
                     class="card-content"
-                    (click)="handleSystemClick(system)"
+                    [routerLink]="['/systems', system.systemId]"
+                    [dropdownItems]="systemActions$$()[system.systemId]"
                 >
                     <h3>{{ system.name }}</h3>
                 </nx-card>

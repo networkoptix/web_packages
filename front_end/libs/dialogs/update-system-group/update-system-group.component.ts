@@ -1,0 +1,50 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { ModalBase } from '@dialogs/modal-base';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { PatchGroup } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+
+import type { UpdateSystemGroup as DT } from '../dialogs.types';
+
+@Component({
+    selector: 'nx-modal-update-system-group-content',
+    templateUrl: 'update-system-group.component.html',
+    standalone: true,
+    imports: [
+        FormsModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+        TranslateModule,
+    ],
+})
+export class UpdateSystemGroupModalContent extends ModalBase<DT['return']> {
+    name: string;
+    updateSystemGroupProcess: Process;
+
+    constructor(
+        private processService: NxProcessService,
+        private cpService: NxChannelPartnersService,
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private groupId: DT['data'],
+    ) {
+        super(dialogRef);
+        this.updateSystemGroupProcess = this.processService.createProcess(
+            () => {
+                const data: PatchGroup = {
+                    name: this.name,
+                };
+                return firstValueFrom(this.cpService.patchGroup(this.groupId, data));
+            },
+            {},
+            res => this.close(res),
+        );
+    }
+}

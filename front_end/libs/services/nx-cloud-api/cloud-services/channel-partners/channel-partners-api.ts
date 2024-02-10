@@ -290,7 +290,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
     };
 
-    updateSystemGroup = (id: string, body: { groupId: string }): Observable<CloudSystem> => {
+    updateSystemGroup = (id: string, body: { groupId: string | null }): Observable<CloudSystem> => {
         return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body });
     };
 

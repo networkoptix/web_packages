@@ -356,6 +356,22 @@ export class NxDialogsService {
         { autoFocus: 'input' },
     );
 
+    updateGroupName = this.dialogV2Factory<Dt.UpdateSystemGroup>(
+        () =>
+            import('./update-system-group/update-system-group.component').then(
+                m => m.UpdateSystemGroupModalContent,
+            ),
+        {
+            width: '360px',
+        },
+    );
+
+    moveOrgItem = this.dialogV2Factory<Dt.MoveOrgItem>(
+        () =>
+            import('./move-org-item/move-org-item.component').then(m => m.MoveOrgItemModalContent),
+        { width: '360px' },
+    );
+
     addOrgUserV2 = this.dialogV2Factory<Dt.AddOrgUserV2>(
         () =>
             import('./channel-partners/add-org-user-v2/add-org-user-v2.component').then(
