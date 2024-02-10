@@ -17,6 +17,7 @@ import type {
     OrganizationRole,
     OrganizationUser,
     State,
+    SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     CloudResponse,
@@ -159,6 +160,18 @@ export type CreateSystemGroup = DialogType<
     },
     void
 >;
+
+export type UpdateSystemGroup = DialogType<string, GroupItem>;
+
+export type MoveOrgItem = DialogType<
+    {
+        item: GroupItem | SystemItem;
+        organization: Organization;
+        groups: GroupItem[];
+    },
+    GroupItem | SystemItem
+>;
+
 export type AddOrgUserV2 = DialogType<
     {
         organization: Organization;

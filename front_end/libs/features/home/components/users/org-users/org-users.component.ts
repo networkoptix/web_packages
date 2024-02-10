@@ -27,7 +27,7 @@ import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
-import { selectCurrentGroups, selectGroupItems } from '@pages/home/store/groups/groups.selectors';
+import { selectGroupItems, selectRootGroups } from '@pages/home/store/groups/groups.selectors';
 import {
     GroupItem,
     GroupUser,
@@ -98,7 +98,7 @@ export class NxOrganizationUsersComponent implements OnInit {
 
     currentItemId$$ = signal<string>('');
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
+    rootGroups$$ = this.store.selectSignal(selectRootGroups);
     orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     selectedUsers: { [key: string]: UserRecord } = {};
@@ -147,8 +147,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     newUserDialog(orgId: string): void {
         const roles = this.orgRoles$$();
         const org = this.currentOrg$$();
-        // Currently only shows child groups in dialog
-        const groups: GroupItem[] = this.currentGroups$$();
+        const groups = this.rootGroups$$();
         if (org) {
             const users = this.userStore.entities();
             this.dialogsService

@@ -1,0 +1,45 @@
+<form #updateSystemGroupFrom="ngForm">
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Rename Folder
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label
+            for="name"
+            translate
+            >Name</label
+        >
+        <input
+            class="form-control"
+            id="name"
+            name="name"
+            [(ngModel)]="name"
+            autofocus
+            required
+        />
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [form]="updateSystemGroupFrom"
+            [process]="updateSystemGroupProcess"
+            [buttonText]="'Save' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="updateSystemGroupProcess"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

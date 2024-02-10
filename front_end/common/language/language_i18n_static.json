@@ -1288,7 +1288,16 @@
                 }
             }
         },
-        "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
+        "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization",
+        "orgs": {
+            "groupAction": {
+                "cancel": "Cancel",
+                "deleteMessage": "Are you sure you want to delete the folder {folderName}?",
+                "delete":  "Delete",
+                "moveTo": "Move To...",
+                "rename": "Rename..."
+            }
+        }
     },
     "menu": {
         "titles": {

@@ -1,24 +1,17 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    DestroyRef,
-    Input,
-    booleanAttribute,
-    computed,
-    effect,
-    inject,
-} from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
+import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -34,9 +27,11 @@ import {
     GroupItem,
     OrgCardItem,
     OrgPermissions,
+    Organization,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
+import { NxVmsClientService } from '@services/vms-client.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
@@ -44,13 +39,13 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
 import { NxSystemCardComponent } from '../../components/system-card/system-card.component';
 import * as GroupActions from '../../store/groups/groups.actions';
 import {
-    selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentGroups,
     selectCurrentSystems,
     selectGroupItems,
     selectHasGroups,
     selectOpenGroups,
+    selectRootGroups,
 } from '../../store/groups/groups.selectors';
 @Component({
     selector: 'nx-org-cards-container',
@@ -70,13 +65,13 @@ import {
         RouterOutlet,
         NxSearchComponent,
         FormsModule,
+        RouterLink,
     ],
 })
 export class NxOrganizationCardContainerComponent {
     LANG = staticLang;
     icons = icons;
     searchConfig = searchConfig;
-    destroyRef = inject(DestroyRef);
     @Input({ transform: booleanAttribute }) inRoot: boolean;
     canCreateGroups$$ = computed(() => {
         const currOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -90,13 +85,12 @@ export class NxOrganizationCardContainerComponent {
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     openGroups$$ = this.store.selectSignal(selectOpenGroups);
+    rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
-    currentGroup$$ = this.store.selectSignal<GroupItem>(selectCurrentGroup);
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
-    filteredGroups: GroupItem[];
+    currentOrg$$ = this.store.selectSignal<Organization>(selectCurrentOrganization);
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     search = { value: '' };
-    searchChanged = new Subject<void>();
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
     filteredSystems$: SystemItem[];
     systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
@@ -110,10 +104,12 @@ export class NxOrganizationCardContainerComponent {
     constructor(
         private store: Store,
         private dialogsService: NxDialogsService,
-        private route: ActivatedRoute,
+        protected route: ActivatedRoute,
         private router: Router,
         private cpService: NxChannelPartnersService,
         private systemsService: NxSystemsService,
+        private translateService: TranslateService,
+        private vmsService: NxVmsClientService,
     ) {
         this.cpService.paramStateHandler.state$
             .pipe(distinctUntilChanged((a, b) => stringify(a) === stringify(b)))
@@ -122,10 +118,11 @@ export class NxOrganizationCardContainerComponent {
             });
 
         effect(() => {
-            this.searchSystems();
-            const systemMap = this.systemMap$$();
-            if (this.inRoot) {
-                this.cpService.getOrgSystems(this.currentOrgId$$()).subscribe(orgSystems => {
+            const currentOrgId = this.currentOrgId$$();
+            const currentGroupID = this.currentGroupId$$();
+            if (this.inRoot && currentOrgId) {
+                this.cpService.getOrgSystems(currentOrgId).subscribe(orgSystems => {
+                    const systemMap = this.systemMap$$();
                     const systems = orgSystems.map(sys => ({
                         ...sys,
                         type: OrgCardItem.SYSTEM,
@@ -133,8 +130,9 @@ export class NxOrganizationCardContainerComponent {
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
-            } else {
-                this.cpService.getGroup(this.currentGroupId$$()).subscribe(group => {
+            } else if (currentGroupID) {
+                this.cpService.getGroup(currentGroupID).subscribe(group => {
+                    const systemMap = this.systemMap$$();
                     const systems = group.systems.map(systemId => ({
                         systemId,
                         name: systemMap.get(systemId)?.name,
@@ -145,14 +143,7 @@ export class NxOrganizationCardContainerComponent {
             }
         });
 
-        this.searchChanged
-            .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.searchSystems();
-            });
-
         this.search.value = this.route.snapshot.queryParams.search;
-        this.searchSystems();
     }
 
     trackGroup(_index: number, item: GroupItem): string {
@@ -173,27 +164,7 @@ export class NxOrganizationCardContainerComponent {
             this.cpService
                 .patchGroup(dragged.id, { parentId: droppedOn.id })
                 .subscribe(updatedGroup => {
-                    // Use ngrx effect to update store
-                    const groups: GroupItem[] = [...this.groupItems$$()];
-                    const parentId = dragged.parentId;
-                    if (parentId) {
-                        const parentIndex = groups?.findIndex(group => group.id === parentId);
-                        const parent = structuredClone(groups[parentIndex]);
-                        parent.children = parent.children.filter(child => child.id !== dragged.id);
-                        groups[parentIndex] = parent;
-                    }
-                    const droppedOnGroup = structuredClone(droppedOn);
-                    if (droppedOnGroup.children) {
-                        droppedOnGroup.children.push(updatedGroup);
-                    } else {
-                        droppedOnGroup.children = [updatedGroup];
-                    }
-                    const droppedOnIndex = groups?.findIndex(group => group.id === droppedOn.id);
-                    groups[droppedOnIndex] = droppedOnGroup;
-
-                    const movedGroupIndex = groups.findIndex(group => group.id === dragged.id);
-                    groups[movedGroupIndex] = updatedGroup;
-                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                    this.updateGroup(updatedGroup, dragged);
                 });
         } else if (dragged.type === OrgCardItem.SYSTEM) {
             this.cpService
@@ -228,30 +199,157 @@ export class NxOrganizationCardContainerComponent {
         this.router.navigate(['systems', system.systemId]);
     }
 
-    searchSystems(): void {
-        const search = this.search.value;
-        const currentGroups = this.currentGroups$$();
-        const currentSystems = this.currentSystems$$();
-        if (search) {
-            if (currentGroups) {
-                this.filteredGroups = currentGroups.filter(system =>
-                    caseInsenstiveSearch(system.name, search),
-                );
-            }
-
-            if (currentSystems) {
-                this.filteredSystems$ = currentSystems.filter(system =>
-                    caseInsenstiveSearch(system.name as string, search),
-                );
-            }
-        } else {
-            this.filteredGroups = currentGroups;
-            this.filteredSystems$ = currentSystems;
+    search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
+    filteredGroups$$ = computed(() => {
+        const search = this.search$$();
+        const groups = this.currentGroups$$();
+        if (!search) {
+            return groups;
         }
-    }
+        return groups.filter(group => caseInsenstiveSearch(group.name, search));
+    });
+    filteredSystems$$ = computed(() => {
+        const search = this.search$$();
+        const systems = this.currentSystems$$();
+        if (!search) {
+            return systems;
+        }
+        return systems.filter(system => caseInsenstiveSearch(system.name, search));
+    });
+    groupActions$$ = computed<Record<string, ActionItems[]>>(() => {
+        const groups = this.currentGroups$$() || [];
+        const renameAction = this.translateService.instant(
+            staticLang.channelPartners.orgs.groupAction.rename,
+        );
+        const moveToAction = this.translateService.instant(
+            staticLang.channelPartners.orgs.groupAction.moveTo,
+        );
+        const deleteAction = this.translateService.instant(
+            staticLang.channelPartners.orgs.groupAction.delete,
+        );
+        return groups.reduce((groupActions, group) => {
+            groupActions[group.id] = [
+                {
+                    name: moveToAction,
+                    id: group.id,
+                    action: () => {
+                        this.dialogsService
+                            .moveOrgItem({
+                                item: group,
+                                organization: this.currentOrg$$(),
+                                groups: this.rootGroups$$(),
+                            })
+                            .then(newGroup => {
+                                if ('parentId' in newGroup) {
+                                    this.updateGroup(newGroup, group);
+                                }
+                            });
+                    },
+                },
+                {
+                    name: renameAction,
+                    id: group.id,
+                    action: () => {
+                        this.dialogsService.updateGroupName(group.id).then(updatedGroup => {
+                            const groups = [...this.groupItems$$()];
+                            const currGroupIndex = groups.findIndex(gr => gr.id === group.id);
+                            groups[currGroupIndex] = updatedGroup;
+                            this.store.dispatch(GroupActions.setGroups({ groups }));
+                        });
+                    },
+                },
+                {
+                    name: deleteAction,
+                    id: group.id,
+                    action: () => {
+                        this.dialogsService
+                            .confirm({
+                                title: deleteAction,
+                                footer: {
+                                    actionLabel: deleteAction,
+                                    cancelLabel: staticLang.channelPartners.orgs.groupAction.cancel,
+                                    buttonClass: 'btn-danger',
+                                },
+                                message: this.translateService.instant(
+                                    staticLang.channelPartners.orgs.groupAction.deleteMessage,
+                                    { folderName: group.name },
+                                ),
+                            })
+                            .then(confirm => {
+                                if (confirm) {
+                                    alert(`Will implement delete`);
+                                }
+                            });
+                    },
+                },
+            ];
+            return groupActions;
+        }, {});
+    });
+    systemActions$$ = computed<Record<string, ActionItems[]>>(() => {
+        const systems = this.currentSystems$$() || [];
+        const openVms = this.translateService.instant('Open in %VMS_NAME%');
+        const moveToAction = this.translateService.instant(
+            staticLang.channelPartners.orgs.groupAction.moveTo,
+        );
+        return systems.reduce((systemActions, system) => {
+            systemActions[system.systemId] = [
+                {
+                    name: moveToAction,
+                    id: system.systemId,
+                    action: () => {
+                        this.dialogsService
+                            .moveOrgItem({
+                                item: system,
+                                organization: this.currentOrg$$(),
+                                groups: this.rootGroups$$(),
+                            })
+                            .then(_ => {
+                                const currSystems = [...this.currentSystems$$()];
+                                const updatedSystems = currSystems.filter(
+                                    sys => sys.systemId !== system.systemId,
+                                );
+                                this.store.dispatch(
+                                    GroupActions.setSystems({ systems: updatedSystems }),
+                                );
+                            });
+                    },
+                },
+                {
+                    name: openVms,
+                    id: system.systemId,
+                    action: this.protocolFactory(system.systemId, true),
+                },
+            ];
+            return systemActions;
+        }, {});
+    });
 
-    setSearch(model: { query: string }): void {
-        this.search.value = model.query;
-        this.searchChanged.next();
-    }
+    protocolFactory = (id: string, useRest: boolean) => () =>
+        this.vmsService.openClient({ id, useRest });
+
+    updateGroup = (updatedGroup: GroupItem, oldGroup: GroupItem): void => {
+        const groups: GroupItem[] = [...this.groupItems$$()];
+        const movedToGroup = groups.find(group => group.id === updatedGroup.parentId);
+        const parentId = oldGroup.parentId;
+        if (parentId) {
+            const parentIndex = groups.findIndex(group => group.id === parentId);
+            const parent = structuredClone(groups[parentIndex]);
+            parent.children = parent.children.filter(child => child.id !== updatedGroup.id);
+            groups[parentIndex] = parent;
+        }
+        if (movedToGroup) {
+            const droppedOnGroup = structuredClone(movedToGroup);
+            if (droppedOnGroup.children) {
+                droppedOnGroup.children.push(updatedGroup);
+            } else {
+                droppedOnGroup.children = [updatedGroup];
+            }
+            const droppedOnIndex = groups?.findIndex(gr => gr.id === movedToGroup.id);
+            groups[droppedOnIndex] = droppedOnGroup;
+        }
+        const movedGroupIndex = groups.findIndex(gr => gr.id === oldGroup.id);
+        groups[movedGroupIndex] = updatedGroup;
+        this.store.dispatch(GroupActions.setGroups({ groups }));
+    };
 }
