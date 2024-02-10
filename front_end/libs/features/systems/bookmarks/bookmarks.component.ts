@@ -33,13 +33,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
-import {
-    alphabeticalSort,
-    cleanIdLegacy,
-    msToParts,
-    offsetDate,
-    paramSortFunc,
-} from '@utils/general';
+import { alphabeticalSort, cleanId, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
@@ -124,19 +118,11 @@ export class NxBookmarksComponent implements OnInit {
     loadingBuffer$ = new BehaviorSubject<number>(0);
     devices$ = new ReplaySubject<BookmarksDevice[]>(1);
     tags$ = new ReplaySubject<BookmarksTags>(1);
-    selectedDevices$ = this.devices$.pipe(
-        map(devices =>
-            devices
-                .map(({ id, name }) => ({ id, name }))
-                .sort(alphabeticalSort(this.locale, ({ name }) => name)),
-        ),
-        startWith<BookmarksDevice[]>([]),
-    );
     tagNames$ = this.tags$.pipe(
         map(tags => Object.keys(tags).sort(alphabeticalSort(this.locale, t => t))),
         startWith<string[]>([]),
     );
-    suggestions$ = combineLatest([this.selectedDevices$, this.tagNames$]).pipe(
+    suggestions$ = combineLatest([this.devices$, this.tagNames$]).pipe(
         map(
             ([devices, tags]): SuggestionSections => ({
                 // DEVICE: devices.map(({ name }) => name),
@@ -294,10 +280,18 @@ export class NxBookmarksComponent implements OnInit {
                 this.noMatchingResults =
                     !bks.length && Object.values(this.queryParams).some(Boolean);
                 this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
-                    return cleanIdLegacy(deviceId) as string;
+                    return cleanId(deviceId);
                 });
                 this.tags$.next(tags);
-                this.devices$.next(devices);
+                this.devices$.next(this.filterDevices(devices));
+                this.devices$.pipe(
+                    map(devices =>
+                        devices
+                            .map(({ id, name }) => ({ id, name }))
+                            .sort(alphabeticalSort(this.locale, ({ name }) => name)),
+                    ),
+                    startWith<BookmarksDevice[]>([]),
+                );
                 this.deviceMap = new Map(devices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
@@ -383,12 +377,11 @@ export class NxBookmarksComponent implements OnInit {
         return bks
             .filter(bk => this.deviceMap.has(bk.deviceId))
             .map<Bookmark>(bk => {
-                const deviceId = cleanIdLegacy(bk.deviceId);
-                const systemId = cleanIdLegacy(this.system.id);
+                const deviceId = cleanId(bk.deviceId);
+                const systemId = cleanId(this.system.id);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
-                const canViewBookmark = this.system.permissionManager.canViewDeviceArchive(
-                    deviceId as string,
-                );
+                const canViewBookmark =
+                    this.system.permissionManager.canViewDeviceArchive(deviceId);
                 const getLink = (transport: string): string => {
                     // User will need viewArchives permissions to view and download bookmarks
                     if (canViewBookmark) {
@@ -414,7 +407,7 @@ export class NxBookmarksComponent implements OnInit {
                     src: getLink('mp4'),
                     downloadSrc: getLink('mkv'),
                     thumbnail: this.system.serverManager.getPreviewUrl(
-                        deviceId as string,
+                        deviceId,
                         bk.startTimeMs,
                         270 * aspectRatio * dpr,
                         270 * dpr, // 270px is the height we want
@@ -424,7 +417,7 @@ export class NxBookmarksComponent implements OnInit {
                     ),
                     canDownloadBookmark:
                         canViewBookmark &&
-                        this.system.permissionManager.canExportDeviceArchive(deviceId as string),
+                        this.system.permissionManager.canExportDeviceArchive(deviceId),
                     canViewBookmark,
                     isVisible: false,
                     deviceName,
@@ -483,6 +476,12 @@ export class NxBookmarksComponent implements OnInit {
 
     trackBookmarkById(index: number, bk: Bookmark): string {
         return bk.id;
+    }
+
+    filterDevices(devices: BookmarksDevice[]): BookmarksDevice[] {
+        return devices.filter(device => {
+            return this.system.permissionManager.canViewDeviceBookmarks(cleanId(device.id));
+        });
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
