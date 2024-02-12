@@ -151,6 +151,22 @@ cdk-tree {
     }
 }
 
+::ng-deep .new-layout-tip {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    margin: -5px 0 0 60px;
+    p {
+        margin: 20px 0 0 80px;
+        line-height: 16px;
+        font-size: 14px;
+        color: var(--grid-new-layout-text);
+        .key {
+            color: var(--grid-new-layout-text-highlight);
+        }
+    }
+}
+
 .renaming-layout {
     &:not(.new-layout) {
         background: var(--tree-renaming-layout-background);
@@ -161,29 +177,38 @@ cdk-tree {
     }
 }
 
-.override-selection {
+@mixin fake-cursor {
+    @keyframes blink {
+        0%,
+        49.9%,
+        100% {
+            opacity: 0;
+        }
+        50%,
+        99.9% {
+            opacity: 1;
+        }
+    }
+
+    content: '';
+    line-height: 16px;
+    font-size: 20px;
+    border-right: 1px solid var(--body-text-color);
+    animation: blink 1s infinite;
+}
+
+.text-value-as-placeholder {
     --selection-text-color-override: var(--tree-editable-selection-override);
     --selection-background-color-override: transparent;
     &:before {
-        @keyframes blink {
-            0%,
-            49.9%,
-            100% {
-                opacity: 0;
-            }
-            50%,
-            99.9% {
-                opacity: 1;
-            }
-        }
+        @include fake-cursor;
+    }
+}
 
-        content: '|';
-        line-height: 20px;
-        font-size: 20px;
-        position: absolute;
-        left: -2px;
-        color: var(--body-text-color);
-        animation: blink 1s infinite;
+.text-with-cursor {
+    // there is no cursor when text is selected. let's fix it )
+    &:after {
+        @include fake-cursor;
     }
 }
 

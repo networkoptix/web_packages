@@ -787,6 +787,9 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--light3);
 
+    --grid-new-layout-text: var(--dark17);
+    --grid-new-layout-text-highlight: var(--dark12);
+
     --overlay-action-bg: rgba(var(--light2--rgb), 0.6);
     --overlay-action-bg-active: rgba(var(--light2--rgb), 0.5);
     --overlay-action-bg-hover: rgba(var(--light2--rgb), 0.7);

@@ -57,10 +57,6 @@ export class LayoutStateEffects {
             map(({ id }) => id),
             distinctUntilChanged(),
             switchMap(createdLayoutId => {
-                this.layoutStateService.editedLayout$$.set({
-                    id: dirtyId(createdLayoutId),
-                    isNew: true,
-                });
                 return this.store.select(selectLayoutsState).pipe(
                     filter(layouts => layouts.some(({ id }) => id === dirtyId(createdLayoutId))),
                     map(() => createdLayoutId),
