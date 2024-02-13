@@ -94,7 +94,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     transferInfo: SystemTransferInfo;
 
     userRole$$: Signal<string> = computed(() => {
-        let { accessRole = '', groupIds = [] } = this.system.permissionManager.currentUser$$();
+        let { accessRole = '', groupIds = [] } =
+            this.system.permissionManager.currentUser$$() || {};
         if (groupIds.length > 1) {
             const groups = (this.system.userManager as UserWithGroupsManager).userGroups;
             const builtInGroup: UserGroup[] = [];
