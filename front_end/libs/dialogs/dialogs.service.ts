@@ -529,6 +529,14 @@ export class NxDialogsService {
         { width: '367px', height: '176px' },
     );
 
+    bookmarkShare = this.dialogV2Factory<Dt.BookmarkShare>(
+        () =>
+            import('./bookmarks/share-modal/bookmark-share.component').then(
+                m => m.NxBookmarkShareComponent,
+            ),
+        { width: '600px' },
+    );
+
     /* New feature */
     /**
      * Factory to create method for the new feature information modal.

@@ -64,7 +64,7 @@ export class NxBookmarksCardModalComponent {
     }
 
     openShareDialog(): void {
-        // TODO: Implement share dialog
+        this.dialogs.bookmarkShare(this.bookmark);
     }
 
     close(): void {

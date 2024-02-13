@@ -918,6 +918,11 @@ html[data-theme="hsl"] {
     --bookmarks-card-background-color-hover: var(--dark7);
     --bookmarks-card-shadow-color-hover: var(--new-dark7);
     --bookmarks-card-border-color: inherit;
+    --bookmarks-share-header-title-color: var(--light4);
+    --bookmarks-share-url-background-color: var(--brand-core);
+    --bookmarks-share-url-text-color: var(--light1);
+    --bookmarks-share-details-text-color: var(--light4);
+    --bookmarks-share-delete-text-color: var(--light4);
 
     --tour-background: var(--new-dark9-t40);
 

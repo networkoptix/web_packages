@@ -1,6 +1,8 @@
 export enum ButtonType {
     brand = 'Brand',
     secondary = 'Secondary',
+    text = 'Text',
+    // Other
     textAction = 'TextAction',
     dropdown = 'Dropdown',
     action = 'Action',

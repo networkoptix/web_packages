@@ -15,7 +15,7 @@ import { ButtonType } from './button.component.types';
     standalone: true,
 })
 export class NxButtonComponent {
-    @Input() type: ButtonType = ButtonType.secondary;
+    @Input() type: `${ButtonType}` = ButtonType.secondary;
     @Input() asyncClick: boolean = false;
     @Input() disabled: boolean = false;
     @Input() active: boolean = false;

@@ -282,6 +282,8 @@ export type BookmarkDownload = DialogType<
     void
 >;
 
+export type BookmarkShare = DialogType<Bookmark, void>;
+
 /* New feature */
 export interface NewFeatureDynamicData {
     content: TemplateRef<unknown>;

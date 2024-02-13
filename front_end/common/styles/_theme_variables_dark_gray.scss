@@ -729,6 +729,11 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
     --bookmarks-card-video-bg: var(--dark6);
+    --bookmarks-share-header-title-color: var(--light4);
+    --bookmarks-share-url-background-color: var(--brand-core);
+    --bookmarks-share-url-text-color: var(--light1);
+    --bookmarks-share-details-text-color: var(--light4);
+    --bookmarks-share-delete-text-color: var(--light4);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

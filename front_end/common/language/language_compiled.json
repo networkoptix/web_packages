@@ -522,6 +522,7 @@
     "ENABLED": "ENABLED",
     "Earlier versions of %VMS_NAME% Client do not support two-factor authentication.": "Earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
     "Edge": "Edge",
+    "Edit": "Edit",
     "Edit Credentials": "Edit Credentials",
     "Edit Layout": "Edit Layout",
     "Edit user - {user}": "Edit user - {user}",
