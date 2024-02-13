@@ -1,11 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 
-import { ClipComponent } from '@components/clip/clip.component';
-
-import { SharedBookmarkViewerComponent } from './shared-bookmark-viewer/shared-bookmark-viewer.component';
 import { SharedBookmarkComponent } from './shared-bookmark.component';
 
 const appRoutes: Routes = [
@@ -28,10 +23,10 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [CommonModule, RouterModule.forChild(appRoutes), TranslateModule, ClipComponent],
+    imports: [RouterModule.forChild(appRoutes), SharedBookmarkComponent],
     providers: [],
-    declarations: [SharedBookmarkComponent, SharedBookmarkViewerComponent],
+    declarations: [],
     bootstrap: [],
-    exports: [SharedBookmarkComponent],
+    exports: [],
 })
 export class SharedBookmarkModule {}
