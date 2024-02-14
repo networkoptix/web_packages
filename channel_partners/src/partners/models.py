@@ -99,6 +99,12 @@ class ChannelPartnerStates:
         ('shutdown', SHUTDOWN)
     ]
 
+    STATE_TEXTS = {
+        ACTIVE: 'active',
+        SUSPENDED: 'suspended',
+        SHUTDOWN: 'shut down'
+    }
+
 
 class ExternalIdTargetManagerQueryset(models.QuerySet):
     @staticmethod

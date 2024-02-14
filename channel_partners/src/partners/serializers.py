@@ -66,6 +66,7 @@ from partners.tasks.notification import (
     added_organization_role_task,
     state_confirmation_task,
 )
+from partners.validators import validate_active_organization
 from tools.helpers import (
     forward_cdb_resp,
     get_path_from_parent,
@@ -971,11 +972,12 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
 
     def validate_organization(self, value: Organization):
         req = self.context.get('request')
-        if value.can_manage_systems(req.user):
-            return value
-        else:
+        if not value.can_manage_systems(req.user):
             raise exceptions.PermissionDenied(
-                detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
+                detail=f'User does not have {Organization.permissions.manage_systems} '
+                       f'permission for this organization')
+        validate_active_organization(value)
+        return value
 
     def validate(self, attrs):
         organization = attrs.get('organization')
@@ -1560,6 +1562,14 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
 class SystemToOrgTransferSerializer(serializers.Serializer):
     organizationId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all())
     comment = serializers.CharField(required=False, default='')
+
+    def validate_organizationId(self, value: Organization):
+        if not value.can_manage_systems(self.context['request'].user):
+            raise exceptions.PermissionDenied(
+                detail=f'User does not have {Organization.permissions.manage_systems} '
+                       f'permission for this organization')
+        validate_active_organization(value)
+        return value
 
     def save(self, system_id: str | uuid.UUID, **kwargs):
         organization = self.validated_data['organizationId']
