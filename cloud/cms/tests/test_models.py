@@ -523,11 +523,12 @@ class TestMenuMethods:
         menus = Menu.generate_menus(customization='default')
         assert menus == {'menu1': mocker.sentinel.generated_menu_default}
 
-    def test_get_prefetched_menus(self, mocker, kb_menu, struct_menu):
+    def test_get_prefetched_menus(self, mocker, kb_menu, struct_menu, db):
         qs = MockSet(kb_menu, struct_menu, Menu(enabled=False))
+        kb_menu.save()
+        struct_menu.save()
         max_depth = qs.aggregate(models.Max('depth'))['depth__max']
-        mocker.patch.object(Menu, 'objects', qs)
-        prefetch_object_mock = mocker.patch.object(Menu, 'get_prefetch_objects', return_value='nodes')
+        prefetch_object_mock = mocker.patch.object(Menu, 'get_prefetch_objects', return_value=[])
         prefetched = Menu.get_prefetched_menus([kb_menu.name, struct_menu.name])
         assert prefetched == list(qs.filter(enabled=True))
         prefetch_object_mock.assert_called_with(max_depth=max_depth, depth=1)
@@ -1321,7 +1322,7 @@ class TestContextMethods:
     @pytest.fixture
     def cust_request(self, arf):
         return arf.get('/', customization_name=self.customization.name)
-    
+
     def test_str(self):
         assert str(self.context) == 'test_context'
         self.context.asset_type = baker.prepare('AssetType', name='test_type')
