@@ -392,7 +392,7 @@ def random_email():
 
 @pytest.fixture()
 def request_host():
-    return settings.INSTANCE_CONFIG.default_host
+    return settings.DEFAULT_HOST_NAME
 
 @pytest.fixture()
 def mock_get_customization_request(httpx_mock, request_host):

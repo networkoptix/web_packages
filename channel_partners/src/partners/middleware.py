@@ -9,7 +9,7 @@ def get_cloud_host(cloud_host_name: str) -> CloudHost | None:
     if not cloud_host_name:
         return None
     if settings.LOCAL_ENV and cloud_host_name == "localhost":
-        cloud_host_name = settings.INSTANCE_CONFIG.default_host
+        cloud_host_name = settings.DEFAULT_HOST_NAME
     cache_key = f'cloud-host-{cloud_host_name}'
     if cloud_host := caches['local'].get(cache_key):
         if isinstance(cloud_host, CloudHost):

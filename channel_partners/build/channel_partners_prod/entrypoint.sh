@@ -2,9 +2,6 @@
 
 WEB_WORKERS=${WEB_WORKERS:-1}
 
-envsubst < /app/app/config/channel_partners.prod.yaml > temp.yaml
-mv temp.yaml /app/app/config/channel_partners.prod.yaml
-
 for command in $@
 
 do

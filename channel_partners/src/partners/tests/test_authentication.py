@@ -70,7 +70,7 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     org = organization_factory(channel_partner=cp)
     sys = system_factory(organization=org)
     system_id = str(sys.system_id)
-    cloud_host = settings.INSTANCE_CONFIG.default_host
+    cloud_host = settings.DEFAULT_HOST_NAME
     system_auth_key = 'system_auth_key'
     cdb_url = f'https://{cloud_host}/cdb/systems/{system_id}'
     activated_system = {

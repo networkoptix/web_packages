@@ -1976,7 +1976,7 @@ class TestCloudSystemViewSetDelete:
         self.org = organization_factory(channel_partner=self.cp)
         self.org_user = org_user_factory(organization=self.org)
         self.system = system_factory(organization=self.org)
-        self.url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{self.system.system_id}'
+        self.url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{self.system.system_id}'
         self.view = CloudSystemViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
         self.request = arf.delete('/')
         self.token = 'HERE_MIGHT_BE_TOKEN'
@@ -2014,7 +2014,7 @@ class TestCloudSystemViewSetDelete:
     def test_destroy_perms(self, system_factory, org_user_factory, arf, mock_auth_with_user, httpx_mock):
         for role in OrganizationRole.objects.filter(permissions__codename=OrganizationPermissions.manage_systems):
             sys = system_factory(organization=self.org)
-            url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{sys.system_id}'
+            url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
             httpx_mock.add_response(url=url, status_code=200)
             user = org_user_factory(organization=self.org, role=role.id)
             request = arf.delete('/')
@@ -2026,7 +2026,7 @@ class TestCloudSystemViewSetDelete:
 
         role = OrganizationRole.objects.exclude(permissions__codename=OrganizationPermissions.manage_systems).first()
         sys = system_factory(organization=self.org)
-        url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{sys.system_id}'
+        url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
         user = org_user_factory(organization=self.org, role=role.id)
         request = arf.delete('/')
@@ -2107,8 +2107,8 @@ class TestSystemTransferOffer:
         self.other_org_request = arf.post(
             '/', data={'organizationId': self.other_org.id, 'comment': self.comment}, format='json')
         self.view = CloudSystemViewSet.as_view(actions={'post': 'transfer_offer'}, detail=True)
-        self.offer_url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0/systems/{self.sys_id}/offer'
-        self.accept_url = (f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0'
+        self.offer_url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/v0/systems/{self.sys_id}/offer'
+        self.accept_url = (f'https://{settings.DEFAULT_HOST_NAME}/cdb/v0'
                            f'/organizations/{self.org.id}/system-offers/{self.sys_id}/accept')
         self.offer_response = {
             "fromAccount": self.org_admin.user.email,

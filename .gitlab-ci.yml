@@ -759,23 +759,6 @@ fail-on-python-license-check:
         sleep 5
       done
 
-cp-checks:
-  needs:
-    - job: cp-lint
-  extends: .cp-django-python
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
-  stage: check
-  variables:
-    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
-    INSTANCE_NAME: test
-  script:
-    - cd channel_partners/src
-    - echo "Running safety check in $(pwd)"
-    - python -m pip install safety==2.3.5
-#    - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
-    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
-    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
-
 .cp-django-python:
   extends: .cp-backend-changes
   image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
@@ -798,6 +781,67 @@ cp-checks:
     POSTGRES_DB: channel_partners
     POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
     INSTANCE_NAME: test
+    DB_HOST: "0.0.0.0"
+    DB_NAME: channel_partners
+    DB_PASSWORD: partners
+    DB_USER: channel
+    DB_PORT: 5432
+    DEBUG: "True"
+    DOMAIN_NAME: "cloud-test.hdw.mx"
+    NOTIFICATION_SECRET: "notification_user:notification_password"
+    QUEUE_CELERY_BROKER_URL: "sqs://"
+    QUEUE_PREFIX: 
+    REDIS_HOST: localhost
+    REDIS_PORT: 6379
+    TRAFFIC_RELAY_DOMAIN: "relay.relay.cloud.hdw.mx"
+    RUN_CELERY_EAGER: "True"
+    RSA_KEY_PRIVATE: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAtb16Q2sJL/eZqNpfItB0oMdhttY9Ov21QN8PedcJm8+1t/qj
+      VBg2c1AxJsMnX+0MH4dcbC9W2JCU+e2vMCX7HMUW4gpmvRtHPDhNutgyByOVJ7TX
+      zCrHR/5xCXojiOLISdikVyP+IDYP+ATe5mM5GIWG1uTTaG7gwwJn2IVggBzUapRW
+      Am3VZUpytfPaLzqucc/zuvoMSUD5K9DZqg4pMeu8VWFCPA7VhFKyuTtdTjrj/72W
+      pLdlcSbARYjjqOO51KUIESXrGUEiw1Mo0OOnacOz/C4G+lXfFDOALsYUNeG//Uib
+      SsfLPghvcIXdC7ghMtYBIzafA/UVcQOqZWPK6wIDAQABAoIBABZWVouowTVTEmDN
+      jjniMyN7vgfR5y6z9i4l/Gn2QykSa3xUYvS4ESE1LwVboSBKK15IrdRiMSNnCdh6
+      HTkmwel0U+6uZphBnQzKwsr/PY7hEbkSoh9m9p1jqZMHnwx5CzMAXJqVQuvEmUvb
+      lWXtthvMdZk+ALnqPtfZGNhk9Epqi6jzGvA4uB3kGlNKEPZWs8Q1y3P88sNRHhVq
+      UUtG5YQaMjoeDaKdfeS+tdDnyvq6ixL7BIUwbdVOCvvWj0ej81C2gKLO4TQ6B2Y4
+      1dwrwP09nSfwn79bUr9sWjFLPGo5P4ALm+Xg+wSq3EbGozw1q9bscZwrWRCZcszZ
+      t15oeCECgYEA3mfE6qgqr95JGsx7CY9BOAdD/dVP+wXdC3nOZyA0JuLNV0y5wev6
+      qBxuKJdRl0dsjZ8+y0KzLM2ueXflYYcQJTTTP4vfTIHEm9wuRr3K8YdJ1eXldlor
+      xiRz+wuJVVYy34NYaM7TEUGyEkF1TlGczwL5jl0AV/Pr6Ev1vqTZ7DECgYEA0TE3
+      ++qPqmsP9L3Cij9u1AwbJZuqCycbzbTLKCafqi3SI+9xUlXkC0PVVId/0VMAXiWR
+      yKzEqFPECNVH4OXxXHoh5LNwIDF+ADR2BMegss1SekaI5pA9Woql4nWZ8C8dpOiQ
+      8yjyUHt3m/bAJmSmNGOHYlLg12p4PXBsdsKsTdsCgYEAv1LRaXRFVImKpg0mAvFD
+      j6lgaipo5W8D2u1sC/b+Jj2Rm/obCqGwPZJHiY+y1srQrXxCjqTQckh2QXRM1XtU
+      /kzVNaNj8vLnaZUeEikPPnu9ns5oeUnUwl11kI86EzlWBkV9dpwFoqC7SU0aVseK
+      d+L9P+TteLwTQwClZN13wuECgYBivY6lU+QYFozjgqZOxv4zDLvLlpw+w2j2Qb4a
+      55A5rYMg/yZILM6FGrGZQpPsY/cqeSVEyXfR1CgV20YgO6kfc26IGsJ0D6hfxGNo
+      gimx/ARQPvbjjXXIROVj7QqKOlMNwdCZVdx6bKzaay/rb1qcI9aFbIVAaLr0lRo9
+      PEpEPQKBgDVVhOqqAeC2Me6nsINMBwcCmQ3koJG1+Y6B3wDhr6sfIZRFZEMJ5sIy
+      +DzntI228OBQvhrr52FQ7NjrmK68jNE8I4uTOomsYmvlvZkBAVZ9j2/VS9KZy+Sz
+      AZTjJgUej4TW1yqC/VZ8QtfzpE2uOorM/T+XEdoQpfRNyZlaBJbJ
+      -----END RSA PRIVATE KEY-----
+
+      
+
+cp-checks:
+  needs:
+    - job: cp-lint
+  extends: .cp-django-python
+  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
+  stage: check
+  variables:
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+    INSTANCE_NAME: test
+  script:
+    - cd channel_partners/src
+    - echo "Running safety check in $(pwd)"
+    - python -m pip install safety==2.3.5
+#    - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
+    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
+    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
 
 
 

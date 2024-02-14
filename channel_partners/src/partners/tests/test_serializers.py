@@ -609,6 +609,7 @@ class TestOrganizationUserSerializer:
         request = arf.post('/')
         request.user = org_admin.user
         mock_account_status(email=self.user.email, active=False)
+        mock_account_status(email=org_admin.user.email, active=False)
         mock_get_customization_request()
         notification_send_url = mock_post_notification()
         serializer = OrganizationUserSerializer(data=data,
@@ -671,6 +672,8 @@ class TestOrganizationUserSerializer:
             'email': user.email,
             'role': self.org_adm_name
         }
+        mock_account_status(email=self.user.email, active=False)
+        mock_account_status(email=group_user.user.email, active=False)
         serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
 
         serializer.is_valid()
