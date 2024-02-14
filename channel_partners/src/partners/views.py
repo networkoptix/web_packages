@@ -640,7 +640,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         end_ts = param_serializer.validated_data.get('endTs')
-        service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by')
+        service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by').order_by('created_ts')
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
