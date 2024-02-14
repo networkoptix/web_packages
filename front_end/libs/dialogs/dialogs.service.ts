@@ -93,20 +93,31 @@ export class NxDialogsService {
         return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
     }
 
-    /**
+    /** Factory that creates a function to lazily open a dialog
      *
      * @param componentPromise Function that lazy imports the modal content
-     * @param customConfig CDK config options https://material.angular.io/cdk/dialog/api#DialogConfig
+     * @param staticConfig Base config that will be applied to all instances of the dialog
+     *     https://material.angular.io/cdk/dialog/api#DialogConfig
      * @returns A function to open the dialog
      */
     private dialogV2Factory<DT extends Dt.DialogType, CT = unknown>(
         componentPromise: () => Promise<ComponentType<CT>>,
-        customConfig: DialogConfig<never> = {},
-    ): (data: DT['data']) => Promise<DT['return']> {
-        return async data => {
+        staticConfig: DialogConfig<never> = {},
+    ): (
+        data: DT['data'] extends void ? null | void : DT['data'],
+        instanceConfig?: DialogConfig<never>,
+    ) => Promise<DT['return']> {
+        /**
+         * @param data Data to be passed to the dialog instance. For dialogs where this type
+         *     is `void`, use `null` to provide `instanceConfig`
+         * @param instanceConfig Config applied to the dialog instance, can overwrite static config
+         * @returns The return value from the dialog instance
+         */
+        return async (data, instanceConfig = {}) => {
             const component = await componentPromise();
             const configWithData: DialogConfig<DT['data']> = {
-                ...customConfig,
+                ...staticConfig,
+                ...instanceConfig,
                 data,
             };
             return this.openV2(component, configWithData);
@@ -118,11 +129,12 @@ export class NxDialogsService {
         import('./generic/generic.component').then(m => m.GenericModalContent),
     );
 
-    async alert(data: Dt.Alert['data']): Promise<void> {
+    async alert(data: Dt.Alert['data'], instanceConfig: DialogConfig<never> = {}): Promise<void> {
         const component = await import('./generic/generic.component').then(
             m => m.GenericModalContent,
         );
         const dialogConfig: DialogConfig<Dt.Generic['data']> = {
+            ...instanceConfig,
             data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },
             // Only close button
         };
