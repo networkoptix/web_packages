@@ -20,6 +20,7 @@ import { BindResponse } from '@authorization/src/app/types/bind-service.types';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -113,8 +114,17 @@ export class BindSystemToCloudComponent implements OnInit {
     getOrgsEffect = effect(async () => {
         const code = this.code$$();
         if (code) {
-            const orgs = await firstValueFrom(this.bindService.getOrgs(code));
-            this.state$$.update(state => ({ ...state, orgs }));
+            if (nxConfig.featureFlags.channelPartners) {
+                const orgs = await firstValueFrom(this.bindService.getOrgs(code));
+                this.state$$.update(state => ({ ...state, orgs }));
+            } else {
+                await firstValueFrom(this.bindService.getTokens(code));
+                this.state$$.update(state => ({
+                    ...state,
+                    bindType: BindType.account,
+                    fsmState: BindDialogStates.finished,
+                }));
+            }
         }
     });
 
@@ -160,6 +170,10 @@ export class BindSystemToCloudComponent implements OnInit {
                 this.handleBindData(res);
             },
         );
+
+        if (!nxConfig.featureFlags.channelPartners) {
+            this.bindSystem.run();
+        }
     }
 
     cleanup(): void {

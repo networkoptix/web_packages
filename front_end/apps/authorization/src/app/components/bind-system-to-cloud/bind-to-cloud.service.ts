@@ -33,7 +33,14 @@ export class BindToCloudService {
         return headers;
     }
 
-    private getTokens(code: string): Observable<CloudTokens> {
+    private deleteToken(token: string): Observable<DeleteResponse> {
+        const headers = this.buildRequestHeaders();
+        return this.http.delete<DeleteResponse>(`/cdb/oauth2/token/${token}`, {
+            headers,
+        });
+    }
+
+    getTokens(code: string): Observable<CloudTokens> {
         return this.http
             .post<CloudTokens>('/cdb/oauth2/token', {
                 grant_type: 'authorization_code',
@@ -41,13 +48,6 @@ export class BindToCloudService {
                 code,
             })
             .pipe(tap(tokens => this.tokens$$.set(tokens)));
-    }
-
-    private deleteToken(token: string): Observable<DeleteResponse> {
-        const headers = this.buildRequestHeaders();
-        return this.http.delete<DeleteResponse>(`/cdb/oauth2/token/${token}`, {
-            headers,
-        });
     }
 
     bindToAccount(name: string): Observable<CdbBindResponse> {
