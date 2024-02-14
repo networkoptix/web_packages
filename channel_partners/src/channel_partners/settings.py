@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import structlog
+from celery.schedules import crontab
 from corsheaders.defaults import default_headers
 
 from channel_partners.configuration.logging_config import configure_logging
@@ -299,3 +300,10 @@ if TESTING or CI or not CELERY_IS_READY:
     CELERY_TASK_ALWAYS_EAGER = True
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False
+
+CELERY_BEAT_SCHEDULE = {
+    "partners.tasks.services.check_expired_services_task": {
+        "task": "partners.tasks.services.check_expired_services_task",
+        "schedule": crontab(hour="*/1"),
+    },
+}

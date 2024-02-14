@@ -329,12 +329,15 @@ def system_factory(cloud_test_host, default_organization):
 @pytest.fixture()
 def cp_service_factory(default_channel_partner):
     def factory(channel_partner=default_channel_partner, parent_service=None,
-                service_type=ChannelPartnerService.LOCAL_RECORDING):
+                service_type=ChannelPartnerService.LOCAL_RECORDING, duration=0,
+                conversion_service=None):
         return baker.make(ChannelPartnerService, name=f'{uuid4()}',
                           created_by_channel_partner=channel_partner,
                           parent_service=parent_service,
                           state=ChannelPartnerService.ACTIVE,
-                          type=service_type
+                          type=service_type,
+                          duration=duration,
+                          conversion_service=conversion_service,
                           )
 
     return factory

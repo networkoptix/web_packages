@@ -17,6 +17,11 @@ app = Celery('channel_partners')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.steps["worker"].add(DjangoStructLogInitStep)
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app.autodiscover_tasks([
+    'partners.tasks.notifications',
+    'partners.tasks.states',
+    'partners.tasks.services',
+])
 
 
 @setup_logging.connect
