@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
+import { catchError } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -23,14 +24,26 @@ export const serverResolver: ResolveFn<NxSystemServer | undefined> = async (
 
     const { serverId } = route.params;
 
+    const systemOffline = 'systemOffline' as const;
+
     const server = await currentSystem.serverManager
         .getForceServers(false)
+        .pipe(catchError(() => Promise.resolve(systemOffline)))
         .toPromise()
         .then(servers => {
+            if (servers === systemOffline) {
+                return systemOffline;
+            }
+
             if (servers?.length) {
                 return servers.find(({ id }) => id.includes(serverId)) || servers[0];
             }
         });
+
+    if (server === systemOffline) {
+        // Don't redirect if the system is offline since this was preventing the page from loading
+        return;
+    }
 
     if (!server) {
         const path = buildUpdatedPath(
@@ -42,7 +55,7 @@ export const serverResolver: ResolveFn<NxSystemServer | undefined> = async (
         await router.navigate([path], {
             relativeTo: activateRoute,
         });
-    } else {
-        return server;
     }
+
+    return server;
 };
