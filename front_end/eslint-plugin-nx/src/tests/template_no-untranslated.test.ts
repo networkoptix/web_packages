@@ -1,11 +1,10 @@
-import { ESLintUtils } from '@typescript-eslint/utils';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 
 import rule from '../rules/template_no-untranslated';
 
 import * as cases from './template_no-untranslated.cases';
 
-const ruleTester = new ESLintUtils.RuleTester({
-    // @ts-expect-error: @typescript-eslint tester only expects TS parser
+const ruleTester = new RuleTester({
     parser: '@angular-eslint/template-parser',
 });
 

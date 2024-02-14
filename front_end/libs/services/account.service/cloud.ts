@@ -127,7 +127,6 @@ export class CloudAccount extends BaseAccount {
 
         return firstValueFrom(this.cloudApi.account(forceUpdate))
             .then((account: Account | any) => {
-                // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {
                     this.account = undefined;
                     return undefined;

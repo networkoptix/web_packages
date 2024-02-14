@@ -4,9 +4,9 @@
     "main": "build/index.js",
     "license": "ISC",
     "scripts": {
-        "watch": "tsc -w",
-        "test": "npx ts-mocha src/tests/*.test.ts",
-        "build": "tsc",
+        "watch": "tsc --project ./tsconfig.build.json -w",
+        "test": "npx ts-mocha --require fixtures.js src/tests/*.test.ts",
+        "build": "tsc --project ./tsconfig.build.json",
         "build-check": "mv ./build ./build-copy; npm run build; build_diff=$(diff -r ./build ./build-copy); if [ ! -z \"$build_diff\" ]; then exit 1; fi",
         "lint": "cd ..; npx eslint --fix \"./eslint-plugin-nx/**/*.ts\""
     },

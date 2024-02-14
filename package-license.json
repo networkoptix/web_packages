@@ -1772,44 +1772,45 @@
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/schematics",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/schematics/LICENSE"
         },
-        "@angular-eslint/builder@17.0.0": {
+        "@angular-eslint/builder@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/builder",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/builder/LICENSE"
         },
-        "@angular-eslint/bundled-angular-compiler@17.0.1": {
+        "@angular-eslint/bundled-angular-compiler@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/bundled-angular-compiler",
-            "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/bundled-angular-compiler/LICENSE"
+            "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/bundled-angular-compiler/README.md"
         },
-        "@angular-eslint/eslint-plugin-template@17.0.1": {
+        "@angular-eslint/eslint-plugin-template@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin-template",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin-template/LICENSE"
         },
-        "@angular-eslint/eslint-plugin@17.0.1": {
+        "@angular-eslint/eslint-plugin@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin/LICENSE"
         },
-        "@angular-eslint/schematics@17.0.0": {
+        "@angular-eslint/schematics@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/schematics",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/schematics/LICENSE"
         },
-        "@angular-eslint/template-parser@17.0.1": {
+        "@angular-eslint/template-parser@17.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/template-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/template-parser/LICENSE"
         },
-        "@angular-eslint/utils@17.0.1": {
+        "@angular-eslint/utils@17.1.1": {
             "licenses": "MIT",
+            "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/utils/LICENSE"
         },
@@ -3105,14 +3106,14 @@
             "path": "cloud_portal/front_end/node_modules/@eslint-community/regexpp",
             "licenseFile": "cloud_portal/front_end/node_modules/@eslint-community/regexpp/LICENSE"
         },
-        "@eslint/eslintrc@2.1.3": {
+        "@eslint/eslintrc@2.1.4": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslintrc",
             "publisher": "Nicholas C. Zakas",
             "path": "cloud_portal/front_end/node_modules/@eslint/eslintrc",
             "licenseFile": "cloud_portal/front_end/node_modules/@eslint/eslintrc/LICENSE"
         },
-        "@eslint/js@8.48.0": {
+        "@eslint/js@8.56.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslint",
             "path": "cloud_portal/front_end/node_modules/@eslint/js",
@@ -3518,7 +3519,7 @@
             "path": "cloud_portal/front_end/node_modules/@grpc/proto-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/@grpc/proto-loader/LICENSE"
         },
-        "@humanwhocodes/config-array@0.11.13": {
+        "@humanwhocodes/config-array@0.11.14": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/humanwhocodes/config-array",
             "publisher": "Nicholas C. Zakas",
@@ -3532,7 +3533,7 @@
             "path": "cloud_portal/front_end/node_modules/@humanwhocodes/module-importer",
             "licenseFile": "cloud_portal/front_end/node_modules/@humanwhocodes/module-importer/LICENSE"
         },
-        "@humanwhocodes/object-schema@2.0.1": {
+        "@humanwhocodes/object-schema@2.0.2": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/humanwhocodes/object-schema",
             "publisher": "Nicholas C. Zakas",
@@ -4156,7 +4157,7 @@
             "path": "cloud_portal/front_end/node_modules/@nrwl/cypress",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/cypress/LICENSE"
         },
-        "@nrwl/devkit@17.0.3": {
+        "@nrwl/devkit@17.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4232,7 +4233,7 @@
             "path": "cloud_portal/front_end/node_modules/@nx/cypress",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/cypress/LICENSE"
         },
-        "@nx/devkit@17.0.3": {
+        "@nx/devkit@17.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4318,13 +4319,13 @@
             "path": "cloud_portal/front_end/node_modules/@pkgjs/parseargs",
             "licenseFile": "cloud_portal/front_end/node_modules/@pkgjs/parseargs/LICENSE"
         },
-        "@pkgr/utils@2.4.2": {
+        "@pkgr/core@0.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/un-ts/pkgr",
             "publisher": "JounQin",
             "email": "admin@1stg.me",
             "url": "https://www.1stG.me",
-            "path": "cloud_portal/front_end/node_modules/@pkgr/utils"
+            "path": "cloud_portal/front_end/node_modules/@pkgr/core"
         },
         "@polka/url@1.0.0-next.21": {
             "licenses": "MIT",
@@ -5384,7 +5385,7 @@
             "path": "cloud_portal/front_end/node_modules/@types/yargs",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/yargs/LICENSE"
         },
-        "@typescript-eslint/eslint-plugin@6.20.0": {
+        "@typescript-eslint/eslint-plugin@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/eslint-plugin",
@@ -5396,47 +5397,60 @@
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/experimental-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/experimental-utils/LICENSE"
         },
-        "@typescript-eslint/parser@6.20.0": {
+        "@typescript-eslint/parser@6.21.0": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/parser",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/parser/LICENSE"
         },
-        "@typescript-eslint/scope-manager@6.20.0": {
+        "@typescript-eslint/rule-tester@6.21.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/typescript-eslint/typescript-eslint",
+            "path": "cloud_portal/front_end/node_modules/@typescript-eslint/rule-tester",
+            "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/rule-tester/LICENSE"
+        },
+        "@typescript-eslint/scope-manager@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/scope-manager",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/scope-manager/LICENSE"
         },
-        "@typescript-eslint/type-utils@6.20.0": {
+        "@typescript-eslint/type-utils@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/type-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/type-utils/LICENSE"
         },
-        "@typescript-eslint/types@6.20.0": {
+        "@typescript-eslint/types@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/types",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/types/LICENSE"
         },
-        "@typescript-eslint/typescript-estree@6.20.0": {
+        "@typescript-eslint/typescript-estree@6.21.0": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree/LICENSE"
         },
-        "@typescript-eslint/utils@6.10.0": {
+        "@typescript-eslint/utils@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/utils/LICENSE"
         },
-        "@typescript-eslint/visitor-keys@6.20.0": {
+        "@typescript-eslint/visitor-keys@6.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/visitor-keys",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/visitor-keys/LICENSE"
+        },
+        "@ungap/structured-clone@1.2.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/ungap/structured-clone",
+            "publisher": "Andrea Giammarchi",
+            "path": "cloud_portal/front_end/node_modules/@ungap/structured-clone",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ungap/structured-clone/LICENSE"
         },
         "@vendure/ngx-translate-extract@9.0.3": {
             "licenses": "MIT",
@@ -5821,7 +5835,7 @@
             "path": "cloud_portal/front_end/node_modules/aria-query",
             "licenseFile": "cloud_portal/front_end/node_modules/aria-query/LICENSE"
         },
-        "array-buffer-byte-length@1.0.0": {
+        "array-buffer-byte-length@1.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/array-buffer-byte-length",
             "publisher": "Jordan Harband",
@@ -5856,6 +5870,14 @@
             "path": "cloud_portal/front_end/node_modules/array-union",
             "licenseFile": "cloud_portal/front_end/node_modules/array-union/license"
         },
+        "array.prototype.filter@1.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/es-shims/Array.prototype.filter",
+            "publisher": "Jordan Harband",
+            "email": "ljharb@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/array.prototype.filter",
+            "licenseFile": "cloud_portal/front_end/node_modules/array.prototype.filter/LICENSE"
+        },
         "array.prototype.findlastindex@1.2.3": {
             "licenses": "MIT",
             "repository": "https://github.com/es-shims/Array.prototype.findLastIndex",
@@ -5883,7 +5905,7 @@
             "path": "cloud_portal/front_end/node_modules/array.prototype.flatmap",
             "licenseFile": "cloud_portal/front_end/node_modules/array.prototype.flatmap/LICENSE"
         },
-        "arraybuffer.prototype.slice@1.0.2": {
+        "arraybuffer.prototype.slice@1.0.3": {
             "licenses": "MIT",
             "repository": "https://github.com/es-shims/ArrayBuffer.prototype.slice",
             "publisher": "Jordan Harband",
@@ -5938,7 +5960,7 @@
             "path": "cloud_portal/front_end/node_modules/autoprefixer",
             "licenseFile": "cloud_portal/front_end/node_modules/autoprefixer/LICENSE"
         },
-        "available-typed-arrays@1.0.5": {
+        "available-typed-arrays@1.0.6": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/available-typed-arrays",
             "publisher": "Jordan Harband",
@@ -6099,14 +6121,6 @@
             "path": "cloud_portal/front_end/node_modules/bent",
             "licenseFile": "cloud_portal/front_end/node_modules/bent/README.md"
         },
-        "big-integer@1.6.52": {
-            "licenses": "Unlicense",
-            "repository": "https://github.com/peterolson/BigInteger.js",
-            "publisher": "Peter Olson",
-            "email": "peter.e.c.olson+npm@gmail.com",
-            "path": "cloud_portal/front_end/node_modules/big-integer",
-            "licenseFile": "cloud_portal/front_end/node_modules/big-integer/LICENSE"
-        },
         "big.js@5.2.2": {
             "licenses": "MIT",
             "repository": "https://github.com/MikeMcl/big.js",
@@ -6160,14 +6174,6 @@
             "url": "https://github.com/twbs/bootstrap/graphs/contributors",
             "path": "cloud_portal/front_end/node_modules/bootstrap",
             "licenseFile": "cloud_portal/front_end/node_modules/bootstrap/LICENSE"
-        },
-        "bplist-parser@0.2.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/nearinfinity/node-bplist-parser",
-            "publisher": "Joe Ferner",
-            "email": "joe.ferner@nearinfinity.com",
-            "path": "cloud_portal/front_end/node_modules/bplist-parser",
-            "licenseFile": "cloud_portal/front_end/node_modules/bplist-parser/README.md"
         },
         "brace-expansion@2.0.1": {
             "licenses": "MIT",
@@ -6299,15 +6305,6 @@
             "repository": "https://github.com/juliangruber/builtins",
             "path": "cloud_portal/front_end/node_modules/builtins",
             "licenseFile": "cloud_portal/front_end/node_modules/builtins/License"
-        },
-        "bundle-name@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/bundle-name",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/bundle-name",
-            "licenseFile": "cloud_portal/front_end/node_modules/bundle-name/license"
         },
         "bytes@3.1.2": {
             "licenses": "MIT",
@@ -7453,24 +7450,6 @@
             "path": "cloud_portal/front_end/node_modules/deepmerge",
             "licenseFile": "cloud_portal/front_end/node_modules/deepmerge/license.txt"
         },
-        "default-browser-id@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/default-browser-id",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/default-browser-id",
-            "licenseFile": "cloud_portal/front_end/node_modules/default-browser-id/license"
-        },
-        "default-browser@4.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/default-browser",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/default-browser",
-            "licenseFile": "cloud_portal/front_end/node_modules/default-browser/license"
-        },
         "default-gateway@6.0.3": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/silverwind/default-gateway",
@@ -7983,6 +7962,22 @@
             "path": "cloud_portal/front_end/node_modules/es-abstract",
             "licenseFile": "cloud_portal/front_end/node_modules/es-abstract/LICENSE"
         },
+        "es-array-method-boxes-properly@1.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ljharb/es-array-method-boxes-properly",
+            "publisher": "Jordan Harband",
+            "email": "ljharb@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/es-array-method-boxes-properly",
+            "licenseFile": "cloud_portal/front_end/node_modules/es-array-method-boxes-properly/LICENSE"
+        },
+        "es-errors@1.3.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ljharb/es-errors",
+            "publisher": "Jordan Harband",
+            "email": "ljharb@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/es-errors",
+            "licenseFile": "cloud_portal/front_end/node_modules/es-errors/LICENSE"
+        },
         "es-module-lexer@1.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/guybedford/es-module-lexer",
@@ -8080,7 +8075,7 @@
             "path": "cloud_portal/front_end/node_modules/eslint-compat-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-compat-utils/LICENSE"
         },
-        "eslint-config-prettier@9.0.0": {
+        "eslint-config-prettier@9.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/eslint-config-prettier",
             "publisher": "Simon Lydell",
@@ -8120,7 +8115,7 @@
             "path": "cloud_portal/front_end/node_modules/eslint-module-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-module-utils/LICENSE"
         },
-        "eslint-plugin-es-x@7.4.0": {
+        "eslint-plugin-es-x@7.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint-community/eslint-plugin-es-x",
             "publisher": "Toru Nagashima",
@@ -8128,7 +8123,7 @@
             "path": "cloud_portal/front_end/node_modules/eslint-plugin-es-x",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-plugin-es-x/LICENSE"
         },
-        "eslint-plugin-import@2.29.0": {
+        "eslint-plugin-import@2.29.1": {
             "licenses": "MIT",
             "repository": "https://github.com/import-js/eslint-plugin-import",
             "publisher": "Ben Mosher",
@@ -8136,7 +8131,7 @@
             "path": "cloud_portal/front_end/node_modules/eslint-plugin-import",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-plugin-import/LICENSE"
         },
-        "eslint-plugin-n@16.3.1": {
+        "eslint-plugin-n@16.6.2": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint-community/eslint-plugin-n",
             "publisher": "Toru Nagashima",
@@ -8154,7 +8149,7 @@
             "licenses": "ISC",
             "path": "cloud_portal/front_end/node_modules/eslint-plugin-nx"
         },
-        "eslint-plugin-prettier@5.0.1": {
+        "eslint-plugin-prettier@5.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/eslint-plugin-prettier",
             "publisher": "Teddy Katz",
@@ -8191,7 +8186,7 @@
             "path": "cloud_portal/front_end/node_modules/eslint-visitor-keys",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-visitor-keys/LICENSE"
         },
-        "eslint@8.48.0": {
+        "eslint@8.56.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslint",
             "publisher": "Nicholas C. Zakas",
@@ -8739,7 +8734,7 @@
             "path": "cloud_portal/front_end/node_modules/get-caller-file",
             "licenseFile": "cloud_portal/front_end/node_modules/get-caller-file/LICENSE.md"
         },
-        "get-intrinsic@1.2.2": {
+        "get-intrinsic@1.2.3": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/get-intrinsic",
             "publisher": "Jordan Harband",
@@ -8958,7 +8953,7 @@
             "path": "cloud_portal/front_end/node_modules/has-symbols",
             "licenseFile": "cloud_portal/front_end/node_modules/has-symbols/LICENSE"
         },
-        "has-tostringtag@1.0.0": {
+        "has-tostringtag@1.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/has-tostringtag",
             "publisher": "Jordan Harband",
@@ -9224,7 +9219,7 @@
             "path": "cloud_portal/front_end/node_modules/ignore-walk",
             "licenseFile": "cloud_portal/front_end/node_modules/ignore-walk/LICENSE"
         },
-        "ignore@5.2.4": {
+        "ignore@5.3.0": {
             "licenses": "MIT",
             "repository": "https://github.com/kaelzhang/node-ignore",
             "publisher": "kael",
@@ -9402,7 +9397,7 @@
             "path": "cloud_portal/front_end/node_modules/is-alphanumerical",
             "licenseFile": "cloud_portal/front_end/node_modules/is-alphanumerical/license"
         },
-        "is-array-buffer@3.0.2": {
+        "is-array-buffer@3.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/is-array-buffer",
             "publisher": "Jordan Harband",
@@ -9560,15 +9555,6 @@
             "path": "cloud_portal/front_end/node_modules/is-hexadecimal",
             "licenseFile": "cloud_portal/front_end/node_modules/is-hexadecimal/license"
         },
-        "is-inside-container@1.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/is-inside-container",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/is-inside-container",
-            "licenseFile": "cloud_portal/front_end/node_modules/is-inside-container/license"
-        },
         "is-interactive@1.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/is-interactive",
@@ -9712,7 +9698,7 @@
             "path": "cloud_portal/front_end/node_modules/is-symbol",
             "licenseFile": "cloud_portal/front_end/node_modules/is-symbol/LICENSE"
         },
-        "is-typed-array@1.1.12": {
+        "is-typed-array@1.1.13": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/is-typed-array",
             "publisher": "Jordan Harband",
@@ -11322,7 +11308,7 @@
             "path": "cloud_portal/front_end/node_modules/object-keys",
             "licenseFile": "cloud_portal/front_end/node_modules/object-keys/LICENSE"
         },
-        "object.assign@4.1.4": {
+        "object.assign@4.1.5": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/object.assign",
             "publisher": "Jordan Harband",
@@ -11337,7 +11323,7 @@
             "path": "cloud_portal/front_end/node_modules/object.fromentries",
             "licenseFile": "cloud_portal/front_end/node_modules/object.fromentries/LICENSE"
         },
-        "object.groupby@1.0.1": {
+        "object.groupby@1.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/es-shims/Object.groupBy",
             "publisher": "Jordan Harband",
@@ -12280,7 +12266,7 @@
             "path": "cloud_portal/front_end/node_modules/prettier-linter-helpers",
             "licenseFile": "cloud_portal/front_end/node_modules/prettier-linter-helpers/LICENSE.md"
         },
-        "prettier@3.1.0": {
+        "prettier@3.2.5": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/prettier",
             "publisher": "James Long",
@@ -12965,15 +12951,6 @@
             "path": "cloud_portal/front_end/node_modules/rsvp",
             "licenseFile": "cloud_portal/front_end/node_modules/rsvp/LICENSE"
         },
-        "run-applescript@5.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/run-applescript",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/run-applescript",
-            "licenseFile": "cloud_portal/front_end/node_modules/run-applescript/license"
-        },
         "run-async@2.4.1": {
             "licenses": "MIT",
             "repository": "https://github.com/SBoudrias/run-async",
@@ -13047,7 +13024,7 @@
             "path": "cloud_portal/front_end/node_modules/rxjs",
             "licenseFile": "cloud_portal/front_end/node_modules/rxjs/LICENSE.txt"
         },
-        "safe-array-concat@1.0.1": {
+        "safe-array-concat@1.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/safe-array-concat",
             "publisher": "Jordan Harband",
@@ -13072,7 +13049,7 @@
             "path": "cloud_portal/front_end/node_modules/safe-json-parse",
             "licenseFile": "cloud_portal/front_end/node_modules/safe-json-parse/LICENCE"
         },
-        "safe-regex-test@1.0.0": {
+        "safe-regex-test@1.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/safe-regex-test",
             "publisher": "Jordan Harband",
@@ -13839,7 +13816,7 @@
             "path": "cloud_portal/front_end/node_modules/symbol-tree",
             "licenseFile": "cloud_portal/front_end/node_modules/symbol-tree/LICENSE"
         },
-        "synckit@0.8.5": {
+        "synckit@0.8.8": {
             "licenses": "MIT",
             "repository": "https://github.com/un-ts/synckit",
             "publisher": "JounQin",
@@ -13957,15 +13934,6 @@
             "publisher": "Tiny Technologies, Inc",
             "path": "cloud_portal/front_end/node_modules/tinymce",
             "licenseFile": "cloud_portal/front_end/node_modules/tinymce/license.txt"
-        },
-        "titleize@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/titleize",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/titleize",
-            "licenseFile": "cloud_portal/front_end/node_modules/titleize/license"
         },
         "tmp@0.2.1": {
             "licenses": "MIT",
@@ -14158,7 +14126,7 @@
             "path": "cloud_portal/front_end/node_modules/tsconfig-paths-webpack-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/tsconfig-paths-webpack-plugin/LICENSE"
         },
-        "tsconfig-paths@3.14.2": {
+        "tsconfig-paths@3.15.0": {
             "licenses": "MIT",
             "repository": "https://github.com/dividab/tsconfig-paths",
             "publisher": "Jonas Kello",
@@ -14235,6 +14203,15 @@
             "url": "http://alogicalparadox.com",
             "path": "cloud_portal/front_end/node_modules/type-detect",
             "licenseFile": "cloud_portal/front_end/node_modules/type-detect/LICENSE"
+        },
+        "type-fest@0.20.2": {
+            "licenses": "(MIT OR CC0-1.0)",
+            "repository": "https://github.com/sindresorhus/type-fest",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "https://sindresorhus.com",
+            "path": "cloud_portal/front_end/node_modules/type-fest",
+            "licenseFile": "cloud_portal/front_end/node_modules/type-fest/license"
         },
         "type-is@1.6.18": {
             "licenses": "MIT",
@@ -14424,15 +14401,6 @@
             "url": "https://github.com/iansan5653",
             "path": "cloud_portal/front_end/node_modules/unraw",
             "licenseFile": "cloud_portal/front_end/node_modules/unraw/license.md"
-        },
-        "untildify@4.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/untildify",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/untildify",
-            "licenseFile": "cloud_portal/front_end/node_modules/untildify/license"
         },
         "update-browserslist-db@1.0.13": {
             "licenses": "MIT",
@@ -14790,7 +14758,7 @@
             "path": "cloud_portal/front_end/node_modules/which-module",
             "licenseFile": "cloud_portal/front_end/node_modules/which-module/LICENSE"
         },
-        "which-typed-array@1.1.13": {
+        "which-typed-array@1.1.14": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/which-typed-array",
             "publisher": "Jordan Harband",

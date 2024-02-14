@@ -5,7 +5,6 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import type staticLang from '@language_static';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 
-/* eslint-disable camelcase */
 export interface ILanguage {
     language: string;
     name: string;

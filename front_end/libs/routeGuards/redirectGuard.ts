@@ -21,7 +21,6 @@ export const TabGuard: CanActivateFn = (
     return inject(NxAccountService)
         .get()
         .then((account: Account) => {
-            // eslint-disable-next-line camelcase
             if (account?.is_authenticated) {
                 router.navigate([
                     nxConfig.featureFlags.dashboardRedirect || cookieService.get('devServer')

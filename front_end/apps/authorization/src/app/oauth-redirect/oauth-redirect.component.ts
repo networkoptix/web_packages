@@ -8,7 +8,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { AuthorizeParams, ClientType } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { WINDOW } from '@services/window-provider';
 
-/* eslint-disable camelcase */
 @UntilDestroy()
 @Component({
     selector: 'nx-oauth-redirect-component',

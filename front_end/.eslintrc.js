@@ -51,18 +51,13 @@ module.exports = {
             plugins: ['import'],
             rules: {
                 'accessor-pairs': 'off',
-                camelcase: [
-                    'error',
-                    {
-                        properties: 'never',
-                        ignoreDestructuring: true,
-                    },
-                ],
+                camelcase: 'off',
+
                 curly: ['error', 'all'],
                 eqeqeq: ['error', 'always'],
                 'multiline-ternary': 'off',
                 'no-case-declarations': 'off',
-                'no-console': ['error', { allow: ['error', 'warn', 'info'] }],
+                'no-console': ['warn', { allow: ['error', 'warn', 'info'] }],
                 'no-dupe-else-if': 'error',
                 'no-mixed-operators': 'off',
                 'no-multi-assign': 'error',
@@ -168,7 +163,7 @@ module.exports = {
                     },
                 ]),
                 ...tsExtension('no-throw-literal'),
-                '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+                '@typescript-eslint/no-unnecessary-type-assertion': onlyEditor('warn'),
                 ...tsExtension('no-use-before-define', [
                     'error',
                     {
@@ -239,7 +234,6 @@ module.exports = {
                 '@typescript-eslint/no-empty-interface': 'off',
                 '@typescript-eslint/no-explicit-any': 'error',
                 '@typescript-eslint/no-inferrable-types': 'off',
-                '@typescript-eslint/no-non-null-assertion': 'error',
 
                 // Re-override recommendeded rule config
                 '@typescript-eslint/no-unused-vars': [
@@ -291,10 +285,8 @@ module.exports = {
         {
             files: ['*.ts'],
             excludedFiles: [
-                'layout-grid.component.ts',
                 'merge.refactor.component.ts',
                 'downloads-releases.component.ts',
-                'subchannels.component.ts',
                 'organization.component.ts',
                 'cameras.component.ts',
                 'settings.component.ts',

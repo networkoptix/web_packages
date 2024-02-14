@@ -216,7 +216,6 @@ export class NxMenusService {
             if (!node) {
                 return;
             }
-            // eslint-disable-next-line camelcase
             let display_name = node.display_name || node.name;
             let name = node.name;
             let translatedRaw = '';
@@ -225,10 +224,8 @@ export class NxMenusService {
             }
             if (translatedRaw && translatedRaw !== node.name_raw) {
                 name = translatedRaw;
-                // eslint-disable-next-line camelcase
                 display_name = translatedRaw;
             } else {
-                // eslint-disable-next-line camelcase
                 display_name = this.translate.instant(display_name);
                 name = this.translate.instant(node.name);
             }

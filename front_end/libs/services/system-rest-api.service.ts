@@ -275,7 +275,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
-        // eslint-disable-next-line camelcase
         if (tokens?.refresh_token) {
             storageService.refreshToken = tokens.refresh_token;
         }
@@ -769,12 +768,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             // Generate new tokens if they are missing
             if (!accessToken) {
                 const res = await firstValueFrom(this.refreshTokens(refreshToken, true));
-                // eslint-disable-next-line camelcase
                 accessToken = res.access_token;
             }
             if (!cloudAccessToken) {
                 const res = await firstValueFrom(this.refreshTokens(refreshToken, false));
-                // eslint-disable-next-line camelcase
                 cloudAccessToken = res.access_token;
             }
             logoutObservable$ = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {

@@ -135,7 +135,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                                 this.location.replaceState(newUrl, queryParams);
 
-                                // eslint-disable-next-line camelcase
                                 if (
                                     this.plugin.pending ||
                                     this.plugin.draft ||
@@ -144,7 +143,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 ) {
                                     const ribbonActions: RibbonAction[] = [];
 
-                                    // eslint-disable-next-line camelcase
                                     if (
                                         this.plugin.pending &&
                                         this.account?.can_publish_integration

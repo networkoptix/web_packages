@@ -57,9 +57,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         this.oauthService.redirectOauth({
             state,
             email,
-            // eslint-disable-next-line camelcase
             accessToken: access_token,
-            // eslint-disable-next-line camelcase
             systemName: system_name,
         });
     }
