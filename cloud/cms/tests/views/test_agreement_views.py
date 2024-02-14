@@ -5,6 +5,7 @@ from uuid import uuid4
 import pytest
 from django.conf import settings
 from django.core.cache import caches, cache
+from django.urls import reverse_lazy
 from rest_framework import status
 
 from cloud.middleware import TOSAgreementMiddleware
@@ -238,8 +239,33 @@ class TestTosAgreements:
         resp = TOSAgreementMiddleware.process_request(TOSAgreementMiddleware, request)
         assert resp is None
 
-        # Test excluded path
+    def test_tos_middleware_excluded_paths(self, arf, disable_feature_flags):
+        version = make_test_version_with_records(self.agreement, agreement_type=AgreementTypes.tos)
+        review = make_test_review(self.customization, version)
+        review.reviewed_date = review.reviewed_date - timedelta(days=30)
+        review.save()
         request = arf.get('/')
+        request.session = {}
+        request.user = self.user
+
+        resp = TOSAgreementMiddleware.process_request(TOSAgreementMiddleware, request)
+        assert resp is None
+
+        request = arf.get('/api/account')
+        request.session = {}
+        request.user = self.user
+
+        resp = TOSAgreementMiddleware.process_request(TOSAgreementMiddleware, request)
+        assert resp is None
+
+        request = arf.get(reverse_lazy('get_language'))
+        request.session = {}
+        request.user = self.user
+
+        resp = TOSAgreementMiddleware.process_request(TOSAgreementMiddleware, request)
+        assert resp is None
+
+        request = arf.get('/api/account/refreshAccessToken')
         request.session = {}
         request.user = self.user
 

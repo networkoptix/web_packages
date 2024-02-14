@@ -109,14 +109,14 @@ class TOSAgreementMiddleware(MiddlewareMixin):
         reverse_lazy('accept_agreement'),
         reverse_lazy('get_language'),
         reverse_lazy('get_settings'),
-        reverse_lazy('account'),
-        reverse_lazy('user_logout')
+        reverse_lazy('user_logout'),
     ]
     EXCLUDE_PATHS = [
+        '/api/account',
         '/api/notifications/',
         '/serve/',
         '/static/',
-        '/api/custom-properties/theme'
+        '/api/custom-properties/theme',
     ]
 
     def process_request(self, request: HttpRequest):
@@ -125,11 +125,11 @@ class TOSAgreementMiddleware(MiddlewareMixin):
             return
         if request.user.is_superuser or not request.user.is_authenticated:
             return
-        if request.path in self.EXCLUDE_ENDPOINTS:
-            return
         for path in self.EXCLUDE_PATHS:
             if request.path.startswith(path):
                 return
+        if request.path in self.EXCLUDE_ENDPOINTS:
+            return
         required_tos = check_required_tos(customization, request.user)
         if not required_tos:
             return
