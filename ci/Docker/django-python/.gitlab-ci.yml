@@ -42,6 +42,7 @@ docker:build-django-python:
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
     - ci/Docker/django-python/*
+    - build_scripts/**/requirements.txt
     - cloud/**/pyproject.toml
     - cloud/**/poetry.lock
     - cloud/**/poetry.toml

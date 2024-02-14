@@ -30,6 +30,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, connections
 from django.db.models import Q, Count, Max
 from django.db.models.deletion import Collector
+from django.db.models.functions import Lower
 from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
 from django.db.utils import ProgrammingError, OperationalError
 from django.dispatch import receiver
@@ -2396,7 +2397,7 @@ class Menu(models.Model):
     enabled = models.BooleanField(default=True)
 
     LOGS_TO_SHOW = 10
-    REQUIRED_MENUS = ['Header', 'Footer', 'Configuration']
+    REQUIRED_MENUS = ['Header', 'Footer', 'Configuration', 'New Header', 'New Footer']
 
     def __str__(self):
         if self.name:
@@ -2521,10 +2522,11 @@ class Menu(models.Model):
     @classmethod
     def get_prefetched_menus(cls, menu_names=None, only_enabled=True):
         menu_names = menu_names or Menu.REQUIRED_MENUS
+        menu_names = [name.lower() for name in menu_names]
         menus = cls.objects.all()
         if only_enabled:
             menus = menus.filter(enabled=True)
-        menu_query = menus.filter(name__in=menu_names)
+        menu_query = menus.annotate(name_lower=models.functions.Lower('name')).filter(name_lower__in=menu_names)
         max_depth = menu_query.aggregate(
             models.Max('depth'))['depth__max']
         if max_depth is None:

@@ -699,7 +699,6 @@ check-python-licenses:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
         - cloud/**/pyproject.toml
         - cloud/**/poetry.lock
