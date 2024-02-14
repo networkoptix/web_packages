@@ -110,7 +110,6 @@ export class InterceptorManager {
                 new WithBearerMiddleware(useSystemScopedToken, shouldAuthenticateWithScopedToken),
                 new WithBearerMiddleware(useCloudToken, shouldAuthenticateWithBearer),
                 new WithVmsSessionMiddleware(
-                    // eslint-disable-next-line camelcase
                     access_token => {
                         fetch('/api/account/loginTokens', {
                             method: 'POST',

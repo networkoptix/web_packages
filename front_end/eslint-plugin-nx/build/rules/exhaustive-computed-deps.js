@@ -11,7 +11,7 @@ module.exports = (0, utils_2.createRule)({
     },
     defaultOptions: [],
     create(context) {
-        const reaonlyProps = new Map();
+        const reaonlyProps = new WeakMap();
         return {
             ClassBody(node) {
                 reaonlyProps.set(node, new Set());

@@ -1,45 +1,40 @@
-import { ESLintUtils } from '@typescript-eslint/utils';
+import { RuleTester } from '@typescript-eslint/rule-tester';
+import { range } from 'lodash';
 
 import rule from '../rules/signal-naming-convention';
 
-import { classWrapper, successfulCodeObjects } from './utils';
+import * as cases from './signal-naming-convention.cases';
+import { successfulCodeObjects } from './utils';
 
-const ruleTester = new ESLintUtils.RuleTester({
+const ruleTester = new RuleTester({
     parser: '@typescript-eslint/parser',
+    parserOptions: {
+        project: '../../tsconfig.json',
+        tsconfigRootDir: __dirname,
+    },
 });
 
 ruleTester.run('signal-naming-convention', rule, {
-    valid: successfulCodeObjects([
-        'const count$$ = signal(0);',
-        'const doubleCount$$ = computed(() => count$$() * 2);',
-        classWrapper('count$$ = signal(0);'),
-        classWrapper('compCount$$ = computed(() => this.count$$() * 2);'),
-        classWrapper("converted$$ = toSignal(from(''));"),
-        classWrapper('users$$ = this.store.selectSignal(selectUsers);'),
-    ]),
+    valid: successfulCodeObjects([cases.s1, cases.s2, cases.s3, cases.s4]),
     invalid: [
         {
-            code: 'const count = signal(0);',
+            code: cases.f1,
+            errors: range(0, 6).map(_ => ({ messageId: 'signalEnd' })),
+        },
+        {
+            code: cases.f2,
             errors: [{ messageId: 'signalEnd' }],
         },
         {
-            code: 'const doubleCount = computed(() => count$$() * 2);',
-            errors: [{ messageId: 'signalEnd' }],
+            code: cases.f3,
+            errors: range(0, 3).map(_ => ({ messageId: 'signalEnd' })),
         },
         {
-            code: classWrapper('count = signal(0);'),
-            errors: [{ messageId: 'signalEnd' }],
+            code: cases.f4,
+            errors: range(0, 3).map(_ => ({ messageId: 'signalEnd' })),
         },
         {
-            code: classWrapper('compCount = computed(() => this.count$$() * 2);'),
-            errors: [{ messageId: 'signalEnd' }],
-        },
-        {
-            code: classWrapper("converted = toSignal(from(''));"),
-            errors: [{ messageId: 'signalEnd' }],
-        },
-        {
-            code: classWrapper('users = this.store.selectSignal(selectUsers);'),
+            code: cases.f5,
             errors: [{ messageId: 'signalEnd' }],
         },
     ],

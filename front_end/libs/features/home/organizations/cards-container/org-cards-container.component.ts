@@ -79,8 +79,8 @@ export class NxOrganizationCardContainerComponent {
     destroyRef = inject(DestroyRef);
     @Input({ transform: booleanAttribute }) inRoot: boolean;
     canCreateGroups$$ = computed(() => {
-        const currOrg = this.store.selectSignal(selectCurrentOrganization);
-        return currOrg()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
+        const currOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+        return currOrg$$()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
     });
     hasEnoughGroupsOrSystems$$ = computed(() => {
         return (

@@ -1,20 +1,10 @@
 /**
  * @fileoverview Enforce $$ suffix naming convention for signals
  *
- * This rule checks for two ways of creating signals:
- *
- * 1. Creating new signals using `signal()` and other functions
- *
- * 2. Selecting from a NgRx store using `.selectSignal()`
- *
- * Weaknesses: Using type-ignorant syntax analysis means that renaming or otherwise not
- * directly using the creation functions (like creating a function that returns new signals)
- * will not be caught
- *
  * @author Andrew Wu
  */
 
-import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
+import { TSESTree, AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { createRule } from './utils';
 
@@ -22,8 +12,8 @@ import { createRule } from './utils';
 // Helpers
 // ----------------------------------------------------------------------------
 
-const newSignalNames = ['signal', 'computed', 'toSignal'];
-// https://angular.io/api/core/rxjs-interop/toSignal
+const signalTypes = ['Signal', 'WritableSignal' /* , 'InputSignal' */];
+// TODO Update for input signals and control flow
 
 // ----------------------------------------------------------------------------
 // Rule Definition
@@ -41,61 +31,61 @@ export = createRule({
     },
     defaultOptions: [],
     create(context) {
+        const services = ESLintUtils.getParserServices(context);
+
+        function checkKeyName(key: TSESTree.Identifier): void {
+            const tsType = services.getTypeAtLocation(key);
+            const typeSymbol = tsType.symbol || tsType.aliasSymbol;
+            if (!typeSymbol) {
+                return; // Literal value, not a signal
+            }
+            const { name } = typeSymbol;
+
+            // const checker = services.program.getTypeChecker();
+            // console.log(checker.typeToString(tsType));
+            // This will return the generic as well
+
+            if (signalTypes.includes(name) && !key.name.endsWith('$$')) {
+                context.report({
+                    node: key,
+                    messageId: 'signalEnd',
+                });
+            }
+        }
+
         return {
-            'VariableDeclarator[id.type="Identifier"], PropertyDefinition'(
-                node: TSESTree.VariableDeclarator | TSESTree.PropertyDefinitionNonComputedName,
-            ) {
-                const key = (
-                    node.type === AST_NODE_TYPES.VariableDeclarator ? node.id : node.key
-                ) as TSESTree.Identifier;
-                const value =
-                    node.type === AST_NODE_TYPES.VariableDeclarator ? node.init : node.value;
-
-                if (!value || value.type !== AST_NODE_TYPES.CallExpression) {
-                    return; // No value or not a value from a function/method call
-                }
-
-                const { callee } = value;
-                if (callee.type === AST_NODE_TYPES.Identifier) {
-                    // This branch checks for creating new signals
-
-                    if (!newSignalNames.includes(callee.name)) {
-                        return; // Not creating a signal
-                    }
-
-                    if (!key.name.endsWith('$$')) {
-                        context.report({
-                            node: key,
-                            messageId: 'signalEnd',
-                        });
-                    }
+            Property(node) {
+                if (node.computed) {
+                    // Ignore computed property names, could be anything
                 } else if (
-                    node.type === AST_NODE_TYPES.PropertyDefinition &&
-                    callee.type === AST_NODE_TYPES.MemberExpression
+                    node.parent.type === AST_NODE_TYPES.ObjectExpression &&
+                    node.key.type === AST_NODE_TYPES.Identifier
                 ) {
-                    // This branch checks for `signalProp = this.store.selectSignal()`
-                    // https://ngrx.io/api/store/Store#selectSignal
-
-                    const { object, property } = callee;
-                    // object is everything before the property
-                    // property is the actual property (in this case, method being called)
-
-                    const isThisStore =
-                        object.type === AST_NODE_TYPES.MemberExpression &&
-                        object.object.type === AST_NODE_TYPES.ThisExpression &&
-                        object.property.type === AST_NODE_TYPES.Identifier &&
-                        object.property.name === 'store';
-
-                    const isSelectSignal =
-                        property.type === AST_NODE_TYPES.Identifier &&
-                        property.name === 'selectSignal';
-
-                    if (isThisStore && isSelectSignal && !key.name.endsWith('$$')) {
-                        context.report({
-                            node: key,
-                            messageId: 'signalEnd',
-                        });
+                    checkKeyName(node.key);
+                    // const obj = { key: value }
+                } else if (
+                    node.parent.type === AST_NODE_TYPES.ObjectPattern &&
+                    node.value.type === AST_NODE_TYPES.Identifier
+                ) {
+                    checkKeyName(node.value);
+                    // const { key: newKey } = { ... }
+                }
+            },
+            'VariableDeclarator, PropertyDefinition, TSPropertySignature'(
+                node:
+                    | TSESTree.VariableDeclarator
+                    | TSESTree.PropertyDefinitionNonComputedName
+                    | TSESTree.TSPropertySignature,
+            ) {
+                const key = node.type === AST_NODE_TYPES.VariableDeclarator ? node.id : node.key;
+                if (key.type === AST_NODE_TYPES.ArrayPattern) {
+                    for (const element of key.elements) {
+                        if (element.type === AST_NODE_TYPES.Identifier) {
+                            checkKeyName(element);
+                        }
                     }
+                } else if (key.type === AST_NODE_TYPES.Identifier) {
+                    checkKeyName(key);
                 }
             },
         };

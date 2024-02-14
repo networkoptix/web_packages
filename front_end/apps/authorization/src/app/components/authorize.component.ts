@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
     Component,

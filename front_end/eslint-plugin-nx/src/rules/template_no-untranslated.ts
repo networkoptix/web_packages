@@ -9,7 +9,7 @@ import type {
     TmplAstText,
     TmplAstBoundText,
 } from '@angular-eslint/bundled-angular-compiler';
-import type { RuleFixer, RuleFix } from '@typescript-eslint/utils/dist/ts-eslint';
+import type { RuleFixer, RuleFix } from '@typescript-eslint/utils/ts-eslint';
 
 import { TMPL_AST_NODES, sourceSpanToLoc } from './template-utils';
 import type { WithType } from './template-utils';

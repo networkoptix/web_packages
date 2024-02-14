@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { CommonModule } from '@angular/common';
 import {
     Component,

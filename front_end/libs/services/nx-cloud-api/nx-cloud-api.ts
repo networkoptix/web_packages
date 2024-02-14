@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Router } from '@angular/router';
@@ -386,10 +385,10 @@ export class NxCloudApiService {
     getSystemToken(systemId: string): Observable<{ access_token: string; refresh_token: string }> {
         // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
         return this.http
-            .post<{ access_token: string; refresh_token: string }>(
-                `${apiBase}/systems/${systemId}/token`,
-                {},
-            )
+            .post<{
+                access_token: string;
+                refresh_token: string;
+            }>(`${apiBase}/systems/${systemId}/token`, {})
             .pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
         // return this.cloudDbApi.getToken(systemId);
     }
@@ -1051,10 +1050,9 @@ export class NxCloudApiService {
     @memoizeAsyncLong
     refreshAccessTokens() {
         return this.http
-            .post<Record<string, string>>(
-                `${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`,
-                {},
-            )
+            .post<
+                Record<string, string>
+            >(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {})
             .pipe(map(({ access_token }) => ({ accessToken: access_token })));
     }
 

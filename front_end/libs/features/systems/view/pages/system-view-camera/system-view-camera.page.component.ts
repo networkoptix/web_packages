@@ -89,8 +89,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
     time$$ = signal<string>('live');
-    canEditCamera$$ = computed<boolean>(
-        () => this.system?.permissionManager.canEditDevice(this.cameraId$$()),
+    canEditCamera$$ = computed<boolean>(() =>
+        this.system?.permissionManager.canEditDevice(this.cameraId$$()),
     );
 
     CONFIG = nxConfig;

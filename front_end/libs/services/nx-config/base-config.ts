@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 // To parse this data:
 //
 //   import { Convert, BaseConfig } from "./file";

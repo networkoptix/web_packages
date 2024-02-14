@@ -59,6 +59,7 @@ export = createRule({
             params.forEach(param => {
                 if (
                     nonAssignments.includes(param.type) &&
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                     !(param as NonAssignment).typeAnnotation
                 ) {
                     context.report({

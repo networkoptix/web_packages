@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { QueryParamsHandling } from '@angular/router';
 
 export enum Auth {
