@@ -91,7 +91,9 @@ export class NxSubchannelsComponent {
             )
             .subscribe(partners => {
                 this.store.dispatch(
-                    CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
+                    CPActions.setCurrentSubchannelPartners({
+                        currentSubchannels: partners.sort((a, b) => a.name.localeCompare(b.name)),
+                    }),
                 );
                 this.subchannelsStoresLoaded = true;
                 this.displayPartners();
