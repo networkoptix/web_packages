@@ -471,12 +471,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }
         const endpoint = '/api/getCurrentUser';
         this.cacheService.addToCache(endpoint);
-        this.userRequest = this.get(endpoint, { headers })
-            .toPromise()
-            .then(({ reply }) => {
-                this.currentUser = reply;
-                return this.currentUser;
-            });
+        this.userRequest = firstValueFrom(this.get(endpoint, { headers })).then(({ reply }) => {
+            this.currentUser = reply;
+            return this.currentUser;
+        });
         this.userRequest.finally(() => {
             this.userRequest = undefined; // Clear cache in case of errors
         });
@@ -501,13 +499,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsyncPersistent
     getApiDoc(type: APIDocType) {
         if (type === 'main') {
-            return this.get('/static/openapi_legacy.json').toPromise();
+            return firstValueFrom(this.get('/static/openapi_legacy.json'));
         }
     }
 
     @memoizeAsyncPersistent
     fetchApiToolJSON(route: string) {
-        return this.get<APIDoc>(`/static/${route}`).toPromise();
+        return firstValueFrom(this.get<APIDoc>(`/static/${route}`));
     }
 
     getAPIToolManifest(): Promise<MenuManifest> {
@@ -562,21 +560,23 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     logout() {
-        return this.post('/api/cookieLogout')
-            .pipe(
+        return firstValueFrom(
+            this.post('/api/cookieLogout').pipe(
                 tap(() => {
                     this.cookieService.delete('x-runtime-guid');
                 }),
-            )
-            .toPromise();
+            ),
+        );
     }
 
     logUrl(params: { name?: string; lines?: number }) {
-        return this.get('/api/showLog', {
-            params: { ...params },
-            headers: { 'Content-Type': 'text' },
-            responseType: 'text',
-        }).toPromise();
+        return firstValueFrom(
+            this.get('/api/showLog', {
+                params: { ...params },
+                headers: { 'Content-Type': 'text' },
+                responseType: 'text',
+            }),
+        );
     }
 
     @memoizeAsyncMedium
@@ -589,7 +589,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     configureServer(configureParams: ConfigureParams) {
-        return this.post<any>('/api/configure', configureParams).toPromise();
+        return firstValueFrom(this.post<any>('/api/configure', configureParams));
     }
 
     changeAdminPassword(newPassword: string, currentPassword: string) {
@@ -625,13 +625,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     checkInternet(reload = true) {
-        return this.getModuleInfo()
-            .toPromise()
-            .then(res => res.reply.serverFlags.includes('SF_HasPublicIP'));
+        return firstValueFrom(this.getModuleInfo()).then(res =>
+            res.reply.serverFlags.includes('SF_HasPublicIP'),
+        );
     }
 
     checkLocalIfNew(reload = true) {
-        return environment.isLocal ? Promise.resolve({}) : this.getModuleInfo().toPromise();
+        return environment.isLocal ? Promise.resolve({}) : firstValueFrom(this.getModuleInfo());
     }
 
     createEvent = createEventLegacyV1;
@@ -640,10 +640,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
      * @deprecated remove method once support for 4.2 systems is dropped.
      */
     backupControl(action?: 'start' | 'stop') {
-        return this.get<any>(
-            '/api/backupControl',
-            action ? { params: { action } } : {},
-        ).toPromise();
+        return firstValueFrom(
+            this.get<any>('/api/backupControl', action ? { params: { action } } : {}),
+        );
     }
 
     setAuthKeys(authGet: string, authPost: string, authPlay: string): void {
@@ -682,7 +681,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     @memoizeAsyncPersistent
     getSettingsDocumentation(): Promise<ServerDocumentation> {
-        return this.get('/api/settingsDocumentation').toPromise();
+        return firstValueFrom(this.get('/api/settingsDocumentation'));
     }
 
     /**
@@ -781,18 +780,22 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     renameServer(serverId: string, serverName: string) {
-        return this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
-            serverId,
-            serverName,
-        }).toPromise();
+        return firstValueFrom(
+            this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
+                serverId,
+                serverName,
+            }),
+        );
     }
 
     saveServerUserSettings(serverId: string, param: { [key: string]: string }) {
         const [key, value] = Object.entries(param)[0];
-        return this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
-            serverId,
-            [key]: value,
-        }).toPromise();
+        return firstValueFrom(
+            this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
+                serverId,
+                [key]: value,
+            }),
+        );
     }
 
     @memoizeAsyncLong
@@ -802,16 +805,18 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     saveCameraUserSettings(cameraId: string, param: { [key: string]: string }) {
         const [key, value] = Object.entries(param)[0];
-        return this.post<ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
-            cameraId,
-            [key]: value,
-        }).toPromise();
+        return firstValueFrom(
+            this.post<ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
+                cameraId,
+                [key]: value,
+            }),
+        );
     }
 
     restartServer(serverId?: string) {
-        return this.post<RestartServer>('/api/restart')
-            .toPromise()
-            .catch(err => Promise.reject(err));
+        return firstValueFrom(this.post<RestartServer>('/api/restart')).catch(err =>
+            Promise.reject(err),
+        );
     }
 
     @memoizeAsyncMedium
@@ -1335,16 +1340,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     private getDigestKeys(adminPassword: string): Promise<{ getKey: string; postKey: string }> {
-        return this.get('/api/getNonce')
-            .toPromise()
-            .then(({ nonce, realm }) => {
-                const digest = md5(`admin:${realm}:${adminPassword}`);
-                const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
-                const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
-                const postKey = btoa(`admin:${nonce}:${postSimplified}`);
-                const getKey = btoa(`admin:${nonce}:${getSimplified}`);
-                return { getKey, postKey };
-            });
+        return firstValueFrom(this.get('/api/getNonce')).then(({ nonce, realm }) => {
+            const digest = md5(`admin:${realm}:${adminPassword}`);
+            const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
+            const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
+            const postKey = btoa(`admin:${nonce}:${postSimplified}`);
+            const getKey = btoa(`admin:${nonce}:${getSimplified}`);
+            return { getKey, postKey };
+        });
     }
 
     deprecatedMergeSystems(
@@ -1361,7 +1364,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 takeRemoteSettings,
                 url,
             };
-            return this.post('/api/mergeSystems', data).toPromise();
+            return firstValueFrom(this.post('/api/mergeSystems', data));
         });
     }
 

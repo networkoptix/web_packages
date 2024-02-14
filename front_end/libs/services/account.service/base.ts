@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
+import { firstValueFrom } from 'rxjs';
 
 import { accountActions, accountSelectors } from '@common/store/account';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -307,9 +308,9 @@ export abstract class BaseAccount {
     public async handleRefreshTokenLogin(refreshToken) {
         const url = new URL(window.location.href);
         url.searchParams.delete('refresh_token');
-        const { code }: any = await this.cloudApi
-            .getTokensFromCloud(refreshToken, 'refresh_token', 'code')
-            .toPromise();
+        const { code }: any = await firstValueFrom(
+            this.cloudApi.getTokensFromCloud(refreshToken, 'refresh_token', 'code'),
+        );
         url.searchParams.set('code', code);
         window.history.pushState({ url: url.toString() }, '', url.toString());
         return this.handleCodeLogin(code);
@@ -345,10 +346,10 @@ export abstract class BaseAccount {
         };
 
         try {
-            const tokens: any = await this.cloudApi.getTokensFromCloud(code).toPromise();
-            const tokenInfo: any = await this.cloudApi
-                .getTokenInfo(tokens.access_token)
-                .toPromise();
+            const tokens: any = await firstValueFrom(this.cloudApi.getTokensFromCloud(code));
+            const tokenInfo: any = await firstValueFrom(
+                this.cloudApi.getTokenInfo(tokens.access_token),
+            );
             this.appStateService.ready = true;
             if (tokenInfo.username === account.email) {
                 await logoutTokens(tokens);

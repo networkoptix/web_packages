@@ -1,3 +1,5 @@
+import { firstValueFrom } from 'rxjs';
+
 import { EventParams } from '@services/system-api.types/events.types';
 
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
@@ -19,5 +21,5 @@ export function createEventLegacyV1(
     this: MediaserverLegacyConnection,
     params: EventParams,
 ): Promise<Event> {
-    return this.post<Event>('/api/createEvent', params as Record<string, unknown>).toPromise();
+    return firstValueFrom(this.post<Event>('/api/createEvent', params as Record<string, unknown>));
 }

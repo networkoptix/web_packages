@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
+import { firstValueFrom } from 'rxjs';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
@@ -74,11 +75,11 @@ export class NxLanguageProviderService {
 
     loadLanguage(): Promise<Language> {
         const lang = this.currentLang ?? this.translate.getDefaultLang();
-        return (
+        return firstValueFrom(
             environment.isLocal
                 ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
-                : this.http.get<Language>('/api/utils/language')
-        ).toPromise();
+                : this.http.get<Language>('/api/utils/language'),
+        );
     }
 
     loadTimelineTranslations(): void {

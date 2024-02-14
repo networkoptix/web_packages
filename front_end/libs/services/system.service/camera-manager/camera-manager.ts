@@ -58,9 +58,9 @@ export class CameraManager {
 
     async updateSystemCameras(): Promise<void> {
         try {
-            const { serverTimes, cameras } = await this.serverManager.mediaserver
-                .getCamerasAndServerTime()
-                .toPromise();
+            const { serverTimes, cameras } = await firstValueFrom(
+                this.serverManager.mediaserver.getCamerasAndServerTime(),
+            );
             await this.processCameras(cameras, serverTimes);
             return Promise.resolve();
         } catch (error) {
@@ -72,17 +72,16 @@ export class CameraManager {
     }
 
     async getCameras(): Promise<NxSystemCamera[]> {
-        await this.serverManager.mediaserver
-            .getCamerasAndServerTime()
-            .toPromise()
-            .then(response => {
+        await firstValueFrom(this.serverManager.mediaserver.getCamerasAndServerTime()).then(
+            response => {
                 if (!response) {
                     this.cameras = [];
                 } else {
                     const { cameras, serverTimes } = response;
                     return this.processCameras(cameras, serverTimes);
                 }
-            });
+            },
+        );
         this.updateCamerasSubject();
         return this.cameras;
     }
@@ -418,7 +417,7 @@ export class CameraManager {
             }
             updateParams.scheduleTasks = scheduleTasks;
         }
-        return this.serverManager.mediaserver.updateRecordingSettings(updateParams).toPromise();
+        return firstValueFrom(this.serverManager.mediaserver.updateRecordingSettings(updateParams));
     }
 
     private parseFps(schedule: ScheduleTask[], max: number): number | 'various' {

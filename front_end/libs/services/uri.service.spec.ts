@@ -1,6 +1,6 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
 import { setupTest41System } from '@mocks/system.test';
 import { nxConfig } from '@services/nx-config/config';
@@ -55,7 +55,7 @@ describe('Uri Service', () => {
     });
 
     it('should getQueryParams', async () => {
-        const params = await uriService.getParams().toPromise();
+        const params = await firstValueFrom(uriService.getParams());
         expect(params).toEqual(queryParams);
     });
 

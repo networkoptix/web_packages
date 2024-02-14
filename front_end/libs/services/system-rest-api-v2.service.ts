@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
+import { firstValueFrom, combineLatest, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
@@ -271,10 +271,12 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     override configureServer(configureParams: ConfigureParams): Promise<any> {
-        return this.patch(
-            '/rest/v2/servers/this/runtimeInfo',
-            configureParams as Record<string, string>,
-        ).toPromise();
+        return firstValueFrom(
+            this.patch(
+                '/rest/v2/servers/this/runtimeInfo',
+                configureParams as Record<string, string>,
+            ),
+        );
     }
 
     override rebuildArchive(location: number, action?: string): Observable<RebuildArchiveResponse> {

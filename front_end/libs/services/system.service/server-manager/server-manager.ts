@@ -112,27 +112,25 @@ export class ServerManager {
                 if (!environment.isLocal) {
                     unauthorizedCallback = this.system.useRest
                         ? () =>
-                              this.cloudApi
-                                  .getSystemToken(this.systemId)
-                                  .toPromise()
-                                  .then(tokens => {
+                              firstValueFrom(this.cloudApi.getSystemToken(this.systemId)).then(
+                                  tokens => {
                                       (<NxSystemRestAPI>this.mediaserver)
                                           .setTokens(tokens, true)
                                           .subscribe(() => {});
                                       return Promise.resolve(true);
-                                  })
+                                  },
+                              )
                         : () =>
-                              this.cloudApi
-                                  .getSystemAuth(this.systemId)
-                                  .toPromise()
-                                  .then(authKeys => {
+                              firstValueFrom(this.cloudApi.getSystemAuth(this.systemId)).then(
+                                  authKeys => {
                                       this.mediaserver.setAuthKeys(
                                           authKeys.authGet,
                                           authKeys.authPost,
                                           authKeys.authPlay,
                                       );
                                       return true;
-                                  });
+                                  },
+                              );
                 }
                 mediaserverConnections[server.id] ||= this.systemApiService.createConnection({
                     user: this.currentUserEmail,
@@ -246,7 +244,7 @@ export class ServerManager {
             value,
             resourceId,
         }));
-        return this.mediaserver.setResourceParams(mappedParams).toPromise();
+        return firstValueFrom(this.mediaserver.setResourceParams(mappedParams));
     }
 
     updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
@@ -354,9 +352,9 @@ export class ServerManager {
 
     private setLogsLegacy(serverId: string, loggers: Logger[]): Promise<void> {
         const promises = loggers.map<Promise<LogLevel>>(logger =>
-            this.mediaserverConnections[serverId]
-                .logLevel(undefined, logger.key, logger.value)
-                .toPromise(),
+            firstValueFrom(
+                this.mediaserverConnections[serverId].logLevel(undefined, logger.key, logger.value),
+            ),
         );
 
         return Promise.all(promises)
@@ -379,7 +377,7 @@ export class ServerManager {
             {},
         );
         return <Promise<void>>(
-            this.mediaserverConnections[serverId].updateLogLevel(logLevels).toPromise()
+            firstValueFrom(this.mediaserverConnections[serverId].updateLogLevel(logLevels))
         );
     }
 
@@ -390,7 +388,7 @@ export class ServerManager {
     }
 
     activateLicense(serverId: string, key: string) {
-        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+        return firstValueFrom(this.mediaserverConnections[serverId].activateLicense(key));
     }
 
     renameServer(serverId: string, serverName: string): Promise<ChangedIdReturned> {

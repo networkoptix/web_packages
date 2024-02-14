@@ -205,7 +205,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             (accessToken || '').replace(InterceptorManager.USE_SYSTEM_TOKEN, '') &&
             cloudAccessToken
         ) {
-            this.deleteToken(cloudAccessToken, accessToken).toPromise();
+            firstValueFrom(this.deleteToken(cloudAccessToken, accessToken));
         }
         this.sessionStorage.clear(this.cloudAccessTokenName);
         this.sessionStorage.store(this.cloudAccessTokenName, token);
@@ -658,15 +658,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
         if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this.get<UserSession>(endpoint, { headers })
-                .toPromise()
+            this.userRequest = firstValueFrom(this.get<UserSession>(endpoint, { headers }))
                 .then(result => {
                     if (!this.accessToken) {
                         this._vmsToken = result.token;
                     }
-                    return this.get<RestV1User[]>('/rest/v1/users', {
-                        params: { name: result.username, _keepDefault: true },
-                    }).toPromise();
+                    return firstValueFrom(
+                        this.get<RestV1User[]>('/rest/v1/users', {
+                            params: { name: result.username, _keepDefault: true },
+                        }),
+                    );
                 })
                 .then(result => {
                     // Todo: convert result to match getCurrentUser result.
@@ -806,33 +807,33 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     @memoizeAsyncPersistent
     override getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
-        return this.get(this.apiDocURL[type]).toPromise();
+        return firstValueFrom(this.get(this.apiDocURL[type]));
     }
 
     @memoizeAsyncPersistent
     override fetchApiToolJSON(route: string): Promise<APIDoc> {
-        return this.get<APIDoc>(`/static/${route}`).toPromise();
+        return firstValueFrom(this.get<APIDoc>(`/static/${route}`));
     }
 
     @memoizeAsyncPersistent
     override getAPIToolManifest(): Promise<MenuManifest> {
-        return this.get('/static/openapi_manifest.json')
-            .toPromise()
-            .catch(() => apiTool.defaultManifest);
+        return firstValueFrom(this.get('/static/openapi_manifest.json')).catch(
+            () => apiTool.defaultManifest,
+        );
     }
 
     @memoizeAsyncPersistent
     override getApiChangelog(): Promise<string> {
-        return this.http
-            .get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' })
-            .toPromise();
+        return firstValueFrom(
+            this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }),
+        );
     }
 
     @memoizeAsyncPersistent
     override getApiPreamble(): Promise<string> {
-        return this.http
-            .get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' })
-            .toPromise();
+        return firstValueFrom(
+            this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }),
+        );
     }
 
     protected updateSystemSettings$ = new BehaviorSubject('');
@@ -1028,29 +1029,37 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     override backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
-        return this.post(backupEndpoint, {
-            caption: action,
-            backupNewCameras: true,
-            quality: 'CameraBackupBoth',
-        }).toPromise();
+        return firstValueFrom(
+            this.post(backupEndpoint, {
+                caption: action,
+                backupNewCameras: true,
+                quality: 'CameraBackupBoth',
+            }),
+        );
     }
 
     updateServerParams(serverId: string, parameters: Record<string, unknown>) {
-        return this.patch<unknown>(`/rest/v1/servers/${cleanId(serverId)}`, {
-            parameters,
-        }).toPromise();
+        return firstValueFrom(
+            this.patch<unknown>(`/rest/v1/servers/${cleanId(serverId)}`, {
+                parameters,
+            }),
+        );
     }
 
     updateDeviceParams(deviceId: string, parameters: Record<string, unknown>) {
-        return this.patch<unknown>(`/rest/v1/devices/${cleanId(deviceId)}`, {
-            parameters,
-        }).toPromise();
+        return firstValueFrom(
+            this.patch<unknown>(`/rest/v1/devices/${cleanId(deviceId)}`, {
+                parameters,
+            }),
+        );
     }
 
     override renameServer(serverId: string, name: string) {
-        return this.patch<ChangedIdReturned>(`/rest/v1/servers/${serverId || 'this'}`, {
-            name,
-        }).toPromise();
+        return firstValueFrom(
+            this.patch<ChangedIdReturned>(`/rest/v1/servers/${serverId || 'this'}`, {
+                name,
+            }),
+        );
     }
 
     override renameSystem(_, systemName: string) {
@@ -1062,13 +1071,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     disconnectFromCloud(): Promise<void> {
-        return this.post('/rest/v1/system/cloudUnbind', { password: '' })
-            .toPromise()
-            .then(() => {
+        return firstValueFrom(this.post('/rest/v1/system/cloudUnbind', { password: '' })).then(
+            () => {
                 if (this.isSessionOauth) {
                     this.clearTokens();
                 }
-            });
+            },
+        );
     }
 
     private mergeUpdater$ = new BehaviorSubject(true);
@@ -1107,9 +1116,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     override restartServer(serverId?: string) {
-        return this.post<RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
-            .toPromise()
-            .catch(err => Promise.reject(err));
+        return firstValueFrom(
+            this.post<RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `),
+        ).catch(err => Promise.reject(err));
     }
 
     override restoreFactorySettings(password?: string, serverId?: string) {

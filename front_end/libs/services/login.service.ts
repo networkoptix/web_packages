@@ -45,22 +45,19 @@ export class NxLoginService {
         let sessionRenewal;
 
         if (!environment.isLocal) {
-            sessionRenewal = this.http
-                .post('/api/account/renewSession', { code })
-                .toPromise()
-                .then(() => this._currentSystem.updateToken(true));
+            sessionRenewal = firstValueFrom(
+                this.http.post('/api/account/renewSession', { code }),
+            ).then(() => this._currentSystem.updateToken(true));
         } else {
             sessionRenewal = this._currentSystem.mediaserver
                 .logout()
-                .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise());
+                .then(() => firstValueFrom(this._currentSystem.mediaserver.loginOauth(code)));
         }
         return sessionRenewal.then(() => Promise.resolve(true)).catch(() => Promise.reject(false));
     }
 
     private pingCloud(): Promise<boolean> {
-        return this.http
-            .get(`${this.CONFIG.cloudHost}/api/ping`)
-            .toPromise()
+        return firstValueFrom(this.http.get(`${this.CONFIG.cloudHost}/api/ping`))
             .then(() => Promise.resolve(true))
             .catch(() => Promise.resolve(false));
     }
