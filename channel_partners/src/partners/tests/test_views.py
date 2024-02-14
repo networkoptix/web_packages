@@ -34,6 +34,7 @@ from partners.models import (
     ChannelPartnerToUser,
     CloudSystemId,
     CloudSystemStates,
+    CloudUser,
     Organization,
     OrganizationPermissions,
     OrganizationRole,
@@ -480,24 +481,50 @@ class TestOrganizationUserViewSet:
 
     def test_destroy_204(self, organization_factory, org_user_factory, system_factory,
                          mock_auth_with_user, arf, httpx_mock, mocker):
-        gen_count = 10
         org = organization_factory()
         admin_user = org_user_factory(organization=org)
-        systems = [system_factory(organization=org) for _ in range(gen_count)]
         role = OrganizationRole.objects.get(name="Power User")
         user = org_user_factory(organization=org, role=role.name)
         request = arf.delete('/')
         mock_auth_with_user(admin_user)
         view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
-        response = view(request, parent_lookup_organization=org.id, email=user.user.email)
-        assert not OrganizationToUser.objects.filter(user__email=user.user.email).exists()
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=user.user.email)
         assert response.status_code == 204
+        assert not OrganizationToUser.objects.filter(user__email=user.user.email).exists()
+        assert CloudUser.objects.filter(email=user.user.email).exists()
+
+    def test_destroy_self_204(self, organization_factory, org_user_factory, system_factory,
+                         mock_auth_with_user, arf, httpx_mock, mocker):
+        org = organization_factory()
+        user = org_user_factory(organization=org, role=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+        request = arf.delete('/')
+        mock_auth_with_user(user)
+        view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=user.user.email)
+        assert response.status_code == 204
+        assert not OrganizationToUser.objects.filter(user__email=user.user.email).exists()
+        assert CloudUser.objects.filter(email=user.user.email).exists()
+
+    def test_destroy_403(self, organization_factory, org_user_factory, system_factory,
+                         mock_auth_with_user, arf, httpx_mock, mocker):
+        org = organization_factory()
+        viewer_user = org_user_factory(organization=org, role=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+        role = OrganizationRole.objects.get(name="Power User")
+        user = org_user_factory(organization=org, role=role.name)
+        request = arf.delete('/')
+        mock_auth_with_user(viewer_user)
+        view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=user.user.email)
+        assert OrganizationToUser.objects.filter(user__email=user.user.email).exists()
+        assert response.status_code == 403
 
     def test_destroy_last_admin(self, organization_factory, org_user_factory, system_factory,
                                 mock_auth_with_user, arf, httpx_mock, default_cp_admin):
         gen_count = 10
         org = organization_factory()
-        systems = [system_factory(organization=org) for _ in range(gen_count)]
         role = OrganizationRole.objects.get(name="Organization Administrator")
         user = org_user_factory(organization=org)
         user_2 = org_user_factory(organization=org)
@@ -639,6 +666,7 @@ class TestChannelPartnerUserViewSet:
         with transaction.atomic():
             response = view(request, parent_lookup_channel_partner=cp.id, email=user_2.user.email)
         assert not ChannelPartnerToUser.objects.filter(user__email=user_2.user.email).exists()
+        assert CloudUser.objects.filter(email=user_2.user.email).exists()
         assert response.status_code == 204
 
         with transaction.atomic():
@@ -647,6 +675,20 @@ class TestChannelPartnerUserViewSet:
         assert response.status_code == 409
         assert response.data['detail']
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
+
+    def test_destroy_self(self, channel_partner_factory, cp_user_factory, default_channel_partner,
+                                mock_auth_with_user, arf, default_cp_admin):
+        # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
+        cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
+        user = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        request = arf.delete('/')
+        mock_auth_with_user(user)
+        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
+        assert response.status_code == 204
+        assert not ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
+        assert CloudUser.objects.filter(email=user.user.email).exists()
 
     def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email,
                     mock_account_status, mock_get_customization_request, mock_post_notification, httpx_mock):
