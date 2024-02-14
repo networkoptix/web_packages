@@ -56,7 +56,7 @@ export class NxUrlProtocolService {
             useOauth ? Promise.resolve('') : this.accountService.authKey(),
             environment.isLocal || !useOauth
                 ? Promise.resolve({ code: '' })
-                : this.cloudApiService.getCode('*').toPromise(),
+                : firstValueFrom(this.cloudApiService.getCode('*')),
         ]).then(([auth, { code }]) => {
             return this.generateLink(systemId, auth, code);
         });
@@ -68,7 +68,7 @@ export class NxUrlProtocolService {
         return Promise.resolve(
             environment.isLocal
                 ? Promise.resolve({ code: '' })
-                : this.cloudApiService.getCode('*').toPromise(),
+                : firstValueFrom(this.cloudApiService.getCode('*')),
         ).then(({ code }) => {
             const link = this.generateLink(systemId, '', code);
             return { code, link };

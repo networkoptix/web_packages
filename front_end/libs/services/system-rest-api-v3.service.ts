@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, combineLatest, map } from 'rxjs';
+import { firstValueFrom, Observable, combineLatest, map } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
@@ -81,16 +81,17 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
             let userId = '';
-            this.userRequest = this.get<UserSessionV3>(endpoint, { headers })
-                .toPromise()
+            this.userRequest = firstValueFrom(this.get<UserSessionV3>(endpoint, { headers }))
                 .then(result => {
                     userId = result.id;
                     if (!this.accessToken) {
                         this._vmsToken = result.token;
                     }
-                    return this.get<RestV3User>(`/rest/v3/users/${result.id}`, {
-                        params: { _keepDefault: true },
-                    }).toPromise();
+                    return firstValueFrom(
+                        this.get<RestV3User>(`/rest/v3/users/${result.id}`, {
+                            params: { _keepDefault: true },
+                        }),
+                    );
                 })
                 .then(result => {
                     this.currentUser = result;
@@ -215,11 +216,11 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }
 
     renameServer(serverId: string, name: string): Promise<ChangedIdReturned> {
-        return this.patch(`/rest/v3/servers/${serverId || 'this'}`, {
-            name,
-        })
-            .toPromise()
-            .then(() => ({ id: serverId }));
+        return firstValueFrom(
+            this.patch(`/rest/v3/servers/${serverId || 'this'}`, {
+                name,
+            }),
+        ).then(() => ({ id: serverId }));
     }
 
     buildRpcUrl(): Observable<string> {

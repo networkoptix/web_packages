@@ -1,4 +1,4 @@
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -32,7 +32,7 @@ describe('Language provider service', () => {
     it('should have setter and getter (currentLang)', async () => {
         const langProvider = await setupLangProvider();
         jest.spyOn(langProvider, 'loadLanguage').mockImplementation(() =>
-            of({ Cancel: 'Cancel' }).toPromise(),
+            firstValueFrom(of({ Cancel: 'Cancel' })),
         );
         const clearUriCache = jest
             .spyOn(langProvider.cacheService, 'clearData')

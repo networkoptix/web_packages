@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -46,18 +47,19 @@ export class OauthService {
         if (!refreshToken) {
             refreshToken = this.cloudApiRefreshToken;
         }
-        return this.http
-            .post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
-                cloudAccessToken: accessToken,
-                refreshToken,
-            })
-            .pipe(
-                tap(() => {
-                    this.storage.clear('cloudApiAccessToken');
-                    this.storage.clear('cloudApiRefreshToken');
-                }),
-            )
-            .toPromise();
+        return firstValueFrom(
+            this.http
+                .post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
+                    cloudAccessToken: accessToken,
+                    refreshToken,
+                })
+                .pipe(
+                    tap(() => {
+                        this.storage.clear('cloudApiAccessToken');
+                        this.storage.clear('cloudApiRefreshToken');
+                    }),
+                ),
+        );
     }
 
     @memoizeAsyncShort

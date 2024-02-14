@@ -222,7 +222,7 @@ export class NxSystemsService {
     }
 
     forceUpdateSystemsAsPromise(): Promise<NxSystemInfo[]> {
-        return this.forceUpdateSystems().toPromise();
+        return firstValueFrom(this.forceUpdateSystems());
     }
 
     getSystemOwnerName(

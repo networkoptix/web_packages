@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import { environment } from '@environments/environment';
 
@@ -68,7 +69,7 @@ export class NxBootstrapProvider {
 
     private getModuleInfo(reload = true) {
         return this.environment.isLocal
-            ? this.http.get('/rest/v1/servers/this/info', {}).toPromise()
+            ? firstValueFrom(this.http.get('/rest/v1/servers/this/info', {}))
             : Promise.resolve({});
     }
 

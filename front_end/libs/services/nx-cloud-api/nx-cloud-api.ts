@@ -4,7 +4,16 @@ import { Inject, Injectable, Injector, runInInjectionContext } from '@angular/co
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer, forkJoin } from 'rxjs';
+import {
+    firstValueFrom,
+    EMPTY,
+    of,
+    from,
+    BehaviorSubject,
+    throwError,
+    defer,
+    forkJoin,
+} from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
@@ -238,11 +247,11 @@ export class NxCloudApiService {
     @swClear('cloudSystemAPI', '/systems', true)
     disconnect(systemId: string) {
         // Use cloudDbApi once TempCredentials have been added to cloudDbApi
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/systems/disconnect', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/systems/disconnect', {
                 system_id: systemId,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
@@ -273,46 +282,54 @@ export class NxCloudApiService {
     }
 
     verify(password) {
-        return this.http
-            .post(apiBase + '/account/verify', {
+        return firstValueFrom(
+            this.http.post(apiBase + '/account/verify', {
                 password,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     update2fa(password: string, mfaCode: string, action: 'activate' | 'deactivate' | 'toggle') {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/security', { password, mfaCode, action })
-            .toPromise();
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/security', {
+                password,
+                mfaCode,
+                action,
+            }),
+        );
     }
 
     deactivate2FaKey() {
-        return this.http.delete<t.CloudResponse>(apiBase + '/account/security').toPromise();
+        return firstValueFrom(this.http.delete<t.CloudResponse>(apiBase + '/account/security'));
     }
 
     get2FaKey() {
-        return this.http.post<t.CloudResponse>(apiBase + '/2fa/verification', {}).toPromise();
+        return firstValueFrom(this.http.post<t.CloudResponse>(apiBase + '/2fa/verification', {}));
     }
 
     get2FaBackupCode() {
-        return this.http.post<t.TwoFactorBackupCodes[]>(apiBase + '/2fa/backup', {}).toPromise();
+        return firstValueFrom(
+            this.http.post<t.TwoFactorBackupCodes[]>(apiBase + '/2fa/backup', {}),
+        );
     }
 
     verify2FaKey(verificationCode, code) {
         const uri = `${apiBase}/2fa/verification?verification_code=${verificationCode}&code=${code}`;
-        return this.http.get(uri).toPromise();
+        return firstValueFrom(this.http.get(uri));
     }
 
     updateSessionWith2fa(verificationCode) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/2fa/updateSession', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/2fa/updateSession', {
                 verification_code: verificationCode,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     toggle2faForSystem(systemId: string, mfaCode: string) {
-        return this.http.post(apiBase + '/systems/toggle2fa', { systemId, mfaCode }).toPromise();
+        return firstValueFrom(
+            this.http.post(apiBase + '/systems/toggle2fa', { systemId, mfaCode }),
+        );
     }
 
     @memoizeAsyncPersistent
@@ -392,23 +409,23 @@ export class NxCloudApiService {
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         // TODO: Move to cloudDbApi once we add oauth handlers to cloudDbApi
-        return this.http
-            .post<t.CloudResponse>(`${apiBase}/systems/merge`, {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(`${apiBase}/systems/merge`, {
                 master_system_id: masterSystemId,
                 slave_system_id: slaveSystemId,
                 password,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     notificationSend(userEmail: string, type: string, message: string) {
-        return this.http
-            .post(`${apiBase.replace('/api', '/notifications')}/send`, {
+        return firstValueFrom(
+            this.http.post(`${apiBase.replace('/api', '/notifications')}/send`, {
                 user_email: userEmail,
                 type,
                 message,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     @staffSWBypass
@@ -435,25 +452,27 @@ export class NxCloudApiService {
         lastName: string,
         code: string,
     ) {
-        return this.http
-            .post<t.RegisterUser>(apiBase + '/account/register', {
+        return firstValueFrom(
+            this.http.post<t.RegisterUser>(apiBase + '/account/register', {
                 email,
                 password,
                 first_name: firstName,
                 last_name: lastName,
                 code,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     reactivateUser(userEmail: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/activate', { user_email: userEmail })
-            .toPromise();
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/activate', {
+                user_email: userEmail,
+            }),
+        );
     }
 
     renameSystem(systemId: string, systemName: string) {
-        return this.cloudDbApi.rename(systemId, systemName).toPromise();
+        return firstValueFrom(this.cloudDbApi.rename(systemId, systemName));
     }
 
     sendMessage(
@@ -463,15 +482,15 @@ export class NxCloudApiService {
         userName?: string,
         userEmail?: string,
     ) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/feedback', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/feedback', {
                 message,
                 asset,
                 type,
                 userName,
                 userEmail,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     @memoizeAsyncShort
@@ -501,29 +520,33 @@ export class NxCloudApiService {
     }
 
     authKey() {
-        return this.http.post<t.AuthKey>(apiBase + '/account/authKey', {}).toPromise();
+        return firstValueFrom(this.http.post<t.AuthKey>(apiBase + '/account/authKey', {}));
     }
 
     visitedKey(key: string) {
-        return this.http
-            .get<t.VisitedKey>(apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key))
-            .toPromise();
+        return firstValueFrom(
+            this.http.get<t.VisitedKey>(
+                apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key),
+            ),
+        );
     }
 
     checkCode(code: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/checkCode', { code })
-            .toPromise();
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/checkCode', { code }),
+        );
     }
 
     checkAuthCode(code: string) {
-        return this.http.post<t.AuthCode>(apiBase + '/account/checkAuthCode', { code }).toPromise();
+        return firstValueFrom(
+            this.http.post<t.AuthCode>(apiBase + '/account/checkAuthCode', { code }),
+        );
     }
 
     checkIfEmailExistsInCloud(email: string) {
-        return this.http
-            .post<t.CheckEmailExists>(apiBase + '/account/check', { email })
-            .toPromise();
+        return firstValueFrom(
+            this.http.post<t.CheckEmailExists>(apiBase + '/account/check', { email }),
+        );
     }
 
     authenticate(
@@ -549,7 +572,7 @@ export class NxCloudApiService {
             body.scope = scope;
         }
 
-        return this.http.post('/oauth/authenticate', body).toPromise();
+        return firstValueFrom(this.http.post('/oauth/authenticate', body));
     }
 
     verifyCode(verification_code: string, code: string) {
@@ -582,28 +605,28 @@ export class NxCloudApiService {
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
-        return this.http
-            .post<Account>(apiBase + '/account/login', {
-                email,
-                password,
-                remember,
-                timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
-            })
-            .pipe(this.logIdentifyUser)
-            .toPromise();
+        return firstValueFrom(
+            this.http
+                .post<Account>(apiBase + '/account/login', {
+                    email,
+                    password,
+                    remember,
+                    timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+                })
+                .pipe(this.logIdentifyUser),
+        );
     }
 
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
-        return this.http
-            .post(apiBase + '/account/loginCode', { code })
-            .pipe(
+        return firstValueFrom(
+            this.http.post(apiBase + '/account/loginCode', { code }).pipe(
                 tap((account: Account) => {
                     this.currentAccount = account;
                 }),
                 this.logIdentifyUser,
-            )
-            .toPromise();
+            ),
+        );
     }
 
     @swClear('apiFresh', '/account', true)
@@ -613,22 +636,23 @@ export class NxCloudApiService {
                 Authorization: `Bearer ${tokensInfo.access_token}`,
             },
         };
-        return this.http
-            .post(apiBase + '/account/loginTokens', tokensInfo, options)
-            .pipe(this.logIdentifyUser)
-            .toPromise();
+        return firstValueFrom(
+            this.http
+                .post(apiBase + '/account/loginTokens', tokensInfo, options)
+                .pipe(this.logIdentifyUser),
+        );
     }
 
     @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
-        return this.http.post<t.CloudResponse>(apiBase + '/account/logout', {}).toPromise();
+        return firstValueFrom(this.http.post<t.CloudResponse>(apiBase + '/account/logout', {}));
     }
 
     deleteCloudUser(password) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/delete', { password })
-            .toPromise();
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }),
+        );
     }
 
     fetchTos(): Observable<TosInfo> {
@@ -748,35 +772,37 @@ export class NxCloudApiService {
         const uri = environment.isLocal
             ? '/static/languages.json'
             : `${this.window.location.origin}/${staticBase}/languages.json`;
-        return this.cachedGet<t.ILanguages>(uri).toPromise();
+        return firstValueFrom(this.cachedGet<t.ILanguages>(uri));
     }
 
     @swClear('apiFresh', '/utils/language', true)
     changeLanguage(language: string) {
-        return this.http
-            .post(apiBase + '/utils/language/', {
+        return firstValueFrom(
+            this.http.post(apiBase + '/utils/language/', {
                 language,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     @memoizeAsyncPersistent
     getDownloads(): Promise<t.Downloads | null> {
-        return this.cachedGet<t.Downloads | null>(apiBase + '/utils/downloads').toPromise();
+        return firstValueFrom(this.cachedGet<t.Downloads | null>(apiBase + '/utils/downloads'));
     }
 
     @memoizeAsyncPersistent
     getDownloadsReleases(): Promise<DownloadReleases | null> {
-        return this.cachedGet<t.DownloadReleases | null>(
-            apiBase + '/utils/downloads-releases',
-        ).toPromise();
+        return firstValueFrom(
+            this.cachedGet<t.DownloadReleases | null>(apiBase + '/utils/downloads-releases'),
+        );
     }
 
     @memoizeAsyncPersistent
     getDownloadsHistory(build: string | undefined): Promise<t.BuildHistory | t.Build> {
-        return this.cachedGet<t.BuildHistory | t.Build>(
-            apiBase + '/utils/downloads/' + (build || 'history'),
-        ).toPromise();
+        return firstValueFrom(
+            this.cachedGet<t.BuildHistory | t.Build>(
+                apiBase + '/utils/downloads/' + (build || 'history'),
+            ),
+        );
     }
 
     accountPost(account: Account) {
@@ -789,25 +815,25 @@ export class NxCloudApiService {
             is_superuser: account.is_superuser || false,
             permissions: account.permissions,
         };
-        return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).toPromise();
+        return firstValueFrom(this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo));
     }
 
     changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/changePassword', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/changePassword', {
                 new_password: newPassword,
                 old_password: oldPassword,
                 mfaCode,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     reactivate(userEmail: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/activate', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/activate', {
                 user_email: userEmail,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     activate(code: string) {
@@ -817,46 +843,47 @@ export class NxCloudApiService {
     }
 
     restorePasswordRequest(userEmail: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/restorePassword', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/restorePassword', {
                 user_email: userEmail,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     restorePassword(code: string, newPassword: string, mfaCode?: string, isBackup = false) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/restorePassword', {
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/restorePassword', {
                 code,
                 new_password: newPassword,
                 mfaCode,
                 isBackup,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     reviewCookie() {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/reviewCookie', {}).toPromise();
+        return firstValueFrom(
+            this.http.post<t.CloudResponse>(apiBase + '/account/reviewCookie', {}),
+        );
     }
 
     acceptAgreement(reviewId: string) {
-        return this.http
-            .post(apiBase + '/cms/accept_agreement', {
+        return firstValueFrom(
+            this.http.post(apiBase + '/cms/accept_agreement', {
                 review_id: reviewId,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     acceptReview(reviewId: number) {
-        return this.http
-            .post(apiBase + '/cms/accept_review', {
+        return firstValueFrom(
+            this.http.post(apiBase + '/cms/accept_review', {
                 review_id: reviewId,
-            })
-            .toPromise()
-            .then(response => {
-                this.cacheService.clearData();
-                return response;
-            });
+            }),
+        ).then(response => {
+            this.cacheService.clearData();
+            return response;
+        });
     }
 
     /* Ownership transfer */
@@ -885,11 +912,11 @@ export class NxCloudApiService {
     // Cloud Storage
 
     enableCloudStorage(systemId: string) {
-        return this.http
-            .post<t.CloudStorage>(apiBase + '/storage/create', {
+        return firstValueFrom(
+            this.http.post<t.CloudStorage>(apiBase + '/storage/create', {
                 systemId,
-            })
-            .toPromise();
+            }),
+        );
     }
 
     /**
@@ -909,13 +936,13 @@ export class NxCloudApiService {
      */
     @memoizeAsyncShort
     getCloudStorageUsage(systemId: string): Promise<any> {
-        return this.http
-            .get<t.CloudStorageUsage>(apiBase + '/storage/usageStats', {
+        return firstValueFrom(
+            this.http.get<t.CloudStorageUsage>(apiBase + '/storage/usageStats', {
                 params: {
                     systemId,
                 },
-            })
-            .toPromise();
+            }),
+        );
     }
 
     @staffSWBypass

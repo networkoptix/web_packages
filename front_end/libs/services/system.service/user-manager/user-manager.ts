@@ -94,17 +94,14 @@ export class UserManager {
     }
 
     deleteUser(removedUser: Pick<NxUser, 'id'>): Promise<void> {
-        return this.mediaserver
-            .deleteUser(removedUser.id)
-            .toPromise()
-            .then(data => {
-                if (!data) {
-                    data = removedUser;
-                }
-                this.users = this.users.filter(user => {
-                    return user.id !== data.id;
-                });
+        return firstValueFrom(this.mediaserver.deleteUser(removedUser.id)).then(data => {
+            if (!data) {
+                data = removedUser;
+            }
+            this.users = this.users.filter(user => {
+                return user.id !== data.id;
             });
+        });
     }
 
     private getUserRole(user: SystemUser): Role {
@@ -137,28 +134,25 @@ export class UserManager {
     }
 
     getUsersDataFromTheSystem(): Promise<void> {
-        return this.mediaserver
-            .getAggregatedUsersData()
-            .toPromise()
-            .then(
-                result => {
-                    if (!result) {
-                        return Promise.reject(`Aggregated request to server has failed ${result}`);
-                    }
-                    const data = result.reply;
-                    const users = data['/ec2/getUsers'];
-                    const userRoles = data['/ec2/getUserRoles'];
-                    const predefinedRoles = data['/ec2/getPredefinedRoles'];
-                    return new Promise(resolve => {
-                        this.updateAccessRoles(predefinedRoles, userRoles);
-                        this.processUsers(users);
-                        resolve();
-                    });
-                },
-                () => {
-                    return Promise.reject('Media server cloud not be reached.');
-                },
-            );
+        return firstValueFrom(this.mediaserver.getAggregatedUsersData()).then(
+            result => {
+                if (!result) {
+                    return Promise.reject(`Aggregated request to server has failed ${result}`);
+                }
+                const data = result.reply;
+                const users = data['/ec2/getUsers'];
+                const userRoles = data['/ec2/getUserRoles'];
+                const predefinedRoles = data['/ec2/getPredefinedRoles'];
+                return new Promise(resolve => {
+                    this.updateAccessRoles(predefinedRoles, userRoles);
+                    this.processUsers(users);
+                    resolve();
+                });
+            },
+            () => {
+                return Promise.reject('Media server cloud not be reached.');
+            },
+        );
     }
 
     // e.g. GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalUserInputPermission
@@ -316,7 +310,7 @@ export class UserManager {
             userData.permissions = this.CONFIG.accessRoles.globalCustomUserPermission;
         }
 
-        return this.mediaserver.saveUser(userData).toPromise();
+        return firstValueFrom(this.mediaserver.saveUser(userData));
     }
 
     private updateAccessRoles(predefinedRoles: PredefinedLegacyRole[], userRoles: Role[]): void {

@@ -382,9 +382,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             return Promise.resolve(true);
         }
 
-        return this.cloudApi
-            .getSystemAuth(this.id)
-            .toPromise()
+        return firstValueFrom(this.cloudApi.getSystemAuth(this.id))
             .then(authKeys => {
                 this.mediaserver.setAuthKeys(
                     authKeys.authGet,
@@ -412,13 +410,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             return Promise.resolve(accessToken);
         }
 
-        return this.cloudApi
-            .getSystemToken(this.id)
-            .toPromise()
+        return firstValueFrom(this.cloudApi.getSystemToken(this.id))
             .then(tokens => {
-                return (<NxSystemRestAPI>this.mediaserver)
-                    .setTokens(tokens, true)
-                    .toPromise()
+                return firstValueFrom((<NxSystemRestAPI>this.mediaserver).setTokens(tokens, true))
                     .then(() => tokens.access_token)
                     .catch(() => tokens.access_token);
             })
@@ -666,7 +660,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         ? this.proxied.cameraManager.updateSystemCameras()
                         : Promise.reject({ offline: true }),
                 )
-                .then(() => this.proxied.serverManager.getForceServers(false).toPromise())
+                .then(() => firstValueFrom(this.proxied.serverManager.getForceServers(false)))
                 .then(() => (environment.isLocal ? Promise.resolve() : this.getUsers(true, true)))
                 .catch(error => {
                     if (error?.offline) {
@@ -800,7 +794,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         );
         return Promise.all(
             [showAlarmRule, doCommandRule].map(rule =>
-                this.mediaserver.saveEventRule(rule).toPromise(),
+                firstValueFrom(this.mediaserver.saveEventRule(rule)),
             ),
         ).catch(errors => {
             console.error(errors);
@@ -824,10 +818,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
         return Promise.all(
             toRemove.map(({ id }) =>
-                this.mediaserver
-                    .removeEventRule(id)
-                    .toPromise()
-                    .catch(errors => errors),
+                firstValueFrom(this.mediaserver.removeEventRule(id)).catch(errors => errors),
             ),
         );
     };
@@ -964,9 +955,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      */
     getUsersCachedInCloud(): Promise<CloudUserCompat[]> {
         this.isAvailable = false;
-        return this.cloudApi
-            .users(this.id)
-            .toPromise()
+        return firstValueFrom(this.cloudApi.users(this.id))
             .then(data => {
                 return data.map<SystemUser>(user => ({
                     ...user,
