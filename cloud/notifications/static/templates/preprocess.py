@@ -56,7 +56,10 @@ def process_file(file):
     if file.endswith(".mustache.txt"):
         write_text(file)
 
-futures.wait([executor.submit(process_file, file) for file in os.listdir(".")])
+instantiated_futures = [executor.submit(process_file, file) for file in os.listdir(".")]
+# Check results so any exceptions that occurred are exposed
+for future in futures.as_completed(instantiated_futures):
+    future.result()
 
 
 shutil.copyfile("notifications-language.json", "../notifications-language.json")
