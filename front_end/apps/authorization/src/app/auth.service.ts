@@ -81,6 +81,10 @@ export class AuthService {
         }
 
         if (scope) {
+            // Drawback is this fix wont work in local dev mode, but fixes deployed code.
+            if (scope.includes(window.location.hostname) && !scope.includes('https://')) {
+                scope = `https://${scope}`;
+            }
             data.scope = scope;
         }
         // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
