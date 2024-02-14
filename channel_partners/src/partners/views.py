@@ -1416,7 +1416,6 @@ class CloudSystemViewSet(NestedViewSetMixin,
     def transfer_offer(self, request, id):
         ser = SystemToOrgTransferSerializer(data=request.data, context=self.get_serializer_context())
         ser.is_valid(raise_exception=True)
-        self.check_object_permissions(request, ser.validated_data['organizationId'])
         system = ser.save(system_id=id)
         return Response(CloudSystemSerializer(system, context=self.get_serializer_context()).data)
 
