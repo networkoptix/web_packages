@@ -54,6 +54,7 @@ from partners.utils.cache_keys import (
     direct_organization_children_count,
     organization_system_count,
 )
+from partners.utils.db import MonthInterval
 from tools.helpers import (
     get_path_from_parent,
     get_period_start,
@@ -429,19 +430,8 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         """
         existing_services = (ChannelPartnerServiceRecord.objects
                              .filter(organization_id=organization_id, cloud_system=self)
-                             .values('service_id', 'cloud_system_id', 'organization_id')
-                             .annotate(negation=-Sum('quantity')))
-        for service in existing_services:
-            if service['negation'] not in (None, 0):
-                ChannelPartnerServiceRecord.objects.create(
-                    quantity=service['negation'],
-                    service_id=service['service_id'],
-                    effective_ts=timezone.now(),
-                    in_effect=True,
-                    cloud_system=self,
-                    organization_id=organization_id,
-                    created_by=None
-                )
+                             )
+        ChannelPartnerServiceRecord.negate_services(existing_services)
         # All services zeroed so we can save empty dict
         self.current_services = {}
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
@@ -1703,6 +1693,20 @@ class ChannelPartnerService(models.Model):
                 copy.save()
 
 
+class ServiceRecordTypes:
+    REGULAR = 1
+    NEGATION = 2
+    CONVERSION = 3
+    LICENSE_MIGRATION = 4
+
+    CHOICES = [
+        (REGULAR, 'regular'),
+        (NEGATION, 'negation'),
+        (CONVERSION, 'conversion'),
+        (LICENSE_MIGRATION, 'licence_migration')
+    ]
+
+
 class ChannelPartnerServiceRecord(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT)
@@ -1714,32 +1718,98 @@ class ChannelPartnerServiceRecord(models.Model):
     cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.SET_NULL, null=True,
                                      related_name='service_records')
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, related_name='service_records')
+    negation_record = models.ForeignKey('ChannelPartnerServiceRecord', null=True, on_delete=models.PROTECT)
+    record_type = models.IntegerField(choices=ServiceRecordTypes.CHOICES, default=ServiceRecordTypes.REGULAR)
 
     def save(self, *args, **kwargs):
         if self._state.adding and not self.organization:
             self.organization = self.cloud_system.organization
         super().save(*args, **kwargs)
 
+    @property
+    def automated(self) -> bool:
+        return self.record_type != ServiceRecordTypes.REGULAR
+
     @classmethod
-    def negate_services_on_shutdown(cls, systems: QuerySet[CloudSystemId]):
+    def negate_services_on_shutdown(cls, systems: QuerySet[CloudSystemId]) -> List['ChannelPartnerServiceRecord']:
         #  We probably need to zeroing of CloudSystemId.current_services
         systems.update(current_services={})
-        records = (cls.objects
-                   .filter(cloud_system__in=systems)
-                   .values('service_id', 'cloud_system_id', 'organization_id')
-                   .annotate(negation=-Sum('quantity')).exclude(negation=0))
+        records = cls.objects.filter(cloud_system__in=systems)
+        return cls.negate_services(records)
+
+
+    @classmethod
+    def negate_services(
+            cls,
+            queryset: QuerySet['ChannelPartnerServiceRecord'],
+            convert_services: bool = False,
+    ) -> List['ChannelPartnerServiceRecord']:
+        negation_quantities = (
+            queryset.values('service_id', 'cloud_system_id', 'organization_id')
+            .annotate(negation=-Sum('quantity'))
+        )
+        now = timezone.now()
         negation_records = []
-        for record in records:
+        for record in negation_quantities:
             negation_records.append(cls(
+                id=uuid.uuid4(),
                 organization_id=record['organization_id'],
                 cloud_system_id=record['cloud_system_id'],
                 service_id=record['service_id'],
                 quantity=record['negation'],
-                effective_ts=timezone.now(),
+                effective_ts=now,
                 in_effect=True,
-                created_by=None
+                created_by=None,
+                record_type=ServiceRecordTypes.NEGATION,
             ))
         cls.objects.bulk_create(negation_records, batch_size=100)
+        conversion_services = []
+        for record in negation_records:
+            (queryset
+             .exclude(record_type=ServiceRecordTypes.NEGATION)
+             .filter(
+                negation_record__isnull=True,
+                organization_id=record.organization_id,
+                cloud_system_id=record.cloud_system_id,
+                service_id=record.service_id
+            ).update(negation_record=record.id))
+            if convert_services:
+                if record.service.conversion_service:
+                    conversion_services.append(cls(
+                        service=record.service.conversion_service,
+                        quantity=-record.quantity,
+                        organization_id=record.organization_id,
+                        cloud_system_id=record.cloud_system_id,
+                        in_effect=True,
+                        record_type=ServiceRecordTypes.CONVERSION,
+                        effective_ts=now,
+                    ))
+        if convert_services and conversion_services:
+            cls.objects.bulk_create(conversion_services, batch_size=100)
+        return negation_records
+
+    @classmethod
+    def check_expired_services(cls) -> List['ChannelPartnerServiceRecord']:
+        system_states = [ChannelPartnerStates.ACTIVE, ChannelPartnerStates.SUSPENDED]
+        queryset = (
+            cls.objects
+            # not a negation record
+            .exclude(record_type=ServiceRecordTypes.NEGATION)
+            .filter(
+                # not negated yet
+                negation_record__isnull=True,
+                # system is not shut down
+                cloud_system__effective_state__in=system_states,
+                # service has duration
+                service__duration__gt=0,
+                created_ts__lt=models.ExpressionWrapper(
+                    datetime.date.today() - MonthInterval("service__duration"),
+                    output_field=models.DateTimeField()
+                )
+            )
+        )
+        negation_records = cls.negate_services(queryset, convert_services=True)
+        return negation_records
 
 
 class ServiceUsage(models.Model):
