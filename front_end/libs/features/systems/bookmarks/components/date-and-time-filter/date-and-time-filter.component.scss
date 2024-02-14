@@ -106,6 +106,9 @@
             .mat-calendar-body {
                 // Day/month/year cell
                 &-cell {
+                    // Override button global height
+                    height: 100% !important;
+
                     &-content {
                         font-size: 0.875rem !important;
                         font-family: typography.$font-family-regular;
