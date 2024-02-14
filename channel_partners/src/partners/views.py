@@ -1067,16 +1067,16 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     retrieve=extend_schema(summary='Get a Group', extensions={'x-permission': f'Membership in organization, ancestor group, or the group itself'}),
     create=extend_schema(summary='Create a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
     partial_update=extend_schema(summary='Update a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
-    destroy=extend_schema(summary='Update a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+    destroy=extend_schema(summary='Delete a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
 @extend_schema(tags=['Groups'])
 class SystemGroupViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
-                         # mixins.ListModelMixin,
+                         mixins.DestroyModelMixin,
                          GenericViewSet):
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['get', 'post', 'patch', 'delete']
     serializer_class = GroupSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     # pagination_class = DefaultPagination

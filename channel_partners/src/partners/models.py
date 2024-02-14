@@ -26,7 +26,10 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import (
+    models,
+    transaction,
+)
 from django.db.models import (
     F,
     Func,
@@ -43,6 +46,7 @@ from rest_framework.authtoken.models import Token
 
 from channel_partners.utils import FieldOriginalMixin
 from partners.tasks.states import expire_confirmation
+from partners.tests.utils.db import RemoveArrayElement
 from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
     cp_direct_children_count,
@@ -406,7 +410,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         self.save()
 
     @staticmethod
-    def invalidate_cache(organization_id: str) -> None:
+    def invalidate_cache(organization_id: str | uuid.UUID) -> None:
         cache_key: str = organization_system_count(organization_id)
         caches['default'].delete(cache_key)
 
@@ -1452,6 +1456,31 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
 
+    def delete(self, using=None, keep_parents=False):
+        with transaction.atomic():
+            organization_id = self.organization_id
+            self_path = get_path_from_parent(self)
+            # moving systems to a parent
+            self.cloud_systems.all().update(system_group_id=self.parent_id)
+            # moving child groups to a parent
+            self.groups.all().update(parent=self.parent)
+            # alter path for all groups below
+            SystemGroup.objects.filter(path__contains=[self.id]).update(
+                path=RemoveArrayElement(
+                    "path",
+                    element=self.id,
+                    output_field=ArrayField(base_field=models.UUIDField()))
+            )
+            # Alter path for all systems below
+            CloudSystemId.objects.filter(path__contains=[self.id]).update(
+                path=RemoveArrayElement(
+                    "path",
+                    element=self.id,
+                    output_field=ArrayField(base_field=models.UUIDField()))
+            )
+            super().delete(using=using, keep_parents=keep_parents)
+        CloudSystemId.invalidate_groups_system_counters(self_path)
+        CloudSystemId.invalidate_cache(organization_id)
 
     def __str__(self):
         return f'<Group {self.name}>'

@@ -1796,6 +1796,7 @@ class TestSystemGroupViewSet:
         self.other_org = organization_factory(channel_partner=self.other_cp)
         self.group = system_group_factory(organization=self.org_1)
         self.group_user = sys_group_user_factory(organization=self.org_1, group=self.group)
+        self.sub_group = system_group_factory(organization=self.org_1, parent=self.group)
         self.group2 = system_group_factory(organization=self.org_2)
         self.other_group = system_group_factory(organization=self.other_org)
         for _ in range(3):
@@ -1831,6 +1832,26 @@ class TestSystemGroupViewSet:
         mock_auth_with_user(self.other_cp_user)
         response = view(request, pk=self.group.id)
         assert response.status_code == 404
+
+    def test_destroy_404_permission(self, mock_auth_with_user, arf):
+        view = SystemGroupViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
+        request = arf.delete('/')
+        mock_auth_with_user(self.other_cp_user)
+        response = view(request, pk=self.group.id)
+        assert response.status_code == 404
+
+    def test_destroy_ok(self, mock_auth_with_user, arf):
+        view = SystemGroupViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
+        request = arf.delete('/')
+        mock_auth_with_user(self.org_user)
+        group_id  = self.group.id
+        response = view(request, pk=self.group.id)
+        assert response.status_code == 204
+        assert SystemGroup.objects.filter(pk=group_id).exists() is False
+        self.sub_group.refresh_from_db()
+        assert self.sub_group.parent is None
+        assert self.sub_group.path[0] == self.org_1.id
+
 
 
 class TestOrganizationRole:

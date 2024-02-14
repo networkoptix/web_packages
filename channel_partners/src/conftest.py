@@ -362,9 +362,9 @@ def service_record_factory():
 
 @pytest.fixture()
 def system_group_factory():
-    def factory(organization, parent=None):
+    def factory(organization, parent=None, name=None):
         uid = uuid4()
-        return baker.make(SystemGroup, id=uid, name=str(uid), organization=organization, parent=parent)
+        return baker.make(SystemGroup, id=uid, name=name or str(uid), organization=organization, parent=parent)
 
     return factory
 
