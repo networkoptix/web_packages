@@ -18,7 +18,7 @@ class CloudSystemService:
         # Construct url
         url_path: str = "/rest/v3/system/cloud/sync"
         system_id: str = cloud_system.system_id
-        relay_host: str = f"https://{system_id}.relay.{settings.TRAFFIC_RELAY_DOMAIN}{url_path}"
+        relay_host: str = f"https://{system_id}.{settings.TRAFFIC_RELAY_DOMAIN}{url_path}"
 
         # Make request and handle response
         try:

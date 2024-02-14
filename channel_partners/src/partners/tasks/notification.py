@@ -75,7 +75,7 @@ def post_notification(host: str, user: CloudUser, message_type: str, message: di
     customization_name = get_customization(host)
     data['customization'] = customization_name
     response = httpx.post(f'https://{host}/notifications/send', json=data,
-                          auth=settings.INSTANCE_CONFIG.notification_auth)
+                          auth=(settings.NOTIFICATION_SECRET_USER, settings.NOTIFICATION_SECRET_PASSWORD))
     if not response.is_success:
         msg = f'Request failed. Request: {data}. Response: {response.content}'
         raise MessageNotPosted(msg)

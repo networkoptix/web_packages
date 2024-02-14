@@ -1,6 +1,7 @@
 .idea
 src/static
 **/stage
+src/config/.env.local
 # Jupyter Notebook for local testing
 src/notebooks
 channel_partners.iml
