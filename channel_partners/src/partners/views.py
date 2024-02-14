@@ -296,14 +296,10 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         context['channel_partner'] = self.get_channel_partner()
         return context
 
-    # def get_object(self):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-    #     filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-    #     obj = get_object_or_404(queryset, **filter_kwargs)
-    #     # Check obj permissions against channel partner
-    #     self.check_object_permissions(self.request, obj.channel_partner)
-    #     return obj
+    def check_object_permissions(self, request, obj):
+        if self.action == 'destroy' and obj.user == request.user:
+            return
+        super().check_object_permissions(request, obj)
 
     def check_permissions(self, request):
         super().check_permissions(request)
@@ -944,7 +940,10 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
             self.check_object_permissions(request, None)
 
     def check_object_permissions(self, request, obj):
-        if self.action == 'retrieve' and self.kwargs.get('email', '').lower() == request.user.email.lower():
+        if all([
+            self.action in ('retrieve', 'destroy'),
+            obj == request.user,
+        ]):
             return
         organization = self.get_organization()
         return super().check_object_permissions(request, obj=organization)
@@ -966,7 +965,8 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
             roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
         )
         if not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists():
-            return super().destroy(request, *args, **kwargs)
+            OrganizationToUser.objects.filter(user=instance, organization=organization).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         raise Conflict(f'User {instance.email} is the only Administrator and may not be demoted or removed.')
 
     @extend_schema(summary='Remove multiple users form an organization.',
