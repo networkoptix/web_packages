@@ -448,7 +448,7 @@ async def refresh_access_token(request):
 
     request.session['access_token'] = tokens['access_token']
     # Shouldn't change but to be safe we'll add it anyway.
-    if new_refresh_token := tokens['refresh_token'] != refresh_token:
+    if (new_refresh_token := tokens['refresh_token']) != refresh_token:
         request.session['refresh_token'] = new_refresh_token
 
     try:
