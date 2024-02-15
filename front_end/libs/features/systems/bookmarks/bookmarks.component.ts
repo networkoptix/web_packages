@@ -139,9 +139,11 @@ export class NxBookmarksComponent implements OnInit {
     timeFilter: TimeRange = { start: null, end: null };
     deviceFilter = new SelectionModel<string>(true, []);
     tagFilter = new SelectionModel<string>(true, []);
+    filteredFetchedBookmarkIds: Set<string> = new Set<string>();
+    deviceIdsWithArchive: string[];
 
     private queryParams: BookmarkParams;
-    deviceIdsWithArchive: string[];
+    private locale: string;
 
     constructor(
         configService: NxConfigService,
@@ -331,11 +333,7 @@ export class NxBookmarksComponent implements OnInit {
             map(bks => this.processBookmarks(bks).sort(paramSortFunc(b => b.startTimeMs, false))),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
             map(bks => {
-                // We should only be displaying Bookmarks with Devices that have an archive (Same behavior as VMS)
-                const bookmarksWithDeviceArchive = bks.filter(bk => {
-                    return this.deviceIdsWithArchive.includes(bk.deviceId);
-                });
-                this._bookmarks = this.mergeBookmarks(this._bookmarks, bookmarksWithDeviceArchive);
+                this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 if (this._bookmarks.length) {
                     pollParams.creationStartTimeMs =
                         this.findNewestBookmark(this._bookmarks)?.creationTimeMs + 1;
@@ -369,11 +367,16 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     processBookmarks(bks: SystemBookmark[]): Bookmark[] {
-        return bks
-            .filter(bk => this.deviceMap.has(bk.deviceId))
-            .map<Bookmark>(bk => {
-                const deviceId = cleanId(bk.deviceId);
-                const systemId = cleanId(this.system.id);
+        const systemId = cleanId(this.system.id);
+        return bks.reduce((bookmarks, bk) => {
+            const deviceId = cleanId(bk.deviceId);
+            if (
+                this.deviceMap.has(bk.deviceId) &&
+                // We should only be displaying Bookmarks with Devices that have an archive (Same behavior as VMS)
+                this.deviceIdsWithArchive.includes(deviceId) &&
+                !this.filteredFetchedBookmarkIds.has(bk.id)
+            ) {
+                this.filteredFetchedBookmarkIds.add(bk.id);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
                 const canViewBookmark =
                     this.system.permissionManager.canViewDeviceArchive(deviceId);
@@ -396,7 +399,7 @@ export class NxBookmarksComponent implements OnInit {
                     })?.defaultRatio || 1.77; // Fallback aspect ratio of 16:9
                 const dpr = window.devicePixelRatio;
 
-                return {
+                bookmarks.push({
                     ...bk,
                     tags: bk.tags ?? [],
                     src: getLink('mp4'),
@@ -416,8 +419,10 @@ export class NxBookmarksComponent implements OnInit {
                     deviceName,
                     deviceId,
                     systemId,
-                };
-            });
+                });
+            }
+            return bookmarks;
+        }, [] as Bookmark[]);
     }
 
     findNewestBookmark(bks: Bookmark[]): Bookmark {
@@ -478,6 +483,7 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
+        this.filteredFetchedBookmarkIds.clear();
         if (!this.queryParams) {
             return;
         }
