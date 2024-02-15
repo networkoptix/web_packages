@@ -33,7 +33,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { alphabeticalSort, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, cleanId, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import { Bookmark, DeviceFilter, TimeRange } from './bookmarks.types';
@@ -162,7 +162,7 @@ export class NxBookmarksComponent implements OnInit {
         private route: ActivatedRoute,
         public router: Router,
         private pageService: NxPageService,
-        @Inject(WINDOW) window: Window,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.locale = getSysLang(window);
@@ -283,18 +283,16 @@ export class NxBookmarksComponent implements OnInit {
                     mediaserver.getBookmarkTags(),
                     mediaserver.getDevices(),
                     mediaserver.getServerTimes(),
+                    this.system.cameraManager.hasArchives(),
                 ]),
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
-            map(([bks, tags, devices, serverTimes]) => {
+            map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
+                this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
+                    return cleanId(deviceId);
+                });
                 this.tags$.next(tags);
                 this.devices$.next(devices);
-                this.offsetTimes = new Map(
-                    serverTimes.reply.map(reply => [
-                        reply.serverId,
-                        Number(reply.timeZoneOffset) ?? 0,
-                    ]),
-                );
                 this.deviceMap = new Map(devices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
@@ -378,8 +376,6 @@ export class NxBookmarksComponent implements OnInit {
             ) {
                 this.filteredFetchedBookmarkIds.add(bk.id);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
-                const canViewBookmark =
-                    this.system.permissionManager.canViewDeviceArchive(deviceId);
                 const getLink = (transport: string): string => {
                     return this.system.mediaserver.getExportUrl({
                         cameraId: bk.deviceId,
@@ -389,6 +385,11 @@ export class NxBookmarksComponent implements OnInit {
                         transport,
                     });
                 };
+                const aspectRatio =
+                    this.system.cameraManager.cameras.find(camera => {
+                        return deviceId === camera.id;
+                    })?.defaultRatio || 1.77; // Fallback aspect ratio of 16:9
+                const dpr = this.window.devicePixelRatio;
 
                 bookmarks.push({
                     ...bk,
@@ -396,11 +397,12 @@ export class NxBookmarksComponent implements OnInit {
                     src: getLink('mp4'),
                     downloadSrc: getLink('mkv'),
                     thumbnail: this.system.serverManager.getPreviewUrl(
-                        bk.deviceId,
+                        deviceId,
                         bk.startTimeMs,
-                        320,
-                        180,
+                        270 * aspectRatio * dpr,
+                        270 * dpr, // 270px is the height we want
                         0,
+                        '',
                     ),
                     isVisible: false,
                     deviceName,
