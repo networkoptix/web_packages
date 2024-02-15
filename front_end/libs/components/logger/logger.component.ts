@@ -74,8 +74,9 @@ export class NxLoggerComponent implements OnChanges {
         let loggerHost = host;
 
         if (!environment.isLocal) {
-            this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]
-                ?.system2faEnabled;
+            this.systemRequires2fa = (
+                await this.system.getInfoFromCloudDb().toPromise()
+            )[0]?.system2faEnabled;
 
             if (!this.systemRequires2fa) {
                 const { authGet } = this.system.mediaserver.getAuthKeys();
@@ -114,8 +115,9 @@ export class NxLoggerComponent implements OnChanges {
             if (this.selectedServerId) {
                 this.logData = '';
                 if (!environment.isLocal) {
-                    this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]
-                        ?.system2faEnabled;
+                    this.systemRequires2fa = (
+                        await this.system.getInfoFromCloudDb().toPromise()
+                    )[0]?.system2faEnabled;
                 }
                 // Initialize Server Manager if it is not already
                 if (!this.system.serverManager.servers.length) {
