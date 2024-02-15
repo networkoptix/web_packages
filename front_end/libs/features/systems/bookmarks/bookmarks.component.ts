@@ -150,6 +150,8 @@ export class NxBookmarksComponent implements OnInit {
     timeFilter: TimeRange = { start: null, end: null };
     deviceFilter = new SelectionModel<string>(true, []);
     tagFilter = new SelectionModel<string>(true, []);
+    filteredFetchedBookmarkIds: Set<string> = new Set<string>();
+    deviceIdsWithArchive: string[];
 
     private queryParams: BookmarkParams;
     private locale: string;
@@ -365,13 +367,19 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     processBookmarks(bks: SystemBookmark[]): Bookmark[] {
-        return bks
-            .filter(bk => this.deviceMap.has(bk.deviceId))
-            .map<Bookmark>(bk => {
-                const timeZoneOffset =
-                    this.localOffsetToUTCMs +
-                    (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
-                const deviceName = this.deviceMap.get(bk.deviceId).name;
+        const systemId = cleanId(this.system.id);
+        return bks.reduce((bookmarks, bk) => {
+            const deviceId = cleanId(bk.deviceId);
+            if (
+                this.deviceMap.has(bk.deviceId) &&
+                // We should only be displaying Bookmarks with Devices that have an archive (Same behavior as VMS)
+                this.deviceIdsWithArchive.includes(deviceId) &&
+                !this.filteredFetchedBookmarkIds.has(bk.id)
+            ) {
+                this.filteredFetchedBookmarkIds.add(bk.id);
+                const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
+                const canViewBookmark =
+                    this.system.permissionManager.canViewDeviceArchive(deviceId);
                 const getLink = (transport: string): string => {
                     return this.system.mediaserver.getExportUrl({
                         cameraId: bk.deviceId,
@@ -382,7 +390,7 @@ export class NxBookmarksComponent implements OnInit {
                     });
                 };
 
-                return {
+                bookmarks.push({
                     ...bk,
                     tags: bk.tags ?? [],
                     src: getLink('mp4'),
@@ -396,11 +404,12 @@ export class NxBookmarksComponent implements OnInit {
                     ),
                     isVisible: false,
                     deviceName,
-                    deviceId: bk.deviceId,
-                    systemId: this.system.id,
-                    timeZoneOffset,
-                };
-            });
+                    deviceId,
+                    systemId,
+                });
+            }
+            return bookmarks;
+        }, [] as Bookmark[]);
     }
 
     findNewestBookmark(bks: Bookmark[]): Bookmark {
@@ -455,6 +464,7 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
+        this.filteredFetchedBookmarkIds.clear();
         if (!this.queryParams) {
             return;
         }
