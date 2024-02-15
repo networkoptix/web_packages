@@ -35,6 +35,7 @@ export interface ChannelPartnerRole {
 export interface ChannelPartnerUser {
     email: string;
     roles: string[];
+    roleIds: string[];
     title: string;
     fullName: string;
     created: string; // e.g. "2023-08-24T19:14:46.748Z"

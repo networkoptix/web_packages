@@ -104,9 +104,8 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     setGroupDescription(gids: string[]): void {
         if (gids.length === 1) {
             const gid = gids[0];
-            this.accessDescription = this.system.userManager.groups.find(
-                ({ id }) => id === gid,
-            )?.tooltip;
+            this.accessDescription = this.system.userManager.groups.find(({ id }) => id === gid)
+                ?.tooltip;
         } else {
             this.accessDescription = '';
         }

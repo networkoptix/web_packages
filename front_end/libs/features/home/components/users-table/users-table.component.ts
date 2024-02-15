@@ -3,6 +3,8 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
+    OnInit,
     Output,
     WritableSignal,
     booleanAttribute,
@@ -30,6 +32,7 @@ import {
     OrganizationRole,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
+import { NgChanges } from '@utils/ng-changes';
 
 import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
 
@@ -49,7 +52,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxTooltipDirective,
     ],
 })
-export class NxUsersTableComponent {
+export class NxUsersTableComponent implements OnInit, OnChanges {
     UserType = UserType;
     currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -78,6 +81,7 @@ export class NxUsersTableComponent {
     expandRowId: string;
     icons = icons;
     canManageUsers: boolean;
+    hasOnlyOneAdmin$$: WritableSignal<boolean> = signal(true);
 
     setHeaders: Array<string>;
     rowsPerPage: Array<number>;
@@ -112,6 +116,12 @@ export class NxUsersTableComponent {
             this.userType === UserType.CHANNEL_PARTNER
                 ? this.currentPartner$$()?.ownPermissions.includes('manage_users')
                 : this.currentOrg$$()?.ownPermissions.includes('manage_users');
+    }
+
+    ngOnChanges(changes: NgChanges<NxUsersTableComponent>): void {
+        if (changes.records?.currentValue) {
+            this.findAdmins(changes.records.currentValue);
+        }
     }
 
     expandRow(id: string): void {
@@ -178,7 +188,17 @@ export class NxUsersTableComponent {
                     roleId,
                     email: user.email,
                 })
-                .subscribe();
+                .subscribe(newUser => {
+                    const copy = structuredClone(this.records);
+                    const index = this.records.findIndex(u => u.userId === user.userId);
+                    copy[index] = {
+                        ...this.records[index],
+                        roles: newUser.roles,
+                        roleIds: newUser.roleIds,
+                    };
+                    this.records = copy;
+                    this.findAdmins(copy);
+                });
         } else if (user.isOrgUser) {
             this.cpService
                 .updateOrganizationUser(this.currentOrg$$()?.id, { roleId, email: user.email })
@@ -195,5 +215,19 @@ export class NxUsersTableComponent {
             return 'access-table';
         }
         return this.userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users';
+    }
+
+    findAdmins(records: UserRecord[]): void {
+        let adminCount = 0;
+        for (const record of records) {
+            if (record.roles?.includes('Administrator')) {
+                adminCount += 1;
+                if (adminCount === 2) {
+                    this.hasOnlyOneAdmin$$.set(false);
+                    return;
+                }
+            }
+        }
+        this.hasOnlyOneAdmin$$.set(true);
     }
 }

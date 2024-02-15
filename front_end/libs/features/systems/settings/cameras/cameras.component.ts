@@ -348,9 +348,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 ? this.selectedFpsWatcher.originalValue
                 : this.selectedFpsWatcher.value;
 
-            const allScheduled = this.recordingModesWatcher.value.find(
-                ({ value }) => value === 2,
-            )?.id;
+            const allScheduled = this.recordingModesWatcher.value.find(({ value }) => value === 2)
+                ?.id;
             const alwaysType = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
             const recordingType = allScheduled || alwaysType;
 

@@ -1275,6 +1275,7 @@
         },
         "usersTable": {
             "infoToolTip": "Users with access based on access to higher-level folders",
+            "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
             "deleteDialog": {
                 "title": "Delete",
                 "singleMessage": "Are you sure you want to delete <span class=\"text-white\">{name}</span>?",
