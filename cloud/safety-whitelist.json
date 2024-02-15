@@ -191,5 +191,9 @@
   "62556": {
     "name": "cryptography",
     "note": "NULL-dereference when loading PKCS7"
+  },
+  "63154": {
+    "name": "jwcrypto",
+    "note": "Jwcrypto version 1.5.1 addresses a potential DoS issue with p2c headers, limiting the default maximum to 16384 to prevent excessive resource usage. For applications requiring more iterations, the jwa default max needs to be adjusted manually.https://github.com/latchset/jwcrypto/commit /d2655d370586cb830e49acfb450f87598da60be8 PVE-2023-63154 For more information, please visit https://data.safetycli.com/v/63154/f17"
   }
 }
