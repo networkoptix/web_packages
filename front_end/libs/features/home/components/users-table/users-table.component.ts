@@ -3,6 +3,8 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
+    OnInit,
     Output,
     WritableSignal,
     booleanAttribute,
@@ -32,6 +34,7 @@ import {
     OrganizationRole,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
+import { NgChanges } from '@utils/ng-changes';
 
 import * as cpActions from '../../store/channel-partners/channel-partners.actions';
 import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
@@ -52,7 +55,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxTooltipDirective,
     ],
 })
-export class NxUsersTableComponent {
+export class NxUsersTableComponent implements OnInit, OnChanges {
     UserType = UserType;
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
@@ -82,6 +85,7 @@ export class NxUsersTableComponent {
     expandRowId: string;
     icons = icons;
     canManageUsers: boolean;
+    hasOnlyOneAdmin$$: WritableSignal<boolean> = signal(true);
 
     setHeaders: Array<string>;
     rowsPerPage: Array<number>;
@@ -117,6 +121,12 @@ export class NxUsersTableComponent {
             this.userType === UserType.CHANNEL_PARTNER
                 ? this.currentPartner$$()?.ownPermissions.includes('manage_users')
                 : this.currentOrg$$()?.ownPermissions.includes('manage_users');
+    }
+
+    ngOnChanges(changes: NgChanges<NxUsersTableComponent>): void {
+        if (changes.records?.currentValue) {
+            this.findAdmins(changes.records.currentValue);
+        }
     }
 
     expandRow(id: string): void {
@@ -192,6 +202,7 @@ export class NxUsersTableComponent {
                         roles: updatedUser.roles,
                     };
                     this.records = copy;
+                    this.findAdmins(copy);
                     const email = this.accountService.email;
                     if (updatedUser.email === email) {
                         const channelPartners = structuredClone(this.channelPartners$$());
@@ -225,5 +236,19 @@ export class NxUsersTableComponent {
             return 'access-table';
         }
         return this.userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users';
+    }
+
+    findAdmins(records: UserRecord[]): void {
+        let adminCount = 0;
+        for (const record of records) {
+            if (record.roles?.includes('Administrator')) {
+                adminCount += 1;
+                if (adminCount === 2) {
+                    this.hasOnlyOneAdmin$$.set(false);
+                    return;
+                }
+            }
+        }
+        this.hasOnlyOneAdmin$$.set(true);
     }
 }

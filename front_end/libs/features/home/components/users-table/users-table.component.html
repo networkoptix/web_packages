@@ -182,7 +182,10 @@
                 <div class="div-container roles">
                     <div
                         *ngIf="
-                            row?.isOrgUser || hasMultipleRoles(row) || !canManageUsers;
+                            row?.isOrgUser ||
+                                hasMultipleRoles(row) ||
+                                !canManageUsers ||
+                                (row.roles[0] === 'Administrator' && hasOnlyOneAdmin$$());
                             else dropdown
                         "
                     >
@@ -239,7 +242,12 @@
                 style="grid-area: delete"
             >
                 <svg-icon
-                    *ngIf="canManageUsers && (!inGroup || !row.isOrgUser); else info"
+                    *ngIf="
+                        canManageUsers &&
+                            (!inGroup || !row.isOrgUser) &&
+                            row.roles[0] !== 'Administrator';
+                        else info
+                    "
                     class="delete"
                     nx-add-svg-src
                     (click)="onDeleteClick.emit(row)"
@@ -249,7 +257,12 @@
                 <ng-template #info>
                     <svg-icon
                         class="info"
-                        [nxTooltip]="LANG.channelPartners.usersTable.infoToolTip | translate"
+                        [nxTooltip]="
+                            (row.roles[0] === 'Administrator' && hasOnlyOneAdmin$$()
+                                ? LANG.channelPartners.usersTable.adminTooltip
+                                : LANG.channelPartners.usersTable.infoToolTip
+                            ) | translate
+                        "
                         [src]="icons.dirTextButtons + 'info.svg'"
                         [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                     ></svg-icon>
