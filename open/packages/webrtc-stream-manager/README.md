@@ -26,7 +26,9 @@ The `WebRTCStreamManager` class exposes a `connect` static method which is used 
 
 The `connect` static method could accept either a `WebRtcUrlConfig` or `WebRtcUrlFactory` as the first argument.
 
-Using `WebRtcUrlConfig` is the recommended way to conect.
+Using `WebRtcUrlConfig` is the recommended way to connect since it allows the library to handle more complicated
+aspects of establishing a connection like choosing the right authentication method bases on vms version as well
+as working with the relay. The `WebRtcUrlFactory` method is deprecated and is only supported for backward compatibility.
 
 ### Example webRtcUrlConfig:
 
@@ -63,7 +65,7 @@ const targetVideoElement = document.querySelector('video#someTargetId')
 #### Initializing connection and setting video source
 
 ```typescript
-WebRTCStreamManager.connect(webRtcConfig, videoElement).subscribe(([stream, error]) => {
+const connectionSubscription = WebRTCStreamManager.connect(webRtcConfig, videoElement).subscribe(([stream, error]) => {
   if (stream) {
     targetVideoElement.srcObject = stream;
     targetVideoElement.muted = true;
@@ -75,3 +77,26 @@ WebRTCStreamManager.connect(webRtcConfig, videoElement).subscribe(([stream, erro
   }
 });
 ```
+
+#### Closing the connection
+
+The connection could either be closed manually by unsubscribing from the subscription returned by
+`WebRtcStreamManager.connect(...).subscribe(...)` or by using rxjs operators like `takeUntil`.
+
+##### Manually unsubscribing
+```typescript
+connectionSubscription.unsubscribe();
+```
+
+##### Using rxjs `takeUntil`
+```typescript
+const notifier$ = new Subject();
+
+WebRTCStreamManager.connect(webRtcConfig).pipe(
+  takeUntil(notifier$)
+).subscribe(handleStream);
+
+// Somewhere else in the code
+notifier$.next();
+```
+
