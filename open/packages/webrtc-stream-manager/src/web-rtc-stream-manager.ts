@@ -873,6 +873,8 @@ export class WebRTCStreamManager {
         return this.apiVersion
     }
 
+    private serverId: string;
+
     /** Initialization helpers */
     /**
      * Initializes websocket connection for negotating peer connection.
@@ -916,9 +918,9 @@ export class WebRTCStreamManager {
             // console.table({ webRtcUrl, stream, position })
             const webRtcUrlObject = new URL(webRtcUrl);
             const relayHost = webRtcUrlObject.host;
-            let serverId = webRtcUrlObject.searchParams.get('x-server-guid');
+            this.serverId = webRtcUrlObject.searchParams.get('x-server-guid');
 
-            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId }) as const;
+            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.serverId }) as const;
             const streamInfoEndpoint =
                 `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId`;
             const fetchStreams = fetchWithRedirectAuthorization(
@@ -926,24 +928,26 @@ export class WebRTCStreamManager {
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
                 ).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
 
-            if (!serverId && this.apiVersion === ApiVersions.v1) {
-                serverId = cleanId((await fetchStreams).serverId);
-                if (serverId) {
-                    webRtcUrl += `x-server-guid=${serverId}&`
-                }
+            if (!this.serverId && this.apiVersion === ApiVersions.v1) {
+                this.serverId = cleanId((await fetchStreams).serverId);
             }
 
-            const resolvedHost = await fetch(`https://${relayHost}/api/ping?${serverId ? `x-server-guid=${serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
+            if (this.serverId) {
+                webRtcUrl += `x-server-guid=${this.serverId}&`
+            }
+
+            const resolvedHost = await fetch(`https://${relayHost}/api/ping?${this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
             if (resolvedHost) {
                 if (this.accessToken) {
                     if (this.apiVersion === ApiVersions.v1) {
-                        WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost]) ? fetch(
-                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${serverId ? `x-server-guid=${serverId}` : ''}`,
+                        const hostKey = `${resolvedHost}${this.serverId ? `-${this.serverId}` : ''}`;
+                        WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey]) ? fetch(
+                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${this.serverId ? `x-server-guid=${this.serverId}` : ''}`,
                             { credentials: 'include' }
                         ).then(() => true).catch(() => false) : WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost];
 
-                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost])) {
+                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey])) {
                             return requeue();
                         }
                     } else {
