@@ -852,6 +852,10 @@ export class WebRTCStreamManager {
     };
 
     private async getApiVersion(): Promise<ApiVersions> {
+        if (this.apiVersion) {
+            return this.apiVersion;
+        }
+
         const relayHost = new URL(this.webRtcUrlFactory({ position: 0 })).host;
         const endpoint = `https://${relayHost}/rest/v2/system/info?_with=version`;
         const fallback = { version: '5.1' }
@@ -864,7 +868,9 @@ export class WebRTCStreamManager {
             () => fallback).then(({ version }) => parseFloat(version)
         );
 
-        return isNaN(version) || version < 6 ? ApiVersions.v1 : ApiVersions.v2
+        this.apiVersion = isNaN(version) || version < 6 ? ApiVersions.v1 : ApiVersions.v2;
+
+        return this.apiVersion
     }
 
     /** Initialization helpers */
@@ -930,6 +936,30 @@ export class WebRTCStreamManager {
             const resolvedHost = await fetch(`https://${relayHost}/api/ping?${serverId ? `x-server-guid=${serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
             if (resolvedHost) {
+                if (this.accessToken) {
+                    if (this.apiVersion === ApiVersions.v1) {
+                        WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost]) ? fetch(
+                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${serverId ? `x-server-guid=${serverId}` : ''}`,
+                            { credentials: 'include' }
+                        ).then(() => true).catch(() => false) : WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost];
+
+                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost])) {
+                            return requeue();
+                        }
+                    } else {
+                        const oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
+
+                        const oneTimeToken = await fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken}` }, method: 'POST'}).then(response => response.json()).then(res => {
+                            return res.token;
+                        }).catch(() => '');
+
+                        if (oneTimeToken) {
+                            webRtcUrl += `_ticket=${oneTimeToken}`
+                        } else {
+                            return requeue();
+                        }
+                    }
+                }
                 webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
             } else {
                 return requeue();
@@ -1026,10 +1056,6 @@ export class WebRTCStreamManager {
     };
 
     private generateWebRtcUrl = (config: WebRtcUrlConfig): WebRtcUrlFactory => {
-        if('apiVersion' in config && config.apiVersion) {
-            this.apiVersion = config.apiVersion;
-        }
-
         const systemId = cleanId(config.systemId);
         const cameraId = cleanId(config.cameraId);
 
@@ -1069,17 +1095,13 @@ export class WebRTCStreamManager {
         public allowTranscoding = false,
         private cameraId = '',
     ) {
-        const relayUrlObject = new URL(this.webRtcUrlFactory());
-        const serverId = relayUrlObject.searchParams.get('x-server-guid');
-        const relayHost = relayUrlObject.host;
         this.updateStream(availableStreams.length === 1 ? availableStreams[0] : WebRTCStreamManager.getInitialStream(videoElement));
 
-        WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost] ||= this.accessToken ? fetch(
-            `https://${relayHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${serverId ? `x-server-guid=${serverId}` : ''}`,
-            { credentials: 'include' }
-        ).then(() => true).catch(() => false) : Promise.resolve(true);
+        if('apiVersion' in webRtcUrlFactoryOrConfig && webRtcUrlFactoryOrConfig.apiVersion) {
+            this.apiVersion = webRtcUrlFactoryOrConfig.apiVersion;
+        }
 
-        from(WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost]).pipe(switchMap(() => combineLatest([
+        from(this.getApiVersion()).pipe(switchMap(() => combineLatest([
             this.position$.pipe(filter(({ skip }) => !skip), map(({ value }) => value)),
             this.stream$.pipe(filter(({ skip }) => !skip), map(({ value }) => value))
         ])),
