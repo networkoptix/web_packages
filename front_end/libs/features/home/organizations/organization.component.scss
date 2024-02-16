@@ -1,6 +1,10 @@
 @use '../components/sidebar-level/sidebar-level.component.scss' as *;
 @use 'bootstrap_utils' as bootstrap;
 
+:host {
+    width: 100%;
+}
+
 #groups {
     display: flex;
     height: 100%;

@@ -1,49 +1,60 @@
 @use "theme_variables_common" as *;
-.channel-partner {
-  height: 100%;
-  overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1rem 0;
 
-  .header {
-    padding-top: 1.2rem;
-  }
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
 
-  .actions {
-    align-items: center;
-  }
+    .channel-partner {
+        height: 100%;
+        overflow-y: hidden;
+        display: flex;
+        padding: 1rem 1rem 0;
 
-  a {
-    padding-left: 1rem;
-     
-    &:hover{
-      cursor: pointer;
+        &.root {
+            flex-direction: column;
+        }
+
+        .header {
+            padding-top: 1.2rem;
+        }
+
+        .actions {
+            align-items: center;
+        }
+
+        a {
+            padding-left: 1rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .hidden {
+            visibility: none;
+        }
+
+        .no-orgs-placeholder {
+            margin: auto;
+            text-align: center;
+
+            h3 {
+                color: var(--placehoder-v2-title-color) !important;
+            }
+
+            p {
+                color: var(--placehoder-v2-message-color) !important;
+            }
+        }
+
+        .card-content {
+            h3 {
+                width: 90%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
     }
-  }
-
-  .hidden{
-    visibility: none;
-  }
-
-  .no-orgs-placeholder {
-    margin: auto;
-    text-align: center;
-    h3 {
-      color: var(--placehoder-v2-title-color)!important;
-    }
-
-    p {
-      color: var(--placehoder-v2-message-color)!important;
-    }
-  }
-
-  .card-content {
-    h3 {
-      width: 90%;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-  }
 }
