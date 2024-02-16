@@ -131,10 +131,39 @@ export function cleanId(id: unknown): string | undefined {
 
 export const fetchWithRedirectAuthorization = async (input: string, init: RequestInit, retries = 10): Promise<Response> => {
     const response = await fetch(input, init);
+    const unauthorized = response.status === 401;
+    const unavailable = response.status === 503;
 
-    if (response.redirected && response.status === 401) {
-        return retries ? fetchWithRedirectAuthorization(response.url, init, retries - 1) : fetch(response.url, init)
+    if (response.redirected && unauthorized || unavailable) {
+        /**
+         * If response is redirected and unauthorized that means that the origin isn't listed on the CSP
+         * and we need to try the redirected url with the same authorization headers.
+         *
+         * If response is redirected and unavailable that means that there's an issue with the relay
+         * that was chosen so we retry the original url to get a redirect to a different relay.
+         */
+        const urlToTry = unavailable ? input : response.url;
+        return retries ? fetchWithRedirectAuthorization(urlToTry, init, retries - 1) : fetch(urlToTry, init)
     }
 
     return response;
 }
+
+
+const responseCache = new Map<string, Promise<Response>>();
+
+export const cacheSuccess = async (request: () => Promise<Response>, key: string): Promise<Response> => {
+    if (!responseCache.has(key)) {
+        responseCache.set(key, request().then(res => {
+            const cloned = res.clone();
+
+            if (!res.ok) {
+                responseCache.delete(key);
+            }
+
+            return cloned;
+        }));
+    }
+
+    return (await responseCache.get(key)).clone();
+};
