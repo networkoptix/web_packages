@@ -419,9 +419,8 @@ async def refresh_access_token(request):
 
     old_token_info = await sync_to_async(Auth.validate_token)(old_access_token)
 
-    if int(old_token_info['expires_in']) > 60 * 10:
-        # If the token is still valid for more than 10 minutes, just return it.
-        # This will prevent several different requests from refreshing the token at the same time.
+    if int(old_token_info['expires_in']) > 0:
+        # Token lifetime is now 10 minutes so we should return it until it hits 0.
         return api_success(old_token_info)
 
     tokens = await sync_to_async(Auth.get_refresh_token)(refresh_token, get_ip(request))
