@@ -271,7 +271,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
-        if self.action in ('create', 'list'):
+        if self.action in ('create', 'list', 'bulk_delete'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage_users))
         if self.action in ('retrieve', 'destroy'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartnerToUser.can_manage))
@@ -325,6 +325,38 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         if not cp_admin_qs.exists() or cp_admin_qs.exclude(pk=instance.pk).exists():
             return super().destroy(request, *args, **kwargs)
         raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
+
+    @extend_schema(summary='Remove multiple users form a channel partner.',
+                   methods=['post'],
+                   request=serializers.ListSerializer(child=serializers.EmailField()),
+                   responses={'200': DeletedEmailsSerializer},
+                   extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Channel Partner'})
+    @action(name='bulk_delete', methods=['post'], detail=False)
+    def bulk_delete(self, request, *args, **kwargs):
+        channel_partner = self.get_channel_partner()
+        self.check_object_permissions(request, obj=channel_partner)
+        serializer = serializers.ListSerializer(
+            data=request.data,
+            child=serializers.EmailField()
+        )
+        serializer.is_valid(raise_exception=True)
+        partner_admin_qs = ChannelPartnerToUser.objects.filter(
+            channel_partner=channel_partner,
+            roles__contains=[ChannelPartnerRoles.ADMINISTRATOR]
+        )
+        if partner_admin_qs.exists() and not partner_admin_qs.exclude(
+                user__email__in=serializer.validated_data).exists():
+            raise Conflict(f'You are trying to remove all channel partner administrators.')
+
+        to_delete_qs: QuerySet = ChannelPartnerToUser.objects.filter(
+            channel_partner=channel_partner,
+            user__email__in=serializer.validated_data)
+        deleted_emails = list(to_delete_qs.values_list('user__email', flat=True))
+        to_delete_qs.delete()
+        deleted_emails_serializer = DeletedEmailsSerializer(data={'emails': deleted_emails})
+        deleted_emails_serializer.is_valid(raise_exception=True)
+
+        return Response(deleted_emails_serializer.data, status=status.HTTP_200_OK)
 
 @extend_schema(
     tags=['Channel Partners'],
