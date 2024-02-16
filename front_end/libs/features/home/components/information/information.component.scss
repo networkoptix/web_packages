@@ -1,31 +1,41 @@
 @use "bootstrap" as bootstrap;
 @use 'typography' as typography;
 
-.information {
-    display: grid;
-    grid-template-columns: 50% 1fr;
-    grid-template-areas: 'description' 'contact';
-    min-height: 20rem;
-    padding: 1rem;
-    gap: 1rem;
+:host {
+    overflow: auto;
+    height: 100%;
+    display: block;
 
-    @include bootstrap.media-breakpoint-down(md) {
-        grid-template-columns: 1fr;
-    }
+    .information {
+        display: grid;
+        grid-template-columns: 50% 1fr;
+        grid-template-areas: 'description' 'contact';
+        min-height: 20rem;
+        padding: 1rem;
+        gap: 1rem;
 
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @include bootstrap.media-breakpoint-down(md) {
+            grid-template-columns: 1fr;
+        }
 
-        &.in-edit-mode {
-            border-bottom: 1px solid var(--CP-pane-header-border);
-            margin-bottom: 8px;
-            padding-bottom: 8px;
+        .card.tile {
+            border: 1px solid var(--CP-pane-border);
+        }
 
-            .header-title {
-                @extend h4;
-                color: var(--card-header-text) !important;
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &.in-edit-mode {
+                border-bottom: 1px solid var(--CP-pane-header-border);
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+
+                .header-title {
+                    @extend h4;
+                    color: var(--card-header-text) !important;
+                }
             }
         }
     }
