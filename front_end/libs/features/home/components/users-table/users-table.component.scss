@@ -1,5 +1,21 @@
+@use "theme_variables_common" as *;
+
 .nx-new-table-container {
-    margin: 0;
+  margin: 0;
+
+  .no-users-placeholder {
+    margin: auto;
+    text-align: center;
+    padding-top: 50px;
+
+    h3 {
+      color: var(--placehoder-v2-title-color) !important;
+    }
+
+    p {
+      color: var(--placehoder-v2-message-color) !important;
+    }
+  }
 }
 
 .clickable:hover {
