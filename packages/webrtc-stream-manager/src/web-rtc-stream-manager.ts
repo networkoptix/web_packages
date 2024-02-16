@@ -7,7 +7,7 @@ import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } fro
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization } from './utils';
+import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -859,10 +859,10 @@ export class WebRTCStreamManager {
         const relayHost = new URL(this.webRtcUrlFactory({ position: 0 })).host;
         const endpoint = `https://${relayHost}/rest/v2/system/info?_with=version`;
         const fallback = { version: '5.1' }
-        const version = await fetchWithRedirectAuthorization(
+        const version = await cacheSuccess(() => fetchWithRedirectAuthorization(
             endpoint,
             { headers: { authorization: `Bearer ${this.accessToken}` }}
-        ).then(
+        ), `${relayHost.split('.')[0]}-version`).then(
             response => response.json() as Promise<typeof fallback>
         ).catch(
             () => fallback).then(({ version }) => parseFloat(version)
@@ -923,10 +923,10 @@ export class WebRTCStreamManager {
             const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.serverId }) as const;
             const streamInfoEndpoint =
                 `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId`;
-            const fetchStreams = fetchWithRedirectAuthorization(
+            const fetchStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
                 streamInfoEndpoint,
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
-                ).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
+                ), `${this.cameraId}-streams`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
 
             if (!this.serverId && this.apiVersion === ApiVersions.v1) {
                 this.serverId = cleanId((await fetchStreams).serverId);
@@ -941,13 +941,12 @@ export class WebRTCStreamManager {
             if (resolvedHost) {
                 if (this.accessToken) {
                     if (this.apiVersion === ApiVersions.v1) {
-                        const hostKey = `${resolvedHost}${this.serverId ? `-${this.serverId}` : ''}`;
-                        WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey]) ? fetch(
-                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${this.serverId ? `x-server-guid=${this.serverId}` : ''}`,
+                        WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost]) ? cacheSuccess(() => fetch(
+                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true`,
                             { credentials: 'include' }
-                        ).then(() => true).catch(() => false) : WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost];
+                        ), resolvedHost).then(res => res.ok) : WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost];
 
-                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[hostKey])) {
+                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost])) {
                             return requeue();
                         }
                     } else {
