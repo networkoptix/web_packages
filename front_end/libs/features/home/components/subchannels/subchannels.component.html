@@ -1,94 +1,67 @@
 <div
-    class="body"
+    class="subchannels-container"
     [ngClass]="{ 'subchannels-placeholder': subchannels$$().length === 0 }"
+    *ngIf="false; else subchannelsEmpty"
 >
     <div
-        class="body"
-        *ngIf="subchannels$$().length > 0; else subchannelsEmpty"
+        class="subchannels-body"
+        *ngIf="!(inSubchannels$ | async); else outlet"
     >
         <div
-            class="body"
-            *ngIf="!(inSubchannels$ | async); else outlet"
+            class="actions p-3"
+            [ngClass]="{ search: !canCreatePartners$$() }"
         >
-            <div
-                class="actions p-3"
-                [ngClass]="{ search: !canCreatePartners$$() }"
+            <button
+                *ngIf="canCreatePartners$$()"
+                class="btn btn-default"
+                translate
+                (click)="newPartnerDialog()"
             >
-                <button
-                    *ngIf="canCreatePartners$$()"
-                    class="btn btn-default"
-                    translate
-                    (click)="newPartnerDialog()"
-                >
-                    New Partner
-                </button>
+                New Partner
+            </button>
 
-                <nx-search
-                    *ngIf="subchannels$$().length > searchConfig.channelPartners.searchMinimumCards"
-                    class="input-overlay"
-                    [style.width.px]="searchConfig.channelPartners.searchWidth"
-                    [ngModel]="search"
-                    (ngModelChange)="setSearch($event)"
-                    layout="compact"
-                    [placeholder]="'Search' | translate"
-                    instant
-                ></nx-search>
-            </div>
-            <ng-container *ngIf="filteredSubchannels$$().length > 0; else noPartners">
-                <div class="px-3 cards-container">
-                    <ng-container *ngFor="let channel of filteredSubchannels$$()">
-                        <nx-card
-                            class="card-content"
-                            (click)="handleChannelClick(channel.id)"
-                            [icon]="icons.dir + 'partner.svg'"
-                        >
-                            <h3>{{ channel.name }}</h3>
-                            <div>
-                                <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
-                                {{ channel.organizationCount }}
-                                <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
-                                {{ channel.partnerCount }}
-                            </div>
-                        </nx-card>
-                    </ng-container>
-                </div>
-            </ng-container>
-            <ng-template #noPartners>
-                <div class="no-partners-placeholder">
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '64',
-                            'height.px': '64'
-                        }"
-                        [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
-                    ></svg-icon>
-                    <h3 translate>No Results</h3>
-                    <p translate>Try changing the search string</p>
-                </div>
-            </ng-template>
+            <nx-search
+                *ngIf="subchannels$$().length > searchConfig.channelPartners.searchMinimumCards"
+                class="input-overlay"
+                [style.width.px]="searchConfig.channelPartners.searchWidth"
+                [ngModel]="search"
+                (ngModelChange)="setSearch($event)"
+                layout="compact"
+                [placeholder]="'Search' | translate"
+                instant
+            ></nx-search>
         </div>
-        <ng-template #outlet>
-            <router-outlet></router-outlet>
-        </ng-template>
-    </div>
-    <ng-template #subchannelsEmpty>
-        <div
-            *ngIf="subchannelsStoresLoaded"
-            class="placeholder-container"
-        >
-            <div>
-                <!-- TEMPORARY SVG - replace Aria label -->
+        <ng-container *ngIf="filteredSubchannels$$().length > 0; else noPartners">
+            <div class="px-3 cards-container">
+                <ng-container *ngFor="let channel of filteredSubchannels$$()">
+                    <nx-card
+                        class="card-content"
+                        (click)="handleChannelClick(channel.id)"
+                        [icon]="icons.dir + 'partner.svg'"
+                    >
+                        <h3>{{ channel.name }}</h3>
+                        <div>
+                            <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+                            {{ channel.organizationCount }}
+                            <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+                            {{ channel.partnerCount }}
+                        </div>
+                    </nx-card>
+                </ng-container>
+            </div>
+        </ng-container>
+        <ng-template #noPartners>
+            <div class="no-partners-placeholder">
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
-                        'height.px': 64,
-                        'width.px': 64,
-                        'pointer-events': 'none'
+                        'width.px': '64',
+                        'height.px': '64'
                     }"
-                    [src]="icons.dirSectionPlaceholder + 'cantconnect.svg'"
-                    svgAriaLabel="change me please"
+                    [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
                 ></svg-icon>
+                <h3 translate>No Results</h3>
+                <p translate>Try changing the search string</p>
             </div>
             <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
             <!-- eslint-disable-next-line nx/template/no-untranslated -->
@@ -105,6 +78,44 @@
                     <span [innerText]="'New Partner' | translate"></span>
                 </nx-button>
             </div>
-        </div>
+        </ng-template>
+    </div>
+    <ng-template #outlet>
+        <router-outlet></router-outlet>
     </ng-template>
 </div>
+<ng-template #subchannelsEmpty>
+    <div
+        *ngIf="subchannelsStoresLoaded"
+        class="placeholder-container"
+    >
+        <div>
+            <!-- TEMPORARY SVG - replace Aria label -->
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{
+                    'height.px': 64,
+                    'width.px': 64,
+                    'pointer-events': 'none'
+                }"
+                [src]="icons.dirSectionPlaceholder + 'cantconnect.svg'"
+                svgAriaLabel="change me please"
+            ></svg-icon>
+        </div>
+        <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
+        <!-- eslint-disable-next-line nx/template/no-untranslated -->
+        <div class="placeholder-body">
+            <!-- TEMPORARY COPY -->
+            Drag video files or images to the client window, or add local media folder through the
+            Local Settings dialog.'
+        </div>
+        <div *ngIf="canCreatePartners$$()">
+            <nx-button
+                [textContent]="'New Partner' | translate"
+                [type]="buttonType"
+                (onClick)="newPartnerDialog()"
+            >
+            </nx-button>
+        </div>
+    </div>
+</ng-template>
