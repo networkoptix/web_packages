@@ -1,6 +1,10 @@
 <div class="px-3 pt-3 cards-container">
     <ng-container *ngFor="let service of services">
-        <nx-card>
+        <nx-card
+            [icon]="icons.dir + service.icon"
+            [dropdownItems]="dropddownItems"
+            [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
+        >
             <h3 name>{{ service.name }}</h3>
         </nx-card>
     </ng-container>
