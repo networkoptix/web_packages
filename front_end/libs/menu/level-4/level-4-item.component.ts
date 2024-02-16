@@ -22,8 +22,8 @@ export class NxLevel4ItemComponent implements OnChanges {
     @Input() idx: number;
 
     itemPath: string;
-    menuNavItemId = this.menuService.navItemId.asReadonly();
-    search = this.menuService.searchRegex.asReadonly();
+    menuNavItemId$$ = this.menuService.navItemId$$.asReadonly();
+    search$$ = this.menuService.searchRegex$$.asReadonly();
     icons = icons;
 
     constructor(private menuService: NxMenuService) {}
@@ -40,6 +40,6 @@ export class NxLevel4ItemComponent implements OnChanges {
     }
 
     setNavIdx(item: Level3Item): void {
-        this.menuService.hoverItemId.set(item.id);
+        this.menuService.hoverItemId$$.set(item.id);
     }
 }

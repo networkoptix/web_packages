@@ -30,7 +30,7 @@
     </div>
     <div
         class="merge-window"
-        [ngSwitch]="currentState()"
+        [ngSwitch]="currentState$$()"
     >
         <nx-merge-select-system-component
             #nxMergeSelectSystem
@@ -72,8 +72,8 @@
         <nx-merge-confirm-merge-component
             *ngSwitchCase="MergeState.confirm"
             [confirmMergeProcess]="confirmMergeProcess"
-            [primaryName]="primaryName()"
-            [secondaryName]="secondaryName()"
+            [primaryName]="primaryName$$()"
+            [secondaryName]="secondaryName$$()"
             [tooManyServers]="tooManyServers"
             [maxServers]="maxServers"
             [supportLink]="CONFIG.company.links.support"

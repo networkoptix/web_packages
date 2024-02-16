@@ -87,7 +87,7 @@ export class NxOrganizationsComponent implements OnInit {
     @Input() inChannelPartner: boolean = false;
     @Input() currentTabRoute: string;
 
-    account = this.store.selectSignal<Account>(selectCurrentUser);
+    private account$$ = this.store.selectSignal<Account>(selectCurrentUser);
     organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
     currentPartnerOrganizations$$ =
         this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
@@ -107,7 +107,7 @@ export class NxOrganizationsComponent implements OnInit {
         private cloudApi: NxCloudApiService,
         private cpService: NxChannelPartnersService,
     ) {
-        const { email } = this.account();
+        const { email } = this.account$$();
         this.userEmail = email;
         this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
             'showSidebarState',

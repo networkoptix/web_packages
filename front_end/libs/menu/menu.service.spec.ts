@@ -213,7 +213,7 @@ describe('NxMenuService', () => {
             providers: [NxMenuService],
         });
         menuService = TestBed.inject(NxMenuService);
-        menuService.content.set(menuContent);
+        menuService.content$$.set(menuContent);
     }));
 
     it('should create the service', () => {
@@ -221,31 +221,31 @@ describe('NxMenuService', () => {
     });
 
     it('should have content set', () => {
-        expect(menuService.content()).toEqual(menuContent);
+        expect(menuService.content$$()).toEqual(menuContent);
     });
 
     it('should set navItemId', () => {
-        expect(menuService.navItemId()).toBe(''); // init value
-        menuService.navItemId.set('General');
-        expect(menuService.navItemId()).toBe('General');
+        expect(menuService.navItemId$$()).toBe(''); // init value
+        menuService.navItemId$$.set('General');
+        expect(menuService.navItemId$$()).toBe('General');
     });
 
     it('should set hoverItemId', () => {
-        expect(menuService.hoverItemId()).toBe(''); // init value
-        menuService.hoverItemId.set('General');
-        expect(menuService.hoverItemId()).toBe('General');
+        expect(menuService.hoverItemId$$()).toBe(''); // init value
+        menuService.hoverItemId$$.set('General');
+        expect(menuService.hoverItemId$$()).toBe('General');
     });
 
     it('should set section', () => {
-        expect(menuService.selectedSection()).toBe(''); // init value
-        menuService.selectedSection.set('General');
-        expect(menuService.selectedSection()).toBe('General');
+        expect(menuService.selectedSection$$()).toBe(''); // init value
+        menuService.selectedSection$$.set('General');
+        expect(menuService.selectedSection$$()).toBe('General');
     });
 
     it('should set detail', () => {
-        expect(menuService.selectedDetailsSection()).toBe(''); // init value
-        menuService.selectedDetailsSection.set('General');
-        expect(menuService.selectedDetailsSection()).toBe('General');
+        expect(menuService.selectedDetailsSection$$()).toBe(''); // init value
+        menuService.selectedDetailsSection$$.set('General');
+        expect(menuService.selectedDetailsSection$$()).toBe('General');
     });
 
     it('should get item by Id', () => {

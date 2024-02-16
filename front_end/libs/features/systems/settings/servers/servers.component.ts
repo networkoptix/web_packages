@@ -70,7 +70,7 @@ export class NxSystemServersComponent implements OnInit, OnChanges, OnDestroy {
         this.system.storageManager.serverId = server.id;
         this.isServerOffline$$.set(server.status === 'Offline');
         this.serverId$$.set(server.id);
-        this.menuService.selectedDetailsSection.set(server.id);
+        this.menuService.selectedDetailsSection$$.set(server.id);
 
         if (this.storageTimer) {
             this.storageTimer.unsubscribe();
@@ -89,7 +89,7 @@ export class NxSystemServersComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit(): void {
         this.isOffline$$.set(!this.system.isOnline);
-        this.menuService.selectedSection.set('servers');
+        this.menuService.selectedSection$$.set('servers');
         this.applyService.initPageWatcher(this.applyContainerRef);
         this.system.infoSubject
             .pipe(

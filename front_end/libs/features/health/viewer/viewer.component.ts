@@ -80,7 +80,7 @@ export class NxReportViewerComponent implements OnInit {
         pageService.pageTitle(this.LANG.pageTitles.information);
 
         effect(() => {
-            const selection = this.menuService.selectedSection();
+            const selection = this.menuService.selectedSection$$();
             if (this.menu && this.menu.selectedSection !== selection) {
                 this.menu.selectedSection = selection;
                 this.menu = { ...this.menu }; // trigger onChang

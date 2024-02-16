@@ -172,8 +172,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     private setupDefaults(): void {
-        this.menuService.selectedSection.set(menus.systemSettings.admin.id);
-        this.menuService.selectedDetailsSection.set(menus.systemSettings.general.id);
+        this.menuService.selectedSection$$.set(menus.systemSettings.admin.id);
+        this.menuService.selectedDetailsSection$$.set(menus.systemSettings.general.id);
     }
 
     private setNameAndTitle(): void {

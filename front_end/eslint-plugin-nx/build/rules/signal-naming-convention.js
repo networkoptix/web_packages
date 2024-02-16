@@ -1,13 +1,13 @@
 "use strict";
 const utils_1 = require("@typescript-eslint/utils");
 const utils_2 = require("./utils");
-const signalTypes = ['Signal', 'WritableSignal'];
+const signalTypes = ['Signal', 'WritableSignal', 'InputSignal'];
 module.exports = (0, utils_2.createRule)({
     meta: {
         type: 'problem',
         schema: [],
         messages: {
-            signalEnd: 'Signals should end with $$',
+            signalEnd: 'Signals should end with $$ unless in a component only using control flow',
         },
     },
     defaultOptions: [],

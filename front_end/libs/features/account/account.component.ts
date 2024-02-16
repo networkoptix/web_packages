@@ -46,7 +46,7 @@ export class NxAccountComponent {
         });
 
         effect(() => {
-            const selectedDetailsSection = this.menuService.selectedDetailsSection();
+            const selectedDetailsSection = this.menuService.selectedDetailsSection$$();
             if (this.content) {
                 this.content.selectedDetailsSection = selectedDetailsSection;
             }

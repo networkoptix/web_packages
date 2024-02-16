@@ -22,7 +22,7 @@ export class LogsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('logs');
-        this.menuService.selectedDetailsSection.set('');
+        this.menuService.selectedSection$$.set('logs');
+        this.menuService.selectedDetailsSection$$.set('');
     }
 }

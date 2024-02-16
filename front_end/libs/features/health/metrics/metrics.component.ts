@@ -96,7 +96,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.pageService.pageTitle(this.LANG.pageTitles.information);
             });
             // when user click same section in the menu - we need to reset table and entity
-            if (this.metricId === this.menuService.selectedSection()) {
+            if (this.metricId === this.menuService.selectedSection$$()) {
                 this.filterModel.query = '';
                 this.resetActiveEntity();
                 this.search();
@@ -140,7 +140,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.routeSubscription = this.route.params.pipe(delay(0)).subscribe((params: any) => {
             this.metricId = params.metric;
             this.metricName = this.healthService.manifest[this.metricId].name;
-            this.menuService.selectedSection.set(this.metricId);
+            this.menuService.selectedSection$$.set(this.metricId);
             this.selectedData = this.healthService.tableHeaders[this.metricId];
             this.selectedPanelData = this.healthService.panelParams[this.metricId];
             this.healthLayoutService.metricsValuesCount =

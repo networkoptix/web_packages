@@ -19,8 +19,8 @@ export class NxOverviewComponent implements OnInit {
     pluginSubscription: SubscriptionLike;
 
     private setupDefaults(): void {
-        this.menuService.navItemId.set('how-it-works');
-        this.menuService.selectedDetailsSection.set('how-it-works');
+        this.menuService.navItemId$$.set('how-it-works');
+        this.menuService.selectedDetailsSection$$.set('how-it-works');
     }
 
     constructor(

@@ -55,8 +55,8 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     @Input() downloadData: DownloadReleases;
 
     ds = inject(DownloadsService);
-    platform = this.ds.platform$$.asReadonly();
-    activeType = this.ds.type$$.asReadonly();
+    private platform$$ = this.ds.platform$$.asReadonly();
+    private activeType$$ = this.ds.type$$.asReadonly();
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -75,23 +75,23 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
 
         effect(
             () => {
-                if (this.menuService.selectedSection() === 'colors') {
-                    const activeType = this.activeType();
+                if (this.menuService.selectedSection$$() === 'colors') {
+                    const activeType = this.activeType$$();
                     if (activeType) {
-                        this.menuService.selectedSection.set(activeType);
+                        this.menuService.selectedSection$$.set(activeType);
                     } else {
-                        this.menuService.selectedSection.set('other');
+                        this.menuService.selectedSection$$.set('other');
                     }
                 }
                 if (this.content) {
-                    this.content.selectedSection = this.menuService.selectedSection();
+                    this.content.selectedSection = this.menuService.selectedSection$$();
                     this.content = { ...this.content };
                 }
             },
             { allowSignalWrites: true },
         );
         effect(() => {
-            const platform = this.platform();
+            const platform = this.platform$$();
             this.initMenu(platform);
         });
 
@@ -110,7 +110,7 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     initMenu(platform: string): void {
         this.content = {
             base: menus.download.baseUrl,
-            selectedSection: this.activeType() || 'other',
+            selectedSection: this.activeType$$() || 'other',
             level1: [],
         };
 

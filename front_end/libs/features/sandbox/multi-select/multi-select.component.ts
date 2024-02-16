@@ -194,8 +194,8 @@ export class MultiSelectComponent {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('dropdowns');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('dropdowns');
 
         this.dropdownConfiguration = {
             type: '',

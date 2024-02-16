@@ -50,7 +50,7 @@ export class NxMenuButtonComponent {
                         if (userId) {
                             const systemId = this.system.id;
                             userId = cleanIdLegacy(userId);
-                            this.menuService.selectedDetailsSection.set(userId);
+                            this.menuService.selectedDetailsSection$$.set(userId);
                             this.uriService
                                 .updateURI(
                                     this.uriService.getSystemSettingsRoute({

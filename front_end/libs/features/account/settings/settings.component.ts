@@ -63,7 +63,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private store: Store,
         @Inject(WINDOW) protected window: Window,
     ) {
-        this.menuService.navItemId.set('settings');
+        this.menuService.navItemId$$.set('settings');
         this.icons = icons;
 
         translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {

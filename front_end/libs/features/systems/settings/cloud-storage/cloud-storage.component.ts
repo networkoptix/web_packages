@@ -174,8 +174,8 @@ export class NxCloudStorageComponent implements OnInit {
                     this.dialogService.cloudStorageInfo(this.licenseManager),
                 )
                 .toPromise();
-            this.menuService.selectedSection.set(menus.systemSettings.admin.id);
-            this.menuService.selectedDetailsSection.set(menus.systemSettings.cloudStorage.id);
+            this.menuService.selectedSection$$.set(menus.systemSettings.admin.id);
+            this.menuService.selectedDetailsSection$$.set(menus.systemSettings.cloudStorage.id);
         }
     }
 

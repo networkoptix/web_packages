@@ -54,8 +54,8 @@ export class SimpleWebglComponent {
     }
 
     async ngOnInit(): Promise<void> {
-        this.menuService.selectedSection.set('colors');
-        this.menuService.selectedDetailsSection.set('simple-webgl');
+        this.menuService.selectedSection$$.set('colors');
+        this.menuService.selectedDetailsSection$$.set('simple-webgl');
 
         await this.systemsService.getSystemAsPromise(SERVER_ID);
         this.system = this.systemService.createSystem(this.accountService.account.email, SERVER_ID);

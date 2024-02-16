@@ -124,10 +124,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
         this.searchService.navDirectionSubject.pipe(untilDestroyed(this)).subscribe(() => {
             if (this.navItems.length) {
-                this.menuService.navItemId.set(this.assignItemId());
+                this.menuService.navItemId$$.set(this.assignItemId());
                 // skip selected item
-                if (this.menuService.navItemId() === this.selectedLevel3) {
-                    this.menuService.navItemId.set(this.assignItemId());
+                if (this.menuService.navItemId$$() === this.selectedLevel3) {
+                    this.menuService.navItemId$$.set(this.assignItemId());
                 }
             }
         });
@@ -137,7 +137,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             if (item) {
                 this.navItemIdx =
                     this.navItemIdx < this.navItems.length - 1 ? this.navItemIdx + 1 : 0;
-                this.menuService.navItemId.set(this.navItems[this.navItemIdx].id);
+                this.menuService.navItemId$$.set(this.navItems[this.navItemIdx].id);
                 this.router
                     .navigate([`${this.content.base}/${item.path}`], {
                         queryParams: { search: this.menuModel.query },
@@ -182,8 +182,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     ngOnChanges(changes: NgChanges<NxMenuComponent>): void {
         const currentContent = changes.content?.currentValue;
         if (currentContent) {
-            if (!isEqual(currentContent.level1, this.menuService.content())) {
-                this.menuService.content.set(cloneDeep(currentContent.level1));
+            if (!isEqual(currentContent.level1, this.menuService.content$$())) {
+                this.menuService.content$$.set(cloneDeep(currentContent.level1));
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
@@ -294,7 +294,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 );
                 // this.menuService.content.length - 1 -> the number of other level1 nodes
                 this.permHeight =
-                    (this.menuService.content()?.length - 1) * this.elmMenuL1.offsetHeight +
+                    (this.menuService.content$$()?.length - 1) * this.elmMenuL1.offsetHeight +
                     (this.containerHeight - this.scrollHeight);
             } catch (_) {
                 // element does not exist
@@ -351,8 +351,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     resetNav(): void {
         this.navItemIdx = -1;
-        this.menuService.hoverItemId.set('');
-        this.menuService.navItemId.set('');
+        this.menuService.hoverItemId$$.set('');
+        this.menuService.navItemId$$.set('');
     }
 
     setNav(): void {
@@ -360,11 +360,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     private assignItemId(): string {
-        const hoverItemId = this.menuService.hoverItemId();
+        const hoverItemId = this.menuService.hoverItemId$$();
         if (hoverItemId) {
             this.navItemIdx = this.navItems.findIndex(item => item.id === hoverItemId);
             // remove info for hovered item
-            this.menuService.hoverItemId.set('');
+            this.menuService.hoverItemId$$.set('');
         }
 
         if (this.searchService.navDirection === ButtonArrowType.up) {
@@ -392,8 +392,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         }
 
         this.navItemIdx = -1;
-        this.menuService.hoverItemId.set('');
-        this.menuService.navItemId.set('');
+        this.menuService.hoverItemId$$.set('');
+        this.menuService.navItemId$$.set('');
 
         this.navItems = [];
         if (this.searchMode) {
