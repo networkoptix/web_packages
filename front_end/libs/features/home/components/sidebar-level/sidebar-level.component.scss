@@ -57,6 +57,11 @@
         &.cdk-drop-list-dragging {
             background-color: rgba(var(--groups-sidebar-highlight--rgb), 0.25);
         }
+
+        .spacer {
+            width: 1px;
+            padding: 0 12px;
+        }
     }
 
 }
