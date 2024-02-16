@@ -289,16 +289,23 @@ export class NxBookmarksComponent implements OnInit {
                     mediaserver.getBookmarks(pollParams),
                     mediaserver.getBookmarkTags(),
                     mediaserver.getDevices(),
+                    mediaserver.getServerTimes(),
                     this.system.cameraManager.hasArchives(),
                 ]),
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
-            map(([bks, tags, devices, devicesWithArchive]) => {
+            map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
                 this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
                     return cleanId(deviceId);
                 });
                 this.tags$.next(tags);
                 this.devices$.next(devices);
+                this.offsetTimes = new Map(
+                    serverTimes.reply.map(reply => [
+                        reply.serverId,
+                        Number(reply.timeZoneOffset) ?? 0,
+                    ]),
+                );
                 this.deviceMap = new Map(devices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
@@ -381,6 +388,9 @@ export class NxBookmarksComponent implements OnInit {
                 !this.filteredFetchedBookmarkIds.has(bk.id)
             ) {
                 this.filteredFetchedBookmarkIds.add(bk.id);
+                const timeZoneOffset =
+                    this.localOffsetToUTCMs +
+                    (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
                 const getLink = (transport: string): string => {
                     return this.system.mediaserver.getExportUrl({
@@ -414,6 +424,7 @@ export class NxBookmarksComponent implements OnInit {
                     deviceName,
                     deviceId,
                     systemId,
+                    timeZoneOffset,
                 });
             }
             return bookmarks;
