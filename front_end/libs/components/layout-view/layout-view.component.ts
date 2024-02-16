@@ -13,22 +13,16 @@ import {
     filter,
     map,
     shareReplay,
-    skip,
     startWith,
     switchMap,
     tap,
-    timeout,
 } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import {
-    LayoutResourceTree,
-    ResourceNode,
-    ResourceType,
-    SharableResourceLeafNode,
     LayoutPlaceholder,
     placeholderNameLookup,
+    ResourceType,
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
@@ -42,27 +36,23 @@ import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
-import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { Layout } from '@services/system-api.types/layouts.types';
 import { CurrentUser } from '@services/system-user.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { SystemResourcesSelectors } from '@store/system-resources';
-import { SystemResourceTypeEnums } from '@store/system-resources/system-resources.types';
-import { cleanIdLegacy, dirtyId, extractVideoLayout } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
-import {
-    parseCameras,
-    parseOtherSystems,
-    parseServers,
-    parseWebPages,
-    sortByName,
-    generateCamerasForTree,
-} from './layout-view-utils';
 import { registerDemoLogger } from './timeline-service-demo';
+import { createFocusLayoutFactory } from './utils/create-focus-layout-factory';
+import { createNewLayoutFactory } from './utils/create-new-layout-factory';
+import { defaultLayoutSelectorFactory } from './utils/default-layout-selector-factory';
+import { findSelectedLayoutFactory } from './utils/find-selected-layout-factory';
+import { generateResourceTree } from './utils/generate-resource-tree';
+import { layoutIdChangeSideEffectFactory } from './utils/layout-id-change-side-effect-factory';
 
 enum CloudLayoutTours {
     DEFAULT = 'default',
@@ -147,166 +137,10 @@ export class NxLayoutViewComponent {
                     hasQuery: !!queryParams?.search?.[0],
                     openNodes: queryParams?.openNodes || [],
                 })),
-                map(search => [...lookupState, search] as const),
+                map(search => [...lookupState, search, this.useV2api] as const),
             ),
         ),
-        map(
-            ([
-                allSystemResources,
-                currentSystemId,
-                currentLayout,
-                layouts,
-                currentUser,
-                editedLayout,
-                otherSystemsInfo,
-                queryInfo,
-            ]): LayoutResourceTree => {
-                const { [currentSystemId]: currentSystem, ...otherSystems } = allSystemResources;
-                const loadedSystems = Object.keys(allSystemResources);
-                const { cameras = [], servers = [], webPages = [] } = currentSystem;
-                const {
-                    cameras: otherSystemsCameras,
-                    servers: otherSystemsServers,
-                    webPages: OtherSystemsWebPages,
-                } = Object.values(otherSystems).reduce(
-                    (allResources, currentSystemResources) => {
-                        Object.entries(currentSystemResources).forEach(
-                            ([resourceType, resources]) =>
-                                allResources[resourceType]?.push(...resources),
-                        );
-                        return allResources;
-                    },
-                    { cameras: [], servers: [], webPages: [] } as Omit<
-                        typeof currentSystem,
-                        SystemResourceTypeEnums.LAYOUTS
-                    >,
-                );
-                const aspectRatio = currentLayout?.cellAspectRatio || 0;
-
-                const parsedCameras = parseCameras(cameras, servers, this.useV2api, aspectRatio);
-
-                const parsedServers = parseServers(servers, aspectRatio);
-
-                const parsedWebPages = parseWebPages(webPages, aspectRatio);
-
-                const parsedOtherSystemsCameras = parseCameras(
-                    otherSystemsCameras,
-                    otherSystemsServers,
-                    false,
-                    aspectRatio,
-                );
-
-                const parsedOtherSystemsServers = parseServers(otherSystemsServers, aspectRatio);
-                const parsedOtherSystemsWebPages = parseWebPages(OtherSystemsWebPages, aspectRatio);
-
-                const parsedOtherSystems = parseOtherSystems(
-                    otherSystemsInfo.filter(({ id }) => id !== currentSystemId),
-                    otherSystemsCameras,
-                    otherSystemsServers,
-                    aspectRatio,
-                    loadedSystems,
-                    queryInfo.hasQuery,
-                    queryInfo.openNodes,
-                );
-
-                const layoutsForTree = layouts
-                    .filter(layout => layout.id && layout.id !== 'new')
-                    .filter(
-                        layout =>
-                            !layout.parentId ||
-                            [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
-                                layout.parentId,
-                            ),
-                    )
-                    .map(
-                        details =>
-                            ({
-                                id: details.id,
-                                type: ResourceType.LAYOUT,
-                                name: details.name,
-                                owned:
-                                    !details.parentId ||
-                                    currentUser?.id === details.parentId ||
-                                    currentUser?.isAdmin,
-                                shared:
-                                    details.parentId === '{00000000-0000-0000-0000-000000000000}',
-                                crossSystem: !details.parentId,
-                                locked: details.locked,
-                                details,
-                            }) as SharableResourceLeafNode<Layout>,
-                    )
-                    .sort((a, b) => {
-                        // newly created layout is displayed first in the tree
-                        if (editedLayout?.isNew && editedLayout.id === a.details.id) {
-                            return -1;
-                        }
-                        // shared layouts are at the top sorted alphabetically
-                        return a.shared === b.shared ? sortByName(a, b) : a.shared ? -1 : 1;
-                    });
-
-                const parsedResources = Object.entries({
-                    ...parsedOtherSystems,
-                    ...parsedOtherSystemsCameras,
-                    ...parsedOtherSystemsServers,
-                    ...parsedOtherSystemsWebPages,
-                    ...parsedServers,
-                    ...parsedCameras,
-                    ...parsedWebPages,
-                    ...layoutsForTree.reduce(
-                        (acc, layout) => ({ ...acc, [layout.details.id]: layout }),
-                        {},
-                    ),
-                }).reduce((newObject, [id, value]) => {
-                    newObject[dirtyId(id)] = value;
-                    return newObject;
-                }, {});
-
-                const serversForTree = Object.values(parsedServers).sort(sortByName);
-
-                const camerasForTree = generateCamerasForTree(parsedCameras);
-
-                const webPagesForTree = Object.values(parsedWebPages).sort(sortByName);
-
-                const otherSystemsForTree = Object.values(parsedOtherSystems).sort(sortByName);
-
-                return {
-                    tree: [
-                        {
-                            name: staticLang.layouts.titles.resourceTypes[ResourceType.LAYOUTS],
-                            details: { id: 'noLayouts' },
-                            type: ResourceType.LAYOUTS,
-                            children: layoutsForTree,
-                        },
-                        (nxConfig.featureFlags.layoutsServers ||
-                            nxConfig.featureFlags.layoutsDemo) && {
-                            name: staticLang.layouts.titles.resourceTypes[ResourceType.SERVERS],
-                            details: { id: ResourceType.SERVERS },
-                            type: ResourceType.SERVERS,
-                            children: serversForTree.map(server => ({
-                                ...server,
-                                children: [],
-                                // children: camerasForTree.filter(({ details: { parentId } }) => parentId === server.details.id)
-                            })),
-                        },
-                        {
-                            name: staticLang.layouts.titles.resourceTypes[ResourceType.CAMERAS],
-                            details: { id: ResourceType.CAMERAS },
-                            type: ResourceType.CAMERAS,
-                            children: camerasForTree,
-                        },
-                        (nxConfig.featureFlags.layoutsWebpages ||
-                            nxConfig.featureFlags.layoutsDemo) && {
-                            name: staticLang.layouts.titles.resourceTypes[ResourceType.WEB_PAGES],
-                            details: { id: ResourceType.WEB_PAGES },
-                            type: ResourceType.WEB_PAGES,
-                            children: webPagesForTree,
-                        },
-                    ].filter(item => !!item),
-                    otherSystems: otherSystemsInfo.length && otherSystemsForTree,
-                    ...parsedResources,
-                } as unknown as LayoutResourceTree;
-            },
-        ),
+        map(generateResourceTree),
         filter(lookup => !!lookup),
         shareReplay({
             bufferSize: 1,
@@ -315,23 +149,9 @@ export class NxLayoutViewComponent {
     );
 
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
-        switchMap(async ({ tree }) => {
-            const layout = tree
-                .find(assertResourceOfType.layouts)
-                .children.find(
-                    ({ details }: ResourceNode<Layout>) => details?.items.length,
-                ) as ResourceNode<Layout>;
-            // const camera = tree
-            //     .find(assertResourceOfType.cameras)
-            //     .children.shift() as ResourceNode<NxSystemCamera>;
-            const layoutId = cleanIdLegacy(layout?.details?.id);
-            if (layoutId) {
-                await this.layoutStateService.paramStateHandler.state$$.set({
-                    params: { layoutId },
-                });
-            }
-            return layoutId || 'noLayouts';
-        }),
+        switchMap(async ({ tree }) =>
+            defaultLayoutSelectorFactory(this.layoutStateService.paramStateHandler.state$$)(tree),
+        ),
         distinctUntilChanged(),
         untilDestroyed(this),
     );
@@ -341,21 +161,13 @@ export class NxLayoutViewComponent {
         switchMap(layoutId =>
             layoutId === 'default' ? this.#defaultLayout$ : Promise.resolve(layoutId),
         ),
-        switchMap(async layoutId => {
-            if (layoutId) {
-                await this.layoutStateService.paramStateHandler.state$$.set({
-                    params: { layoutId },
-                });
-            }
-
-            const systemName = this.systemService.getCurrentSystem().info.name;
-
-            this.pageService.pageTitle(
-                [staticLang.pageTitles.layouts, systemName, this.CONFIG.cloudName].join(' - '),
-            );
-
-            return layoutId;
-        }),
+        map(layoutId =>
+            layoutIdChangeSideEffectFactory(
+                this.layoutStateService.paramStateHandler.state$$,
+                this.systemService.getCurrentSystem().info.name,
+                (title: string) => this.pageService.pageTitle(title),
+            )(layoutId),
+        ),
         untilDestroyed(this),
     );
 
@@ -369,28 +181,12 @@ export class NxLayoutViewComponent {
             ),
         ),
     ]).pipe(
-        switchMap(async ([system, layoutId, layouts, layoutItems]): Promise<Layout> => {
-            if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
-                const existingLayout = layouts.find(({ id }) => cleanIdLegacy(id) === layoutId);
-                const isResourceId = Object.values(layoutItems).some(items =>
-                    items?.some(({ id }) => id === layoutId),
-                );
-
-                // Prevent showing a layout that was accidentally saved with the same ID as a resource.
-                if (existingLayout && !isResourceId) {
-                    return { systemId: system.id, ...existingLayout };
-                }
+        switchMap(args => {
+            if (args[1] === LayoutPlaceholder.NO_LAYOUTS) {
+                return Promise.resolve(this.createPlaceholder(LayoutPlaceholder.NO_LAYOUTS));
             }
 
-            if (layoutId === LayoutPlaceholder.NO_LAYOUTS) {
-                return this.createPlaceholder(LayoutPlaceholder.NO_LAYOUTS);
-            }
-
-            return layoutId
-                ? this.createFocusLayout(system.id, layoutId).catch(() =>
-                      this.createNewLayout(system.id),
-                  )
-                : this.createNewLayout(system.id);
+            return findSelectedLayoutFactory(this.createNewLayout, this.createFocusLayout)(args);
         }),
         switchMap(layout =>
             timer(layout ? 0 : 2500).pipe(
@@ -430,8 +226,6 @@ export class NxLayoutViewComponent {
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         private dialogsService: NxDialogsService,
-        layoutGridService: NxLayoutGridService,
-        // private location: Location,
         private pageService: NxPageService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
@@ -496,28 +290,9 @@ export class NxLayoutViewComponent {
         }
     }
 
-    createNewLayout = (
-        systemId: string,
-        parentId = '',
-        name = this.LANG.layouts.helpMessages.unsaved.title,
-        items: LayoutItem[] = [],
-    ): Layout => ({
-        backgroundHeight: -1,
-        backgroundImageFilename: '',
-        backgroundOpacity: 0.699999988079071,
-        backgroundWidth: -1,
-        cellAspectRatio: 0,
-        cellSpacing: 0.01,
-        fixedHeight: 0,
-        fixedWidth: 0,
-        id: null,
-        items,
-        locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
-        logicalId: 0,
-        name,
-        systemId,
-        parentId: parentId || this.accountService.account.id,
-    });
+    createNewLayout = createNewLayoutFactory(
+        () => this.systemService.currentSystem$$()?.userManager.currentUser.id,
+    );
 
     createPlaceholder = (id: LayoutPlaceholder): Layout =>
         this.createNewLayout(
@@ -526,98 +301,12 @@ export class NxLayoutViewComponent {
             placeholderNameLookup[id],
         );
 
-    createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
-        const node = await firstValueFrom(
-            merge(
-                this.layoutItemLookup$.pipe(
-                    map(layoutItems => layoutItems[dirtyId(id)]),
-                    filter(Boolean),
-                ),
-                this.#selectedLayout$.pipe(
-                    skip(1),
-                    map(() => 'cancel'),
-                ),
-            ).pipe(timeout({ first: 1000, with: () => Promise.resolve(false as const) })),
-        );
-
-        if (typeof node === 'string' || !node) {
-            return;
-        }
-
-        let rotation = 0;
-        let rotatedAspect = false;
-        let aspect = 0;
-        let bottom = 1;
-        let right = 1;
-
-        if (assertResourceOfType.camera(node)) {
-            rotation = node.details.parameters?.rotation ?? 0;
-            rotatedAspect = Boolean(rotation % 180);
-            if (node.details.parameters?.VideoLayout) {
-                const { height, width } = extractVideoLayout(node.details.parameters.VideoLayout);
-                aspect = node.details.defaultRatio;
-                bottom = rotatedAspect ? width : height;
-                right = rotatedAspect ? height : width;
-            } else {
-                aspect = node.details.parameters?.overrideAr || node.details.defaultRatio;
-            }
-        }
-
-        const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
-        return {
-            backgroundHeight: -1,
-            backgroundImageFilename: '',
-            backgroundOpacity: 0.699999988079071,
-            backgroundWidth: -1,
-            cellAspectRatio,
-            cellSpacing: 0.0001,
-            fixedHeight: 0,
-            fixedWidth: 0,
-            id,
-            items: [
-                {
-                    bottom,
-                    contrastParams: {
-                        blackLevel: 0.001,
-                        enabled: false,
-                        gamma: 1,
-                        whiteLevel: 0.0005,
-                    },
-                    controlPtz: false,
-                    dewarpingParams: {
-                        enabled: false,
-                        fov: 1.2217304763960306,
-                        panoFactor: 1,
-                        xAngle: 0,
-                        yAngle: 0,
-                    },
-                    displayAnalyticsObjects: false,
-                    displayInfo: false,
-                    displayRoi: false,
-                    flags: 1,
-                    id: `{${id}}`,
-                    left: 0,
-                    resourceId: `{${id}}`,
-                    resourcePath: `cloud://${
-                        'systemId' in node.details ? node.details.systemId : systemId
-                    }.${node.details.id}`,
-                    right,
-                    rotation: rotation || 0,
-                    top: 0,
-                    zoomBottom: 0,
-                    zoomLeft: 0,
-                    zoomRight: 0,
-                    zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
-                    zoomTop: 0,
-                },
-            ],
-            locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
-            logicalId: 0,
-            name: this.layoutStateService.focusViewToken,
-            systemId,
-            parentId: this.accountService.account.id,
-        };
-    };
+    createFocusLayout = createFocusLayoutFactory({
+        layoutItemLookup$: this.layoutItemLookup$,
+        account: this.accountService.account,
+        focusViewToken: this.layoutStateService.focusViewToken,
+        selectedLayout$: this.#selectedLayout$,
+    });
 
     updateLayout = (layoutId: string): Promise<string> => {
         this.changeLayout(layoutId);
