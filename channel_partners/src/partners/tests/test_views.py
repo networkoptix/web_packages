@@ -735,6 +735,63 @@ class TestChannelPartnerUserViewSet:
         assert response.status_code == 400
         assert f"User {email} has a role in the channel partner child organization" in response.data['email'][0]
 
+    def test_bulk_delete_403(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        other_cp = channel_partner_factory()
+        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        other_user = cp_user_factory(channel_partner=other_cp)
+        data = emails + [other_user.user.email]
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(other_user)
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 403
+
+    def test_bulk_delete_400(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        admin = cp_user_factory(channel_partner=cp)
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        data = emails + ['invalid_email']
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(admin)
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 400
+
+    def test_bulk_delete_409(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        admin = cp_user_factory(channel_partner=cp)
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = emails + [admin.user.email]
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(admin)
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 409
+
+    def test_bulk_delete(self, channel_partner_factory, cp_user_factory,
+                         mock_auth_with_user, arf, random_email):
+        cp = channel_partner_factory()
+        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        admin = cp_user_factory(channel_partner=cp)
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = emails + [random_email]
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(admin)
+        response = view(request, parent_lookup_channel_partner=cp.id)
+
+        assert response.status_code == 200
+        assert 'emails' in response.data
+        assert set(response.data['emails']) == set(emails)
 
 
 class TestChannelPartnerNestedViewSet:
