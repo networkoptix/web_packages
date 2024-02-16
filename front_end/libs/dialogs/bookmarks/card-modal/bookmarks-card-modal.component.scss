@@ -116,6 +116,8 @@
         }
     
         .description {
+            max-height: 96px;
+            overflow-y: auto;
             font-size: 14px;
             margin-bottom: 15px;
             white-space: pre-line;
