@@ -141,8 +141,7 @@ def notification_added_channel_partner_role(
     post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)
 
 
-@shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,),
-             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+@shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,), retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
 def added_organization_role_task(
         self: TaskWithLogging,
         organization_id: uuid.UUID | str, sharer_id: int,
@@ -159,9 +158,11 @@ def added_organization_role_task(
 def notification_added_organization_role(
         organization_id: uuid.UUID | str, sharer_id: int,
         user_id: str, cloud_host_name: str, task: TaskWithLogging):
+
     organization = Organization.objects.filter(id=organization_id).first()
     sharer = CloudUser.objects.filter(id=sharer_id).first()
     user = CloudUser.objects.filter(id=user_id).first()
+
     if not all([organization, sharer, user]):
         logger.error(
             "Unable to resolve",

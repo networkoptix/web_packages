@@ -46,6 +46,10 @@ from rest_framework.authtoken.models import Token
 
 from channel_partners.utils import FieldOriginalMixin
 from partners.tasks.cloud_user_full_name import update_cloud_user_full_name
+from partners.tasks.services import (
+    new_channel_partner_created,
+    new_channel_partner_service_created,
+)
 from partners.tasks.states import expire_confirmation
 from partners.tests.utils.db import RemoveArrayElement
 from partners.utils.cache_keys import (
@@ -806,16 +810,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         super().save(*args, **kwargs)
 
         if self.parent_channel_partner and new:
-            for service in self.parent_channel_partner.services.all():
-                copy = ChannelPartnerService.objects.get(id=service.id)
-                copy.pk = None
-                copy.id = None
-                copy._state.adding = True
-                copy.created_by_channel_partner = self
-                copy.parent_service = service
-                if service.conversion_service:
-                    copy.conversion_service = service.conversion_service.channelpartnerservice_set.get(created_by_channel_partner=self)
-                copy.save()
+            new_channel_partner_created.apply_async(args=[self.pk])
 
     @staticmethod
     def invalidate_cache(pk: str) -> None:
@@ -1688,17 +1683,7 @@ class ChannelPartnerService(models.Model):
         super().save(*args, **kwargs)
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SERVICE_CHANGED, service=self)
         if new:
-            for channel_partner in self.created_by_channel_partner.channel_partners.all():
-                copy = ChannelPartnerService.objects.get(pk=self.pk)
-                copy.pk = None
-                copy.id = None
-                copy._state.adding = True
-                copy.created_by_channel_partner = channel_partner
-                copy.parent_service = self
-                # If we make this asyncronous it could cause some race conditions
-                if self.conversion_service:
-                    copy.conversion_service = self.conversion_service.channelpartnerservice_set.get(created_by_channel_partner=channel_partner)
-                copy.save()
+            new_channel_partner_service_created.apply_async(args=[self.pk])
 
 
 class ServiceRecordTypes:
