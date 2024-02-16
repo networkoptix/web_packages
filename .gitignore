@@ -47,3 +47,5 @@ PythonRobot/chromedriver
 PythonRobot/qr_code.png
 PythonRobot/NoptixLibrary/letsencrypt-stg.crt
 PythonRobot/error.png
+/cloud_portal.iml
+/common/python/python.iml

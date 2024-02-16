@@ -4,4 +4,4 @@ src/static
 src/config/.env.local
 # Jupyter Notebook for local testing
 src/notebooks
-channel_partners.iml
+*.iml
