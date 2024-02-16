@@ -18,7 +18,7 @@
                     [componentId]="setting.key"
                 ></nx-checkbox>
                 <label [for]="setting.key">{{
-                    wizardService.systemAdvancedSettings[setting.key]['settingLabel']
+                    wizardService.systemAdvancedSettings[setting.key]['settingLabel'] | translate
                 }}</label>
             </div>
 
@@ -33,18 +33,17 @@
                 ></nx-select>
 
                 <div class="form-text helper-block">
-                    <ng-container
+                    <div
                         *ngIf="selectedSecurity.value == 'standard'; else safe"
                         translate
                     >
                         Provides compatibility and usability but general system security is lower
-                    </ng-container>
-                    <ng-template
-                        #safe
-                        translate
-                    >
-                        Highest security level but may lead to user experience and compatibility
-                        issues
+                    </div>
+                    <ng-template #safe>
+                        <div translate>
+                            Highest security level but may lead to user experience and compatibility
+                            issues
+                        </div>
                     </ng-template>
                 </div>
             </div>

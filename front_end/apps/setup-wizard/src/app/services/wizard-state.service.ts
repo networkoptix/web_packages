@@ -2,11 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, Observable, of, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
+import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
@@ -124,7 +123,7 @@ export class WizardStateService {
     }
 
     CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    LANG = staticLang;
     server: NxSystemRestAPI | NxSystemRestAPI2;
 
     private readonly defaultUser = 'admin';
@@ -205,11 +204,9 @@ export class WizardStateService {
         private router: Router,
         private http: HttpClient,
         private nxSystemAPIService: NxSystemAPIService,
-        private translate: TranslateService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = config.getConfig();
-        this.LANG = language.translations;
         this.simpleURLRegex = this.CONFIG.simpleURLRegex;
 
         const [host, port] = this.window.location.host.split(':');
@@ -229,7 +226,7 @@ export class WizardStateService {
 
         this.wizardFSM = {
             start: {
-                title: this.LANG.setupWizard.title.start(),
+                title: this.LANG.setupWizard.title.start,
                 next: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -238,7 +235,7 @@ export class WizardStateService {
                 }
             },
             systemName: {
-                title: this.LANG.setupWizard.title.systemName(),
+                title: this.LANG.setupWizard.title.systemName,
                 jump: () => {
                     this.currentState = WIZARD_STATE.Advanced;
                 },
@@ -254,7 +251,7 @@ export class WizardStateService {
                 validate: () => this.setupConfig.systemName.length > 0
             },
             advanced: {
-                title: this.LANG.setupWizard.title.advanced(),
+                title: this.LANG.setupWizard.title.advanced,
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -360,7 +357,7 @@ export class WizardStateService {
             /**/
 
             merge: {
-                title: this.LANG.setupWizard.title.merge(),
+                title: this.LANG.setupWizard.title.merge,
                 back: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
@@ -370,10 +367,10 @@ export class WizardStateService {
                 validate: () => this.setupConfig.mergeDataState === FORM_STATE.VALID
             },
             mergeProcess: {
-                title: this.LANG.setupWizard.title.mergeProcess()
+                title: this.LANG.setupWizard.title.mergeProcess
             },
             mergeFailure: {
-                title: this.LANG.setupWizard.title.mergeFailure(),
+                title: this.LANG.setupWizard.title.mergeFailure,
                 back: () => {
                     this.currentState = WIZARD_STATE.Merge;
                 },
@@ -386,7 +383,7 @@ export class WizardStateService {
             },
 
             localLogin: {
-                title: this.LANG.setupWizard.title.localLogin(),
+                title: this.LANG.setupWizard.title.localLogin,
                 back: () => {
                     // Reset Credentials
                     this.currentState = WIZARD_STATE.SystemName;
@@ -397,11 +394,11 @@ export class WizardStateService {
                 validate: () => this.setupConfig.localLoginDataState === FORM_STATE.VALID,
             },
             localSuccess: {
-                title: this.LANG.setupWizard.title.localSuccess(),
+                title: this.LANG.setupWizard.title.localSuccess,
                 finish: true
             },
             localFailure: {
-                title: this.LANG.setupWizard.title.localFailure(),
+                title: this.LANG.setupWizard.title.localFailure,
                 back: () => {
                     this.currentState = WIZARD_STATE.SystemName;
                 },
@@ -412,13 +409,13 @@ export class WizardStateService {
             },
 
             initFailure: {
-                title: this.LANG.setupWizard.title.initFailure(),
+                title: this.LANG.setupWizard.title.initFailure,
                 retry: () => {
                     this.initWizard();
                 }
             },
             brokenSystem: {
-                title: this.LANG.setupWizard.title.brokenSystem(),
+                title: this.LANG.setupWizard.title.brokenSystem,
                 retry: () => {
                     this.initWizard();
                 }
@@ -807,10 +804,7 @@ export class WizardStateService {
                         settingValue = settingValue === 'true';
                     }
 
-                    let settingLabel = this.translate.instant(settingKey);
-                    if (settingLabel === settingKey && settingConfig.label) {
-                        settingLabel = settingConfig.label;
-                    }
+                    const settingLabel = settingConfig.label;
                     // TODO: REMOVE! ...Temporary fix for https://networkoptix.atlassian.net/browse/CLOUD-9716
                     // until server API is fixed
                     // rest/v1/system/settings returns null for “statisticsAllowed“

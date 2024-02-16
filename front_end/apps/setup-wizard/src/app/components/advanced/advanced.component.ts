@@ -2,6 +2,7 @@ import { KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
@@ -12,6 +13,7 @@ import { SECURITY_LEVEL } from '../../types/wizard-state.types';
     templateUrl: 'advanced.component.html'
 })
 export class AdvancedComponent {
+    LANG = staticLang;
     stringBool: { string: boolean };
     itemsSecurity: DropdownItem<SECURITY_LEVEL>[];
     selectedSecurity: DropdownItem<SECURITY_LEVEL>;
@@ -21,8 +23,8 @@ export class AdvancedComponent {
         public wizardService: WizardStateService
     ) {
         this.itemsSecurity = [
-            { value: SECURITY_LEVEL.STANDARD, name: translate.instant('setupWizard.advancedSettings.standard') },
-            { value: SECURITY_LEVEL.HIGH, name: translate.instant('setupWizard.advancedSettings.high') }
+            { value: SECURITY_LEVEL.STANDARD, name: translate.instant(this.LANG.setupWizard.advancedSettings.standard) },
+            { value: SECURITY_LEVEL.HIGH, name: translate.instant(this.LANG.setupWizard.advancedSettings.high) }
         ];
 
         this.selectedSecurity = this.itemsSecurity.find(item => {
