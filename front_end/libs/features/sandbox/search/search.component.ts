@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
+import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxMenuService } from '@menu/menu.service';
 
@@ -7,6 +10,8 @@ import { NxMenuService } from '@menu/menu.service';
     selector: 'search',
     templateUrl: 'search.component.html',
     styleUrls: ['search.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, NxSearchComponent],
 })
 export class SearchComponent {
     filter: SearchFilter;

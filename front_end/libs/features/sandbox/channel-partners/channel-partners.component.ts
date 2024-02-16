@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { PushPipe } from '@ngrx/component';
 
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 
@@ -6,6 +9,8 @@ import { NxChannelPartnersService } from '@pages/home/services/channel-partners.
     selector: 'nx-channel-partners',
     templateUrl: 'channel-partners.component.html',
     styleUrls: ['channel-partners.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, PushPipe],
 })
 export class NxChannelPartnersComponent implements OnInit {
     channelParters$ = this.cpService.getChannelPartners();

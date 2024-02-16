@@ -1,10 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
+import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
+import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
+import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
+import { NxRadioComponent } from '@components/radio/radio.component';
+// import { NxSliderComponent } from '@components/slider/slider.component';
 import * as staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
+import { PipesModule } from '@pipes/pipes.module';
 import { WINDOW } from '@services/window-provider';
 import { simpleURLRegex } from '@static-variables';
 
@@ -17,6 +29,22 @@ import {
     selector: 'form-elements',
     templateUrl: 'form-elements.component.html',
     styleUrls: ['form-elements.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NxCheckboxComponent,
+        NxSearchableDropdown,
+        NxMatLikeInputComponent,
+        NxMatLikePasswordComponent,
+        NxMatLikeTypeAheadDropdown,
+        // NxSliderComponent,
+        NxDropdownComponent,
+        NxSimpleDropdownItemComponent,
+        NxRadioComponent,
+        PipesModule,
+    ],
 })
 export class FormElementsComponent {
     LANG = staticLang;

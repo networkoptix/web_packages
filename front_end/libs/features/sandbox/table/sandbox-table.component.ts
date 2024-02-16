@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import staticLang from '@language/language_i18n_static.json';
 import { NxMenuService } from '@menu/menu.service';
@@ -7,6 +9,7 @@ import {
     UserRecord,
     UserType,
 } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
+import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { icons } from '@static-variables';
 
@@ -14,6 +17,8 @@ import { icons } from '@static-variables';
     selector: 'sandbox-table',
     templateUrl: 'sandbox-table.component.html',
     styleUrls: ['sandbox-table.component.scss'],
+    standalone: true,
+    imports: [CommonModule, NxUsersTableComponent, NxResizeObserver],
 })
 export class SandboxTableComponent {
     UserType = UserType;

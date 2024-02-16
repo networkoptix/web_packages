@@ -1,8 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
-import type { NgForm } from '@angular/forms';
+import { FormsModule, type NgForm } from '@angular/forms';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
@@ -11,10 +17,23 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
 
+import { DynamicFormApplyExampleComponent } from '../dynamic-form-apply-example/dynamic-form-apply-example.component';
+
 @Component({
     selector: 'form-apply-example',
     templateUrl: 'form-apply-example.component.html',
     styleUrls: ['form-apply-example.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        NxGenericDropdownModule,
+        NxMultiSelectDropdown,
+        LanguageModule,
+        NxCheckboxComponent,
+        NxRadioComponent,
+        DynamicFormApplyExampleComponent,
+    ],
 })
 export class FormApplyExampleComponent {
     // Refs to use for rendering apply component instances

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
@@ -23,6 +24,8 @@ const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b?time=live';
     selector: 'webgl',
     templateUrl: 'webgl.component.html',
     styleUrls: ['webgl.component.scss'],
+    standalone: true,
+    imports: [CommonModule /* ??? */],
 })
 export class WebglComponent {
     end: number;

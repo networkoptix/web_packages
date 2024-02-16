@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 // import * as d3 from 'd3';
 // import * as fc from 'd3fc';
 import { timer } from 'rxjs';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { SimpleWebGLTimelineModule } from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
 
 // SOFIA
 // const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';
@@ -28,6 +32,8 @@ const CAMERA_ID = 'd4650aab-4812-f660-683e-a2c3f866028b?time=live';
     selector: 'simple-webgl',
     templateUrl: 'webgl.component.html',
     styleUrls: ['webgl.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, NxCheckboxComponent, SimpleWebGLTimelineModule],
 })
 export class SimpleWebglComponent {
     end: number;

@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
@@ -10,6 +12,8 @@ import { Process } from '@services/process.service/process';
     selector: 'section-apply-example',
     templateUrl: 'section-apply-example.component.html',
     styleUrls: ['section-apply-example.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule],
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances
