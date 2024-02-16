@@ -45,6 +45,13 @@
                     title="{{ head.value }}"
                     >{{ head.value }}</span
                 >
+                <svg-icon
+                    class="clickable"
+                    *ngIf="head.value === 'Login'"
+                    [src]="icons.dir + 'sorting.svg'"
+                    [svgStyle]="{ 'width.px': '14', 'height.px': '14' }"
+                    (click)="sortUsers()"
+                ></svg-icon>
             </div>
             <!--            <div-->
             <!--                #sortItem-->
@@ -79,7 +86,7 @@
                 <nx-checkbox
                     componentId="checkBox{{ row[idPropName] }}"
                     (onClick)="selectRecord(row)"
-                    [disabled]="!canManageUsers || (inGroup && row.isOrgUser)"
+                    [disabled]="!canManageUsers$$() || (inGroup && row.isOrgUser)"
                 >
                 </nx-checkbox>
                 <svg-icon
@@ -174,21 +181,14 @@
             </div>
 
             <div
-                class="div-container-wrapper"
+                class="div-container-wrapper roles-container"
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: roles"
+                [ngClass]="{ dropdown: !showRole(row) }"
                 *ngIf="row.roles?.length || row.groupRoles?.length"
             >
                 <div class="div-container roles">
-                    <div
-                        *ngIf="
-                            row?.isOrgUser ||
-                                hasMultipleRoles(row) ||
-                                !canManageUsers ||
-                                (row.roles[0] === 'Administrator' && hasOnlyOneAdmin$$());
-                            else dropdown
-                        "
-                    >
+                    <div *ngIf="showRole(row); else dropdown">
                         {{ getDisplayRole(row) | translate }}
                     </div>
                     <ng-template #dropdown>
@@ -242,13 +242,8 @@
                 style="grid-area: delete"
             >
                 <svg-icon
-                    *ngIf="
-                        canManageUsers &&
-                            (!inGroup || !row.isOrgUser) &&
-                            row.roles[0] !== 'Administrator';
-                        else info
-                    "
-                    class="delete"
+                    *ngIf="canManageUsers$$() && (!inGroup || !row.isOrgUser); else info"
+                    class="delete clickable"
                     nx-add-svg-src
                     (click)="onDeleteClick.emit(row)"
                     [src]="icons.dirTextButtons + 'delete.svg'"

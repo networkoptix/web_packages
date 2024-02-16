@@ -16,6 +16,7 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
@@ -56,6 +57,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
     userStore = inject(UserStore);
+    icons = icons;
 
     @Input() inSubchannel: boolean = false;
     searchModel: SearchFilter = { query: '' };
@@ -219,5 +221,9 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                         });
                 }
             });
+    }
+
+    sortRecords(): void {
+        alert('Will implement sort');
     }
 }

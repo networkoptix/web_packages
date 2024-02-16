@@ -8,6 +8,7 @@ import {
     Output,
     WritableSignal,
     booleanAttribute,
+    computed,
     signal,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -80,8 +81,15 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     subLevels: boolean = false;
     expandRowId: string;
     icons = icons;
-    canManageUsers: boolean;
     hasOnlyOneAdmin$$: WritableSignal<boolean> = signal(true);
+    canManageUsers$$ = computed(() => {
+        const currentPartner = this.currentPartner$$();
+        const currentOrg = this.currentOrg$$();
+        return this.userType === UserType.CHANNEL_PARTNER
+            ? currentPartner?.ownPermissions.includes('manage_users')
+            : currentOrg?.ownPermissions.includes('manage_users');
+    });
+    originalRecords: UserRecord[] | null = null;
 
     setHeaders: Array<string>;
     rowsPerPage: Array<number>;
@@ -112,10 +120,6 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         if (this.accessTable) {
             this.setHeaders = ['userId', 'accessLevel', 'roles', 'delete'];
         }
-        this.canManageUsers =
-            this.userType === UserType.CHANNEL_PARTNER
-                ? this.currentPartner$$()?.ownPermissions.includes('manage_users')
-                : this.currentOrg$$()?.ownPermissions.includes('manage_users');
     }
 
     ngOnChanges(changes: NgChanges<NxUsersTableComponent>): void {
@@ -210,6 +214,10 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         }
     }
 
+    showRole(row: UserRecord): boolean {
+        return row?.isOrgUser || this.hasMultipleRoles(row) || !this.canManageUsers$$();
+    }
+
     get tableType(): string {
         if (this.accessTable) {
             return 'access-table';
@@ -229,5 +237,10 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
             }
         }
         this.hasOnlyOneAdmin$$.set(true);
+    }
+
+    sortUsers(): void {
+        // Temporary as unsure how this should sort the users
+        this.records = [...structuredClone(this.records).reverse()];
     }
 }

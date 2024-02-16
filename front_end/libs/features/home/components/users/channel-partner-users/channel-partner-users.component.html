@@ -8,12 +8,17 @@
         Add User
     </button>
 
-    <nx-search
-        [(ngModel)]="searchModel"
-        (ngModelChange)="setQuery($event)"
-        layout="search"
-        instant
-    ></nx-search>
+    <div class="filter">
+        <nx-search
+            [(ngModel)]="searchModel"
+            (ngModelChange)="setQuery($event)"
+            layout="search"
+            instant
+        ></nx-search>
+        <button (click)="sortRecords()">
+            <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>
+        </button>
+    </div>
 </div>
 <div
     #tableContainer
