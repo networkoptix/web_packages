@@ -1,10 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
+import { NxMultiSelectDropdownItemComponent } from '@components/dropdownV2/dropdownItems/multiSelectDropdownItem/multi-select-dropdown-item.component';
+import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
+import { NxMultiDropdownComponent } from '@components/dropdownV2/multi-dropdown.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import {
     DATA_TYPE,
     MultiSelectItem,
 } from '@components/dropdowns/multi-select/multi-select.component.types';
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
+import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
 import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
@@ -13,6 +25,21 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
     selector: 'multi-select',
     templateUrl: 'multi-select.component.html',
     styleUrls: ['multi-select.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NxDropdownComponent,
+        NxSimpleDropdownItemComponent,
+        NxMultiDropdownComponent,
+        NxMultiSelectDropdownItemComponent,
+        NxMultiSelectDropdown,
+        NxMatLikeGenericDropdownModule,
+        NxGenericDropdownModule,
+        NxSearchableDropdown,
+        NxCheckboxComponent,
+    ],
 })
 export class MultiSelectComponent {
     items: MultiSelectItem[] = [];

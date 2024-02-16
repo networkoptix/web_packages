@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@menu/menu.service';
@@ -587,6 +588,8 @@ const palette = `$dark1: #000000;
     selector: 'nx-theme-colors',
     templateUrl: 'colors.component.html',
     styleUrls: ['colors.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxThemeColorsComponent implements OnInit {
     palette: object;

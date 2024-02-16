@@ -1,6 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    NgForm,
+    ReactiveFormsModule,
+} from '@angular/forms';
 
+import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
@@ -12,6 +22,8 @@ import { NxToastService } from '@services/toast.service';
     selector: 'dynamic-form-apply-example',
     templateUrl: 'dynamic-form-apply-example.component.html',
     styleUrls: ['dynamic-form-apply-example.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, PrimaryButtonModule],
 })
 export class DynamicFormApplyExampleComponent {
     // page process

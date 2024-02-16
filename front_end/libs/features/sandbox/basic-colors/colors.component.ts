@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@menu/menu.service';
@@ -6,6 +7,8 @@ import { NxMenuService } from '@menu/menu.service';
     selector: 'nx-colors',
     templateUrl: 'colors.component.html',
     styleUrls: ['colors.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxBasicColorsComponent implements OnInit {
     red = [

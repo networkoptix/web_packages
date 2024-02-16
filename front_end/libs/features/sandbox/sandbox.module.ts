@@ -1,55 +1,19 @@
-import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxButtonComponent } from '@components/button/button.component';
-import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { DangerButtonModule } from '@components/danger-button/danger-button.module';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
-import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { LanguageModule } from '@components/dropdowns/language/language.module';
-import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
-import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
-import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
-import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
-import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
-import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
-import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
-import { NxRadioComponent } from '@components/radio/radio.component';
-import { NxSearchComponent } from '@components/search/search.component';
-import { NxSliderComponent } from '@components/slider/slider.component';
-import { NxBaseTableComponent } from '@components/table/table.component';
-import { NxTagComponent } from '@components/tag/tag.component';
-import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
-import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { MenuModule } from '@menu/menu.module';
-import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
-import { PipesModule } from '@pipes/pipes.module';
-import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
-import { NxAccountSettingsModule } from '../account/settings/settings.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';
-import { NxGridLayoutModule } from '../layout/layout.module';
 
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
-import { DynamicFormApplyExampleComponent } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
@@ -172,72 +136,12 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule.forChild(appRoutes),
-        TranslateModule,
-        AngularSvgIconModule,
-        NgrxDemoModule,
-        NxAlertBlockComponent,
-        NxCheckboxComponent,
-        NxContentBlockComponent,
-        MenuModule,
-        NxAccountSettingsModule,
-        NxBaseTableComponent,
-        NxGridLayoutModule,
-        NxSliderComponent,
-        PipesModule,
-        NxSearchComponent,
-        NxSearchableDropdown,
-        VmsClientTimelineModule,
-        NxThemeGeneratorComponent,
-        NxGenericDropdownModule,
-        NxMatLikeGenericDropdownModule,
-        NxMultiSelectDropdown,
-        PrimaryButtonModule,
-        DangerButtonModule,
-        NxRadioComponent,
-        NxTagComponent,
-        NxButtonComponent,
-        NxMatLikeTypeAheadDropdown,
-        NxMatLikeInputComponent,
-        NxMatLikePasswordComponent,
-        NxUsersTableComponent,
-        NxResizeObserver,
-        LanguageModule,
-        NxDropdownModule,
-        NxTooltipDirective,
-        NxMultiLineEllipsisComponent,
-        WebglComponent,
-        NxAddSvgSrcDirective,
-        NxButtonsExampleComponent,
-        NxButtonsExampleComponent,
-    ],
+    imports: [RouterModule.forChild(appRoutes), NgrxDemoModule],
     providers: [],
 
-    declarations: [
-        NxSandboxComponent,
-        SectionApplyExampleComponent,
-        FormApplyExampleComponent,
-        DynamicFormApplyExampleComponent,
-        ToasterComponent,
-        MultiSelectComponent,
-        SearchComponent,
-        MasonryGridComponent,
-        FormElementsComponent,
-        TagsComponent,
-        SandboxTableComponent,
-        ValidationComponent,
-        NxArchSvgComponent,
-        NxBasicColorsComponent,
-        NxCustomColorsComponent,
-        NxThemeColorsComponent,
-        NxHSLThemeColorsComponent,
-    ],
+    declarations: [],
     bootstrap: [],
-    exports: [NxSandboxComponent],
+    exports: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SandboxModule {}

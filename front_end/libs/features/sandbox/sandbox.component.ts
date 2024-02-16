@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, effect } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
+import { MenuModule } from '@menu/menu.module';
 import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 
@@ -7,6 +10,8 @@ import type { Content } from '@menu/menu.types';
     selector: 'sandbox-component',
     templateUrl: 'sandbox.component.html',
     styleUrls: ['sandbox.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, MenuModule],
 })
 export class NxSandboxComponent {
     content: Content;
@@ -72,11 +77,6 @@ export class NxSandboxComponent {
                             id: 'webgl',
                             label: 'WebGL',
                             path: '/webgl',
-                        },
-                        {
-                            id: 'simple-webgl',
-                            label: 'Simple WebGL',
-                            path: '/simple-webgl',
                         },
                     ],
                 },

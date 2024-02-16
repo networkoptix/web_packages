@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { LetDirective, PushPipe } from '@ngrx/component';
 import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
 
 import { ToastType } from '@components/toast-container/toast.types';
@@ -16,6 +18,8 @@ import { NxToastService } from '@services/toast.service';
     selector: 'nx-channel-partner',
     templateUrl: 'channel-partner.component.html',
     styleUrls: ['channel-partner.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, LetDirective, PushPipe],
 })
 export class NxChannelPartnerComponent implements OnInit {
     private id$ = this.route.params.pipe(map<Params, string>(p => p.partnerId));

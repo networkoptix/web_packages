@@ -1,5 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { DangerButtonModule } from '@components/danger-button/danger-button.module';
+import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
+import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
@@ -12,6 +19,16 @@ import { icons } from '@static-variables';
     selector: 'toaster',
     templateUrl: 'toaster.component.html',
     styleUrls: ['toaster.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        NxCheckboxComponent,
+        PrimaryButtonModule,
+        DangerButtonModule,
+        NxRadioComponent,
+        NxAlertBlockComponent,
+    ],
 })
 export class ToasterComponent implements OnInit, OnDestroy {
     LANG = staticLang;

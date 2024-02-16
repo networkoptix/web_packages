@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxMenuService } from '@menu/menu.service';
 
 @Component({
@@ -7,6 +10,8 @@ import { NxMenuService } from '@menu/menu.service';
     templateUrl: 'tags.component.html',
     styleUrls: ['tags.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [CommonModule, TranslateModule, NxTagComponent],
 })
 export class TagsComponent {
     options: { name: string; selected: boolean; type?: string }[];
