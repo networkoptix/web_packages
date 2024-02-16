@@ -61,7 +61,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private store: Store,
     ) {
-        this.menuService.navItemId.set('settings');
+        this.menuService.navItemId$$.set('settings');
         this.icons = icons;
 
         translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {

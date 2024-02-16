@@ -8,7 +8,6 @@ import {
     OnDestroy,
     OnInit,
     runInInjectionContext,
-    Signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
@@ -88,11 +87,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         return this.#system;
     }
 
-    editCameras: Signal<boolean> = computed(
+    private editCameras$$ = computed<boolean>(
         () => this.system.permissionManager.permissions$$().editCameras,
     );
 
-    editUsers: Signal<boolean> = computed(
+    private editUsers$$ = computed<boolean>(
         () => this.system.permissionManager.permissions$$().editUsers,
     );
 
@@ -176,7 +175,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private updateContent(skipPermissions = false): string {
         // hide search if no permissions for potentially long list ... cameras, servers and users
         this.menuSearchable =
-            this.editCameras() && this.system.permissionManager.isAdmin$$() && this.editUsers();
+            this.editCameras$$() && this.system.permissionManager.isAdmin$$() && this.editUsers$$();
         /**
          * This isn't ideal since it's pretty dependent on the menu structure implementation
          * but the alternative is to refactor the settings component and menu service
@@ -239,7 +238,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.canNavMenu(
                 this.origSelectedSection,
                 'selectedSection',
-                this.menuService.selectedSection(),
+                this.menuService.selectedSection$$(),
             );
         });
 
@@ -247,7 +246,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.canNavMenu(
                 this.origSelectedSubSection,
                 'selectedSubSection',
-                this.menuService.selectedSubSection(),
+                this.menuService.selectedSubSection$$(),
             );
         });
 
@@ -255,7 +254,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.canNavMenu(
                 this.origSelectedDetailSection,
                 'selectedDetailsSection',
-                this.menuService.selectedDetailsSection(),
+                this.menuService.selectedDetailsSection$$(),
             );
         });
     }
@@ -371,7 +370,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             )
             .then(
                 () => {
-                    if (this.editUsers()) {
+                    if (this.editUsers$$()) {
                         this.gettingSystemUsers.run();
                     } else {
                         this.updateArchivesPresent();
@@ -641,7 +640,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
         this.updateCameraSettingsMenu();
 
-        if (this.editUsers()) {
+        if (this.editUsers$$()) {
             let usersNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.users.id,
             );

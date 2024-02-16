@@ -596,8 +596,8 @@ export class NxThemeColorsComponent implements OnInit {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('colors');
-        this.menuService.selectedDetailsSection.set('themeColors');
+        this.menuService.selectedSection$$.set('colors');
+        this.menuService.selectedDetailsSection$$.set('themeColors');
 
         this.parse();
     }

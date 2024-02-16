@@ -44,7 +44,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
     ) {
-        this.menuService.navItemId.set('security');
+        this.menuService.navItemId$$.set('security');
     }
 
     ngOnInit(): void {

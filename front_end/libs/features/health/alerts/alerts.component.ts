@@ -95,7 +95,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         pageService.pageTitle(this.LANG.pageTitles.information);
 
         effect(() => {
-            if (this.metricId === this.menuService.selectedSection()) {
+            if (this.metricId === this.menuService.selectedSection$$()) {
                 this.resetActiveEntity();
                 this.resetFilterModel();
                 this.alerts = this.healthService.alertsSearch(
@@ -135,7 +135,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.numFilters = 4;
 
         this.params = this.route.snapshot.queryParams;
-        this.menuService.selectedSection.set('alerts');
+        this.menuService.selectedSection$$.set('alerts');
 
         const { url } = this.router;
         this.reportView = url.includes('/health-report/viewer');

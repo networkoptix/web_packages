@@ -12,8 +12,7 @@ import { createRule } from './utils';
 // Helpers
 // ----------------------------------------------------------------------------
 
-const signalTypes = ['Signal', 'WritableSignal' /* , 'InputSignal' */];
-// TODO Update for input signals and control flow
+const signalTypes = ['Signal', 'WritableSignal', 'InputSignal'];
 
 // ----------------------------------------------------------------------------
 // Rule Definition
@@ -24,7 +23,7 @@ export = createRule({
         type: 'problem',
         schema: [],
         messages: {
-            signalEnd: 'Signals should end with $$',
+            signalEnd: 'Signals should end with $$ unless in a component only using control flow',
         },
         // fixable: 'code',
         // hasSuggestions: true,

@@ -159,14 +159,14 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     cameraViewPath: string;
     fullInfoPath: string;
-    canSeeInfo = computed<boolean>(() => {
+    canSeeInfo$$ = computed<boolean>(() => {
         const permissions = this.system.permissionManager.permissions$$();
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
         return permissions?.systemHealth;
     });
-    canSeeView = computed<boolean>(() => {
+    canSeeView$$ = computed<boolean>(() => {
         const cameraId = this.cameraId$$();
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
@@ -238,7 +238,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         data: Pick<NxCamerasComponent, 'camera' | 'system'>,
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.menuService.selectedSection.set('cameras');
+        this.menuService.selectedSection$$.set('cameras');
         if (data) {
             Object.assign(this, data);
         }
@@ -479,7 +479,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private setCamera = async (): Promise<void> => {
-        this.menuService.selectedDetailsSection.set(this.camera.id);
+        this.menuService.selectedDetailsSection$$.set(this.camera.id);
 
         const {
             vendor,

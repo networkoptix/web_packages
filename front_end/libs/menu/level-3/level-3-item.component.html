@@ -3,7 +3,7 @@
     [ngClass]="{
         selected: selected,
         'item-disabled': item.disabled,
-        focus: menuNavItemId() === item.id
+        focus: menuNavItemId$$() === item.id
     }"
     [tabindex]="selected ? '-1' : undefined"
     [id]="item.id"
@@ -36,7 +36,7 @@
         >
             <nx-search-highlight
                 [text]="item.label | nxTranslate"
-                [search]="search()"
+                [search]="search$$()"
             ></nx-search-highlight>
         </span>
         <span
@@ -46,7 +46,7 @@
             <span class="ml-1 mr-1">&ndash;</span>
             <nx-search-highlight
                 [text]="item.additionalLabel | nxTranslate"
-                [search]="search()"
+                [search]="search$$()"
             ></nx-search-highlight>
         </span>
     </div>

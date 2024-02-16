@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 
 import { NxSearchService } from '@services/search.service';
@@ -10,20 +10,20 @@ import type { Level1Item, Level3Item } from './menu.types';
     providedIn: 'root',
 })
 export class NxMenuService {
-    content: WritableSignal<Level1Item[]> = signal([]);
-    hoverItemId: WritableSignal<string> = signal('');
-    navItemId: WritableSignal<string> = signal('');
+    content$$ = signal<Level1Item[]>([]);
+    hoverItemId$$ = signal('');
+    navItemId$$ = signal('');
 
-    searchRegex = signal<string | RegExp>('');
+    searchRegex$$ = signal<string | RegExp>('');
 
-    selectedSection: WritableSignal<string> = signal('');
-    selectedSubSection: WritableSignal<string> = signal('');
-    selectedDetailsSection: WritableSignal<string> = signal('');
+    selectedSection$$ = signal('');
+    selectedSubSection$$ = signal('');
+    selectedDetailsSection$$ = signal('');
 
     constructor(private searchService: NxSearchService) {}
 
     getItemBy(id: string): Level3Item | undefined {
-        for (const node of this.content()) {
+        for (const node of this.content$$()) {
             if (node.level3?.length) {
                 const match = node.level3.find(item => item.id === id);
                 if (match) {
@@ -34,9 +34,9 @@ export class NxMenuService {
     }
 
     filterMenu(model: SearchModel): Level1Item[] {
-        const content = cloneDeep(this.content());
+        const content = cloneDeep(this.content$$());
         if (!model.query) {
-            this.searchRegex.set('');
+            this.searchRegex$$.set('');
             return content;
         }
         this.setHighlightPattern(model);
@@ -88,6 +88,6 @@ export class NxMenuService {
             model.queryAndMatch,
         ].find(m => Array.isArray(m)) as string[];
 
-        this.searchRegex.set(new RegExp(`(${match.join('|')})`, 'i'));
+        this.searchRegex$$.set(new RegExp(`(${match.join('|')})`, 'i'));
     }
 }

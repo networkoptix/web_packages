@@ -51,8 +51,8 @@ export class FormElementsComponent {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('formElements');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('formElements');
 
         this.toggleDisabled = true;
         this.show = false;

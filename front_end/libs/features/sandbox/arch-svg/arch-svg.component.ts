@@ -11,7 +11,7 @@ export class NxArchSvgComponent implements OnInit {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('archsvg');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('archsvg');
     }
 }

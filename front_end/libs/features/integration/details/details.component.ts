@@ -67,7 +67,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
         effect(() => {
             if (this.content) {
-                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection();
+                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection$$();
                 this.content = { ...this.content }; // trigger onChange
             }
         });

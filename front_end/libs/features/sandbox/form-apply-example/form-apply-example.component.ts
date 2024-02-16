@@ -102,8 +102,8 @@ export class FormApplyExampleComponent {
     }
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('applyServiceForm');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('applyServiceForm');
 
         this.account.form1Field1Input = 'Tsanko';
         this.account.form1Field2Input = 'Tsolov';

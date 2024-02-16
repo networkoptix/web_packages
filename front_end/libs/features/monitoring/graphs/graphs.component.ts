@@ -22,7 +22,7 @@ export class GraphsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('graphs');
-        this.menuService.selectedDetailsSection.set('');
+        this.menuService.selectedSection$$.set('graphs');
+        this.menuService.selectedDetailsSection$$.set('');
     }
 }

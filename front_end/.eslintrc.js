@@ -1,4 +1,5 @@
 const { showOptionalWarnings } = require('./eslintrc-options.json');
+const nonControlFlowTemplates = require('./non-control-flow-templates');
 const typeLintErrorCount = require('./type-lint-error-count');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
@@ -301,23 +302,6 @@ module.exports = {
         },
         {
             files: ['*.ts'],
-            excludedFiles: [
-                'merge.refactor.component.ts',
-                'downloads-releases.component.ts',
-                'organization.component.ts',
-                'cameras.component.ts',
-                'settings.component.ts',
-                'level-3-item.component.ts',
-                'level-4-item.component.ts',
-                'menu.service.ts',
-            ],
-            rules: {
-                'nx/signal-naming-convention': 'error',
-                // 'nx/exhaustive-computed-deps': 'warn',
-            },
-        },
-        {
-            files: ['*.ts'],
             plugins: ['rxjs'],
             extends: ['plugin:rxjs/recommended'],
             rules: {
@@ -454,6 +438,32 @@ module.exports = {
                         ],
                     },
                 ],
+            },
+        },
+
+        /* Only allow non-$$-suffixed signals in components exclusively using control flow,
+        since old directives (*ngIf, *ngFor, etc.) cannot detect constant conditions while
+        control flow can. New components should be only using control flow. */
+        {
+            files: ['*.ts'],
+            excludedFiles: ['*.component.ts'],
+            rules: {
+                'nx/signal-naming-convention': 'error',
+            },
+        },
+        {
+            files: nonControlFlowTemplates.map(t => t.replace('.html', '.ts')),
+            rules: {
+                'nx/signal-naming-convention': 'error',
+            },
+        },
+        {
+            files: ['*.component.html'],
+            excludedFiles: nonControlFlowTemplates.map(t =>
+                t.endsWith('.html') ? t : `${t}/*inline-template-*.component.html `,
+            ),
+            rules: {
+                '@angular-eslint/template/prefer-control-flow': 'error',
             },
         },
     ],

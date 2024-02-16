@@ -23,8 +23,8 @@ export class ValidationComponent {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('validation');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('validation');
 
         this.change = this.processService.createProcess(() => {
             return Promise.resolve(true);

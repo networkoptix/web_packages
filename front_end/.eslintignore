@@ -27,6 +27,7 @@ libs/ngx-translate-patch/**
 
 # Automatically generated
 type-lint-error-count.js
+non-control-flow-templates.js
 
 # Keeping as reference while refactoring view, will eventually delete
 libs/features/systems/view/datatypes/TestCamera.ts

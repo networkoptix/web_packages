@@ -14,8 +14,8 @@ export class NxSandboxComponent {
 
     constructor(private menuService: NxMenuService) {
         effect(() => {
-            const selection = this.menuService.selectedSection();
-            const detailSelection = this.menuService.selectedDetailsSection();
+            const selection = this.menuService.selectedSection$$();
+            const detailSelection = this.menuService.selectedDetailsSection$$();
             if (
                 !this.content ||
                 (this.content.selectedSection === selection &&
@@ -30,7 +30,7 @@ export class NxSandboxComponent {
 
         effect(() => {
             if (this.content) {
-                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection();
+                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection$$();
                 this.content = { ...this.content }; // trigger onChange
             }
         });

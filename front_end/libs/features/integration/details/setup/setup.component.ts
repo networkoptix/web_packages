@@ -23,8 +23,8 @@ export class NxSetupComponent implements OnInit {
     pluginSubscription: SubscriptionLike;
 
     private setupDefaults(): void {
-        this.menuService.navItemId.set('how-to-setup');
-        this.menuService.selectedDetailsSection.set('how-to-setup');
+        this.menuService.navItemId$$.set('how-to-setup');
+        this.menuService.selectedDetailsSection$$.set('how-to-setup');
     }
 
     constructor(

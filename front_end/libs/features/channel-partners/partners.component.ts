@@ -57,13 +57,13 @@ export class NxChannelPartnersComponent implements OnInit {
         private partnersService: NxPartnersService,
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.menuService.selectedSection.set('users');
+        this.menuService.selectedSection$$.set('users');
 
         effect(() => {
             this.canNavMenu(
                 this.origSelectedSection,
                 'selectedSection',
-                this.menuService.selectedSection(),
+                this.menuService.selectedSection$$(),
             );
         });
 
@@ -71,7 +71,7 @@ export class NxChannelPartnersComponent implements OnInit {
             this.canNavMenu(
                 this.origSelectedSubSection,
                 'selectedSubSection',
-                this.menuService.selectedSubSection(),
+                this.menuService.selectedSubSection$$(),
             );
         });
 
@@ -79,7 +79,7 @@ export class NxChannelPartnersComponent implements OnInit {
             this.canNavMenu(
                 this.origSelectedDetailSection,
                 'selectedDetailsSection',
-                this.menuService.selectedDetailsSection(),
+                this.menuService.selectedDetailsSection$$(),
             );
         });
     }

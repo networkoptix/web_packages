@@ -71,7 +71,7 @@ export class NxMonitoringComponent implements OnInit {
         });
 
         effect(() => {
-            const selection = this.menuService.selectedSection();
+            const selection = this.menuService.selectedSection$$();
             if (this.content.selectedSection === selection) {
                 return;
             }

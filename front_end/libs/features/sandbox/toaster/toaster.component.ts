@@ -29,8 +29,8 @@ export class ToasterComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection.set('components');
-        this.menuService.selectedDetailsSection.set('toaster');
+        this.menuService.selectedSection$$.set('components');
+        this.menuService.selectedDetailsSection$$.set('toaster');
     }
 
     ngOnDestroy(): void {

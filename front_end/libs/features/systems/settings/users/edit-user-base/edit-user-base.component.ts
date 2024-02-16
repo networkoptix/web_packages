@@ -114,13 +114,13 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         protected uriService: NxUriService,
         protected toastService: NxToastService,
     ) {
-        this.menuService.selectedSection.set('users');
+        this.menuService.selectedSection$$.set('users');
     }
 
     ngOnChanges(changes: NgChanges<NxSystemUsersBaseComponent>): void {
         const user = changes.selectedUser?.currentValue;
         if (user) {
-            this.menuService.selectedDetailsSection.set(user.id);
+            this.menuService.selectedDetailsSection$$.set(user.id);
             this.locked.clear();
             this.setUserHelper(user);
             this.changeUser(user);
@@ -159,7 +159,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
                         console.error(error);
                     });
 
-                this.menuService.selectedDetailsSection.set(nextUserId);
+                this.menuService.selectedDetailsSection$$.set(nextUserId);
             }
         });
     }
@@ -219,7 +219,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
-        this.menuService.selectedDetailsSection.set(cleanIdLegacy(user.id) ?? '');
+        this.menuService.selectedDetailsSection$$.set(cleanIdLegacy(user.id) ?? '');
 
         this.fullName = user.fullName;
         this.email = user.email;
