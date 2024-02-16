@@ -21,6 +21,7 @@ app.autodiscover_tasks([
     'partners.tasks.notifications',
     'partners.tasks.states',
     'partners.tasks.services',
+    'partners.tasks.cloud_user_full_name'
 ])
 
 

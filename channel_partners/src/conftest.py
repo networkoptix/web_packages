@@ -45,12 +45,24 @@ def assert_all_responses_were_requested() -> bool:
 
 @pytest.fixture()
 def cloud_user_factory(db, random_email):
+    original_save = CloudUser.save
+
+    def _save_no_task(self, *args, **kwargs):
+        super(CloudUser, self).save(*args, **kwargs)
+
+    # Replace the CloudUser's save method with the new one
+    CloudUser.save = _save_no_task
+
     def user(email=None):
         if not email:
             email = random_email
-        return CloudUser.objects.get_or_create(email=email)[0]
+        cloud_user = CloudUser.objects.get_or_create(email=email)[0]
+        return cloud_user
 
-    return user
+    yield user
+
+    # Restore the original save
+    CloudUser.save = original_save
 
 
 @pytest.fixture()

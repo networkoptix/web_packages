@@ -626,7 +626,8 @@ class TestOrganizationUserSerializer:
         assert notification_data['type'] == 'cps_organization_invite'
         assert notification_data['user_email'] == self.user.email
         assert notification_data['message']['organization_name'] == self.org.name
-        assert notification_data['message']['sharer_name'] == org_admin.user.full_name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == org_admin.user.email
 
         relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
         assert relations.count() == 1

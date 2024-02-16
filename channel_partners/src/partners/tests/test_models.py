@@ -13,7 +13,6 @@ from partners.models import (
     ChannelPartnerStates,
     ChannelPartnerToUser,
     CloudSystemId,
-    CloudUser,
     Organization,
     OrganizationPermissions,
     OrganizationRoles,
@@ -1017,10 +1016,6 @@ class TestCloudUser:
         systems = cp_admin.user.all_systems()
         # only other org systems must be in the list
         assert systems.count() == 2
-
-    def test_full_name(self, cloud_user_factory):
-        user: CloudUser = cloud_user_factory(email='test@example.com')
-        assert user.full_name == 'John Smith'
 
     def test_systems_memberships(self, channel_partner_factory, cp_user_factory, organization_factory,
                                     org_user_factory, system_group_factory, system_factory,
