@@ -1,3 +1,15 @@
 .nx-new-table-container {
     margin: 0;
 }
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.delete {
+    svg {
+        .icon-with-fill {
+            fill: var(--error);
+        }
+    }
+}

@@ -1271,7 +1271,7 @@
             "login": "Login",
             "fullName": "Full Name",
             "accessLevel": "Has access to",
-            "groups": "Permission Groups"
+            "groups": "Permission Group"
         },
         "usersTable": {
             "infoToolTip": "Users with access based on access to higher-level folders",

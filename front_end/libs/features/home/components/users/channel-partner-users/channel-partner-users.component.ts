@@ -292,4 +292,8 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 }
             });
     }
+
+    sortRecords(): void {
+        alert('Will implement sort');
+    }
 }

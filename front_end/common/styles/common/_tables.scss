@@ -63,7 +63,7 @@
     }
 
     tbody {
-        background-color: var(--card-body-bg);
+        background-color: var(--body-bg);
 
         tr {
             //display: block;
@@ -80,7 +80,7 @@
 
             &.spacer {
                 height: .5rem;
-                background-color: var(--card-body-bg);
+                background-color: var(--body-bg);
             }
 
             td {
@@ -141,6 +141,8 @@
 
         & > div {
             display: flex;
+            align-items: center;
+            gap: 0.25rem;
             flex-wrap: wrap;
             align-content: center;
             justify-items: flex-start;
@@ -179,7 +181,7 @@
         // define it per table (see .cameras) --TT
         //grid-template-columns: 50px repeat(4, 1fr) 32px;
         grid-template-rows: minmax(2.5rem, auto);
-        background-color: var(--card-body-bg);
+        background-color: var(--body-bg);
         border-bottom: 1px solid var(--border-color);
 
         &:hover {
@@ -241,9 +243,17 @@
                 stroke: none;
             }
         }
-
         .roles {
             width: 100%;
+
+            .select-wrapper {
+                height: 100%;
+                align-items: center;
+                background-color: transparent;
+            }
+        }
+        .dropdown {
+            padding: 0;
         }
     }
 }
