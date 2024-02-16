@@ -223,7 +223,7 @@ const systemSelected = async () => {
   cameras = await fetch(`https://${systemRelay}/rest/v2/devices`, { credentials: 'include' }).then((res) => res.json());
 
   const cameraAvailable = (camera: BasicCameraInfo) => ['online', 'recording'].includes(camera.status?.toLowerCase())
-  const camerasOptions = cameras.map(
+  const camerasOptions = cameras.sort((a, b) => a.name.localeCompare(b.name)).map(
     (camera) =>
       `<option value="${camera.id}" ${
         cameraAvailable(camera) ? '' : 'disabled'
