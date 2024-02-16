@@ -444,7 +444,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             this.systemsSubscription.unsubscribe();
         }
         this.systemsSubscription = this.systemsService.systemsSubject.subscribe(() => {
-            if (this.systemsService.finishedMerged) {
+            if (this.currentMergeInfo?.role === 'slave') {
+                this.router.navigate(['systems', this.currentMergeInfo.primary.id]);
+            } else if (this.systemsService.finishedMerged) {
                 this.systemsService.finishedMerged = false;
                 this.system.getInfo(true, false);
             }
