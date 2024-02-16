@@ -1,6 +1,8 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { icons } from '@static-variables';
+
 import { NxCardComponent } from '../card/card.component';
 
 type Service = {
@@ -20,12 +22,17 @@ type Service = {
 export class NxOrganizationReportsComponent {
     services = [
         {
-            name: 'Service Changes',
+            name: 'Health Monitoring',
+            icon: 'donut_chart.svg',
         },
         {
-            name: 'Service Usage',
+            name: 'Paid Services',
+            icon: 'bar_chart.svg',
         },
     ];
 
+    dropddownItems = [{ name: 'Item 1', action: null }];
+
     handleServiceClick = (service: Service): void => {};
+    protected readonly icons = icons;
 }
