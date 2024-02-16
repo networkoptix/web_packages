@@ -143,7 +143,6 @@ export class NxBookmarksComponent implements OnInit {
     deviceIdsWithArchive: string[];
 
     private queryParams: BookmarkParams;
-    private locale: string;
 
     constructor(
         configService: NxConfigService,
