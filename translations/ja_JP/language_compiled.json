@@ -1420,7 +1420,7 @@
     "Supported Origins": "サポートされているオリジン",
     "Supported Platforms": "対応プラットフォーム",
     "Suspend": "一時停止",
-    "Suspended": "一時停止中",
+    "Suspended": "サスペンド",
     "Switch to load from source url": "ソースURLからの読み込みに切り替える",
     "Switch to load from widget file": "ウィジェットファイルからの読み込みに切り替える",
     "Sync time epsilon. New value is not applied if time delta less than epsilon": "時刻同期の閾値。時刻差がこの設定値より小さい場合、新しい値は適用されません。",
