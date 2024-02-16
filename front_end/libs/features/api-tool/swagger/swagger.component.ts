@@ -400,7 +400,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private replaceHTMLAsterisk = (): void => {
-        const descriptions = this.document.querySelectorAll('.rendered-markdown');
+        const descriptions = this.document.querySelectorAll('.renderedMarkdown');
         for (const description of descriptions) {
             description.innerHTML = description.innerHTML.replace(/&amp;ast;/g, '&ast;');
         }
