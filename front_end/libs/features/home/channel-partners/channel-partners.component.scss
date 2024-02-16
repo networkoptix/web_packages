@@ -1,6 +1,10 @@
 @use "theme_variables_common" as *;
 .channel-partner {
   height: 100%;
+  overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 0;
 
   .header {
     padding-top: 1.2rem;
@@ -8,13 +12,6 @@
 
   .actions {
     align-items: center;
-  }
-
-  &.root {
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1rem 0;
   }
 
   a {
