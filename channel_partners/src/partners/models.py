@@ -45,6 +45,7 @@ from django_cte import CTEManager
 from rest_framework.authtoken.models import Token
 
 from channel_partners.utils import FieldOriginalMixin
+from partners.tasks.cloud_user_full_name import update_cloud_user_full_name
 from partners.tasks.states import expire_confirmation
 from partners.tests.utils.db import RemoveArrayElement
 from partners.utils.cache_keys import (
@@ -140,15 +141,22 @@ class ExternalIdTargetManager(models.Manager):
 
 class CloudUser(models.Model):
     email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255, null=True, blank=True, default=None)
 
     is_system_user = False
 
     def __str__(self):
         return self.email
 
-    @property
-    def full_name(self) -> str:
-        return "John Smith"
+    def save(self, *args, **kwargs):
+        is_new: bool = self._state.adding
+
+        # Call the original save method to ensure the user is saved
+        super().save(*args, **kwargs)
+
+        # If this is a new user, schedule the Celery task
+        if is_new:
+            update_cloud_user_full_name.delay(email=self.email)
 
     @property
     def is_authenticated(self):

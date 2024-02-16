@@ -442,7 +442,7 @@ class TestOrganizationUserViewSet:
         assert OrganizationToUser.objects\
             .filter(user__email=new_user_data["email"], organization=org, roles__contains=[role.id]).exists()
         assert response.data["email"] == new_user_data["email"]
-        assert response.data['fullName'] == 'John Smith'
+        assert response.data['fullName'] is None
         assert response.data["roles"] == [role.name]
 
 
@@ -470,7 +470,7 @@ class TestOrganizationUserViewSet:
             .filter(user__email=user_data["email"], organization=org).count() == 1
         assert response.status_code == 200
         assert response.data["email"] == user_data["email"]
-        assert response.data['fullName'] == 'John Smith'
+        assert response.data['fullName']  is None
         user_data["title"] = f"{uuid4()}"
         request = arf.post('/', data=user_data, format='json')
         response = view(request, parent_lookup_organization=org.id)
@@ -713,7 +713,8 @@ class TestChannelPartnerUserViewSet:
         assert notification_data['type'] == 'cps_partner_invite'
         assert notification_data['user_email'] == email
         assert notification_data['message']['partner_name'] == cp.name
-        assert notification_data['message']['sharer_name'] == cp_admin.user.full_name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == cp_admin.user.email
 
     def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
                              mock_auth_with_user, arf, org_user_factory, random_email):

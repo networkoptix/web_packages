@@ -12,9 +12,11 @@ from pathlib import Path
 
 import environ
 import structlog
-from celery.schedules import crontab
 from corsheaders.defaults import default_headers
 
+from channel_partners.configuration.celery_cron_config import (
+    CELERY_CRON_CONFIG,
+)
 from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.tools.config import get_default_host
 
@@ -338,9 +340,4 @@ elif ENV_NAME == EnvironmentEnum.local and RUN_CELERY_EAGER:
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 
-CELERY_BEAT_SCHEDULE = {
-    "partners.tasks.services.check_expired_services_task": {
-        "task": "partners.tasks.services.check_expired_services_task",
-        "schedule": crontab(hour="*/1"),
-    },
-}
+CELERY_BEAT_SCHEDULE = CELERY_CRON_CONFIG
