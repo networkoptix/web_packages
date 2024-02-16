@@ -33,7 +33,14 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { alphabeticalSort, cleanId, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import {
+    alphabeticalSort,
+    cleanId,
+    MS,
+    msToParts,
+    offsetDate,
+    paramSortFunc,
+} from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import { Bookmark, DeviceFilter, TimeRange } from './bookmarks.types';
@@ -282,12 +289,11 @@ export class NxBookmarksComponent implements OnInit {
                     mediaserver.getBookmarks(pollParams),
                     mediaserver.getBookmarkTags(),
                     mediaserver.getDevices(),
-                    mediaserver.getServerTimes(),
                     this.system.cameraManager.hasArchives(),
                 ]),
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
-            map(([bks, tags, devices, serverTimes, devicesWithArchive]) => {
+            map(([bks, tags, devices, devicesWithArchive]) => {
                 this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
                     return cleanId(deviceId);
                 });
