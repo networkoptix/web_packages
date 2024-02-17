@@ -110,14 +110,36 @@ export class NxAccessTableComponent implements OnInit {
             { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
             { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
         ];
-
         let request: Observable<UserRecord[]>;
         if (this.inGroup$$()) {
-            request = this.cpService.getGroupUser(this.currentGroupId$$(), this.email).pipe(
+            request = this.cpService.getGroupUsersWithAccess(this.currentGroupId$$()).pipe(
                 take(1),
                 map(res => {
-                    this.fullName$$.set(res.fullName);
-                    // Issue with API calls from groups user isn't directly added to
+                    const user = res.find(user => user.email === this.email);
+                    const userType =
+                        user?.hasAccessTo?.membershipType === UserType.ORGANIZATION
+                            ? UserType.ORGANIZATION
+                            : UserType.GROUP;
+                    if (user) {
+                        this.fullName$$.set(user.fullName);
+                        return [
+                            {
+                                userType,
+                                userId: this.email,
+                                email: this.email,
+                                isOrgUser: userType === UserType.ORGANIZATION,
+                                roles: user.roles,
+                                groupRoles: [
+                                    {
+                                        name: user.hasAccessTo?.name,
+                                        groupId: user.hasAccessTo?.id,
+                                        roles: user.roles,
+                                        roleIds: user.roleIds,
+                                    },
+                                ],
+                            },
+                        ];
+                    }
                     return [];
                 }),
                 catchError(err => {
@@ -128,10 +150,20 @@ export class NxAccessTableComponent implements OnInit {
         } else {
             request = this.cpService.getOrganizationUser(this.currentOrg$$()?.id, this.email).pipe(
                 take(1),
-                map(({ groupRoles, fullName }) => {
+                map(({ groupRoles, fullName, roles }) => {
                     this.fullName$$.set(fullName);
+
+                    // Org users do not have groupRoles
+                    if (!groupRoles.length) {
+                        return roles.map(role => ({
+                            userType: UserType.ORGANIZATION,
+                            userId: this.email,
+                            email: this.email,
+                            isOrgUser: true,
+                            roles: [role],
+                        }));
+                    }
                     // TODO: bug with groupItems being undefined when loading directly into access table
-                    // Todo: if user only added as org user, groupRoles will be empty & so will table. Clarify what to show on access table for user only added to org
                     const groupItems = this.groupItems$$();
                     const groupMap = new Map(groupItems?.map(group => [group.id, group]));
                     return groupRoles.map(group => {
