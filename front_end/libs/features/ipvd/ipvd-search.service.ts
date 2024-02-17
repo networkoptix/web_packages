@@ -51,8 +51,9 @@ export class IpvdSearchService {
             return query.length === 0 || result || c.maxResolution.includes(query);
         }
 
-        const resolution = filter.selects.find(x => x.id === IpvdSearchService.RESOLUTION)
-            ?.selected;
+        const resolution = filter.selects.find(
+            x => x.id === IpvdSearchService.RESOLUTION,
+        )?.selected;
 
         const vendors = filter.multiselects.find(x => x.id === IpvdSearchService.VENDORS)?.selected;
 

@@ -1029,8 +1029,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                         url,
                     };
 
-                    const mediaStreamsRawValue = addParams.find(p => p.name === 'mediaStreams')
-                        ?.value;
+                    const mediaStreamsRawValue = addParams.find(
+                        p => p.name === 'mediaStreams',
+                    )?.value;
                     const mediaStreams = mediaStreamsRawValue
                         ? (JSON.parse(mediaStreamsRawValue) as MediaStreams).streams
                         : [];
