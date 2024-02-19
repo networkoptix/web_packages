@@ -1,25 +1,31 @@
-<nx-auth-header [viewType]="viewType">{{ 'Connect system to' | translate }}</nx-auth-header>
-<main>
-    <div
-        class="d-flex flex-grow-1 align-items-center"
-        [ngSwitch]="fsmState$$()"
-    >
-        <nx-select-bind-type
-            *ngSwitchCase="fsmStates.initial"
-            [orgs]="orgs$$()"
-            (bindSelection)="setBindType($event)"
-        ></nx-select-bind-type>
-        <nx-select-org
-            *ngSwitchCase="fsmStates.selectOrg"
-            [orgs]="orgs$$()"
-            (selectedOrg)="selectedOrg = $event"
-        ></nx-select-org>
-    </div>
-    <nx-auth-footer
-        [bindProcess]="bindSystem"
-        [blockBack]="fsmState$$() === fsmStates.finished"
-        [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
-        [viewType]="viewType"
-        (goBack)="back()"
-    ></nx-auth-footer>
-</main>
+<ng-template #loading>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<ng-container *ngIf="channelPartnersEnabled; else loading">
+    <nx-auth-header [viewType]="viewType">{{ 'Connect system to' | translate }}</nx-auth-header>
+    <main>
+        <div
+            class="d-flex flex-grow-1 align-items-center"
+            [ngSwitch]="fsmState$$()"
+        >
+            <nx-select-bind-type
+                *ngSwitchCase="fsmStates.initial"
+                [orgs]="orgs$$()"
+                (bindSelection)="setBindType($event)"
+            ></nx-select-bind-type>
+            <nx-select-org
+                *ngSwitchCase="fsmStates.selectOrg"
+                [orgs]="orgs$$()"
+                (selectedOrg)="selectedOrg = $event"
+            ></nx-select-org>
+        </div>
+        <nx-auth-footer
+            [bindProcess]="bindSystem"
+            [blockBack]="fsmState$$() === fsmStates.finished"
+            [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
+            [viewType]="viewType"
+            (goBack)="back()"
+        ></nx-auth-footer>
+    </main>
+</ng-container>
