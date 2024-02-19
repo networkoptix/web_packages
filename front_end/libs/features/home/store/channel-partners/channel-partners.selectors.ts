@@ -19,11 +19,6 @@ export const selectRootOrganizations = createSelector(
     state => state.rootOrganizations,
 );
 
-export const selectVisitedPartners = createSelector(
-    selectChannelPartnersState,
-    state => state.visitedPartners,
-);
-
 export const selectCurrentPartnerId = createSelector(
     selectChannelPartnersState,
     state => state.currentPartnerId,

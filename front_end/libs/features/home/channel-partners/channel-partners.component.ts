@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, DestroyRef, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, computed, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -84,9 +84,27 @@ export class NxChannelPartnersComponent implements OnInit {
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
-    @Input() currentTabRoute: string;
-    currentTabIndex$$ = signal<number>(0);
-    tabs: Tab[];
+    currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+
+    initializedTabs = false;
+    tabs$$ = computed(() => {
+        const currPartner = this.currentPartner$$();
+        if (!currPartner) {
+            return this.defaultTabs;
+        }
+        const { ownPermissions, ownRoles } = currPartner;
+        return this.populateTabs({ ownPermissions, ownRoles });
+    });
+    currentTabIndex$$ = computed(() => {
+        const tabs = this.tabs$$();
+        const currentTabRoute = this.currentTabRoute$$();
+        for (const [index, tab] of tabs.entries()) {
+            if (tab.route === currentTabRoute) {
+                return index;
+            }
+        }
+        return -1;
+    });
     processedTabs = false;
     searchConfig = searchConfig;
 
@@ -109,50 +127,12 @@ export class NxChannelPartnersComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
                 combineLatestWith(this.channelPartners$),
                 switchMap(([id, partners]) => {
-                    if (id !== this.currentPartnerId) {
-                        this.processedTabs = false;
-                        this.tabs = this.defaultTabs;
-                    }
-
                     this.currentPartnerId = id;
                     const currPartner = partners.find(
                         partner => partner.id === this.currentPartnerId,
                     );
                     if (partners.length && !currPartner) {
                         return throwError(() => 'Partner not found');
-                    }
-                    const { ownPermissions, ownRoles } = currPartner;
-
-                    if (!this.processedTabs) {
-                        if (ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR)) {
-                            this.tabs.splice(1, 0, {
-                                displayName: this.LANG.channelPartners.tabNames.partners,
-                                route: 'subchannels',
-                            });
-                        }
-                        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
-                            this.tabs.push({
-                                displayName: this.LANG.channelPartners.tabNames.users,
-                                route: 'users',
-                            });
-                        }
-                        if (
-                            ownPermissions.includes(
-                                ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER,
-                            )
-                        ) {
-                            this.tabs.push({
-                                displayName: this.LANG.channelPartners.tabNames.settings,
-                                route: 'settings',
-                            });
-                        }
-                        this.processedTabs = true;
-                    }
-                    for (const [index, tab] of this.tabs.entries()) {
-                        if (tab.route === this.currentTabRoute) {
-                            this.currentTabIndex$$.set(index);
-                            break;
-                        }
                     }
                     return this.CPService.getPartnerOrganizations(id);
                 }),
@@ -183,7 +163,7 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     get showOrganizations(): boolean {
-        return !this.tabs[this.currentTabIndex$$()].route;
+        return !this.tabs$$()[this.currentTabIndex$$()]?.route;
     }
 
     newOrgDialog(): void {
@@ -200,12 +180,12 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
-        const newTab = this.tabs[newIndex];
+        const newTab = this.tabs$$()[newIndex];
         const route = ['home', 'channelPartners', this.currentPartnerId];
         if (newTab.route) {
             route.push(newTab.route);
         }
-        this.router.navigate(route).then(() => this.currentTabIndex$$.set(newIndex));
+        this.router.navigate(route);
     }
 
     handleOrgClick(id: string): void {
@@ -240,5 +220,34 @@ export class NxChannelPartnersComponent implements OnInit {
                 route: 'information',
             },
         ];
+    }
+
+    populateTabs(partnerAccess: { ownPermissions: string[]; ownRoles: string[] }): Tab[] {
+        const tabs = this.defaultTabs;
+        const { ownRoles, ownPermissions } = partnerAccess;
+        if (ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR)) {
+            tabs.splice(1, 0, {
+                displayName: this.LANG.channelPartners.tabNames.partners,
+                route: 'subchannels',
+            });
+        }
+        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.users,
+                route: 'users',
+            });
+        }
+        if (ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.settings,
+                route: 'settings',
+            });
+        }
+
+        if (this.initializedTabs) {
+            this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
+        }
+        this.initializedTabs = true;
+        return tabs;
     }
 }
