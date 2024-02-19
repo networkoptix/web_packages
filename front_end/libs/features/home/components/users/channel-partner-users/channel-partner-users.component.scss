@@ -28,3 +28,28 @@
         }
     }
 }
+
+.selected-users {
+    display: flex;
+    align-items: center;
+    color: var(--light4);
+
+    .text {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        svg {
+            .st0 {
+                stroke: var(--light4);
+            }
+        }
+    }
+
+    button {
+        gap: .2rem;
+        font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: none;
+        color: var(--light16);
+    }
+}
