@@ -5,7 +5,7 @@ import type {
     DeviceV1Full,
 } from '@services/system-api.types/devices.types';
 
-export interface Bookmark extends BookmarkResp {
+export type Bookmark = BookmarkResp & {
     tags: string[];
     src: string;
     downloadSrc: string;
@@ -16,7 +16,7 @@ export interface Bookmark extends BookmarkResp {
     systemId: string;
     canDownloadBookmark: boolean;
     canViewBookmark: boolean;
-}
+};
 
 export interface TimeRange {
     start: number | null;

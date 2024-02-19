@@ -1,4 +1,10 @@
-<div class="outer-container">
+<div
+    class="outer-container"
+    [ngStyle]="{ visibility: loading ? 'hidden' : 'visible' }"
+>
+    @if (loading) {
+        <nx-pre-loader class="pre-loader-visible" />
+    }
     <div class="modal-header">
         <div
             class="header-title"

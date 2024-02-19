@@ -296,7 +296,7 @@ type Boomarks_orderBy =
     | 'creatorUserId'
     | 'creationTimeMs';
 
-export interface Bookmark {
+export interface BookmarkV1 {
     creationTimeMs: number;
     creatorUserId: string;
     description: string;
@@ -307,6 +307,15 @@ export interface Bookmark {
     startTimeMs: number;
     tags?: string[];
 }
+
+export interface BookmarkV4 extends BookmarkV1 {
+    // if share exists then bookmark is publicly visible
+    share?: {
+        expirationTimeMs: number;
+    };
+}
+
+export type Bookmark = BookmarkV1 | BookmarkV4;
 
 export interface BookmarksTagsParams extends Omit<HiddenParams, '_with' | '_orderBy'> {
     limit?: number;

@@ -13,6 +13,7 @@ import { BookmarkDetails as DT } from '@dialogs/dialogs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { nxConfig } from '@services/nx-config/config';
+import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -40,11 +41,12 @@ export class NxBookmarksCardModalComponent {
     fullRecordingUrl: string;
     videoError$$ = signal(false);
     videoLoaded$$ = signal(false);
-    bookmarkSharingEnabled = nxConfig.featureFlags.bookmarkSharing;
+    bookmarkSharingEnabled = false;
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
         private dialogs: NxDialogsService,
+        systemService: NxSystemService,
         @Inject(DIALOG_DATA) { bookmark, startTime, startDate }: DT['data'],
     ) {
         this.bookmark = bookmark;
@@ -52,6 +54,9 @@ export class NxBookmarksCardModalComponent {
         this.time = startTime;
         this.date = startDate;
         this.fullRecordingUrl = `systems/${bookmark.systemId}/view/${bookmark.deviceId}?time=${bookmark.startTimeMs}`;
+        this.bookmarkSharingEnabled =
+            !!nxConfig.featureFlags.bookmarkSharing &&
+            systemService.getCurrentSystem().version >= 6.1;
     }
 
     openDownloadDialog(): void {

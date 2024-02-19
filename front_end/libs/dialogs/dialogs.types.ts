@@ -24,6 +24,7 @@ import type {
     TosInfo,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
+import { BookmarkV4 } from '@services/system-api.types/devices.types';
 import type { MergeInfo } from '@services/system-api.types/system.types';
 import { NxUser } from '@services/system-user.types';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -282,7 +283,7 @@ export type BookmarkDownload = DialogType<
     void
 >;
 
-export type BookmarkShare = DialogType<Bookmark, void>;
+export type BookmarkShare = DialogType<BookmarkV4, void>;
 
 /* New feature */
 export interface NewFeatureDynamicData {

@@ -94,10 +94,10 @@ import {
     cameraKeyMapV1,
     DeviceV1Full,
     DevicesParams,
-    Bookmark,
     BookmarksParams,
     BookmarksTags,
     BookmarksTagsParams,
+    BookmarkV1,
 } from './system-api.types/devices.types';
 import { WebPages } from './system-api.types/layouts.types';
 import { RestartServer, TimeOfServers } from './system-api.types/servers.types';
@@ -1132,7 +1132,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             _keepDefault: true,
             _orderBy: 'creationTimeMs',
         },
-    ): Observable<Bookmark[]> {
+    ): Observable<BookmarkV1[]> {
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
