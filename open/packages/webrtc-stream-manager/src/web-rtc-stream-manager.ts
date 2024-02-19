@@ -7,7 +7,7 @@ import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } fro
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess } from './utils';
+import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -822,7 +822,12 @@ export class WebRTCStreamManager {
         this.peerConnection
             .setLocalDescription(description)
             .then(() => {
-                this.wsConnection.next({ sdp: this.peerConnection.localDescription });
+                if (this.allowTranscoding || streamSupported(this.peerConnection.localDescription)) {
+                    this.wsConnection.next({ sdp: this.peerConnection.localDescription });
+                } else {
+                    this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+                    this.close(false);
+                }
             })
             .catch(this.errorHandler);
     };
@@ -913,6 +918,7 @@ export class WebRTCStreamManager {
             }
 
             webRtcUrl += `stream=${stream}&`;
+            const systemId = new URL(webRtcUrl).host.split('.').shift();
 
             console.info('Starting stream')
             // console.table({ webRtcUrl, stream, position })
@@ -920,13 +926,31 @@ export class WebRTCStreamManager {
             const relayHost = webRtcUrlObject.host;
             this.serverId = webRtcUrlObject.searchParams.get('x-server-guid');
 
-            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.serverId }) as const;
+            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.serverId, id: this.cameraId }) as const;
+            const deviceParams = '?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId,id'
+            const allStreamsInfoEndpoint = `https://${relayHost}/rest/v2/devices${deviceParams}`
             const streamInfoEndpoint =
-                `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId`;
-            const fetchStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
+                `https://${relayHost}/rest/v2/devices/${this.cameraId}${deviceParams}`;
+
+            const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
+                allStreamsInfoEndpoint,
+                { headers: { authorization: `Bearer ${this.accessToken}` }}
+                ), `${systemId}-streams`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
+
+            const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
                 streamInfoEndpoint,
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
-                ), `${this.cameraId}-streams`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
+                ), `${this.cameraId}-streams`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
+
+            const fetchStreams = fetchAllStreams.then(devices => {
+                const device = devices.find(({ id }) => cleanId(id) === this.cameraId);
+
+                if (device) {
+                    return device;
+                }
+
+                return fetchCurrentStream();
+            });
 
             if (!this.serverId && this.apiVersion === ApiVersions.v1) {
                 this.serverId = cleanId((await fetchStreams).serverId);
@@ -1071,7 +1095,7 @@ export class WebRTCStreamManager {
             }
 
             const parsedPosition = typeof position === 'string' ? parseFloat(position) : position;
-            return `position=${parsedPosition && !isNaN(parsedPosition) ? position : 0}$`
+            return `position=${parsedPosition && !isNaN(parsedPosition) ? position : 0}`
         };
 
         return (params) => `wss://${host}${endpoint}${positionParam(params?.position)}`
