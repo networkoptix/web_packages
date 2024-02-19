@@ -167,3 +167,28 @@ export const cacheSuccess = async (request: () => Promise<Response>, key: string
 
     return (await responseCache.get(key)).clone();
 };
+
+const extractContent = (source: string, delimiter: string, identifier: string): string => {
+    const lines = source.split(delimiter);
+    const targetLine = lines.find(l => l.startsWith(identifier));
+    const content = targetLine?.split(identifier)?.[1]?.trim();
+    return content
+}
+
+const readSdpLine = (sdp: RTCSessionDescription | RTCSessionDescriptionInit | string, identifier: string, property?: string): string | undefined => {
+    const sdpString = (typeof sdp === 'string' ? sdp : sdp.sdp);
+    const content = extractContent(sdpString, '\r\n', identifier);
+
+    if (!property) {
+        return content;
+    }
+
+    return  extractContent(content, ';', property.endsWith('=') ? property : `${property}=`);
+}
+
+export const streamSupported = (answer: Parameters<typeof readSdpLine>[0]
+): boolean => {
+    const mid = readSdpLine(answer, 'a=mid:');
+    const group = readSdpLine(answer, 'a=group:');
+    return group?.includes(mid) && !readSdpLine(answer, 'a=inactive')
+}
