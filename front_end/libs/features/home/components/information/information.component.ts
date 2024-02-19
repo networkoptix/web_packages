@@ -36,8 +36,6 @@ import {
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 
-const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
-
 @Component({
     selector: 'nx-channel-partner-information',
     templateUrl: 'information.component.html',
@@ -59,13 +57,13 @@ export class NxChannelPartnerInformationComponent {
     protected readonly CPInfoType = CPInfoType;
     protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
-    systems = mockSystems;
     icons = icons;
 
     hasChanges: boolean = false;
     allValid: boolean = true;
 
     informationData: SupportInformation;
+    hasInformation = false;
     information: SupportInformation = {
         phones: [],
         emails: [],
@@ -117,7 +115,7 @@ export class NxChannelPartnerInformationComponent {
                 description = (item as InfoRowServer).description;
             }
 
-            this.information[type].push({
+            const newItem: InfoRow = {
                 data: {
                     value,
                     validation: this.validationType[type],
@@ -125,14 +123,23 @@ export class NxChannelPartnerInformationComponent {
                 description: {
                     value: description,
                 },
-            });
+            };
+
+            if (type === 'sites') {
+                delete newItem.description;
+            }
+
+            this.information[type].push(newItem);
         });
     }
 
     mapPartnerSupportInfo(psi: SupportInformationSever): void {
-        ['sites', 'phones', 'emails', 'custom'].forEach(type => {
-            this.mapInfoFor(type, psi[type]);
-        });
+        if (psi) {
+            ['sites', 'phones', 'emails', 'custom'].forEach(type => {
+                this.mapInfoFor(type, psi[type]);
+                this.hasInformation ||= psi[type].length;
+            });
+        }
     }
 
     formToServerData(formId: string): InfoRowServer[] {
@@ -140,7 +147,7 @@ export class NxChannelPartnerInformationComponent {
         this.information[formId].map(({ data, description }): number =>
             serverData.push({
                 value: data.value,
-                description: description.value,
+                description: description?.value || '', // account for "sites"
             }),
         );
         return serverData;
@@ -200,20 +207,20 @@ export class NxChannelPartnerInformationComponent {
         private toastService: NxToastService,
     ) {}
 
-    editModeToggle(): void {
+    editModeToggle = (): void => {
         this.editMode = !this.editMode;
-    }
+    };
 
     addRecordTo(type: CPInfoType): void {
         let target: string = '';
-        let description: string | null = '';
+        let description: string | undefined = '';
         let validators: Array<ValidationErrors | null | ValidatorFn> = [];
 
         switch (type) {
             case CPInfoType.URL:
                 target = 'sites';
                 validators = this.siteValidators;
-                description = 'null';
+                description = undefined;
                 break;
             case CPInfoType.PHONE:
                 target = 'phones';
@@ -235,8 +242,11 @@ export class NxChannelPartnerInformationComponent {
                 value: '',
                 validation: validators,
             },
-            description: { value: description },
         };
+
+        if (description) {
+            newRecord.description.value = description;
+        }
 
         data.push(newRecord); // = { ...this.information, [target]: newTargetArray };
         this.information[target] = [...data];

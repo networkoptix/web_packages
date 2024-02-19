@@ -15,5 +15,5 @@ export interface CPInfoDataEvent {
 
 export interface ControlRow {
     data: string;
-    description: string;
+    description?: string;
 }

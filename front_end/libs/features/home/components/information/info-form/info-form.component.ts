@@ -118,11 +118,17 @@ export class NxInfoGroupComponent {
     }
 
     setInfoRows(data: InfoRow[]): void {
-        const rows = data.map(row => {
-            return this.formBuilder.group({
+        const rows = data.map((row: InfoRow) => {
+            const group = {
                 data: [row.data.value, row.data.validation],
                 description: [row.description?.value, row.description?.validation],
-            });
+            };
+
+            if (!row.description) {
+                delete group.description;
+            }
+
+            return this.formBuilder.group(group);
         });
 
         const rowsFormArray = this.formBuilder.array(rows);

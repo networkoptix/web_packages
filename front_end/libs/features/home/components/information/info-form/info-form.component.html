@@ -12,7 +12,7 @@
                 >{{ item.data.value }}</a
             >
 
-            <span *ngIf="item.description?.value !== 'null'">
+            <span *ngIf="item.description">
                 <span class="mx-1">&dash;</span>
                 <span class="section-descr">{{ item.description.value }}</span>
             </span>
@@ -69,7 +69,7 @@
                     </div>
                     <div
                         class="pr-3 w-100"
-                        *ngIf="row.get('description')?.value != 'null'"
+                        *ngIf="row.get('description')"
                     >
                         <label translate>Description</label>
                         <input

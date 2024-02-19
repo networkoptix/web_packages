@@ -1,178 +1,180 @@
-<div class="information">
+@if (!editMode && !hasInformation) {
     <nx-page-placeholder-v2
-        *ngIf="!systems"
         [type]="PAGE_PLACEHOLDER.NO_INFO"
+        [clickFn]="editModeToggle"
     >
     </nx-page-placeholder-v2>
-
-    <nx-block type="tile">
-        <header>
-            <h4
-                class="float-left"
-                translate
-            >
-                Support
-            </h4>
-            <div
-                class="float-right clickable"
-                (click)="editModeToggle()"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'edit.svg'"
-                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                    [applyClass]="true"
-                ></svg-icon>
-            </div>
-        </header>
-        <nx-section>
-            <div
-                class="section-header"
-                [ngClass]="{ 'in-edit-mode': editMode }"
-            >
-                <div
-                    class="header-title"
+} @else {
+    <div class="information">
+        <nx-block type="tile">
+            <header>
+                <h4
+                    class="float-left"
                     translate
                 >
-                    Sites
-                </div>
+                    Support
+                </h4>
                 <div
-                    class="clickable"
-                    *ngIf="editMode"
-                    (click)="addRecordTo(CPInfoType.URL)"
+                    class="float-right clickable"
+                    (click)="editModeToggle()"
                 >
                     <svg-icon
                         nx-add-svg-src
-                        [src]="icons.dir + 'plus.svg'"
+                        [src]="icons.dir + 'edit.svg'"
                         [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                         [applyClass]="true"
                     ></svg-icon>
                 </div>
-            </div>
-            <ng-container *ngIf="information.sites?.length; else noSites">
-                <nx-info-form
-                    [formId]="'sites'"
-                    [linkCaption]="'site'"
-                    [editMode]="editMode"
-                    [linkPredicate]="'https://'"
-                    [data]="information.sites"
-                    (dataChanges)="updateData($event)"
-                ></nx-info-form>
-            </ng-container>
-        </nx-section>
-        <nx-section>
-            <div
-                class="section-header"
-                [ngClass]="{ 'in-edit-mode': editMode }"
-            >
+            </header>
+            <nx-section>
                 <div
-                    class="header-title"
-                    translate
+                    class="section-header"
+                    [ngClass]="{ 'in-edit-mode': editMode }"
                 >
-                    Phones
+                    <div
+                        class="header-title"
+                        translate
+                    >
+                        Sites
+                    </div>
+                    <div
+                        class="clickable"
+                        *ngIf="editMode"
+                        (click)="addRecordTo(CPInfoType.URL)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'plus.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
                 </div>
+                <ng-container *ngIf="information.sites?.length; else noSites">
+                    <nx-info-form
+                        [formId]="'sites'"
+                        [linkCaption]="'site'"
+                        [editMode]="editMode"
+                        [linkPredicate]="'https://'"
+                        [data]="information.sites"
+                        (dataChanges)="updateData($event)"
+                    ></nx-info-form>
+                </ng-container>
+            </nx-section>
+            <nx-section>
                 <div
-                    class="clickable"
-                    *ngIf="editMode"
-                    (click)="addRecordTo(CPInfoType.PHONE)"
+                    class="section-header"
+                    [ngClass]="{ 'in-edit-mode': editMode }"
                 >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'plus.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                        [applyClass]="true"
-                    ></svg-icon>
+                    <div
+                        class="header-title"
+                        translate
+                    >
+                        Phones
+                    </div>
+                    <div
+                        class="clickable"
+                        *ngIf="editMode"
+                        (click)="addRecordTo(CPInfoType.PHONE)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'plus.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
                 </div>
-            </div>
-            <ng-container *ngIf="information.phones?.length; else noPhones">
-                <nx-info-form
-                    [formId]="'phones'"
-                    [linkCaption]="'phone'"
-                    [editMode]="editMode"
-                    [linkPredicate]="'tel:'"
-                    [data]="information.phones"
-                    (dataChanges)="updateData($event)"
-                ></nx-info-form>
-            </ng-container>
-        </nx-section>
-        <nx-section>
-            <div
-                class="section-header"
-                [ngClass]="{ 'in-edit-mode': editMode }"
-            >
+                <ng-container *ngIf="information.phones?.length; else noPhones">
+                    <nx-info-form
+                        [formId]="'phones'"
+                        [linkCaption]="'phone'"
+                        [editMode]="editMode"
+                        [linkPredicate]="'tel:'"
+                        [data]="information.phones"
+                        (dataChanges)="updateData($event)"
+                    ></nx-info-form>
+                </ng-container>
+            </nx-section>
+            <nx-section>
                 <div
-                    class="header-title"
-                    translate
+                    class="section-header"
+                    [ngClass]="{ 'in-edit-mode': editMode }"
                 >
-                    Emails
+                    <div
+                        class="header-title"
+                        translate
+                    >
+                        Emails
+                    </div>
+                    <div
+                        class="clickable"
+                        *ngIf="editMode"
+                        (click)="addRecordTo(CPInfoType.EMAIL)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'plus.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
                 </div>
+                <ng-container *ngIf="information.emails?.length; else noEmails">
+                    <nx-info-form
+                        [formId]="'emails'"
+                        [linkCaption]="'email'"
+                        [editMode]="editMode"
+                        [linkPredicate]="'mailto:'"
+                        [data]="information.emails"
+                        (dataChanges)="updateData($event)"
+                    ></nx-info-form>
+                </ng-container>
+            </nx-section>
+            <nx-section>
                 <div
-                    class="clickable"
-                    *ngIf="editMode"
-                    (click)="addRecordTo(CPInfoType.EMAIL)"
+                    class="section-header"
+                    [ngClass]="{ 'in-edit-mode': editMode }"
                 >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'plus.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                        [applyClass]="true"
-                    ></svg-icon>
+                    <div
+                        class="header-title"
+                        translate
+                    >
+                        Custom
+                    </div>
+                    <div
+                        class="clickable"
+                        *ngIf="editMode"
+                        (click)="addRecordTo(CPInfoType.CUSTOM)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'plus.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
                 </div>
-            </div>
-            <ng-container *ngIf="information.emails?.length; else noEmails">
-                <nx-info-form
-                    [formId]="'emails'"
-                    [linkCaption]="'email'"
-                    [editMode]="editMode"
-                    [linkPredicate]="'mailto:'"
-                    [data]="information.emails"
-                    (dataChanges)="updateData($event)"
-                ></nx-info-form>
-            </ng-container>
-        </nx-section>
-        <nx-section>
-            <div
-                class="section-header"
-                [ngClass]="{ 'in-edit-mode': editMode }"
-            >
-                <div
-                    class="header-title"
-                    translate
-                >
-                    Custom
-                </div>
-                <div
-                    class="clickable"
-                    *ngIf="editMode"
-                    (click)="addRecordTo(CPInfoType.CUSTOM)"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'plus.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                        [applyClass]="true"
-                    ></svg-icon>
-                </div>
-            </div>
-            <ng-container *ngIf="information.custom?.length; else noCustom">
-                <nx-info-form
-                    [formId]="'custom'"
-                    [linkCaption]="'label'"
-                    [editMode]="editMode"
-                    [linkPredicate]="''"
-                    [data]="information.custom"
-                    (dataChanges)="updateData($event)"
-                ></nx-info-form>
-            </ng-container>
-        </nx-section>
-        <nx-apply
-            [visible]="hasChanges"
-            [saveDisabled]="!allValid"
-            [discard]="discardDataChanges"
-            [save]="saveDataChanges"
-        ></nx-apply>
-    </nx-block>
-</div>
+                <ng-container *ngIf="information.custom?.length; else noCustom">
+                    <nx-info-form
+                        [formId]="'custom'"
+                        [linkCaption]="'label'"
+                        [editMode]="editMode"
+                        [linkPredicate]="''"
+                        [data]="information.custom"
+                        (dataChanges)="updateData($event)"
+                    ></nx-info-form>
+                </ng-container>
+            </nx-section>
+            <nx-apply
+                [visible]="hasChanges"
+                [saveDisabled]="!allValid"
+                [discard]="discardDataChanges"
+                [save]="saveDataChanges"
+            ></nx-apply>
+        </nx-block>
+    </div>
+}
 
 <ng-template #noSites>
     <span translate>You have not yet added sites</span>

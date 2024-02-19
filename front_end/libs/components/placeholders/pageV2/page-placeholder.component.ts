@@ -44,6 +44,7 @@ import { icons } from '@static-variables';
 })
 export class NxPagePlaceholderV2Component implements OnInit {
     @Input() type: PAGE_PLACEHOLDER;
+    @Input() clickFn: () => void;
 
     LANG = staticLang;
 
@@ -53,11 +54,17 @@ export class NxPagePlaceholderV2Component implements OnInit {
     title: string;
     message: string;
     description: string;
-    button: NxButtonComponent;
+    buttonText: string;
+
+    protected readonly ButtonType = ButtonType;
 
     constructor(private translateService: TranslateService) {}
 
     ngOnInit(): void {
+        if (!this.clickFn) {
+            this.clickFn = () => {};
+        }
+
         this.setupPlaceholder();
     }
 
@@ -71,9 +78,15 @@ export class NxPagePlaceholderV2Component implements OnInit {
                 this.message = this.translateService.instant(
                     this.LANG.placeholderV2Texts.noInfo.message,
                 );
+                this.buttonText = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.noInfo.buttonText,
+                );
                 break;
         }
     }
 
-    protected readonly ButtonType = ButtonType;
+    clickHandler(event: Event): void {
+        event.stopPropagation();
+        this.clickFn();
+    }
 }
