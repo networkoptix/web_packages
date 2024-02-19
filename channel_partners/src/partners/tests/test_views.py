@@ -1,6 +1,7 @@
 import json
 import random
 import re
+from datetime import timedelta
 from uuid import uuid4
 
 import httpx
@@ -35,6 +36,7 @@ from partners.models import (
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
+    MigrationRecord,
     Organization,
     OrganizationPermissions,
     OrganizationRole,
@@ -214,6 +216,113 @@ class TestCloudSystemViewSetBind:
         with transaction.atomic():
             response = view(request)
         assert response.status_code == 400
+
+
+class TestCloudSystemViewSetMenageLegacyLicenses:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, system_factory,
+              cp_service_factory, service_record_factory, cloud_test_host, org_user_factory):
+        self.license_quantity = 20
+        self.cp = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=self.cp)
+        self.org_admin = org_user_factory(organization=self.organization)
+        self.system = system_factory(organization=self.organization)
+        self.other_services = []
+        self.trial_services = []
+        for i in range(10):
+            service = cp_service_factory(channel_partner=self.cp)
+            service.created_ts = timezone.now() - timedelta(days=3*i)
+            service.save()
+            self.other_services.append(service)
+            trial_service = cp_service_factory(channel_partner=self.cp)
+            trial_service.sub_type = ChannelPartnerService.TRIAL
+            trial_service.created_ts = timezone.now() - timedelta(days=2*i)
+            trial_service.save()
+            self.trial_services.append(trial_service)
+        self.hardware_ids = [str(uuid4()) for _ in range(10)]
+        self.licenses = [
+            "4NSW-Q6ZR-6V6N-D9P2",
+            "4NSW-Q6ZR-6V6N-D9P3",
+            "4NSW-Q6ZR-6V6N-D9P4",
+            "4NSW-Q6ZR-6V6N-D9P35"
+        ]
+        self.valid_data = {
+            "licenses": self.licenses,
+            "hardwareIds": self.hardware_ids
+        }
+        self.invalid_data = {
+            "licenses": [],
+        }
+        service_record = service_record_factory(
+            service=self.other_services[0],
+            cloud_system=self.system
+        )
+        MigrationRecord.objects.create(
+            license_key=self.licenses[1],
+            service_record_id=service_record.id
+        )
+        self.auth = f'Basic {uuid4()}'
+        self.url = f'{settings.LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy'
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path = reverse('cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
+        self.lic_response_data = [{
+            "key": "key",
+            "count": 10,
+        }]
+        caches['local'].clear()
+        caches['default'].clear()
+
+    def test_all_ok(self, httpx_mock, mock_cdb_basic_auth):
+        httpx_mock.add_response(
+            status_code=200,
+            url=self.url,
+            json=self.lic_response_data,
+        )
+        auth = mock_cdb_basic_auth(self.system)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        response = self.client.post(self.path, data=self.valid_data)
+        assert response.status_code == 200
+        data = response.json()
+        assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 4
+        migration_record = MigrationRecord.objects.filter(license_key__in=self.licenses).last()
+        assert migration_record.service_record.quantity == 30
+        assert migration_record.service_record.cloud_system == self.system
+        skipped = self.licenses.pop(1)
+        assert data['migratedLicenses'] == self.licenses
+        assert data['skippedLicenses'] == [skipped]
+        assert data['failedLicenses'] == []
+
+    def test_all_failed(self, httpx_mock, mock_cdb_basic_auth):
+        httpx_mock.add_response(
+            status_code=400,
+            url=self.url,
+            json=self.lic_response_data,
+        )
+        auth = mock_cdb_basic_auth(self.system)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        response = self.client.post(self.path, data=self.valid_data)
+        assert response.status_code == 200
+        data = response.json()
+        assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 1
+        skipped = self.licenses.pop(1)
+        assert data['migratedLicenses'] == []
+        assert data['skippedLicenses'] == [skipped]
+        assert data['failedLicenses'] == self.licenses
+
+    def test_missing_trial_service(self, httpx_mock, mock_cdb_basic_auth):
+        for service in self.trial_services:
+            service.delete()
+        httpx_mock.add_response(
+            status_code=400,
+            url=self.url,
+            json=self.lic_response_data,
+        )
+        auth = mock_cdb_basic_auth(self.system)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        response = self.client.post(self.path, data=self.valid_data)
+        assert response.status_code == 400
+        data = response.json()
+        assert 'Cannot determine trial service for system' in data['detail']
 
 
 class TestCloudSystemViewSet:

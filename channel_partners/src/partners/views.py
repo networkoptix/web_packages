@@ -123,6 +123,8 @@ from partners.serializers import (
     ErrorMessageSerializer,
     GroupSerializer,
     GroupsStructureSerializer,
+    LegacyLicensesSerializer,
+    LicensesMigrationResultSerializer,
     OrganizationAggDataSerializer,
     OrganizationExternalIdSerializer,
     OrganizationQueryParamsSerializer,
@@ -1291,7 +1293,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.action == 'system_usage_report':
             return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_url_kwarg)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action in ('retrieve', 'services', 'saas_report'):
+        if self.action in ('retrieve', 'services', 'saas_report', 'migrate_legacy_licenses'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
                                                         system_allowed=True, direct_access_allowed=True))
         if self.action == 'destroy':
@@ -1450,6 +1452,18 @@ class CloudSystemViewSet(NestedViewSetMixin,
         ser.is_valid(raise_exception=True)
         system = ser.save(system_id=id)
         return Response(CloudSystemSerializer(system, context=self.get_serializer_context()).data)
+
+    @extend_schema(
+        request=LegacyLicensesSerializer,
+        responses=LicensesMigrationResultSerializer(many=False),
+        extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
+    @action(methods=['post'], detail=True)
+    def migrate_legacy_licenses(self, request, id):
+        system = self.get_object()
+        ser = LegacyLicensesSerializer(data=request.data, context=self.get_serializer_context())
+        ser.is_valid(raise_exception=True)
+        migration_result = ser.save(system=system)
+        return Response(LicensesMigrationResultSerializer(instance=migration_result).data)
 
 
 @extend_schema(
