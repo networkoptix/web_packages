@@ -17,6 +17,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthorizeState } from '@authorization/src/app/components/authorize.component.types';
 import { BindToCloudService } from '@authorization/src/app/components/bind-system-to-cloud/bind-to-cloud.service';
 import { BindResponse } from '@authorization/src/app/types/bind-service.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
@@ -56,6 +57,7 @@ interface BindState {
         TranslateModule,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        NxPreLoaderComponent,
         NxProcessButtonComponent,
         AuthHeaderComponent,
         AuthFooterComponent,
@@ -65,6 +67,8 @@ interface BindState {
 })
 export class BindSystemToCloudComponent implements OnInit {
     protected readonly environment = environment;
+    protected readonly channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
+    readonly fsmStates = BindDialogStates;
     @Input() set code(code: string) {
         this.code$$.set(code);
     }
@@ -87,7 +91,6 @@ export class BindSystemToCloudComponent implements OnInit {
         selectedOrg: undefined,
         fsmState: BindDialogStates.initial,
     });
-    readonly fsmStates = BindDialogStates;
 
     // selectors
     fsmState$$ = computed(() => this.state$$().fsmState);
@@ -114,7 +117,7 @@ export class BindSystemToCloudComponent implements OnInit {
     getOrgsEffect = effect(async () => {
         const code = this.code$$();
         if (code) {
-            if (nxConfig.featureFlags.channelPartners) {
+            if (this.channelPartnersEnabled) {
                 const orgs = await firstValueFrom(this.bindService.getOrgs(code));
                 this.state$$.update(state => ({ ...state, orgs }));
             } else {
@@ -124,6 +127,7 @@ export class BindSystemToCloudComponent implements OnInit {
                     bindType: BindType.account,
                     fsmState: BindDialogStates.finished,
                 }));
+                this.bindSystem.run();
             }
         }
     });
@@ -170,10 +174,6 @@ export class BindSystemToCloudComponent implements OnInit {
                 this.handleBindData(res);
             },
         );
-
-        if (!nxConfig.featureFlags.channelPartners) {
-            this.bindSystem.run();
-        }
     }
 
     cleanup(): void {
