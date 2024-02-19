@@ -3,10 +3,15 @@ import datetime
 import json
 import uuid
 from collections import defaultdict
+from dataclasses import (
+    dataclass,
+    field,
+)
 from typing import List
 
 import httpx
 import llutil
+import structlog
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db.models import (
@@ -49,11 +54,13 @@ from partners.models import (
     CloudSystemStates,
     CloudUser,
     ConfirmationCodeInvalid,
+    MigrationRecord,
     Organization,
     OrganizationExternalId,
     OrganizationRole,
     OrganizationRoles,
     OrganizationToUser,
+    ServiceRecordTypes,
     ServiceToOrganizationProperties,
     ServiceToSubChannelProperties,
     ServiceUsage,
@@ -69,6 +76,7 @@ from partners.tasks.notification import (
 from partners.validators import validate_active_organization
 from tools.helpers import (
     forward_cdb_resp,
+    get_license_server_client,
     get_path_from_parent,
 )
 from tools.serializers import (
@@ -77,6 +85,9 @@ from tools.serializers import (
     NullValuePKField,
 )
 from tools.utils import bind_system_to_cdb_organization
+
+
+logger = structlog.getLogger(__name__)
 
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
@@ -1743,3 +1754,83 @@ class ChannelPartnerStateConfirmationSerializer(StateConfirmationSerializer):
             'changeId',
             'code',
         ]
+
+
+@dataclass
+class MigrationResult:
+    migratedLicenses: List[str] = field(default_factory=list)
+    skippedLicenses: List[str] = field(default_factory=list)
+    failedLicenses: List[str] = field(default_factory=list)
+
+
+class LegacyLicensesSerializer(serializers.Serializer):
+    licenses = serializers.ListField(child=serializers.CharField(), allow_empty=False)
+    hardwareIds = serializers.ListField(child=serializers.CharField(), allow_empty=False)
+
+    def get_service(self, system: CloudSystemId):
+        service = ChannelPartnerService.objects.filter(
+            created_by_channel_partner_id=system.organization.channel_partner_id,
+            sub_type=ChannelPartnerService.TRIAL,
+            type=ChannelPartnerService.LOCAL_RECORDING
+        ).order_by('created_ts').first()
+        if not service:
+            logger.warning(f"No service found.",
+                           system_id=system.system_id,
+                           organization_id=system.organization.id,
+                           channel_partner_id=system.organization.channel_partner_id)
+            raise exceptions.ValidationError({"detail": f"Cannot determine trial service for system {system.system_id}"})
+        return service
+
+    def save(self, system: CloudSystemId, **kwargs):
+        service = self.get_service(system)
+        licence_client = get_license_server_client()
+        url = f'/nxlicensed/api/v2/internal/migrate_legacy'
+        results = MigrationResult()
+        now = timezone.now()
+        quantity = 0
+        for license_key in self.validated_data['licenses']:
+            if MigrationRecord.objects.filter(license_key=license_key).exists():
+                results.skippedLicenses.append(license_key)
+                continue
+            data = {
+                "licenses": [license_key],
+                "hardwareIds": self.validated_data['hardwareIds']
+            }
+            try:
+                lic_response = licence_client.post(url=url, json=data)
+            except httpx.HTTPError as ex:
+                logger.error("Request to license server failed.",
+                             exception=str(ex))
+                raise exceptions.APIException(detail="Cannot proceed request.")
+            if lic_response.is_success:
+                lic_data = lic_response.json()
+                if not lic_data:
+                    continue
+                lic_data = lic_data[0]
+                quantity += lic_data['count']
+                results.migratedLicenses.append(license_key)
+                continue
+            results.failedLicenses.append(license_key)
+        if results.migratedLicenses:
+            service_record = ChannelPartnerServiceRecord.objects.create(
+                cloud_system=system,
+                service=service,
+                quantity=quantity,
+                record_type=ServiceRecordTypes.LICENSE_MIGRATION,
+                in_effect=True,
+                effective_ts=now,
+            )
+            migration_records = [
+                MigrationRecord(license_key=license_key, service_record_id=service_record.id)
+                for license_key in results.migratedLicenses
+            ]
+            MigrationRecord.objects.bulk_create(migration_records, batch_size=100)
+        return results
+
+
+
+class LicensesMigrationResultSerializer(serializers.Serializer):
+
+    migratedLicenses = serializers.ListField(child=serializers.CharField())
+    skippedLicenses = serializers.ListField(child=serializers.CharField())
+    failedLicenses = serializers.ListField(child=serializers.CharField())

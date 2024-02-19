@@ -157,8 +157,9 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
 
     @staticmethod
     def get_or_create_system(system_id, request=None):
-        return CloudSystemId.objects.get_or_create(
-            system_id=system_id, cloud_host=request.cloud_host)[0]
+        if system := CloudSystemId.objects.filter(system_id=system_id, cloud_host=request.cloud_host).first():
+            return system
+        return CloudSystemId.objects.create(system_id=system_id, cloud_host=request.cloud_host)
 
     def authenticate_credentials(self, userid, password, request=None):
         auth_header = request.headers.get('authorization')

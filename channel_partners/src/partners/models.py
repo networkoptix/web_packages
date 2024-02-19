@@ -2322,3 +2322,9 @@ class NotificationTypes(enum.StrEnum):
     cps_partner_state_active = 'cps_partner_state_active'
     cps_partner_state_confirmation = 'cps_partner_state_confirmation'
     cps_partner_state_suspended = 'cps_partner_state_suspended'
+
+
+class MigrationRecord(models.Model):
+
+    license_key = models.CharField(max_length=128)
+    service_record = models.ForeignKey(ChannelPartnerServiceRecord, on_delete=models.CASCADE)

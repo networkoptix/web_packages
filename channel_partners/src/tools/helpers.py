@@ -84,3 +84,8 @@ def cast_uuid(uid: str | uuid.UUID | None) -> str | uuid.UUID | None:
         except ValueError:
             return uid
     raise TypeError(f"Expected UUID or str, got {type(uid)}, value {uid}.")
+
+
+def get_license_server_client() -> httpx.Client:
+    client = httpx.Client(base_url=f'{settings.LICENSE_SERVER}')
+    return client
