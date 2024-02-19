@@ -21,16 +21,19 @@ import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
+    selectChannelPartners,
     selectCurrentOrganization,
     selectCurrentPartner,
 } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
+import { NxAccountService } from '@services/account.service';
 import {
     ChannelPartnerRole,
     OrganizationRole,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
+import * as cpActions from '../../store/channel-partners/channel-partners.actions';
 import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
 
 @Component({
@@ -51,6 +54,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
 })
 export class NxUsersTableComponent {
     UserType = UserType;
+    channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
@@ -88,6 +92,7 @@ export class NxUsersTableComponent {
     constructor(
         private store: Store,
         private cpService: NxChannelPartnersService,
+        private accountService: NxAccountService,
     ) {}
 
     ngOnInit(): void {
@@ -173,12 +178,37 @@ export class NxUsersTableComponent {
 
     updateRole(user: UserRecord, roleId: string): void {
         if (user.userType === UserType.CHANNEL_PARTNER) {
+            const currPartner = this.currentPartner$$();
             this.cpService
-                .updateChannelPartnerUser(this.currentPartner$$()?.id, {
+                .updateChannelPartnerUser(currPartner.id, {
                     roleId,
                     email: user.email,
                 })
-                .subscribe();
+                .subscribe(updatedUser => {
+                    const copy = structuredClone(this.records);
+                    const index = this.records.findIndex(u => u.userId === user.userId);
+                    copy[index] = {
+                        ...this.records[index],
+                        roles: updatedUser.roles,
+                    };
+                    this.records = copy;
+                    const email = this.accountService.email;
+                    if (updatedUser.email === email) {
+                        const channelPartners = structuredClone(this.channelPartners$$());
+                        const currPartnerIndex = channelPartners.findIndex(
+                            partner => partner.id === currPartner.id,
+                        );
+                        const permissions = this.roles.find(
+                            role => role.name === updatedUser.roles[0],
+                        )?.permissions;
+                        channelPartners[currPartnerIndex] = {
+                            ...channelPartners[currPartnerIndex],
+                            ownPermissions: permissions,
+                            ownRoles: updatedUser.roles,
+                        };
+                        this.store.dispatch(cpActions.setChannelPartners({ channelPartners }));
+                    }
+                });
         } else if (user.isOrgUser) {
             this.cpService
                 .updateOrganizationUser(this.currentOrg$$()?.id, { roleId, email: user.email })

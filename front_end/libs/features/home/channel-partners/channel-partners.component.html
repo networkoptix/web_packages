@@ -20,7 +20,7 @@
             [currentTabIndex]="currentTabIndex$$()"
         >
             <nx-base-tab
-                *ngFor="let tab of tabs"
+                *ngFor="let tab of tabs$$()"
                 [displayName]="tab.displayName"
                 (tabClick)="onTabClick($event)"
             >

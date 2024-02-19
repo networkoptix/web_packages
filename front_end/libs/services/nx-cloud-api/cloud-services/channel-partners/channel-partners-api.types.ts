@@ -87,7 +87,7 @@ export enum ChannelPartnerPermissions {
 export enum ChannelPartnerRoles {
     ADMINISTRATOR = 'Administrator',
     MANAGER = 'Manager',
-    ACCOUNTANT = 'Accountant',
+    REPORTS_VIEWER = 'Reports Viewer',
 }
 
 export interface InfoRowServer {

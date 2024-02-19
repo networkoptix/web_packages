@@ -10,7 +10,6 @@ const initialState: ChannelPartnersState = {
     currentPartnerOrganizations: [],
     channelPartners: [],
     rootOrganizations: [],
-    visitedPartners: {},
 };
 
 export const channelPartnersReducer = createReducer(
@@ -41,7 +40,6 @@ export const channelPartnersReducer = createReducer(
         ChannelPartnerActions.setCurrentPartnerId,
         (state, { currentPartnerId }): ChannelPartnersState => ({
             ...state,
-            visitedPartners: { ...state.visitedPartners, currentPartnerId: true },
             currentPartnerId,
         }),
     ),

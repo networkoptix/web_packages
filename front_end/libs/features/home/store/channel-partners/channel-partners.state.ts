@@ -10,5 +10,4 @@ export interface ChannelPartnersState {
     currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
     rootOrganizations: Organization[];
-    visitedPartners: Record<string, boolean>;
 }
