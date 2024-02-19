@@ -1,12 +1,42 @@
 <div class="actions p-3">
-    <button
-        *ngIf="currentPartnerId$ | async as id"
-        class="btn btn-default"
-        translate
-        (click)="newUserDialog(id)"
+    <div
+        class="selected-users"
+        *ngIf="hasSelectedUsers; else addUser"
     >
-        Add User
-    </button>
+        <div class="text">
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'close.svg'"
+                [svgStyle]="{ 'width.px': '12' }"
+            ></svg-icon>
+            {{ selectedUsersLength }}
+            <span translate> selected: </span>
+        </div>
+        <button
+            class="btn"
+            translate
+            (click)="deleteChannelPartnerUser()"
+        >
+            <svg-icon
+                class="delete"
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'delete.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+            ></svg-icon>
+
+            Delete
+        </button>
+    </div>
+    <ng-template #addUser>
+        <button
+            *ngIf="currentPartnerId$ | async as id"
+            class="btn btn-default"
+            translate
+            (click)="newUserDialog(id)"
+        >
+            Add User
+        </button>
+    </ng-template>
 
     <nx-search
         [(ngModel)]="searchModel"
@@ -23,10 +53,9 @@
         <nx-users-table
             [userType]="UserType.CHANNEL_PARTNER"
             [headers]="headers"
-            [records]="filteredRecords"
-            [selectedRecordId]="selectedUserEmail"
+            [records]="recordStore.filteredRecords$$()"
             (onDeleteClick)="deleteChannelPartnerUser($event)"
-            (onRowClick)="selectUser($event)"
+            (selectedUsersEmitter)="updateSelectedUsers($event)"
             [roles]="roles$$()"
         ></nx-users-table>
     </div>
