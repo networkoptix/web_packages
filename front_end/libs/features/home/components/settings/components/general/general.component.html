@@ -1,33 +1,44 @@
-<div class="pane">
-    <h4 translate>General</h4>
-    <div class="body">
-        <div class="input">
-            <label
-                for="name"
-                translate
-                >Name</label
+<nx-block>
+    <header>
+        <h4 translate>General</h4>
+    </header>
+
+    <nx-section>
+        <div class="body">
+            <form
+                name="settingsGeneralForm"
+                #settingsGeneralForm="ngForm"
             >
-            <input
-                id="name"
-                [(ngModel)]="name"
-                (input)="updateName.emit(name)"
-            />
+                <div class="input">
+                    <label
+                        for="name"
+                        translate
+                        >Name</label
+                    >
+                    <input
+                        id="name"
+                        class="form-control ml-2"
+                        [(ngModel)]="name"
+                        (input)="updateName.emit(name)"
+                    />
+                </div>
+                <div
+                    class="input"
+                    *ngIf="view === settingsViews.ORGANIZATIONS"
+                >
+                    <label
+                        for="role"
+                        translate
+                        >Channel Partner Access</label
+                    >
+                    <nx-select
+                        [componentId]="'channelPartnerAccessSelect'"
+                        [items]="partnerAccess"
+                        [selected]="currAccess"
+                        (onSelected)="updateAccess.emit($event.value)"
+                    ></nx-select>
+                </div>
+            </form>
         </div>
-        <div
-            class="input"
-            *ngIf="view === settingsViews.ORGANIZATIONS"
-        >
-            <label
-                for="role"
-                translate
-                >Channel Partner Access</label
-            >
-            <nx-select
-                [componentId]="'channelPartnerAccessSelect'"
-                [items]="partnerAccess"
-                [selected]="currAccess"
-                (onSelected)="updateAccess.emit($event.value)"
-            ></nx-select>
-        </div>
-    </div>
-</div>
+    </nx-section>
+</nx-block>

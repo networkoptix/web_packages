@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { settingsViews } from '@pages/home/home.types';
@@ -33,7 +35,14 @@ const accessMap: { [key: string]: DropdownItem<string> } = {
     templateUrl: 'general.component.html',
     styleUrls: ['../../settings.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxGenericDropdownModule, NxCheckboxComponent, FormsModule],
+    imports: [
+        CommonModule,
+        NxGenericDropdownModule,
+        NxCheckboxComponent,
+        FormsModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+    ],
 })
 export class NxSettingsGeneralComponent implements OnInit {
     partnerAccess = partnerAccess;

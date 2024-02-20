@@ -28,18 +28,6 @@
 
                   display: flex;
                   align-items: center;
-
-                  svg-icon {
-                      height: 20px;
-                      display: flex;
-                      align-items: center;
-
-                      svg {
-                          path, rect {
-                              fill: var(--change-state-dialog-color);
-                          }
-                      }
-                  }
               }
 
           }
@@ -83,6 +71,8 @@
 
   .status-info {
       padding-left: 0.25rem;
+      margin-top: 0.5rem;
+
       li {
           list-style-type: '-';
           padding-left: 0.25rem;
