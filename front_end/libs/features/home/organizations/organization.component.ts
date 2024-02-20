@@ -145,10 +145,13 @@ export class NxOrganizationsComponent implements OnInit {
                 this.tabs = [];
                 const orgs = this.organizations$$();
                 const partnerOrgs = this.currentPartnerOrganizations$$();
-                if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
+                const currOrg = this.currentOrganization$$();
+                if (
+                    (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) ||
+                    !currOrg
+                ) {
                     return this.router.navigate(['404']);
                 }
-                const currOrg = this.currentOrganization$$();
                 const { ownPermissions } = currOrg;
                 await firstValueFrom(
                     this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner),

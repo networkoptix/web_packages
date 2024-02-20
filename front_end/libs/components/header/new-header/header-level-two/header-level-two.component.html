@@ -5,7 +5,7 @@
     ></nx-header-logo-area>
     <div
         class="menu-items"
-        [ngStyle]="{ 'width.px': menuItemsWidth }"
+        [ngStyle]="{ 'width.px': menuItemsWidth$$() }"
         #menuItems
     >
         <div

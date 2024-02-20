@@ -29,6 +29,14 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
+        ChannelPartnerActions.setChannelPartnersAndOrgs,
+        (state, { channelPartners, rootOrganizations }): ChannelPartnersState => ({
+            ...state,
+            channelPartners,
+            rootOrganizations,
+        }),
+    ),
+    on(
         ChannelPartnerActions.setCurrentPartnerId,
         (state, { currentPartnerId }): ChannelPartnersState => ({
             ...state,

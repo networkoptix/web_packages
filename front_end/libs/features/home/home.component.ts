@@ -4,17 +4,18 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, firstValueFrom, forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { setChannelPartnersAndOrgs } from '@pages/home/store/channel-partners/channel-partners.actions';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 
-import { NxChannelPartnersService } from './services/channel-partners.service';
-import * as CPActions from './store/channel-partners/channel-partners.actions';
 import {
     selectChannelPartners,
     selectRootOrganizations,
@@ -40,8 +41,8 @@ export class NxHomeComponent implements OnInit {
         private CPService: NxChannelPartnersService,
     ) {}
 
-    ngOnInit(): void {
-        this.initChannelPartners();
+    async ngOnInit(): Promise<void> {
+        await firstValueFrom(this.initChannelPartners());
         const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         const systems$ = this.systemsService.systemsSubject.pipe(
             map((systems: NxSystemInfo[]) =>
@@ -49,14 +50,15 @@ export class NxHomeComponent implements OnInit {
             ),
             distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         );
-        const homeNode = this.headerService.nodes$.pipe(
-            map(nodes => nodes.find(node => node.url === '/home')),
+        const homeNode$ = this.headerService.nodes$.pipe(
+            map(nodes => nodes?.find(node => node.url === '/home')),
         );
+        // Note: Eventually we can remove if we change how the store is initialized.
         const organizations$ = this.store.select(selectRootOrganizations);
         const channelPartners$ = this.store.select(selectChannelPartners);
         let redirectPath = '';
 
-        combineLatest([homeNode, channelPartners$, organizations$, systems$])
+        combineLatest([homeNode$, channelPartners$, organizations$, systems$])
             .pipe(untilDestroyed(this))
             .subscribe(([homeNode, channelPartners, organizations, systems]) => {
                 if (!homeNode) {
@@ -78,7 +80,7 @@ export class NxHomeComponent implements OnInit {
                         )
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map(org => {
-                            return new MenuNode(org.name, `/home/organization/${org.id}/systems`);
+                            return new MenuNode(org.name, `/home/organization/${org.id}`);
                         }),
                 ];
                 nodes[0].invisible = true;
@@ -87,7 +89,7 @@ export class NxHomeComponent implements OnInit {
                     redirectPath = 'shared';
                     nodes.push(
                         new MenuNode(
-                            this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.shared.displayName,
+                            this.LANG.appHeader.headerMenuNodes.channelPartners.nodes.shared.displayName,
                             '/home/shared',
                         ),
                     );
@@ -96,7 +98,7 @@ export class NxHomeComponent implements OnInit {
                     redirectPath = 'personal';
                     nodes.push(
                         new MenuNode(
-                            this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.personal.displayName,
+                            this.LANG.appHeader.headerMenuNodes.channelPartners.nodes.personal.displayName,
                             '/home/personal',
                         ),
                     );
@@ -121,21 +123,25 @@ export class NxHomeComponent implements OnInit {
             });
     }
 
-    initChannelPartners(): void {
-        this.CPService.getChannelPartners().subscribe(partners => {
-            const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
-            this.store.dispatch(
-                CPActions.setChannelPartners({
-                    channelPartners: partners.filter(
-                        partner =>
-                            !partner.parentChannelPartner ||
-                            !channelPartnerIds.has(partner.parentChannelPartner),
-                    ),
-                }),
-            );
-        });
-        this.CPService.getOrganizations().subscribe(orgs =>
-            this.store.dispatch(CPActions.setOrganizations({ rootOrganizations: orgs })),
+    initChannelPartners(): Observable<boolean> {
+        return forkJoin([
+            this.CPService.getChannelPartners(),
+            this.CPService.getOrganizations(),
+        ]).pipe(
+            map(([partners, orgs]) => {
+                const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
+                this.store.dispatch(
+                    setChannelPartnersAndOrgs({
+                        channelPartners: partners.filter(
+                            partner =>
+                                !partner.parentChannelPartner ||
+                                !channelPartnerIds.has(partner.parentChannelPartner),
+                        ),
+                        rootOrganizations: orgs,
+                    }),
+                );
+                return true;
+            }),
         );
     }
 }
