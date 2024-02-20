@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import LANG from '@language_static';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
@@ -22,6 +24,8 @@ import { icons } from '@variables/static-variables';
         TranslateModule,
         NgxTranslateCutModule,
         LetDirective,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
     ],
 })
 export class NxSettingsStateComponent {
