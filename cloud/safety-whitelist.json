@@ -188,5 +188,9 @@
   "63154": {
     "name": "jwcrypto",
     "note": "PVE-2023-63154: Jwcrypto version 1.5.1 addresses a potential DoS issue with p2c headers, limiting the default maximum to 16384 to prevent excessive resource usage. For applications requiring more iterations, the jwa default max needs to be adjusted manually.https://github.com/latchset/jwcrypto/commit/d2655d370586cb830e49acfb450f87598da60be8"
+  },
+  "64227": {
+    "name": "jinja2",
+    "note": "Jinja2 before 3.1.3 is affected by a Cross-Site Scripting vulnerability. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template. The Jinja 'xmlattr' filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based. CVE-2024-22195 For more information, please visit https://data.safetycli.com/v/64227/f17"
   }
 }
