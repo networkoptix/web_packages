@@ -1183,8 +1183,8 @@
                     }
                 ]
             },
-            "systemGroups": {
-                "displayName": "System Groups",
+            "channelPartners": {
+                "displayName": "Home",
                 "nodes": {
                     "personal": {
                         "displayName": "My System"

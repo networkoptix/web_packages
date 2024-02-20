@@ -281,6 +281,13 @@ export class NxMenusService {
     }
 
     makeSystemMenuNode() {
+        if (nxConfig.featureFlags.channelPartners) {
+            const homeLang = this.LANG.appHeader.headerMenuNodes.channelPartners;
+            const homeNode = new MenuNode(homeLang.displayName, '/home');
+            homeNode.nodes.push(new MenuNode('', '/home'));
+            homeNode.nodes[0].invisible = true;
+            return homeNode;
+        }
         const systemLang = this.LANG.appHeader.headerMenuNodes.system;
         const systemNode = new MenuNode(systemLang.displayName, '/systems');
         systemNode.nodes.push(new MenuNode(systemLang.nodes[0].displayName, '/systems'));
@@ -293,21 +300,6 @@ export class NxMenusService {
         accountNode.invisible = true;
         accountNode.nodes.push(new MenuNode(accountSettingsLang.nodes[0].displayName, '/account'));
         return accountNode;
-    }
-
-    makeSystemGroupsNode() {
-        const systemGroupsLang = this.LANG.appHeader.headerMenuNodes.systemGroups;
-        const groupsNode = new MenuNode(systemGroupsLang.displayName, '/home');
-        groupsNode.invisible = true;
-        groupsNode.nodes.push(new MenuNode('', '/home'));
-        groupsNode.nodes[0].invisible = true;
-        groupsNode.nodes.push(
-            new MenuNode(systemGroupsLang.nodes.personal.displayName, '/home/personal'),
-        );
-        groupsNode.nodes.push(
-            new MenuNode(systemGroupsLang.nodes.shared.displayName, '/home/shared'),
-        );
-        return groupsNode;
     }
 
     makeWelcomeNode() {

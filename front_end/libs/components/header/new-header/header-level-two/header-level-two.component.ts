@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    signal,
+    ViewChild,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -38,7 +46,7 @@ export class NxHeaderLevelTwoComponent {
     @Input() systemCount: number;
     @Output() systemNav = new EventEmitter<boolean>();
     logoState = logoAreaState.LOGO;
-    menuItemsWidth: number;
+    menuItemsWidth$$ = signal(0);
     navArrowState = {
         visible: false,
         left: false,
@@ -111,7 +119,7 @@ export class NxHeaderLevelTwoComponent {
 
     recalculateSizes(windowWidth = window.innerWidth): void {
         const { logoAreaWidth, margins } = this.sizeConstants;
-        this.menuItemsWidth = windowWidth - logoAreaWidth - this.mainActionWidth - margins;
+        this.menuItemsWidth$$.set(windowWidth - logoAreaWidth - this.mainActionWidth - margins);
         this.checkNavArrowsVisible(true);
     }
 

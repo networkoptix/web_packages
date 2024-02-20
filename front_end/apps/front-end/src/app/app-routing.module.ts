@@ -4,7 +4,8 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
 import { AuthGuard } from '@guards/authGuard';
 import { BuildGuard } from '@guards/buildGuard';
-import { FeatureGuardMatch } from '@guards/feature.guard';
+import { ChannelPartnerGuard } from '@guards/channelPartnerGuard';
+import { FeatureGuardActivate, FeatureGuardMatch } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -24,14 +25,6 @@ const lazyRoutes: Routes = [
         path: 'account',
         loadChildren: () => import('@pages/account/account.module').then(m => m.NxAccountModule),
     },
-    // {
-    //     path: 'partners',
-    //     loadChildren: () => import('@pages/channel-partners/partners.module').then(m => m.NxChannelPartnersModule)
-    // },
-    // {
-    //     path: 'organizations',
-    //     loadChildren: () => import('@pages/channel-partners/organizations').then(m => m.NxPartnerOrganizationsModule)
-    // },
     {
         path: 'systems/:systemId/view',
         loadChildren: () =>
@@ -42,7 +35,7 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/layouts',
         loadChildren: () =>
             import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
-        canLoad: [FeatureGuardMatch],
+        canMatch: [FeatureGuardMatch],
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         data: {
             flag: FeatureFlagStrings.layouts,
@@ -52,13 +45,12 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/services',
         loadComponent: () =>
             import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
-        canActivate: [
-            AuthGuard,
-            SystemGuard,
-            TwofaGuard,
-            () => nxConfig.featureFlags.channelPartners,
-        ],
+        canMatch: [FeatureGuardMatch],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         title: SystemTitleResolver,
+        data: {
+            flag: FeatureFlagStrings.channelPartners,
+        },
     },
     {
         path: 'theme-generator',
@@ -66,7 +58,7 @@ const lazyRoutes: Routes = [
             import('@pages/theme-generator-demo/theme-generator-demo.module').then(
                 m => m.NxThemeGeneratorDemoModule,
             ),
-        canLoad: [FeatureGuardMatch],
+        canMatch: [FeatureGuardActivate],
         canActivate: [AuthGuard],
         data: {
             flag: FeatureFlagStrings.themeGenerator,
@@ -82,8 +74,17 @@ const lazyRoutes: Routes = [
             import('@pages/new-landing/new-landing.module').then(m => m.NewLandingModule),
     },
     {
+        path: 'home',
+        canMatch: [FeatureGuardActivate],
+        loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
+        data: {
+            flag: FeatureFlagStrings.channelPartners,
+        },
+    },
+    {
         path: 'systems',
         title: 'systems',
+        canMatch: [ChannelPartnerGuard],
         loadChildren: () =>
             import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule),
     },
@@ -91,15 +92,6 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId',
         loadChildren: () =>
             import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
-    },
-    {
-        path: 'home',
-        loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
-        canActivate: [() => nxConfig.featureFlags.channelPartners],
-        canLoad: [FeatureGuardMatch],
-        data: {
-            flag: FeatureFlagStrings.systemGroups,
-        },
     },
     {
         path: 'systems/:systemId/health',
@@ -166,7 +158,7 @@ const lazyRoutes: Routes = [
             import('@pages/developer-console/developer-console.module').then(
                 m => m.NxDeveloperConsoleModule,
             ),
-        canLoad: [FeatureGuardMatch],
+        canMatch: [FeatureGuardActivate],
         canActivate: [AuthGuard],
         data: {
             flag: FeatureFlagStrings.customClients,
@@ -265,10 +257,10 @@ const lazyRoutes: Routes = [
     },
     // {
     //     path: 'dashboard',
-    //     canLoad: [FeatureGuardMatch],
+    //     canMatch: [FeatureGuardActivate],
     //     canActivate: [AuthGuard],
     //     data: {
-    //         flags: FeatureFlagStrings.dashboard,
+    //         flag: FeatureFlagStrings.dashboard,
     //     },
     //     loadChildren: () =>
     //         import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule),

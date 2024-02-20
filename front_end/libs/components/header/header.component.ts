@@ -313,7 +313,6 @@ export class NxHeaderComponent implements OnInit {
                     } else {
                         nodes.unshift(this.menusService.makeSystemMenuNode());
                         nodes.push(this.menusService.makeAccountSettingsNode());
-                        nodes.push(this.menusService.makeSystemGroupsNode());
                     }
                 }
                 this.headerService.nodes = nodes;
@@ -429,10 +428,8 @@ export class NxHeaderComponent implements OnInit {
                             }
                             const systemNode = this.menusService.makeSystemMenuNode();
                             const accountNode = this.menusService.makeAccountSettingsNode();
-                            const systemGroupsNode = this.menusService.makeSystemGroupsNode();
                             this.headerService.nodes.unshift(systemNode);
                             this.headerService.nodes.push(accountNode);
-                            this.headerService.nodes.push(systemGroupsNode);
                         }
                     }
                 } else {
