@@ -246,6 +246,7 @@ export type UpdateOrganizationUser = CreateOrganizationUser;
 /* System Services */
 export interface Service {
     quantity: number;
+    used: number;
 }
 
 export interface SystemServices {
