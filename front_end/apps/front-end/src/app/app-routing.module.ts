@@ -26,33 +26,6 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/account/account.module').then(m => m.NxAccountModule),
     },
     {
-        path: 'systems/:systemId/view',
-        loadChildren: () =>
-            import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
-    },
-    {
-        path: 'systems/:systemId/layouts',
-        loadChildren: () =>
-            import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
-        canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
-        data: {
-            flag: FeatureFlagStrings.layouts,
-        },
-    },
-    {
-        path: 'systems/:systemId/services',
-        loadComponent: () =>
-            import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
-        canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
-        title: SystemTitleResolver,
-        data: {
-            flag: FeatureFlagStrings.channelPartners,
-        },
-    },
-    {
         path: 'theme-generator',
         loadChildren: () =>
             import('@pages/theme-generator-demo/theme-generator-demo.module').then(
@@ -82,16 +55,31 @@ const lazyRoutes: Routes = [
         },
     },
     {
-        path: 'systems',
-        title: 'systems',
-        canMatch: [ChannelPartnerGuard],
+        path: 'systems/:systemId/view',
         loadChildren: () =>
-            import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule),
+            import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
     },
     {
-        path: 'systems/:systemId',
+        path: 'systems/:systemId/layouts',
         loadChildren: () =>
-            import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
+            import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
+        canMatch: [FeatureGuardMatch],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        data: {
+            flag: FeatureFlagStrings.layouts,
+        },
+    },
+    {
+        path: 'systems/:systemId/services',
+        loadComponent: () =>
+            import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
+        canMatch: [FeatureGuardMatch],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        title: SystemTitleResolver,
+        data: {
+            flag: FeatureFlagStrings.channelPartners,
+        },
     },
     {
         path: 'systems/:systemId/health',
@@ -109,6 +97,19 @@ const lazyRoutes: Routes = [
         loadChildren: () =>
             import('@pages/monitoring/monitoring.module').then(m => m.NxMonitoringModule),
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+    },
+    {
+        path: 'systems/:systemId',
+        loadChildren: () =>
+            import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
+    },
+    // Order matters when going to systems. When you click on a system in and org it will get stuck on the home page.
+    {
+        path: 'systems',
+        title: 'systems',
+        canMatch: [ChannelPartnerGuard],
+        loadChildren: () =>
+            import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule),
     },
     {
         path: 'integrations/:id',
