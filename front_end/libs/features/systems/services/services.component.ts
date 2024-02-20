@@ -23,7 +23,7 @@ interface ServiceTableData {
     serviceId: string;
     displayName: string;
     quantity: number;
-    remaining: number;
+    used: number;
 }
 
 @Component({
@@ -49,13 +49,13 @@ export class NxServicesComponent {
             sort: 'string',
         },
         {
-            name: 'quantity',
-            value: 'Used / Total',
+            name: 'total',
+            value: 'Total',
             sort: 'number',
         },
         {
-            name: 'remaining',
-            value: 'Remaining',
+            name: 'used',
+            value: 'Used',
             sort: 'number',
         },
     ];
@@ -88,12 +88,12 @@ export class NxServicesComponent {
         if (!(availableServices.length && Object.keys(systemServices.services).length)) {
             return [];
         }
-        return Object.entries(systemServices.services).map(([serviceId, { quantity }]) => ({
+        return Object.entries(systemServices.services).map(([serviceId, { quantity, used }]) => ({
             serviceId,
             displayName:
                 availableServices.find(({ id }) => id === serviceId)?.displayName ?? serviceId,
             quantity,
-            remaining: 0,
+            used,
         }));
     });
 
@@ -116,7 +116,7 @@ export class NxServicesComponent {
             return;
         }
         const data = this.systemServices$$();
-        data.services[service] = { quantity };
+        data.services[service] = { quantity, used: data.services?.[service]?.used || 0 };
         this.systemService.updateSystemServiceQuantity(this.systemId$.value, data).subscribe({
             next: updatedServices => this.systemServices$$.set(updatedServices),
             error: () => alert('Something failed. Check the network tab!'),
