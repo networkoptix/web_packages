@@ -83,16 +83,17 @@
                     'width.px': 64,
                     'pointer-events': 'none'
                 }"
-                [src]="icons.dirSectionPlaceholder + 'cantconnect.svg'"
+                [src]="icons.dirPageV2Placeholder + 'no_partners.svg'"
                 svgAriaLabel="change me please"
             ></svg-icon>
         </div>
         <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
         <!-- eslint-disable-next-line nx/template/no-untranslated -->
-        <div class="placeholder-body">
-            <!-- TEMPORARY COPY -->
-            Drag video files or images to the client window, or add local media folder through the
-            Local Settings dialog.'
+        <div
+            translate
+            class="placeholder-body"
+        >
+            You have not yet created any partners.
         </div>
         <div *ngIf="canCreatePartners$$()">
             <nx-button
