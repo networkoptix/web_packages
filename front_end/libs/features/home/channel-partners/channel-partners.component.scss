@@ -43,10 +43,15 @@
                 color: var(--placehoder-v2-title-color) !important;
             }
 
-            p {
-                color: var(--placehoder-v2-message-color) !important;
-            }
-        }
+    p {
+      color: var(--placehoder-v2-message-color)!important;
+    }
+
+    .new-org-btn {
+      display: inline-block !important;
+      margin-top: 10px;
+    }
+  }
 
         .card-content {
             h3 {
