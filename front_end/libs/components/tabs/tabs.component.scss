@@ -43,3 +43,7 @@ label, .slider {
   width: 10rem;
   height: auto;
 }
+
+label.hidden {
+  visibility: hidden;
+}

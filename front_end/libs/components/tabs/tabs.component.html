@@ -12,6 +12,7 @@
             <label
                 class="content"
                 [for]="'t' + i"
+                [ngClass]="{ hidden: tab.hidden }"
             >
                 {{ tab.displayName }}
             </label>
