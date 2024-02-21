@@ -277,7 +277,21 @@ export class NxOrganizationCardContainerComponent {
                             })
                             .then(confirm => {
                                 if (confirm) {
-                                    alert(`Will implement delete`);
+                                    this.cpService.deleteGroup(group.id).subscribe(
+                                        deletedGroup => {
+                                            const groups = this.groupItems$$()?.filter(
+                                                obj => obj.id !== group.id,
+                                            );
+                                            if (groups) {
+                                                this.store.dispatch(
+                                                    GroupActions.setGroups({ groups }),
+                                                );
+                                            }
+                                        },
+                                        () => {
+                                            // TODO: Waiting for direction from design on error handling//
+                                        },
+                                    );
                                 }
                             });
                     },

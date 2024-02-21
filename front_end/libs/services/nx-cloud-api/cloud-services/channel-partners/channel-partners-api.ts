@@ -312,6 +312,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.post('/groups/', { body });
     };
 
+    deleteGroup = (groupId: string): Observable<GroupItem> => {
+        return this.delete(this.makeUrl(urlBases.GROUPS, [groupId]));
+    };
+
     patchGroup = (groupId: string, body: PatchGroup): Observable<GroupItem> => {
         return this.patch(this.makeUrl(urlBases.GROUPS, [groupId]), { body });
     };

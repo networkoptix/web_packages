@@ -94,6 +94,7 @@ export class NxChannelPartnersService {
     createGroup = this.cpApi.createGroup;
     getGroup = this.cpApi.getGroup;
     patchGroup = this.cpApi.patchGroup;
+    deleteGroup = this.cpApi.deleteGroup;
 
     /* Group Users */
     getGroupUser = this.cpApi.getGroupUser;
