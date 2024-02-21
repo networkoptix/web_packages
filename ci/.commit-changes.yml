@@ -1,0 +1,32 @@
+.commit-changes:
+  script:
+    - |
+      COMMIT_MESSAGE="${COMMIT_MESSAGE:-$CI_JOB_NAME}"
+      ERROR_MESSAGE="${ERROR_MESSAGE:-$CI_JOB_NAME failed to push changes, please fix manually}"
+      OVERRIDE_COMMIT_EXIT_CODE="${OVERRIDE_COMMIT_EXIT_CODE:-1}"
+
+      if [[ $(git diff --stat) != '' ]]; then
+        echo '${COMMIT_MESSAGE}, attempting to commit changes'
+        git config user.email "$GITLAB_USER_EMAIL"
+        git config user.name "$GITLAB_USER_NAME"
+        git remote add mr_upstream "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_PROJECT_PATH.git"
+        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
+        echo "Attempting to fetch origin"
+        git remote show mr_origin
+        git fetch mr_upstream $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
+        git add .
+        git commit -m "(${COMMIT_MESSAGE}) committed by pipeline"
+
+        if [[ $(git log --cherry-pick --right-only "mr_origin/$CI_COMMIT_REF_NAME...mr_upstream/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME") ]]; then
+            echo "Non cherry pick commits found ok to push commit to branch"
+            git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
+            echo 'pushed commit to branch'
+        else
+            echo "Only cherry pick commits found, not pushing commit to branch"
+            echo "$ERROR_MESSAGE"
+            exit $OVERRIDE_COMMIT_EXIT_CODE
+        fi
+      else
+        echo "No changes to commit"
+      fi

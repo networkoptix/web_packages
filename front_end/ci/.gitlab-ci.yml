@@ -1,0 +1,74 @@
+include:
+  - local: "front_end/ci/.front-end-common.yml"
+  - local: "front_end/ci/.scheduled.yml"
+
+open-source:monorepo-checks:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
+      pushd "front_end"
+        npm run ci:open
+      popd
+
+other-frontend-checks:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
+      pushd "ci"
+        start_task "./nx_mentions.sh" "nx_mentions" &
+      popd
+      pushd "front_end"
+        pushd "eslint-plugin-nx"
+          start_task "npm run build-check" "eslint_plugin_build_check" &
+          start_task "npm run test" "eslint_plugin_test" &
+        popd
+      popd
+
+frontend-lint:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
+      pushd "front_end"
+        LINT_STATUS=$(npm run lint:ci; echo $?)
+        echo $LINT_STATUS
+        EXIT_FROM_LINT=$(echo "$LINT_STATUS" | tail -n1)
+
+        if [ $EXIT_FROM_LINT == 0 ]; then
+          echo "Lint passed"
+        else
+          echo "Lint failed with exit code $EXIT_FROM_LINT, attempting to fix automatically"
+          npm run lint:ci -- --fix
+        fi
+      popd
+      COMMIT_MESSAGE="FE lint auto fixed"
+    - !reference [".commit-changes", "script"]
+
+frontend-builds:
+  extends: .frontend-node
+  stage: build
+  script:
+    - |
+      pushd "front_end"
+          npm run build:ci
+      popd
+
+frontend-tests:
+  extends: .frontend-node
+  stage: test
+  coverage: /^TOTAL.+?(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - front_end/junit/**/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/**/cobertura-coverage.xml
+  script:
+    - |
+      pushd "front_end"
+        npm run test:ci
+      popd

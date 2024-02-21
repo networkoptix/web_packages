@@ -1,0 +1,22 @@
+include:
+  - local: "ci/.shared.yml"
+
+.node-base:
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
+    FRONTEND_NODE_MODULES: /node_modules_frontend
+    ES_LINT_PLUGIN_NODE_MODULES: /node_modules_es_lint_plugin
+    NX_CLOUD_ACCESS_TOKEN: NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU=
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  before_script:
+    - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
+    - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
+
+.frontend-node:
+  extends: .node-base
+  rules:
+  - if: !reference [ .enable_for_mr ]
+    changes: !reference [ .frontend_changes ]

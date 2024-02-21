@@ -1,14 +1,16 @@
+include:
+  - local: "ci/Docker/.version-enforced.yml"
+
 variables:
   NODE_JS_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_node_js'
-  NODE_JS_IMAGE_VERSION: 'develop_8d4a1a'
-  NODE_JS_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${NODE_JS_IMAGE_VERSION}'
+  NODE_JS_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${IMAGE_VERSION}'
+  DOCKER_DIR: 'ci/Docker/node-chrome'
 
 docker:build-node-chrome:
-  extends: .docker.template
-  interruptible: true
+  extends: .version-enforced-docker
   before_script:
+  - !reference [".version-enforced-docker", "before_script"]
   - |
-    DOCKER_DIR="ci/Docker/node-chrome"
     touch build.env
     if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" ]]; then
       NODE_JS_IMAGE_TAG="${NODE_JS_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"
@@ -16,7 +18,7 @@ docker:build-node-chrome:
     fi
 
     if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
-      NODE_JS_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${NODE_JS_IMAGE_VERSION}"
+      NODE_JS_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${IMAGE_VERSION}"
       echo "NODE_JS_IMAGE_TAG=${NODE_JS_IMAGE_TAG}" > build.env
     fi
     TARGET_IMAGE="${NODE_JS_IMAGE}"

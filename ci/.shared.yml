@@ -1,0 +1,46 @@
+include:
+  - project: "dev/ci"
+    file: "pipelines/infra-templates.yml"
+  - project: "dev/ci"
+    file: "pipelines/secrets.yml"
+  - local: "ci/Docker/**/.gitlab-ci.yml"
+  - local: "ci/.commit-changes.yml"
+
+# Rules
+
+.enable_for_mr: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+.enable_for_schedule: '$CI_PIPELINE_SOURCE == "schedule"'
+
+.frontend_changes:
+  - front_end/**/*
+  - .gitlab-ci.yml
+
+.notification_changes:
+ - desktop_notifications/**/*
+ - .gitlab-ci.yml
+
+.channel_partners_changes:
+ - common/python/**/*
+ - channel_partners/**/*
+ - .gitlab-ci.yml
+
+.webadmin_changes:
+  - front_end/**/*
+  - webadmin/**/*
+
+.enable_for_mr_branch: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/ ||
+  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" )'
+
+.enable_for_protected_branch: '( $CI_PIPELINE_SOURCE == "push" &&
+  ( $CI_COMMIT_REF_NAME =~ /^vms_/ || $CI_COMMIT_REF_NAME == "develop" ) )'
+
+.jenkins-builds:
+  stage: build
+  image: nx/ci
+  secrets:
+    JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
+  retry:
+    max: 2
+    when:
+      - always
