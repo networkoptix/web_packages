@@ -29,6 +29,7 @@
         <nx-base-tab
             *ngFor="let tab of tabs"
             [displayName]="tab.displayName"
+            [hidden]="tab.route === 'settings' && currentGroupId$$() !== undefined"
             (tabClick)="onTabClick($event)"
         >
             {{ tab.displayName }}
