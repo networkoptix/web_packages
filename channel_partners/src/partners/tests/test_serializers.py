@@ -535,6 +535,16 @@ class TestChannelPartnerRecordsParamSerializer:
         assert ser.errors["endTs"][0] == '"startTs" cannot be greater than "endTs".'
         assert ser.errors["startTs"][0] == '"startTs" cannot be greater than "endTs".'
 
+    def test_too_large_period(self):
+        params = {
+            "endTs": datetime.date.today(),
+            "startTs": datetime.date.today() - relativedelta.relativedelta(months=13)
+        }
+        ser = ChannelPartnerRecordsParamSerializer(data=params)
+        assert ser.is_valid() is False
+        assert ser.errors["endTs"][0] == "Look up range cannot be more than 1 year."
+        assert ser.errors["startTs"][0] == "Look up range cannot be more than 1 year."
+
 
 
 class TestGroupSerializer:

@@ -1226,6 +1226,9 @@ class ChannelPartnerRecordsParamSerializer(serializers.Serializer):
         if attrs["startTs"] > attrs.get('endTs'):
             raise ValidationError({'startTs': '"startTs" cannot be greater than "endTs".',
                                    'endTs': '"startTs" cannot be greater than "endTs".'})
+        if attrs["startTs"] + relativedelta(years=1) < attrs.get('endTs'):
+            raise ValidationError({'startTs': "Look up range cannot be more than 1 year.",
+                                   'endTs': "Look up range cannot be more than 1 year."})
         return attrs
 
 
