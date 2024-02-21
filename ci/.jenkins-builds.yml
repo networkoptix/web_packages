@@ -1,0 +1,83 @@
+include:
+  - local: "ci/.shared.yml"
+
+jenkins-build-webadmin:
+  extends: .jenkins-builds
+  script:
+    - |
+      set -ex
+      if [[ "$CI_COMMIT_REF_PROTECTED" == true ]]; then
+        PUBLISH=ON
+      else
+        PUBLISH=OFF
+      fi
+    - echo "Running webadmin build"
+    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+      "PUBLISH=$PUBLISH"
+      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "GITLAB_REFSPEC=$CI_COMMIT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .webadmin_changes ]
+  - if: !reference [.enable_for_protected_branch]
+    changes: !reference [ .webadmin_changes ]
+
+jenkins-build-frontend:
+  extends: .jenkins-builds
+  script:
+    - echo "Running frontend build"
+    - runJenkinsJob.sh gitlab.cloud.frontend
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .frontend_changes ]
+
+jenkins-build-notification:
+  extends: .jenkins-builds
+  script:
+    - echo "Running notification build"
+    - runJenkinsJob.sh gitlab.cloud.notification
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .notification_changes ]
+
+jenkins-build-channel-partners:
+  extends: .jenkins-builds
+  script:
+    - echo "Running channel partners build"
+    - runJenkinsJob.sh gitlab.cloud.channel_partners
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .channel_partners_changes ]

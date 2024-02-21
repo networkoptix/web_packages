@@ -1,0 +1,34 @@
+include:
+  - local: "front_end/ci/.front-end-common.yml"
+
+.schedule_when_cherry_pick:
+  extends: .node-base
+  stage: check
+  rules:
+    - if: !reference [ .enable_for_schedule ]
+    - if: !reference [ .enable_for_mr_branch ]
+      variables:
+         OVERRIDE_COMMIT_EXIT_CODE: 0
+
+node-license-check:
+  extends: .schedule_when_cherry_pick
+  artifacts:
+    paths:
+      - package-license.json
+    when: on_failure
+  script:
+    - npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
+    - COMMIT_MESSAGE="Node licenses updated"
+    - !reference [".commit-changes", "script"]
+
+frontend-lang:
+  extends: .schedule_when_cherry_pick
+  script:
+    - |
+      pushd "front_end"
+        npm run update-lang
+        python3 fill-lang.py
+        python3 compile-lang.py
+        npm run test-lang
+    - COMMIT_MESSAGE="Language files updated"
+    - !reference [".commit-changes", "script"]

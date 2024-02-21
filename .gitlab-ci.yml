@@ -7,6 +7,9 @@ include:
     file: "pipelines/secrets.yml"
   - local: "ci/Docker/**/.gitlab-ci.yml"
   - local: "channel_partners/build/channel_partners_ci/.gitlab-ci.yml"
+  - local: "front_end/ci/.gitlab-ci.yml"
+  - local: "ci/.shared.yml"
+  - local: "ci/.jenkins-builds.yml"
 
 default:
   tags:
@@ -34,59 +37,29 @@ stages:
   - build
   - create mr
   - test
-  - fail-fast
-
-.retries:
-  interruptible: true
-  retry:
-    max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
-      - scheduler_failure
-#
-.frontend-changes:
-  extends: .retries
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*
-
-.get_target_branch_script:
-  script:
-  - set -e
-  - if [[ "$CI_COMMIT_REF_PROTECTED" == "true" ]]; then
-  -   TARGET_BRANCH_NAME=${CI_COMMIT_REF_NAME}
-  - else
-  -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
-        --gitlab-server-url=${CI_SERVER_URL}
-        --gitlab-token="${GITLAB_API_TOKEN}"
-        --project-id=${CI_PROJECT_ID}
-        --merge-request-iid=${CI_MERGE_REQUEST_IID})
-  - fi
 
 no-changes:
 #  extends: .retries
   needs: []
   rules:
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      - if: !reference [ .enable_for_mr_branch ]
         changes:
             - cloud/**/*
             - front_end/**/*
         when: never
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      - if: !reference [ .enable_for_mr_branch ]
         when: always
   stage: check
   script:
     - echo "If this is the only job that runs then no changes were made that requires the pipeline"
 
 .backend-changes:
-  extends: .retries
+  # extends: .retries
   needs:
     - job: docker:build-django-python
       optional: true
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: !reference [ .enable_for_mr_branch ]
       changes:
         - cloud/**/*
         - cloud/poetry.toml
@@ -201,7 +174,7 @@ common-python-unit-test:
     - cd /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: !reference [ .enable_for_mr_branch ]
       changes:
         - common/python/**/*
         - cloud/poetry.toml
@@ -224,37 +197,12 @@ cp-common-python-unit-test:
     - cd /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: !reference [ .enable_for_mr_branch ]
       changes:
         - common/python/**/*
         - channel_partners/poetry.toml
         - channel_partners/poetry.lock
         - channel_partners/pyproject.toml
-
-.frontend-node:
-  extends: .frontend-changes
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
-  variables:
-    CHROME_BIN: /usr/bin/google-chrome
-    FRONTEND_NODE_MODULES: /node_modules_frontend
-    ES_LINT_PLUGIN_NODE_MODULES: /node_modules_es_lint_plugin
-    NX_CLOUD_ACCESS_TOKEN: NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU=
-
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-  before_script:
-    - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
-    - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
-
-open-source:monorepo-checks:
-  extends: .frontend-node
-  stage: check
-  script:
-    - |
-      pushd "front_end"
-        npm run ci:open
-      popd
 
 open-source:open-source-checker:
   stage: check
@@ -286,324 +234,6 @@ open-source:open-source-checker:
     - open_candidate/**/*
     - open_source_check_config.json
 
-node-license-check:
-  extends: .frontend-node
-  stage: check
-  artifacts:
-    paths:
-      - package-license.json
-    when: on_failure
-  script:
-    - |
-      npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
-      if [[ $(git diff --stat) != '' ]]; then
-        echo 'package-license.json updated, attempting commiting changes'
-        git config user.email "$GITLAB_USER_EMAIL"
-        git config user.name "$GITLAB_USER_NAME"
-        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
-        echo "Attempting to fetch origin"
-        git remote show mr_origin
-        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
-        git add .
-        git commit -m "Node Licenses autofixed by pipeline"
-        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
-        echo 'pushed node licenses fixe to branch'
-      fi
-
-other-frontend-checks:
-  extends: .frontend-node
-  stage: check
-  script:
-    - |
-      pushd "ci"
-        start_task "./nx_mentions.sh" "nx_mentions" &
-      popd
-      pushd "front_end"
-        pushd "eslint-plugin-nx"
-          start_task "npm run build-check" "eslint_plugin_build_check" &
-          start_task "npm run test" "eslint_plugin_test" &
-        popd
-      popd
-
-frontend-lang:
-  extends: .frontend-node
-  stage: check
-  script:
-    - |
-      pushd "front_end"
-        npm run update-lang
-        python3 fill-lang.py
-        python3 compile-lang.py
-        npm run test-lang
-      if [[ $(git diff --stat) != '' ]]; then
-        echo 'Language files changed, attempting commiting changes'
-        git config user.email "$GITLAB_USER_EMAIL"
-        git config user.name "$GITLAB_USER_NAME"
-        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
-        echo "Attempting to fetch origin"
-        git remote show mr_origin
-        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
-        git add .
-        git commit -m "Language autofixed by pipeline"
-        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
-        echo 'pushed lang fixes to branch'
-      fi
-      popd
-
-frontend-lint:
-  extends: .frontend-node
-  stage: check
-  script:
-    - |
-      pushd "front_end"
-        LINT_STATUS=$(npm run lint:ci; echo $?)
-        echo $LINT_STATUS
-        EXIT_FROM_LINT=$(echo "$LINT_STATUS" | tail -n1)
-
-        if [ $EXIT_FROM_LINT == 0 ]; then
-          echo "Lint passed"
-        else
-          echo "Lint failed with exit code $EXIT_FROM_LINT, attempting to fix automatically"
-          npm run lint:ci -- --fix
-        fi
-      popd
-
-      if [[ $(git diff --stat) != '' ]]; then
-        echo 'Lint errors automatically fixed, attempting commiting changes'
-        git config user.email "$GITLAB_USER_EMAIL"
-        git config user.name "$GITLAB_USER_NAME"
-        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
-        echo "Attempting to fetch origin"
-        git remote show mr_origin
-        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
-        git add .
-        git commit -m "Lint autofixed by pipeline"
-        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
-        echo 'pushed lint fixes to branch'
-      fi
-
-frontend-builds:
-  extends: .frontend-node
-  stage: build
-  script:
-    - |
-      pushd "front_end"
-          npm run build:ci
-      popd
-
-frontend-tests:
-  extends: .frontend-node
-  stage: test
-  coverage: /^TOTAL.+?(\d+\%)$/
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - front_end/junit/**/junit.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: front_end/coverage/**/cobertura-coverage.xml
-  script:
-    - |
-      pushd "front_end"
-        npm run test:ci
-      popd
-
-.jenkins-builds:
-  extends: .frontend-changes
-  stage: build
-  image: nx/ci
-  artifacts:
-    paths:
-      - logs/**/*
-  secrets:
-    JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
-
-jenkins-build-webadmin:
-  extends: .jenkins-builds
-  rules:
-  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
-    when: on_success
-    changes:
-      - front_end/**/*
-  script:
-    - |
-      set -ex
-      if [[ "$CI_COMMIT_REF_PROTECTED" == true ]]; then
-        PUBLISH=ON
-      else
-        PUBLISH=OFF
-      fi
-    - mkdir logs
-    - echo "Running webadmin build"
-    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
-      "PUBLISH=$PUBLISH"
-      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
-      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
-      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-      "GITLAB_JOB_ID=$CI_JOB_ID"
-      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 2>&1 | tee logs/webadmin.log & WEBADMIN_EXIT="$?"
-    - wait
-
-jenkins-build-frontend:
-  extends: .jenkins-builds
-  script:
-    - mkdir logs
-    - echo "Running frontend build"
-    - runJenkinsJob.sh gitlab.cloud.frontend
-      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-      "BUILD_IDENTITY=$CI_PIPELINE_ID"
-      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
-      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-      "GITLAB_JOB_ID=$CI_JOB_ID"
-      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
-    - wait
-
-create-vms-mr:
-  stage: create mr
-  extends: .jenkins-builds
-  rules:
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-    - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
-    when: on_success
-    changes:
-    - front_end/**/*
-  script:
-    - runJenkinsJob.sh gitlab.vms.review.webadmin.create-vms-mr
-      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
-      "CLOUD_PORTAL_COMMIT=$CI_COMMIT_SHA"
-      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-      "GITLAB_JOB_ID=$CI_JOB_ID"
-      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL"
-
-#wheel-uploader:
-#  extends: .retries
-#  stage: pre-build
-#  script:
-#    - mkdir ~/.nxcloud
-#    - >
-#      echo "auth: $NXCLOUD_UTIL_SERVICE_AUTH" > ~/.nxcloud/config.yaml
-#    - curl -L hdw.mx/linux/nxcloud | tee ./nxcloud > /dev/null && chmod +x ./nxcloud
-#    - cat cloud/requirements.txt | ./nxcloud runCommand UploadWheels
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#      changes:
-#        - cloud/requirements.txt
-
-
-.fail-on:
-  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
-  stage: fail-fast
-  interruptible: true
-  variables:
-    CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
-    CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
-  allow_failure: true
-  script:
-    - cd cloud
-    - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
-    - /usr/local/bin/python -m pip install discord.py
-    - cd bots
-    - python y_u_no_pipeline_bot.py
-    - echo "Canceling jobs still running on pipeline"
-    - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
-
-.fail-on-backend:
-  extends: .fail-on
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - cloud/**/*
-      when: on_failure
-
-.fail-on-frontend:
-  extends: .fail-on
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*
-      when: on_failure
-
-on-other-frontend-checks:
-  extends: .fail-on-frontend
-  needs: ["other-frontend-checks"]
-
-on-frontend-builds:
-  extends: .fail-on-frontend
-  needs: ["frontend-builds"]
-
-on-frontend-tests:
-  extends: .fail-on-frontend
-  needs: ["frontend-tests"]
-
-on-jenkins-builds:
-  extends: .fail-on-frontend
-  needs: ["jenkins-build-frontend"]
-
-on-django-checks:
-  extends: .fail-on-backend
-  needs: ["django-checks"]
-
-on-django-tests-slow:
-  extends: .fail-on-backend
-  needs: ["django-unit-test-slow"]
-
-on-django-tests-fast:
-  extends: .fail-on-backend
-  needs: ["django-unit-test-fast"]
-
-#on-wheel-upload:
-#  extends: .fail-on
-#  needs: ["wheel-uploader"]
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#      changes:
-#        - cloud/requirements.txt
-#      when: on_failure
-
-.hooker:
-  image: ${DJANGO_PYTHON_IMAGE}:develop${DJANGO_PYTHON_IMAGE_TAG}
-  needs: []
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  variables:
-    CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
-    CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
-  allow_failure: true
-  before_script:
-    - cd cloud
-    - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
-    - /usr/local/bin/python -m pip install discord-webhook
-    - /usr/local/bin/python -m pip install gql
-    - /usr/local/bin/python -m pip install aiohttp
-    - cd bots
-
-y-u-no-review:
-  extends: .hooker
-  script:
-    - python y_u_no_review_bot.py
-
 check-python-licenses:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: check
@@ -617,7 +247,7 @@ check-python-licenses:
 #      - cloud/ci-license.json
 #    when: on_failure
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: !reference [ .enable_for_mr_branch ]
       changes:
         - build_scripts/**/requirements.txt
         - cloud/**/pyproject.toml
@@ -629,27 +259,13 @@ check-python-licenses:
     - /usr/local/bin/python -m pip install pip-licenses
     - ./cloud_helper.sh check_licenses
 
-fail-on-python-license-check:
-  extends: .fail-on
-  needs: [check-python-licenses]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - cloud/**/requirements.txt
-        - build_scripts/**/requirements.txt
-        - cloud/**/pyproject.toml
-        - cloud/**/poetry.lock
-        - cloud/**/poetry.toml
-        - cloud/**/allowed_licenses.txt
-      when: on_failure
-
 .cp-backend-changes:
-  extends: .retries
+  # extends: .retries
   needs:
     - job: docker:build-channel-partners
       optional: true
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: !reference [ .enable_for_mr_branch ]
       changes:
         - channel_partners/src/**/*
         - channel_partners/build/channel_partners_ci/**/*
@@ -676,7 +292,7 @@ fail-on-python-license-check:
           echo "Attempt $i Successfully connected to postgres server"
           break
         fi
-      
+
         sleep 5
       done
 
@@ -711,7 +327,7 @@ fail-on-python-license-check:
     DOMAIN_NAME: "cloud-test.hdw.mx"
     NOTIFICATION_SECRET: "notification_user:notification_password"
     QUEUE_CELERY_BROKER_URL: "sqs://"
-    QUEUE_PREFIX: 
+    QUEUE_PREFIX:
     REDIS_HOST: localhost
     REDIS_PORT: 6379
     TRAFFIC_RELAY_DOMAIN: "relay.relay.cloud.hdw.mx"
@@ -745,7 +361,7 @@ fail-on-python-license-check:
       AZTjJgUej4TW1yqC/VZ8QtfzpE2uOorM/T+XEdoQpfRNyZlaBJbJ
       -----END RSA PRIVATE KEY-----
 
-      
+
 
 cp-checks:
   needs:
@@ -798,17 +414,5 @@ cp-lint:
     - ruff check --fix src/
     - echo "Checking imports sorting and grouping."
     - isort /builds/dev/cloud_portal/channel_partners/
-    - |
-      if [[ $(git diff --stat) != '' ]]; then
-        echo 'Linter automatic fixes, attempting commiting changes'
-        git config user.email "$GITLAB_USER_EMAIL"
-        git config user.name "$GITLAB_USER_NAME"
-        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
-        echo "Attempting to fetch origin"
-        git remote show mr_origin
-        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
-        git add .
-        git commit -m "Linter autofixes by pipeline"
-        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
-        echo 'pushed lint fixes to branch'
-      fi
+    - COMMIT_MESSAGE="CPS lint auto fixed"
+    - !reference [".commit-changes", "script"]

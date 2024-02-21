@@ -1,0 +1,18 @@
+variables:
+  IMAGE_VERSION: '40601'
+
+.version-enforced-docker:
+    extends: .docker.template
+    interruptible: true
+    before_script:
+    - |
+      echo "Current image version: ${IMAGE_VERSION}"
+      echo "Current merge request id: ${CI_MERGE_REQUEST_ID}"
+      echo "Current docker directory: ${DOCKER_DIR}"
+
+      if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" && "${IMAGE_VERSION}" != "${CI_MERGE_REQUEST_ID}" ]]; then
+        echo "Please update the IMAGE_VERSION from ${IMAGE_VERSION} to ${CI_MERGE_REQUEST_ID}"
+        echo "see ci/Docker/.version-enforced.yml"
+        exit 1
+      fi
+

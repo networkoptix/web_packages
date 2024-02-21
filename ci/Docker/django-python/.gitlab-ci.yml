@@ -1,7 +1,9 @@
+include:
+  - local: "ci/Docker/.version-enforced.yml"
+
 variables:
   DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_django_python'
-  DJANGO_PYTHON_IMAGE_VERSION: '1.4.4'
-  DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${DJANGO_PYTHON_IMAGE_VERSION}'
+  DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${IMAGE_VERSION}'
 
 
 # Required CI/CD variables, which should be defined on Gitlab instance layer
@@ -10,7 +12,7 @@ variables:
 # - PIP_INDEX_URL
 # - ARTIFACTORY_URL
 docker:build-django-python:
-  extends: .docker.template
+  extends: .version-enforced-docker
   interruptible: true
   variables:
     BUILD_OPTIONS: |
@@ -18,6 +20,7 @@ docker:build-django-python:
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
       --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
   before_script:
+  - !reference [".version-enforced-docker", "before_script"]
   - |
     DOCKER_DIR="ci/Docker/django-python"
     touch build-django.env
@@ -25,12 +28,12 @@ docker:build-django-python:
       DJANGO_PYTHON_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"
       echo "DJANGO_PYTHON_IMAGE_TAG=${DJANGO_PYTHON_IMAGE_TAG}" > build-django.env
     fi
-    
+
     if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
-      DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${DJANGO_PYTHON_IMAGE_VERSION}"
+      DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${IMAGE_VERSION}"
       echo "DJANGO_PYTHON_IMAGE_TAG=${DJANGO_PYTHON_IMAGE_TAG}" > build-django.env
     fi
-    
+
     TARGET_IMAGE="${DJANGO_PYTHON_IMAGE}"
     TARGET_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}"
   artifacts:

@@ -1,7 +1,9 @@
+include:
+  - local: "ci/Docker/.version-enforced.yml"
+
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_DJANGO_PYTHON_IMAGE_VERSION: '1.4.18'
-  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}'
+  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${IMAGE_VERSION}'
 
 
 # Required CI/CD variables, which should be defined on Gitlab instance layer
@@ -10,7 +12,7 @@ variables:
 # - PIP_INDEX_URL
 # - ARTIFACTORY_URL
 docker:build-channel-partners:
-  extends: .docker.template
+  extends: .version-enforced-docker
   interruptible: true
   variables:
     BUILD_OPTIONS: |
@@ -18,14 +20,15 @@ docker:build-channel-partners:
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
       --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
   before_script:
+  - !reference [".version-enforced-docker", "before_script"]
   - |
     DOCKER_DIR="channel_partners/build/channel_partners_ci"
     touch build-cp-django.env
     if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
-      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}"
-    fi    
+      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${IMAGE_VERSION}"
+    fi
     echo "CP_DJANGO_PYTHON_IMAGE_TAG=${CP_DJANGO_PYTHON_IMAGE_TAG}" > build-cp-django.env
-    
+
     TARGET_IMAGE="${CP_DJANGO_PYTHON_IMAGE}"
     TARGET_IMAGE_TAG="${CP_DJANGO_PYTHON_IMAGE_TAG}"
   artifacts:
