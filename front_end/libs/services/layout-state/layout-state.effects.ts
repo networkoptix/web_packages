@@ -364,10 +364,25 @@ export class LayoutStateEffects {
     deleteLayout$ = createEffect(() => {
         return this.actions.pipe(
             ofType(SharedLayoutsActions.deleteLayout),
-            switchMap(async ({ layoutIds }) => {
+            map(({ layoutIds }) => {
+                const layouts = this.store.selectSignal(selectLayoutsState)();
+                return layoutIds.reduce(
+                    (acc, id) => {
+                        const isLocalLayout = layouts.find(
+                            ({ id: layoutId, layoutType }) =>
+                                layoutId === id && layoutType === LayoutTypes.LOCAL,
+                        );
+
+                        (isLocalLayout ? acc.localLayouts : acc.crossSystemLayouts).push(id);
+                        return acc;
+                    },
+                    { localLayouts: [] as string[], crossSystemLayouts: [] as string[] } as const,
+                );
+            }),
+            switchMap(async ({ localLayouts, crossSystemLayouts }) => {
                 const mediaserver = this.systemService.getCurrentSystem()
                     .mediaserver as NxSystemRestAPI3;
-                const deletedLocalLayouts = layoutIds.map(layoutId =>
+                const deletedLocalLayouts = localLayouts.map(layoutId =>
                     firstValueFrom(
                         mediaserver.deleteLayout(layoutId).pipe(
                             map(() => layoutId),
@@ -376,7 +391,7 @@ export class LayoutStateEffects {
                     ),
                 );
 
-                const deletedCrossSystemLayouts = layoutIds.map(layoutId => {
+                const deletedCrossSystemLayouts = crossSystemLayouts.map(layoutId => {
                     const cleanedLayoutId = cleanId(layoutId);
                     return firstValueFrom(
                         this.layoutStateService.crossSystemLayoutApi
