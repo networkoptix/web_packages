@@ -216,7 +216,9 @@ export class NxOrganizationSettingsComponent implements OnInit {
         if (this.updatedName.value) {
             orgBody.name = this.updatedName.value;
         }
-        if (this.updatedPartnerAccess.value) {
+        if (this.updatedPartnerAccess.value === 'serviceManagementOnly') {
+            orgBody.channelPartnerAccessLevel = null;
+        } else if (this.updatedPartnerAccess.value) {
             orgBody.channelPartnerAccessLevel = this.updatedPartnerAccess.value;
         }
         return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
