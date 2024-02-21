@@ -1,9 +1,9 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, Subject, takeUntil, timer } from 'rxjs';
+import { firstValueFrom, Observable, Subject, takeUntil, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -41,7 +41,7 @@ import type { Disconnect as DT } from '../dialogs.types';
         NxProcessCancelButtonComponent,
     ],
 })
-export class DisconnectModalContent extends ModalBase<DT['return']> {
+export class DisconnectModalContent extends ModalBase<DT['return']> implements OnInit {
     readonly environment: IEnvironment = environment;
     LANG = staticLang;
     disconnect: Process;
@@ -62,6 +62,9 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
+        const isOrgSystem =
+            'organizationId' in
+            (this.systemsService.systems.find(({ id }) => id === this.system.id) ?? {});
         this.disconnect = this.processService.createProcess(
             () => {
                 this.lock();
@@ -70,8 +73,14 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                     return this.disconnectLocal();
                 }
                 return new Promise<void>((resolve, reject) => {
-                    this.cloudApiService
-                        .disconnect(this.system.id)
+                    const disconnectPromise = isOrgSystem
+                        ? firstValueFrom(
+                              this.cloudApiService.cloudChannelPartnersApi.disconnectSystem(
+                                  this.system.id,
+                              ),
+                          )
+                        : this.cloudApiService.disconnect(this.system.id);
+                    disconnectPromise
                         .then(() => {
                             this.getSystems()
                                 .pipe(takeUntil(this.unsub$))
