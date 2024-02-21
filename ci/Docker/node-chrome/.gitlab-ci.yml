@@ -1,6 +1,6 @@
 variables:
   NODE_JS_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_node_js'
-  NODE_JS_IMAGE_VERSION: '1.3'
+  NODE_JS_IMAGE_VERSION: '1.4'
   NODE_JS_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${NODE_JS_IMAGE_VERSION}'
 
 docker:build-node-chrome:

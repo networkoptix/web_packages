@@ -1,9 +1,5 @@
 const defaultCloud = 'https://cloud-test.hdw.mx';
 const proxyTargetConfig = {
-    brova: {
-        host: 'http://brova.mykeenetic.ru:7001',
-        cloud: defaultCloud
-    },
     demo: {
         host: 'http://demo.networkoptix.com:7001',
         cloud: defaultCloud

@@ -169,8 +169,8 @@ django-unit-test-fast:
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
     - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
   rules:
-  - if: !reference [ .enable_for_mr ]
-    changes: [ .frontend_changes ]
+    - if: !reference [ .enable_for_mr ]
+      changes: !reference [ .frontend_changes ]
 
 other-frontend-checks:
   extends: .frontend-node
