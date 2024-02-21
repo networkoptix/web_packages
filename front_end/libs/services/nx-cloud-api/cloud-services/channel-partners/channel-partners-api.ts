@@ -258,6 +258,9 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         ).pipe(getResults());
     };
 
+    disconnectSystem = (systemId: string): Observable<void> =>
+        this.delete(`/cloud_systems/${systemId}/`);
+
     /* System Services */
     getSystem = (id: string): Observable<unknown> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
