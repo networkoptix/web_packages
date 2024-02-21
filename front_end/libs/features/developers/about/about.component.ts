@@ -106,7 +106,7 @@ export class NxAboutComponent {
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
             setTimeout(() => {
-                this.injector.get(NxPageService).redirect404();
+                this.injector.get(NxPageService).show404();
             });
             return;
         }
@@ -211,7 +211,7 @@ export class NxAboutComponent {
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: developers.landing.adminLink.replace('%ID%', id)
+                value: this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(

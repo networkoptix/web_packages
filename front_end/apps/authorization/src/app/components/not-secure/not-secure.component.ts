@@ -32,11 +32,8 @@ export class NxAuthorizeNotSecureComponent {
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     constructor(
-        language: NxLanguageProviderService,
         configService: NxConfigService
     ) {
-        const lang = language.translations;
-        this.LANG = lang;
         this.CONFIG = configService.getConfig();
     }
 
