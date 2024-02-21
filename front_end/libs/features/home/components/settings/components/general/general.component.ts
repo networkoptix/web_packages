@@ -23,11 +23,16 @@ const partnerAccess: DropdownItem<string>[] = [
         name: 'System Health Viewer',
         value: OrgRoleIds.SysHealthViewer,
     },
+    {
+        name: 'Service Management Only',
+        value: 'serviceManagementOnly',
+    },
 ];
 
 const accessMap: { [key: string]: DropdownItem<string> } = {
     [OrgRoleIds.OrgAdmin]: partnerAccess[0],
     [OrgRoleIds.SysHealthViewer]: partnerAccess[1],
+    serviceManagementOnly: partnerAccess[2],
 };
 
 @Component({

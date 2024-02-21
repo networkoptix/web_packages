@@ -190,7 +190,7 @@ export interface CreateOrganization {
 export type UpdateOrganization = Partial<{
     state: State;
     channelPartner: string;
-    channelPartnerAccessLevel: string;
+    channelPartnerAccessLevel: string | null;
     attributes?: Record<string, unknown>;
     currentServices?: Record<string, unknown>;
     name: string;
