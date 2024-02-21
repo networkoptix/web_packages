@@ -68,7 +68,7 @@
                 <ng-container *ngIf="information.sites?.length; else noSites">
                     <nx-info-form
                         [formId]="'sites'"
-                        [linkCaption]="'site'"
+                        [linkCaption]="'site' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'https://'"
                         [data]="information.sites"
@@ -103,7 +103,7 @@
                 <ng-container *ngIf="information.phones?.length; else noPhones">
                     <nx-info-form
                         [formId]="'phones'"
-                        [linkCaption]="'phone'"
+                        [linkCaption]="'phone' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'tel:'"
                         [data]="information.phones"
@@ -138,7 +138,7 @@
                 <ng-container *ngIf="information.emails?.length; else noEmails">
                     <nx-info-form
                         [formId]="'emails'"
-                        [linkCaption]="'email'"
+                        [linkCaption]="'email' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'mailto:'"
                         [data]="information.emails"
@@ -173,7 +173,8 @@
                 <ng-container *ngIf="information.custom?.length; else noCustom">
                     <nx-info-form
                         [formId]="'custom'"
-                        [linkCaption]="'label'"
+                        [linkCaption]="'label' | translate"
+                        [descrCaption]="'value' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="''"
                         [data]="information.custom"
