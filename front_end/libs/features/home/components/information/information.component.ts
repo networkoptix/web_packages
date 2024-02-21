@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect } from '@angular/core';
 import { ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
 
@@ -53,6 +54,7 @@ const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
         NxPagePlaceholderV2Component,
         NxInfoGroupComponent,
         NxApplyComponent,
+        TranslateModule,
     ],
 })
 export class NxChannelPartnerInformationComponent {
