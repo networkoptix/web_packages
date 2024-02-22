@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, firstValueFrom, map, mergeMap, of } from 'rxjs';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -139,9 +139,16 @@ export class NxOrganizationsComponent implements OnInit {
             .pipe(
                 map(({ params }) => params.organizationId),
                 distinctUntilChanged(),
+                mergeMap(id => combineLatest([of(id), this.cpService.getOrgGroups(id)])),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(async id => {
+            .subscribe(async ([id, groups]) => {
+                this.isLoading = true;
+                this.store.dispatch(
+                    groupActions.setGroups({
+                        groups: this.processGroups(groups),
+                    }),
+                );
                 this.tabs = [];
                 const orgs = this.organizations$$();
                 const partnerOrgs = this.currentPartnerOrganizations$$();
@@ -196,14 +203,6 @@ export class NxOrganizationsComponent implements OnInit {
                 }
                 this.isLoading = false;
             });
-
-        this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
-            this.store.dispatch(
-                groupActions.setGroups({
-                    groups: this.processGroups(groups),
-                }),
-            );
-        });
     }
 
     public handleSidebarTogglingEarClick(): void {
