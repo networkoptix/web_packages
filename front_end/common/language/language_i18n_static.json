@@ -1410,7 +1410,8 @@
     "placeholderV2Texts": {
         "noInfo": {
             "title": "No Information",
-            "message": "You have not yet added any information."
+            "message": "You have not yet added any information.",
+            "buttonText": "Add Information"
         }
     },
     "placeholderTexts": {
