@@ -23,6 +23,7 @@
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>
         <nx-settings-state
+            *ngIf="isDirectParentCP$$()"
             (updateState)="handleStateUpdate($event)"
             [currState]="state.item.state"
             [canChange]="state.canUpdateStatus"
