@@ -3,40 +3,40 @@
     "emailSubject": "Activa a túa conta"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Fuches convidado a %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Consulta de vendas para {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Consulta técnica para {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Comentarios para {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Opinión sobre a cámara{{#message.asset}} para {{{message.asset}}}{{/message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "Transferencia de propiedade para {{message.system_name}}"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "Transferencia de propiedade para {{message.system_name}} - {{message.status}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} ten unha nova versión para revisar"
   },
   "restore_password": {
-    "emailSubject": "Reset your password"
+    "emailSubject": "Restablece o teu contrasinal"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} convídate a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}O sistema de vídeo {{{message.system_name}}} compartiuse contigo{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "O sistema de vídeo {{{message.system_name}}} compartiuse contigo"
   },
   "cps_organization_invite": {
     "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
