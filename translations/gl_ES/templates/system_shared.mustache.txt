@@ -5,7 +5,7 @@ Ola, {{message.userFullName}}
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Concedéuselle acceso ao sistema de xestión de vídeos "{{message.system_name}}".
+Concedéuseche acceso ao sistema de xestión de vídeos "{{message.system_name}}".
 {{/message.sharer_name}}
 
 Ver no portal %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}
