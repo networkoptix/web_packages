@@ -47,9 +47,9 @@ function brew_install() {
     pip install poetry==1.5.1
     echo 'Installing node v18.15.0'
     n 18.15.0
-    echo 'Installing python 3.8.10'
-    pyenv install 3.8.10
-    pyenv local 3.8.10
+    echo 'Installing python 3.11.4'
+    pyenv install 3.11.4
+    pyenv local 3.11.4
     virtualenv -p "$(pyenv which python)" env
     echo 'Brew install complete.'
 }
