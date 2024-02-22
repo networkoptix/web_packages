@@ -5,8 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -28,8 +27,7 @@ import { NxToastService } from '@services/toast.service';
         FormsModule,
         TranslateModule,
 
-        NxCheckboxComponent,
-        NxNumericComponent,
+        NxEmailComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
     ],
@@ -37,14 +35,10 @@ import { NxToastService } from '@services/toast.service';
 export class AddPartnerModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
-    name: string;
-    canCreateSubChannels: boolean = true;
-    hasMonthlyLimit: boolean;
-    monthlyAdditionalServiceLimit: number = 0;
+    name: string = '';
+    firstAdminEmail: string = '';
 
     addPartnerProcess: Process;
-
-    readonly POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
 
     /* Assuming no way to create top level partners for now, also assuming that
     create partner buttons will be all associated with a parent partner */
@@ -63,10 +57,7 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
                     this.cpService.createChannelPartner({
                         name: this.name,
                         parentChannelPartner,
-                        canCreateSubChannels: this.canCreateSubChannels,
-                        monthlyAdditionalServiceLimit: this.hasMonthlyLimit
-                            ? this.monthlyAdditionalServiceLimit
-                            : undefined,
+                        firstAdminEmail: this.firstAdminEmail,
                     }),
                 );
             },

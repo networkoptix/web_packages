@@ -91,6 +91,12 @@ export enum ChannelPartnerRoles {
     REPORTS_VIEWER = 'Reports Viewer',
 }
 
+export enum ChannelPartnerRoleIds {
+    ADMINISTRATOR = '00000000-0000-4000-8000-000000000001',
+    MANAGER = '00000000-0000-4000-8000-000000000002',
+    REPORTS_VIEWER = '00000000-0000-4000-8000-000000000003',
+}
+
 export interface InfoRowServer {
     value: string;
     description: string;
@@ -130,6 +136,7 @@ export interface CreateChannelPartner {
     attributes?: Record<string, unknown>;
     canCreateSubChannels?: boolean;
     monthlyAdditionalServiceLimit?: number | null;
+    firstAdminEmail?: string;
 }
 
 export type UpdateChannelPartner = Partial<{

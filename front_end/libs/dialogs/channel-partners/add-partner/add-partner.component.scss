@@ -1,26 +1,9 @@
 :host {
-    nx-checkbox + span {
-        height: 24px;
-        line-height: 24px;
+    .warning-container {
+        height: 1.5rem;
     }
 
-    .monthly-limit-container {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-
-        label {
-            margin-bottom: 0 !important;
-        }
-
-        & > div {
-            display: flex;
-            align-items: center;
-
-            nx-numeric {
-                max-width: 60px;
-            }
-        }
+    .modal-footer {
+        padding-top: 0.5rem !important;
     }
 }
