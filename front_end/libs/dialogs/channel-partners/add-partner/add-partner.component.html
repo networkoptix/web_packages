@@ -1,4 +1,5 @@
 <form
+    #addPartnerForm="ngForm"
     name="addPartnerForm"
     novalidate
 >
@@ -23,41 +24,58 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label translate>Name</label>
+            <label
+                for="partnerName"
+                translate
+                >Name</label
+            >
             <input
                 class="form-control"
                 id="partnerName"
                 name="partnerName"
                 [(ngModel)]="name"
+                #partnerName="ngModel"
                 required
             />
-        </div>
-        <div>
-            <label>
-                <nx-checkbox
-                    name="canCreateSubChannels"
-                    componentId="canCreateSubChannels"
-                    [(ngModel)]="canCreateSubChannels"
-                ></nx-checkbox>
-                <span translate>Can create subchannels</span>
-            </label>
-        </div>
-        <div class="monthly-limit-container">
-            <label translate>Monthly additional service limit</label>
-            <div>
-                <nx-checkbox
-                    name="hasMonthlyLimit"
-                    componentId="hasMonthlyLimit"
-                    [(ngModel)]="hasMonthlyLimit"
-                    [ngModelOptions]="{ standalone: true }"
-                ></nx-checkbox>
-                <nx-numeric
-                    [min]="0"
-                    [max]="POSITIVE_INFINITY"
-                    [disabled]="!hasMonthlyLimit"
-                    [(ngModel)]="monthlyAdditionalServiceLimit"
-                    [ngModelOptions]="{ standalone: true }"
-                ></nx-numeric>
+            <div class="warning-container">
+                <span
+                    *ngIf="partnerName.touched && partnerName.errors?.required"
+                    class="input-error"
+                    translate
+                    >Required</span
+                >
+            </div>
+
+            <label
+                for="ownerEmail"
+                translate
+                >Owner email</label
+            >
+            <nx-email-input
+                class="fs-mask form-component"
+                id="ownerEmail"
+                name="ownerEmail"
+                componentId="ownerEmail"
+                [(ngModel)]="firstAdminEmail"
+                [form]="addPartnerForm"
+                #ownerEmail="ngModel"
+            >
+            </nx-email-input>
+            <div class="warning-container">
+                <ng-container *ngIf="ownerEmail.touched">
+                    <span
+                        *ngIf="ownerEmail.errors?.required"
+                        class="input-error"
+                        translate
+                        >Required</span
+                    >
+                    <span
+                        *ngIf="ownerEmail.errors?.pattern"
+                        class="input-error"
+                        translate
+                        >Invalid email</span
+                    >
+                </ng-container>
             </div>
         </div>
     </div>
@@ -65,6 +83,7 @@
         <nx-process-button
             [process]="addPartnerProcess"
             [buttonText]="'Create' | translate"
+            [buttonDisabled]="!!(partnerName.errors || ownerEmail.errors)"
         ></nx-process-button>
         <nx-cancel-button
             [process]="addPartnerProcess"

@@ -305,7 +305,7 @@ export class NxDialogsService {
             import('./channel-partners/add-partner/add-partner.component').then(
                 m => m.AddPartnerModalContent,
             ),
-        { autoFocus: 'input' },
+        { autoFocus: 'input', width: '313px' },
     );
 
     updateChannelPartner = this.dialogV2Factory<Dt.EditChannelPartner>(() =>
