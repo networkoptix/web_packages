@@ -5,7 +5,7 @@
     >
     </nx-page-placeholder-v2>
 
-    <nx-block type="tile">
+    <nx-block type="tile dense">
         <header>
             <h4
                 class="float-left"
@@ -66,7 +66,23 @@
                 [ngClass]="{ 'in-edit-mode': editMode }"
             >
                 <div
-                    class="header-title"
+                    class="info-note"
+                    *ngIf="editMode"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'info.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [applyClass]="true"
+                    ></svg-icon>
+                    <span translate
+                        >Remember that this information will be seen not only by your employees, but
+                        also by your partners and organizations.</span
+                    >
+                </div>
+                <div
+                    class="section-header"
+                    [ngClass]="{ 'in-edit-mode': editMode }"
                     translate
                 >
                     Phones
