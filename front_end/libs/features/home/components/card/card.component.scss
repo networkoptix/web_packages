@@ -10,23 +10,27 @@ $card-width: 20rem;
 $card-border-radius: 12px;
 
 .card {
-  border: none;
-  background-color: transparent;
-  
-  width: $card-width;
-  height: $card-height;
-  user-select: none;
-  cursor: pointer;
-  // overflow    : hidden;
+    border: 1px solid var(--system-card-border-color);
+    border-radius: $card-border-radius;
+    background-color: var(--system-card-bg);
+    box-shadow: 0 1px 2px 0 #1018280F;
+
+    width: $card-width;
+    height: $card-height;
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--system-card-bg-grad0);
+        box-shadow: 0 1px 3px 0 #1018281A;
+    }
   
   &.card-condensed {
       .card-body {
           display: flex;
           flex-direction: column;
           height: 100%;
-          border-radius: $card-border-radius;
           padding: $card-vertical-padding 1rem;
-          background: var(--system-card-bg);
 
           .info {
             display: flex;
@@ -36,22 +40,18 @@ $card-border-radius: 12px;
             width: 100%;
           }
 
-          &:hover {
-              background: var(--system-card-bg-grad0);
-          }
-
           &.not-online {
               h2 {
                   color: var(--system-card-offline-color) !important;
               }
-              background: linear-gradient(
+              background-color: linear-gradient(
                   180deg,
                   rgba(var(--system-card-bg-grad0--rgb), 0.3) 0%,
                   rgba(var(--system-card-bg-grad100--rgb), 0.3) 100%
               );
 
               &:hover {
-                  background: rgba(var(--system-card-bg-grad0--rgb), 0.3);
+                  background-color: rgba(var(--system-card-bg-grad0--rgb), 0.3);
               }
           }
 
