@@ -487,25 +487,46 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data_copied)
 
+    def get_or_create_relation(
+            self,
+            user: CloudUser,
+            channel_partner: ChannelPartner
+    ) -> ChannelPartnerToUser:
+        try:
+            return ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)[0]
+        except ChannelPartnerToUser.MultipleObjectsReturned:
+            relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by(
+                'created_ts')
+            relation = relations.first()
+            relations.exclude(id=relation.id).delete()
+            return relation
+
+    def validate(self, attrs):
+        user = attrs.get('user').get('email')
+        role = attrs.get('roleId') or attrs.get('role')
+        channel_partner = self.context.get('channel_partner')
+        admins_queryset = ChannelPartnerToUser.objects.filter(
+            channel_partner=channel_partner, roles__contains=[ChannelPartnerRoles.ADMINISTRATOR])
+        if all([
+            role.id != ChannelPartnerRoles.ADMINISTRATOR,
+            admins_queryset.exists(),
+            not admins_queryset.exclude(user=user).exists(),
+        ]):
+            raise ValidationError({'roleId': ['It is impossible to change role for the only administrator.']})
+        return attrs
+
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
         role = validated_data.get('roleId') or validated_data.get('role')
         title = validated_data.get('title')
         channel_partner = self.context.get('channel_partner')
         created_by = getattr(self.context.get('request'), 'user', None)
-
-        # In case of some situation with multiple user records for same entity
-        try:
-            relation, _ = ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
-        except ChannelPartnerToUser.MultipleObjectsReturned:
-            relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by(
-                'created_ts')
-            relation = relations.first()
-            relations.exclude(id=relation.id).delete()
-
+        relation = self.get_or_create_relation(user, channel_partner)
         # Set attributes
-        attributes = validated_data.get('attributes', {})
-        relation.set_attributes(attributes)
+        if 'attributes' in validated_data:
+            # Todo. Looks like it works not like it is supposed to do.
+            attributes = validated_data.get('attributes', {})
+            relation.set_attributes(attributes, partial=True)
 
         relation.title = title
         relation.roles = [role.id]
@@ -623,9 +644,23 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         relation = sorted(obj.organization_relations, key=lambda rel: rel.created_ts)[0]
         return relation.title
 
+    def validate(self, attrs: dict) -> dict:
+        organization = self.context.get('organization')
+        user = attrs.get('email')
+        role = attrs.get('roleId') or attrs.get('role')
+        admins_queryset = OrganizationToUser.objects.filter(
+            organization=organization, roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
+        if (
+            role.id != OrganizationRoles.ORGANIZATION_ADMINISTRATOR and
+            admins_queryset.exists() and
+            not admins_queryset.exclude(user__email=user).exists()
+        ):
+            raise ValidationError({'roleId': ['It is impossible to change role for the only administrator.']})
+        return attrs
+
     def create(self, validated_data):
         role = validated_data.get('roleId') or validated_data.get('role')
-        user, _ = CloudUser.objects.get_or_create(email=validated_data['email'])
+        user = validated_data['email']
         title = validated_data.get('title', '')
         organization = self.context.get('organization')
         created_by = self.context['request'].user

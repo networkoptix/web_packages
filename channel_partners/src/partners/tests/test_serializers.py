@@ -707,6 +707,39 @@ class TestOrganizationUserSerializer:
         assert serializer.errors
         assert serializer.errors['role'][0]
 
+    def test_changing_the_only_admin(self, mock_new_org_user_role_notification, org_user_factory):
+        user= org_user_factory(organization=self.org)
+        data = {
+            'email': user.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is False
+        assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+
+    def test_changing_the_second_admin(self, mock_new_org_user_role_notification, org_user_factory):
+        user = org_user_factory(organization=self.org)
+        other_user = org_user_factory(organization=self.org)
+        data = {
+            'email': user.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is True
+
+    def test_changing_the_only_admin_2_users(self, mock_new_org_user_role_notification, org_user_factory):
+        user = org_user_factory(organization=self.org)
+        other_user = org_user_factory(organization=self.org, role=OrganizationRoles.POWER_USER)
+        data = {
+            'email': user.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is False
+        assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
 
 class TestSystemGroupUserSerializer:
 
