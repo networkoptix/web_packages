@@ -19,6 +19,7 @@
         </ng-container>
         <div
             class="slider"
+            *ngIf="tabItems.length"
             [ngStyle]="{
                 transition:
                     animated || animationSpeed
