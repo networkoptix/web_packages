@@ -1,10 +1,10 @@
 import type { InfoDataServer } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export enum CPInfoType {
-    URL,
-    PHONE,
-    EMAIL,
-    CUSTOM,
+    URL = 'sites',
+    PHONE = 'phones',
+    EMAIL = 'emails',
+    CUSTOM = 'custom',
 }
 
 export interface CPInfoDataEvent {

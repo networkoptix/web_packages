@@ -11,7 +11,7 @@
         grid-template-columns: 60% 1fr;
         grid-template-areas: 'description' 'contact';
         min-height: 20rem;
-        padding: 1rem;
+        padding: 1rem 1rem 82px;
         gap: 1rem;
 
         @include bootstrap.media-breakpoint-down(md) {

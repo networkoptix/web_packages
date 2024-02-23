@@ -67,8 +67,8 @@
                 </div>
                 <ng-container *ngIf="information.sites?.length; else noSites">
                     <nx-info-form
-                        [formId]="'sites'"
-                        [linkCaption]="'site'"
+                        [formId]="CPInfoType.URL"
+                        [linkCaption]="'site' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'https://'"
                         [data]="information.sites"
@@ -118,8 +118,8 @@
                 </div>
                 <ng-container *ngIf="information.phones?.length; else noPhones">
                     <nx-info-form
-                        [formId]="'phones'"
-                        [linkCaption]="'phone'"
+                        [formId]="CPInfoType.PHONE"
+                        [linkCaption]="'phone' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'tel:'"
                         [data]="information.phones"
@@ -153,8 +153,8 @@
                 </div>
                 <ng-container *ngIf="information.emails?.length; else noEmails">
                     <nx-info-form
-                        [formId]="'emails'"
-                        [linkCaption]="'email'"
+                        [formId]="CPInfoType.EMAIL"
+                        [linkCaption]="'email' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="'mailto:'"
                         [data]="information.emails"
@@ -208,8 +208,9 @@
                 </div>
                 <ng-container *ngIf="information.custom?.length; else noCustom">
                     <nx-info-form
-                        [formId]="'custom'"
-                        [linkCaption]="'label'"
+                        [formId]="CPInfoType.CUSTOM"
+                        [linkCaption]="'label' | translate"
+                        [descrCaption]="'value' | translate"
                         [editMode]="editMode"
                         [linkPredicate]="''"
                         [data]="information.custom"

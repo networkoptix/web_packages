@@ -77,6 +77,31 @@
                             type="text"
                             formControlName="description"
                         />
+                        <ng-container
+                            *ngIf="
+                                row.get('description').invalid &&
+                                ((row.get('description').dirty &&
+                                    !row.get('description').errors?.pattern) ||
+                                    row.get('description').touched)
+                            "
+                        >
+                            <p
+                                *ngIf="row.get('description').errors.required; else customError"
+                                class="error-label mt-1 mb-0"
+                                data-testid="linkRequiredError"
+                                translate
+                            >
+                                Required
+                            </p>
+                            <ng-template #customError>
+                                <p
+                                    class="error-label mt-1 mb-0"
+                                    data-testid="linkCustomError"
+                                >
+                                    {{ row.get('description').errors.msg }}
+                                </p>
+                            </ng-template>
+                        </ng-container>
                     </div>
                     <div
                         class="clickable"
