@@ -1,3 +1,6 @@
+@use './mixins' as mixins;
+
+
 .selected-scroll-item {
     background-color: var(--dropdown-item-selected-bg) !important;
     color: var(--dropdown-item-selected-color) !important;
@@ -12,12 +15,12 @@
     border: 1px solid var(--input-border-color);
     border-radius: 2px;
     height: 167px;
-    width: 320px;
     margin-top: 8px;
-}
 
-.scroll-item {
-    color: var(--dropdown-item-color);
-    height: 28px;
-    padding: 6px 8px;
+    .scroll-item {
+        @include mixins.ellipsis;
+        color: var(--dropdown-item-color);
+        height: 28px;
+        padding: 6px 8px;
+    }
 }
