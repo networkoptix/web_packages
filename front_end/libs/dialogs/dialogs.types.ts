@@ -158,7 +158,7 @@ export type CreateSystemGroup = DialogType<
         orgId: string;
         parentGroup: string;
     },
-    void
+    GroupItem
 >;
 
 export type UpdateSystemGroup = DialogType<string, GroupItem>;

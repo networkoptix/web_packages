@@ -61,7 +61,7 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
                 return firstValueFrom(this.cpService.createGroup(data));
             },
             {},
-            () => this.close(),
+            res => this.close(res),
         );
     }
 

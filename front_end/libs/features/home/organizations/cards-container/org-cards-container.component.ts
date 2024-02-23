@@ -179,11 +179,28 @@ export class NxOrganizationCardContainerComponent {
     }
 
     newGroupDialog(): void {
-        this.dialogsService.createSystemGroup({
-            parentGroup: this.currentGroupId$$(),
-            orgId: this.currentOrgId$$(),
-            hasGroups: this.hasGroups$$(),
-        });
+        const currGroupId = this.currentGroupId$$();
+        this.dialogsService
+            .createSystemGroup({
+                parentGroup: currGroupId,
+                orgId: this.currentOrgId$$(),
+                hasGroups: this.hasGroups$$(),
+            })
+            .then(group => {
+                if (group) {
+                    const groups = structuredClone(this.groupItems$$()) || [];
+                    if (group.parentId) {
+                        const currGroupIndex = groups.findIndex(group => group.id === currGroupId);
+                        groups[currGroupIndex] = {
+                            ...groups[currGroupIndex],
+                            children: [...groups[currGroupIndex].children, group],
+                        };
+                    } else {
+                        groups.push(group);
+                    }
+                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                }
+            });
     }
 
     handleGroupClick(group: GroupItem): void {
@@ -240,8 +257,13 @@ export class NxOrganizationCardContainerComponent {
                                 groups: this.rootGroups$$(),
                             })
                             .then(newGroup => {
-                                if ('parentId' in newGroup) {
-                                    this.updateGroup(newGroup, group);
+                                if (newGroup && 'parentId' in newGroup) {
+                                    const processedGroup = {
+                                        ...group,
+                                        ...newGroup,
+                                        children: group.children,
+                                    };
+                                    this.updateGroup(processedGroup, group);
                                 }
                             });
                     },
