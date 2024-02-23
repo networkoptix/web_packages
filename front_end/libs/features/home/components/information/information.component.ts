@@ -85,6 +85,7 @@ export class NxChannelPartnerInformationComponent {
         Validators.required,
         this.nxValidators.email(),
     ];
+    customValidators: Array<ValidationErrors | null | ValidatorFn> = [Validators.required];
 
     validForms: Record<string, boolean> = {
         phones: true,
@@ -97,7 +98,7 @@ export class NxChannelPartnerInformationComponent {
         phones: this.phoneValidators,
         emails: this.emailValidators,
         sites: this.siteValidators,
-        custom: [],
+        custom: this.customValidators,
     };
 
     mapInfoFor(type: string, psi: InfoDataServer[]): void {
@@ -108,7 +109,7 @@ export class NxChannelPartnerInformationComponent {
             let value: string;
             let description: string;
 
-            if (type === 'custom') {
+            if (type === CPInfoType.CUSTOM) {
                 value = (item as CustomRowServer).label || (item as ControlRow).data;
                 description =
                     (item as CustomRowServer).value || (item as ControlRow).description || null;
@@ -127,8 +128,12 @@ export class NxChannelPartnerInformationComponent {
                 },
             };
 
-            if (type === 'sites') {
+            if (type === CPInfoType.URL) {
                 delete newItem.description;
+            }
+
+            if (type === CPInfoType.CUSTOM) {
+                newItem.description.validation = this.validationType[type];
             }
 
             this.information[type].push(newItem);
@@ -137,10 +142,12 @@ export class NxChannelPartnerInformationComponent {
 
     mapPartnerSupportInfo(psi: SupportInformationSever): void {
         if (psi) {
-            ['sites', 'phones', 'emails', 'custom'].forEach(type => {
-                this.mapInfoFor(type, psi[type]);
-                this.hasInformation ||= psi[type].length;
-            });
+            [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(
+                type => {
+                    this.mapInfoFor(type, psi[type]);
+                    this.hasInformation ||= psi[type].length > 0;
+                },
+            );
         }
     }
 
@@ -168,9 +175,9 @@ export class NxChannelPartnerInformationComponent {
 
     mapDataToServer(): SupportInformationSever {
         return {
-            sites: this.formToServerData('sites'),
-            emails: this.formToServerData('emails'),
-            phones: this.formToServerData('phones'),
+            sites: this.formToServerData(CPInfoType.URL),
+            emails: this.formToServerData(CPInfoType.EMAIL),
+            phones: this.formToServerData(CPInfoType.PHONE),
             custom: this.formCustomToServerData(),
         };
     }
@@ -213,45 +220,28 @@ export class NxChannelPartnerInformationComponent {
         this.editMode = !this.editMode;
     };
 
-    addRecordTo(type: CPInfoType): void {
-        let target: string = '';
-        let description: string | undefined = '';
-        let validators: Array<ValidationErrors | null | ValidatorFn> = [];
-
-        switch (type) {
-            case CPInfoType.URL:
-                target = 'sites';
-                validators = this.siteValidators;
-                description = undefined;
-                break;
-            case CPInfoType.PHONE:
-                target = 'phones';
-                validators = this.phoneValidators;
-                break;
-            case CPInfoType.EMAIL:
-                target = 'emails';
-                validators = this.emailValidators;
-                break;
-            case CPInfoType.CUSTOM:
-                target = 'custom';
-                validators = [];
-                break;
-        }
-
-        const data = [...this.information[target]];
+    addRecordTo(type: string): void {
+        const data = [...this.information[type]];
         const newRecord: InfoRow = {
             data: {
                 value: '',
-                validation: validators,
+                validation: this.validationType[type],
+            },
+            description: {
+                value: '',
             },
         };
 
-        if (description) {
-            newRecord.description.value = description;
+        if (type === CPInfoType.URL) {
+            delete newRecord.description;
         }
 
-        data.push(newRecord); // = { ...this.information, [target]: newTargetArray };
-        this.information[target] = [...data];
+        if (type === CPInfoType.CUSTOM) {
+            newRecord.description.validation = this.validationType[type];
+        }
+
+        data.push(newRecord);
+        this.information[type] = [...data];
         this.hasChanges = true;
     }
 

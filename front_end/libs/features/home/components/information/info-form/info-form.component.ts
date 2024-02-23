@@ -84,9 +84,10 @@ export class NxInfoGroupComponent {
             return false;
         } else {
             for (let idx = 0; idx < currValues.length; idx++) {
+                const description = data[idx].description.value || '';
                 if (
                     currValues[idx].value.data !== data[idx].data.value ||
-                    currValues[idx].value.description !== data[idx].description.value
+                    currValues[idx].value.description !== description
                 ) {
                     return false;
                 }
