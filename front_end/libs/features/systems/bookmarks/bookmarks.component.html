@@ -16,7 +16,7 @@
                 (timeRangeChange)="updateParam('time')"
             ></nx-date-and-time-filter>
             <nx-device-filter
-                [items]="devices$ | async"
+                [items]="(devices$ | async) || []"
                 [selection]="deviceFilter"
                 (selectionChange)="updateParam('devices')"
             ></nx-device-filter>
