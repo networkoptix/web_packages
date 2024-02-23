@@ -169,7 +169,22 @@
         <h4>Searchable selected</h4>
         {{ selectedSearchableDDItem | json }}
     </div>
-    <div class="col-4 p-4"><hr /></div>
+    <div class="col-4 p-4">
+        <h4>Basic Searchable</h4>
+        <nx-basic-search-input formControlName="search"></nx-basic-search-input>
+        <cdk-virtual-scroll-viewport
+            class="scroll-area"
+            style="height: 100px"
+            [itemSize]="50"
+        >
+            <div
+                class="scroll-item"
+                *ngFor="let org of itemsNameId"
+            >
+                {{ org.name }}
+            </div>
+        </cdk-virtual-scroll-viewport>
+    </div>
 
     <div class="col-4 p-4">
         <h4>Configure Select:</h4>

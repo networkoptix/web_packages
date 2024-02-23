@@ -1,7 +1,21 @@
+@use "./mixins" as mixins;
+
 .section-apply-wrapper {
     height: 80px;
 }
 
 .dropdownPadding {
     padding-top: 10px;
+}
+
+.scroll-area {
+    background-color: var(--dropdown-menu-bg);
+    border: 1px solid var(--input-border-color);
+    border-radius: 2px;
+    height: 167px;
+    margin-top: 8px;
+
+    .scroll-item {
+        @include mixins.ellipsis;
+    }
 }

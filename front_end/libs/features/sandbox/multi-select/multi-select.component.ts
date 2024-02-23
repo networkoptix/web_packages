@@ -1,8 +1,10 @@
+import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { SearchInputComponent } from '@authorization/src/app/components/basic-search-input/basic-search-input.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
 import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
@@ -35,6 +37,10 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
         NxGenericDropdownModule,
         NxSearchableDropdown,
         NxCheckboxComponent,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualScrollViewport,
+        ReactiveFormsModule,
+        SearchInputComponent,
     ],
 })
 export class MultiSelectComponent {
@@ -43,6 +49,7 @@ export class MultiSelectComponent {
     tooManyItems: MultiSelectItem[] = [];
     itemsSelectedTooMany: string[];
     itemsOther: MultiSelectItem[] = [];
+    itemsNameId: Record<string, string>[];
     itemsSelectedOther: string[];
     mode: DropdownItem<string>[];
     modeSelected: DropdownItem<string>;
@@ -267,6 +274,11 @@ export class MultiSelectComponent {
             { label: 'Live Viewer', id: '24' },
         ];
 
+        this.itemsNameId = [
+            { name: 'Administrator asdasda das das das d as da sdasd as da sd', id: 'qwerty1' },
+            { name: 'Advanced Viewer', id: '2' },
+        ];
+
         this.itemsSelectedTooMany = [];
         this.itemsSelected = ['qwerty2', 'qwerty3'];
         this.itemsSelectedOther = ['3'];
@@ -333,6 +345,10 @@ export class MultiSelectComponent {
 
         // this.selectedDDItem = { value: '0', name: 'All' };
         this.itemsSearchableDDSingle = [
+            {
+                value: 'test adawdq  dqwd qw dqw d qw d qw dqw d qw d qw d qw d qw dqw d qwd',
+                name: 'test adawdq  dqwd qw dqw d qw d qw dqw d qw d qw d qw d qw dqw d qwd',
+            },
             { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
             {
                 value: 'test1@test.com',
