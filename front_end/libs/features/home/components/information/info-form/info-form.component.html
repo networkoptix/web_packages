@@ -12,7 +12,7 @@
                 >{{ item.data.value }}</a
             >
 
-            <span *ngIf="item.description">
+            <span *ngIf="item.description?.value">
                 <span class="mx-1">&dash;</span>
                 <span class="section-descr">{{ item.description.value }}</span>
             </span>
