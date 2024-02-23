@@ -162,6 +162,11 @@ export class PermissionManager {
                         role.isOwner === isOwner &&
                         role.permissions === permissionsString,
                 )?.name || '';
+            if (!accessRole) {
+                const userRoleId = ('userRoleId' in user && user.userRoleId) || '';
+                accessRole =
+                    roles.find(role => 'id' in role && role?.id === userRoleId)?.name || '';
+            }
         } else if (!environment.isLocal) {
             // If roles is empty that means we couldn't fetch them from the system.
             // As a fallback for cloud we can try to get the accessRole from cdb.
@@ -221,10 +226,21 @@ export class PermissionManager {
         const isOwner = this.isOwner$$();
         const isAdmin = isOwner || this.isAdmin$$();
         const groups = this.groups$$();
+        const roles = this.roles$$();
+        const user = this.user$$();
         if (groups.length) {
             return this.permissionsFromGroups$$();
         }
-        const permissions = this.user$$()?.permissions || '';
+        let permissions = '';
+        // For support when a user has a custom user role.
+        const userRoleId = ('userRoleId' in user && user.userRoleId) || '';
+        if (userRoleId) {
+            const customRole = roles.find(role => 'id' in role && role?.id === userRoleId);
+            permissions = customRole?.permissions || '';
+        } else {
+            permissions = user?.permissions || '';
+        }
+
         return Object.assign(initializePermissions(isOwner, isAdmin), {
             editUsers: isAdmin || permissions.includes(PermissionStrings.editUserPermissionFlag),
             editCameras:
