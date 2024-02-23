@@ -6,6 +6,7 @@
         <nx-settings-general
             [view]="settingsViews.CHANNEL_PARTNERS"
             [item]="state.item"
+            [disableNameInput]="isDirectParentCP$$()"
             (updateName)="handleNameUpdate($event)"
         ></nx-settings-general>
     </ng-container>
@@ -19,6 +20,7 @@
         <nx-settings-general
             [view]="state.view"
             [item]="state.item"
+            [disableNameInput]="isDirectParentCP$$()"
             (updateName)="handleNameUpdate($event)"
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>

@@ -55,6 +55,7 @@ export class NxSettingsGeneralComponent implements OnInit {
     @Input() canAccess: string;
     @Input() view: string;
     @Input() item: Organization | ChannelPartner | undefined;
+    @Input() disableNameInput: boolean;
     @Output() updateName = new EventEmitter<string>();
     @Output() updateAccess = new EventEmitter<string>();
     extId: string;

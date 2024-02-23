@@ -18,6 +18,7 @@
                     <input
                         id="name"
                         class="form-control ml-2"
+                        [disabled]="disableNameInput"
                         [(ngModel)]="name"
                         [name]="name"
                         (input)="updateName.emit(name)"
