@@ -156,23 +156,6 @@
             height: auto;
         }
 
-        .info-note {
-            display: flex;
-            margin-bottom: 1rem;
-
-            svg-icon svg .icon-with-fill {
-                fill: var(--svg-table-button) !important;
-            }
-
-            span {
-                margin-left: .5rem;
-                line-height: 1rem;
-                @include typography.regular14nocolor;
-                color: var(--svg-table-button);
-
-            }
-        }
-
         &-info {
             .section {
                 margin-bottom: 1rem;

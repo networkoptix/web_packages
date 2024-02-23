@@ -5,6 +5,21 @@
     >
     </nx-page-placeholder-v2>
 } @else {
+    <div
+        class="info-note"
+        *ngIf="editMode"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'info.svg'"
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            [applyClass]="true"
+        ></svg-icon>
+        <span translate
+            >Remember that this information will be seen not only by your employees, but also by
+            your partners and organizations.</span
+        >
+    </div>
     <div class="information">
         <nx-block type="tile dense">
             <header>
@@ -27,21 +42,6 @@
                 </div>
             </header>
             <nx-section>
-                <div
-                    class="info-note"
-                    *ngIf="editMode"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dirTextButtons + 'info.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                        [applyClass]="true"
-                    ></svg-icon>
-                    <span translate
-                        >Remember that this information will be seen not only by your employees, but
-                        also by your partners and organizations.</span
-                    >
-                </div>
                 <div
                     class="section-header"
                     [ngClass]="{ 'in-edit-mode': editMode }"
