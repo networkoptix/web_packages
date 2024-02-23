@@ -46,35 +46,7 @@
                         title="{{ head.value }}"
                         >{{ head.value }}</span
                     >
-                    <svg-icon
-                        class="clickable"
-                        *ngIf="head.value === 'Login'"
-                        [src]="icons.dir + 'sorting.svg'"
-                        [svgStyle]="{ 'width.px': '14', 'height.px': '14' }"
-                        (click)="sortUsers()"
-                    ></svg-icon>
                 </div>
-                <!--            <div-->
-                <!--                #sortItem-->
-                <!--                data-sort-string-->
-                <!--                style="grid-area: email"-->
-                <!--            >-->
-                <!--                {{ headers['email'].name }}-->
-                <!--            </div>-->
-                <!--            <div-->
-                <!--                #sortItem-->
-                <!--                data-sort-string-->
-                <!--                style="grid-area: fullName"-->
-                <!--            >-->
-                <!--                {{ headers['fullName'].name }}-->
-                <!--            </div>-->
-                <!--            <div style="grid-area: accessLevel">-->
-                <!--                {{ headers['accessLevel'].name }}-->
-                <!--            </div>-->
-                <!--            <div style="grid-area: roles">-->
-                <!--                {{ headers['roles'].name }}-->
-                <!--            </div>-->
-                <!--            <div>&nbsp;</div>-->
             </ng-template>
             <ng-template
                 #rows
