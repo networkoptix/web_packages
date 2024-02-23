@@ -138,6 +138,9 @@
 
     .header {
         grid-template-columns: 50px repeat(4, 1fr) 32px;
+        grid-template-rows: var(--table-header-height);
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--card-header-bg);
 
         & > div {
             display: flex;
@@ -181,7 +184,7 @@
         // define it per table (see .cameras) --TT
         //grid-template-columns: 50px repeat(4, 1fr) 32px;
         grid-template-rows: minmax(2.5rem, auto);
-        background-color: var(--body-bg);
+        background-color: var(--card-body-bg);
         border-bottom: 1px solid var(--border-color);
 
         &:hover {
@@ -245,15 +248,26 @@
         }
         .roles {
             width: 100%;
-
-            .select-wrapper {
-                height: 100%;
-                align-items: center;
-                background-color: transparent;
-            }
         }
         .dropdown {
             padding: 0;
+        }
+        // dropdown v2
+        .select-wrapper {
+            height: 100%;
+            align-items: center;
+            background-color: transparent;
+            box-shadow: none;
+
+             &:hover {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }
+
+            &:active {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }
         }
     }
 }

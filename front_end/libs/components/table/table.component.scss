@@ -37,9 +37,6 @@
                 .header {
                     width: fit-content;
                     display: grid;
-                    grid-template-rows: var(--table-header-height);
-                    border-bottom: 1px solid var(--border-color);
-                    background-color: var(--card-header-bg);
                 }
 
                 .body {
@@ -57,26 +54,7 @@
                     .content {
                         z-index: 9;
                         //overflow-y: scroll;
-                        background-color: var(--body-bg);
                     }
-
-                    //.grid-background {
-                    //    position: absolute;
-                    //    top: 5px;
-                    //    width: calc(100% - 8px); // account for scroll area
-                    //    z-index: 1;
-                    //    display: grid;
-                    //    grid-template-columns: 50px repeat(4, 1fr) 32px;
-                    //    grid-template-rows: repeat(50, 40px);
-                    //    background-color: var(--card-body-bg);
-                    //    border-bottom: 1px solid var(--border-color);
-                    //
-                    //    & > * {
-                    //        border-bottom: 1px solid var(--border-color);
-                    //        border-right: 1px solid var(--border-color);
-                    //    }
-                    //
-                    //}
                 }
             }
         }

@@ -163,22 +163,28 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     initPageRows(): void {
-        if (this.setAutoRows && this.tableBodyContainer && this.data?.length) {
-            const autoRows = Math.floor(
-                (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) / ROW_HEIGHT,
-            );
-            this.perPageSelectedOption = { name: 'auto', value: autoRows };
-        } else {
-            this.rowsPerPage.forEach(item => {
-                this.perPageOptions.push({ name: `${item}`, value: item });
-            });
-            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data?.length });
-            this.perPageSelectedOption = this.perPageOptions[1]; // 10 items per page - we need to make it dynamic
+        if (this.tableBodyContainer) {
+            if (this.setAutoRows && this.data?.length) {
+                const autoRows = Math.floor(
+                    (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) /
+                        ROW_HEIGHT,
+                );
+                this.perPageSelectedOption = { name: 'auto', value: autoRows };
+            } else {
+                this.rowsPerPage.forEach(item => {
+                    this.perPageOptions.push({ name: `${item}`, value: item });
+                });
+                this.perPageOptions.push({ name: this.LANG.search.All, value: this.data?.length });
+                this.perPageSelectedOption = this.perPageOptions[1]; // 10 items per page - we need to make it dynamic
+            }
+
+            this.numPages = Math.ceil(this.data?.length / this.perPageSelectedOption.value);
+
+            this.createTemplate();
+            this.currentPage = 1;
+
+            this.sortElements(true);
         }
-
-        this.numPages = Math.ceil(this.data?.length / this.perPageSelectedOption.value);
-
-        this.sortElements(true);
     }
 
     ngOnChanges({ additionalClasses, data }: NgChanges<NxBaseTableComponent<T>>): void {
@@ -189,8 +195,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             this._headers = <Prop>Object.keys(this.data[0]);
             this.headers = [...this._headers];
 
-            this.createTemplate();
-            this.currentPage = 1;
             this.initPageRows();
         }
 
@@ -370,11 +374,12 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         });
     }
 
-    private createSortElement(id: string, sortType: string): HTMLDivElement {
+    private createSortElement(id: string, sortType: string): HTMLDivElement | undefined {
         if (!sortType) {
             console.info(
                 '¯\\_(ツ)_/¯ => Sorting enabled for column but no datatype is set for sorting',
             );
+            return;
         }
 
         const sort: HTMLDivElement = this.renderer.createElement('div');
@@ -413,28 +418,33 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     private addSorting(items: QueryList<HTMLDivElement>): void {
         // @ts-expect-error type error
         items.forEach((item: ElementRef) => {
-            const id = this.getItemId(item);
+            if (item.nativeElement.dataset.sort) {
+                const id = this.getItemId(item);
 
-            this.renderer.listen(item.nativeElement, 'mouseover', $event => {
-                if ($event.target.children[id]) {
-                    this.renderer.addClass($event.target.children[id], 'sort-svg-hover');
-                }
-            });
-            this.renderer.listen(item.nativeElement, 'mouseout', $event => {
-                if ($event.target.children[id]) {
-                    this.renderer.removeClass($event.target.children[id], 'sort-svg-hover');
-                }
-            });
-            this.renderer.listen(
-                item.nativeElement,
-                'click',
-                $event =>
-                    $event.target.children[id] &&
-                    this.sortColumn($event.target.children[id], item.nativeElement.dataset.sort),
-            );
+                this.renderer.listen(item.nativeElement, 'mouseover', $event => {
+                    if ($event.target.children[id]) {
+                        this.renderer.addClass($event.target.children[id], 'sort-svg-hover');
+                    }
+                });
+                this.renderer.listen(item.nativeElement, 'mouseout', $event => {
+                    if ($event.target.children[id]) {
+                        this.renderer.removeClass($event.target.children[id], 'sort-svg-hover');
+                    }
+                });
+                this.renderer.listen(
+                    item.nativeElement,
+                    'click',
+                    $event =>
+                        $event.target.children[id] &&
+                        this.sortColumn(
+                            $event.target.children[id],
+                            item.nativeElement.dataset.sort,
+                        ),
+                );
 
-            const sort = this.createSortElement(id, item.nativeElement.dataset.sort);
-            this.renderer.appendChild(item.nativeElement, sort);
+                const sort = this.createSortElement(id, item.nativeElement.dataset.sort);
+                this.renderer.appendChild(item.nativeElement, sort);
+            }
         });
     }
 
