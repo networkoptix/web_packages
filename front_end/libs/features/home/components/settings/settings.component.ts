@@ -99,10 +99,15 @@ export class NxOrganizationSettingsComponent implements OnInit {
         return state;
     });
     isDirectParentCP$$: Signal<boolean> = computed(() => {
-        const permissions = Object.values(this.currentPartner$$()?.ownPermissions);
+        const currentOrg = this.currentOrg$$();
+        const currentPartner = this.currentPartner$$();
+        const permissions = Object.values(currentPartner?.ownPermissions || {});
+        if (!permissions.length) {
+            return false;
+        }
         const canAlterState = permissions.includes('alter_state_organizations');
         const canAlterSubCP = permissions.includes('alter_state_sub_channel_partners');
-        return (this.currentOrg$$() && canAlterState) || (this.currentPartner$$() && canAlterSubCP);
+        return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP);
     });
     hasUpdate = false;
 
