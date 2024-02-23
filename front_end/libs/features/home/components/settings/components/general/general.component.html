@@ -19,6 +19,7 @@
                         id="name"
                         class="form-control ml-2"
                         [(ngModel)]="name"
+                        [name]="name"
                         (input)="updateName.emit(name)"
                     />
                 </div>
