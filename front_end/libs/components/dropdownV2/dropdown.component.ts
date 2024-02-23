@@ -72,16 +72,15 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
         // Timeout for dropdown element to become accessible
         setTimeout(() => {
             this.setOverlayWidth();
-            if (this.selected !== undefined) {
-                this.highlightValue$$.set(this.selected);
-                this.scrollOptionIntoView(
-                    this.dropdownItems.find(item => item.value === this.selected),
-                );
-            } else {
+            const selectedItem = this.dropdownItems.find(item => item.value === this.selected);
+            if (this.selected === undefined || !selectedItem) {
                 const first = this.getFirstEnabled();
                 if (first) {
                     this.highlightValue$$.set(first.value);
                 }
+            } else {
+                this.highlightValue$$.set(this.selected);
+                this.scrollOptionIntoView(selectedItem);
             }
             this.openState$$.set(DropdownState.Open);
         });
@@ -122,7 +121,10 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     }
 
     private decrementSelect(): void {
-        if (this.selected === undefined) {
+        if (
+            this.selected === undefined ||
+            !this.dropdownItems.find(item => item.value === this.selected)
+        ) {
             return;
         }
         const prev = this.getPrevEnabled(this.selected);
@@ -132,7 +134,10 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     }
 
     private incrementSelect(): void {
-        if (this.selected === undefined) {
+        if (
+            this.selected === undefined ||
+            !this.dropdownItems.find(item => item.value === this.selected)
+        ) {
             const first = this.getFirstEnabled();
             if (first) {
                 this.selectedChange.emit(first.value);
