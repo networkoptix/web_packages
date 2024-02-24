@@ -96,6 +96,7 @@ export class NxOrganizationCardContainerComponent {
         map(systems => new Map(systems?.map(sys => [sys.id, sys]))),
     );
     groupItems$$ = this.store.selectSignal(selectGroupItems);
+    groupName: string = '';
     constructor(
         private store: Store,
         private dialogsService: NxDialogsService,
@@ -132,6 +133,7 @@ export class NxOrganizationCardContainerComponent {
                     .getGroup(currentGroupID)
                     .pipe(combineLatestWith(this.systemMap$))
                     .subscribe(([group, systemMap]) => {
+                        this.groupName = group.name;
                         const systems = group.systems.map(systemId => ({
                             systemId,
                             name: systemMap.get(systemId)?.name,
@@ -184,6 +186,7 @@ export class NxOrganizationCardContainerComponent {
                 parentGroup: currGroupId,
                 orgId: this.currentOrgId$$(),
                 hasGroups: this.hasGroups$$(),
+                parentGroupName: this.groupName,
             })
             .then(group => {
                 if (group) {

@@ -977,7 +977,7 @@
     "New User": "New User",
     "New group will be created in current group": "New group will be created in current group",
     "New group will be created in root": "New group will be created in root",
-    "New group will be created in {parentGroup}": "New group will be created in {parentGroup}",
+    "New group will be created in { parentGroupName }": "New group will be created in { parentGroupName }",
     "New password": "New password",
     "New version of %CLOUD_NAME% is available": "New version of %CLOUD_NAME% is available",
     "Next": "Next",
