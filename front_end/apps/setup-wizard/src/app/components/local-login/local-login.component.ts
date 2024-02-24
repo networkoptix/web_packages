@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -6,6 +6,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { WizardStateService } from '../../services/wizard-state.service';
+import { FORM_STATE } from '../../types/wizard-state.types';
 
 @UntilDestroy()
 @Component({
@@ -42,10 +43,17 @@ export class LocalLoginComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.setAdminPasswordForm.statusChanges
+        this.wizardService.setupConfig.localLoginDataState = FORM_STATE.INVALID;
+        this.setAdminPasswordForm.valueChanges
             .pipe(untilDestroyed(this))
-            .subscribe((result: string) => {
-                this.wizardService.setupConfig.localLoginDataState = result;
+            .subscribe(() => {
+                if (!this.setAdminPasswordForm.form.controls.createPassword.value ||
+                    this.setAdminPasswordForm.form.controls.createPassword.value !== this.setAdminPasswordForm.form.controls.confirmPassword.value
+                ) {
+                    this.wizardService.setupConfig.localLoginDataState = FORM_STATE.INVALID;
+                } else {
+                    this.wizardService.setupConfig.localLoginDataState = FORM_STATE.VALID;
+                }
             });
 
         this.wizardService.formValidateSubject
@@ -58,21 +66,13 @@ export class LocalLoginComponent implements AfterViewInit {
                         this.setAdminPasswordForm.form.get(ctrl).markAsDirty();
                     }
                 }
+                this.checkPasswords();
             });
     }
 
     checkPasswords(): void {
         if (this.confirmedPassword !== this.password) {
             this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
-        }
-    }
-
-    @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            if (this.setAdminPasswordForm.form.valid) {
-                this.wizardService.next();
-            }
         }
     }
 }
