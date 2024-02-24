@@ -118,6 +118,10 @@ export abstract class BaseAccount {
         });
     }
 
+    async showExpired(): Promise<void> {
+        return Promise.resolve();
+    }
+
     private loginTokens(tokens) {
         return this.cloudApi.loginTokens(tokens).then((res: any) => {
             this.tokens = undefined;
