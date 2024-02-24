@@ -25,7 +25,7 @@ export class TokenSessionManager {
                     }),
                 ),
                 catchError(e => {
-                    if (logoutMethod) {
+                    if (logoutMethod && e.url.includes('/api/account/refreshAccessToken')) {
                         logoutMethod();
                     }
                     throw e;
