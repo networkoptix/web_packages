@@ -41,6 +41,7 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     hasGroups: boolean;
     parentGroup: string | undefined;
     orgId: string | undefined;
+    parentGroupName?: string | undefined;
 
     createSystemGroupProcess: Process;
 
@@ -66,6 +67,6 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
-        assignFrom(this.dialogData, ['hasGroups', 'parentGroup', 'orgId'], this);
+        assignFrom(this.dialogData, ['hasGroups', 'parentGroup', 'orgId', 'parentGroupName'], this);
     }
 }

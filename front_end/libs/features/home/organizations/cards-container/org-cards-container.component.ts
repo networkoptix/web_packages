@@ -120,6 +120,7 @@ export class NxOrganizationCardContainerComponent {
                 });
             } else if (currentGroupID) {
                 this.cpService.getGroup(currentGroupID).subscribe(group => {
+                    this.groupName = group.name;
                     const systems = group.systems.map(systemId => ({
                         systemId,
                         name: systemMap.get(systemId)?.name,
@@ -179,6 +180,7 @@ export class NxOrganizationCardContainerComponent {
                 parentGroup: currGroupId,
                 orgId: this.currentOrgId$$(),
                 hasGroups: this.hasGroups$$(),
+                parentGroupName: this.groupName,
             })
             .then(group => {
                 if (group) {

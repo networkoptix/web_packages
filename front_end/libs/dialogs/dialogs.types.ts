@@ -158,6 +158,7 @@ export type CreateSystemGroup = DialogType<
         hasGroups: boolean;
         orgId: string;
         parentGroup: string;
+        parentGroupName?: string;
     },
     GroupItem
 >;
