@@ -1,4 +1,10 @@
-<div>
+<div class="viewer-container">
+    <div class="hero-logo">
+        <img
+            [alt]="CONFIG.cloudName + ' logo'"
+            [src]="'/static/images/' + (CONFIG.isDarkTheme ? 'dark_' : '') + 'logo.png'"
+        />
+    </div>
     <nx-clip
         [sourceUrl]="videoSource$$()"
         (error)="onError()"

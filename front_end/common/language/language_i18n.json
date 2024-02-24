@@ -704,6 +704,7 @@
     "The merge is complete. Merge was unsuccessful for the following severs:": "The merge is complete. Merge was unsuccessful for the following severs:",
     "The page you are looking for does not exist or another error has occured": "The page you are looking for does not exist or another error has occured",
     "The recommended maximum user session lifetime is 30 days.": "The recommended maximum user session lifetime is 30 days.",
+    "The requested video is protected with a password": "The requested video is protected with a password",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.",
     "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.": "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.",
     "The video format for this bookmark is not supported by your browser. Please download it to view locally": "The video format for this bookmark is not supported by your browser. Please download it to view locally",

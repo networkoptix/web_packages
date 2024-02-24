@@ -1,15 +1,21 @@
-<div class="background-container">
-    <div class="hero-logo">
-        <img
-            [alt]="CONFIG.cloudName + ' logo'"
-            src="/static/images/dark_logo.png"
+<div
+    class="background-container"
+    [ngClass]="{ 'container-password-variant': pageState === 'password' }"
+>
+    @if (pageState === 'loading') {
+        <nx-pre-loader class="pre-loader" />
+    } @else if (pageState === 'viewer') {
+        <nx-shared-bookmark-viewer
+            class="view-container"
+            [videoSource]="videoSource"
+            [title]="title"
+            [startTime]="startTime"
+            [description]="description"
         />
-    </div>
-    <nx-shared-bookmark-viewer
-        class="view-container"
-        [videoSource]="videoSource"
-        [title]="title"
-        [startTime]="startTime"
-        [description]="description"
-    />
+    } @else if (pageState === 'password') {
+        <nx-shared-bookmark-password
+            (onConfirmPressed)="checkPassword()"
+            [(password)]="password"
+        />
+    }
 </div>

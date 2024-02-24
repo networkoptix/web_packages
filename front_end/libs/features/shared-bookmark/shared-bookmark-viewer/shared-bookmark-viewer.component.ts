@@ -3,6 +3,7 @@ import { Component, computed, input } from '@angular/core';
 import dateFormat from 'dateformat';
 
 import { ClipComponent } from '@components/clip/clip.component';
+import { nxConfig } from '@services/nx-config/config';
 
 @Component({
     selector: 'nx-shared-bookmark-viewer',
@@ -29,4 +30,6 @@ export class SharedBookmarkViewerComponent {
     onLoadedData(): void {
         console.info('Video loaded');
     }
+
+    CONFIG = nxConfig;
 }

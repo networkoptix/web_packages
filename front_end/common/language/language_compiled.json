@@ -1521,6 +1521,7 @@
     "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
     "The page you are looking for does not exist or another error has occured": "The page you are looking for does not exist or another error has occured",
     "The recommended maximum user session lifetime is 30 days.": "The recommended maximum user session lifetime is 30 days.",
+    "The requested video is protected with a password": "The requested video is protected with a password",
     "The review has been accepted": "The review has been accepted",
     "The route \"{url}\" has been moved to \"{redirectUrl}\".": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.",

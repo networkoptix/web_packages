@@ -532,6 +532,7 @@ export const servers = {
         userPasswordRequired: 'userPasswordRequired',
         vmsRequestFailure: 'vmsRequestFailure',
         wrongSessionToken: 'Auth_WrongSessionToken',
+        forbidden: 'forbidden',
     },
 };
 

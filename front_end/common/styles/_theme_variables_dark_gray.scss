@@ -736,6 +736,10 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-share-url-text-color: var(--light1);
     --bookmarks-share-details-text-color: var(--light4);
     --bookmarks-share-delete-text-color: var(--light4);
+    --bookmarks-share-password-container-border-color: var(--dark6);
+    --bookmarks-share-password-container-background-color: var(--dark4);
+    --bookmarks-share-input-header-text-color: var(--light4);
+    --bookmark-sharing-viewer-text-color: var(--light4);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

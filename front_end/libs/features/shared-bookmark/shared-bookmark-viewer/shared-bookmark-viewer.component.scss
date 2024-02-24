@@ -1,26 +1,34 @@
+@use "typography";
+
 .title-text {
-    // TODO: move font out to mixins
-    font-size: 18px;
-    font-weight: 500;
-    // TODO: move this out - light3
-    color: #EBEFF1;
+    @include typography.medium18nocolor;
+    color: var(--bookmark-sharing-viewer-text-color);
     margin-top: 15px;
 }
 
 .date-text {
-    // TODO: move font out to mixins
-    font-size: 15px;
-    font-weight: 500;
-    // TODO: move this out - light3
-    color: #EBEFF1;
+    @include typography.medium15nocolor;
+    color: var(--bookmark-sharing-viewer-text-color);
     margin-top: 20px;
 }
 
 .description-text {
-    // TODO: move font out to mixins
-    font-size: 14px;
-    font-weight: 400;
-    // TODO: move this out - light3
-    color: #EBEFF1;
+    @include typography.regular14nocolor;
+    color: var(--bookmark-sharing-viewer-text-color);
     margin-top: 20px;
+}
+
+.viewer-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-logo {
+    max-width: 110px;
+    margin-bottom: 25px;
+    align-self: center;
+
+    img {
+        width: 100%;
+    }
 }
