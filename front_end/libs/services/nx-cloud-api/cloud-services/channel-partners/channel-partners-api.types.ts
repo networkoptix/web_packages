@@ -74,6 +74,7 @@ export enum ChannelPartnerPermissions {
     ADD_REMOVE_SUB_CHANNEL_PARTNERS = 'add_remove_sub_channel_partners',
     MANAGE_USERS = 'manage_users',
     CONFIGURE_CHANNEL_PARTNER = 'configure_channel_partner',
+    CONFIGURE_ORGANIZATION = 'configure_organization',
     VIEW_SERVICE_REPORTS = 'view_service_reports',
     ALTER_STATE_ORGANIZATIONS = 'alter_state_organizations',
     ADD_REMOVE_SERVICE_QUANTITIES = 'add_remove_service_quantities',

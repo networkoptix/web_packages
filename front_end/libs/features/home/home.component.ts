@@ -16,6 +16,7 @@ import {
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
+import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     ChannelPartner,
     Organization,
@@ -78,38 +79,43 @@ export class NxHomeComponent implements OnInit {
             return;
         }
 
-        const organizations = this.organizations$$();
-        const channelPartners = this.channelPartners$$();
+        const channelPartners = (this.channelPartners$$() || []).filter(
+            partner =>
+                !partner.ownPermissions.includes(
+                    ChannelPartnerPermissions.FIELD_ACCESS_CP_ACCOUNTANT,
+                ),
+        );
+        const organizations = (this.organizations$$() || [])
+            .filter(org => !channelPartners.some(partner => org.channelPartner === partner.id))
+            .sort((a, b) => a.name.localeCompare(b.name));
 
         const nodes = [
             new MenuNode('', '/home'),
-            ...channelPartners.map(partner => {
-                return new MenuNode(partner.name, `/home/channelPartners/${partner.id}`);
-            }),
-            ...organizations
-                .filter(org => !channelPartners.some(partner => org.channelPartner === partner.id))
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map(org => {
-                    return new MenuNode(org.name, `/home/organization/${org.id}`);
-                }),
+            ...channelPartners.map(
+                partner => new MenuNode(partner.name, `/home/channelPartners/${partner.id}`),
+            ),
+            ...organizations.map(org => new MenuNode(org.name, `/home/organization/${org.id}`)),
         ];
         nodes[0].invisible = true;
 
-        if (systems.some(sys => sys.accessRole !== 'owner')) {
-            redirectPath = 'shared';
-            nodes.push(
-                new MenuNode(
-                    this.LANG.appHeader.headerMenuNodes.channelPartners.nodes.shared.displayName,
-                    '/home/shared',
-                ),
-            );
-        }
         if (systems.some(sys => sys.accessRole === 'owner')) {
             redirectPath = 'personal';
             nodes.push(
                 new MenuNode(
                     this.LANG.appHeader.headerMenuNodes.channelPartners.nodes.personal.displayName,
                     '/home/personal',
+                ),
+            );
+        }
+
+        if (systems.some(sys => sys.accessRole !== 'owner')) {
+            if (redirectPath !== 'personal') {
+                redirectPath = 'shared';
+            }
+            nodes.push(
+                new MenuNode(
+                    this.LANG.appHeader.headerMenuNodes.channelPartners.nodes.shared.displayName,
+                    '/home/shared',
                 ),
             );
         }

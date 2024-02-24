@@ -88,7 +88,7 @@ export class NxChannelPartnersComponent implements OnInit {
     tabs$$ = computed(() => {
         const currPartner = this.currentPartner$$();
         if (!currPartner) {
-            return this.defaultTabs;
+            return [];
         }
         const { ownPermissions, ownRoles } = currPartner;
         return this.populateTabs({ ownPermissions, ownRoles });
@@ -190,22 +190,20 @@ export class NxChannelPartnersComponent implements OnInit {
         this.searchChanged.next();
     }
 
-    get defaultTabs(): Tab[] {
-        return [
-            {
+    populateTabs(partnerAccess: { ownPermissions: string[]; ownRoles: string[] }): Tab[] {
+        const tabs: Tab[] = [];
+        const { ownRoles, ownPermissions } = partnerAccess;
+        if (
+            [
+                ChannelPartnerPermissions.CONFIGURE_ORGANIZATION,
+                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+            ].some(permission => ownPermissions.includes(permission))
+        ) {
+            tabs.splice(0, 0, {
                 displayName: this.LANG.channelPartners.tabNames.organizations,
                 route: '',
-            },
-            {
-                displayName: this.LANG.channelPartners.tabNames.information,
-                route: 'information',
-            },
-        ];
-    }
-
-    populateTabs(partnerAccess: { ownPermissions: string[]; ownRoles: string[] }): Tab[] {
-        const tabs = this.defaultTabs;
-        const { ownRoles, ownPermissions } = partnerAccess;
+            });
+        }
         if (ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR)) {
             tabs.splice(1, 0, {
                 displayName: this.LANG.channelPartners.tabNames.partners,
@@ -219,6 +217,10 @@ export class NxChannelPartnersComponent implements OnInit {
             });
         }
         if (ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.information,
+                route: 'information',
+            });
             tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.settings,
                 route: 'settings',
