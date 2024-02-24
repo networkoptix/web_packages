@@ -101,7 +101,7 @@ export class CloudAccount extends BaseAccount {
                         this.window.onbeforeunload = () => {
                             this.sessionService.invalidateSession();
                         };
-                        return this.dialogs.expiredSession().then(() => this.logoutHelper(true));
+                        return this.showExpired();
                     }
                     return of(undefined);
                 }),
@@ -109,6 +109,14 @@ export class CloudAccount extends BaseAccount {
             .subscribe((account: Account) => {
                 this.account = account;
             });
+    }
+
+    /**
+     * This method will log the user out. Be careful when using.
+     */
+    override async showExpired(): Promise<void> {
+        await this.dialogs.expiredSession();
+        return this.logoutHelper(true);
     }
 
     get(forceUpdate = false): Promise<Account> {

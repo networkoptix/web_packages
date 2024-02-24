@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { inject, Inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,6 +11,7 @@ import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxAccountService } from '@services/account.service';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
@@ -381,10 +382,10 @@ export class NxCloudApiService {
     getSystemToken(systemId: string): Observable<{ access_token: string; refresh_token: string }> {
         // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
         return this.http
-            .post<{ access_token: string; refresh_token: string }>(
-                `${apiBase}/systems/${systemId}/token`,
-                {},
-            )
+            .post<{
+                access_token: string;
+                refresh_token: string;
+            }>(`${apiBase}/systems/${systemId}/token`, {})
             .pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
         // return this.cloudDbApi.getToken(systemId);
     }
@@ -1053,6 +1054,8 @@ export class NxCloudApiService {
             .pipe(map(({ access_token }) => ({ accessToken: access_token })));
     }
 
+    private refreshError = false;
+
     /**
      * This is used to ensure that request made to cloud services external to cloud portal have a fresh session to be used for request.
      *
@@ -1061,9 +1064,19 @@ export class NxCloudApiService {
      * @param minSessionSeconds : number
      * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
      */
-    #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance(
-        '/api/account/refreshAccessToken',
-    );
+    #withFreshSession: t.WithFreshSession = minSessionSeconds => {
+        return TokenSessionManager.getInstance('/api/account/refreshAccessToken')(
+            minSessionSeconds,
+            () => {
+                if (!this.refreshError && !environment.isLocal) {
+                    this.refreshError = true;
+                    runInInjectionContext(this.injector, () => {
+                        inject(NxAccountService).showExpired();
+                    });
+                }
+            },
+        );
+    };
 
     @memoizeAsyncShort
     getAccessToken(): Observable<string> {
