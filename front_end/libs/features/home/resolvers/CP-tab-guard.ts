@@ -8,15 +8,14 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 
+import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
+import { selectCurrentPartner } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     ChannelPartnerPermissions,
     ChannelPartnerRoles,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-
-import { NxChannelPartnersService } from '../services/channel-partners.service';
-import * as cpActions from '../store/channel-partners/channel-partners.actions';
-import { selectCurrentPartner } from '../store/channel-partners/channel-partners.selectors';
 
 export const cpTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,

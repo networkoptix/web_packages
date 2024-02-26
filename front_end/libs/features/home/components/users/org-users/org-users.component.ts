@@ -22,12 +22,12 @@ import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { iif, map, Observable, zip } from 'rxjs';
 
+import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { selectGroupItems, selectRootGroups } from '@pages/home/store/groups/groups.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupItem,
     GroupUser,

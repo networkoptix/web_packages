@@ -4,10 +4,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
 
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { settingsViews } from '@pages/home/home.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectChannelPartners,
     selectCurrentOrganization,
@@ -16,7 +13,11 @@ import {
     selectCurrentPartnerOrgs,
     selectCurrentSubchannelPartners,
     selectRootOrganizations,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
+} from '@common/store/channel-partners/channel-partners.selectors';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { settingsViews } from '@pages/home/home.types';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     OrgPermissions,
@@ -27,8 +28,6 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-
-import * as cpActions from '../../store/channel-partners/channel-partners.actions';
 
 import { NxSettingsGeneralComponent } from './components/general/general.component';
 import { NxSettingsStateComponent } from './components/state/state.component';

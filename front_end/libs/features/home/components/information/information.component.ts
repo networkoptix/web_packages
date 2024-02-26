@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
 
+import {
+    selectCurrentPartnerId,
+    selectCurrentPartnerInfo,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxApplyComponent } from '@components/applyV2/apply.component';
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -21,11 +25,7 @@ import {
     CPInfoDataEvent,
     CPInfoType,
 } from '@pages/home/components/information/information.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    selectCurrentPartnerId,
-    selectCurrentPartnerInfo,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CustomRowServer,
     InfoDataServer,

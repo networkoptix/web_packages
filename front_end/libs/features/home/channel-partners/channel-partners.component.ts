@@ -14,10 +14,16 @@ import {
     debounceTime,
     distinctUntilChanged,
     map,
-    switchMap,
     throwError,
 } from 'rxjs';
 
+import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
+import {
+    selectChannelPartners,
+    selectCurrentPartner,
+    selectCurrentPartnerOrgs,
+    selectArePartnerOrgsLoading,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -25,6 +31,7 @@ import { Tab } from '@components/tabs/tabs.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     Organization,
@@ -35,13 +42,6 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxCardComponent } from '../components/card/card.component';
-import { NxChannelPartnersService } from '../services/channel-partners.service';
-import * as CPActions from '../store/channel-partners/channel-partners.actions';
-import {
-    selectChannelPartners,
-    selectCurrentPartner,
-    selectCurrentPartnerOrgs,
-} from '../store/channel-partners/channel-partners.selectors';
 
 @Component({
     selector: 'nx-channel-partners',
@@ -69,9 +69,7 @@ export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
 
-    isLoading = true;
-    currentPartnerId: string;
-    currentPartnerOrgs: Organization[];
+    isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
     canCreateOrganizations$$ = computed(() => {
         const currPartner = this.currentPartner$$();
@@ -126,31 +124,13 @@ export class NxChannelPartnersComponent implements OnInit {
                 distinctUntilChanged(),
                 takeUntilDestroyed(this.destroyRef),
                 combineLatestWith(this.channelPartners$),
-                switchMap(([id, partners]) => {
-                    this.currentPartnerId = id;
-                    const currPartner = partners.find(
-                        partner => partner.id === this.currentPartnerId,
-                    );
-                    if (partners.length && !currPartner) {
-                        return throwError(() => 'Partner not found');
-                    }
-                    return this.CPService.getPartnerOrganizations(id);
-                }),
             )
-            .subscribe({
-                next: orgs => {
-                    this.isLoading = false;
-                    this.currentPartnerOrgs = orgs;
-                    this.store.dispatch(
-                        CPActions.setCurrentPartner({
-                            currentPartnerId: this.currentPartnerId,
-                            currentPartnerOrganizations: orgs,
-                        }),
-                    );
-                },
-                error: () => {
-                    this.router.navigate(['404']);
-                },
+            .subscribe(([currentPartnerId, partners]) => {
+                const currPartner = partners.find(partner => partner.id === currentPartnerId);
+                if (partners.length && !currPartner) {
+                    return throwError(() => 'Partner not found');
+                }
+                this.store.dispatch(CPActions.loadPartnerOrgs({ partnerId: currentPartnerId }));
             });
         this.searchChanged
             .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
@@ -167,21 +147,22 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     newOrgDialog(): void {
-        this.dialogsService.createOrganization(this.currentPartnerId).then((org: Organization) => {
-            if (org) {
-                this.store.dispatch(
-                    CPActions.setCurrentPartner({
-                        currentPartnerId: this.currentPartnerId,
-                        currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
-                    }),
-                );
-            }
-        });
+        this.dialogsService
+            .createOrganization(this.currentPartner$$().id)
+            .then((org: Organization) => {
+                if (org) {
+                    this.store.dispatch(
+                        CPActions.addPartnerOrg({
+                            newPartnerOrg: org,
+                        }),
+                    );
+                }
+            });
     }
 
     onTabClick(newIndex: number): void {
         const newTab = this.tabs$$()[newIndex];
-        const route = ['home', 'channelPartners', this.currentPartnerId];
+        const route = ['home', 'channelPartners', this.currentPartner$$().id];
         if (newTab.route) {
             route.push(newTab.route);
         }
@@ -245,7 +226,7 @@ export class NxChannelPartnersComponent implements OnInit {
         }
 
         if (this.initializedTabs) {
-            this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
+            this.router.navigate(['home', 'channelPartners', this.currentPartner$$().id]);
         }
         this.initializedTabs = true;
         return tabs;

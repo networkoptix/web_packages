@@ -8,7 +8,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/add-org-user-v2/org-tree-selector/org-tree-selector.component';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupItem,
     Organization,

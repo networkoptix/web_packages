@@ -8,13 +8,13 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { HomeSystemListComponent } from '@pages/home/components/systems-list/systems-list.component';
 import { Account } from '@services/account.service/account';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NgChanges } from '@utils/ng-changes';
 
 import { SystemsDisplayMode } from '../home.types';
-import { NxChannelPartnersService } from '../services/channel-partners.service';
 
 @Component({
     selector: 'nx-groups-systems',

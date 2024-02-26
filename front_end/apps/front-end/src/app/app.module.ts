@@ -57,6 +57,8 @@ import { NxSwPromptUpdateService } from '@services/sw-prompt-update.service';
 import { TosService } from '@services/tos.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
+import { ChannelPartnersEffects } from '@store/channel-partners/channel-partners.effects';
+import { channelPartnersReducer } from '@store/channel-partners/channel-partners.reducer';
 import { SystemResourcesReducer } from '@store/system-resources';
 import { SystemResourcesEffects } from '@store/system-resources/system-resources.effects';
 
@@ -80,9 +82,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         StoreModule.forRoot({
             account: accountReducer,
         }),
+        StoreModule.forFeature('channelPartners', channelPartnersReducer),
         StoreModule.forFeature('systemResources', SystemResourcesReducer.reducer),
         EffectsModule.forRoot([
             AccountSync,
+            ChannelPartnersEffects,
             SystemsSync,
             SystemResourcesSync,
             SystemResourcesEffects,

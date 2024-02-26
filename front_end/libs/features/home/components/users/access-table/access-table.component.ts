@@ -15,18 +15,18 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, catchError, map, of, take } from 'rxjs';
 
+import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import {
     selectCurrentGroupId,
     selectCurrentGroups,
     selectCurrentPath,
     selectInGroup,
 } from '@pages/home/store/groups/groups.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupRole,
     OrgCardItem,

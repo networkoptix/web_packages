@@ -8,15 +8,14 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, map, of, switchMap } from 'rxjs';
 
-import { OrgPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-
-import { NxChannelPartnersService } from '../services/channel-partners.service';
-import * as cpActions from '../store/channel-partners/channel-partners.actions';
+import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectCurrentOrgId,
     selectCurrentOrganization,
     selectCurrentPartnerId,
-} from '../store/channel-partners/channel-partners.selectors';
+} from '@common/store/channel-partners/channel-partners.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { OrgPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export const orgTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,

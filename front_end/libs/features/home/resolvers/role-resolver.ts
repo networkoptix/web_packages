@@ -3,8 +3,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular
 import { firstValueFrom, Observable } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
-
-import { NxChannelPartnersService } from '../services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 
 export const RoleResolver: ResolveFn<boolean> = (
     route: ActivatedRouteSnapshot,
