@@ -42,12 +42,12 @@ stages:
 no-changes:
   needs: []
   rules:
-      - if: !reference [ .enable_for_mr_branch ]
+      - if: !reference [ .enable_for_mr ]
         changes:
             - cloud/**/*
             - front_end/**/*
         when: never
-      - if: !reference [ .enable_for_mr_branch ]
+      - if: !reference [ .enable_for_mr ]
         when: always
   stage: check
   script:
@@ -58,7 +58,7 @@ no-changes:
     - job: docker:build-django-python
       optional: true
   rules:
-    - if: !reference [ .enable_for_mr_branch ]
+    - if: !reference [ .enable_for_mr ]
       changes:
         - cloud/**/*
         - cloud/poetry.toml
@@ -173,7 +173,7 @@ common-python-unit-test:
     - cd /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
   rules:
-    - if: !reference [ .enable_for_mr_branch ]
+    - if: !reference [ .enable_for_mr ]
       changes:
         - common/python/**/*
         - cloud/poetry.toml
@@ -196,7 +196,7 @@ cp-common-python-unit-test:
     - cd /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
   rules:
-    - if: !reference [ .enable_for_mr_branch ]
+    - if: !reference [ .enable_for_mr ]
       changes:
         - common/python/**/*
         - channel_partners/poetry.toml
@@ -246,7 +246,7 @@ check-python-licenses:
 #      - cloud/ci-license.json
 #    when: on_failure
   rules:
-    - if: !reference [ .enable_for_mr_branch ]
+    - if: !reference [ .enable_for_mr ]
       changes:
         - build_scripts/**/requirements.txt
         - cloud/**/pyproject.toml
@@ -263,7 +263,7 @@ check-python-licenses:
     - job: docker:build-channel-partners
       optional: true
   rules:
-    - if: !reference [ .enable_for_mr_branch ]
+    - if: !reference [ .enable_for_mr ]
       changes:
         - channel_partners/src/**/*
         - channel_partners/build/channel_partners_ci/**/*

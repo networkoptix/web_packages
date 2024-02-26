@@ -43,7 +43,7 @@ jenkins-build-frontend:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHA"
   rules:
-  - if: !reference [ .enable_for_mr_branch ]
+  - if: !reference [ .enable_for_mr ]
     changes: !reference [ .frontend_changes ]
 
 jenkins-build-notification:
@@ -61,7 +61,7 @@ jenkins-build-notification:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHA"
   rules:
-  - if: !reference [ .enable_for_mr_branch ]
+  - if: !reference [ .enable_for_mr]
     changes: !reference [ .notification_changes ]
 
 jenkins-build-channel-partners:
@@ -79,7 +79,7 @@ jenkins-build-channel-partners:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHA"
   rules:
-  - if: !reference [ .enable_for_mr_branch ]
+  - if: !reference [ .enable_for_mr ]
     changes: !reference [ .channel_partners_changes ]
 
 cloud-deploy:
