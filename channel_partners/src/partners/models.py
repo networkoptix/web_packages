@@ -509,8 +509,8 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             service_id: str = str(usage['service']) if usage['service'] else None
             used = ServiceUsage.get_quantity_from_usage(usage['service_type'], usage['usage'])
             if not used_services.get(service_id):
-                logger.warning(f"Used service {service_id} missed in allocated services",
-                               current_services=used_services,
+                logger.warning(f"Used service not in allocated services",
+                               current_services=list(used_services.keys()),
                                service_id=service_id,
                                service_type=usage['service_type'])
                 used_services[service_id] = {'used': used, 'total': 0}
