@@ -92,6 +92,8 @@ import {
     ec2Storage,
     LogLevel,
     RestartServer,
+    StaticWebContentInfo,
+    StaticWebContentDownload,
 } from './system-api.types/servers.types';
 import {
     Alarms,
@@ -1427,6 +1429,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     addUser(user: unknown): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
+    }
+
+    getCurrentWebadminBuild(): Observable<StaticWebContentInfo> {
+        throw new Error('should only be using rest v2 version');
+    }
+
+    updateWebadmin(url: string, checksum?: string): Observable<StaticWebContentDownload> {
         throw new Error('should only be using rest v2 version');
     }
 }

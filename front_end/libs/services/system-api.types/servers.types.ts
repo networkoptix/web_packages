@@ -214,3 +214,22 @@ export interface ConfigureParams {
     password?: string;
     currentPassword?: string;
 }
+
+export interface StaticWebContentInfo {
+    source: string;
+    update?: {
+        percentage: number;
+        source: string;
+        expectedSha256?: string;
+        status?: string;
+    };
+}
+
+export interface StaticWebContentDownload {
+    source: string;
+    update: {
+        percentage: number;
+        source: string;
+        expectedSha256?: string;
+    };
+}

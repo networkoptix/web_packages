@@ -45,6 +45,7 @@ import { NxSystemLicensesModule } from './licenses/licenses.module';
 import { NxSystemServersComponent } from './servers/servers.component';
 import { NxSystemServersModule } from './servers/servers.module';
 import { NxSystemSettingsComponent } from './settings.component';
+import { NxUpdateWebadminComponent } from './update-webadmin/update-webadmin.component';
 import { NxSystemUsersComponent } from './users/users.component';
 import { NxSystemUsersModule } from './users/users.module';
 
@@ -181,6 +182,12 @@ export const cloudSettingsRoutes: Routes = [
                 resolve: { system: currentSystemResolver },
                 component: NxSystemLicensesComponent,
             },
+            {
+                path: 'update-webadmin',
+                title: SystemTitleResolver,
+                resolve: { system: currentSystemResolver },
+                component: NxUpdateWebadminComponent,
+            },
         ],
     },
 ];
@@ -198,6 +205,7 @@ export const cloudSettingsRoutes: Routes = [
         NxSystemServersModule,
         NxCloudStorageModule,
         NxSystemLicensesModule,
+        NxUpdateWebadminComponent,
         NxCamerasModule,
         NxPagePlaceholderComponent,
         PipesModule,

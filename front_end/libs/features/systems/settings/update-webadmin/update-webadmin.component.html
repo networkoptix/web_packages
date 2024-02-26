@@ -1,0 +1,129 @@
+@if (system && currentBuildUrl) {
+    <nx-block>
+        <header>
+            <h4 translate>WebAdmin Version</h4>
+        </header>
+        <nx-section>
+            <p>
+                <span
+                    class="text-label"
+                    translate
+                    >Current Build
+                </span>
+                {{ currentBuildUrl }}
+            </p>
+            @if (checksumVerificationError.show) {
+                <div class="mt-4">
+                    <p>
+                        <span
+                            class="text-label"
+                            translate
+                            >Error validating checksum
+                        </span>
+                        <span>{{
+                            'URL: {newBuildUrl}'
+                                | translate: { newBuildUrl: checksumVerificationError.url }
+                        }}</span>
+                        <br />
+                        <span>{{
+                            'Checksum: {checksum}'
+                                | translate: { checksum: checksumVerificationError.checksum }
+                        }}</span>
+                    </p>
+                </div>
+            } @else if (downloadingBuildUrl && !checksumVerificationError.show) {
+                <div class="mt-4">
+                    <p>
+                        <span
+                            class="text-label"
+                            translate
+                            >Currently downloading
+                        </span>
+                        <span class="download-progress">({{ downloadProgress }}%)</span>
+                        {{ downloadingBuildUrl }}
+                    </p>
+                    <p translate>
+                        WebAdmin will be updated to this build when the download completes.
+                    </p>
+                </div>
+            }
+        </nx-section>
+    </nx-block>
+    <nx-block>
+        <header>
+            <h4 translate>Update WebAdmin</h4>
+        </header>
+
+        <form
+            class="form"
+            role="form"
+            id="updateWebadminForm"
+            name="updateWebadminForm"
+            #updateWebadminForm="ngForm"
+            novalidate
+            autocomplete="off"
+        >
+            <nx-section>
+                <div class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8x">
+                    <div class="form-group d-flex">
+                        <label
+                            class="control-label text-nowrap user-form-labels text-right"
+                            for="url"
+                            translate
+                            >URL</label
+                        >
+                        <input
+                            class="form-control w-100 mx-0 mx-md-2 px-0 d-md-table-cell col-md-9"
+                            id="url"
+                            name="url"
+                            [(ngModel)]="formModel.url"
+                            [pattern]="simpleURLRegex"
+                            required
+                            type="text"
+                            #url="ngModel"
+                        />
+                    </div>
+                    @if (url.invalid && url.touched) {
+                        <div class="input-error-wrapper col-8 col-md-9 col-xl-10 pl-2">
+                            @if (url.errors?.required) {
+                                <span
+                                    class="input-error"
+                                    translate
+                                    >Enter URL</span
+                                >
+                            } @else if (url.errors?.pattern) {
+                                <span
+                                    class="input-error"
+                                    translate
+                                    >Invalid URL</span
+                                >
+                            }
+                        </div>
+                    }
+                    <div class="form-group d-flex">
+                        <label
+                            class="control-label text-nowrap user-form-labels text-right"
+                            for="sha256Checksum"
+                            translate
+                            >SHA-256 Checksum</label
+                        >
+                        <input
+                            class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-9"
+                            id="sha256Checksum"
+                            name="sha256Checksum"
+                            [(ngModel)]="formModel.sha256Checksum"
+                            type="text"
+                        />
+                    </div>
+                </div>
+            </nx-section>
+            <nx-section>
+                <nx-async-action-button [action]="updateWebadminAction">
+                    {{ 'Update' | translate }}
+                </nx-async-action-button>
+            </nx-section>
+        </form>
+    </nx-block>
+} @else {
+    <nx-pre-loader></nx-pre-loader>
+}

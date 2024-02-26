@@ -2078,5 +2078,9 @@
         "siteInvalid": "URL is invalid",
         "emailInvalid": "Email is invalid",
         "phoneInvalid": "Phone number is invalid"
+    },
+    "updateWebadmin": {
+        "downloadError": "Error downloading new WebAdmin build",
+        "startDownload": "Started downloading new WebAdmin build"
     }
 }

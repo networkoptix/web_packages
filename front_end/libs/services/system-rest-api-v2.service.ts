@@ -31,6 +31,8 @@ import {
     RebuildArchiveResponse,
     ServerHardareIdsResp,
     ServerTime,
+    StaticWebContentInfo,
+    StaticWebContentDownload,
 } from './system-api.types/servers.types';
 import { ValuesReply } from './system-api.types/system.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
@@ -290,6 +292,23 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             case 'stop':
                 return this.delete(url);
         }
+    }
+
+    override getCurrentWebadminBuild(): Observable<StaticWebContentInfo> {
+        return this.get('/rest/v2/servers/this/staticWebContent');
+    }
+
+    override updateWebadmin(url: string, checksum?: string): Observable<StaticWebContentDownload> {
+        const body = {
+            update: {
+                source: url,
+                expectedSha256: checksum,
+            },
+        };
+        if (!checksum) {
+            delete body.update.expectedSha256;
+        }
+        return this.put('/rest/v2/servers/this/staticWebContent', body);
     }
 
     // Licenses

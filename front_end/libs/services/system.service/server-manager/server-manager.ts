@@ -21,6 +21,8 @@ import type {
     ModuleInformationReply,
     ModuleInformation,
     RestartServer,
+    StaticWebContentInfo,
+    StaticWebContentDownload,
 } from '@services/system-api.types/servers.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -415,6 +417,18 @@ export class ServerManager {
             currentPassword,
             serverId,
         );
+    }
+
+    getCurrentWebadminBuild(serverId: string): Promise<StaticWebContentInfo> {
+        return firstValueFrom(this.mediaserverConnections[serverId].getCurrentWebadminBuild());
+    }
+
+    updateWebadmin(
+        serverId: string,
+        url: string,
+        checksum?: string,
+    ): Promise<StaticWebContentDownload> {
+        return firstValueFrom(this.mediaserverConnections[serverId].updateWebadmin(url, checksum));
     }
 
     /**
