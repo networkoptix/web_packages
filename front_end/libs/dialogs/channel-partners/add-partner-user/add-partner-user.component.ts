@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -18,11 +18,12 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
+import { credentialsValidation } from '@static-variables';
 
 @Component({
     selector: 'nx-modal-add-partner-user-content',
     templateUrl: 'add-partner-user.component.html',
-    styleUrls: [],
+    styleUrls: ['add-partner-user.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -42,6 +43,8 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
 
     roles: DropdownItem<string>[] = [];
     selectedRole: DropdownItem<string>;
+    roleDescriptionMap = this.LANG.channelPartners.usersTable.roleDescriptions;
+    hasValidEmail$$ = signal(true);
 
     createUserProcess: Process;
 
@@ -55,12 +58,12 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         // There's probably a smarter place to put this so we only have
         // to fetch once, but putting here for now
+        this.selectedRole = { name: 'Select', value: '' };
         cpService.getChannelPartnerRoles().subscribe(roles => {
             this.roles = roles.map<DropdownItem<string>>(role => ({
                 name: role.name,
                 value: role.id,
             }));
-            this.selectedRole = this.roles[0];
         });
 
         this.createUserProcess = processService.createProcess(
@@ -84,5 +87,8 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         );
     }
 
-    ngOnInit(): void {}
+    validateEmail(email: string): void {
+        const EMAIL_REGEXP = new RegExp(credentialsValidation.emailRegex);
+        this.hasValidEmail$$.set(EMAIL_REGEXP.test(email));
+    }
 }

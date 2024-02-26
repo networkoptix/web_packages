@@ -713,6 +713,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --change-state-dialog-shutdown-btn-bg: var(--red_main);
     --change-state-dialog-shutdown-btn-color: var(--light1);
 
+    --add-user-dialog-color: #{$light18};
+
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, var(--dark2) 0%, var(--brand-d4) 0.01%, transparent 98.65%);

@@ -41,27 +41,38 @@
                     [setFocus]="true"
                     [isUsername]="true"
                     #createUser="ngModel"
+                    (ngModelChange)="validateEmail($event)"
                 ></nx-email-input>
+                <div
+                    *ngIf="!hasValidEmail$$()"
+                    class="subtext error"
+                    translate
+                >
+                    Invalid email
+                </div>
             </div>
-            <div class="form-group pb-4">
+            <div class="form-group">
                 <label
                     for="userRole"
                     translate
-                    >Role</label
+                    >Permission Group</label
                 >
                 <nx-select
                     [componentId]="'partnerAddUserRole'"
                     name="userRole"
-                    [stillLoading]="!roles.length"
                     [items]="roles"
                     [selected]="selectedRole"
                     [(ngModel)]="selectedRole"
                 ></nx-select>
+                <div class="subtext description">
+                    {{ roleDescriptionMap[selectedRole.name] | translate }}
+                </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <nx-process-button
+            [buttonDisabled]="!email || !hasValidEmail$$() || !selectedRole.value"
             [process]="createUserProcess"
             [buttonText]="'Confirm' | translate"
         ></nx-process-button>

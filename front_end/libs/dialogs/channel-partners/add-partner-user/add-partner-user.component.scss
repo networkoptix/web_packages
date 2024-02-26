@@ -1,0 +1,18 @@
+@use "theme_variables_common" as *;
+
+.subtext {
+  padding-top: .35rem;
+  color: var(--add-user-dialog-color);
+
+  &.error {
+    color: var(--error);
+  }
+
+  &.description {
+    padding-bottom: .5rem;
+  }
+}
+
+label {
+  color: var(--light10) !important;
+}
