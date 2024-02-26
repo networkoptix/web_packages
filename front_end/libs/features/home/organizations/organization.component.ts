@@ -9,12 +9,21 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { combineLatest, distinctUntilChanged, firstValueFrom, map, mergeMap, of } from 'rxjs';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
+import {
+    selectCurrentOrgId,
+    selectCurrentOrganization,
+    selectCurrentPartnerId,
+    selectCurrentPartnerOrgs,
+    selectRootOrganizations,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
     GroupItem,
@@ -30,15 +39,6 @@ import { icons } from '@static-variables';
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
 import { GroupsItem, Crumb, OpenGroups } from '../home.types';
-import { NxChannelPartnersService } from '../services/channel-partners.service';
-import * as CPActions from '../store/channel-partners/channel-partners.actions';
-import {
-    selectCurrentOrgId,
-    selectCurrentOrganization,
-    selectCurrentPartnerId,
-    selectCurrentPartnerOrgs,
-    selectRootOrganizations,
-} from '../store/channel-partners/channel-partners.selectors';
 import * as groupActions from '../store/groups/groups.actions';
 import {
     selectCurrentGroupId,

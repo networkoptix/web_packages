@@ -14,7 +14,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { AddPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';

@@ -30,7 +30,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';

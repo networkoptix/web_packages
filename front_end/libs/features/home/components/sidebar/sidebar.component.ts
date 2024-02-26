@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { selectRootGroups } from '@pages/home/store/groups/groups.selectors';
 import {
     GroupItem,

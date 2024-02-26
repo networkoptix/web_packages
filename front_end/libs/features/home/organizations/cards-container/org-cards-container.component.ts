@@ -11,17 +11,17 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { combineLatestWith, distinctUntilChanged, map } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
+import {
+    selectCurrentOrgId,
+    selectCurrentOrganization,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    selectCurrentOrgId,
-    selectCurrentOrganization,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
     GroupItem,

@@ -11,7 +11,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { CreateGroup } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';

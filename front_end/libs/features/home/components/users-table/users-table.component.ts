@@ -15,6 +15,12 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
+import {
+    selectChannelPartners,
+    selectCurrentOrganization,
+    selectCurrentPartner,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxBaseTableComponent } from '@components/table/table.component';
@@ -22,14 +28,9 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    selectChannelPartners,
-    selectCurrentOrganization,
-    selectCurrentPartner,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
 import { NxAccountService } from '@services/account.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartnerRole,
     OrganizationRole,
@@ -37,7 +38,6 @@ import {
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
-import * as cpActions from '../../store/channel-partners/channel-partners.actions';
 import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
 
 @Component({

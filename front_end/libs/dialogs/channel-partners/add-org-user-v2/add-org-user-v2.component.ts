@@ -15,8 +15,8 @@ import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { NxAccountService } from '@services/account.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     OrgRoleIds,
     type GroupItem,

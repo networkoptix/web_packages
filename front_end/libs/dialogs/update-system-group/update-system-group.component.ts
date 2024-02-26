@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { PatchGroup } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';

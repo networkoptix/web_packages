@@ -9,6 +9,16 @@ import { ChannelPartnersState } from './channel-partners.state';
 
 const selectChannelPartnersState = createFeatureSelector<ChannelPartnersState>('channelPartners');
 
+export const selectArePartnerOrgsLoading = createSelector(
+    selectChannelPartnersState,
+    state => state.arePartnerOrgsLoading,
+);
+
+export const selectAreChannelPartnersAndOrgsLoading = createSelector(
+    selectChannelPartnersState,
+    state => state.areChannelPartnersAndOrgsLoading,
+);
+
 export const selectChannelPartners = createSelector(
     selectChannelPartnersState,
     state => state.channelPartners,

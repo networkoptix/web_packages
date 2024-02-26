@@ -10,17 +10,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Subject, debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 
+import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
+import {
+    selectCurrentPartner,
+    selectCurrentPartnerId,
+    selectCurrentSubchannelPartners,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    selectCurrentPartner,
-    selectCurrentPartnerId,
-    selectCurrentSubchannelPartners,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     ChannelPartnerPermissions,
@@ -29,7 +30,6 @@ import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
 
-import * as CPActions from '../../store/channel-partners/channel-partners.actions';
 import { NxCardComponent } from '../card/card.component';
 
 @UntilDestroy()

@@ -31,11 +31,25 @@ export const setCurrentOrgId = createAction(
 );
 
 export const setCurrentPartner = createAction(
-    '[Channel Partners] Set current partner',
+    '[Channel Partners] Set current partner and partner orgs',
     props<{ currentPartnerId: string; currentPartnerOrganizations: Organization[] }>(),
+);
+
+export const addPartnerOrg = createAction(
+    '[Channel Partners] Add partner organization',
+    props<{ newPartnerOrg: Organization }>(),
 );
 
 export const setCurrentSubchannelPartners = createAction(
     '[Channel Partners] Set current subchannels',
     props<{ currentSubchannels: ChannelPartner[] }>(),
+);
+
+export const loadPartnerOrgs = createAction(
+    '[Channel Partners] Load partner organizations',
+    props<{ partnerId: string }>(),
+);
+
+export const loadChannelPartnersAndOrgs = createAction(
+    '[Channel Partners] Load channel partners and organizations',
 );

@@ -4,6 +4,8 @@ import * as ChannelPartnerActions from './channel-partners.actions';
 import { ChannelPartnersState } from './channel-partners.state';
 
 const initialState: ChannelPartnersState = {
+    arePartnerOrgsLoading: false,
+    areChannelPartnersAndOrgsLoading: false,
     currentPartnerId: null,
     currentOrgId: null,
     currentSubchannels: [],
@@ -14,6 +16,20 @@ const initialState: ChannelPartnersState = {
 
 export const channelPartnersReducer = createReducer(
     initialState,
+    on(
+        ChannelPartnerActions.loadPartnerOrgs,
+        (state): ChannelPartnersState => ({
+            ...state,
+            arePartnerOrgsLoading: true,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.loadChannelPartnersAndOrgs,
+        (state): ChannelPartnersState => ({
+            ...state,
+            areChannelPartnersAndOrgsLoading: true,
+        }),
+    ),
     on(
         ChannelPartnerActions.setChannelPartners,
         (state, { channelPartners }): ChannelPartnersState => ({
@@ -32,6 +48,7 @@ export const channelPartnersReducer = createReducer(
         ChannelPartnerActions.setChannelPartnersAndOrgs,
         (state, { channelPartners, rootOrganizations }): ChannelPartnersState => ({
             ...state,
+            areChannelPartnersAndOrgsLoading: false,
             channelPartners,
             rootOrganizations,
         }),
@@ -54,8 +71,16 @@ export const channelPartnersReducer = createReducer(
         ChannelPartnerActions.setCurrentPartner,
         (state, { currentPartnerId, currentPartnerOrganizations }): ChannelPartnersState => ({
             ...state,
+            arePartnerOrgsLoading: false,
             currentPartnerId,
             currentPartnerOrganizations,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.addPartnerOrg,
+        (state, { newPartnerOrg }): ChannelPartnersState => ({
+            ...state,
+            currentPartnerOrganizations: [...state.currentPartnerOrganizations, newPartnerOrg],
         }),
     ),
     on(

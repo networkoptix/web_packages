@@ -5,13 +5,13 @@ import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { switchMap } from 'rxjs';
 
-import { NxTabsModule } from '@components/tabs/tabs.module';
-import { Tab } from '@components/tabs/tabs.types';
-import staticLang from '@language_static';
 import {
     selectCurrentPartner,
     selectSubchannelPartner,
-} from '@pages/home/store/channel-partners/channel-partners.selectors';
+} from '@common/store/channel-partners/channel-partners.selectors';
+import { NxTabsModule } from '@components/tabs/tabs.module';
+import { Tab } from '@components/tabs/tabs.types';
+import staticLang from '@language_static';
 import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
 

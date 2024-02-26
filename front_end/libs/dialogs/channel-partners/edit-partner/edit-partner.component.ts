@@ -15,7 +15,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { EditChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import LANG from '@language_static';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';

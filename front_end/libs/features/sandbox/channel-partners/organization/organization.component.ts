@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupItem,
     Organization,

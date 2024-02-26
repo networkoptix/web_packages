@@ -22,7 +22,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';

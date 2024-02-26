@@ -12,7 +12,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { ToastType } from '@components/toast-container/toast.types';
 import type { EditPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
