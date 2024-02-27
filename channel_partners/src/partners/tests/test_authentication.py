@@ -1,4 +1,8 @@
 from time import sleep
+from unittest.mock import (
+    MagicMock,
+    patch,
+)
 from uuid import uuid4
 
 import pytest
@@ -7,6 +11,7 @@ from rest_framework import exceptions
 
 from partners.authentication import (
     NxCloudOauthIntrospectAuthentication,
+    NxCloudSystemBasicAuthentication,
     TokenCache,
     check_system_credentials,
     get_cloud_user_from_token,
@@ -15,6 +20,7 @@ from partners.models import (
     CloudSystemStates,
     VmsRoles,
 )
+from tools.exception import APIErrorWithoutRollback
 
 
 def test_get_cloud_user_from_token(httpx_mock):
@@ -64,6 +70,37 @@ def test_token_cache(mocker):
     cache_get_mock.assert_not_called()
 
 
+class TestSystemCredentialsUpdate:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, system_factory):
+        self.new_name = 'MY NEW NAME'
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        self.sys = system_factory(organization=org)
+        self.system_id = self.sys.system_id
+        self.cloud_host = settings.DEFAULT_HOST_NAME
+
+    @patch('partners.authentication.NxCloudSystemBasicAuthentication.get_or_create_system')
+    @patch('partners.authentication.check_system_credentials')
+    def test_credentials_update_name(self, mock_check_system_credentials, mock_get_or_create_system):
+        mock_check_system_credentials.return_value = (True, 4, self.new_name)
+        mock_get_or_create_system.return_value = self.sys
+
+        auth_instance = NxCloudSystemBasicAuthentication()
+        mock_request = MagicMock()
+        mock_request.cloud_host.hostname = 'test_host'
+        mock_request.headers.get.return_value = 'auth_header'
+
+        try:
+            auth_instance.authenticate_credentials(self.system_id, 'dummy_password', request=mock_request)
+        except APIErrorWithoutRollback:
+            self.fail("Authentication raised APIErrorWithoutRollback unexpectedly!")
+
+        self.sys.refresh_from_db()
+        assert self.sys.name == self.new_name, "System name was not updated in the database."
+
+
 def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
                                   organization_factory, system_factory):
     cp = channel_partner_factory()
@@ -75,11 +112,13 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     cdb_url = f'https://{cloud_host}/cdb/systems/{system_id}'
     activated_system = {
         'id': system_id,
-        'status': 'activated'
+        'status': 'activated',
+        'name': 'name_activated',
     }
     not_activated_system = {
         'id': system_id,
-        'status': 'notActivated'
+        'status': 'notActivated',
+        'name': 'name_not_activated',
     }
     deleted_system = {
         'id': system_id,
@@ -93,40 +132,44 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
         'status': 'activated'
     }
     httpx_mock.add_response(url=cdb_url, json=activated_system, status_code=200)
-    authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
 
     assert authenticated is True
     assert status == CloudSystemStates.ACTIVATED
+    assert system_name == 'name_activated'
 
     httpx_mock.reset(False)
     httpx_mock.add_response(url=cdb_url, json=not_activated_system, status_code=200)
-    authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
 
     assert authenticated is False
     assert status == CloudSystemStates.NOT_ACTIVATED
+    assert system_name == 'name_not_activated'
 
     httpx_mock.reset(False)
     httpx_mock.add_response(url=cdb_url, json=wrong_id, status_code=200)
-    authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
 
     assert authenticated is False
     assert status is None
+    assert system_name == None
 
     sys.refresh_from_db()
     assert sys.system_state == CloudSystemStates.ACTIVATED
 
     httpx_mock.reset(False)
     httpx_mock.add_response(url=cdb_url, json=deleted_system, status_code=200)
-    authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
-
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
+    assert system_name == None
 
     httpx_mock.reset(False)
     httpx_mock.add_response(url=cdb_url, json=auth_error, status_code=403)
-    authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
+    assert system_name is None
 
 
 class TestNxCloudOauthIntrospectAuthentication:
