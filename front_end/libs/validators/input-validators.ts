@@ -13,6 +13,36 @@ export class NxValidators {
 
     constructor(private translate: TranslateService) {}
 
+    // to be used only with nx-info-form for now as it target FormArray
+    // if any other usage is required - some mods need to be made.
+    uniqueNumber(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value = control.value;
+            const numbers = control.parent?.parent; // target FormArray controls
+
+            let unique = [];
+
+            if (numbers?.controls) {
+                // @ts-expect-error mistype
+                unique = numbers?.controls.filter(number => {
+                    return (
+                        number.controls.data.value.replace(/[^0-9]+/g, '') ===
+                        value.replace(/[^0-9]+/g, '')
+                    );
+                });
+            }
+
+            // const phoneInvalid = new RegExp(simplePhoneRegex).test(value);
+
+            return unique.length > 1 // match self and another one
+                ? {
+                      phoneInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.phoneNotUnique),
+                  }
+                : null;
+        };
+    }
+
     phone(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value;
