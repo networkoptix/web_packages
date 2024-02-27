@@ -1,13 +1,6 @@
 from time import sleep
-from typing import (
-    List,
-    Tuple,
-    TypedDict,
-)
-from uuid import (
-    UUID,
-    uuid4,
-)
+from typing import List
+from uuid import uuid4
 
 import httpx
 import structlog
@@ -147,6 +140,10 @@ from partners.serializers import (
     UserListSerializer,
 )
 from partners.services.cloud_system_service import CloudSystemService
+from partners.services.internal_grant_access_service import (
+    InternalGrantAccessResult,
+    InternalGrantAccessService,
+)
 from tools.exception import Conflict
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 from tools.utils import paginated_response
@@ -169,7 +166,7 @@ def grant_access(request):
         hostname: str = request.cloud_host or 'cloud-test.hdw.mx'
 
         # internal_grant_access: InternalGrantAccess = InternalGrantAccess()
-        result: InternalGrantAccessResult = InternalGrantAccess.process(email, hostname)
+        result: InternalGrantAccessResult = InternalGrantAccessService.process(email, hostname)
 
         context = {'form': form, **result}
         return render(request, 'grant_access.html', context)
@@ -1637,134 +1634,3 @@ def cloud_storage_usage_report(request):
     return Response(serializer.data)
 
 
-class InternalGrantAccessResult(TypedDict):
-    nx_admin: CloudUser
-    cp_admin: CloudUser
-    org_admin: CloudUser
-    nx_cp: ChannelPartner
-    cp: ChannelPartner
-    org: Organization
-
-
-class InternalGrantAccess:
-    """
-    A class to handle granting access to internal users
-    """
-    @classmethod
-    def process(cls, email: str, hostname: str) -> InternalGrantAccessResult:
-        """
-        Processes the granting of access for an internal user.
-        """
-        base_user: str = email.split("@")[0]
-
-        cloud_host: CloudHost = CloudHost.objects.get(hostname=hostname)
-
-        nx_admin, cp_admin, org_admin = cls.__get_cloud_users(base_user)
-        nx_cp: ChannelPartner = cls.__get_root_channel_partner(cloud_host)
-        cp, org = cls.__get_or_create_org_and_partners(nx_cp, base_user, cloud_host)
-
-        cls.__apply_channel_partner_role(nx_admin, nx_cp)
-        cls.__apply_channel_partner_role(cp_admin, cp)
-        cls.__apply_organization_role(org_admin, org)
-
-        return {
-            'nx_admin': nx_admin,
-            'cp_admin': cp_admin,
-            'org_admin': org_admin,
-            'nx_cp': nx_cp,
-            'cp': cp,
-            'org': org
-        }
-
-    @classmethod
-    def __get_root_channel_partner(cls, cloud_host: CloudHost) -> ChannelPartner:
-        """
-        Gets the root channel partner for a given cloud host.
-        """
-        return ChannelPartner.objects.filter(parent_channel_partner__isnull=True, cloud_host=cloud_host).first()
-
-    @classmethod
-    def __get_or_create_org_and_partners(
-            cls,
-            host_root_cp: ChannelPartner,
-            base_user: str,
-            cloud_host: CloudHost
-    ) -> Tuple['ChannelPartner', 'Organization']:
-        """
-        Gets or creates an organization and its associated channel partner for a given internal user.
-        """
-        # Channel Partner Stuff
-        channel_partner_name: str = f"{base_user}'s Channel Partner"
-        channel_partner: ChannelPartner
-        cp_created: bool
-        channel_partner, cp_created = ChannelPartner.objects.get_or_create(
-            parent_channel_partner=host_root_cp,
-            name=channel_partner_name,
-            cloud_host=cloud_host)
-
-        # Organization Stuff
-        organization_name: str = f"{base_user}'s Organization"
-        organization: Organization
-        org_created: bool
-        organization, org_created = Organization.objects.get_or_create(
-            channel_partner=channel_partner,
-            name=organization_name)
-
-        return channel_partner, organization
-
-    @classmethod
-    def __apply_organization_role(cls, user: CloudUser, organization: Organization) -> OrganizationToUser:
-        """
-        Applies an organization role to a given internal user for a specific organization.
-        """
-        org_admin_role: List[UUID] = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
-
-        organization_user: OrganizationToUser = OrganizationToUser.objects.filter(
-            user=user,
-            organization=organization)
-
-        if organization_user.exists():
-            logger.info(
-                "Found user and deleting from organization_to_user",
-                email=user.email)
-            organization_user.delete()
-
-        return OrganizationToUser(
-            user=user,
-            organization=organization,
-            roles=org_admin_role).save()
-
-    @classmethod
-    def __apply_channel_partner_role(cls, user: CloudUser, channel_partner: ChannelPartner) -> ChannelPartnerToUser:
-        """
-         Applies a channel partner role to a given internal user for a specific channel partner.
-        """
-        admin_role: List[UUID] = [ChannelPartnerRoles.ADMINISTRATOR]
-
-        channel_partner_user: ChannelPartnerToUser = ChannelPartnerToUser.objects.filter(
-            user=user,
-            channel_partner=channel_partner)
-
-        if channel_partner_user.exists():
-            logger.info(
-                "Found user and deleting from channel_partner_to_user",
-                email=user.email)
-            channel_partner_user.delete()
-
-        return ChannelPartnerToUser(
-            user=user,
-            channel_partner=channel_partner,
-            roles=admin_role).save()
-
-    @classmethod
-    def __get_cloud_users(cls, base_user: str) -> Tuple['CloudUser', 'CloudUser', 'CloudUser']:
-        """
-        Gets or creates three internal users with specific roles for a given username.
-        """
-        domain: str = "networkoptix.com"
-
-        nx_admin, _ = CloudUser.objects.get_or_create(email=f'{base_user}+nxadmin@{domain}')
-        cp_admin, _ = CloudUser.objects.get_or_create(email=f'{base_user}+cpadmin@{domain}')
-        org_admin, _ = CloudUser.objects.get_or_create(email=f'{base_user}+orgadmin@{domain}')
-
-        return nx_admin, cp_admin, org_admin
