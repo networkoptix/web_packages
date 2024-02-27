@@ -80,6 +80,7 @@ export class NxChannelPartnerInformationComponent {
     phoneValidators: Array<ValidationErrors | null | ValidatorFn> = [
         Validators.required,
         this.nxValidators.phone(),
+        this.nxValidators.uniqueNumber(),
     ];
     emailValidators: Array<ValidationErrors | null | ValidatorFn> = [
         Validators.required,

@@ -2086,7 +2086,8 @@
     "customValidatorMsg": {
         "siteInvalid": "URL is invalid",
         "emailInvalid": "Email is invalid",
-        "phoneInvalid": "Phone number is invalid"
+        "phoneInvalid": "Phone number is invalid",
+        "phoneNotUnique": "Phone number is already added"
     },
     "updateWebadmin": {
         "downloadError": "Error downloading new WebAdmin build",
