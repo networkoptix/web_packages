@@ -52,33 +52,52 @@
     </form>
 </div>
 
-{% if nx_admin and cp_admin and org_admin and nx_cp and cp and org %}
-<table style="width: 100%; border-collapse: collapse;">
-    <thead>
-    <tr style="background-color: #f2f2f2; text-align: left;">
-        <th style="padding: 8px;">User Email</th>
-        <th style="padding: 8px;">Channel Partner Name (Added to)</th>
-        <th style="padding: 8px;">Channel Partner ID</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-        <td style="padding: 8px;">{{nx_admin.email}}</td>
-        <td style="padding: 8px;">{{nx_cp.name}}</td>
-        <td style="padding: 8px;">{{nx_cp.id}}</td>
-    </tr>
+{% if nx_admin and cp_admin and org_admin and nx_cp and cp and org and meta_admin and meta_cp_admin and meta_org_admin and meta_nx_cp and meta_cp and meta_org %}
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr style="background-color: #f2f2f2; text-align: left;">
+            <th style="padding: 8px;">User Email</th>
+            <th style="padding: 8px;">Channel Partner Name (Added to)</th>
+            <th style="padding: 8px;">Channel Partner ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ nx_admin.email }}</td>
+            <td style="padding: 8px;">{{ nx_cp.name }}</td>
+            <td style="padding: 8px;">{{ nx_cp.id }}</td>
+        </tr>
 
-    <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
-        <td style="padding: 8px;">{{cp_admin.email}}</td>
-        <td style="padding: 8px;">{{cp.name}}</td>
-        <td style="padding: 8px;">{{cp.id}}</td>
-    </tr>
+        <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ cp_admin.email }}</td>
+            <td style="padding: 8px;">{{ cp.name }}</td>
+            <td style="padding: 8px;">{{ cp.id }}</td>
+        </tr>
 
-    <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-        <td style="padding: 8px;">{{org_admin.email}}</td>
-        <td style="padding: 8px;">{{org.name}}</td>
-        <td style="padding: 8px;">{{org.id}}</td>
-    </tr>
-    </tbody>
-</table>
+        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ org_admin.email }}</td>
+            <td style="padding: 8px;">{{ org.name }}</td>
+            <td style="padding: 8px;">{{ org.id }}</td>
+        </tr>
+
+        {# Meta Users #}
+        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ meta_admin.email }}</td>
+            <td style="padding: 8px;">{{ meta_nx_cp.name }}</td>
+            <td style="padding: 8px;">{{ meta_nx_cp.id }}</td>
+        </tr>
+
+        <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ meta_cp_admin.email }}</td>
+            <td style="padding: 8px;">{{ meta_cp.name }}</td>
+            <td style="padding: 8px;">{{ meta_cp.id }}</td>
+        </tr>
+
+        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">{{ meta_org_admin.email }}</td>
+            <td style="padding: 8px;">{{ meta_org.name }}</td>
+            <td style="padding: 8px;">{{ meta_org.id }}</td>
+        </tr>
+        </tbody>
+    </table>
 {% endif %}

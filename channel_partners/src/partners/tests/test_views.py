@@ -2087,6 +2087,7 @@ class TestGrantAccessView:
               service_record_factory, cp_user_factory,
               organization_factory, channel_partner_factory, org_user_factory):
         root = channel_partner_factory(parent_channel_partner=None)
+        meta_root = channel_partner_factory(parent_channel_partner=None, name="metavms")
         child = channel_partner_factory(parent_channel_partner=root)
         root_user = cp_user_factory(channel_partner=root)
         child_user = cp_user_factory(channel_partner=child)
@@ -2120,12 +2121,18 @@ class TestGrantAccessView:
 
 
         expected_data = [
+            # NX Users
             'test+nxadmin@networkoptix.com',
             'test+cpadmin@networkoptix.com',
-            'test+orgadmin@networkoptix.com'
+            'test+orgadmin@networkoptix.com',
+            # Meta Users
+            'test+metaadmin@networkoptix.com',
+            'test+metacpadmin@networkoptix.com',
+            'test+metaorgadmin@networkoptix.com'
         ]
 
-        for i, row in enumerate(response.content.decode().split('<tr')[2:-1]):
+        response_content = response.content.decode().split('<tr')[2::]
+        for i, row in enumerate(response_content):
             cols = [col.strip() for col in row.split('<td style="padding: 8px;">')[1:-1]]
             user_email = [col.split('</td>')[0] for col in cols][0]
 
