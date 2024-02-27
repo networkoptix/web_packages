@@ -22,52 +22,11 @@
             <span class="close-content"></span>
         </button>
     </div>
-    <div class="url-section">
-        <div class="url-text">
-            {{ shareUrl }}
-        </div>
-        <button
-            class="copy-button"
-            type="button"
-            (click)="copyToClipboard()"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'copy.svg'"
-                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                [applyClass]="true"
-            >
-            </svg-icon>
-        </button>
-    </div>
-    <div class="share-details-section">
-        <!-- TODO: update with values from server when we update the bookmark API to v3 -->
-        <ul>
-            <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <li>Expires in a day</li>
-            <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <li>No password protection</li>
-        </ul>
-    </div>
-    <div class="buttons-sections">
-        <nx-button
-            type="Secondary"
-            translate
-            >Edit</nx-button
-        >
-        <nx-button type="Text">
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'delete.svg'"
-                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                [applyClass]="true"
-            >
-            </svg-icon>
-            <span
-                class="delete-button-text"
-                translate
-                >Delete</span
-            >
-        </nx-button>
-    </div>
+    <nx-bookmark-share-details
+        [shareUrl]="shareUrl"
+        [onEditClick]="onEditClick"
+        [onDeleteClick]="onDeleteClick"
+        [expirationText]="(expirationText | async) || '' | nxTranslate"
+        [passwordDetailsText]="passwordDetailsText"
+    />
 </div>

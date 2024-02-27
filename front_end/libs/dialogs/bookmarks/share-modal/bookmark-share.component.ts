@@ -2,17 +2,19 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { ClipboardService } from 'ngx-clipboard';
+import type { Observable } from 'rxjs';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import staticLang from '@language_static';
+import type { Translatable } from '@pipes/nx-translate.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxSystemRestAPI4 } from '@services/system-rest-api-v4.service';
 import { NxSystemService } from '@services/system.service/system.service';
-import { icons } from '@static-variables';
 
 import { BookmarkShare as DT } from '../../dialogs.types';
+
+import { getExpirationText } from './bookmark-sharing.util';
+import { NxShareDetailsComponent } from './share-details/share-details.component';
 
 const DEFAULT_SHARE_PARAMS = {
     expirationTimeMs: 0,
@@ -25,25 +27,25 @@ const DEFAULT_SHARE_PARAMS = {
     styleUrls: ['bookmark-share.component.scss'],
     standalone: true,
     imports: [
-        AngularSvgIconModule,
         CommonModule,
         TranslateModule,
-        NxAddSvgSrcDirective,
-        NxButtonComponent,
         NxPreLoaderComponent,
+        NxShareDetailsComponent,
+        PipesModule,
     ],
 })
 export class NxBookmarkShareComponent {
-    icons = icons;
     mediaServer: NxSystemRestAPI4;
 
     shareUrl: string;
     loading = true;
 
+    expirationText: Observable<Translatable>;
+    passwordDetailsText: string;
+
     constructor(
-        private clipboardService: ClipboardService,
         public dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) bookmark: DT['data'],
+        @Inject(DIALOG_DATA) private bookmark: DT['data'],
         private systemService: NxSystemService,
     ) {
         this.mediaServer = this.systemService.getCurrentSystem().mediaserver as NxSystemRestAPI4;
@@ -57,19 +59,36 @@ export class NxBookmarkShareComponent {
                     deviceId: bookmark.deviceId,
                     updateBookmarkShareParams: DEFAULT_SHARE_PARAMS,
                 })
-                .subscribe(() => {
+                .subscribe(updatedBookmark => {
                     this.loading = false;
+                    // Slight anti-pattern. This updates the bookmark all the way back to the BookmarkCard.
+                    // We should update this logic in the future when we have a better data layer
+                    bookmark.share = updatedBookmark.share;
+                    this.updateTextDetails();
                 });
         } else {
             this.loading = false;
+            this.updateTextDetails();
         }
     }
 
-    copyToClipboard(): void {
-        this.clipboardService.copy(this.shareUrl);
+    updateTextDetails(): void {
+        if (this.bookmark.share) {
+            this.expirationText = getExpirationText(new Date(this.bookmark.share.expirationTimeMs));
+            // TODO: figure out how we know password exists. Server team is working on it
+            const passwordExists = false;
+            this.passwordDetailsText = passwordExists
+                ? this.LANG.bookmarkSharing.passwordProtected
+                : this.LANG.bookmarkSharing.notPasswordProtected;
+        }
     }
+
+    onEditClick(): void {}
+    onDeleteClick(): void {}
 
     close(): void {
         this.dialogRef.close();
     }
+
+    LANG = staticLang;
 }

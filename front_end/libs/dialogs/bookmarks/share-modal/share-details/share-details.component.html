@@ -1,0 +1,49 @@
+<div class="url-section">
+    <div class="url-text">
+        {{ shareUrl() }}
+    </div>
+    <button
+        class="copy-button"
+        type="button"
+        (click)="copyToClipboard()"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'copy.svg'"
+            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+            [applyClass]="true"
+        >
+        </svg-icon>
+    </button>
+</div>
+<div class="share-details-section">
+    <ul>
+        <li>{{ expirationText() }}</li>
+        <li>{{ passwordDetailsText() }}</li>
+    </ul>
+</div>
+<div class="buttons-sections">
+    <nx-button
+        type="Secondary"
+        translate
+        (onClick)="onEditClick()()"
+        >Edit</nx-button
+    >
+    <nx-button
+        type="Text"
+        (onClick)="onDeleteClick()()"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'delete.svg'"
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            [applyClass]="true"
+        >
+        </svg-icon>
+        <span
+            class="delete-button-text"
+            translate
+            >Delete</span
+        >
+    </nx-button>
+</div>

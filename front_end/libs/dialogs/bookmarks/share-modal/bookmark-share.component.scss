@@ -18,57 +18,6 @@
     }
 }
 
-.url-section {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: var(--brand-core);
-
-    .url-text {
-        padding-left: 16px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        @include typography.regular18nocolor;
-        color: var(--bookmarks-share-url-text-color);
-    }
-
-    .copy-button {
-        margin: 16px 16px 16px 0;
-        padding: 0 !important;
-        height: unset !important;
-        min-width: min-content;
-        border-radius: 50% !important;
-
-        svg-icon {
-            padding: 8px;
-        }
-    }
-}
-
-.share-details-section {
-    @include typography.regular18nocolor;
-    color: var(--bookmarks-share-details-text-color);
-    padding-top: 30px;
-
-    .bullet-point {
-        padding-right: 12px;
-    }
-}
-
-.buttons-sections {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 16px;
-
-    .delete-button-text {
-        color: var(--bookmarks-share-delete-text-color) !important;
-        font-weight: 400;
-        padding-left: 4px;
-    }
-}
-
 .pre-loader-visible {
     visibility: visible;
     position: absolute;
