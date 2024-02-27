@@ -124,18 +124,25 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         responseType: 'code',
     ): Observable<{ access_code: string; code: string }>;
     private tokenHandler(systemId: string, responseType: string): Observable<unknown> {
-        return this.#refreshToken$.pipe(
-            map(code => ({
-                client_id: 'cloud_portal',
-                grant_type: 'authorization_code',
-                response_type: responseType,
-                scope:
-                    systemId === '*'
-                        ? undefined
-                        : `${window.location.host} cloudSystemId=${systemId}`,
-                code,
-            })),
-            switchMap(body => this.post<{ code: string }>(this.authEndpoint('token'), { body })),
+        const code$ = this.#refreshToken$;
+        return iif(
+            () => systemId === '*' && responseType === 'code',
+            code$.pipe(map(code => ({ code }))),
+            code$.pipe(
+                map(code => ({
+                    client_id: 'cloud_portal',
+                    grant_type: 'authorization_code',
+                    response_type: responseType,
+                    scope:
+                        systemId === '*'
+                            ? undefined
+                            : `${window.location.host} cloudSystemId=${systemId}`,
+                    code,
+                })),
+                switchMap(body =>
+                    this.post<{ code: string }>(this.authEndpoint('token'), { body }),
+                ),
+            ),
         );
     }
 
