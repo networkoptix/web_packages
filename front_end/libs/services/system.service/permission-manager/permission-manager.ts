@@ -58,6 +58,8 @@ const PermissionStringsV3 = {
     administrator: 'administrator',
 };
 
+const LegacyDefaultRoleId = '{00000000-0000-0000-0000-000000000000}';
+
 export const AdminGroups = {
     administratorGroup: '{00000000-0000-0000-0000-100000000000}',
     powerUserGroup: '{00000000-0000-0000-0000-100000000001}',
@@ -131,9 +133,34 @@ export class PermissionManager {
             viewLogs: isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewLogs),
         });
     });
-    resourceAccessRights$$ = signal<ResourceAccessRights>({});
+    private userResourceAccessRights$$ = signal<ResourceAccessRights>({});
+    resourceAccessRights$$ = computed<ResourceAccessRights>(() => {
+        const resourceAccessRights = this.userResourceAccessRights$$();
+        const customRole = this.customRole$$();
+        if (customRole && 'accessibleResources' in customRole) {
+            return Object.fromEntries(
+                customRole.accessibleResources.map(id => [
+                    cleanId(id),
+                    this.convertAccessRightsStringToObj('view'),
+                ]),
+            );
+        }
+        return resourceAccessRights;
+    });
     groups$$ = signal<UserGroup[]>([]);
     roles$$ = signal<Role[]>([]);
+    customRole$$ = computed<Role | undefined>(() => {
+        const roles = this.roles$$();
+        const user = this.user$$();
+        if (!user || !roles) {
+            return undefined;
+        }
+        const userRoleId = (user && 'userRoleId' in user && user.userRoleId) || '';
+        if (!userRoleId) {
+            return undefined;
+        }
+        return roles.find(role => 'id' in role && role.id === userRoleId);
+    });
     currentUser$$ = computed<CurrentUser>(() => {
         const user = this.user$$();
         if (!user) {
@@ -145,6 +172,7 @@ export class PermissionManager {
         const isOwner = this.isOwner$$();
         const isAdmin = this.isAdmin$$();
         const permissions = this.permissions$$();
+        const customRole = this.customRole$$();
         const permissionsString = user.permissions.split('|').sort().join('|');
         const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
 
@@ -162,10 +190,8 @@ export class PermissionManager {
                         role.isOwner === isOwner &&
                         role.permissions === permissionsString,
                 )?.name || '';
-            if (!accessRole) {
-                const userRoleId = ('userRoleId' in user && user.userRoleId) || '';
-                accessRole =
-                    roles.find(role => 'id' in role && role?.id === userRoleId)?.name || '';
+            if (!accessRole && customRole) {
+                accessRole = customRole.name;
             }
         } else if (!environment.isLocal) {
             // If roles is empty that means we couldn't fetch them from the system.
@@ -226,16 +252,15 @@ export class PermissionManager {
         const isOwner = this.isOwner$$();
         const isAdmin = isOwner || this.isAdmin$$();
         const groups = this.groups$$();
-        const roles = this.roles$$();
         const user = this.user$$();
+        const customRole = this.customRole$$();
         if (groups.length) {
             return this.permissionsFromGroups$$();
         }
         let permissions = '';
         // For support when a user has a custom user role.
-        const userRoleId = ('userRoleId' in user && user.userRoleId) || '';
-        if (userRoleId) {
-            const customRole = roles.find(role => 'id' in role && role?.id === userRoleId);
+        const roleId = (customRole && 'id' in customRole && customRole.id) || '';
+        if (roleId && roleId !== LegacyDefaultRoleId) {
             permissions = customRole?.permissions || '';
         } else {
             permissions = user?.permissions || '';
@@ -271,11 +296,12 @@ export class PermissionManager {
         this.cloudApi.users(this.systemId).subscribe(users => {
             const user = users.find(({ accountEmail }) => accountEmail === this.currentUserEmail);
             if (user) {
+                const { customPermissions, permissions } = user || {};
                 this.user$$.set({
                     ...user,
                     name: user.accountEmail,
                     email: user.accountEmail,
-                    permissions: user.customPermissions,
+                    permissions: permissions || customPermissions || '',
                     isCloud: true,
                     isLdap: false,
                     id: user.vmsUserId,
@@ -287,6 +313,9 @@ export class PermissionManager {
     }
 
     async checkCurrentUser(): Promise<void> {
+        if (this.mediaserver.version === 0) {
+            await this.mediaserver.unauthorizedCallback(false);
+        }
         const user = await this.mediaserver.getCurrentUser(true);
         if (user) {
             this.user$$.set(user);
@@ -299,7 +328,7 @@ export class PermissionManager {
                         this.convertAccessRightsStringToObj('view'),
                     ]),
                 );
-                this.resourceAccessRights$$.set(_resourceAccessRights);
+                this.userResourceAccessRights$$.set(_resourceAccessRights);
             }
         } else {
             return Promise.reject();
@@ -321,7 +350,7 @@ export class PermissionManager {
                             ],
                         ),
                     );
-                    this.resourceAccessRights$$.set(_resourceAccessRights);
+                    this.userResourceAccessRights$$.set(_resourceAccessRights);
                 }
             });
         }

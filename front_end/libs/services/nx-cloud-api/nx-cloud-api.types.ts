@@ -194,6 +194,7 @@ export interface CloudUser {
     customPermissions: string;
     isEnabled: boolean;
     lastLoginTime: string;
+    permissions: string;
     systemId: string;
     usageFrequency: number;
     userRoleId: string;
