@@ -235,9 +235,9 @@ def mock_internal_token_auth(mocker):
 
 @pytest.fixture()
 def mock_auth_with_system(mocker):
-    def mock(system, status: int = CloudSystemStates.ACTIVATED, authenticated: bool = True):
+    def mock(system, status: int = CloudSystemStates.ACTIVATED, authenticated: bool = True, name: str = 'name'):
         mocked_check = mocker.patch('partners.authentication.check_system_credentials',
-                                    return_value=(authenticated, status))
+                                    return_value=(authenticated, status, name))
         mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_or_create_system',
                      return_value=system)
         mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system',
@@ -248,10 +248,10 @@ def mock_auth_with_system(mocker):
 
 @pytest.fixture()
 def mock_cdb_basic_auth(httpx_mock, cloud_test_host):
-    def mock(system, status: str = 'activated') -> str:
+    def mock(system, status: str = 'activated', name: str = 'name') -> str:
         url = f'https://{cloud_test_host.hostname}/cdb/systems/{system.system_id}'
         httpx_mock.add_response(url=url,
-                                json={'id': f'{system.system_id}', 'status': status},
+                                json={'id': f'{system.system_id}', 'status': status, 'name': name},
                                 status_code=200)
         auth = _basic_auth_str(f'{system.system_id}', 'password')
         return auth

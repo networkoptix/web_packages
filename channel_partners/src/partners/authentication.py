@@ -57,7 +57,6 @@ class TokenCache:
         mdsum = sha256((settings.CACHE_SALT + auth_header).encode()).hexdigest()
         return f'system-authenticated-{mdsum}'
 
-
     @classmethod
     def get_token(cls, token):
         if not token:
@@ -83,7 +82,7 @@ class TokenCache:
 
     @classmethod
     def set_token_system(cls, token: str, system_id: str | uuid.UUID,
-                         email: str, roles_ids: List[str| uuid.UUID], expires_in: int = None):
+                         email: str, roles_ids: List[str | uuid.UUID], expires_in: int = None):
         cls.cache().set(
             cls.token_system_cache_key(token, system_id=system_id), (email, roles_ids),
             timeout=cls.get_timeout(expires_in)
@@ -92,6 +91,7 @@ class TokenCache:
     @classmethod
     def get_system_auth(cls, auth_header: str) -> str | None:
         return cls.cache().get(cls.system_auth_cache_key(auth_header))
+
     @classmethod
     def set_system_auth(cls, auth_header: str, system_id: str | uuid.UUID):
         cls.cache().set(
@@ -118,33 +118,40 @@ class NxTokenAuthentication(TokenAuthentication):
         return get_user_model()(), token
 
 
-def check_system_credentials(system_id: str, system_auth_key: str, cloud_host: str) -> Tuple[bool, None | int]:
+def check_system_credentials(
+        system_id: str,
+        system_auth_key: str,
+        cloud_host: str
+) -> Tuple[bool, None | int, str | None]:
     system_api: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
-    response: Response = system_api.system.get_system(system_id, auth=httpx.BasicAuth(username=system_id,
-                                                                                      password=system_auth_key))
+    response: Response = system_api.system.get_system(
+        system_id, auth=httpx.BasicAuth(
+            username=system_id,
+            password=system_auth_key))
 
     if response.is_success:
         response_body = response.json()
         response_system_id = response_body.get('id')
         response_status = response_body.get('status')
+        system_name = response_body.get('name')
 
         state = CloudSystemStates.STATE_DICT.get(response_status)
         is_activated: bool = state == CloudSystemStates.ACTIVATED
 
         if response_system_id == system_id:
             if not is_activated:
-                return False, state
+                return False, state, system_name
             if is_activated:
-                return True, state
-        return False, None
+                return True, state, system_name
+        return False, None, None
 
     if response.headers.get('content-type') == 'application/json':
         error = response.json()
         if error.get('resultCode') == 'credentialsRemovedPermanently':
-            return False, CloudSystemStates.DELETED
+            return False, CloudSystemStates.DELETED, None
 
     if response.status_code == 401:
-        return False, None
+        return False, None, None
     response.raise_for_status()
 
 
@@ -171,7 +178,7 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
         ):
             request.cloud_system = self.get_system(system_id=userid, request=request)
             return get_user_model()(), None
-        authenticated, system_status = check_system_credentials(
+        authenticated, system_status, system_name = check_system_credentials(
             system_id=userid, system_auth_key=password,
             cloud_host=request.cloud_host.hostname
         )
@@ -186,17 +193,22 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
             else:
                 cloud_system = None
             if isinstance(cloud_system, CloudSystemId):
-                # can fail if system is not added to CPS
+                needs_update = False
+                if cloud_system.name != system_name:
+                    cloud_system.name = system_name
+                    needs_update = True
                 if cloud_system.system_state != system_status:
-                    with transaction.atomic():
-                        cloud_system.system_state = system_status
-                        cloud_system.save()
+                    cloud_system.system_state = system_status
+                    needs_update = True
+                if needs_update:
+                    cloud_system.save()
         if authenticated:
             request.cloud_system = cloud_system
             return get_user_model()(), None
 
-        raise APIErrorWithoutRollback(detail='Invalid system id or auth key',
-                                      status_code=status.HTTP_401_UNAUTHORIZED)
+        raise APIErrorWithoutRollback(
+            detail='Invalid system id or auth key',
+            status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):
