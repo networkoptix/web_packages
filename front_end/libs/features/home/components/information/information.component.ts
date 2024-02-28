@@ -184,7 +184,6 @@ export class NxChannelPartnerInformationComponent {
     }
 
     saveDataChanges = (): void => {
-        // const test = this.mapDataToServer();
         this.cpService
             .updateChannelPartner(this.currPartnerId$$(), {
                 supportInformation: this.mapDataToServer(),
@@ -244,6 +243,8 @@ export class NxChannelPartnerInformationComponent {
         data.push(newRecord);
         this.information[type] = [...data];
         this.hasChanges = true;
+        this.allValid = false;
+        this.validForms[type] = false;
     }
 
     updateData(e: CPInfoDataEvent): void {
@@ -259,5 +260,10 @@ export class NxChannelPartnerInformationComponent {
     discardDataChanges = (): void => {
         this.information = cloneDeep(this.informationData);
         this.hasChanges = false;
+        this.allValid = true;
+
+        [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(type => {
+            this.validForms[type] = true;
+        });
     };
 }

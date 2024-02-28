@@ -84,10 +84,11 @@ export class NxInfoGroupComponent {
             return false;
         } else {
             for (let idx = 0; idx < currValues.length; idx++) {
-                const description = data[idx].description.value || '';
+                const descriptionData = data[idx].description?.value || '';
+                const descriptionCurr = currValues[idx].value.description || '';
                 if (
                     currValues[idx].value.data !== data[idx].data.value ||
-                    currValues[idx].value.description !== description
+                    descriptionCurr !== descriptionData
                 ) {
                     return false;
                 }
@@ -135,7 +136,14 @@ export class NxInfoGroupComponent {
 
         const rowsFormArray = this.formBuilder.array(rows);
         this.formGroup.setControl('records', rowsFormArray);
-        this.formGroup.updateValueAndValidity();
+
+        // force controls validators
+        for (let idx = 0; idx < rows.length; idx++) {
+            rows[idx].controls.data.markAsDirty();
+            rows[idx].controls.data.markAsTouched();
+            rows[idx].controls.description?.markAsDirty();
+            rows[idx].controls.description?.markAsTouched();
+        }
     }
 
     get records(): FormArray {
@@ -159,7 +167,7 @@ export class NxInfoGroupComponent {
             } else {
                 data = {
                     value: newInfo[idx].data.value,
-                    description: newInfo[idx].description.value,
+                    description: newInfo[idx].description?.value,
                 };
             }
 
