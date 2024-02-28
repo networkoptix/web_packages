@@ -700,7 +700,8 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
     class SecuritySerializer(serializers.Serializer):
         lastCheck = serializers.DateTimeField(source='last_usage_report', format='%Y-%m-%d %H:%M:%S')
         tmpExpirationDate = serializers.SerializerMethodField()
-        status = serializers.DictField(source='get_security_statuses')
+        status = serializers.DictField(source='security_statuses_by_type')
+        statusIds = serializers.DictField(source='security_statuses_by_service')
         checkPeriodS = serializers.SerializerMethodField()
 
         def get_tmpExpirationDate(self, obj: CloudSystemId) -> str:
@@ -743,22 +744,7 @@ class UsageSerializer(serializers.Serializer):
 
     service = NullValuePKField(queryset=ChannelPartnerService.objects.all(),
                                null_value=ServiceUsage.UNALLOCATED_SERVICE)
-    serviceType = CodeChoiceField(source='service_type', choices=ChannelPartnerService.SERVICE_TYPE_CODES, required=False,
-                                  allow_null=True)
     devices = DeviceSerializer(many=True)
-
-    def validate(self, data):
-        if not data.get('service') and data.get('service_type') is None:
-            raise serializers.ValidationError({
-                'service_type': ['One of service or service_type must be provided.'],
-                'service': ['One of service or service_type must be provided.'],
-            })
-        if (service := data.get('service')) and (service_type := data.get('service_type')) is not None:
-            if service.type != service_type:
-                raise serializers.ValidationError({
-                    'service_type': ['service_type must be equal to the type of service.'],
-                })
-        return data
 
 
 class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
@@ -788,18 +774,15 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         if to_ts - from_ts != datetime.timedelta(seconds=ServiceUsage.CHECK_PERIOD):
             raise serializers.ValidationError(
                 f'Time range must cover exactly {ServiceUsage.CHECK_PERIOD} seconds')
-        usages = []
-        for usage in data.get('usages', []):
-            if usage.get('service_type') is None:
-                usage['service_type'] = usage['service'].type
-            # CLOUD-12459: ignoring cloud storage
-            if usage.get('service_type') == ChannelPartnerService.CLOUD_STORAGE:
-                continue
-            if usage.get('service') and usage['service'].type == ChannelPartnerService.CLOUD_STORAGE:
-                continue
-            usages.append(usage)
-        data['usages'] = usages
         return data
+
+    def validate_usages(self, value):
+        # CLOUD-12699 ignoring "00000000-0000-0000-0000-000000000000", ignoring cloud storage
+        value = [
+            usage for usage in (value or [])
+            if usage['service'] and usage['service'].type != ChannelPartnerService.CLOUD_STORAGE
+        ]
+        return value
 
     def save_security_metrics(self, cloud_system: CloudSystemId):
         usages = self.validated_data.get('usages')
@@ -809,16 +792,17 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         service_usage_dict = defaultdict(int)
         for usage in usages:
             device_list = usage.get('devices')
-            service_id = usage.get('service').id if usage.get('service') else None
-            service_type = usage.get('service_type')
+            service_id = usage.get('service').id
             for device in device_list:
-                service_usage_dict[service_id, service_type] += device.get('usage', 0)
-
-        for (service_id, service_type), usage in service_usage_dict.items():
-            ServiceUsage.objects.create(
+                service_usage_dict[service_id] += device.get('usage', 0)
+        usage_records = []
+        for service_id, usage in service_usage_dict.items():
+            usage_records.append(ServiceUsage(
                 usage=usage, cloud_system=cloud_system,
-                service_id=service_id, service_type=service_type,
-                from_ts=from_ts, to_ts=to_ts)
+                service_id=service_id,
+                from_ts=from_ts, to_ts=to_ts
+            ))
+        ServiceUsage.objects.bulk_create(usage_records)
 
         ServiceUsage.check_excess(cloud_system)
         cloud_system.last_usage_report = timezone.now()
@@ -833,8 +817,20 @@ class CloudStorageUsageSerializer(serializers.Serializer):
             queryset=ChannelPartnerService.objects.filter(type=ChannelPartnerService.CLOUD_STORAGE),
         )
 
-    cloudSystemId = serializers.PrimaryKeyRelatedField(source='cloud_system', queryset=CloudSystemId.objects.all())
+    cloudSystemId = serializers.UUIDField(source='cloud_system')
     devices = DeviceSerializer(many=True)
+
+    def validate_cloudSystemId(self, value) -> CloudSystemId:
+        if system := CloudSystemId.objects.filter(system_id=value).first():
+            return system
+        raise exceptions.ValidationError('Invalid cloud system id or cloud system does not exists.')
+
+    def validate_devices(self, value):
+        value = [
+            device for device in (value or [])
+            if device and device['service']
+        ]
+        return value
 
 
 class CloudStorageUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
@@ -858,12 +854,10 @@ class CloudStorageUsageReportSerializer(SignSerializerMixin, serializers.Seriali
         for service_id, usage in service_usage_dict.items():
             ServiceUsage.objects.create(
                 usage=usage, cloud_system=cloud_system,
-                service_id=service_id, service_type=service_type,
-                from_ts=now, to_ts=now)
+                service_id=service_id, from_ts=now, to_ts=now,
+            )
 
         ServiceUsage.check_excess(cloud_system)
-        cloud_system.last_usage_report = timezone.now()
-        cloud_system.save()
 
 
 @extend_schema_serializer(

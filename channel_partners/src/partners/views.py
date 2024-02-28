@@ -1362,7 +1362,6 @@ class CloudSystemViewSet(NestedViewSetMixin,
     @action(methods=['GET'], detail=True)
     def saas_report(self, request, id):
         system: CloudSystemId = self.get_object()
-
         request_id: str = request.query_params.get('requestId', '')
         serializer = SaaSReportSerializer(system, context={'requestId': request_id})
 

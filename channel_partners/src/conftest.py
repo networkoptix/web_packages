@@ -446,17 +446,14 @@ def mox_tasks_retries(mocker):
 @pytest.fixture()
 def service_usage_factory():
     def factory(system: CloudSystemId, service: ChannelPartnerService = None,
-                service_type: int = None, usage: int = 0,
-                from_ts: datetime.datetime = None, to_ts: datetime.datetime = None) -> ServiceUsage:
+                usage: int = 0, from_ts: datetime.datetime = None,
+                to_ts: datetime.datetime = None) -> ServiceUsage:
         if not to_ts:
             raise ValueError("to_ts must be set")
         if not from_ts:
             from_ts = to_ts - datetime.timedelta(minutes=5)
-        if service_type is None:
-            service_type = service.type
         return ServiceUsage.objects.create(
             service=service,
-            service_type=service_type,
             cloud_system=system,
             usage=usage,
             from_ts=from_ts,
@@ -469,15 +466,11 @@ def service_usage_factory():
 @pytest.fixture()
 def cloud_storage_usage_factory():
     def factory(system: CloudSystemId, service: ChannelPartnerService = None,
-                service_type: int = None, usage: int = 0,
-                ts: datetime.datetime = None) -> ServiceUsage:
+                ts: datetime.datetime = None, usage: int = 0) -> ServiceUsage:
         if not ts:
             ts = timezone.now()
-        if service_type is None:
-            service_type = service.type
         return ServiceUsage.objects.create(
             service=service,
-            service_type=service_type,
             cloud_system=system,
             usage=usage,
             from_ts=ts,

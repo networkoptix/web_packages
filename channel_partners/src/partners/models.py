@@ -10,6 +10,7 @@ from enum import (
     StrEnum,
 )
 from math import ceil
+from threading import Lock
 from typing import (
     Dict,
     List,
@@ -314,28 +315,77 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         system_active: bool = self.system_state == CloudSystemStates.ACTIVATED
         return effectively_active and system_active
 
-    def get_security_statuses(self):
-        if self.last_usage_check < timezone.now() - timedelta(days=3):
-            ServiceUsage.check_excess(self)
+    def get_sec_statuses_lock(self) -> Lock:
+        if lock := getattr(self, 'sec_statuses_lock', None):
+            return lock
+        self.sec_statuses_lock = Lock()
+        return self.sec_statuses_lock
 
-        return {
-            service_code: {
-                'status': self.security_statuses.get(service_code, {}).get('status', 'ok'),
-                'issueExpirationDate': self.security_statuses.get(service_code, {}).get('issueExpirationDate')
+    def refresh_security_statuses(self):
+        lock = self.get_sec_statuses_lock()
+        lock.acquire(blocking=True)
+        if (
+                not self.security_statuses
+                or not self.last_usage_check
+                or self.last_usage_check < timezone.now() - timedelta(days=3)
+        ):
+            try:
+                ServiceUsage.check_excess(self)
+                self.refresh_from_db()
+            except Exception as ex:
+                logger.error("Error gotten when refreshing security statuses", exception=str(ex))
+                lock.release()
+                raise ex
+        lock.release()
+
+    @property
+    def security_statuses_by_type(self):
+        self.refresh_security_statuses()
+        if not (statuses :=self.security_statuses.get('types', {})):
+            service_type_map = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP
+            return {
+                service_type_map[ChannelPartnerService.LOCAL_RECORDING]: ServiceUsage.STATUS_OK,
+                service_type_map[ChannelPartnerService.CLOUD_STORAGE]: ServiceUsage.STATUS_OK,
+                service_type_map[ChannelPartnerService.ANALYTICS]: ServiceUsage.STATUS_OK,
             }
-            for service_type, service_code in ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP.items()
-        }
+        return statuses
+
+    @property
+    def security_statuses_by_service(self):
+        self.refresh_security_statuses()
+        return self.security_statuses.get('services', {})
 
     def set_security_statuses(self, statuses):
-        self.security_statuses = self.security_statuses or {}
-        for service, new_status in statuses.items():
-            service_code = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[service]
-            old_status = self.security_statuses.get(service_code, {}).get('status', ServiceUsage.STATUS_OK)
+        self.security_statuses = self.security_statuses or {'types': {}, 'services': {}}
+        expiration_date = (timezone.now() + relativedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
+        for service_type, new_status in statuses['types'].items():
+            service_code = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[service_type]
+            old_status = (self.security_statuses
+                          .get('types', {})
+                          .get(service_code, {})
+                          .get('status', ServiceUsage.STATUS_OK))
             if new_status == ServiceUsage.STATUS_OK:
-                self.security_statuses[service_code] = {'status': new_status, 'issueExpirationDate': None}
+                self.security_statuses['types'][service_code] = {
+                    'status': new_status, 'issueExpirationDate': None
+                }
             elif new_status != old_status:
-                expiration_date = (timezone.now() + relativedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
-                self.security_statuses[service_code] = {'status': new_status, 'issueExpirationDate': expiration_date}
+                self.security_statuses['types'][service_code] = {
+                    'status': new_status, 'issueExpirationDate': expiration_date
+                }
+        for service_id, new_status in statuses['services'].items():
+            old_status = (self.security_statuses
+                          .get('services', {})
+                          .get(service_id, {})
+                          .get('status', ServiceUsage.STATUS_OK))
+            if new_status == ServiceUsage.STATUS_OK:
+                self.security_statuses['services'][service_id] = {
+                    'status': new_status, 'issueExpirationDate': None
+                }
+            elif new_status != old_status:
+                self.security_statuses['services'][service_id] = {
+                    'status': new_status, 'issueExpirationDate': expiration_date
+                }
+
 
     def can_manage(self, user: CloudUser):
         return self.organization and self.organization.can_manage_systems(user)
@@ -477,11 +527,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def calculate_current_services(self, organization_id=None, save_results=True) -> CurrentServices:
         services = {
-            str(record['service']): {'quantity': record['quantity']}
+            str(record['service']): {'quantity': record['quantity'], 'service_type': record['service__type']}
             for record in
             self.service_records
             .filter(organization_id=organization_id or self.organization.id)
-            .values('service').annotate(quantity=Sum('quantity'))}
+            .values('service', 'service__type').annotate(quantity=Sum('quantity'))}
         self.current_services = {
             'services': services,
             'last_update_ts': round(timezone.now().timestamp())
@@ -499,7 +549,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     @property
     def services(self) -> Dict[str, ServiceUsageDict]:
-        last_usages = ServiceUsage.get_latest_usages(self, allocated_service_only=True)
+        last_usages = ServiceUsage.get_latest_usages(self)
         used_services: Dict[str, dict[str, int]] = {
             service: {'used': 0, **quantity}
             for service, quantity in
@@ -507,12 +557,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         }
         for usage in last_usages:
             service_id: str = str(usage['service']) if usage['service'] else None
-            used = ServiceUsage.get_quantity_from_usage(usage['service_type'], usage['usage'])
+            used = ServiceUsage.get_quantity_from_usage(usage['service__type'], usage['usage'])
             if not used_services.get(service_id):
                 logger.warning(f"Used service not in allocated services",
                                current_services=list(used_services.keys()),
                                service_id=service_id,
-                               service_type=usage['service_type'])
+                               service_type=usage['service__type'])
                 used_services[service_id] = {'used': used, 'total': 0}
             else:
                 used_services[service_id]['used'] = used
@@ -1813,8 +1863,7 @@ class ServiceUsage(models.Model):
     UNALLOCATED_SERVICE = "00000000-0000-0000-0000-000000000000"
     CHECK_PERIOD = 5 * 60  # 5 minutes
 
-    service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, null=True)
-    service_type = models.IntegerField(choices=ChannelPartnerService.SERVICE_TYPES)
+    service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE)
     cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.CASCADE, related_name='service_usages')
     usage = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -1837,99 +1886,61 @@ class ServiceUsage(models.Model):
             return service_usage
         return ceil(service_usage / cls.CHECK_PERIOD)
 
-    @property
-    def in_service_quantity(self) -> int:
-        return self.get_quantity_from_usage(self.service_type, self.usage)
-
     @classmethod
-    def latest_services_usage(
-            cls, cloud_system: CloudSystemId, allocated_service_only=False
-    ) -> QuerySet['ServiceUsage']:
+    def get_latest_usages(cls, cloud_system: CloudSystemId) -> QuerySet[dict]:
         base_queryset = cls.objects.filter(cloud_system=cloud_system)
-        if allocated_service_only:
-            base_queryset = base_queryset.exclude(service__isnull=True)
         last_usage: ServiceUsage = (
             base_queryset
-            .exclude(service_type=ChannelPartnerService.CLOUD_STORAGE)
+            .exclude(service__type=ChannelPartnerService.CLOUD_STORAGE)
             .order_by('-to_ts').first()
         )
-        if not last_usage:
-            return cls.objects.none()
-        return (
-            base_queryset
-            .exclude(service_type=ChannelPartnerService.CLOUD_STORAGE)
-            .filter(to_ts=last_usage.to_ts)
-        )
-
-    @classmethod
-    def latest_cloud_storage_usage(
-            cls, cloud_system: CloudSystemId, allocated_service_only=False
-    ) -> QuerySet['ServiceUsage']:
-        base_queryset = cls.objects.filter(cloud_system=cloud_system)
-        if allocated_service_only:
-            base_queryset = base_queryset.exclude(service__isnull=True)
-
-        # Get the last usages for cloud storage service.
+        # cloud storage may report services at different time
         last_usage_cloud_storage: ServiceUsage = (
             base_queryset
-            .filter(service_type=ChannelPartnerService.CLOUD_STORAGE)
+            .filter(service__type=ChannelPartnerService.CLOUD_STORAGE)
             .order_by('-to_ts').first()
         )
-        if not last_usage_cloud_storage:
-            return ServiceUsage.objects.none()
+        # Check if any service usage is greater than the allowed usage
+        cloud_system.usage_issue_detected = False
+        lookup_ts = []
+        if last_usage:
+            lookup_ts.append(last_usage.to_ts)
+        if last_usage_cloud_storage:
+            lookup_ts.append(last_usage_cloud_storage.to_ts)
         return (
             base_queryset
-            .filter(service_type=ChannelPartnerService.CLOUD_STORAGE)
-            .filter(to_ts=last_usage_cloud_storage.to_ts)
-        )
-
-    @classmethod
-    def get_latest_usages(cls, cloud_system: CloudSystemId,
-                          allocated_service_only=False) -> QuerySet[Dict]:
-        cloud_storage_qs = (
-            cls.latest_cloud_storage_usage(cloud_system, allocated_service_only)
-            .values('service', 'service_type')
+            .filter(to_ts__in=lookup_ts)
+            .values('service', 'service__type')
             .annotate(usage=Sum('usage'))
         )
 
-        services_usage_qs = (
-            cls.latest_services_usage(cloud_system, allocated_service_only)
-            .values('service', 'service_type')
-            .annotate(usage=Sum('usage'))
-        )
-        return cloud_storage_qs.union(services_usage_qs)
-
-
     @classmethod
-    def check_excess(cls, cloud_system: CloudSystemId) -> Dict[int, str]:
-        # Lock this system to prevent concurrent calculations/modifications
-        CloudSystemId.objects.filter(pk=cloud_system.pk).select_for_update().first()
+    def check_excess(cls, cloud_system: CloudSystemId) -> Dict[str, dict]:
+        cloud_system = CloudSystemId.objects.filter(pk=cloud_system.pk).select_for_update().first()
         cloud_system.last_usage_check = timezone.now()
-        statuses = {
+        current_services = cloud_system.get_current_services()
+        cloud_system.usage_issue_detected = False
+        services = {
+            service_id: ServiceUsage.STATUS_OK
+            for service_id, service in current_services.items()
+        }
+        types = {
             ChannelPartnerService.LOCAL_RECORDING: ServiceUsage.STATUS_OK,
             ChannelPartnerService.CLOUD_STORAGE: ServiceUsage.STATUS_OK,
             ChannelPartnerService.ANALYTICS: ServiceUsage.STATUS_OK,
         }
-
         usage_records = cls.get_latest_usages(cloud_system)
-
-        current_services = cloud_system.get_current_services()
-        # Check if any service usage is greater than the allowed usage
-        cloud_system.usage_issue_detected = False
         for record in usage_records:
-            if record['service'] is None:
-                # service==None means that system send zeroed service id and that
-                # service is not enabled/activated, this is counted as overuse.
-                statuses[record['service_type']] = ServiceUsage.STATUS_OVER_USE
-                cloud_system.usage_issue_detected = True
-                continue
+            # Check if any service usage is greater than the allowed usage
             service_id = str(record['service'])
+            service_type = record['service__type']
             allocated_service_qty = current_services.get(service_id, {}).get('quantity', 0)
-            control_usage_seconds = cls.get_usage_from_quantity(record['service_type'], allocated_service_qty)
+            control_usage_seconds = cls.get_usage_from_quantity(service_type, allocated_service_qty)
             if record['usage'] > control_usage_seconds:
                 cloud_system.usage_issue_detected = True
-                statuses[record['service_type']] = ServiceUsage.STATUS_OVER_USE
-
+                services[service_id] = ServiceUsage.STATUS_OVER_USE
+                types[service_type] = ServiceUsage.STATUS_OVER_USE
+        statuses = {'services': services, 'types': types}
         cloud_system.set_security_statuses(statuses=statuses)
         cloud_system.save()
         return statuses

@@ -358,8 +358,7 @@ class TestCloudSystemViewSet:
                               usage=usage_recording,
                               to_ts=now)
         service_usage_factory(system,
-                              service=None,
-                              service_type=ChannelPartnerService.LOCAL_RECORDING,
+                              service=local_recording_service,
                               usage=usage_recording,
                               to_ts=now)
         service_usage_factory(system,
@@ -384,8 +383,8 @@ class TestCloudSystemViewSet:
         assert response.status_code == 200
         assert response.data['services']
         assert response.data['services'][str(local_recording_service.id)]
-        # 330 / (5*60) = 1.1 -> rounded to 2
-        assert response.data['services'][str(local_recording_service.id)]['used'] == 2
+        # 660 / (5*60) = 2.2 -> rounded to 3
+        assert response.data['services'][str(local_recording_service.id)]['used'] == 3
         assert response.data['services'][str(local_recording_service.id)]['quantity'] == quantity
         # storage usage metric is unchanged
         assert response.data['services'][str(cloud_storage_service.id)]['used'] == usage_storage
@@ -479,19 +478,28 @@ class TestCloudSystemViewSet:
         assert mock_method.call_count == 0
 
     def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
-                      mock_auth_with_system, arf_basic_auth):
+                         mock_auth_with_system, arf_basic_auth, service_record_factory, cp_service_factory):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         system.system_state = CloudSystemStates.NOT_ACTIVATED
         system.save()
-
+        service = cp_service_factory(channel_partner=cp)
+        record = service_record_factory(service, system, organization=org, quantity=10)
+        TokenCache.cache().clear()
         view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
         request = arf_basic_auth.get('/', {'requestId': 'test-id-1'})
         mock_auth_with_system(system)
         response = view(request, id=system.system_id)
+        system.refresh_from_db()
         assert response.status_code == 200
         assert system.system_state == CloudSystemStates.ACTIVATED
+        status = response.data['security']['status']
+        assert status[ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.LOCAL_RECORDING]]
+        assert status[ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.CLOUD_STORAGE]]
+        assert status[ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.ANALYTICS]]
+        stautsIds = response.data['security']['statusIds']
+        assert stautsIds[str(service.id)]
         # clear cached authorizations
         TokenCache.cache().clear()
         request = arf_basic_auth.get('/')
@@ -2508,7 +2516,7 @@ class TestCloudStorageUsageReport:
     def test_401(self):
         data = {
             "usedDevices": {
-                "cloudSystemId": str(self.system.id),
+                "cloudSystemId": str(self.system.system_id),
                 "devices": [self.device_data(self.cloud_storage_service.id)]
             }
         }
@@ -2522,7 +2530,7 @@ class TestCloudStorageUsageReport:
     def test_200_single_device(self):
         data = {
             "usedDevices": {
-                "cloudSystemId": str(self.system.id),
+                "cloudSystemId": str(self.system.system_id),
                 "devices": [
                     self.device_data(self.cloud_storage_service.id)
                 ]
@@ -2533,14 +2541,13 @@ class TestCloudStorageUsageReport:
         assert response.status_code == 200
         assert ServiceUsage.objects.all().count() == 1
         assert ServiceUsage.objects.first().service_id == self.cloud_storage_service.id
-        assert ServiceUsage.objects.first().service_type == self.cloud_storage_service.type
         assert ServiceUsage.objects.first().usage == 1
 
 
     def test_200_multiple_devices_single_service(self):
         data = {
             "usedDevices": {
-                "cloudSystemId": str(self.system.id),
+                "cloudSystemId": str(self.system.system_id),
                 "devices": [
                     self.device_data(self.cloud_storage_service.id),
                     self.device_data(self.cloud_storage_service.id),
@@ -2554,14 +2561,14 @@ class TestCloudStorageUsageReport:
         assert response.status_code == 200
         assert ServiceUsage.objects.all().count() == 1
         assert ServiceUsage.objects.first().service_id == self.cloud_storage_service.id
-        assert ServiceUsage.objects.first().service_type == self.cloud_storage_service.type
         assert ServiceUsage.objects.first().usage == 4
+        self.system.refresh_from_db()
         assert self.system.usage_issue_detected is False
 
     def test_200_multiple_devices_multiple_services(self):
         data = {
             "usedDevices": {
-                "cloudSystemId": str(self.system.id),
+                "cloudSystemId": str(self.system.system_id),
                 "devices": [
                     self.device_data(self.cloud_storage_service.id),
                     self.device_data(self.cloud_storage_service_2.id),
@@ -2577,33 +2584,32 @@ class TestCloudStorageUsageReport:
         assert ServiceUsage.objects.all().count() == 2
         usage = ServiceUsage.objects.get(service_id=self.cloud_storage_service.id)
         assert usage.service_id == self.cloud_storage_service.id
-        assert usage.service_type == self.cloud_storage_service.type
         assert usage.usage == 2
         usage = ServiceUsage.objects.get(service_id=self.cloud_storage_service_2.id)
         assert usage.service_id == self.cloud_storage_service_2.id
-        assert usage.service_type == self.cloud_storage_service_2.type
         assert usage.usage == 3
+        self.system.refresh_from_db()
         assert self.system.usage_issue_detected is False
 
     def test_200_multiple_devices_multiple_services_excess(self):
         data = {
             "usedDevices": {
-                "cloudSystemId": str(self.system.id),
+                "cloudSystemId": str(self.system.system_id),
                 "devices": [
                     self.device_data(self.cloud_storage_service.id)
                     for _ in range(self.service_quantity * 2)
                 ]
             }
         }
+        data['usedDevices']['devices'] += [self.device_data(self.cloud_storage_service_2.id)]
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         response = self.client.post(path=self.path, data=data, format='json')
         assert response.status_code == 200
-        assert ServiceUsage.objects.all().count() == 1
+        assert ServiceUsage.objects.all().count() == 2
         usage = ServiceUsage.objects.get(service_id=self.cloud_storage_service.id)
         assert usage.service_id == self.cloud_storage_service.id
-        assert usage.service_type == self.cloud_storage_service.type
         assert usage.usage == self.service_quantity * 2
 
         self.system.refresh_from_db()
-
+        system = CloudSystemId.objects.get(system_id=self.system.system_id)
         assert self.system.usage_issue_detected is True
