@@ -78,7 +78,7 @@ const lazyRoutes: Routes = [
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         title: SystemTitleResolver,
         data: {
-            flag: FeatureFlagStrings.channelPartners,
+            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
         },
     },
     {

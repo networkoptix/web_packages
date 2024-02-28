@@ -197,7 +197,7 @@ export class NxOrganizationsComponent implements OnInit {
                 }
                 if (
                     ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
-                    nxConfig.featureFlags.channelPartnersReports
+                    nxConfig.featureFlags.channelPartnersReportsUI
                 ) {
                     this.tabs.push({
                         displayName: this.LANG.channelPartners.tabNames.reports,
