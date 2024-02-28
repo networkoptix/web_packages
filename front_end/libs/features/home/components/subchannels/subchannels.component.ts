@@ -26,6 +26,7 @@ import {
     ChannelPartner,
     ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
@@ -58,9 +59,12 @@ export class NxSubchannelsComponent {
     buttonType = ButtonType.brand;
     icons = icons;
     canCreatePartners$$ = computed(() => {
-        const currPartner$$ = this.store.selectSignal(selectCurrentPartner);
-        return currPartner$$()?.ownPermissions.includes(
-            ChannelPartnerPermissions.ADD_REMOVE_SUB_CHANNEL_PARTNERS,
+        const currentPartner = this.store.selectSignal(selectCurrentPartner)();
+        return (
+            nxConfig.featureFlags.channelPartnersCreatePartnerUI &&
+            currentPartner?.ownPermissions.includes(
+                ChannelPartnerPermissions.ADD_REMOVE_SUB_CHANNEL_PARTNERS,
+            )
         );
     });
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);

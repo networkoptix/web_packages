@@ -93,9 +93,11 @@ class FLAGS(metaclass=_FlagType):
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 
-    system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
-    channel_partners_reports = ('Channel Partners Reports', 'channelPartnersReports', '%CHANNEL_PARTNERS_TABS_ENABLED%')
+    channel_partners_change_state_ui = ('Channel Partners Change State UI', 'channelPartnersChangeStateUI')
+    channel_partners_create_partner_ui = ('Channel Partners Create Partner UI', 'channelPartnersCreatePartnerUI')
+    channel_partners_change_services_ui = ('Channel Partners Change Services UI', 'channelPartnersChangeServicesUI')
+    channel_partners_reports_ui = ('Channel Partners Reports UI', 'channelPartnersReportsUI')
     rest_cookie_login = ('Rest Cookie Login', 'restCookieLogin')
 
     request_caching = ('Request Caching', 'requestCaching', '%REQUEST_CACHING_ENABLED%')

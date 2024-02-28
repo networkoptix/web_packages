@@ -42,7 +42,7 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'reports',
-                canActivate: [() => nxConfig.featureFlags.channelPartnersReports, orgTabGuard],
+                canActivate: [() => nxConfig.featureFlags.channelPartnersReportsUI, orgTabGuard],
                 component: NxOrganizationReportsComponent,
             },
             {

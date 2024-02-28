@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Signal, computed } from '@angular/core';
+import { Component, Input, OnInit, computed } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
@@ -26,6 +26,7 @@ import {
     UpdateChannelPartner,
     UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -53,6 +54,7 @@ interface SettingsState {
     ],
 })
 export class NxOrganizationSettingsComponent implements OnInit {
+    readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     settingsViews = settingsViews;
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
@@ -69,7 +71,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
     @Input() cpSettings: boolean;
     @Input() orgSettings: boolean;
     @Input() subchannelSettings: boolean;
-    currentState$$: Signal<SettingsState> = computed(() => {
+    currentState$$ = computed<SettingsState>(() => {
         const state: SettingsState = {};
         if (this.cpSettings) {
             state.item = this.currentPartner$$();
@@ -102,7 +104,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
         return Object.values(currentPartner?.ownPermissions || {});
     });
 
-    isDirectParentCP$$ = computed(() => {
+    isDirectParentCP$$ = computed<boolean>(() => {
         const currentOrg = this.currentOrg$$();
         const currentPartner = this.currentPartner$$();
         const permissions = this.currentPartnerPermissions$$();
@@ -111,7 +113,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
         }
         const canAlterState = permissions.includes('alter_state_organizations');
         const canAlterSubCP = permissions.includes('alter_state_sub_channel_partners');
-        return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP);
+        return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP) || false;
     });
 
     isOrgAdmin$$ = computed(() => {
