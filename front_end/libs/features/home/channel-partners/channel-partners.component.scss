@@ -9,10 +9,10 @@
         height: 100%;
         overflow-y: hidden;
         display: flex;
-        padding: 1rem 1rem 0;
 
         &.root {
             flex-direction: column;
+            padding: 1rem 1rem 0;
         }
 
         .header {
