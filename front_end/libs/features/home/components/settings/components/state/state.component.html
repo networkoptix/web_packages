@@ -61,47 +61,42 @@
                     <ng-container *ngSwitchCase="State.Suspended">
                         <li
                             *ngrxLet="
-                                LANG.dialogs.channelPartners.usersNoAccess
-                                    | translate as usersNoAccess
+                                LANG.dialogs.channelPartners.cloudUsersNoAccess
+                                    | translate as cloudUsersNoAccess
                             "
                         >
-                            <span>{{ usersNoAccess | translateCut: 0 }}</span
-                            ><span class="error">{{ usersNoAccess | translateCut: 1 }}</span
-                            ><span>{{ usersNoAccess | translateCut: 2 }}</span>
+                            <span>{{ cloudUsersNoAccess | translateCut: 0 }}</span
+                            ><span class="error">{{ cloudUsersNoAccess | translateCut: 1 }}</span
+                            ><span>{{ cloudUsersNoAccess | translateCut: 2 }}</span>
                         </li>
-                        <li>{{ LANG.dialogs.channelPartners.systemsAccess | translate }}</li>
-                        <li>{{ LANG.dialogs.channelPartners.recordingEnabled | translate }}</li>
+                        <li>{{ LANG.dialogs.channelPartners.systemsLocalAccess | translate }}</li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.recordingWillContinue | translate }}
+                        </li>
                     </ng-container>
                     <ng-container *ngSwitchCase="State.ShutDown">
                         <li
                             *ngrxLet="
-                                LANG.dialogs.channelPartners.usersNoAccess
-                                    | translate as usersNoAccess
+                                LANG.dialogs.channelPartners.cloudUsersNoAccess
+                                    | translate as cloudUsersNoAccess
                             "
                         >
-                            <span>{{ usersNoAccess | translateCut: 0 }}</span
-                            ><span class="error">{{ usersNoAccess | translateCut: 1 }}</span
-                            ><span>{{ usersNoAccess | translateCut: 2 }}</span>
+                            <span>{{ cloudUsersNoAccess | translateCut: 0 }}</span
+                            ><span class="error">{{ cloudUsersNoAccess | translateCut: 1 }}</span
+                            ><span>{{ cloudUsersNoAccess | translateCut: 2 }}</span>
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.systemsLocalAccess | translate }}
                         </li>
                         <li
                             *ngrxLet="
-                                LANG.dialogs.channelPartners.systemsNoAccess
-                                    | translate as systemsNoAccess
+                                LANG.dialogs.channelPartners.recordingStopped
+                                    | translate as recordingStopped
                             "
                         >
-                            <span>{{ systemsNoAccess | translateCut: 0 }}</span
-                            ><span class="error">{{ systemsNoAccess | translateCut: 1 }}</span
-                            ><span>{{ systemsNoAccess | translateCut: 2 }}</span>
-                        </li>
-                        <li
-                            *ngrxLet="
-                                LANG.dialogs.channelPartners.recordingDisabled
-                                    | translate as recordingDisabled
-                            "
-                        >
-                            <span>{{ recordingDisabled | translateCut: 0 }}</span
-                            ><span class="error">{{ recordingDisabled | translateCut: 1 }}</span
-                            ><span>{{ recordingDisabled | translateCut: 2 }}</span>
+                            <span>{{ recordingStopped | translateCut: 0 }}</span
+                            ><span class="error">{{ recordingStopped | translateCut: 1 }}</span
+                            ><span>{{ recordingStopped | translateCut: 2 }}</span>
                         </li>
                     </ng-container>
                 </ul>
