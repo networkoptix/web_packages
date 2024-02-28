@@ -144,34 +144,34 @@ function setup_env() {
 }
 
 function reinstall_virtualenv() {
-  echo "Command will remove current python virtual environment and"
-  echo "install a new one with accurate python version. You must have"
-  echo "installed 'pyenv' and 'poetry 1.5.1'."
-  read -p "Do you want to proceed? (yes/y/no/n) [no] " yn
-  case $yn in
-      yes ) echo "Installing $1";;
-      y ) echo "Installing $1";;
-      no ) echo exiting...;
-          exit;;
-      * ) echo invalid response;
-          exit 1;;
-  esac
-  echo "Removing current python in '$(pwd)/env'..."
-  rm -rf ./env
-  echo "Using python version $(cat .python-version)."
-  echo "Installing python virtual environment in '$(pwd)/env'..."
-  if ! which pyenv &> /dev/null ; then
-        echo "'pyenv' is not installed or not set up properly."
-        exit 1
-  fi
-  if ! which virtualenv &> /dev/null ; then
-        echo "'virtualenv' is not installed or not set up properly."
-        exit 1
-  fi
-  virtualenv -p $(pyenv which python) env
-  echo "Copying repositories config..."
-  cp etc/virtual_env_template/pip.conf env
-  setup_env
+    echo "Command will remove current python virtual environment and"
+    echo "install a new one with accurate python version. You must have"
+    echo "installed 'pyenv' and 'poetry 1.5.1'."
+    read -p "Do you want to proceed? (yes/y/no/n) [no] " yn
+    case $yn in
+        yes ) echo "Installing";;
+        y ) echo "Installing";;
+        no ) echo exiting...;
+            exit;;
+        * ) echo invalid response;
+            exit 1;;
+    esac
+    echo "Removing current python in '$(pwd)/env'..."
+    rm -rf ./env
+    echo "Using python version $(cat .python-version)."
+    echo "Installing python virtual environment in '$(pwd)/env'..."
+    if ! which pyenv &> /dev/null ; then
+          echo "'pyenv' is not installed or not set up properly."
+          exit 1
+    fi
+    if ! which virtualenv &> /dev/null ; then
+          echo "'virtualenv' is not installed or not set up properly."
+          exit 1
+    fi
+    virtualenv -p "$(pyenv which python)" env
+    echo "Copying repositories config..."
+    cp etc/virtual_env_template/pip.conf env
+    setup_env
 }
 
 function setup_robot_env() {
@@ -280,6 +280,35 @@ function run_mediaserver() {
     done
 }
 
+function ask_before_modifying_existing() {
+    local PORTS=$1
+    RUNNING_CONTAINERS="$(docker ps --format '{{.Names}}' | grep auto-nx-server-)"
+
+    declare -a SELECTED_PORTS
+    DELETE_ALL=false
+    for PORT in $PORTS; do
+        echo $PORT
+        KEEP=true
+        if [[ "$DELETE_ALL" = false ]]; then
+            for CONTAINER in $RUNNING_CONTAINERS; do
+                if [[ $CONTAINER == *"$PORT" ]]; then
+                    echo "A Match"
+                    read -p "Do you want to remove ${CONTAINER}? (y for yes. all for all running containers. anything else for no): " yan
+                    case $yan in
+                        y) ;;
+                        all) DELETE_ALL=true;;
+                        *) KEEP=false;;
+                    esac
+                fi
+            done
+        fi
+        if [ "$KEEP" = true ]; then
+            SELECTED_PORTS+=("$PORT")
+        fi
+    done
+    echo "${SELECTED_PORTS[@]}"
+}
+
 function smart_stop_mediaserver() {
     local PORTS=$1
     RUNNING_CONTAINERS="$(docker ps --format '{{.Names}}' | grep auto-nx-server-)"
@@ -363,6 +392,7 @@ function extract_logs_from_container() {
 }
 
 function run_virtual_cameras() {
+    local PORTS=$1
     VIDEO_DIR="./tools/videos"
     #Replace networkoptix with other customization. You can get it by using ssh to access the docker container and running ls
     RUN_TIME="/opt/networkoptix/mediaserver/bin"
@@ -383,11 +413,16 @@ function run_virtual_cameras() {
     echo "Using video as $cameras"
     for container in $containers
     do
-        echo "Copying video file(s) to $container container"
-        docker cp $VIDEO_DIR $container:$RUN_TIME
+        for PORT in $PORTS
+        do
+            if [[ $container == *"$PORT" ]] ; then
+                echo "Copying video file(s) to $container container"
+                docker cp $VIDEO_DIR $container:$RUN_TIME
 
-        echo "Running test cameras for for $container"
-        docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I=127.0.0.1 \"files=${cameras}\""
+                echo "Running test cameras for for $container"
+                docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I=127.0.0.1 \"files=${cameras}\""
+            fi
+        done
     done
 
 }
@@ -489,16 +524,20 @@ CONNECT_TO_CLOUD="false"
 CLOUD_HOST="cloud-test.hdw.mx"
 CLOUD_EMAIL=""
 CLOUD_PASSWORD=""
+CUSTOMIZATION="default"
 DOWNLOAD_BUILD="false"
 LOCAL_WEBADMIN="false"
 SKIP_BUILD="false"
 SKIP_SETUP="false"
 
 # Parse command-line options
-while getopts "h:e:p:lsmd" opt; do
+while getopts "h:c:e:p:lsmd" opt; do
     case $opt in
         h)
             CLOUD_HOST=$OPTARG
+            ;;
+        c)
+            CUSTOMIZATION=$OPTARG
             ;;
         e)
             CLOUD_EMAIL=$OPTARG
@@ -521,6 +560,7 @@ while getopts "h:e:p:lsmd" opt; do
         \?)
             echo "Invalid option: -$OPTARG" >&2
             echo "-h {cloud host} (leave off https://)"
+            echo "-c {customization name}"
             echo "-e {cloud email}"
             echo "-p {cloud password}"
             echo "-l : builds webadmin locally"
@@ -539,7 +579,7 @@ if [ -n "$CLOUD_EMAIL" ] && [ -n "$CLOUD_PASSWORD" ]; then
     SKIP_SETUP="false"
 fi
 
-for command in $@
+for command in "$@"
 do
     case "$command" in
         init_all)
@@ -642,7 +682,7 @@ do
             ;;
         stop_mediaserver)
             PORTS=${2:-""}
-            stop_mediaserver $PORTS
+            stop_mediaserver "$PORTS"
             ;;
         start_https_tunnel)
             start_https_tunnel
@@ -657,11 +697,14 @@ do
 
             if [ "$DOWNLOAD_BUILD" == "true" ]; then
                 echo "fetching $VERSION"
-                python tools/scripts/download_deb.py $VERSION
+                python tools/scripts/download_deb.py --customization="$CUSTOMIZATION" "$VERSION"
 
                 echo "$VERSION has been saved to tools/$VERSION.deb"
                 SKIP_BUILD="false"
             fi
+
+            # Updates ports by asking the user what to do with existing containers
+            PORTS=$(ask_before_modifying_existing "$PORTS")
 
             smart_stop_mediaserver "$PORTS"
 
@@ -695,11 +738,12 @@ do
             break
             ;;
         run_virtual_cameras)
+            PORTS=${2:-"7001"}
             echo "Adding cameras to running servers"
-            run_virtual_cameras
+            run_virtual_cameras "$PORTS"
             ;;
         get_mediaserver_logs)
-            PORTS=$2
+            PORTS=${2:-"7001"}
             echo "Extracting logs from docker containers and placing them in ./tools/docker_server_logs"
             extract_logs_from_container "$PORTS"
             break

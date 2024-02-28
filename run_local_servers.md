@@ -24,15 +24,16 @@ Guide on how to use [cloud_helper.sh](./cloud_helper.sh) for creating local dock
 
 # Available flags for run_local_servers
 
-| Flag                | Description                                                                                                                        |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| -h {cloud host}     | Sets the cloud host for the container(s) (leave off https://)                                                                      |
-| -e {cloud email}    | Sets the email for adding the system(s) to a cloud account                                                                         |
-| -p {cloud password} | Sets the password for a cloud account                                                                                              |
-| -l                  | Builds webadmin locally <mark>(Note: you will need a package.zip to customize webadmin. Will update how to get this later)</mark>  |
-| -s                  | Skips the local build                                                                                                              |
-| -m                  | Skips the setup for docker                                                                                                         |
-| -d                  | Downloads the version that is passed as an argument                                                                                |
+| Flag                 | Description                                                                                                                        |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| -h {cloud host}      | Sets the cloud host for the container(s) (leave off https://)                                                                      |
+| -c {customization}   | Sets the customization for the system                                                                                              |
+| -e {cloud email}     | Sets the email for adding the system(s) to a cloud account                                                                         |
+| -p {cloud password}  | Sets the password for a cloud account                                                                                              |
+| -l                   | Builds webadmin locally <mark>(Note: you will need a package.zip to customize webadmin. Will update how to get this later)</mark>  |
+| -s                   | Skips the local build                                                                                                              |
+| -m                   | Skips the setup for docker                                                                                                         |
+| -d                   | Downloads the version that is passed as an argument                                                                                |
 
 
 # Positional arguments for run_local_servers
