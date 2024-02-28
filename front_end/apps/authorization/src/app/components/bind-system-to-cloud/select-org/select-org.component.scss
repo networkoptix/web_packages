@@ -4,10 +4,6 @@
 .selected-scroll-item {
     background-color: var(--dropdown-item-selected-bg) !important;
     color: var(--dropdown-item-selected-color) !important;
-
-    &:hover {
-        background-color: var(--dropdown-item-hover-bg) !important;
-    }
 }
 
 .scroll-area {
@@ -22,5 +18,11 @@
         color: var(--dropdown-item-color);
         height: 28px;
         padding: 6px 8px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--dropdown-item-hover-bg) !important;
+            color: var(--dropdown-item-hover-color) !important;
+        }
     }
 }
