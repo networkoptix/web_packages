@@ -62,7 +62,7 @@ def test_token_cache(mocker):
 
     TokenCache.set_token(token, value, expires_in='2')
     assert TokenCache.get_token(token) == value
-    sleep(2)
+    sleep(2.5)
     assert TokenCache.get_token(token) is None
 
     cache_get_mock = mocker.patch("django.core.cache.backends.redis.RedisCache.get", return_value=None)

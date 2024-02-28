@@ -1108,6 +1108,8 @@ class TestServiceUsage:
                                                                    quantity=self.service_quantity)
         self.analytics_service = cp_service_factory(
             channel_partner=self.cp, service_type=ChannelPartnerService.ANALYTICS)
+        self.analytics_service_2 = cp_service_factory(
+            channel_partner=self.cp, service_type=ChannelPartnerService.ANALYTICS)
         self.analytics_service_record = service_record_factory(self.analytics_service,
                                                                cloud_system=self.system,
                                                                organization=self.organization,
@@ -1119,6 +1121,12 @@ class TestServiceUsage:
             system=self.system,
             service=self.analytics_service,
             usage=5,
+            to_ts=now,
+        )
+        analytics_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.analytics_service,
+            usage=1,
             to_ts=now,
         )
         local_recording_service_usage = service_usage_factory(
@@ -1134,10 +1142,15 @@ class TestServiceUsage:
             ts=now,
 
         )
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OK
 
     def test_check_excess_over_use(self, service_usage_factory, cloud_storage_usage_factory):
         now = timezone.now()
@@ -1189,10 +1202,10 @@ class TestServiceUsage:
                 ChannelPartnerService.CLOUD_STORAGE, self.service_quantity * 2),
             ts=minus_12_hours,
         )
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OVER_USE
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OVER_USE
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OVER_USE
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OVER_USE
 
     def test_check_excess_not_assigned_services(self, service_usage_factory, cloud_storage_usage_factory):
         now = timezone.now()
@@ -1202,6 +1215,12 @@ class TestServiceUsage:
         analytics_service_usage = service_usage_factory(
             system=self.system,
             service=self.analytics_service,
+            usage=2,
+            to_ts=yesterday,
+        )
+        analytics_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.analytics_service_2,
             usage=2,
             to_ts=yesterday,
         )
@@ -1218,10 +1237,16 @@ class TestServiceUsage:
             ts=yesterday,
         )
 
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.analytics_service_2.id)] == ServiceUsage.STATUS_OVER_USE
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OK
 
         # add some usages without a service as services were deallocated for this system
         analytics_service_usage = service_usage_factory(
@@ -1232,8 +1257,7 @@ class TestServiceUsage:
         )
         analytics_service_usage = service_usage_factory(
             system=self.system,
-            service=None,
-            service_type=ChannelPartnerService.ANALYTICS,
+            service=self.analytics_service_2,
             usage=2,
             to_ts=minus_12_hours,
         )
@@ -1257,17 +1281,21 @@ class TestServiceUsage:
         )
         cloud_storage_service_usage = cloud_storage_usage_factory(
             system=self.system,
-            service=None,
-            service_type=ChannelPartnerService.CLOUD_STORAGE,
-            usage=2,
+            service=self.cloud_storage_service,
+            usage=20,
             ts=now,
         )
 
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OVER_USE
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OVER_USE
 
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.analytics_service_2.id)] == ServiceUsage.STATUS_OVER_USE
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OVER_USE
 
         cloud_storage_service_usage = cloud_storage_usage_factory(
             system=self.system,
@@ -1276,10 +1304,18 @@ class TestServiceUsage:
             ts=now + timedelta(hours=1)
         )
 
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.analytics_service_2.id)] == ServiceUsage.STATUS_OVER_USE
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OK
+
         self.system.refresh_from_db()
         assert self.system.usage_issue_detected
 
@@ -1290,12 +1326,29 @@ class TestServiceUsage:
             to_ts=now,
         )
 
-        usage_statuses = ServiceUsage.check_excess(self.system)
-        assert usage_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
-        assert usage_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OVER_USE
+
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OVER_USE
+
+        self.system.refresh_from_db()
+        assert self.system.usage_issue_detected is True
+
+        analytics_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.analytics_service,
+            usage=2,
+            to_ts=now + timedelta(hours=3),
+        )
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
         self.system.refresh_from_db()
         assert self.system.usage_issue_detected is False
+
 
     def test_get_latest_usages(self, service_usage_factory, cloud_storage_usage_factory):
         now = timezone.now()
@@ -1395,7 +1448,7 @@ class TestServiceUsage:
     def make_usage_dict(self, usages):
         ret = {}
         for usage in usages:
-            ret[usage['service'], usage['service_type']] = usage['usage']
+            ret[usage['service'], usage['service__type']] = usage['usage']
         return ret
 
     def test_get_latest_usages(self, service_usage_factory, cloud_storage_usage_factory):
@@ -1453,8 +1506,7 @@ class TestServiceUsage:
 
         local_recording_service_usage_yesterday = service_usage_factory(
             system=self.system,
-            service=None,
-            service_type=ChannelPartnerService.LOCAL_RECORDING,
+            service=self.local_recording_service,
             usage=2,
             to_ts=yesterday,
         )
@@ -1462,23 +1514,10 @@ class TestServiceUsage:
         latest_usages = ServiceUsage.get_latest_usages(self.system)
         id_list = list([usage['service'] for usage in latest_usages])
         usages_dict = self.make_usage_dict(latest_usages)
-        assert latest_usages.count() == 4
-        assert self.analytics_service.id in id_list
-        assert self.local_recording_service.id in id_list
-        assert self.cloud_storage_service.id in id_list
-        assert None in id_list
-        assert usages_dict[self.analytics_service.id, ChannelPartnerService.ANALYTICS] == 2
-        assert usages_dict[self.local_recording_service.id, ChannelPartnerService.LOCAL_RECORDING] == 2
-        assert usages_dict[None, ChannelPartnerService.LOCAL_RECORDING] == 2
-        assert usages_dict[self.cloud_storage_service.id, ChannelPartnerService.CLOUD_STORAGE] == 4
-
-        latest_usages = ServiceUsage.get_latest_usages(self.system, allocated_service_only=True)
-        id_list = list([usage['service'] for usage in latest_usages])
-        usages_dict = self.make_usage_dict(latest_usages)
         assert latest_usages.count() == 3
         assert self.analytics_service.id in id_list
         assert self.local_recording_service.id in id_list
         assert self.cloud_storage_service.id in id_list
         assert usages_dict[self.analytics_service.id, ChannelPartnerService.ANALYTICS] == 2
-        assert usages_dict[self.local_recording_service.id, ChannelPartnerService.LOCAL_RECORDING] == 2
+        assert usages_dict[self.local_recording_service.id, ChannelPartnerService.LOCAL_RECORDING] == 4
         assert usages_dict[self.cloud_storage_service.id, ChannelPartnerService.CLOUD_STORAGE] == 4
