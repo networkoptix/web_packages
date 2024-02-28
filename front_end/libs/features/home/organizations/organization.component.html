@@ -42,9 +42,10 @@
     cdkDropListGroup
     *ngIf="!showAccessTable; else accessTable"
 >
-    <div
+    <button
+        *ngIf="currentGroups$$()?.length && !isLoading"
         class="sidebar-toggling-ear-wrapper"
-        *ngIf="!isLoading"
+        type="button"
         [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
         (click)="handleSidebarTogglingEarClick()"
     >
@@ -55,13 +56,20 @@
             >
             </svg-icon>
         </div>
-    </div>
+    </button>
 
-    <div *ngIf="(sidebarSettings.value$ | async)?.showSidebarState">
+    <div
+        *ngIf="
+            currentGroups$$()?.length &&
+            currentSystems$$()?.length &&
+            (sidebarSettings.value$ | async)?.showSidebarState
+        "
+    >
         <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
         <ng-template #sidebar>
             <nx-groups-sidebar
                 [currentGroupId]="currentGroupId$$()"
+                [currentOrg]="currentOrganization$$()"
                 [userEmail]="userEmail"
                 [hasGroups]="hasGroups$ | async"
                 [openGroups]="openGroups$ | async"

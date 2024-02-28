@@ -1,48 +1,8 @@
 <div class="sidebar">
-    <!-- No Groups View-->
-    <div
-        *ngIf="!hasGroups; else groupsSidebar"
-        class="no-groups"
-    >
-        <!-- <img alt="placeholder image" /> -->
-        <div class="intro-container">
-            <div class="image-placeholder"></div>
-            <h2 translate>Introducing System Folders</h2>
-            <p [innerHTML]="LANG.systemGroups.introduction | translate"></p>
-            <button
-                class="btn btn-default"
-                (click)="newGroupDialog()"
-                translate
-            >
-                Create First Folder
-            </button>
-        </div>
-        <div class="intro-footer">
-            <button
-                class="cmb-2"
-                (click)="dismiss.emit()"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'close.svg'"
-                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                ></svg-icon>
-                <p
-                    class="mb-0 ml-2"
-                    translate
-                >
-                    Not interested
-                </p>
-            </button>
-        </div>
-    </div>
-
     <!--Groups Sidebar-->
-    <ng-template #groupsSidebar>
-        <nx-sidebar-level
-            [rootOrg]="currentOrg$$()"
-            [groups]="rootGroupItems$ | async"
-            [openGroups]="openGroups"
-        ></nx-sidebar-level>
-    </ng-template>
+    <nx-sidebar-level
+        [rootOrg]="currentOrg"
+        [groups]="rootGroupItems$ | async"
+        [openGroups]="openGroups"
+    ></nx-sidebar-level>
 </div>

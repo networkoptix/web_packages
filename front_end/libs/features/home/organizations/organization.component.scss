@@ -17,7 +17,8 @@
         top: calc(50% - 40px / 2);
         left: 0;
         width: 16px;
-        height: 40px;
+        height: 40px !important;
+        padding: 0 !important;
         background-color: var(--control-color);
         opacity: 0.8;
         z-index: 3;
