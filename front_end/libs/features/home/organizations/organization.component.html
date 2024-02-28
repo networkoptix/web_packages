@@ -60,8 +60,7 @@
 
     <div
         *ngIf="
-            currentGroups$$()?.length &&
-            currentSystems$$()?.length &&
+            (currentGroups$$()?.length || currentSystems$$()?.length) &&
             (sidebarSettings.value$ | async)?.showSidebarState
         "
     >
