@@ -349,7 +349,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             if (
                 this.environment.isLocal &&
                 newPort &&
-                (await this.system.mediaserver.checkIfConnectedToServer(serverId).toPromise())
+                (await firstValueFrom(this.system.mediaserver.checkIfConnectedToServer(serverId)))
             ) {
                 setTimeout(() => {
                     this.uriService.changePort(newPort.toString());
@@ -392,29 +392,25 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     checkIfOnline(serverId: string): Promise<void> {
-        return this.system.serverManager
-            .getServers()
-            .pipe(untilDestroyed(this))
-            .toPromise()
-            .then(
-                res => {
-                    if (res) {
-                        this.setStatus(
-                            res
-                                .find(
-                                    server => cleanIdLegacy(server.id) === cleanIdLegacy(serverId),
-                                )
-                                .status.toLowerCase(),
-                        );
-                        this.applyService.setVisible(true);
-                    }
-                },
-                err => {
-                    console.error(err);
-                    this.setStatus(servers.status.offline);
+        return firstValueFrom(
+            this.system.serverManager.getServers().pipe(untilDestroyed(this)),
+        ).then(
+            res => {
+                if (res) {
+                    this.setStatus(
+                        res
+                            .find(server => cleanIdLegacy(server.id) === cleanIdLegacy(serverId))
+                            .status.toLowerCase(),
+                    );
                     this.applyService.setVisible(true);
-                },
-            );
+                }
+            },
+            err => {
+                console.error(err);
+                this.setStatus(servers.status.offline);
+                this.applyService.setVisible(true);
+            },
+        );
     }
 
     checkStatus(): void {
@@ -533,9 +529,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
-        const analyticsData = await this.system.storageManager
-            .checkForAnalyticsData(this.selectedServer.id)
-            .toPromise();
+        const analyticsData = await firstValueFrom(
+            this.system.storageManager.checkForAnalyticsData(this.selectedServer.id),
+        );
 
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {

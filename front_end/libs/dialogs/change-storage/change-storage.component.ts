@@ -96,11 +96,11 @@ export class ChangeStorageModalContent extends ModalBase<DT['return']> {
                 },
             } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'keep') {
-                await this.system
-                    .updateOrGetSystemSettings({
+                await firstValueFrom(
+                    this.system.updateOrGetSystemSettings({
                         metadataStorageChangePolicy: 'keep',
-                    })
-                    .toPromise();
+                    }),
+                );
             }
             return Promise.resolve();
         } catch (error) {

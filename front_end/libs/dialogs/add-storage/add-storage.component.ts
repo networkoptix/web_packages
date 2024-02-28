@@ -13,7 +13,7 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { last } from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -128,7 +128,7 @@ export class AddStorageModalContent extends ModalBase<DT['return']> implements A
                 this.lock();
                 const { url, login, password } = this.storageForm.value;
                 const systemStorages =
-                    (await this.storageManager.getStoragesInfo().toPromise()) || [];
+                    (await firstValueFrom(this.storageManager.getStoragesInfo())) || [];
                 const storageExistsOnSystem =
                     !this.alreadyCheckedAndExists &&
                     systemStorages.find(
@@ -198,9 +198,9 @@ export class AddStorageModalContent extends ModalBase<DT['return']> implements A
                     ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@`
                     : '';
             const smbShare = `smb://${credentials}${url.substr(2)}`;
-            const { reply } = await this.storageManager
-                .getStorageStatus({ path: smbShare })
-                .toPromise();
+            const { reply } = await firstValueFrom(
+                this.storageManager.getStorageStatus({ path: smbShare }),
+            );
 
             if (!reply) {
                 return Promise.reject(Error('SystemOffline'));
@@ -220,8 +220,8 @@ export class AddStorageModalContent extends ModalBase<DT['return']> implements A
                 const size = reply.storage.totalSpace;
                 const upperBound = 107374182400; // 100GB
                 const lowerBound = upperBound / 2; // 50GB
-                const res = await this.storageManager
-                    .saveStorage({
+                const res = await firstValueFrom(
+                    this.storageManager.saveStorage({
                         parentId: this.serverId,
                         url: smbShare,
                         storageType: 'smb',
@@ -233,8 +233,8 @@ export class AddStorageModalContent extends ModalBase<DT['return']> implements A
                         usedForWriting: true,
                         isWritable: true,
                         isBackup: false,
-                    })
-                    .toPromise();
+                    }),
+                );
                 return res
                     ? new Promise(resolve => {
                           this.cancelPolls();

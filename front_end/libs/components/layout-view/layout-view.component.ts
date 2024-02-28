@@ -266,8 +266,8 @@ export class NxLayoutViewComponent {
                 ),
             ),
         );
-        this.cloudApi
-            .checkFeatureNotice('cloudLayouts', () =>
+        firstValueFrom(
+            this.cloudApi.checkFeatureNotice('cloudLayouts', () =>
                 this.dialogsService.cloudLayoutsInfo().then(start => {
                     if (start) {
                         this.tourService.start();
@@ -276,8 +276,8 @@ export class NxLayoutViewComponent {
                         return Promise.reject();
                     }
                 }),
-            )
-            .toPromise();
+            ),
+        );
     };
 
     changeLayout(layout: string | DropdownItem<string>): void {

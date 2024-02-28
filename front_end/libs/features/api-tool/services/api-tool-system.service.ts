@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, BehaviorSubject, of, Subject, Subscription } from 'rxjs';
 import {
     catchError,
     delay,
@@ -219,7 +219,9 @@ export class NxAPIToolSystemService {
 
     async handleSystemChange(): Promise<void> {
         if (environment.isLocal) {
-            const systemInfo = await this.currentSystem.serverManager.getModuleInfo().toPromise();
+            const systemInfo = await firstValueFrom(
+                this.currentSystem.serverManager.getModuleInfo(),
+            );
             const version = systemInfo?.reply?.version;
             if (!version || parseFloat(version) < 4) {
                 this.markSystemOutdated();
@@ -561,10 +563,11 @@ export class NxAPIToolSystemService {
         if (this.queryParams.disableCache) {
             return null;
         }
-        const cachedObject = (await this.indexedDbService
-            .getByKey('jsons', this.makeCacheKey(systemId, route))
-            .pipe(take(1))
-            .toPromise()) as IndexDBCacheObject;
+        const cachedObject = (await firstValueFrom(
+            this.indexedDbService
+                .getByKey('jsons', this.makeCacheKey(systemId, route))
+                .pipe(take(1)),
+        )) as IndexDBCacheObject;
         if (!cachedObject) {
             // Not cached
             return null;

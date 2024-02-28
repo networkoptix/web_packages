@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
+import { firstValueFrom, BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
 import { switchMap, tap, map, filter, startWith, catchError } from 'rxjs/operators';
 
 import type {
@@ -229,11 +229,15 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     fetchSearchHandler({ query, page }) {
         return from(
             // Using a promise so that request completes and can be cached
-            this.cloudApi
-                .documentationInstantSearch(this.kbService.menuNameSubject.value, query.trim(), {
-                    page,
-                })
-                .toPromise(),
+            firstValueFrom(
+                this.cloudApi.documentationInstantSearch(
+                    this.kbService.menuNameSubject.value,
+                    query.trim(),
+                    {
+                        page,
+                    },
+                ),
+            ),
         ).pipe(
             catchError(err => {
                 console.error(

@@ -13,6 +13,7 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { firstValueFrom } from 'rxjs';
 
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
@@ -112,23 +113,26 @@ export class ChangePasswordModalContent
                         return Promise.reject('dontMatch');
                     }
 
-                    return this.system.mediaserver
-                        .loginToken('admin', this.currentPasswordForUser, true)
-                        .toPromise()
-                        .then(
-                            () => {
-                                return this.system.userManager
-                                    .saveUser(updatedUser)
-                                    .then(() => this.close(true));
-                            },
-                            () => {
-                                this.changePasswordForm.controls.currentPassword.setErrors({
-                                    wrongPassword: true,
-                                });
-                                this.renderer.selectRootElement('#currentPassword').focus();
-                                return Promise.reject('wrongPassword');
-                            },
-                        );
+                    return firstValueFrom(
+                        this.system.mediaserver.loginToken(
+                            'admin',
+                            this.currentPasswordForUser,
+                            true,
+                        ),
+                    ).then(
+                        () => {
+                            return this.system.userManager
+                                .saveUser(updatedUser)
+                                .then(() => this.close(true));
+                        },
+                        () => {
+                            this.changePasswordForm.controls.currentPassword.setErrors({
+                                wrongPassword: true,
+                            });
+                            this.renderer.selectRootElement('#currentPassword').focus();
+                            return Promise.reject('wrongPassword');
+                        },
+                    );
                 }
 
                 return this.system.userManager.saveUser(updatedUser).then(() => this.close(true));

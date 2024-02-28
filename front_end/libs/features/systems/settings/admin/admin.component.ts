@@ -425,7 +425,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
             if (!this.environment.isLocal) {
-                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
+                firstValueFrom(this.systemsService.forceUpdateSystems()).catch(console.error);
             } else {
                 this.systemsService.mergingSystems.add(this.system.id);
                 this.systemsService.checkMerge(this.system);

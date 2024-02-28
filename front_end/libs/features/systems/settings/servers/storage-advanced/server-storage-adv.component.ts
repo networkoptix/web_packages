@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -263,9 +263,7 @@ export class NxSystemAdvancedStorageComponent implements OnChanges {
             storage.reservedSpace = Math.round(reservedSpace.bits);
         });
 
-        this.currentStorageState
-            .saveStorages()
-            .toPromise()
+        firstValueFrom(this.currentStorageState.saveStorages())
             .then(
                 response => {
                     if (response.error !== undefined && response.error !== '0') {

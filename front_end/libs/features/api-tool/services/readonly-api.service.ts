@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { firstValueFrom, BehaviorSubject, Subject } from 'rxjs';
 
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -58,7 +58,7 @@ export class NxReadonlyAPIService {
             return;
         }
 
-        const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
+        const readonlyAPIs = await firstValueFrom(this.api.getReadOnlyAPIs());
         if (readonlyAPIs.data) {
             readonlyAPIs.data.sort((a, b) => a.order - b.order);
             for (const API of readonlyAPIs.data) {
@@ -77,7 +77,7 @@ export class NxReadonlyAPIService {
             this.currentReadonlyAPI = this.readonlyAPIStore[id];
             return true;
         }
-        const readonlyAPI = await this.api.getReadOnlyAPI(id).toPromise();
+        const readonlyAPI = await firstValueFrom(this.api.getReadOnlyAPI(id));
         if (readonlyAPI) {
             const manifest = JSON.parse(readonlyAPI.manifest);
             let APIPreamble, APIChangelog;

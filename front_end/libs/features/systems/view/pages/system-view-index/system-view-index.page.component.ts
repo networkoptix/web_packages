@@ -13,7 +13,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { of, Subject, timer } from 'rxjs';
+import { firstValueFrom, of, Subject, timer } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -303,21 +303,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         mediaServers: ViewBaseServer[],
         archiveRanges: Record<string, BaseTimeRange>,
     ): Promise<void> {
-        return this.system.mediaserver
-            .getCameraHistoryItems()
-            .toPromise()
-            .then(result => {
-                if (!result?.length) {
-                    return;
-                }
-                mediaServers.forEach(mediaServer => {
-                    const rec = result.find(rec => rec.serverGuid === `{${mediaServer.id}}`);
-                    rec?.archivedCameras.forEach(cameraId => {
-                        // trick camera 'hasArchive' - here we don't need a real info -- TT
-                        archiveRanges[cleanIdLegacy(cameraId)] = newBaseTimeRange(1, 2);
-                    });
+        return firstValueFrom(this.system.mediaserver.getCameraHistoryItems()).then(result => {
+            if (!result?.length) {
+                return;
+            }
+            mediaServers.forEach(mediaServer => {
+                const rec = result.find(rec => rec.serverGuid === `{${mediaServer.id}}`);
+                rec?.archivedCameras.forEach(cameraId => {
+                    // trick camera 'hasArchive' - here we don't need a real info -- TT
+                    archiveRanges[cleanIdLegacy(cameraId)] = newBaseTimeRange(1, 2);
                 });
             });
+        });
     }
 
     private initSystem(): void {
@@ -344,9 +341,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return;
                 }
                 let canViewArchive = false;
-                const mediaServers = await this.system.mediaserver
-                    .getViewMediaServersAndCameras()
-                    .pipe(
+                const mediaServers = await firstValueFrom(
+                    this.system.mediaserver.getViewMediaServersAndCameras().pipe(
                         map(({ mediaServers, cameras }) => {
                             mediaServers.forEach(cleanIds);
                             cameras.forEach(camera => {
@@ -366,8 +362,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                 ),
                             }));
                         }),
-                    )
-                    .toPromise();
+                    ),
+                );
 
                 if (
                     this.initialized &&
@@ -380,23 +376,22 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 cachedData = { mediaServers, canViewArchive };
 
                 processingMediaServers = true;
-                const serverTimeInfos = await this.system.mediaserver
-                    .getServerTimes()
-                    .toPromise()
-                    .then(({ reply }) => {
-                        const now = Date.now();
-                        return reply.map(i => {
-                            const vmsTime = parseInt(i.vmsTime);
-                            const osTime = parseInt(i.osTime);
-                            return {
-                                vmsTime,
-                                vmsTimeOffset: now - vmsTime,
-                                osTimeOffset: now - osTime,
-                                serverId: i.serverId.slice(1, -1), // Clean id
-                                timeZoneOffset: parseInt(i.timeZoneOffset),
-                            };
-                        });
+                const serverTimeInfos = await firstValueFrom(
+                    this.system.mediaserver.getServerTimes(),
+                ).then(({ reply }) => {
+                    const now = Date.now();
+                    return reply.map(i => {
+                        const vmsTime = parseInt(i.vmsTime);
+                        const osTime = parseInt(i.osTime);
+                        return {
+                            vmsTime,
+                            vmsTimeOffset: now - vmsTime,
+                            osTimeOffset: now - osTime,
+                            serverId: i.serverId.slice(1, -1), // Clean id
+                            timeZoneOffset: parseInt(i.timeZoneOffset),
+                        };
                     });
+                });
                 this.vms.serverTimes$$.set(serverTimeInfos);
                 serverTimeInfos.forEach(sti => {
                     const mediaServer = mediaServers?.find(ms => ms.id === sti.serverId);

@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase, isEqual } from 'lodash-es';
 import {
+    firstValueFrom,
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
@@ -169,11 +170,11 @@ export class NxCloudStorageComponent implements OnInit {
                 });
         }
         if (this.type !== 'servers') {
-            this.cloudApi
-                .checkFeatureNotice('cloudStorage', () =>
+            firstValueFrom(
+                this.cloudApi.checkFeatureNotice('cloudStorage', () =>
                     this.dialogService.cloudStorageInfo(this.licenseManager),
-                )
-                .toPromise();
+                ),
+            );
             this.menuService.selectedSection$$.set(menus.systemSettings.admin.id);
             this.menuService.selectedDetailsSection$$.set(menus.systemSettings.cloudStorage.id);
         }

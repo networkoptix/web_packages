@@ -4,6 +4,7 @@ import { Component, Inject, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -72,7 +73,7 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
                 this.lock();
                 this.disconnectAccountForm.controls.password.setErrors(undefined);
                 this.wrongPassword = false;
-                return this.system.deleteFromCurrentAccount(this.auth.password).toPromise();
+                return firstValueFrom(this.system.deleteFromCurrentAccount(this.auth.password));
             },
             {
                 ignoreUnauthorized: true,

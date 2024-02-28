@@ -73,7 +73,7 @@ export class NxLoggerComponent implements OnChanges {
 
         if (!environment.isLocal) {
             this.systemRequires2fa = (
-                await this.system.getInfoFromCloudDb().toPromise()
+                await firstValueFrom(this.system.getInfoFromCloudDb())
             )[0]?.system2faEnabled;
 
             if (!this.systemRequires2fa) {
@@ -114,7 +114,7 @@ export class NxLoggerComponent implements OnChanges {
                 this.logData = '';
                 if (!environment.isLocal) {
                     this.systemRequires2fa = (
-                        await this.system.getInfoFromCloudDb().toPromise()
+                        await firstValueFrom(this.system.getInfoFromCloudDb())
                     )[0]?.system2faEnabled;
                 }
                 // Initialize Server Manager if it is not already

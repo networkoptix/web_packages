@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -56,7 +57,10 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
         this.serverName = server.name;
 
         this.detachServer = this.processService.createProcess(
-            () => this.system.serverManager.detachFromSystem(server.id, this.password).toPromise(),
+            () =>
+                firstValueFrom(
+                    this.system.serverManager.detachFromSystem(server.id, this.password),
+                ),
             { ignoreError: true },
             () => {
                 this.close(true);

@@ -16,7 +16,7 @@ import { Title } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { cloneDeep, escape } from 'lodash-es';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -392,7 +392,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     async webadminSetup(): Promise<void> {
         const peerSystems = (
-            await this.system.mediaserver.getPeerSystems().toPromise()
+            await firstValueFrom(this.system.mediaserver.getPeerSystems())
         ).reply.filter(peer => this.system.id !== peer.localSystemId);
         this.mergeSystems = peerSystems
             .map(peer =>
@@ -567,15 +567,15 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 if (this.isLocal) {
                     const takeRemoteSettings = this.system.id === this.secondarySystem$$().id;
                     const bothAreCloud = this.isSessionOauth && !!this.targetSystem.cloudSystemId;
-                    return this.system.mediaserver
-                        .mergeSystems(
+                    return firstValueFrom(
+                        this.system.mediaserver.mergeSystems(
                             this.serverUrl,
                             bothAreCloud ? '' : this.targetSystem.id,
                             false,
                             password,
                             takeRemoteSettings,
-                        )
-                        .toPromise();
+                        ),
+                    );
                 } else {
                     return this.cloudApi.merge(
                         this.primarySystem$$().id,
@@ -701,21 +701,22 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 let secondarySystem: ModuleInformationReply;
                 try {
                     if (this.system.useRest) {
-                        secondarySystem = await (this.system.mediaserver as NxSystemRestAPI)
-                            .getRemoteServerInfo(this.serverUrl)
-                            .toPromise()
-                            .catch(err => {
-                                if ([0, 504].includes(err.status)) {
-                                    throw Error(ResponseStrings.noServerFound);
-                                } else {
-                                    throw err;
-                                }
-                            });
+                        secondarySystem = await firstValueFrom(
+                            (this.system.mediaserver as NxSystemRestAPI).getRemoteServerInfo(
+                                this.serverUrl,
+                            ),
+                        ).catch(err => {
+                            if ([0, 504].includes(err.status)) {
+                                throw Error(ResponseStrings.noServerFound);
+                            } else {
+                                throw err;
+                            }
+                        });
                     } else {
                         secondarySystem = (
-                            await this.system.serverManager
-                                .getModuleInfoUsingUrl(this.serverUrl)
-                                .toPromise()
+                            await firstValueFrom(
+                                this.system.serverManager.getModuleInfoUsingUrl(this.serverUrl),
+                            )
                         ).reply;
                     }
                 } catch (err) {
@@ -791,8 +792,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
             if (mainSystemProto === targetSystemProto) {
                 const [mainServers, targetServers] = await Promise.all([
-                    this.system.mediaserver.getMediaServers(false).toPromise(),
-                    targetSystemService.mediaserver.getMediaServers(false).toPromise(),
+                    firstValueFrom(this.system.mediaserver.getMediaServers(false)),
+                    firstValueFrom(targetSystemService.mediaserver.getMediaServers(false)),
                 ]);
                 const primaryServerIds: Set<string> = mainServers.reduce(
                     (list, { id }) => list.add(id),
@@ -838,9 +839,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         err.secondarySystemName = this.secondaryName$$();
 
         let system: NxSystemInfo;
-        this.systemsService
-            .forceUpdateSystems()
-            .toPromise()
+        firstValueFrom(this.systemsService.forceUpdateSystems())
             .then(systems => {
                 system = systems.find(system => system.id === this.primarySystem$$().id);
             })

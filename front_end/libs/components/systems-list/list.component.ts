@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
@@ -140,7 +140,7 @@ export class NxSystemsListComponent implements OnInit {
         this.gettingSystems = this.processService.createProcess(
             () => {
                 this.fetchComplete = true;
-                return this.systemsService.forceUpdateSystems().toPromise();
+                return firstValueFrom(this.systemsService.forceUpdateSystems());
             },
             {
                 errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix,

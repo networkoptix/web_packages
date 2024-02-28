@@ -380,20 +380,19 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 rotation,
             }),
         ]).then(_ => {
-            return this.system.serverManager.mediaserver
-                .getCamera(this.camera.id)
-                .toPromise()
-                .then(updatedCamera => {
-                    const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
-                    this.camera = newNxSystemCamera;
+            return firstValueFrom(
+                this.system.serverManager.mediaserver.getCamera(this.camera.id),
+            ).then(updatedCamera => {
+                const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
+                this.camera = newNxSystemCamera;
 
-                    this.immediatelyUpdateCamera();
+                this.immediatelyUpdateCamera();
 
-                    this.setCamera();
-                    // this updates the menu with any changes. we should look to avoid this pattern
-                    this.system.systemInfo = this.system;
-                    return newNxSystemCamera;
-                });
+                this.setCamera();
+                // this updates the menu with any changes. we should look to avoid this pattern
+                this.system.systemInfo = this.system;
+                return newNxSystemCamera;
+            });
         });
     }
 
@@ -423,8 +422,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.credentialsUpdateInProgress = true;
         const update = (): Promise<void> => {
             this.showUnauthorized = false;
-            return of('')
-                .pipe(
+            return firstValueFrom(
+                of('').pipe(
                     delay(this.cameraCredentialUpdateTimeout),
                     switchMap(() =>
                         from(this.system.cameraManager.getCameras()).pipe(
@@ -446,22 +445,20 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                         console.error(err);
                         return of(err);
                     }),
-                )
-                .toPromise()
-                .finally(() => {
-                    this.credentialsUpdateInProgress = false;
-                    this.showUnauthorized = this.camera.status === CameraStatus.Unauthorized;
-                    this.reload$.next(this.reload$.value + 1);
-                    firstValueFrom(
-                        this.system.serverManager.mediaserver.getCamera(this.camera.id),
-                    ).then(updatedCamera => {
-                        const newNxSystemCamera =
-                            this.system.cameraManager.parseCamera(updatedCamera);
-                        this.camera = newNxSystemCamera;
-                        this.setCamera();
-                        this.immediatelyUpdateCamera();
-                    });
+                ),
+            ).finally(() => {
+                this.credentialsUpdateInProgress = false;
+                this.showUnauthorized = this.camera.status === CameraStatus.Unauthorized;
+                this.reload$.next(this.reload$.value + 1);
+                firstValueFrom(
+                    this.system.serverManager.mediaserver.getCamera(this.camera.id),
+                ).then(updatedCamera => {
+                    const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
+                    this.camera = newNxSystemCamera;
+                    this.setCamera();
+                    this.immediatelyUpdateCamera();
                 });
+            });
         };
         this.dialogService.updateCameraCredentials({
             camera: this.camera,

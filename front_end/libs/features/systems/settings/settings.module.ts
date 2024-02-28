@@ -11,6 +11,7 @@ import {
     createUrlTreeFromSnapshot,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
@@ -77,7 +78,7 @@ const cameraResolver: ResolveFn<NxSystemCamera> = async (
     const LANG = staticLang;
     const currentSystem = systemsService.getCurrentSystem();
     const cameraId = route.params.cameraId;
-    const ec2Camera = await currentSystem.mediaserver.getCamera(cameraId).toPromise();
+    const ec2Camera = await firstValueFrom(currentSystem.mediaserver.getCamera(cameraId));
     if (ec2Camera) {
         return currentSystem.cameraManager.parseCamera(ec2Camera);
     } else {

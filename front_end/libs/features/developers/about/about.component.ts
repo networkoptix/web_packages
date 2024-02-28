@@ -1,7 +1,7 @@
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { firstValueFrom, BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -120,15 +120,14 @@ export class NxAboutComponent {
     };
 
     private updatePageMeta = (): void => {
-        this.menusService
-            .getMenu(this.menuName)
-            .pipe(
+        firstValueFrom(
+            this.menusService.getMenu(this.menuName).pipe(
                 tap(menu => {
                     this.pageService.pageTitle(menu.title, menu.description);
                 }),
                 untilDestroyed(this),
-            )
-            .toPromise();
+            ),
+        );
     };
 
     private mapToAboutNode = ({
@@ -173,10 +172,11 @@ export class NxAboutComponent {
     private fetchUpdatedDocs = (): void => {
         const { state } = this.route.snapshot.queryParams;
 
-        this.cloudApi
-            .getDocumentation(this.menuName, DOC_TYPES.struct, '', state)
-            .pipe(untilDestroyed(this), tap(this.mapDocToNodes(state)))
-            .toPromise();
+        firstValueFrom(
+            this.cloudApi
+                .getDocumentation(this.menuName, DOC_TYPES.struct, '', state)
+                .pipe(untilDestroyed(this), tap(this.mapDocToNodes(state))),
+        );
     };
     // Not quiet sure what this was originally doing, probably handles if a user was logged out or session gets invalidated
     // private checkAccount = (

@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { LocalStorageService } from 'ngx-webstorage';
+import { firstValueFrom } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { accountActions, accountSelectors } from '@common/store/account';
@@ -80,12 +81,9 @@ export class NxCookieBannerComponent implements OnInit {
     }
 
     async checkCookiePolicyExists(): Promise<void> {
-        this.cloudApiService
-            .getArticle(this.cookiePolicyURL)
-            .toPromise()
-            .then(() => {
-                this.cookiePolicyExists = true;
-            });
+        firstValueFrom(this.cloudApiService.getArticle(this.cookiePolicyURL)).then(() => {
+            this.cookiePolicyExists = true;
+        });
     }
 
     async onCookieBannerClose(): Promise<void> {
