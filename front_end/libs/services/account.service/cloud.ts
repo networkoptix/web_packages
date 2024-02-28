@@ -85,7 +85,17 @@ export class CloudAccount extends BaseAccount {
         combineLatest([timer(0, updateInterval), currentEmail$])
             .pipe(
                 filter(([_, email]) => !!email),
-                switchMap(() => this.cloudApi.account(false)),
+                switchMap(() =>
+                    this.cloudApi.account(false).pipe(
+                        catchError(err => {
+                            // If the error is dealing with connectivity return the current account value.
+                            if (err.status > 500) {
+                                return of(this.account);
+                            }
+                            throw err;
+                        }),
+                    ),
+                ),
                 map((account: Account) => {
                     if (!account?.is_authenticated) {
                         throw Error('unauthorized');
