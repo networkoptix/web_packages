@@ -373,10 +373,14 @@ export class PermissionManager {
     }
 
     canViewDevice = (deviceId: string): boolean =>
-        this.permissions$$().view || this.resourceAccessRights$$()[deviceId]?.view;
+        this.permissions$$().view ||
+        this.resourceAccessRights$$()[deviceId]?.view ||
+        this.mediaserver.version === 0; // Due to how the legacy api works we just need to fetch the cameras and hope
 
     canViewDeviceArchive = (deviceId: string): boolean =>
-        this.permissions$$().viewArchives || this.resourceAccessRights$$()[deviceId]?.viewArchive;
+        this.permissions$$().viewArchives ||
+        this.resourceAccessRights$$()[deviceId]?.viewArchive ||
+        this.mediaserver.version === 0; // Due to how the legacy api works we just need to fetch the cameras and hope
 
     canExportDeviceArchive = (deviceId: string): boolean =>
         this.permissions$$().exportArchives ||
