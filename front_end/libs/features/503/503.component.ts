@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { firstValueFrom } from 'rxjs';
 
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -23,9 +24,7 @@ export class Nx503Component implements OnInit {
     }
 
     ngOnInit(): void {
-        this.apiService
-            .getStatic('/static/503.html')
-            .toPromise()
+        firstValueFrom(this.apiService.getStatic('/static/503.html'))
             .then(result => {
                 this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
             })

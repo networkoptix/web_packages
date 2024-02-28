@@ -35,6 +35,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
+    firstValueFrom,
     BehaviorSubject,
     combineLatest,
     forkJoin,
@@ -1684,8 +1685,8 @@ export class NxLayoutGridComponent {
         );
         let firstCheck = true;
         const update = (): Promise<void> => {
-            return of('')
-                .pipe(
+            return firstValueFrom(
+                of('').pipe(
                     delayWhen(() => {
                         if (firstCheck) {
                             firstCheck = false;
@@ -1715,32 +1716,31 @@ export class NxLayoutGridComponent {
                         console.error(err);
                         return of(err);
                     }),
-                )
-                .toPromise()
-                .finally(() => {
-                    const selectedCamera = system.cameraManager.cameras.find(
-                        ({ id }) => id === camera.id,
+                ),
+            ).finally(() => {
+                const selectedCamera = system.cameraManager.cameras.find(
+                    ({ id }) => id === camera.id,
+                );
+
+                if (selectedCamera.status === CameraStatus.Unauthorized && !defaultPassword) {
+                    this.toastService.notify(
+                        {
+                            value: staticLang.layouts.errors.unableToAuthorizeCamera,
+                            params: pick(camera, 'name'),
+                        },
+                        ToastType.Warning,
                     );
-
-                    if (selectedCamera.status === CameraStatus.Unauthorized && !defaultPassword) {
-                        this.toastService.notify(
-                            {
-                                value: staticLang.layouts.errors.unableToAuthorizeCamera,
-                                params: pick(camera, 'name'),
-                            },
-                            ToastType.Warning,
-                        );
-                    } else {
-                        delete this.errors[selectedCamera.id];
-                        delete this.errorIcons[selectedCamera.id];
-                        if (defaultPassword) {
-                            this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
-                        }
+                } else {
+                    delete this.errors[selectedCamera.id];
+                    delete this.errorIcons[selectedCamera.id];
+                    if (defaultPassword) {
+                        this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
                     }
+                }
 
-                    // TODO: This needs to be updated to update the resources store once it's setup.
-                    // this.updateLayoutItems.emit();
-                });
+                // TODO: This needs to be updated to update the resources store once it's setup.
+                // this.updateLayoutItems.emit();
+            });
         };
 
         this.dialogsService.updateCameraCredentials({

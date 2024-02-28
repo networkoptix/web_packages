@@ -159,19 +159,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private updateArchivesPresent(): void {
-        this.system.mediaserver
-            .getCameraHistoryItems()
-            .toPromise()
-            .then(response => {
-                this.archivesPresent.clear();
-                response.forEach(server => {
-                    server.archivedCameras
-                        .map(cleanIdLegacy)
-                        .forEach(cam => this.archivesPresent.add(cam));
-                });
-
-                this.updateCameraSettingsMenu();
+        firstValueFrom(this.system.mediaserver.getCameraHistoryItems()).then(response => {
+            this.archivesPresent.clear();
+            response.forEach(server => {
+                server.archivedCameras
+                    .map(cleanIdLegacy)
+                    .forEach(cam => this.archivesPresent.add(cam));
             });
+
+            this.updateCameraSettingsMenu();
+        });
     }
 
     private updateContent(skipPermissions = false): string {

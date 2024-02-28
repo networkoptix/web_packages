@@ -19,7 +19,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
-import { animationFrameScheduler, BehaviorSubject, interval, map, Subject, timer } from 'rxjs';
+import {
+    firstValueFrom,
+    animationFrameScheduler,
+    BehaviorSubject,
+    interval,
+    map,
+    Subject,
+    timer,
+} from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -686,7 +694,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.restorePlayback();
         } else {
             const archivePromise = this.canViewArchive$$()
-                ? this.system.mediaserver.getRecords(this.id, 0, now, 1).toPromise()
+                ? firstValueFrom(this.system.mediaserver.getRecords(this.id, 0, now, 1))
                 : Promise.reject();
             archivePromise
                 .then(async ar => {

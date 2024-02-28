@@ -261,12 +261,12 @@ export class NxSystemStorageComponent implements OnInit {
     pollStats = async (update: boolean = false): Promise<void> => {
         this.cancelPolling$.next('cancel previous');
         if (update) {
-            await timer(1500)
-                .pipe(
+            await firstValueFrom(
+                timer(1500).pipe(
                     switchMap(_ => this.system.storageManager.update()),
                     take(2),
-                )
-                .toPromise();
+                ),
+            );
         }
         const started = Date.now();
         const triggerUpdate = (type: UpdateTriggers): Observable<CurrentStorageState> =>
@@ -486,12 +486,12 @@ export class NxSystemStorageComponent implements OnInit {
                 [] as (() => Promise<ChangedIdReturned | void>)[],
             );
             if (cameraSettingsToSave.length) {
-                await of(...cameraSettingsToSave)
-                    .pipe(
+                await firstValueFrom(
+                    of(...cameraSettingsToSave).pipe(
                         bufferCount(30),
                         concatMap(saveSettings => Promise.all(saveSettings.map(save => save()))),
-                    )
-                    .toPromise();
+                    ),
+                );
             }
             await this.system.update();
         }
@@ -692,16 +692,16 @@ export class NxSystemStorageComponent implements OnInit {
                 ) {
                     if (store.storageId.startsWith('/')) {
                         // Add new external storage
-                        const updatedStore = await this.system.storageManager
-                            .saveStorage({
+                        const updatedStore = await firstValueFrom(
+                            this.system.storageManager.saveStorage({
                                 parentId: this.serverId,
                                 url: store.storageId,
                                 storageType: 'usb',
                                 usedForWriting: true,
                                 isWritable: true,
                                 isBackup: currentMode === 'modeBackup',
-                            })
-                            .toPromise();
+                            }),
+                        );
                         updating.push(updatedStore.id);
                     } else {
                         updating.push(store.storageId);
@@ -713,10 +713,9 @@ export class NxSystemStorageComponent implements OnInit {
         this.beingUpdated = updating.filter(id => !this.updatingModes.includes(id));
         this.updatingModes = [...this.updatingModes, ...updating];
         return this.updatingModes.length
-            ? this.currentStorageState
-                  .saveStorages()
-                  .toPromise()
-                  .catch(err => console.error(err))
+            ? firstValueFrom(this.currentStorageState.saveStorages()).catch(err =>
+                  console.error(err),
+              )
             : Promise.resolve('storageModesNotUpdated');
     };
 
@@ -766,9 +765,7 @@ export class NxSystemStorageComponent implements OnInit {
             })
             .then(response => {
                 if (response) {
-                    this.system.mediaserver
-                        .removeStorage({ id: storage.storageId })
-                        .toPromise()
+                    firstValueFrom(this.system.mediaserver.removeStorage({ id: storage.storageId }))
                         .then(async response => {
                             if (response.id) {
                                 this.currentStorageState.locations =
@@ -935,7 +932,7 @@ export class NxSystemStorageComponent implements OnInit {
     cancelIndexing(type: 'main' | 'backup'): void {
         const target = TARGET_STORAGE[type.toUpperCase()];
         this[type === 'main' ? 'percentMainDone' : 'percentBackupDone'] = 0;
-        this.system.storageManager.rebuildArchive(this.serverId, target, 'stop').toPromise();
+        firstValueFrom(this.system.storageManager.rebuildArchive(this.serverId, target, 'stop'));
         this.reindexingStorages = this.reindexingStorages.filter(mode => mode !== type);
         this.stopReindex$.next(target);
     }

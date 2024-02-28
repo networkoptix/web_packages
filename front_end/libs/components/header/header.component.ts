@@ -23,7 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
+import { firstValueFrom, BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
@@ -386,13 +386,10 @@ export class NxHeaderComponent implements OnInit {
                 if (this.userEmail && event instanceof NavigationEnd) {
                     // You only receive NavigationEnd events
                     if (this.systemId && !this.systems) {
-                        this.systemsService
-                            .forceUpdateSystems()
-                            .toPromise()
-                            .then(() => {
-                                this.updateActiveSystem();
-                                this.updateActive();
-                            });
+                        firstValueFrom(this.systemsService.forceUpdateSystems()).then(() => {
+                            this.updateActiveSystem();
+                            this.updateActive();
+                        });
                     } else {
                         this.updateActiveSystem();
                         this.updateActive();

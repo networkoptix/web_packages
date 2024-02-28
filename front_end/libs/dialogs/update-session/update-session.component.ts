@@ -4,6 +4,7 @@ import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -72,7 +73,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
         this.processAction = processAction;
         Promise.all([
             system.mediaserver.getCurrentUser(),
-            system.mediaserver.getModuleInfo().toPromise(),
+            firstValueFrom(system.mediaserver.getModuleInfo()),
         ])
             .then(([account, serverInfo]) => {
                 const moduleInfo = serverInfo?.reply;
@@ -124,9 +125,9 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
         };
         this.login = processService.createProcess(
             () => {
-                return system.mediaserver
-                    .loginToken(this.auth.login, this.auth.password, true)
-                    .toPromise();
+                return firstValueFrom(
+                    system.mediaserver.loginToken(this.auth.login, this.auth.password, true),
+                );
             },
             {
                 ignoreUnauthorized: true,

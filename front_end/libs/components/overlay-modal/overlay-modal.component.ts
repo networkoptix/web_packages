@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
+import { firstValueFrom, Subject, BehaviorSubject, interval, empty } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -176,9 +176,7 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     getServers(): void {
-        this.system.serverManager
-            .getServers()
-            .toPromise()
+        firstValueFrom(this.system.serverManager.getServers())
             .then(res => {
                 this.servers = (res || [])
                     .filter(({ id }) => id !== this.serverId)
@@ -200,6 +198,6 @@ export class NxOverlayModalComponent implements OnInit {
 
     checkIfOnline(): Promise<ModuleInformation> {
         this.oneCheckAtATime = true;
-        return this.system.mediaserver.getModuleInfo().toPromise();
+        return firstValueFrom(this.system.mediaserver.getModuleInfo());
     }
 }

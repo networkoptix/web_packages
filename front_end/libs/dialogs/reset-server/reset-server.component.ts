@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { timer } from 'rxjs';
+import { firstValueFrom, timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -100,9 +100,9 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         this.resetServer = this.processService.createProcess(
             () => {
                 this.lock();
-                return this.system.serverManager
-                    .restoreFactorySettings(server.id, this.password)
-                    .toPromise();
+                return firstValueFrom(
+                    this.system.serverManager.restoreFactorySettings(server.id, this.password),
+                );
             },
             {
                 ignoreError: true,
@@ -130,9 +130,9 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
 
                 let moduleInfo: ModuleInformation;
                 try {
-                    moduleInfo = await this.system.serverManager
-                        .getModuleInfo(server.id)
-                        .toPromise();
+                    moduleInfo = await firstValueFrom(
+                        this.system.serverManager.getModuleInfo(server.id),
+                    );
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);

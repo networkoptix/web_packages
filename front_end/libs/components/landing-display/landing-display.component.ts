@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { firstValueFrom } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
@@ -18,11 +19,8 @@ export class NxLandingDisplayComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.apiService
-            .getStaticLanding()
-            .toPromise()
-            .then(result => {
-                this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
-            });
+        firstValueFrom(this.apiService.getStaticLanding()).then(result => {
+            this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
+        });
     }
 }

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
+import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
@@ -179,9 +180,7 @@ export class NxContentComponent implements OnInit {
     loadStaticContent(): void {
         const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
 
-        this.cloudApiService
-            .getStatic(templateUrl)
-            .toPromise()
+        firstValueFrom(this.cloudApiService.getStatic(templateUrl))
             .then(result => {
                 this.body = result;
                 const parser = new DOMParser();
