@@ -1,6 +1,15 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, Input, OnInit, inject, signal } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    inject,
+    signal,
+    Inject,
+    LOCALE_ID,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -35,6 +44,7 @@ import {
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
@@ -106,6 +116,7 @@ export class NxOrganizationsComponent implements OnInit {
         private router: Router,
         private cloudApi: NxCloudApiService,
         private cpService: NxChannelPartnersService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         const { email } = this.account$$();
         this.userEmail = email;
@@ -203,6 +214,15 @@ export class NxOrganizationsComponent implements OnInit {
                 }
                 this.isLoading = false;
             });
+
+        this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
+            groups.sort(alphabeticalSort(this.locale, g => g.name));
+            this.store.dispatch(
+                groupActions.setGroups({
+                    groups: this.processGroups(groups),
+                }),
+            );
+        });
     }
 
     public handleSidebarTogglingEarClick(): void {
