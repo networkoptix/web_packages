@@ -302,6 +302,7 @@ export class UserManager {
             delete userData.permissions;
         } else if (userData.role) {
             userData.permissions = userData.role.permissions;
+            userData.userRoleId = ('id' in userData.role && userData.role?.id) || ZERO_ID;
         } else {
             delete userData.permissions;
         }
