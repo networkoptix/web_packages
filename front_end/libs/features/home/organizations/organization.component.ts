@@ -35,6 +35,7 @@ import {
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
@@ -207,6 +208,15 @@ export class NxOrganizationsComponent implements OnInit {
                 }
                 this.isLoading = false;
             });
+
+        this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
+            groups.sort(alphabeticalSort(g => g.name));
+            this.store.dispatch(
+                groupActions.setGroups({
+                    groups: this.processGroups(groups),
+                }),
+            );
+        });
     }
 
     public handleSidebarTogglingEarClick(): void {
