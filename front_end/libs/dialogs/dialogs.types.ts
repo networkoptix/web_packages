@@ -10,6 +10,7 @@ import type { Translatable } from '@pipes/nx-translate.types';
 import type {
     ChannelPartner,
     ChannelPartnerUser,
+    CloudSystem,
     GroupItem,
     GroupUser,
     Organization,
@@ -204,7 +205,7 @@ export type ToggleSystem2fa = DialogType<ToggleSystem2faData, boolean>;
 
 export type CantEnableSystem2fa = DialogType<void, void>;
 
-export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
+export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo | CloudSystem>;
 
 /* Cloud storage */
 export type CloudStorage = DialogType<

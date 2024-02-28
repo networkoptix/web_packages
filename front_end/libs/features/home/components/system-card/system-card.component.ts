@@ -18,6 +18,7 @@ import { icons, openClientError } from '@static-variables';
 
 import type { SystemItem } from '../../home.types';
 
+/** Not used, kept for reference */
 @Component({
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',

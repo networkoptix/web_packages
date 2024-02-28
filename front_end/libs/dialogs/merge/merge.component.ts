@@ -39,7 +39,7 @@ import { Process } from '@services/process.service/process';
 import { DiscoveredPeers, ModuleInformation } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from '@services/systems.service.types';
+import type { NxUserSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, servers } from '@static-variables';
@@ -52,7 +52,8 @@ interface SystemDropdownItem extends DropdownItem<string> {
     peer?: boolean;
 }
 
-interface NxSystemModuleInfo extends NxSystemInfo {
+// Org systems are not mergable for v1
+interface NxSystemModuleInfo extends NxUserSystemInfo {
     moduleInfo?: any;
     protoVersion?: string;
 }
@@ -86,7 +87,7 @@ export class MergeModalContent {
     readonly environment = environment;
 
     system;
-    systems: NxSystemInfo[];
+    systems: NxUserSystemInfo[];
     systemsWithInfo: NxSystemModuleInfo[];
     account: Account;
     checkMergeabilityFunction;
@@ -208,7 +209,7 @@ export class MergeModalContent {
             }
             this.account = await this.accountService.get();
             this.systemsWithInfo = await Promise.all(
-                this.systems.map(async (system: NxSystemInfo) => {
+                this.systems.map(async system => {
                     const newSystem: NxSystemModuleInfo = {
                         ...system,
                         status: '',

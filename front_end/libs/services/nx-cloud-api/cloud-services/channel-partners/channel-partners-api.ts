@@ -262,7 +262,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         this.delete(`/cloud_systems/${systemId}/`);
 
     /* System Services */
-    getSystem = (id: string): Observable<unknown> => {
+    getSystem = (id: string): Observable<CloudSystem> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
     };
 

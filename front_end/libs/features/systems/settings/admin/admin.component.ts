@@ -3,7 +3,9 @@ import {
     booleanAttribute,
     Component,
     computed,
+    inject,
     Inject,
+    input,
     Input,
     LOCALE_ID,
     OnDestroy,
@@ -13,12 +15,13 @@ import {
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgForm } from '@angular/forms';
-import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable, Subscription, take } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom, Observable, Subscription, take, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -39,13 +42,15 @@ import type { MergeInfo } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
 import { UserGroup } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-import { icons, menus, redirect } from '@static-variables';
+import { icons, menus, redirect, updateInterval } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
+import { isUserSystem } from '@utils/nx';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -61,6 +66,7 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input({ transform: booleanAttribute }) advanced: boolean;
     @Input() system: NxSystem;
+    systemId$$ = input.required<string>({ alias: 'systemId' });
     CONFIG = nxConfig;
     readonly environment = environment;
     LANG = staticLang;
@@ -90,8 +96,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
-
-    transferInfo: SystemTransferInfo;
 
     userRole$$: Signal<string> = computed(() => {
         let { accessRole = '', groupIds = [] } =
@@ -136,39 +140,99 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         return accessRole;
     });
 
-    cdbSystemInfo$$ = computed<NxSystemInfo | null>(() => {
-        const systems = this.systemsService.systems$$();
-        return systems?.find(({ id }) => this.system.id === id) || null;
+    // This should be a conversion of router resolved input system in future,
+    // but don't want to potentially destabilize 23.3.1 release any more
+    system$$ = inject(NxSystemService).currentSystem$$;
+
+    cloudSystemInfo$$ = computed<NxSystemInfo | undefined>(() => {
+        const [systemId, systemInfos] = [this.systemId$$(), this.systemsService.systems$$()];
+        return !environment.isLocal ? systemInfos.find(info => info.id === systemId)! : undefined;
+    });
+    cloudSystemType$$ = computed<'user' | 'org' | undefined>(() => {
+        const systemInfo = this.cloudSystemInfo$$();
+        if (!systemInfo) {
+            return undefined;
+        } else {
+            return isUserSystem(systemInfo) ? 'user' : 'org';
+        }
+    });
+    cloudSystemOwnerUser$$ = computed<
+        { ownerFullName: string; ownerAccountEmail: string } | undefined
+    >(() => {
+        const systemInfo = this.cloudSystemInfo$$();
+        if (!systemInfo) {
+            return undefined;
+        } else if ('ownerFullName' in systemInfo) {
+            return systemInfo;
+        } else {
+            return undefined;
+        }
+    });
+
+    // Object = Found in response
+    // undefined = Not found in reponse
+    // null = Not checked yet
+    transferInfo$$ = signal<SystemTransferInfo | undefined | null>(null);
+
+    canTransferSystem$$ = computed<boolean>(() => {
+        const [system, systemType, transferInfo] = [
+            this.system$$(),
+            this.cloudSystemType$$(),
+            this.transferInfo$$(),
+        ];
+        return (
+            nxConfig.featureFlags.cloudOwnershipTransfer &&
+            systemType === 'user' &&
+            system.permissionManager.isOwner$$() &&
+            system.useRest &&
+            transferInfo === undefined
+        );
+    });
+
+    systemOfferedByUser$$ = computed<boolean>(() => {
+        const [transferInfo, currentUser] = [
+            this.transferInfo$$(),
+            this.system.permissionManager.currentUser$$(),
+        ];
+        return !!transferInfo && transferInfo.fromAccount === currentUser.email;
+    });
+
+    systemOfferSentFrom$$ = computed<{ name: string; email: string } | null>(() => {
+        const [system, transferInfo] = [this.system$$(), this.transferInfo$$()];
+        if (transferInfo) {
+            const { fromAccount } = transferInfo;
+            return {
+                email: fromAccount,
+                name: system.userManager.users.find(u => u.email === fromAccount)!.fullName,
+            };
+        } else {
+            return null;
+        }
+    });
+
+    systemOfferedToUser$$ = computed<boolean>(() => {
+        const [transferInfo, currentUser] = [
+            this.transferInfo$$(),
+            this.system.permissionManager.currentUser$$(),
+        ];
+        return !!transferInfo && transferInfo.toAccount === currentUser.email;
+    });
+
+    systemOfferSentTo$$ = computed<{ name: string; email: string } | null>(() => {
+        const [system, transferInfo] = [this.system$$(), this.transferInfo$$()];
+        if (transferInfo) {
+            const { toAccount } = transferInfo;
+            return {
+                email: toAccount,
+                name: system.userManager.users.find(u => u.email === toAccount)!.fullName,
+            };
+        } else {
+            return null;
+        }
     });
 
     get permissionGroupsCount(): number {
         return this.system.permissionManager.currentUser$$()?.groupIds?.length;
-    }
-
-    /** Owner (current user) can send a new ownership transfer request */
-    get canSendTransferRequest(): boolean {
-        return (
-            nxConfig.featureFlags.cloudOwnershipTransfer &&
-            this.system.permissionManager.isOwner$$() &&
-            this.system.useRest &&
-            !this.transferInfo
-        );
-    }
-
-    /** System ownership is offered to the current user */
-    get systemOffered(): boolean {
-        return (
-            !environment.isLocal &&
-            !!this.transferInfo &&
-            this.transferInfo.toAccount === this.system.permissionManager.currentUser$$().email
-        );
-    }
-
-    get newOwnerName(): string {
-        return (
-            this.system.userManager.users.find(u => u.email === this.transferInfo.toAccount)
-                ?.fullName || ''
-        );
     }
 
     private setupDefaults(): void {
@@ -216,7 +280,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         private systemsService: NxSystemsService,
         private menuService: NxMenuService,
         private router: Router,
-        private route: ActivatedRoute,
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -236,6 +299,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         });
 
         this.setupDefaults();
+
+        // TODO: In develop add a store for transfers.
+        if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isLocal) {
+            timer(0, updateInterval)
+                .pipe(
+                    takeUntilDestroyed(),
+                    switchMap(() => this.cloudApiService.getTransfers()),
+                )
+                .subscribe(res => {
+                    this.transferInfo$$.set(
+                        res.find(transfer => transfer.systemId === this.system.id),
+                    );
+                });
+        }
     }
 
     ngOnInit(): void {
@@ -244,27 +321,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             .pipe(map(res => res?.reply?.settings));
 
         this.showNewText = this.system.version > 5.1;
+
+        // Only works on cloud, have to wait for system.info on local
+        const currentSystemInfo = this.cloudSystemInfo$$();
+        if (currentSystemInfo) {
+            this.systemName = currentSystemInfo.name;
+        }
+        if (this.cloudSystemType$$() === 'org') {
+            this.cloudApiService.cloudChannelPartnersApi.getSystem(this.systemId$$()).subscribe({
+                next: system => this.orgName$$.set(system.organizationName),
+                error: _ => {}, // If the user is not a member of the org, the request will 403
+            });
+        }
     }
 
     ngAfterViewInit(): void {
-        const { name, organizationId } =
-            this.systemsService.systems?.find(s => s.id === this.route.snapshot.params.systemId) ||
-            {};
-        this.systemName = name;
-
-        this.accountService.get().then((account?: Account) => {
+        this.accountService.get().then(account => {
             this.user = account;
         });
-
-        if (organizationId) {
-            firstValueFrom(
-                this.cloudApiService.cloudChannelPartnersApi.getSystemSassReport(this.system.id),
-            ).then(report => {
-                if (report.organization) {
-                    this.orgName$$.set(report.organization.name);
-                }
-            });
-        }
 
         this.settings = {
             disconnectDisabled: false,
@@ -296,15 +370,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
                 if (!this.applyService.locked) {
                     this.setNameAndTitle();
-                }
-
-                // TODO: In develop add a store for transfers.
-                if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isLocal) {
-                    this.cloudApiService.getTransfers().subscribe(res => {
-                        this.transferInfo = res.find(
-                            transfer => transfer.systemId === this.system.id,
-                        );
-                    });
                 }
             });
 
@@ -456,7 +521,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     transferOwnership(): void {
         this.dialogs.transferOwnership(this.system).then(info => {
             if (info) {
-                this.transferInfo = info;
+                if ('toAccount' in info) {
+                    this.transferInfo$$.set(info); // Transfer to user
+                } else {
+                    location.reload(); // Transfer to org, no action required from org admins
+                }
             }
         });
     }
@@ -539,7 +608,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     mergeSystems() {
         this.mergeTargetSystems = this.systemsService.systems.filter(
-            system => system.ownerAccountEmail === this.user.email && system.id !== this.system.id,
+            system =>
+                isUserSystem(system) &&
+                system.ownerAccountEmail === this.user.email &&
+                system.id !== this.system.id,
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
@@ -626,20 +698,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     acceptOwnershipTransfer(): void {
         this.cloudApiService.respondToTransfer(this.system.id, 'accepted').subscribe(_ => {
-            this.transferInfo = undefined;
+            this.transferInfo$$.set(undefined);
             this.window.location.reload();
         });
     }
 
     rejectOwnershipTransfer(): void {
         this.cloudApiService.respondToTransfer(this.system.id, 'rejected').subscribe(_ => {
-            this.transferInfo = undefined;
+            this.transferInfo$$.set(undefined);
         });
     }
 
     cancelOwnershipTransfer(): void {
         this.cloudApiService.cancelTransfer(this.system.id).subscribe(_ => {
-            this.transferInfo = undefined;
+            this.transferInfo$$.set(undefined);
         });
     }
 }

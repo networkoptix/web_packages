@@ -8,7 +8,6 @@ import { NxSearchHighlightComponent } from '@components/search-highlight/search-
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { SystemItem } from '@pages/home/home.types';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -33,10 +32,10 @@ import { NgChanges } from '@utils/ng-changes';
     ],
 })
 export class SystemCardComponent implements OnChanges {
-    @Input() system: SystemItem | NxSystemInfo;
+    @Input() system: NxSystemInfo;
     @Input() search: string;
     @Input() account: Account;
-    @Input() openSystem: (system: NxSystemInfo | SystemItem) => void;
+    @Input() openSystem: (system: NxSystemInfo) => void;
 
     LANG = staticLang;
     CONFIG: IConfig;

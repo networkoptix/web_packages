@@ -36,7 +36,6 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
-import { NxSystemCardComponent } from '../../components/system-card/system-card.component';
 import * as GroupActions from '../../store/groups/groups.actions';
 import {
     selectCurrentGroupId,
@@ -56,7 +55,6 @@ import {
         TranslateModule,
         CdkMenuModule,
         CommonModule,
-        NxSystemCardComponent,
         DragDropModule,
         NxNoSystemsCardsComponent,
         NxCardComponent,

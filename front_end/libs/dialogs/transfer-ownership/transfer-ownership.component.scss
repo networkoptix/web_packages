@@ -72,10 +72,6 @@
 
 }
 
-.from-org-warning {
-    padding-inline-start: 1rem;
-}
-
 .subtext {
     @include typography.regular13nocolor;
     color: var(--light-text-color); // light16

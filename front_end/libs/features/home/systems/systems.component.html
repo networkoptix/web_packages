@@ -1,9 +1,9 @@
 <ng-template #loading>
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
-<ng-container *ngIf="systems$$().length > 0; else loading">
+<ng-container *ngIf="directAccessSystems$$().length > 0; else loading">
     <nx-home-systems-list
-        [nonOrgSystemsIds]="systems$$()"
+        [directAccessSystems]="directAccessSystems$$()"
         [account]="currentUser$$()"
     ></nx-home-systems-list>
 </ng-container>

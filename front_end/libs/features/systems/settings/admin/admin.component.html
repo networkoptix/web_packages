@@ -2,7 +2,7 @@
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
 <div
-    *ngIf="systemName !== undefined; else systemNotReady"
+    *ngIf="!environment.isLocal ? cloudSystemInfo$$() : systemName; else systemNotReady"
     class="row d-flex align-items-start"
 >
     <div class="col-12 system-settings">
@@ -32,119 +32,89 @@
                     </div>
                 </form>
 
-                <ng-template #ownerText>
-                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                    <span>
-                        <span
-                            *ngIf="system.permissionManager.isOwner$$()"
-                            class="system-header-bold"
-                            translate
-                            >you</span
-                        >
-                        <ng-container *ngIf="!system.permissionManager.isOwner$$()">
-                            <span class="fs-mask system-header-bold">{{
-                                system.info.ownerFullName
-                            }}</span>
-                            <span class="fs-mask">&nbsp;({{ system.info.ownerAccountEmail }})</span>
-                        </ng-container>
-                    </span>
-                    <a
-                        *ngIf="canSendTransferRequest && !cdbSystemInfo$$()?.organizationId"
-                        id="change-ownership"
-                        class="ml-1 btn-text"
-                        (click)="$event.preventDefault(); transferOwnership()"
-                        translate
-                        >(change)</a
-                    >
-                </ng-template>
-                <ng-template #cancelTransferText>
-                    <span
-                        [innerHTML]="
-                            LANG.system.transferTo
-                                | translate
-                                    : {
-                                          newOwnerName: newOwnerName,
-                                          newOwnerEmail: transferInfo.toAccount
-                                      }
-                        "
-                    ></span>
-                    <a
-                        id="cancel-transfers"
-                        class="ml-1 btn-text"
-                        (click)="$event.preventDefault(); cancelOwnershipTransfer()"
-                        translate
-                        >(cancel)</a
-                    >
-                </ng-template>
-                <ng-template #systemOfferedText>
-                    <div class="mb-2">
-                        <span
-                            [innerHTML]="
-                                LANG.system.ownerWantsToTransfer
-                                    | translate
-                                        : {
-                                              ownerName: system.info.ownerFullName,
-                                              ownerEmail: system.info.ownerAccountEmail
-                                          }
-                            "
-                        ></span>
+                @if (!environment.isLocal) {
+                    <div class="d-flex align-items-center">
+                        <span class="system-owner">
+                            @if (cloudSystemType$$() === 'user') {
+                                @if (systemOfferedByUser$$()) {
+                                    <span
+                                        [innerHTML]="
+                                            LANG.system.transferTo
+                                                | translate: systemOfferSentTo$$()
+                                        "
+                                    ></span>
+                                    <a
+                                        id="cancel-transfers"
+                                        class="ml-1 btn-text"
+                                        (click)="$event.preventDefault(); cancelOwnershipTransfer()"
+                                        translate
+                                        >(cancel)</a
+                                    >
+                                } @else if (systemOfferedToUser$$()) {
+                                    <div class="mb-2">
+                                        <span
+                                            [innerHTML]="
+                                                LANG.system.ownerWantsToTransfer
+                                                    | translate: systemOfferSentFrom$$()
+                                            "
+                                        ></span>
+                                    </div>
+                                } @else {
+                                    <span translate>Owner</span>
+                                    <span>&nbsp;–&nbsp;</span>
+                                    <span>
+                                        @if (system.permissionManager.isOwner$$()) {
+                                            <span
+                                                class="system-header-bold"
+                                                translate
+                                                >you</span
+                                            >
+                                        } @else {
+                                            <!-- Already checked as user owned system above -->
+                                            <span class="fs-mask system-header-bold">{{
+                                                cloudSystemOwnerUser$$()!.ownerFullName
+                                            }}</span
+                                            >&nbsp;<span class="fs-mask"
+                                                >({{
+                                                    cloudSystemOwnerUser$$()!.ownerAccountEmail
+                                                }})</span
+                                            >
+                                        }
+                                    </span>
+                                    <a
+                                        *ngIf="canTransferSystem$$()"
+                                        id="change-ownership"
+                                        class="ml-1 btn-text"
+                                        (click)="$event.preventDefault(); transferOwnership()"
+                                        translate
+                                        >(change)</a
+                                    >
+                                }
+                            } @else {
+                                {{ orgName$$() }}
+                            }
+                        </span>
                     </div>
-                </ng-template>
-
-                <div class="d-flex align-items-center">
-                    <span
-                        class="system-owner"
-                        *ngIf="!environment.isLocal"
+                    <div
+                        *ngIf="systemOfferedToUser$$()"
+                        class="d-flex"
                     >
-                        <ng-container *ngIf="orgName$$(); else notInOrg">
-                            {{ orgName$$() }}
-                        </ng-container>
-
-                        <ng-template #notInOrg>
-                            <ng-template
-                                *ngIf="
-                                    !transferInfo ||
-                                    (transferInfo &&
-                                        !system.permissionManager.isOwner$$() &&
-                                        transferInfo.toAccount !==
-                                            system.permissionManager.currentUser$$().email)
-                                "
-                                [ngTemplateOutlet]="ownerText"
-                            ></ng-template>
-                            <ng-template
-                                *ngIf="transferInfo && system.permissionManager.isOwner$$()"
-                                [ngTemplateOutlet]="cancelTransferText"
-                            ></ng-template>
-                            <ng-template
-                                *ngIf="
-                                    transferInfo &&
-                                    transferInfo.toAccount ===
-                                        system.permissionManager.currentUser$$().email
-                                "
-                                [ngTemplateOutlet]="systemOfferedText"
-                            ></ng-template>
-                        </ng-template>
-                    </span>
-                </div>
-                <div
-                    *ngIf="systemOffered"
-                    class="d-flex"
-                >
-                    <button
-                        class="btn btn-primary mr-2"
-                        (click)="acceptOwnershipTransfer()"
-                        translate
-                    >
-                        Accept
-                    </button>
-                    <button
-                        class="btn btn-default"
-                        (click)="rejectOwnershipTransfer()"
-                        translate
-                    >
-                        Reject
-                    </button>
-                </div>
+                        <button
+                            class="btn btn-primary mr-2"
+                            (click)="acceptOwnershipTransfer()"
+                            translate
+                        >
+                            Accept
+                        </button>
+                        <button
+                            class="btn btn-default"
+                            (click)="rejectOwnershipTransfer()"
+                            translate
+                        >
+                            Reject
+                        </button>
+                    </div>
+                }
             </header>
             <ng-template #notMine>
                 <nx-section>
@@ -213,7 +183,9 @@
                 <div class="row m-0">
                     <div class="col-lg-6 pl-0">
                         <div class="float-left mr-2">
+                            <!-- Cloud merge not supported for v1 of org systems -->
                             <button
+                                *ngIf="cloudSystemType$$() !== 'org'"
                                 class="btn btn-default"
                                 [disabled]="merging || !system.isOnline || !system.isAvailable"
                                 (click)="mergeSystems()"
@@ -308,6 +280,7 @@
                                     >you</span
                                 >
                                 <span *ngIf="!system.permissionManager.isOwner$$()">
+                                    <!-- This doesn't work with cloud login on org owned systems atm -->
                                     <span class="system-header-bold">{{
                                         system.info.ownerFullName
                                     }}</span>

@@ -13,7 +13,13 @@ import type {
     SingleTranslateObject,
 } from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
+import type { OrgSystem, System, UserSystem } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig as CONFIG } from '@services/nx-config/config';
+import type {
+    NxOrgSystemInfo,
+    NxSystemInfo,
+    NxUserSystemInfo,
+} from '@services/systems.service.types';
 
 import type { ArrayType } from './general';
 
@@ -445,4 +451,16 @@ export function cleanIds<T>(obj: T): T {
         }
     });
     return obj;
+}
+
+export function isOrgSystem(system: System): system is OrgSystem;
+export function isOrgSystem(system: NxSystemInfo): system is NxOrgSystemInfo;
+export function isOrgSystem(system: System | NxSystemInfo): boolean {
+    return 'organizationId' in system;
+}
+
+export function isUserSystem(system: System): system is UserSystem;
+export function isUserSystem(system: NxSystemInfo): system is NxUserSystemInfo;
+export function isUserSystem(system: System | NxSystemInfo): boolean {
+    return 'ownerAccountId' in system;
 }

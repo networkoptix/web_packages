@@ -24,6 +24,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { CloudSystem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
@@ -70,8 +71,8 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
 
     channelPartnersEnabled: boolean | null = null;
 
-    currentOwnerType: 'user' | 'org' = 'user'; // TODO: Add checks for this after CDB support
-    transferInfo: SystemTransferInfo;
+    currentOwnerType: 'user' | 'org' = 'user'; // Transferring from orgs not supported in V1
+    transferInfo: SystemTransferInfo | CloudSystem;
     hideErrors: boolean = false;
     transferToUser: Process;
     transferToOrg: Process;
@@ -118,7 +119,9 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         });
         this.userEmails$$.set(items);
 
-        this.channelPartnersEnabled = nxConfig.featureFlags.channelPartners || false;
+        this.channelPartnersEnabled = !!(
+            this.system.version > 5.1 && nxConfig.featureFlags.channelPartners
+        );
         if (this.channelPartnersEnabled) {
             this.partnersService.getOrganizations().subscribe(orgs => {
                 const items = orgs.reduce((orgs, org) => {
@@ -186,7 +189,8 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
                 );
             },
             { errorCodes, ignoreError: true },
-            async (res: unknown) => {
+            async (res: CloudSystem) => {
+                this.transferInfo = res;
                 this.selectedIndex += 1;
                 this.unlock();
             },

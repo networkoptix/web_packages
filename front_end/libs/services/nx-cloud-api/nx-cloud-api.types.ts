@@ -159,7 +159,7 @@ export interface RegisterUser {
     resultCode?: string;
 }
 
-export interface System {
+interface BaseSystem {
     accessRole: string;
     authKey: string;
     authKeyHash: string;
@@ -178,11 +178,19 @@ export interface System {
     systemSequence: string;
     usageFrequency: number;
     version: string;
-    ownerAccountEmail?: string;
-    ownerAccountId?: string;
-    ownerFullName?: string;
-    organizationId?: string;
 }
+
+export interface UserSystem extends BaseSystem {
+    ownerAccountEmail: string;
+    ownerAccountId: string;
+    ownerFullName: string;
+}
+
+export interface OrgSystem extends BaseSystem {
+    organizationId: string;
+}
+
+export type System = UserSystem | OrgSystem;
 
 /** Cached user when system cannot be reached */
 export interface CloudUser {
