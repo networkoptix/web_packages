@@ -38,7 +38,7 @@ describe('NxPagePlaceholderV2Component', () => {
 
         expect(component.title).toBe(staticLang.placeholderV2Texts.noInfo.title);
         expect(component.message).toBe(staticLang.placeholderV2Texts.noInfo.message);
-        expect(component.imagePath).toBe(icons.dirPageV2Placeholder + 'default.svg');
+        expect(component.imagePath).toBe(icons.dirPageV2Placeholder + 'no_info.svg');
     });
 });
 

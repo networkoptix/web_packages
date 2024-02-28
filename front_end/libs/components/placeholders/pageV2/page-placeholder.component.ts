@@ -71,7 +71,7 @@ export class NxPagePlaceholderV2Component implements OnInit {
     setupPlaceholder(): void {
         switch (this.type) {
             case PAGE_PLACEHOLDER.NO_INFO:
-                this.imagePath = icons.dirPageV2Placeholder + 'default.svg';
+                this.imagePath = icons.dirPageV2Placeholder + 'no_info.svg';
                 this.title = this.translateService.instant(
                     this.LANG.placeholderV2Texts.noInfo.title,
                 );
