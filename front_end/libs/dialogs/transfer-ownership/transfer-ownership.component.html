@@ -199,7 +199,7 @@
                 ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
             </p>
             <div
-                *ngIf="transferTargetType$$() !== 'org'"
+                *ngIf="transferTargetType$$() === 'user'"
                 class="warning-block"
             >
                 <div class="warning-block__header mb-1">
@@ -215,18 +215,6 @@
                 >
                     Once the ownership transfer is complete, you will be removed from the system.
                 </p>
-                <ul
-                    class="from-org-warning"
-                    *ngIf="currentOwnerType === 'org'"
-                >
-                    <li translate>
-                        Licenses that were used in this system will be deactivated for this system
-                        but can be activated again in another system
-                    </li>
-                    <li translate>
-                        Channel Partner and Organization users will be removed from this system
-                    </li>
-                </ul>
             </div>
         </div>
         <div class="modal-footer modal-footer__justify-between">
@@ -258,14 +246,14 @@
                 [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
             ></svg-icon>
             <p
-                *ngIf="transferTargetType$$() === 'org' && selectedOrg?.value; else normaResult"
+                *ngIf="transferTargetType$$() === 'org'; else normalResult"
                 id="request-sent"
                 class="mt-1"
                 translate
             >
                 System ownership was successfully changed
             </p>
-            <ng-template #normaResult>
+            <ng-template #normalResult>
                 <p
                     id="request-sent"
                     class="mt-1"

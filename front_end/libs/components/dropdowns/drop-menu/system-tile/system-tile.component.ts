@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
@@ -15,7 +14,9 @@ import { icons } from '@static-variables';
     standalone: true,
 })
 export class NxSystemTileComponent {
-    @Input() system: System;
+    // Old header is dead and incompatible with org systems
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Input() system: any;
     @Input() active: boolean = false;
     @Input() width: number = 240;
 

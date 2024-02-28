@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, signal } from '@angular/core';
+import { Component, computed, inject, input, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { LetDirective } from '@ngrx/component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { map } from 'rxjs';
@@ -25,11 +26,12 @@ import type { Account } from '@services/account.service/account';
 import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from '@services/systems.service.types';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { NxVmsClientService } from '@services/vms-client.service';
 import { icons, search } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
+import { isUserSystem } from '@utils/nx';
 
 @Component({
     selector: 'nx-home-systems-list',
@@ -50,6 +52,7 @@ import { caseInsenstiveSearch } from '@utils/general';
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
         NxTagComponent,
+        LetDirective,
     ],
 })
 export class HomeSystemListComponent {
@@ -62,10 +65,8 @@ export class HomeSystemListComponent {
     uriService = inject(NxUriService);
     clientService = inject(NxVmsClientService);
 
-    private nonOrgSystemsIds$$ = signal<string[]>([]);
-    @Input() set nonOrgSystemsIds(systems: string[]) {
-        this.nonOrgSystemsIds$$.set(systems);
-    }
+    directAccessSystems$$ = input.required<NxSystemInfo[]>({ alias: 'directAccessSystems' });
+    isUserSystem = isUserSystem;
 
     @Input({ required: true }) account: Account;
 
@@ -78,15 +79,11 @@ export class HomeSystemListComponent {
         ),
         { initialValue: '' },
     );
-    showSearch$$ = computed<boolean>(() => this.nonOrgSystems$$().length >= search.minSystems);
-    systems$$ = toSignal(this.systemsService.systemsSubject, { initialValue: [] });
-    nonOrgSystems$$ = computed<NxSystemInfo[]>(() => {
-        const systems = this.systems$$();
-        const nonOrgSystemIds = this.nonOrgSystemsIds$$();
-        return systems.filter(({ id }) => nonOrgSystemIds.includes(id));
-    });
+    showSearch$$ = computed<boolean>(
+        () => this.directAccessSystems$$().length >= search.minSystems,
+    );
     visibleSystems$$ = computed(() => {
-        const systems = this.nonOrgSystems$$();
+        const systems = this.directAccessSystems$$();
         const searchText = this.search$$() || '';
         return systems.filter(system => {
             const ownerText = this.systemsService.getSystemOwnerName(system);
@@ -99,7 +96,7 @@ export class HomeSystemListComponent {
     });
 
     actionItemsForSystems$$ = computed<Record<string, ActionItems[]>>(() => {
-        const systems = this.nonOrgSystems$$();
+        const systems = this.directAccessSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
         return systems.reduce((actionMap, system) => {
             actionMap[system.id] = [

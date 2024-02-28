@@ -1,12 +1,12 @@
 <ng-template #loading>
     <nx-pre-loader type="page"></nx-pre-loader>
 </ng-template>
-<ng-container *ngIf="nonOrgSystems$$(); else loading">
+<ng-container *ngIf="directAccessSystems$$(); else loading">
     <ng-template #noSystems>
         <nx-no-systems></nx-no-systems>
     </ng-template>
     <div
-        *ngIf="nonOrgSystems$$().length; else noSystems"
+        *ngIf="directAccessSystems$$().length; else noSystems"
         class="container"
     >
         <div
@@ -41,16 +41,22 @@
                     [dropdownItems]="actionItemsForSystems$$()[system.id] ?? []"
                 >
                     <div class="d-flex flex-column w-100">
-                        <div
-                            *ngIf="system.ownerAccountEmail !== account.email"
-                            class="fs-mask user-name"
-                        >
-                            <span translate>Owner</span>:&nbsp;
-                            <nx-search-highlight
-                                [search]="search$$()"
-                                [text]="system.ownerFullName"
-                            ></nx-search-highlight>
-                        </div>
+                        <!-- For now user does not have access to org name for systems
+                        that user was directly added to and are owned by orgs that
+                        user IS NOT a member of -->
+                        <!-- Org name will be added to API response in the future (?) -->
+                        @if (isUserSystem(system)) {
+                            <div
+                                *ngIf="system.ownerAccountEmail !== account.email"
+                                class="fs-mask user-name"
+                            >
+                                <span translate>Owner</span>:&nbsp;
+                                <nx-search-highlight
+                                    [search]="search$$()"
+                                    [text]="system.ownerFullName"
+                                ></nx-search-highlight>
+                            </div>
+                        }
                         <div class="d-flex justify-content-between">
                             <h3>
                                 <nx-search-highlight

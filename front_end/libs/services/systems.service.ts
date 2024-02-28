@@ -24,6 +24,7 @@ import staticLang from '@language_static';
 import { NxToastService } from '@services/toast.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
+import { isUserSystem } from '@utils/nx';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
@@ -36,7 +37,7 @@ import { NxStorageService } from './storage.service';
 import type { MergeInfo } from './system-api.types/system.types';
 import type { NxSystem } from './system.service/system';
 import { NxSystemService } from './system.service/system.service';
-import type { NxOrgSystemInfo, NxSystemInfo, NxUserSystemInfo } from './systems.service.types';
+import type { NxSystemInfo, NxUserSystemInfo } from './systems.service.types';
 import { NxUriService } from './uri.service';
 
 @UntilDestroy()
@@ -55,7 +56,6 @@ export class NxSystemsService {
     );
     private updateSystems$ = new Subject<void>();
     mergingSystems = new Set<string>();
-    systemsPoll: Observable<System[]>;
     systemsSubject = merge(this.currentUser$, this.updateSystems$).pipe(
         withLatestFrom(this.currentUser$),
         filter(([_, email]) => environment.isLocal || !!email),
@@ -65,46 +65,8 @@ export class NxSystemsService {
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 
-    systems$$ = toSignal(this.systemsSubject);
+    systems$$ = toSignal(this.systemsSubject, { initialValue: [] });
 
-    // Todo: Partition these from systemsSubject
-    splitSystems = this.systemsSubject.pipe(
-        map((systems: NxSystemInfo[]) => {
-            const map = new Map<'personal' | 'shared', Map<string, NxUserSystemInfo>>([
-                ['personal', new Map()],
-                ['shared', new Map()],
-            ]);
-            for (const system of systems) {
-                if (system.isMine) {
-                    map.set(
-                        'personal',
-                        map.get('personal').set(system.id, system as NxUserSystemInfo),
-                    );
-                } else {
-                    map.set('shared', map.get('shared').set(system.id, system as NxUserSystemInfo));
-                }
-            }
-            return map;
-        }),
-    );
-    orgSystems = this.systemsSubject.pipe(
-        map((systems: NxSystemInfo[]) => {
-            const newSystems: NxOrgSystemInfo[] = systems
-                .filter(sys => sys.organizationId)
-                .map(sys => sys as NxOrgSystemInfo);
-            const map = new Map<string, Map<string, NxOrgSystemInfo>>();
-            for (const system of newSystems) {
-                if (!map.has(system.organizationId)) {
-                    map.set(system.organizationId, new Map<string, NxOrgSystemInfo>());
-                }
-                map.set(
-                    system.organizationId,
-                    map.get(system.organizationId).set(system.id, system),
-                );
-            }
-            return map;
-        }),
-    );
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
         primary: undefined,
@@ -224,16 +186,18 @@ export class NxSystemsService {
         return firstValueFrom(this.forceUpdateSystems());
     }
 
-    getSystemOwnerName(
-        system: Pick<System, 'name' | 'ownerAccountEmail' | 'ownerFullName'>,
-    ): string {
+    getSystemOwnerName(system: System | NxSystemInfo): string {
+        if ('organizationId' in system) {
+            return '';
+            // Old systems list will not be used with org systems in prod
+        }
         if (system.ownerAccountEmail === this.userEmail) {
             return this.LANG.system.yourSystem;
         }
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
             return system.ownerFullName;
         }
-        return system?.ownerAccountEmail || '';
+        return system.ownerAccountEmail;
     }
 
     getSystem(
@@ -263,31 +227,41 @@ export class NxSystemsService {
 
     private processSystems(systems: System[]): NxSystemInfo[] {
         const sortedSystems = this.sortSystems(systems);
-        return sortedSystems.map(system => {
-            const isMine = system.ownerAccountEmail === this.userEmail;
-            const canMerge = !!(
-                isMine &&
-                (system.capabilities.cloudMerge || clientMode.debug || clientMode.beta)
-            );
+        return sortedSystems.map<NxSystemInfo>(system => {
             const versionMatch = system.version.match(/(\d*\.\d*)\.\d*\.\d*/);
             const version = parseFloat(versionMatch?.[1] ?? '0');
             const useRest = Math.floor(version) > 4;
 
-            const systemInfo = {
-                ...system,
-                isMine,
-                canMerge,
-                version,
-                useRest,
-            };
+            if (isUserSystem(system)) {
+                const isMine = system.ownerAccountEmail === this.userEmail;
+                const canMerge = !!(
+                    isMine &&
+                    (system.capabilities.cloudMerge || clientMode.debug || clientMode.beta)
+                );
+                const systemInfo = {
+                    ...system,
+                    isMine,
+                    canMerge,
+                    version,
+                    useRest,
+                };
 
-            this.checkMerge(systemInfo);
+                this.checkMerge(systemInfo);
 
-            return systemInfo;
+                return systemInfo;
+            } else {
+                return {
+                    ...system,
+                    isMine: false,
+                    canMerge: false,
+                    version,
+                    useRest,
+                };
+            }
         });
     }
 
-    checkMerge(system: NxSystem | NxSystemInfo): boolean {
+    checkMerge(system: NxSystem | NxUserSystemInfo): boolean {
         if ((system as NxSystem).mergeInfo !== undefined) {
             this.addToMergeList(system.id);
         } else if (this.mergingSystems.has(system.id)) {
