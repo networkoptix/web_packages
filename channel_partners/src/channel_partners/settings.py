@@ -30,6 +30,8 @@ class EnvironmentEnum(StrEnum):
     prod = 'prod'
 
 
+IS_CELERY = 'celery' in sys.argv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_ENV = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
@@ -52,12 +54,11 @@ local_env_path = os.path.join(BASE_DIR, 'config/.env.local')
 base_env_path = os.path.join(BASE_DIR, 'config/.env.dist')
 
 if (
-    (LOCAL_ENV or LOCAL_DOCKER or BUILD)
-    and os.path.exists(local_env_path)
+        (LOCAL_ENV or LOCAL_DOCKER or BUILD)
+        and os.path.exists(local_env_path)
 ):
     # Load development environment.
     env.read_env(local_env_path)
-
 
 # Loading variable from environment
 
@@ -81,8 +82,10 @@ REDIS_PORT = env.int("REDIS_PORT", default=6379)
 RUN_CELERY_EAGER = env.bool('RUN_CELERY_EAGER', False)
 SILK_ENABLED = env.bool('SILK_ENABLED', False)
 TRAFFIC_RELAY_DOMAIN = env.str('TRAFFIC_RELAY_DOMAIN')
-RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 DEFAULT_HOST_NAME = get_default_host(INSTANCE_NAME, DOMAIN_NAME)
+if not IS_CELERY:
+    # Only run for channel_partners application
+    RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 # End environment variables section
 
 
@@ -337,7 +340,6 @@ if TESTING or ENV_NAME == EnvironmentEnum.ci:
     CELERY_TASK_ALWAYS_EAGER = True
 elif ENV_NAME == EnvironmentEnum.local and RUN_CELERY_EAGER:
     CELERY_TASK_ALWAYS_EAGER = True
-
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 
