@@ -340,14 +340,16 @@ export class NxOrganizationCardContainerComponent {
                                 organization: this.currentOrg$$(),
                                 groups: this.rootGroups$$(),
                             })
-                            .then(_ => {
-                                const currSystems = [...this.currentSystems$$()];
-                                const updatedSystems = currSystems.filter(
-                                    sys => sys.systemId !== system.systemId,
-                                );
-                                this.store.dispatch(
-                                    GroupActions.setSystems({ systems: updatedSystems }),
-                                );
+                            .then(sys => {
+                                if (sys) {
+                                    const currSystems = [...this.currentSystems$$()];
+                                    const updatedSystems = currSystems.filter(
+                                        sys => sys.systemId !== system.systemId,
+                                    );
+                                    this.store.dispatch(
+                                        GroupActions.setSystems({ systems: updatedSystems }),
+                                    );
+                                }
                             });
                     },
                 },
