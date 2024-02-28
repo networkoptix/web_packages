@@ -1458,7 +1458,7 @@ class GroupSerializer(serializers.ModelSerializer):
     children = ChildGroupSerializer(source='groups', read_only=True, many=True)
     parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(), allow_null=True)
     organizationId = serializers.UUIDField(source='organization_id', read_only=True)
-    path = serializers.ListField(child=serializers.UUIDField(), source='visible_path', default=list)
+    path = serializers.ListField(child=serializers.UUIDField(), source='visible_path', default=list, read_only=True)
     systemCount = serializers.IntegerField(source='system_count', read_only=True)
 
     class Meta:
