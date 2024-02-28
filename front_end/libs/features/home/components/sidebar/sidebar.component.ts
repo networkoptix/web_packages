@@ -4,8 +4,6 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { selectRootGroups } from '@pages/home/store/groups/groups.selectors';
@@ -37,21 +35,10 @@ export class NxSystemGroupsSidebarComponent {
     @Input() openGroups: OpenGroups;
     @Input() hasGroups: boolean;
     @Input() userEmail: string;
+    @Input() currentOrg: Organization | undefined;
     @Output() dismiss = new EventEmitter<void>();
     rootGroupItems$ = this.store.select<GroupItem[]>(selectRootGroups);
-    currentOrg$$ = this.store.selectSignal<Organization>(selectCurrentOrganization);
     icons = icons;
     LANG = staticLang;
-    constructor(
-        private dialogsService: NxDialogsService,
-        private store: Store,
-    ) {}
-
-    newGroupDialog(): void {
-        this.dialogsService.createSystemGroup({
-            parentGroup: this.currentGroupId,
-            orgId: this.currentOrg$$().id,
-            hasGroups: this.hasGroups,
-        });
-    }
+    constructor(private store: Store) {}
 }
