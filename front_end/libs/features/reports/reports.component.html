@@ -1,0 +1,13 @@
+<div class="nx-reports-sidebar">
+    <nx-searchable-select
+        class="fs-mask org-dropdown"
+        [items]="cpAndOrgItems()"
+        [ngModel]="selectedItem"
+        (ngModelChange)="selectItem($event)"
+        [selected]="selectedItem"
+        [noMatchMsg]="'Channel partner or organization not found' | translate"
+        [ngModelOptions]="{ standalone: true }"
+        [placeholder]="'Channel Partner or Organization' | translate"
+    ></nx-searchable-select>
+</div>
+<router-outlet></router-outlet>

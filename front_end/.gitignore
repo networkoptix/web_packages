@@ -26,7 +26,6 @@ src/**/*
 src/supported_languages.json
 coverage
 junit
-reports
 env_**
 common/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
 common/scripts/downgraded-providers.js

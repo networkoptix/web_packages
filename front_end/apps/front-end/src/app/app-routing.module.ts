@@ -267,6 +267,10 @@ const lazyRoutes: Routes = [
     //         import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule),
     // },
     {
+        path: 'reports',
+        loadChildren: () => import('@pages/reports/reports.module').then(m => m.NxOrgReportsModule),
+    },
+    {
         path: '**',
         loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module),
     },

@@ -1,0 +1,42 @@
+<nx-table
+    ngClass="service-changes-table"
+    [style.height]="'calc(100% - 12px)'"
+    set-pagination
+    set-sorting
+    set-rows-auto
+    [set-row-expand]="false"
+    [set-selected-item-id]="selectedRecordId"
+    [data]="records"
+>
+    <ng-template #header>
+        @for (head of headers; track head.name) {
+            <div
+                [attr.id]="head.name"
+                [style.justify-content]="head.align || 'flex-start'"
+            >
+                <span
+                    class="head-title"
+                    title="{{ head.value }}"
+                    >{{ head.value }}</span
+                >
+            </div>
+        }
+    </ng-template>
+    <ng-template
+        #rows
+        let-row
+    >
+        <div>
+            {{ row.serviceName }}
+        </div>
+        <div>
+            {{ row.amount }}
+        </div>
+        <div>
+            {{ row.addedTo }}
+        </div>
+        <div>
+            {{ row.date }}
+        </div>
+    </ng-template>
+</nx-table>
