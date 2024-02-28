@@ -586,6 +586,17 @@ class TestGroupSerializer:
         )
         assert serializer.is_valid() is True
 
+    def test_path_read_only(self):
+        data = {
+            "name": f'{uuid.uuid4()}',
+            "organizationId": self.organization.id,
+            "parentId": self.groups[2].id,
+            "path": [str(uuid.uuid4()), str(uuid.uuid4()), str(uuid.uuid4())]
+        }
+        serializer = GroupSerializer(instance=self.groups[-1], data=data)
+        assert serializer.is_valid() is True
+        assert 'path' not in serializer.validated_data
+
     def test_systemCount(self):
         serializer = GroupSerializer(instance=self.other_group)
         assert serializer.data["systemCount"] == 0
