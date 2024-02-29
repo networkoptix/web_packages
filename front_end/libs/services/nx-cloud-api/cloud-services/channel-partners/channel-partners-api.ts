@@ -293,8 +293,12 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
     };
 
-    updateSystemGroup = (id: string, body: { groupId: string | null }): Observable<CloudSystem> => {
-        return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body });
+    updateSystemGroup = (
+        id: string,
+        body: { groupId: string | number },
+    ): Observable<CloudSystem> => {
+        const groupId = body.groupId ? String(body.groupId) : null;
+        return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body: { groupId } });
     };
 
     /* Internal */

@@ -207,10 +207,11 @@ export interface CloudSystem {
     groupId: string | null;
     name: string;
     organization: string;
-    organizationName: string;
     services: Record<string, unknown>;
     state: string;
     systemId: string;
+    organizationName: string;
+    system_state: string;
 }
 
 export type PaginatedCloudSystemList = Page<CloudSystem>;

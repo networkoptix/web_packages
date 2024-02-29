@@ -170,7 +170,7 @@ export type MoveOrgItem = DialogType<
         organization: Organization;
         groups: GroupItem[];
     },
-    GroupItem | SystemItem
+    GroupItem | CloudSystem
 >;
 
 export type AddOrgUserV2 = DialogType<
