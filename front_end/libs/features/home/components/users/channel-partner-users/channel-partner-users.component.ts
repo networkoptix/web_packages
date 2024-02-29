@@ -84,15 +84,6 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
     };
 };
 
-const UserStore = signalStore(
-    withEntities<UserRecord>(),
-    withMethods(store => ({
-        addUser: user => patchState(store, addEntity(user, { idKey: 'userId' })),
-        removeUser: user => patchState(store, removeEntity(user)),
-        setUsers: users => patchState(store, setAllEntities(users, { idKey: 'userId' })),
-    })),
-);
-
 @Component({
     selector: 'nx-channel-partner-users',
     templateUrl: 'channel-partner-users.component.html',
@@ -101,7 +92,7 @@ const UserStore = signalStore(
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
-    providers: [RecordStore, UserStore],
+    providers: [RecordStore],
     imports: [
         CommonModule,
         FormsModule,
@@ -116,7 +107,6 @@ const UserStore = signalStore(
 export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
-    userStore = inject(UserStore);
     icons = icons;
     recordStore = inject(RecordStore);
 
@@ -194,7 +184,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     }
 
     newUserDialog(partnerId: string): void {
-        const reqId = partnerId;
         if (this.inSubchannel) {
             this.CPService.paramStateHandler.state$
                 .pipe(
@@ -202,22 +191,19 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                     take(1),
                 )
                 .subscribe(id => {
-                    this.dialogsService
-                        .addPartnerUser(id)
-                        .then(user => this.recordStore.addRecord(mapCpUser(user)));
+                    this.dialogsService.addPartnerUser(id).then(user => {
+                        if (user) {
+                            this.recordStore.addRecord(mapCpUser(user));
+                        }
+                    });
                 });
         } else {
-            this.dialogsService
-                .addPartnerUser(partnerId)
-                .then(user => this.recordStore.addRecord(mapCpUser(user)));
-        }
-        this.dialogsService.addPartnerUser(reqId).then(user => {
-            this.userStore.addUser({
-                ...user,
-                userId: user.email,
-                userType: UserType.CHANNEL_PARTNER,
+            this.dialogsService.addPartnerUser(partnerId).then(user => {
+                if (user) {
+                    this.recordStore.addRecord(mapCpUser(user));
+                }
             });
-        });
+        }
     }
 
     updateSelectedUsers(users: { [key: string]: UserRecord }): void {
