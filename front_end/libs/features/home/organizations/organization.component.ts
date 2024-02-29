@@ -45,8 +45,7 @@ import {
     selectCurrentGroupId,
     selectHasGroups,
     selectOpenGroups,
-    selectCurrentGroups,
-    selectCurrentSystems,
+    selectRootGroups,
 } from '../store/groups/groups.selectors';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
@@ -102,8 +101,7 @@ export class NxOrganizationsComponent implements OnInit {
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
-    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
+    rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
 
     constructor(
         private store: Store,

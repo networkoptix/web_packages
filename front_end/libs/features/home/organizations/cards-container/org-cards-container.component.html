@@ -8,7 +8,7 @@
 <ng-template #showContent>
     <div class="actions p-3">
         <button
-            *ngIf="currentSystems$$()?.length && canCreateGroups$$()"
+            *ngIf="canCreateGroups$$()"
             class="btn btn-default"
             translate
             (click)="newGroupDialog()"
