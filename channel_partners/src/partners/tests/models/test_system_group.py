@@ -11,6 +11,7 @@ from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
     organization_system_count,
 )
+from tools.helpers import get_path_from_parent
 
 
 class TestSystemGroupDelete:
@@ -58,6 +59,15 @@ class TestSystemGroupDelete:
                 system_factory(organization=self.org, system_group=group)
                 sys_group_user_factory(organization=self.org, group=group)
 
+    def check_systems_path(self):
+        for sys in CloudSystemId.objects.all():
+            path = get_path_from_parent(sys.system_group or sys.organization)
+            assert path == sys.path
+
+    def check_groups_path(self):
+        for group in SystemGroup.objects.all():
+            path = get_path_from_parent(group.parent or group.organization)
+            assert path == group.path
 
     def test_delete_remove_users(self):
         group = self.group_0_0_0
@@ -140,3 +150,44 @@ class TestSystemGroupDelete:
         for group in self.groups[2:]:
             key = cache_key_cloud_system_group_children_count(group.id)
             assert caches['default'].get(key) > 0
+
+    def test_save_without_changes(self, mocker):
+        spy_move_children = mocker.spy(SystemGroup, 'move_children')
+        for group in self.groups:
+            group.save()
+        self.check_groups_path()
+        self.check_systems_path()
+        assert spy_move_children.call_count == 0
+
+    def test_save_move_to_group(self, mocker):
+        spy_move_children = mocker.spy(SystemGroup, 'move_children')
+        self.group_0_0.parent = self.group_1_1
+        self.group_0_0.save()
+        self.check_groups_path()
+        self.check_systems_path()
+        self.group_0_0.refresh_from_db()
+        assert self.group_0_0.path[0] == self.group_1_1.id
+        assert spy_move_children.call_count == 1
+
+    def test_save_move_to_org(self):
+        self.group_0_0.parent = None
+        self.group_0_0.save()
+        self.check_groups_path()
+        self.check_systems_path()
+        self.group_0_0.refresh_from_db()
+        assert self.group_0_0.path[0] == self.org.id
+
+    def test_system_counters_invalidation(self):
+        for group in self.groups:
+            assert group.system_count >= 0
+
+        for group in self.org.groups.all():
+            cache_key: str = cache_key_cloud_system_group_children_count(group.id)
+            assert caches['default'].get(cache_key) >= 0
+
+        self.group_0_0.parent = None
+        self.group_0_0.save()
+
+        for group in self.org.groups.all():
+            cache_key: str = cache_key_cloud_system_group_children_count(group.id)
+            assert caches['default'].get(cache_key) is None
