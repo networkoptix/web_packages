@@ -43,7 +43,7 @@
     *ngIf="!showAccessTable; else accessTable"
 >
     <button
-        *ngIf="currentGroups$$()?.length && !isLoading"
+        *ngIf="rootGroups$$()?.length && !isLoading"
         class="sidebar-toggling-ear-wrapper"
         type="button"
         [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
@@ -60,7 +60,7 @@
 
     <div
         *ngIf="
-            (currentGroups$$()?.length || currentSystems$$()?.length) &&
+            (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
             (sidebarSettings.value$ | async)?.showSidebarState
         "
     >
