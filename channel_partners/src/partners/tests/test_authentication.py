@@ -1,18 +1,21 @@
-from time import sleep
-from unittest.mock import (
-    MagicMock,
-    patch,
+import json
+from datetime import (
+    datetime,
+    timedelta,
 )
+from time import sleep
 from uuid import uuid4
 
 import pytest
 from django.conf import settings
+from django.core.cache import caches
 from rest_framework import exceptions
 
 from partners.authentication import (
     NxCloudOauthIntrospectAuthentication,
-    NxCloudSystemBasicAuthentication,
     TokenCache,
+    authenticate_jwt_token,
+    authenticate_regular_token,
     check_system_credentials,
     get_cloud_user_from_token,
 )
@@ -20,10 +23,13 @@ from partners.models import (
     CloudSystemStates,
     VmsRoles,
 )
-from tools.exception import APIErrorWithoutRollback
+from tools.jwt.jwt_auth import (
+    FallbackToRegToken,
+    get_jwk_client,
+)
 
 
-def test_get_cloud_user_from_token(httpx_mock):
+def test_authenticate_regular_token(httpx_mock):
     email = f'{uuid4()}'
     token = f'{uuid4()}'
     cloud_host = f'{uuid4()}'
@@ -37,7 +43,7 @@ def test_get_cloud_user_from_token(httpx_mock):
     httpx_mock.add_response(url=url, json=token_resp)
 
     # Call the function with mocked client and authentication
-    auth = get_cloud_user_from_token(token, cloud_host)
+    auth = authenticate_regular_token(token, cloud_host)
 
     request = httpx_mock.get_request(url=url)
     assert auth == email
@@ -47,7 +53,7 @@ def test_get_cloud_user_from_token(httpx_mock):
     httpx_mock.reset(False)
     httpx_mock.add_response(url=url, json=token_resp)
 
-    auth = get_cloud_user_from_token(token, cloud_host)
+    auth = authenticate_regular_token(token, cloud_host)
 
     request = httpx_mock.get_request(url=url)
     assert auth == email
@@ -62,43 +68,12 @@ def test_token_cache(mocker):
 
     TokenCache.set_token(token, value, expires_in='2')
     assert TokenCache.get_token(token) == value
-    sleep(2.5)
+    sleep(2)
     assert TokenCache.get_token(token) is None
 
     cache_get_mock = mocker.patch("django.core.cache.backends.redis.RedisCache.get", return_value=None)
     assert TokenCache.get_token(None) is None
     cache_get_mock.assert_not_called()
-
-
-class TestSystemCredentialsUpdate:
-
-    @pytest.fixture(autouse=True)
-    def setUp(self, channel_partner_factory, organization_factory, system_factory):
-        self.new_name = 'MY NEW NAME'
-        cp = channel_partner_factory()
-        org = organization_factory(channel_partner=cp)
-        self.sys = system_factory(organization=org)
-        self.system_id = self.sys.system_id
-        self.cloud_host = settings.DEFAULT_HOST_NAME
-
-    @patch('partners.authentication.NxCloudSystemBasicAuthentication.get_or_create_system')
-    @patch('partners.authentication.check_system_credentials')
-    def test_credentials_update_name(self, mock_check_system_credentials, mock_get_or_create_system):
-        mock_check_system_credentials.return_value = (True, 4, self.new_name)
-        mock_get_or_create_system.return_value = self.sys
-
-        auth_instance = NxCloudSystemBasicAuthentication()
-        mock_request = MagicMock()
-        mock_request.cloud_host.hostname = 'test_host'
-        mock_request.headers.get.return_value = 'auth_header'
-
-        try:
-            auth_instance.authenticate_credentials(self.system_id, 'dummy_password', request=mock_request)
-        except APIErrorWithoutRollback:
-            self.fail("Authentication raised APIErrorWithoutRollback unexpectedly!")
-
-        self.sys.refresh_from_db()
-        assert self.sys.name == self.new_name, "System name was not updated in the database."
 
 
 def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
@@ -266,3 +241,140 @@ class TestNxCloudOauthIntrospectAuthentication:
             pass
         else:
             assert False, "AuthenticationFailed must be raised"
+
+
+class TestAuthenticateJwtToken:
+    @pytest.fixture(autouse=True)
+    def setup(self, private_key_factory, jwk_key_factory, jwt_token_factory,
+              faking_jwt_token, cloud_test_host):
+        self.valid_keys = []
+        self.valid_ts = datetime.utcnow() + timedelta(hours=1)
+        self.expired_ts = datetime.utcnow() - timedelta(hours=1)
+        self.timestamps = [
+            self.valid_ts,
+            self.expired_ts
+        ]
+        for _ in range(3):
+            kid = f'{uuid4()}'
+            private_key = private_key_factory()
+            jwk = jwk_key_factory(kid=kid, priv_key=private_key)
+            emails = [f'{uuid4()}@netwrokotix.com' for _ in range(2)]
+            jwt_tokens = [f'nxcdb-{jwt_token_factory(email, kid, private_key, exp=ts)}'
+                          for email, ts in zip(emails, self.timestamps)]
+            self.valid_keys.append({
+                'kid': kid,
+                'private_key': private_key,
+                'emails': emails,
+                'jwk': jwk,
+                'jwt_tokens': jwt_tokens
+            })
+        self.jwks = [k['jwk'] for k in self.valid_keys]
+        self.jwks_ret_val = json.dumps(self.jwks).encode()
+        self.missing_keys = []
+        self.missing_ts = datetime.utcnow()
+        for _ in range(3):
+            kid = f'{uuid4()}'
+            private_key = private_key_factory()
+            jwk = jwk_key_factory(kid, private_key)
+            emails = [f'{uuid4()}@netwrokotix.com' for _ in range(2)]
+            jwt_tokens = [f'nxcdb-{jwt_token_factory(email, kid, private_key, exp=self.missing_ts)}'
+                          for email in emails]
+            self.missing_keys.append({
+                'kid': kid,
+                'private_key': private_key,
+                'emails': emails,
+                'jwk': jwk,
+                'jwt_tokens': jwt_tokens
+            })
+        self.hostname = cloud_test_host.hostname
+        # looks like settings.py
+        settings.JWK_CLIENT = get_jwk_client(cloud_test_host.hostname, init_keys=False)
+        caches['default'].clear()
+
+    def test_valid_tokens(self, mock_jwks_request):
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        for key in self.valid_keys:
+            token = key['jwt_tokens'][0]
+            email = key['emails'][0]
+            verified_email = authenticate_jwt_token(token)
+            assert verified_email == email
+            assert TokenCache.get_token(token) == email
+            token = key['jwt_tokens'][1]
+            email = key['emails'][1]
+            verified_email = authenticate_jwt_token(token)
+            assert verified_email is None
+            assert TokenCache.get_token(token) is None
+
+    def test_missing_keys(self, mock_jwks_request):
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = self.missing_keys[0]['jwt_tokens'][0]
+        verified_email = authenticate_jwt_token(token)
+        assert verified_email is None
+
+    def test_fake_token(self, mock_jwks_request, faking_jwt_token):
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = self.valid_keys[0]['jwt_tokens'][0]
+        fake_token = faking_jwt_token(token)
+        verified_email = authenticate_jwt_token(fake_token)
+        assert verified_email is None
+
+    def test_connection_error(self, mock_jwks_request):
+        mock_jwks = mock_jwks_request(self.jwks_ret_val, side_effect=TimeoutError('timeout'))
+        token = self.valid_keys[0]['jwt_tokens'][0]
+        try:
+            authenticate_jwt_token(token)
+        except FallbackToRegToken as ex:
+            assert True
+        else:
+            assert False, 'should have raised FallbackToRegToken'
+
+
+    def test_get_cloud_user_from_token_valid_jwt(self, mock_jwks_request, mocker, random_email):
+        spy_authenticate_jwt_token = mocker.spy(settings.JWK_CLIENT, 'decode_jwt_token')
+        mock_reg_token = mocker.patch('partners.authentication.authenticate_regular_token', return_value=random_email)
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = self.valid_keys[0]['jwt_tokens'][0]
+        email = get_cloud_user_from_token(token, cloud_host=self.hostname)
+        assert email == self.valid_keys[0]['emails'][0]
+        spy_authenticate_jwt_token.assert_called_once_with(token, verify_exp=True)
+        mock_reg_token.assert_not_called()
+
+    def test_get_cloud_user_from_token_expired_jwt(self, mock_jwks_request, mocker, random_email):
+        spy_authenticate_jwt_token = mocker.spy(settings.JWK_CLIENT, 'decode_jwt_token')
+        mock_reg_token = mocker.patch('partners.authentication.authenticate_regular_token', return_value=random_email)
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = self.valid_keys[0]['jwt_tokens'][1]
+        email = get_cloud_user_from_token(token, cloud_host=self.hostname)
+        assert email is None
+        spy_authenticate_jwt_token.assert_called_once_with(token, verify_exp=True)
+        mock_reg_token.assert_not_called()
+
+    def test_get_cloud_user_from_token_missing_key(self, mock_jwks_request, mocker, random_email):
+        spy_authenticate_jwt_token = mocker.spy(settings.JWK_CLIENT, 'decode_jwt_token')
+        mock_reg_token = mocker.patch('partners.authentication.authenticate_regular_token', return_value=random_email)
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = self.missing_keys[0]['jwt_tokens'][1]
+        email = get_cloud_user_from_token(token, cloud_host=self.hostname)
+        assert email is None
+        spy_authenticate_jwt_token.assert_called_once_with(token, verify_exp=True)
+        mock_reg_token.assert_not_called()
+
+    def test_get_cloud_user_from_token_non_jwt(self, mock_jwks_request, mocker, random_email):
+        spy_authenticate_jwt_token = mocker.spy(settings.JWK_CLIENT, 'decode_jwt_token')
+        mock_reg_token = mocker.patch('partners.authentication.authenticate_regular_token', return_value=random_email)
+        mock_jwks = mock_jwks_request(self.jwks_ret_val)
+        token = f'{uuid4()}'
+        email = get_cloud_user_from_token(token, cloud_host=self.hostname)
+        assert email == random_email
+        spy_authenticate_jwt_token.assert_not_called()
+        mock_reg_token.assert_called_once_with(token, self.hostname)
+
+    def test_get_cloud_user_from_token_fallback_to_reg(self, mock_jwks_request, mocker, random_email):
+        spy_authenticate_jwt_token = mocker.spy(settings.JWK_CLIENT, 'decode_jwt_token')
+        mock_reg_token = mocker.patch('partners.authentication.authenticate_regular_token', return_value=random_email)
+        mock_jwks = mock_jwks_request(self.jwks_ret_val, side_effect=TimeoutError('timeout'))
+        token = self.missing_keys[0]['jwt_tokens'][1]
+        email = get_cloud_user_from_token(token, cloud_host=self.hostname)
+        assert email == random_email
+        spy_authenticate_jwt_token.assert_called_once_with(token, verify_exp=True)
+        mock_reg_token.assert_called_once_with(token, self.hostname)

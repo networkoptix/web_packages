@@ -2,10 +2,12 @@ import uuid
 from hashlib import sha256
 from typing import (
     List,
+    Optional,
     Tuple,
 )
 
 import httpx
+import structlog
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import caches
@@ -13,6 +15,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 from httpx import Response
+from jwt import InvalidTokenError
 from nx_cloud_api_client.base_auth import CdbAuthAPIClient
 from nx_cloud_api_client.client import NxCloudAPISyncClient
 from rest_framework import (
@@ -33,7 +36,15 @@ from partners.models import (
 )
 from tools.exception import APIErrorWithoutRollback
 from tools.helpers import cast_uuid
+from tools.jwt.jwt_auth import (
+    JWT_REGEX,
+    FallbackToRegToken,
+    JWKMissingKeyError,
+)
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
+
+
+logger = structlog.getLogger(__name__)
 
 
 class TokenCache:
@@ -223,10 +234,31 @@ class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):
         }
 
 
-def get_cloud_user_from_token(token, cloud_host):
+def get_cloud_user_from_token(token: str, cloud_host: str) -> Optional[str]:
+    if JWT_REGEX.match(token):
+        try:
+            return authenticate_jwt_token(token)
+        except FallbackToRegToken as ex:
+            logger.info('Falling back to regular token.', exception=str(ex), reason=ex.reason)
+    return authenticate_regular_token(token, cloud_host)
+
+
+def authenticate_jwt_token(token: str) -> Optional[str]:
     if email := TokenCache.get_token(token):
         return email
+    try:
+        verified_payload = settings.JWK_CLIENT.decode_jwt_token(token, verify_exp=True)
+    except (InvalidTokenError, JWKMissingKeyError) as ex:
+        logger.debug('Unauthorized token.', exception=str(ex))
+        return None
+    logger.debug('Verified JWT')
+    TokenCache.set_token(token, verified_payload.sub, expires_in=verified_payload.expires_in)
+    return verified_payload.sub
 
+
+def authenticate_regular_token(token: str, cloud_host: str) -> Optional[str]:
+    if email := TokenCache.get_token(token):
+        return email
     auth_client: CdbAuthAPIClient = NxCloudApiClientFactory.get_sync_client(
         host=cloud_host,
         access_token=token
@@ -245,6 +277,7 @@ def get_cloud_user_from_token(token, cloud_host):
         return None
     else:
         response.raise_for_status()
+
 
 
 class NxCloudOauthTokenAuthentication(TokenAuthentication):

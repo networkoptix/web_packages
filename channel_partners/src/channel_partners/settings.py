@@ -19,6 +19,7 @@ from channel_partners.configuration.celery_cron_config import (
 )
 from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.tools.config import get_default_host
+from tools.jwt.jwt_auth import get_jwk_client
 
 
 env = environ.Env()
@@ -41,7 +42,6 @@ MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 BUILD = 'collectstatic' in sys.argv
 
-MIN_LOGGING_LEVEL = logging.INFO
 
 if CI:
     ENV_NAME = EnvironmentEnum.ci
@@ -87,6 +87,9 @@ if not IS_CELERY:
     # Only run for channel_partners application
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 # End environment variables section
+
+
+MIN_LOGGING_LEVEL = logging.DEBUG if DEBUG and (LOCAL_ENV or LOCAL_DOCKER) else logging.INFO
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -344,3 +347,7 @@ elif ENV_NAME == EnvironmentEnum.local and RUN_CELERY_EAGER:
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 CELERY_BEAT_SCHEDULE = CELERY_CRON_CONFIG
+
+
+JWK_LIFESPAN = 21600
+JWK_CLIENT = get_jwk_client(DEFAULT_HOST_NAME, lifespan=JWK_LIFESPAN, init_keys=False)
