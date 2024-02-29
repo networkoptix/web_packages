@@ -52,7 +52,6 @@ from partners.tasks.services import (
     new_channel_partner_service_created,
 )
 from partners.tasks.states import expire_confirmation
-from partners.tests.utils.db import RemoveArrayElement
 from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
     cp_direct_children_count,
@@ -60,7 +59,11 @@ from partners.utils.cache_keys import (
     direct_organization_children_count,
     organization_system_count,
 )
-from partners.utils.db import MonthInterval
+from partners.utils.db import (
+    MonthInterval,
+    RemoveArrayElement,
+    ReplaceAncestors,
+)
 from tools.helpers import (
     get_path_from_parent,
     get_period_start,
@@ -1488,16 +1491,38 @@ class SystemGroup(FieldOriginalMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        new = self._state.adding
-        if new or self.organization_id != self._original_organization_id or self.parent_id != self._original_parent_id:
-            if self.parent_id:
-                self.path = get_path_from_parent(self.parent)
-            elif self.organization_id:
-                self.path = get_path_from_parent(self.organization)
-            else:
-                self.path = None
-        super().save(force_insert=force_insert, force_update=force_update,
-                     using=using, update_fields=update_fields)
+        with transaction.atomic():
+            new = self._state.adding
+            if not new and self.organization_id != self._original_organization_id:
+                raise ValueError('Organization cannot be changed for a group.')
+            group_changed = self.parent_id != self._original_parent_id
+            old_path = self.path
+            if new or group_changed:
+                if self.parent_id:
+                    self.path = get_path_from_parent(self.parent)
+                elif self.organization_id:
+                    self.path = get_path_from_parent(self.organization)
+                else:
+                    self.path = None
+
+            super().save(force_insert=force_insert, force_update=force_update,
+                         using=using, update_fields=update_fields)
+            if not new and group_changed:
+                self.move_children(old_path)
+
+    def move_children(self, old_path: List[uuid.UUID]) -> None:
+        # Altering paths for all nested groups
+        SystemGroup.objects.filter(path__contains=[self.id]).update(
+            path=ReplaceAncestors(old_ancestors=old_path, new_ancestors=self.path,
+                                  output_field=ArrayField(base_field=models.UUIDField()))
+        )
+        # Altering paths for all nested systems
+        CloudSystemId.objects.filter(path__contains=[self.id]).update(
+            path=ReplaceAncestors(old_ancestors=old_path, new_ancestors=self.path,
+                                  output_field=ArrayField(base_field=models.UUIDField()))
+        )
+        org_groups = self.organization.groups.all().values_list('id', flat=True)
+        CloudSystemId.invalidate_groups_system_counters(org_groups)
 
     def delete(self, using=None, keep_parents=False):
         with transaction.atomic():
