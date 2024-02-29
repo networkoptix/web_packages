@@ -287,12 +287,10 @@ function ask_before_modifying_existing() {
     declare -a SELECTED_PORTS
     DELETE_ALL=false
     for PORT in $PORTS; do
-        echo $PORT
         KEEP=true
         if [[ "$DELETE_ALL" = false ]]; then
             for CONTAINER in $RUNNING_CONTAINERS; do
                 if [[ $CONTAINER == *"$PORT" ]]; then
-                    echo "A Match"
                     read -p "Do you want to remove ${CONTAINER}? (y for yes. all for all running containers. anything else for no): " yan
                     case $yan in
                         y) ;;
