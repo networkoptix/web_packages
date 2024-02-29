@@ -48,8 +48,7 @@ function brew_install() {
     echo 'Installing node v18.15.0'
     n 18.15.0
     echo 'Installing python 3.8.10'
-    pyenv install 3.8.10
-    pyenv local 3.8.10
+    pyenv install $(cat .python-version)
     virtualenv -p "$(pyenv which python)" env
     echo 'Brew install complete.'
 }

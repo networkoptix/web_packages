@@ -15,6 +15,7 @@ docker:build-channel-partners:
   extends: .version-enforced-docker
   interruptible: true
   variables:
+    IMAGE_VERSION: '40687'
     BUILD_OPTIONS: |
       --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
@@ -40,6 +41,3 @@ docker:build-channel-partners:
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
     - channel_partners/build/channel_partners_ci/*
-    - channel_partners/pyproject.toml
-    - channel_partners/poetry.lock
-    - channel_partners/poetry.toml

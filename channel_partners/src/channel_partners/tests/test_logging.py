@@ -1,9 +1,9 @@
 import io
-import logging
 import sys
 from typing import Literal
 
 import pytest
+from django.conf import settings
 from django.test import (
     Client,
     override_settings,
@@ -20,7 +20,7 @@ class TestStructuredLogging:
     @override_settings(ENV_NAME='local')
     @pytest.mark.django_db
     def test_structured_logging_404_local(self, caplog):
-        min_level = logging.INFO
+        min_level = settings.MIN_LOGGING_LEVEL
         caplog.set_level(min_level)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
@@ -43,7 +43,7 @@ class TestStructuredLogging:
     @override_settings(ENV_NAME='prod')
     @pytest.mark.django_db
     def test_structured_logging_404_prod_or_ci(self, caplog):
-        min_level = logging.INFO
+        min_level = settings.MIN_LOGGING_LEVEL
         caplog.set_level(min_level)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
