@@ -99,16 +99,25 @@ export class NxOrganizationSettingsComponent implements OnInit {
         }
         return state;
     });
-    isDirectParentCP$$ = computed<boolean>(() => {
+    currentPartnerPermissions$$ = computed(() => {
+        const currentPartner = this.currentPartner$$();
+        return Object.values(currentPartner?.ownPermissions || {});
+    });
+
+    isDirectParentCP$$ = computed(() => {
         const currentOrg = this.currentOrg$$();
         const currentPartner = this.currentPartner$$();
-        const permissions = Object.values(currentPartner?.ownPermissions || {});
+        const permissions = this.currentPartnerPermissions$$();
         if (!permissions.length) {
             return false;
         }
         const canAlterState = permissions.includes('alter_state_organizations');
         const canAlterSubCP = permissions.includes('alter_state_sub_channel_partners');
         return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP) || false;
+    });
+
+    isOrgAdmin$$ = computed(() => {
+        return this.currentPartnerPermissions$$().includes('administer_organization_systems');
     });
     hasUpdate = false;
 
