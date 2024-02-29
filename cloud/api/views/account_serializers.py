@@ -16,7 +16,8 @@ class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer
     first_name = serializers.CharField(required=True, allow_blank=False, max_length=255)
     last_name = serializers.CharField(required=True, allow_blank=False, max_length=255)
 
-    code = serializers.CharField(required=False, max_length=255)
+    # Note: max_length was increased from 255 -> 5k to accommodate long codes now that we use jwt.
+    code = serializers.CharField(required=False, max_length=5000)
 
     @staticmethod
     def validate_password(value):
