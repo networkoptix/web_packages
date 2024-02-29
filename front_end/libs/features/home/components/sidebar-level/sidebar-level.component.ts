@@ -110,6 +110,7 @@ export class NxGroupsSidebarLevelComponent implements OnInit {
                     } else {
                         droppedOnGroup.children = [updatedGroup];
                     }
+                    droppedOnGroup.systemCount += 1;
                     const droppedOnIndex = groups?.findIndex(group => group.id === droppedOn.id);
                     groups[droppedOnIndex] = droppedOnGroup;
 
@@ -120,11 +121,22 @@ export class NxGroupsSidebarLevelComponent implements OnInit {
         } else if (dragged.type === OrgCardItem.SYSTEM) {
             this.cpService
                 .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
-                .subscribe(() => {
+                .subscribe(sys => {
                     const systems = this.currentSystems$$().filter(
                         sys => sys.systemId !== dragged.systemId,
                     );
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
+                    const groups = structuredClone(this.groupItems$$());
+                    const parentIndex = groups.findIndex(
+                        group => group.id === this.currentGroupId$$(),
+                    );
+                    const targetIndex = groups?.findIndex(group => group.id === sys.groupId);
+                    if (parentIndex !== -1) {
+                        groups[parentIndex].systemCount -= 1;
+                    }
+                    if (targetIndex !== -1) {
+                        groups[targetIndex].systemCount += 1;
+                    }
+                    this.store.dispatch(GroupActions.setGroupsAndSystems({ groups, systems }));
                 });
         }
     }
@@ -138,6 +150,12 @@ export class NxGroupsSidebarLevelComponent implements OnInit {
             this.cpService.patchSystem(dragged.systemId, { groupId: null }).subscribe(_ => {
                 const currSystems = [...this.currentSystems$$()];
                 const updatedSystems = currSystems.filter(sys => sys.systemId !== dragged.systemId);
+                const groups = structuredClone(this.groupItems$$());
+                const groupIndex = groups?.findIndex(group => group.id === this.currentGroupId$$());
+                if (groups && groupIndex !== -1) {
+                    groups[groupIndex].systemCount -= 1;
+                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                }
                 this.store.dispatch(GroupActions.setSystems({ systems: updatedSystems }));
             });
         } else {

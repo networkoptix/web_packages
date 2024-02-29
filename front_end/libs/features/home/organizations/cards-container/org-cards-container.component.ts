@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -43,7 +43,6 @@ import {
     selectCurrentSystems,
     selectGroupItems,
     selectHasGroups,
-    selectOpenGroups,
     selectRootGroups,
 } from '../../store/groups/groups.selectors';
 @Component({
@@ -82,7 +81,6 @@ export class NxOrganizationCardContainerComponent {
         );
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
-    openGroups$$ = this.store.selectSignal(selectOpenGroups);
     rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
@@ -90,20 +88,12 @@ export class NxOrganizationCardContainerComponent {
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     search = { value: '' };
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
-    filteredSystems$: SystemItem[];
-    systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
-    systemMap$$ = computed(() => {
-        const systems = this.systemsFromSubject$$();
-        return new Map(systems?.map(sys => [sys.id, sys]));
-    });
-
-    isLoading = true;
+    groupName: string = '';
     constructor(
         private store: Store,
         private dialogsService: NxDialogsService,
         protected route: ActivatedRoute,
-        private router: Router,
         private cpService: NxChannelPartnersService,
         private systemsService: NxSystemsService,
         private translateService: TranslateService,
@@ -118,28 +108,28 @@ export class NxOrganizationCardContainerComponent {
         effect(() => {
             const currentOrgId = this.currentOrgId$$();
             const currentGroupID = this.currentGroupId$$();
+            const systemMap = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
             if (this.inRoot && currentOrgId) {
                 this.cpService.getOrgSystems(currentOrgId).subscribe(orgSystems => {
-                    const systemMap = this.systemMap$$();
                     const systems = orgSystems.map(sys => ({
                         ...sys,
-                        type: OrgCardItem.SYSTEM,
                         name: systemMap.get(sys.systemId)?.name,
+                        type: OrgCardItem.SYSTEM,
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
             } else if (currentGroupID) {
                 this.cpService.getGroup(currentGroupID).subscribe(group => {
-                    const systemMap = this.systemMap$$();
                     const systems = group.systems.map(systemId => ({
                         systemId,
                         name: systemMap.get(systemId)?.name,
                         type: OrgCardItem.SYSTEM,
+                        parentId: group.id,
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
             }
-        });
+        }, {});
 
         this.search.value = this.route.snapshot.queryParams.search;
     }
@@ -167,10 +157,16 @@ export class NxOrganizationCardContainerComponent {
         } else if (dragged.type === OrgCardItem.SYSTEM) {
             this.cpService
                 .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
-                .subscribe(() => {
+                .subscribe(_ => {
                     const systems = this.currentSystems$$().filter(
                         sys => sys.systemId !== dragged.systemId,
                     );
+                    const groups = structuredClone(this.groupItems$$());
+                    const groupIndex = groups.findIndex(group => group.id === droppedOn.id);
+                    if (groups && groupIndex !== -1) {
+                        groups[groupIndex].systemCount += 1;
+                        this.store.dispatch(GroupActions.setGroups({ groups }));
+                    }
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
         }
@@ -199,19 +195,6 @@ export class NxOrganizationCardContainerComponent {
                     this.store.dispatch(GroupActions.setGroups({ groups }));
                 }
             });
-    }
-
-    handleGroupClick(group: GroupItem): void {
-        const route = ['group', group.id];
-        this.router.navigate(route, { relativeTo: this.route.parent }).then(_ => {
-            const groups = { ...this.openGroups$$() };
-            groups[group.id] = true;
-            this.store.dispatch(GroupActions.setOpenGroups({ openGroups: groups }));
-        });
-    }
-
-    handleSystemClick(system: CloudSystem | SystemItem): void {
-        this.router.navigate(['systems', system.systemId]);
     }
 
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
@@ -341,16 +324,35 @@ export class NxOrganizationCardContainerComponent {
                                 organization: this.currentOrg$$(),
                                 groups: this.rootGroups$$(),
                             })
-                            .then(sys => {
-                                if (sys) {
-                                    const currSystems = [...this.currentSystems$$()];
-                                    const updatedSystems = currSystems.filter(
-                                        sys => sys.systemId !== system.systemId,
-                                    );
-                                    this.store.dispatch(
-                                        GroupActions.setSystems({ systems: updatedSystems }),
-                                    );
+                            .then(newSystem => {
+                                let groups: GroupItem[];
+                                if (newSystem) {
+                                    groups = structuredClone(this.groupItems$$());
+                                    if (groups) {
+                                        const parentIndex = groups?.findIndex(
+                                            group => group.id === this.currentGroupId$$(),
+                                        );
+                                        if (parentIndex !== -1) {
+                                            groups[parentIndex].systemCount -= 1;
+                                        }
+                                        if ('groupId' in newSystem) {
+                                            const targetIndex = groups?.findIndex(
+                                                group => group.id === newSystem.groupId,
+                                            );
+                                            if (targetIndex !== -1) {
+                                                groups[targetIndex].systemCount += 1;
+                                            }
+                                            this.store.dispatch(GroupActions.setGroups({ groups }));
+                                        }
+                                    }
                                 }
+                                const currSystems = [...this.currentSystems$$()];
+                                const updatedSystems = currSystems.filter(
+                                    sys => sys.systemId !== system.systemId,
+                                );
+                                this.store.dispatch(
+                                    GroupActions.setSystems({ systems: updatedSystems }),
+                                );
                             });
                     },
                 },
