@@ -188,5 +188,13 @@
   "64227": {
     "name": "jinja2",
     "note": "Jinja2 before 3.1.3 is affected by a Cross-Site Scripting vulnerability. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template. The Jinja 'xmlattr' filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based. CVE-2024-22195 For more information, please visit https://data.safetycli.com/v/64227/f17"
+  },
+  "64436": {
+    "name": "Pillow",
+    "note": "Pillow is affected by an arbitrary code execution vulnerability. If an attacker has control over the keys passed to the environment argument of PIL.ImageMath.eval(), they may be able to execute arbitrary code.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html CVE-2023-50447"
+  },
+  "64437": {
+    "name": "Pillow",
+    "note": "Pillow is potentially vulnerable to DoS attacks through PIL.ImageFont.ImageFont.getmask(). A decompression bomb check has also been added to the affected function.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64437"
   }
 }
