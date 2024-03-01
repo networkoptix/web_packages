@@ -7,7 +7,7 @@
             class="modal-title"
             translate
         >
-            New User
+            Add User
         </h1>
         <button
             type="button"
@@ -30,7 +30,7 @@
                 <label
                     for="email"
                     translate
-                    >Login</label
+                    >Email</label
                 >
                 <nx-email-input
                     name="email"
@@ -74,7 +74,7 @@
         <nx-process-button
             [buttonDisabled]="!email || !hasValidEmail$$() || !selectedRole.value"
             [process]="createUserProcess"
-            [buttonText]="'Confirm' | translate"
+            [buttonText]="'Add' | translate"
         ></nx-process-button>
         <nx-cancel-button
             [process]="createUserProcess"
