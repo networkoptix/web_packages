@@ -42,7 +42,6 @@ MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 BUILD = 'collectstatic' in sys.argv
 
-
 if CI:
     ENV_NAME = EnvironmentEnum.ci
 elif LOCAL_ENV:
@@ -90,7 +89,6 @@ if not IS_CELERY:
 
 
 MIN_LOGGING_LEVEL = logging.DEBUG if DEBUG and (LOCAL_ENV or LOCAL_DOCKER) else logging.INFO
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!gefm+0ps6f!vlc^*wqby=k6%o81$=s2jjum@qre=5pqf)d&yk'
@@ -348,6 +346,15 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 CELERY_BEAT_SCHEDULE = CELERY_CRON_CONFIG
 
-
 JWK_LIFESPAN = 21600
 JWK_CLIENT = get_jwk_client(DEFAULT_HOST_NAME, lifespan=JWK_LIFESPAN, init_keys=False)
+
+
+"""
+- If i don't import the following, i'm not getting any signals. 
+- If i place at the top, the following tests fail
+    - TestCloudSystemViewSet::test_saas_report
+    - TestSystemUsers::test_system_failure
+"""
+# ruff: noqa: F401, TID252
+from .logging_signals import bind_additional_request_metadata
