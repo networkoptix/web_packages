@@ -359,7 +359,9 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.security_statuses.get('services', {})
 
     def set_security_statuses(self, statuses):
-        self.security_statuses = self.security_statuses or {'types': {}, 'services': {}}
+        self.security_statuses = self.security_statuses or {}
+        self.security_statuses['types'] = self.security_statuses.get('type', {})
+        self.security_statuses['services'] = self.security_statuses.get('services', {})
         expiration_date = (timezone.now() + relativedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
         for service_type, new_status in statuses['types'].items():
             service_code = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[service_type]

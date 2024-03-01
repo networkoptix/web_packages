@@ -1152,6 +1152,45 @@ class TestServiceUsage:
         assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
         assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OK
 
+    def test_check_excess_ok_wrong_current_statuses(self, service_usage_factory, cloud_storage_usage_factory):
+        now = timezone.now()
+        analytics_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.analytics_service,
+            usage=5,
+            to_ts=now,
+        )
+        analytics_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.analytics_service,
+            usage=1,
+            to_ts=now,
+        )
+        local_recording_service_usage = service_usage_factory(
+            system=self.system,
+            service=self.local_recording_service,
+            usage=5,
+            to_ts=now,
+        )
+        cloud_storage_service_usage = cloud_storage_usage_factory(
+            system=self.system,
+            service=self.cloud_storage_service,
+            usage=5,
+            ts=now,
+
+        )
+        self.system.security_statuses = {'wrong_key': ServiceUsage.STATUS_OK}
+        self.system.save()
+        types_statuses = ServiceUsage.check_excess(self.system)['types']
+        assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OK
+        assert types_statuses[ChannelPartnerService.CLOUD_STORAGE] == ServiceUsage.STATUS_OK
+
+        services_statuses = ServiceUsage.check_excess(self.system)['services']
+        assert services_statuses[str(self.analytics_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.local_recording_service.id)] == ServiceUsage.STATUS_OK
+        assert services_statuses[str(self.cloud_storage_service.id)] == ServiceUsage.STATUS_OK
+
     def test_check_excess_over_use(self, service_usage_factory, cloud_storage_usage_factory):
         now = timezone.now()
         minus_12_hours = now - timedelta(hours=12)
