@@ -30,6 +30,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
+// import { NxSettingsDisconnectComponent } from './components/disconnect/disconnect.component';
 import { NxSettingsGeneralComponent } from './components/general/general.component';
 import { NxSettingsStateComponent } from './components/state/state.component';
 
@@ -51,6 +52,7 @@ interface SettingsState {
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         TranslateModule,
+        // NxSettingsDisconnectComponent,
     ],
 })
 export class NxOrganizationSettingsComponent implements OnInit {
@@ -118,6 +120,10 @@ export class NxOrganizationSettingsComponent implements OnInit {
 
     isOrgAdmin$$ = computed(() => {
         return this.currentPartnerPermissions$$().includes('administer_organization_systems');
+    });
+    canUpdateOrg$$ = computed(() => {
+        const currentState = this.currentState$$();
+        return currentState.item?.ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION);
     });
     hasUpdate = false;
 
