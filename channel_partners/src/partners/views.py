@@ -801,7 +801,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         cloud_host: CloudHost = self.request.cloud_host
 
         if self.detail:
-            return self.queryset.filter(channel_partner__cloud_host=cloud_host)
+            return self.queryset.filter()
 
         # Validate & Extract if valud
         param_serializer = OrganizationQueryParamsSerializer(data=self.request.query_params)
@@ -809,14 +809,14 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             raise ValidationError(param_serializer.errors)
         include_child_orgs: bool = param_serializer.validated_data.get('includeChildOrgs')
 
-        # Build base query
-        query: Q = Q(channel_partner__cloud_host=cloud_host, users=cloud_user)
+        # Build base user query
+        query: Q = Q(users=cloud_user)
 
         # Add additional conditions, if needed
         if include_child_orgs:
             query |= Q(channel_partner__channelpartnertouser__user=cloud_user)
 
-        result = self.queryset.filter(query).distinct()
+        result = self.queryset.filter(channel_partner__cloud_host=cloud_host).filter(query).distinct()
         return result
 
 
