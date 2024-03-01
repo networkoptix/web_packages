@@ -18,6 +18,7 @@
 >
     <ng-container *ngIf="state.item">
         <nx-settings-general
+            *ngIf="canUpdateOrg$$()"
             [view]="state.view"
             [item]="state.item"
             [disableNameInput]="isDirectParentCP$$() && !isOrgAdmin$$()"
@@ -25,11 +26,14 @@
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>
         <nx-settings-state
-            *ngIf="canChangeStateUI && isDirectParentCP$$()"
+            *ngIf="canChangeStateUI && canUpdateOrg$$() && isDirectParentCP$$()"
             (updateState)="handleStateUpdate($event)"
             [currState]="state.item.state"
             [canChange]="state.canUpdateStatus"
         ></nx-settings-state>
+        <!-- <nx-settings-disconnect
+            [organizationId]="currentOrg$$().id"
+        ></nx-settings-disconnect> -->
     </ng-container>
 </ng-template>
 
