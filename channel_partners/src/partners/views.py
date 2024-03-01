@@ -1362,6 +1362,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
     @action(methods=['GET'], detail=True)
     def saas_report(self, request, id):
         system: CloudSystemId = self.get_object()
+        if not system.organization:
+            return Response({'detail': 'Not an organization system.'}, status=status.HTTP_404_NOT_FOUND)
         request_id: str = request.query_params.get('requestId', '')
         serializer = SaaSReportSerializer(system, context={'requestId': request_id})
 
@@ -1432,6 +1434,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         responses=SystemUsageReportSerializer)
     @action(methods=['post'], detail=True)
     def system_usage_report(self, request, id):
+        if not request.cloud_system.organization:
+            return Response({'detail': 'Not an organization system.'}, status=status.HTTP_404_NOT_FOUND)
         serializer = SystemUsageReportSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         caches['default'].delete(self.get_service_quantity_cache_key(request.cloud_system))

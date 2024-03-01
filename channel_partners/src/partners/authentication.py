@@ -135,10 +135,15 @@ def check_system_credentials(
         cloud_host: str
 ) -> Tuple[bool, None | int, str | None]:
     system_api: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
-    response: Response = system_api.system.get_system(
-        system_id, auth=httpx.BasicAuth(
-            username=system_id,
-            password=system_auth_key))
+    try:
+        response: Response = system_api.system.get_system(
+            system_id, auth=httpx.BasicAuth(
+                username=system_id,
+                password=system_auth_key))
+    except httpx.HTTPError as ex:
+        logger.error("Request to cdb failed",
+                     exception=str(ex))
+        return False, None, None
 
     if response.is_success:
         response_body = response.json()
@@ -160,10 +165,12 @@ def check_system_credentials(
         error = response.json()
         if error.get('resultCode') == 'credentialsRemovedPermanently':
             return False, CloudSystemStates.DELETED, None
-
-    if response.status_code == 401:
-        return False, None, None
-    response.raise_for_status()
+    # CLOUD-12908. Let's count any error status code as unauthorized
+    logger.info('Authentication failed',
+                system_id=system_id,
+                status_code=response.status_code,
+                response=response.content.decode())
+    return False, None, None
 
 
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
@@ -187,7 +194,7 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
                 (cloud_system_id := TokenCache.get_system_auth(auth_header))
                 and userid == cloud_system_id
         ):
-            request.cloud_system = self.get_system(system_id=userid, request=request)
+            request.cloud_system = self.get_or_create_system(system_id=userid, request=request)
             return get_user_model()(), None
         authenticated, system_status, system_name = check_system_credentials(
             system_id=userid, system_auth_key=password,
@@ -197,10 +204,8 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
         if authenticated and system_status == CloudSystemStates.ACTIVATED:
             TokenCache.set_system_auth(auth_header, userid)
         with transaction.atomic():
-            if authenticated:
+            if authenticated or system_status:
                 cloud_system = self.get_or_create_system(system_id=cloud_system_id, request=request)
-            elif system_status:
-                cloud_system = self.get_system(system_id=cloud_system_id, request=request)
             else:
                 cloud_system = None
             if isinstance(cloud_system, CloudSystemId):
@@ -265,7 +270,12 @@ def authenticate_regular_token(token: str, cloud_host: str) -> Optional[str]:
     ).authentication
 
     headers = {"Authorization": f"Bearer {token}"}
-    response: Response = auth_client.token_get(token, headers=headers)
+    try:
+        response: Response = auth_client.token_get(token, headers=headers)
+    except httpx.HTTPError as ex:
+        logger.error('Token authentication request failed.', exception=str(ex))
+        # raise exception to avoid token refresh
+        raise ex
 
     if response.is_success:
         resp = response.json()
@@ -275,9 +285,11 @@ def authenticate_regular_token(token: str, cloud_host: str) -> Optional[str]:
         return email
     elif response.status_code == 401:
         return None
-    else:
-        response.raise_for_status()
-
+    # CLOUD-12908. Let's count any error status code as unauthorized
+    logger.info('Authentication failed',
+                status_code=response.status_code,
+                response=response.content.decode())
+    return None
 
 
 class NxCloudOauthTokenAuthentication(TokenAuthentication):

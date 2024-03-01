@@ -6,6 +6,7 @@ from datetime import (
 from time import sleep
 from uuid import uuid4
 
+import httpx
 import pytest
 from django.conf import settings
 from django.core.cache import caches
@@ -58,6 +59,47 @@ def test_authenticate_regular_token(httpx_mock):
     request = httpx_mock.get_request(url=url)
     assert auth == email
     assert request is None
+    # test errors
+    caches['default'].clear()
+    httpx_mock.reset(False)
+    httpx_mock.add_response(url=url, json=token_resp, status_code=401)
+
+    auth = authenticate_regular_token(token, cloud_host)
+
+    request = httpx_mock.get_request(url=url)
+    assert auth is None
+    assert request
+
+    caches['default'].clear()
+    httpx_mock.reset(False)
+    httpx_mock.add_response(url=url, json=token_resp, status_code=403)
+
+    auth = authenticate_regular_token(token, cloud_host)
+
+    request = httpx_mock.get_request(url=url)
+    assert auth is None
+    assert request
+
+    caches['default'].clear()
+    httpx_mock.reset(False)
+    httpx_mock.add_response(url=url, json=token_resp, status_code=500)
+
+    auth = authenticate_regular_token(token, cloud_host)
+
+    request = httpx_mock.get_request(url=url)
+    assert auth is None
+    assert request
+
+    caches['default'].clear()
+    httpx_mock.reset(False)
+    httpx_mock.add_exception(url=url, exception=httpx.ConnectError('Connection refused'))
+    try:
+        auth = authenticate_regular_token(token, cloud_host)
+    except httpx.ConnectError:
+        assert True
+    else:
+        assert False, 'Should have raised an exception'
+
 
 
 def test_token_cache(mocker):
@@ -145,6 +187,28 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
     assert system_name is None
+
+    httpx_mock.reset(False)
+    httpx_mock.add_response(url=cdb_url, content=b'some text response', status_code=403)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
+    assert authenticated is False
+    assert status is None
+    assert system_name is None
+
+    httpx_mock.reset(False)
+    httpx_mock.add_response(url=cdb_url, content=b'some text response', status_code=500)
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
+    assert authenticated is False
+    assert status is None
+    assert system_name is None
+
+    httpx_mock.reset(False)
+    httpx_mock.add_exception(url=cdb_url, exception=httpx.ConnectError('error'))
+    authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
+    assert authenticated is False
+    assert status is None
+    assert system_name is None
+
 
 
 class TestNxCloudOauthIntrospectAuthentication:
