@@ -1,15 +1,22 @@
 import io
 import sys
 from typing import Literal
+from unittest.mock import (
+    MagicMock,
+    patch,
+)
 
 import pytest
 from django.conf import settings
+from django.http import HttpRequest
 from django.test import (
     Client,
     override_settings,
 )
 
 from channel_partners.configuration.logging_config import configure_logging
+from channel_partners.logging_signals import bind_additional_request_metadata
+from channel_partners.utils import standardize_path
 
 
 def setup_test_logging(env: Literal["local", "ci", "prod"], min_level: int):
@@ -62,3 +69,28 @@ class TestStructuredLogging:
 
         # Check if the IP address is logged
         assert any("ip" in log.message for log in logs)
+
+
+@pytest.mark.django_db
+class TestBindAdditionalRequestMetadata:
+    @patch('channel_partners.logging_signals.structlog.contextvars.bind_contextvars')
+    def test_bind_additional_request_metadata(self, mock_bind_contextvars):
+        # Mock HttpRequest
+        request = MagicMock(spec=HttpRequest)
+        request.get_host.return_value = 'testserver'
+        request.path = '/test/path'
+        request.method = 'GET'
+
+        # Expected normalized path
+        expected_normalized_path = standardize_path(request.path)
+
+        # Call the signal receiver function
+        bind_additional_request_metadata(request, logger=None)
+
+        # Assert that bind_contextvars was called with expected arguments
+        mock_bind_contextvars.assert_called_once_with(
+            cloud_host='testserver',
+            path='/test/path',
+            normalized_path=expected_normalized_path,
+            method='GET'
+        )
