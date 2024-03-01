@@ -8,17 +8,15 @@ import {
     QueryList,
     booleanAttribute,
     signal,
-    computed,
+    AfterViewInit,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxBaseTabComponent } from './tab/tab.component';
 
-const tabWidth = 10;
-
 /*
 Usage:
-<nx-tabs (animated OR animationSpeed="2s") [(currentTabIndex)]="currTabIndex">
+<nx-tabs [(currentTabIndex)]="currTabIndex">
     <nx-base-tab
         [displayName]="tab.displayName"
         (tabClick)="handleTabClick($event)"
@@ -36,17 +34,18 @@ Usage:
     standalone: true,
     imports: [TranslateModule, CommonModule],
 })
-export class NxTabsComponent {
+export class NxTabsComponent implements AfterViewInit {
     @Input({ transform: booleanAttribute }) animated: boolean = false;
     @Input() animationSpeed: string;
     @Input() set currentTabIndex(index: number) {
         this.currentTabIndex$$.set(index);
     }
     @Output() currentTabIndexChange = new EventEmitter<number>();
+
     @ContentChildren(NxBaseTabComponent, { descendants: true })
     tabItems: QueryList<NxBaseTabComponent>;
+
     currentTabIndex$$ = signal<number>(0);
-    currTabTranslate$$ = computed(() => this.currentTabIndex$$() * tabWidth);
 
     handleTabClick = (tab: NxBaseTabComponent, index: number): void => {
         const childTabs = this.tabItems.toArray();
@@ -56,4 +55,15 @@ export class NxTabsComponent {
         tab.tabClick.emit(index);
         this.currentTabIndexChange.emit(index);
     };
+
+    ngAfterViewInit(): void {
+        this.tabItems.changes.subscribe(tabs => {
+            const items = tabs.toArray();
+            const selected = items.some(tab => tab.selected);
+
+            if (!selected && items.length > 0) {
+                this.handleTabClick(items[0], 0);
+            }
+        });
+    }
 }

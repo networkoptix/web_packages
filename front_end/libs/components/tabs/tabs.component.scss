@@ -1,14 +1,39 @@
-.tabs-component{
+@use 'typography' as typography;
 
-  .row{
+.tabs-component{
+  .tabs-row{
+    display: flex;
+    flex-direction: row;
     border-bottom: 1px solid var(--tabs-border-color);
     height: 50%;
 
-    .tab {
-      width: 10rem;
-      background-color: var(--body-bg);
-      color: var(--tabs-color);
-      padding: 0 !important;
+    .hidden {
+      display: none;
+    }
+
+    .tab-container {
+      margin-right : 1rem;
+
+      &:after {
+        opacity: 0;
+        display: block;
+        content: '';
+        width: 100%;
+        height: 2px;
+        border-bottom: 2px solid var(--tabs-active-color);
+        margin-top: -1px;
+        transition: visibility 0s linear 500ms, opacity 500ms;
+      }
+
+      &.selected {
+        &:after {
+          opacity: 1;
+        }
+
+        .content {
+          color: var(--tabs-active-color) !important;
+        }
+      }
     }
 
     input {
@@ -16,34 +41,15 @@
     }
     
     .content {
-      width: 10rem;
+      @include typography.medium15nocolor;
       justify-content: center;
       cursor: pointer;
       height: 100%;
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem .25rem;
       display: flex;
       align-items: center;
+      color: var(--tabs-color);
     }
   }
-
-  .slider {
-    background-color: transparent;
-    position: absolute;
-    border-bottom: 3px solid var(--tabs-active-color);
-    margin-top: 31px;
-    width: 10rem;
-  }
- 
 }
 
-label, .slider {
-  display: inline-block;
-  font-weight: bold;
-  text-align: center;
-  width: 10rem;
-  height: auto;
-}
-
-label.hidden {
-  visibility: hidden;
-}
