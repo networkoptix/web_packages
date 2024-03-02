@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
@@ -57,7 +58,7 @@ interface SettingsState {
 })
 export class NxOrganizationSettingsComponent implements OnInit {
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
-    settingsViews = settingsViews;
+    readonly settingsViews = settingsViews;
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
@@ -65,42 +66,67 @@ export class NxOrganizationSettingsComponent implements OnInit {
     currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     subchannelPartners$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
-    updatedName = new BehaviorSubject<string | null>(null);
-    updatedPartnerAccess = new BehaviorSubject<string | null>(null);
-    updatedState = new BehaviorSubject<State | null>(null);
+    currentName$ = new BehaviorSubject<string | null>(null);
+    currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
+    currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
 
-    @Input() cpSettings: boolean;
-    @Input() orgSettings: boolean;
-    @Input() subchannelSettings: boolean;
+    // eslint-disable-next-line nx/signal-naming-convention
+    cpSettings = input<boolean>();
+    // eslint-disable-next-line nx/signal-naming-convention
+    orgSettings = input<boolean>();
+    // eslint-disable-next-line nx/signal-naming-convention
+    subchannelSettings = input<boolean>();
+
+    subChannelId$$ = toSignal(
+        this.cpService.paramStateHandler.state$.pipe(
+            map(({ params: { subchannelId } }) => subchannelId),
+            distinctUntilChanged(),
+        ),
+    );
+
     currentState$$ = computed<SettingsState>(() => {
         const state: SettingsState = {};
-        if (this.cpSettings) {
+        if (this.cpSettings()) {
             state.item = this.currentPartner$$();
             state.view = settingsViews.CHANNEL_PARTNERS;
-        } else if (this.orgSettings) {
+        } else if (this.orgSettings()) {
             state.item = this.currentOrg$$();
             state.view = settingsViews.ORGANIZATIONS;
             state.canUpdateStatus = state.item?.ownPermissions.includes(
                 OrgPermissions.CONFIGURE_ORGANIZATION,
             );
-        } else if (this.subchannelSettings) {
+        } else if (this.subchannelSettings()) {
             const subchannelsMap = new Map<string, ChannelPartner>(
                 this.subchannelPartners$$().map(partner => [partner.id, partner]),
             );
-            this.cpService.paramStateHandler.state$
-                .pipe(
-                    map(({ params: { subchannelId } }) => subchannelId),
-                    distinctUntilChanged(),
-                )
-                .subscribe(id => {
-                    state.item = subchannelsMap.get(id);
-                });
+            state.item = subchannelsMap.get(this.subChannelId$$());
             state.view = settingsViews.SUBCHANNELS;
             state.canUpdateStatus = true;
         }
         return state;
     });
+
+    // This pattern is not idea, but because we are not live updating the page it's okay for now.
+    effectState$$ = computed<State>(() => {
+        const state = this.currentState$$().item.state;
+        this.currentState$.next(state);
+        return state;
+    });
+
+    name$$ = computed<string>(() => {
+        const name = this.currentState$$().item.name;
+        this.currentName$.next(name);
+        return name;
+    });
+
+    accessLevel$$ = computed<string>(() => {
+        const currentStateItem = this.currentState$$().item;
+        const accessLevel = (currentStateItem as Organization)?.channelPartnerAccessLevel || '';
+        this.currentPartnerAccess$.next(accessLevel);
+        return accessLevel;
+    });
+
     currentPartnerPermissions$$ = computed(() => {
         const currentPartner = this.currentPartner$$();
         return Object.values(currentPartner?.ownPermissions || {});
@@ -172,52 +198,38 @@ export class NxOrganizationSettingsComponent implements OnInit {
         );
     }
 
+    // State related methods
     handleNameUpdate = (name: string): void => {
-        if (name === this.currentState$$().item?.name) {
-            this.updatedName.next(null);
-        } else {
-            this.updatedName.next(name);
-        }
+        this.currentName$.next(name);
     };
 
     handleAccessUpdate = (id: string): void => {
-        const item = this.currentState$$().item;
-        if ('channelPartnerAccessLevel' in item) {
-            if (id === item.channelPartnerAccessLevel) {
-                this.updatedPartnerAccess.next(null);
-            } else {
-                this.updatedPartnerAccess.next(id);
-            }
-        }
+        this.currentPartnerAccess$.next(id);
     };
 
     handleStateUpdate = (state: State): void => {
-        const currState = this.currentState$$().item?.effectiveState;
-        if (currState === state) {
-            this.updatedState.next(null);
-        } else {
-            this.updatedState.next(state);
-        }
+        this.currentState$.next(state);
     };
 
     get hasChange(): boolean {
-        return !!(
-            this.updatedName.value ||
-            this.updatedPartnerAccess.value ||
-            this.updatedState.value
+        return (
+            this.currentName$.value !== this.name$$() ||
+            this.currentPartnerAccess$.value !== this.accessLevel$$() ||
+            this.currentState$.value !== this.effectState$$()
         );
     }
 
-    resetUpdates(): void {
-        this.updatedName.next(null);
-        this.updatedState.next(null);
-        this.updatedPartnerAccess.next(null);
-    }
+    resetUpdates = (): void => {
+        this.currentState$.next(this.effectState$$());
+        this.currentName$.next(this.name$$());
+        this.currentPartnerAccess$.next(this.accessLevel$$());
+    };
 
+    // Process helper functions
     updateChannelPartner(): Promise<ChannelPartner> {
         const cpBody: UpdateChannelPartner = {};
-        if (this.updatedName.value) {
-            cpBody.name = this.updatedName.value;
+        if (this.name$$() !== this.currentName$.value) {
+            cpBody.name = this.currentName$.value;
         }
         // Todo: add extId to body when API is ready
         return firstValueFrom(
@@ -237,16 +249,18 @@ export class NxOrganizationSettingsComponent implements OnInit {
     updateOrganization(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
         const currOrg = this.currentOrg$$();
-        if (this.updatedState.value) {
-            orgBody.state = this.updatedState.value;
+        if (this.effectState$$() !== this.currentState$.value) {
+            orgBody.state = this.currentState$.value;
         }
-        if (this.updatedName.value) {
-            orgBody.name = this.updatedName.value;
+        if (this.name$$() !== this.currentName$.value) {
+            orgBody.name = this.currentName$.value;
         }
-        if (this.updatedPartnerAccess.value === 'serviceManagementOnly') {
-            orgBody.channelPartnerAccessLevel = null;
-        } else if (this.updatedPartnerAccess.value) {
-            orgBody.channelPartnerAccessLevel = this.updatedPartnerAccess.value;
+        if (this.accessLevel$$() !== this.currentPartnerAccess$.value) {
+            if (this.currentPartnerAccess$.value === 'serviceManagementOnly') {
+                orgBody.channelPartnerAccessLevel = null;
+            } else if (this.currentPartnerAccess$.value) {
+                orgBody.channelPartnerAccessLevel = this.currentPartnerAccess$.value;
+            }
         }
         return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
     }
@@ -272,11 +286,11 @@ export class NxOrganizationSettingsComponent implements OnInit {
 
     updateSubchannel(currentState: SettingsState): Promise<ChannelPartner> {
         const subchannelBody: UpdateChannelPartner = {};
-        if (this.updatedName.value) {
-            subchannelBody.name = this.updatedName.value;
+        if (this.name$$() !== this.currentName$.value) {
+            subchannelBody.name = this.currentName$.value;
         }
-        if (this.updatedState.value) {
-            subchannelBody.state = this.updatedState.value;
+        if (this.effectState$$() !== this.currentState$.value) {
+            subchannelBody.state = this.currentState$.value;
         }
         return firstValueFrom(
             this.cpService.updateChannelPartner(currentState.item?.id, subchannelBody),
