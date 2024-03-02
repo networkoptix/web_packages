@@ -14,7 +14,6 @@ import type { Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
     imports: [PipesModule, TranslateModule, CommonModule],
 })
 export class ReleaseComponent implements OnInit {
-    @Input() build: string;
     @Input() release: Downloads;
     @Input() linkbase: string;
 
