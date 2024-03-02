@@ -53,7 +53,9 @@
     <ul *ngIf="cardExpanded[platform.name]">
         <li *ngFor="let file of platform.files">
             <ng-container>{{ file.niceName }}&nbsp;</ng-container>
-            <a [href]="linkbase + '/' + build + '/' + file.path">{{ file.fileName }}</a>
+            <a [href]="linkbase + '/' + release.buildNumber + '/' + file.path">{{
+                file.fileName
+            }}</a>
         </li>
     </ul>
 </div>
