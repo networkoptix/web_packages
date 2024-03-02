@@ -18,15 +18,15 @@
                     <input
                         id="name"
                         class="form-control ml-2"
-                        [disabled]="disableNameInput"
-                        [(ngModel)]="name"
-                        [name]="name"
-                        (input)="updateName.emit(name)"
+                        [disabled]="disableNameInput()"
+                        [ngModel]="name()"
+                        [name]="name()"
+                        (ngModelChange)="onNameChange($event)"
                     />
                 </div>
                 <div
                     class="input"
-                    *ngIf="view === settingsViews.ORGANIZATIONS"
+                    *ngIf="view() === settingsViews.ORGANIZATIONS"
                 >
                     <label
                         for="role"
@@ -36,7 +36,7 @@
                     <nx-select
                         [componentId]="'channelPartnerAccessSelect'"
                         [items]="partnerAccess"
-                        [selected]="currAccess"
+                        [selected]="currAccess$$()"
                         (onSelected)="updateAccess.emit($event.value)"
                     ></nx-select>
                 </div>

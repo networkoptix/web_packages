@@ -5,7 +5,7 @@
     <ng-container *ngIf="state.item">
         <nx-settings-general
             [view]="settingsViews.CHANNEL_PARTNERS"
-            [item]="state.item"
+            [name]="currentName$ | async"
             [disableNameInput]="isDirectParentCP$$() && !isOrgAdmin$$()"
             (updateName)="handleNameUpdate($event)"
         ></nx-settings-general>
@@ -20,7 +20,8 @@
         <nx-settings-general
             *ngIf="canUpdateOrg$$()"
             [view]="state.view"
-            [item]="state.item"
+            [name]="currentName$ | async"
+            [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
             [disableNameInput]="isDirectParentCP$$() && !isOrgAdmin$$()"
             (updateName)="handleNameUpdate($event)"
             (updateAccess)="handleAccessUpdate($event)"
@@ -28,7 +29,7 @@
         <nx-settings-state
             *ngIf="canChangeStateUI && canUpdateOrg$$() && isDirectParentCP$$()"
             (updateState)="handleStateUpdate($event)"
-            [currState]="state.item.state"
+            [currState]="currentState$ | async"
             [canChange]="state.canUpdateStatus"
         ></nx-settings-state>
         <!-- <nx-settings-disconnect
@@ -57,6 +58,10 @@
             [buttonText]="'Save' | translate"
         >
         </nx-process-button>
-        <nx-cancel-button [process]="updateStateProcess"> </nx-cancel-button>
+        <nx-cancel-button
+            [process]="updateStateProcess"
+            [discardFn]="resetUpdates"
+        >
+        </nx-cancel-button>
     </div>
 </div>
