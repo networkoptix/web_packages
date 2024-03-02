@@ -1,5 +1,6 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import type { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { LegacyMenuManifest, MarkdownItem } from '@services/nx-config/base-config';
 import type { NxSystemServer } from '@services/system.service/types/servers.types';
 
 import type { APIDoc, APIInfo } from '../api-tool-types';
@@ -21,10 +22,21 @@ export interface APIType {
     type: number;
 }
 
+export interface APIToolSettings {
+    manualSystemChangeCooldown: number;
+    apiTypes: {
+        main: APIType;
+        deprecated: APIType;
+    };
+    defaultDocs: MarkdownItem[];
+    defaultManifest: LegacyMenuManifest;
+    legacyManifest: LegacyMenuManifest;
+}
+
 export interface ServerInfo {
     server: NxSystemServer;
     json: APIDoc;
-    markdown: MarkdownObj;
+    markdown?: MarkdownIndex | undefined;
 }
 
 export interface ReadOnlyAPIInfoWithJSON extends ReadOnlyAPI {
@@ -36,7 +48,12 @@ export interface ReadOnlyAPIStore {
     menus: {
         [type: string]: MenuNodeWithParent[];
     };
-    markdown?: MarkdownObj;
+    markdown?: MarkdownIndex;
+}
+
+export interface FetchedMarkdown {
+    name: string;
+    markdown: string;
 }
 
 export interface APIData {
@@ -47,12 +64,16 @@ export interface APIData {
     infos: {
         [type: string]: APIInfo;
     };
-    markdown?: MarkdownObj;
+    markdown?: MarkdownIndex;
 }
 
 export interface MarkdownObj {
     APIPreamble: markdownFile;
     APIChangelog: markdownFile;
+}
+
+export interface MarkdownIndex {
+    [key: string]: markdownFile;
 }
 
 export type APITypes = {
@@ -69,7 +90,7 @@ export type APITypes = {
 export interface IndexDBCacheObject {
     json: APIDoc;
     version: string;
-    markdown: MarkdownObj;
+    markdown: MarkdownIndex;
     key: string;
 }
 

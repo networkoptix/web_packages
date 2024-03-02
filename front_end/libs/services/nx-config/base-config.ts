@@ -254,7 +254,21 @@ export interface ManifestItem {
     }[];
 }
 
-export type MenuManifest = ManifestItem[];
+export interface MarkdownItem {
+    name: string;
+    doc: string;
+    chapters?: {
+        name: string;
+        doc: string;
+    }[];
+}
+
+export type LegacyMenuManifest = ManifestItem[];
+
+export type MenuManifest = {
+    docs: MarkdownItem[];
+    versions: ManifestItem[];
+};
 
 export interface AccessRoles {
     adminAccess: string[];
