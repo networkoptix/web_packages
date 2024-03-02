@@ -157,11 +157,13 @@ export class NxOrganizationsComponent implements OnInit {
             )
             .subscribe(async ([id, groups]) => {
                 this.isLoading = true;
+                groups.sort(alphabeticalSort(this.locale, g => g.name));
                 this.store.dispatch(
                     groupActions.setGroups({
                         groups: this.processGroups(groups),
                     }),
                 );
+
                 this.tabs = [];
                 const orgs = this.organizations$$();
                 const partnerOrgs = this.currentPartnerOrganizations$$();
@@ -216,15 +218,6 @@ export class NxOrganizationsComponent implements OnInit {
                 }
                 this.isLoading = false;
             });
-
-        this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
-            groups.sort(alphabeticalSort(this.locale, g => g.name));
-            this.store.dispatch(
-                groupActions.setGroups({
-                    groups: this.processGroups(groups),
-                }),
-            );
-        });
     }
 
     public handleSidebarTogglingEarClick(): void {
