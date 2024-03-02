@@ -48,8 +48,9 @@ export class NxBookmarkShareComponent {
         @Inject(DIALOG_DATA) private bookmark: DT['data'],
         private systemService: NxSystemService,
     ) {
-        this.mediaServer = this.systemService.getCurrentSystem().mediaserver as NxSystemRestAPI4;
-        this.shareUrl = `${window.location.origin}/${bookmark.deviceId}/${bookmark.id}`;
+        const currentSystem = this.systemService.getCurrentSystem();
+        this.mediaServer = currentSystem.mediaserver as NxSystemRestAPI4;
+        this.shareUrl = `${window.location.origin}/share/${currentSystem.systemId}/${bookmark.id}`;
 
         // When the user clicks Share and opens this dialog we want to share the bookmark if it's not already shared
         if (!bookmark.share) {
