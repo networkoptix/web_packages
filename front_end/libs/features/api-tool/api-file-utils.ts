@@ -2,8 +2,10 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
+import { MarkdownItem } from '@services/nx-config/base-config';
 
 import type { APIDoc, method, MethodInfo } from './api-tool-types';
+import { MarkdownIndex } from './services/api-tool-service-types';
 
 // This file contains functions that modify API files
 
@@ -240,31 +242,71 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
     });
 };
 
-export const addAPIInfoNodesToMenu = (
-    API: APIDoc,
-    menuNodes: MenuNodeWithParent[],
-    restAPIInfo: boolean = false,
-) => {
+export const addLegacyAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
     if (
         !menuNodes.length ||
         (menuNodes && !['APIInformation', 'APIPreamble'].includes(menuNodes[0].name))
     ) {
-        if (restAPIInfo) {
-            menuNodes.unshift(
-                new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'),
-            );
-            menuNodes.unshift(
-                new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'),
-            );
-            return;
-        }
-
         if (API?.info?.description) {
             menuNodes.unshift(
                 new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'),
             );
         }
     }
+};
+
+/**
+    Creates the menu structure from the api-tool manifest. \
+    Optionally takes a markdown index argument and will only add nodes that have a file present in the markdown index
+ */
+export const constructAPIInfoNodes = (
+    docs: MarkdownItem[],
+    markdown: MarkdownIndex | undefined = undefined,
+): MenuNodeWithParent[] => {
+    const nodes: MenuNodeWithParent[] = [];
+    const convertName = (name: string) => name.toLowerCase().replace(/\s+/g, '');
+    const makeNode = (name: string, hasURL = true): MenuNodeWithParent =>
+        new MenuNode(
+            name.replace(/\s+/g, ''),
+            hasURL ? appendBaseAPIToolRoute(convertName(name)) : '',
+            name,
+        );
+    const nodeFileExists = (name: string, markdown: MarkdownIndex | undefined = undefined) => {
+        if (!markdown) {
+            return true;
+        }
+        return !!markdown[name];
+    };
+    const checkNodeGoesToValidURL = (node: MenuNodeWithParent) => {
+        return !!node.url || !!node.nodes.filter(node => !!node.url).length;
+    };
+    for (const doc of docs) {
+        // Only include URL if the file exists in the MarkdownIndex (or auto-include url if we are not checking the MarkdownIndex)
+        const rootNode = makeNode(doc.name, nodeFileExists(doc.name.replace(/\s+/g, ''), markdown));
+        if (doc.chapters) {
+            for (const chapter of doc.chapters) {
+                const childNode = makeNode(
+                    chapter.name,
+                    nodeFileExists(chapter.name.replace(/\s+/g, ''), markdown),
+                );
+                rootNode.nodes.push(childNode);
+                childNode.parentNode = rootNode;
+            }
+        }
+        if (checkNodeGoesToValidURL(rootNode)) {
+            nodes.push(rootNode);
+        }
+    }
+    return nodes;
+};
+
+export const addAPIInfoNodesToMenu = (
+    docs: MarkdownItem[],
+    menuNodes: MenuNodeWithParent[],
+    markdown: MarkdownIndex | undefined = undefined,
+) => {
+    const APIInfoNodes = constructAPIInfoNodes(docs, markdown);
+    menuNodes.unshift(...APIInfoNodes);
 };
 
 export const queryInDescription = (path: MethodInfo, query: string) => {

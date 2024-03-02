@@ -56,7 +56,7 @@ import { proxyLegacyV1 } from './mediaserver-apis/endpoints/proxy';
 import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-storage';
 import { saveStorageLegacyV1 } from './mediaserver-apis/endpoints/save-storage';
 import { NxAppStateService } from './nx-app-state.service';
-import type { APIDocType, MenuManifest } from './nx-config/base-config';
+import type { APIDocType, LegacyMenuManifest, MenuManifest } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
@@ -483,16 +483,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get<APIDoc>(`/static/${route}`).toPromise();
     }
 
-    getAPIToolManifest(): Promise<MenuManifest> {
+    getAPIToolManifest(): Promise<MenuManifest | LegacyMenuManifest | undefined> {
         return Promise.resolve(apiTool.legacyManifest);
-    }
-
-    public getApiPreamble(): void {
-        throw Error(this.notImplementedMsg);
-    }
-
-    public getApiChangelog(): void {
-        throw Error(this.notImplementedMsg);
     }
 
     login(

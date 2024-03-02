@@ -7,8 +7,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ReadOnlyAPI, ReadOnlyAPIDetail } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { FeatureFlagStrings, MenuManifest } from '@services/nx-config/base-config';
+import { FeatureFlagStrings, LegacyMenuManifest } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
+import { apiTool } from '@static-variables';
 import { isUUID } from '@utils/general';
 
 import {
@@ -20,7 +21,7 @@ import {
 } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownObj } from './api-tool-service-types';
+import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownIndex } from './api-tool-service-types';
 
 @UntilDestroy()
 @Injectable()
@@ -59,7 +60,7 @@ export class NxReadonlyAPIService {
         }
 
         const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
-        if (readonlyAPIs.data) {
+        if (readonlyAPIs?.data) {
             readonlyAPIs.data.sort((a, b) => a.order - b.order);
             for (const API of readonlyAPIs.data) {
                 this.readonlyAPIIDs.push(API.id);
@@ -80,11 +81,11 @@ export class NxReadonlyAPIService {
         const readonlyAPI = await this.api.getReadOnlyAPI(id).toPromise();
         if (readonlyAPI) {
             const manifest = JSON.parse(readonlyAPI.manifest);
-            let APIPreamble, APIChangelog;
+            let APIInformation, APIChangelog;
             for (const file of readonlyAPI.files) {
                 switch (file.type) {
                     case 'Preamble Markdown File':
-                        APIPreamble = file.content;
+                        APIInformation = file.content;
                         break;
                     case 'Changelog Markdown File':
                         APIChangelog = file.content;
@@ -93,18 +94,15 @@ export class NxReadonlyAPIService {
                         break;
                 }
             }
-            const preparedReadOnlyAPI = this.prepareReadonlyAPI(
-                manifest,
-                readonlyAPI,
-                !!(APIPreamble || APIChangelog),
-            );
-            let markdown: MarkdownObj;
-            if (APIPreamble || APIChangelog) {
+            let markdown: MarkdownIndex | undefined;
+            if (APIInformation || APIChangelog) {
                 markdown = {
-                    APIPreamble,
+                    APIInformation,
                     APIChangelog,
                 };
             }
+            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, markdown);
+
             if (preparedReadOnlyAPI) {
                 const apiStoreObject = { ...readonlyAPI, content: preparedReadOnlyAPI.json };
                 this.readonlyAPIStore[readonlyAPI.id] = {
@@ -120,11 +118,12 @@ export class NxReadonlyAPIService {
     }
 
     prepareReadonlyAPI(
-        manifest: MenuManifest,
+        manifest: LegacyMenuManifest,
         readonlyAPI: ReadOnlyAPIDetail,
-        hasMarkdown: boolean,
+        markdown: MarkdownIndex | undefined = undefined,
     ) {
-        let combinedJSON: APIDoc;
+        let combinedJSON: APIDoc = {} as APIDoc;
+        let combinedJSONCreated = false;
         const menus = {};
         for (let i = 0; i < manifest.length; i++) {
             const item = manifest[i];
@@ -141,7 +140,8 @@ export class NxReadonlyAPIService {
                     ),
                 );
                 prepareSwaggerAPIDoc(json, type);
-                if (!combinedJSON) {
+                if (!combinedJSONCreated) {
+                    combinedJSONCreated = true;
                     combinedJSON = json;
                 } else {
                     mergeAPIDocs(combinedJSON, json);
@@ -149,7 +149,9 @@ export class NxReadonlyAPIService {
                 generateMenu(menu, json);
                 menus[i + 1] = menu;
             }
-            addAPIInfoNodesToMenu(combinedJSON, menu, hasMarkdown);
+            if (markdown) {
+                addAPIInfoNodesToMenu(apiTool.defaultDocs, menu, markdown);
+            }
         }
         return {
             json: combinedJSON,
@@ -177,7 +179,7 @@ export class NxReadonlyAPIService {
         return false;
     }
 
-    async setReadonlyAPI(id: number = null) {
+    async setReadonlyAPI(id: number | undefined = undefined) {
         if (!this.isEnabled) {
             return false;
         }

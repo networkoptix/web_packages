@@ -24,7 +24,7 @@ export interface APIType {
 export interface ServerInfo {
     server: NxSystemServer;
     json: APIDoc;
-    markdown: MarkdownObj;
+    markdown?: MarkdownIndex | undefined;
 }
 
 export interface ReadOnlyAPIInfoWithJSON extends ReadOnlyAPI {
@@ -36,7 +36,12 @@ export interface ReadOnlyAPIStore {
     menus: {
         [type: string]: MenuNodeWithParent[];
     };
-    markdown?: MarkdownObj;
+    markdown?: MarkdownIndex;
+}
+
+export interface FetchedMarkdown {
+    name: string;
+    markdown: string;
 }
 
 export interface APIData {
@@ -47,12 +52,16 @@ export interface APIData {
     infos: {
         [type: string]: APIInfo;
     };
-    markdown?: MarkdownObj;
+    markdown?: MarkdownIndex;
 }
 
 export interface MarkdownObj {
     APIPreamble: markdownFile;
     APIChangelog: markdownFile;
+}
+
+export interface MarkdownIndex {
+    [key: string]: markdownFile;
 }
 
 export type APITypes = {
@@ -69,7 +78,7 @@ export type APITypes = {
 export interface IndexDBCacheObject {
     json: APIDoc;
     version: string;
-    markdown: MarkdownObj;
+    markdown: MarkdownIndex;
     key: string;
 }
 

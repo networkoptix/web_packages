@@ -7,11 +7,19 @@ import { filter } from 'rxjs/operators';
 
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import type { MenuNode } from '@services/menus.service.types';
-import { MenuManifest, MenuStructure } from '@services/nx-config/base-config';
+import {
+    LegacyMenuManifest,
+    ManifestItem,
+    MarkdownItem,
+    MenuManifest,
+    MenuStructure,
+} from '@services/nx-config/base-config';
+import { apiTool } from '@static-variables';
 import { findMenuNode } from '@utils/nx';
 
 import {
     addAPIInfoNodesToMenu,
+    addLegacyAPIInfoNodesToMenu,
     addSeperator,
     generateAPIRouteName,
     generateMenu,
@@ -29,8 +37,8 @@ import {
     APIType,
     ServerInfo,
     ReadOnlyAPIStore,
-    MarkdownObj,
     FetchedJSONs,
+    MarkdownIndex,
 } from './api-tool-service-types';
 import { NxAPIToolSystemService } from './api-tool-system.service';
 import { NxReadonlyAPIService } from './readonly-api.service';
@@ -38,12 +46,11 @@ import { NxReadonlyAPIService } from './readonly-api.service';
 @UntilDestroy()
 @Injectable()
 export class NxOpenAPIJSONService {
-    currentAPIDoc$ = new BehaviorSubject<APIDoc>(null);
-    currentType$ = new BehaviorSubject<number>(null);
-    currentMarkdown: MarkdownObj;
-    queuedServerChange: string = null;
+    currentAPIDoc$ = new BehaviorSubject<APIDoc | undefined>(undefined);
+    currentType$ = new BehaviorSubject<number | undefined>(undefined);
+    currentMarkdown: MarkdownIndex | undefined;
+    queuedServerChange: string | null = null;
     APIStore: Store<APIData> = {}; // Storing JSONs, API Info (part of jsons), and Menus for developers-menu
-    APIInfoNodes = ['APIInformation', 'APIPreamble', 'APIChangelog'];
     isInfoNode = false; // info nodes don't display swagger routes
     isMarkdownNode = false;
     isReadOnly = false;
@@ -71,7 +78,7 @@ export class NxOpenAPIJSONService {
     get currentAPIDoc() {
         return this.currentAPIDoc$.value;
     }
-    set currentAPIDoc(api: APIDoc) {
+    set currentAPIDoc(api: APIDoc | undefined) {
         this.currentAPIDoc$.next(api);
     }
 
@@ -98,7 +105,7 @@ export class NxOpenAPIJSONService {
         return this._activeNode;
     }
     set activeNode(node: MenuNodeWithParent) {
-        this.isInfoNode = this.determineIsInfoNode(node);
+        this.isInfoNode = this.determineIsInfoNode(node, this.APIToolService.currentServerId);
         this.isMarkdownNode = this.determineIsMarkdownNode();
         this._activeNode = node;
     }
@@ -185,17 +192,25 @@ export class NxOpenAPIJSONService {
     }
 
     async handleNewServer(serverInfo: ServerInfo): Promise<void> {
-        const { server, markdown } = serverInfo;
-        const manifest = await this.APIToolService.getMenuManifest();
-        const jsons = this.fetchAllJSONsInManifest(manifest);
+        let { server, markdown } = serverInfo;
+        const manifest = (await this.APIToolService.getMenuManifest()) as MenuManifest;
+        const manifestJSONScheme: ManifestItem[] =
+            manifest?.versions || (manifest as unknown as LegacyMenuManifest);
+        const jsons = this.fetchAllJSONsInManifest(manifestJSONScheme);
         this.createAPIStore(server.id);
+        if (!markdown && this.APIToolService.isRestAPI(server.id)) {
+            // markdown not in cache and not legacy system
+            const docs: MarkdownItem[] = manifest?.docs || apiTool.defaultDocs;
+            markdown = await this.APIToolService.getMarkdownFiles(docs);
+        }
         if (markdown) {
             this.APIToolService.useBrandingVariables(markdown);
             this.storeMarkdown(server.id, markdown);
         }
-        let combinedJSON: APIDoc;
-        for (let i = 0; i < manifest.length; i++) {
-            const item = manifest[i];
+        let combinedJSONCreated = false;
+        let combinedJSON: APIDoc = {} as APIDoc;
+        for (let i = 0; i < manifestJSONScheme.length; i++) {
+            const item = manifestJSONScheme[i];
             const type = i + 1;
             const menu: MenuNodeWithParent[] = [];
             for (const section of item.sections) {
@@ -204,7 +219,8 @@ export class NxOpenAPIJSONService {
                 }
                 const json = cloneDeep(await jsons[section.scheme]);
                 prepareSwaggerAPIDoc(json, type);
-                if (!combinedJSON) {
+                if (!combinedJSONCreated) {
+                    combinedJSONCreated = true;
                     combinedJSON = json;
                     this.storeAPIJson(server.id, json);
                 } else {
@@ -213,9 +229,14 @@ export class NxOpenAPIJSONService {
                 generateMenu(menu, json);
             }
             this.emitAPIType({ type, displayName: item.name });
-            this.storeAPIInfo(server.id, type, combinedJSON.info);
+            this.storeAPIInfo(server.id, type, combinedJSON?.info);
             this.storeAPIMenu(server.id, type, menu);
-            addAPIInfoNodesToMenu(combinedJSON, menu, !!markdown);
+            if (this.APIToolService.isRestAPI(server.id)) {
+                const docs: MarkdownItem[] = manifest?.docs || apiTool.defaultDocs;
+                addAPIInfoNodesToMenu(docs, menu);
+            } else {
+                addLegacyAPIInfoNodesToMenu(combinedJSON, menu);
+            }
         }
         this.APIToolService.useBrandingVariables(combinedJSON);
 
@@ -230,7 +251,7 @@ export class NxOpenAPIJSONService {
      * Returns an object that maps routes -> promises
      * The purpose is to trigger a fetch for each needed JSON simultaneously
      */
-    fetchAllJSONsInManifest(manifest: MenuManifest) {
+    fetchAllJSONsInManifest(manifest: ManifestItem[]) {
         const jsons: FetchedJSONs = {};
         for (const item of manifest) {
             for (const section of item.sections) {
@@ -250,19 +271,19 @@ export class NxOpenAPIJSONService {
         this.APIToolService.setQueryParams('type', type);
         this.currentType = parseInt(type);
         this.currentAPIDoc = API.json;
-        this.currentMarkdown = API.markdown || null;
+        this.currentMarkdown = API.markdown;
         this.setMenuNodes(API.menus[type]);
     }
 
     setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore): void => {
-        const manifest = JSON.parse(readonlyAPI.api.manifest) as MenuManifest;
+        const manifest = JSON.parse(readonlyAPI.api.manifest) as LegacyMenuManifest;
         for (let i = 0; i < manifest.length; i++) {
             const apiType = { displayName: manifest[i].name, type: i + 1 };
             this.emitAPIType(apiType);
         }
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
-        this.currentMarkdown = readonlyAPI.markdown || null;
+        // this.currentMarkdown = readonlyAPI.markdown;
         this.setMenuNodes(readonlyAPI.menus[1]);
     };
 
@@ -286,14 +307,14 @@ export class NxOpenAPIJSONService {
         this.APIStore[serverID].json = json;
     }
 
-    storeAPIInfo(serverID: string, APIType: string | number, APIInfo: APIInfo): void {
+    storeAPIInfo(serverID: string, APIType: string | number, APIInfo: APIInfo | undefined): void {
         if (APIInfo?.description) {
             const { title, description, version } = APIInfo;
             this.APIStore[serverID].infos[APIType] = { title, description, version };
         }
     }
 
-    storeMarkdown(serverID: string, markdown: MarkdownObj): void {
+    storeMarkdown(serverID: string, markdown: MarkdownIndex): void {
         this.APIStore[serverID].markdown = markdown;
     }
 
@@ -306,7 +327,9 @@ export class NxOpenAPIJSONService {
      *  Required so that swagger displays the correct info.
      */
     setAPIInfo = (info: APIInfo): void => {
-        this.currentAPIDoc.info = info;
+        if (this.currentAPIDoc) {
+            this.currentAPIDoc.info = info;
+        }
     };
 
     setAPIType = (serverID: string | undefined, type: number): void => {
@@ -323,8 +346,16 @@ export class NxOpenAPIJSONService {
         this.activeNode = getFirstNode(this.menuNodes);
     };
 
-    determineIsInfoNode = (node: MenuNodeWithParent) => {
-        return this.APIInfoNodes.includes(node.name);
+    determineIsInfoNode = (node: MenuNodeWithParent, serverID: string) => {
+        if (this.APIStore[serverID]?.markdown) {
+            const markdownStore = this.APIStore[serverID].markdown as MarkdownIndex;
+            return !!markdownStore[node.name];
+        }
+        if (this.readonlyAPIService.currentReadonlyAPI?.markdown) {
+            const markdownStore = this.readonlyAPIService.currentReadonlyAPI.markdown;
+            return !!markdownStore[node.name];
+        }
+        return false;
     };
 
     determineIsMarkdownNode = () => {
@@ -347,17 +378,19 @@ export class NxOpenAPIJSONService {
 
     searchAPIDoc(): void {
         const searchMoreNodes: MenuNodeWithParent[] = [];
-        for (const path of Object.keys(this.currentAPIDoc.paths)) {
-            const route = this.currentAPIDoc.paths[path];
-            for (const requestType of Object.keys(route)) {
-                if (queryInDescription(route[requestType], this.searchQuery)) {
-                    const tag = generateAPIRouteName(path, requestType);
-                    const node = findMenuNode(
-                        this.menuSubject.value.nodes,
-                        node => node.name === tag,
-                    );
-                    if (node) {
-                        searchMoreNodes.push(node);
+        if (this.currentAPIDoc) {
+            for (const path of Object.keys(this.currentAPIDoc.paths)) {
+                const route = this.currentAPIDoc.paths[path];
+                for (const requestType of Object.keys(route)) {
+                    if (queryInDescription(route[requestType], this.searchQuery)) {
+                        const tag = generateAPIRouteName(path, requestType);
+                        const node = findMenuNode(
+                            this.menuSubject.value.nodes,
+                            node => node.name === tag,
+                        );
+                        if (node) {
+                            searchMoreNodes.push(node);
+                        }
                     }
                 }
             }

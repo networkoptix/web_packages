@@ -610,7 +610,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             const isSingleView = this.isAPIRouteNode(node);
             const expand = isSingleView ? 'full' : 'list';
             // this.markdownComponentShowing = node.name in this.openAPIJSONService.APIInfoNodes;
-            if (!this.openAPIJSONService.determineIsInfoNode(node)) {
+            if (
+                !this.openAPIJSONService.determineIsInfoNode(
+                    node,
+                    this.APIToolSystemService.currentServerId,
+                )
+            ) {
                 this.setSwaggerDescription(node, expand);
             }
             if (isSingleView) {
