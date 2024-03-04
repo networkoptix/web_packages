@@ -162,8 +162,13 @@ export class NxGroupsSidebarLevelComponent implements OnInit {
             this.cpService.patchGroup(dragged.id, { parentId: null }).subscribe(_ => {
                 const groups: GroupItem[] = [...this.groupItems$$()];
                 const currGroup = groups.findIndex(group => group.id === dragged.id);
+                const parentIndex = groups.findIndex(group => group.id === dragged.parentId);
                 const updatedGroup = structuredClone(groups[currGroup]);
                 updatedGroup.parentId = null;
+                groups[parentIndex] = {
+                    ...groups[parentIndex],
+                    children: groups[parentIndex].children.filter(group => group.id !== dragged.id),
+                };
                 groups[currGroup] = updatedGroup;
                 this.store.dispatch(GroupActions.setGroups({ groups }));
             });

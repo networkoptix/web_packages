@@ -56,4 +56,11 @@ export const groupsReducer = createReducer(
             systems,
         }),
     ),
+    on(
+        GroupActions.addSystems,
+        (state, { systems }): GroupsState => ({
+            ...state,
+            systems: [...state.systems, ...systems],
+        }),
+    ),
 );

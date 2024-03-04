@@ -33,3 +33,8 @@ export const setGroupsAndSystems = createAction(
     '[System Groups] Set groups and systems',
     props<{ groups: GroupItem[]; systems: SystemItem[] }>(),
 );
+
+export const addSystems = createAction(
+    '[System Groups] Adding system',
+    props<{ systems: SystemItem[] }>(),
+);

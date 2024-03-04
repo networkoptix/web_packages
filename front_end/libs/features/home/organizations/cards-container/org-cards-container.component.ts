@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/route
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, map } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
 import {
@@ -287,21 +287,65 @@ export class NxOrganizationCardContainerComponent {
                             })
                             .then(confirm => {
                                 if (confirm) {
-                                    this.cpService.deleteGroup(group.id).subscribe(
-                                        deletedGroup => {
-                                            const groups = this.groupItems$$()?.filter(
-                                                obj => obj.id !== group.id,
-                                            );
-                                            if (groups) {
-                                                this.store.dispatch(
-                                                    GroupActions.setGroups({ groups }),
+                                    const systemsSource = this.inRoot
+                                        ? this.cpService.getOrgSystems(this.currentOrgId$$())
+                                        : this.cpService.getGroup(group.parentId);
+                                    this.cpService
+                                        .deleteGroup(group.id)
+                                        .pipe(switchMap(() => systemsSource))
+                                        .subscribe(
+                                            res => {
+                                                const systemMap = new Map(
+                                                    this.systemsService.systems.map(sys => [
+                                                        sys.id,
+                                                        sys,
+                                                    ]),
                                                 );
-                                            }
-                                        },
-                                        () => {
-                                            // TODO: Waiting for direction from design on error handling//
-                                        },
-                                    );
+                                                let systems: SystemItem[] = [];
+                                                if ('systems' in res) {
+                                                    systems = res.systems.map(systemId => ({
+                                                        systemId,
+                                                        name: systemMap.get(systemId)?.name,
+                                                        type: OrgCardItem.SYSTEM,
+                                                    }));
+                                                } else {
+                                                    systems = res.map(sys => ({
+                                                        ...sys,
+                                                        type: OrgCardItem.SYSTEM,
+                                                        name: systemMap.get(sys.systemId)?.name,
+                                                    }));
+                                                }
+                                                const groups = this.groupItems$$()?.filter(
+                                                    obj => obj.id !== group.id,
+                                                );
+                                                if (groups) {
+                                                    if (group.parentId) {
+                                                        const parentIndex = groups?.findIndex(
+                                                            gr => gr.id === group.parentId,
+                                                        );
+                                                        if (parentIndex !== -1) {
+                                                            groups[parentIndex] = {
+                                                                ...groups[parentIndex],
+                                                                children: groups[
+                                                                    parentIndex
+                                                                ].children.filter(
+                                                                    child => child.id !== group.id,
+                                                                ),
+                                                            };
+                                                        }
+                                                    }
+                                                    this.store.dispatch(
+                                                        GroupActions.setGroupsAndSystems({
+                                                            groups,
+                                                            systems,
+                                                        }),
+                                                    );
+                                                }
+                                            },
+                                            () => {
+                                                // TODO: Waiting for direction from design on error handling//
+                                            },
+                                        );
                                 }
                             });
                     },
