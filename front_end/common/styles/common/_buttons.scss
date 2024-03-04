@@ -82,8 +82,8 @@ button,
         box-shadow: var(--btn-default-hover-shadow);
     }
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         color: var(--btn-default-active-color) !important;
         background-color: var(--btn-default-active-bg) !important;
         box-shadow: var(--btn-default-active-shadow) !important;
@@ -125,8 +125,8 @@ button,
         box-shadow       : var(--btn-default-hover-shadow);
     }
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         color : var(--btn-default-active-color) !important;
         background-color : var(--btn-default-active-bg) !important;
         box-shadow       : var(--btn-default-active-shadow) !important;
@@ -181,8 +181,8 @@ button,
         box-shadow: var(--btn-dropdown-toggle-hover-shadow);
     }
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         background-color: var(--btn-dropdown-toggle-active-bg);
         box-shadow: var(--btn-dropdown-toggle-active-shadow) !important;
     }
@@ -206,8 +206,8 @@ button,
     &:focus,
     &.focus {}
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         color: var(--btn-primary-active-color) !important;
         background-color: var(--btn-primary-active-bg) !important;
         box-shadow: var(--btn-primary-active-shadow) !important;
@@ -236,8 +236,8 @@ button,
     &:focus,
     &.focus {}
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         background-color: var(--btn-danger-active-bg) !important;
         box-shadow: inset 0 1px 0 0 var(--btn-danger-active-shadow) !important;
     }
@@ -267,8 +267,8 @@ button,
         background-color: var(--light5);
     }
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         background-color: var(--light6)  !important;
     }
 
@@ -321,8 +321,8 @@ button,
         }
     }
 
-    &:active,
-    &.active {
+    &:active:not([disabled]):not(.disabled),
+    &.active:not([disabled]):not(.disabled) {
         color: var(--btn-clear-active-color);
         background-color: var(--btn-clear-active-bg) !important;
 
@@ -351,7 +351,7 @@ button,
         }
     }
 
-    &:active {
+    &:active:not([disabled]):not(.disabled) {
         svg-icon svg .st0 {
             fill: var(--btn-default-active-color) !important;
         }
@@ -530,7 +530,7 @@ button,
         }
     }
 
-    &:active {
+    &:active:not([disabled]):not(.disabled) {
         span {
             color: var(--btn-text-active-color) !important;
 
