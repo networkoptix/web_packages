@@ -1245,6 +1245,20 @@ class TestCloudSystemSerializer:
         assert serializer.data['organizationName'] == VALUE_REPLACEMENT
 
 
+    def test_effectiveState(self):
+        state_code = dict(ChannelPartnerStates.STATE_CHOICES)[self.system.effective_state].lower()
+        # Test organization parent partner user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['effectiveState'] == state_code
+        # Test organization user
+        self.request.user = self.org_user.user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['effectiveState'] == state_code
+        # Test organization top partner user
+        self.request.user = self.cp_user.user
+        serializer = CloudSystemSerializer(instance=self.system, context=self.context)
+        assert serializer.data['effectiveState'] == state_code
+
 
 class TestSystemUsageReportSerializer:
 

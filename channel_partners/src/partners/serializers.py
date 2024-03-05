@@ -419,7 +419,7 @@ class ServiceQuantitySerializer(serializers.Serializer):
 class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = "cloudsystemid"
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
-    effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
+    effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
     system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CODES, read_only=True)
     services = serializers.DictField(read_only=True, child=ServiceQuantitySerializer())

@@ -25,7 +25,10 @@ def fix_paths(apps, schema_editor):
         for group in organization.groups.filter(parent__isnull=True):
             fix_group_path(group)
 
-    all_systems = CloudSystemId.objects.all().select_related('organization', 'system_group').iterator(chunk_size=500)
+    all_systems = (CloudSystemId.objects
+                   .exclude(organization_id__isnull=True, system_group_id__isnull=True)
+                   .select_related('organization', 'system_group')
+                   .iterator(chunk_size=500))
     updated_systems = []
     for system in all_systems:
         correct_path = get_path_from_parent(system.system_group or system.organization)

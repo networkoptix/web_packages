@@ -12,13 +12,12 @@ def fix_group_path(group: SystemGroup):
         print(f"Fixing group '{group}' correct path {correct_path}, existing path {group.path}")
         group.path = correct_path
         group.save()
-
     for sub_group in SystemGroup.objects.filter(parent=group):
         fix_group_path(sub_group)
 
 
 def fix_systems_paths():
-    all_systems = CloudSystemId.objects.all()
+    all_systems = CloudSystemId.objects.exclude(organization_id__isnull=True, system_group_id__isnull=True)
     updated_systems = []
     for system in all_systems:
         correct_path = get_path_from_parent(system.system_group or system.organization)
