@@ -1,9 +1,9 @@
 <div class="actions p-3">
     <button
-        *ngIf="currentItemId$$() as id"
+        *ngIf="currentItemId$$()"
         class="btn btn-default"
         translate
-        (click)="newUserDialog(id)"
+        (click)="newUserDialog()"
     >
         Add User
     </button>
@@ -19,8 +19,8 @@
     [userType]="inGroup ? UserType.GROUP : UserType.ORGANIZATION"
     [inGroup]="inGroup"
     [headers]="headers"
-    [records]="userStore.entities()"
-    [roles]="orgRoles$$()"
+    [records]="orgUserStore.tableUsers$$()"
+    [roles]="orgRoles$$() || []"
     (selectedUsersEmitter)="updateSelectedUsers($event)"
     (onDeleteClick)="deleteUsers($event)"
     (onExpandClick)="expandClick($event)"

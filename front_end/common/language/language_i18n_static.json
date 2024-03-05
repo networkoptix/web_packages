@@ -1287,6 +1287,8 @@
             "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
             "deleteDialog": {
                 "title": "Delete",
+                "singleAccessRole": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{folder}</span>?",
+                "multipleAccessRole": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{count} folders</span>?",
                 "singleMessage": "Are you sure you want to delete <span class=\"text-white\">{name}</span>?",
                 "multipleMessage": "Are you sure you want to delete <span class=\"text-white\">{count} users</span>?",
                 "channelPartner": {

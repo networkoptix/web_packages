@@ -16,6 +16,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { combineLatest, distinctUntilChanged, firstValueFrom, map, mergeMap, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
@@ -137,6 +138,7 @@ export class NxOrganizationsComponent implements OnInit {
             .pipe(
                 map(({ params }) => params.email),
                 distinctUntilChanged(),
+                delay(100),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(email => {

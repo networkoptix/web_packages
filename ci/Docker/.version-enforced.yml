@@ -1,5 +1,5 @@
 variables:
-  IMAGE_VERSION: '40601'
+  IMAGE_VERSION: '41024'
 
 .version-enforced-docker:
     extends: .docker.template

@@ -79,7 +79,6 @@ export class NxAccessTableComponent implements OnInit {
     selectedGroups: { [key: string]: UserRecord } = {};
 
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    groupItems$$ = this.store.selectSignal(selectCurrentGroups);
     currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
     currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
     groupsPath$$ = this.store.selectSignal(selectCurrentPath);
@@ -134,9 +133,10 @@ export class NxAccessTableComponent implements OnInit {
                                         name: user.hasAccessTo?.name,
                                         groupId: user.hasAccessTo?.id,
                                         roles: user.roles,
-                                        roleIds: user.roleIds,
+                                        rolesIds: user.rolesIds,
                                     },
                                 ],
+                                groupId: UserType.ORGANIZATION,
                             },
                         ];
                     }
@@ -161,24 +161,25 @@ export class NxAccessTableComponent implements OnInit {
                             email: this.email,
                             isOrgUser: true,
                             roles: [role],
+                            groupId: UserType.ORGANIZATION,
                         }));
                     }
                     // TODO: bug with groupItems being undefined when loading directly into access table
-                    const groupItems = this.groupItems$$();
+                    const groupItems = this.currentGroups$$();
                     const groupMap = new Map(groupItems?.map(group => [group.id, group]));
                     return groupRoles.map(group => {
                         // Todo, add path once API updated
                         const currGroup = groupMap.get(group.groupId);
                         const groupItem: GroupRole = {
                             ...currGroup,
-                            name: currGroup?.name,
-                            groupId: currGroup?.id,
-                            roleIds: [],
+                            groupId: group?.groupId,
+                            roles: group.roles,
+                            rolesIds: [],
                         };
 
                         return {
                             userType: UserType.GROUP,
-                            roles: [],
+                            roles: group.roles,
                             groupId: group.groupId,
                             groupRoles: [groupItem],
                             userId: this.email,
@@ -210,11 +211,17 @@ export class NxAccessTableComponent implements OnInit {
             this.dialogService
                 .addOrgUserV2({ organization: org, roles, groups, users, email: this.email })
                 .then(user => {
-                    this.groupStore.addGroup({
-                        ...user,
-                        userId: user.email,
-                        userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
-                    });
+                    if (user) {
+                        const accessLevel = (('accessLevel' in user && user.accessLevel) ??
+                            {}) as Record<string, string>;
+                        const groupId = accessLevel?.id || UserType.ORGANIZATION;
+                        this.groupStore.addGroup({
+                            ...user,
+                            groupId,
+                            userId: user.email,
+                            userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
+                        });
+                    }
                 });
         }
     }
@@ -224,15 +231,17 @@ export class NxAccessTableComponent implements OnInit {
         const deleteMultiple = selectedGroupsLength > 1;
         const message = deleteMultiple
             ? this.translateService.instant(
-                  this.LANG.channelPartners.usersTable.deleteDialog.multipleMessage,
+                  this.LANG.channelPartners.usersTable.deleteDialog.multipleAccessRole,
                   {
+                      name: row.fullName || row.email,
                       count: selectedGroupsLength,
                   },
               )
             : this.translateService.instant(
-                  this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
+                  this.LANG.channelPartners.usersTable.deleteDialog.singleAccessRole,
                   {
-                      name: row.fullName,
+                      name: row.fullName || row.email,
+                      folder: row?.accessLevel?.name || '',
                   },
               );
         this.dialogService
@@ -249,11 +258,28 @@ export class NxAccessTableComponent implements OnInit {
             })
             .then(confirm => {
                 if (confirm) {
-                    if (deleteMultiple) {
-                        this.groupStore.removeGroups(Object.keys(this.selectedGroups));
+                    let deleteRequest: Observable<unknown>;
+                    let deletedIds: string[] = [];
+                    const orgId = this.currentOrg$$().id;
+                    if (row.isOrgUser) {
+                        deletedIds = [UserType.ORGANIZATION];
+                        deleteRequest = this.cpService.deleteOrganizationUser(orgId, this.email);
                     } else {
-                        this.groupStore.removeGroup(row.groupId);
+                        const groupsToDelete: string[] = deleteMultiple
+                            ? Object.keys(this.selectedGroups)
+                            : row.groupId
+                              ? [row.groupId]
+                              : [];
+                        deletedIds = groupsToDelete;
+                        deleteRequest = this.cpService.deleteBulkUserGroups(
+                            orgId,
+                            this.email,
+                            groupsToDelete,
+                        );
                     }
+                    deleteRequest.subscribe(() => {
+                        this.groupStore.removeGroups(deletedIds);
+                    });
                 }
             });
     }
