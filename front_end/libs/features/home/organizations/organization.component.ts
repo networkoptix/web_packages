@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { combineLatest, distinctUntilChanged, firstValueFrom, map, mergeMap, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
@@ -30,6 +31,7 @@ import {
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
@@ -81,6 +83,8 @@ interface SidebarSettings {
         DragDropModule,
         NxTabsModule,
         NxAccessTableComponent,
+        NxTagComponent,
+        TranslateModule,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {

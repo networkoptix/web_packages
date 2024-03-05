@@ -1,24 +1,19 @@
 <ng-template #body>
     <div class="name pb-3">
         <h2>{{ currentOrganization$$().name }}</h2>
+        <nx-tag
+            *ngIf="currentOrganization$$().effectiveState !== 'active'"
+            [type]="currentOrganization$$().effectiveState === 'suspended' ? 'warning' : 'danger'"
+            [size]="'large'"
+            [locked]="true"
+            [isStatusBadge]="true"
+        >
+            {{ currentOrganization$$().effectiveState | translate | uppercase }}
+        </nx-tag>
         <ng-container
             class="status"
             [ngSwitch]="currentOrganization$$().effectiveState"
         >
-            <div
-                class="status suspended"
-                *ngSwitchCase="State.Suspended"
-                translate
-            >
-                SUSPEND
-            </div>
-            <div
-                class="status shutdown"
-                *ngSwitchCase="State.ShutDown"
-                translate
-            >
-                SHUT DOWN
-            </div>
         </ng-container>
     </div>
     <nx-tabs

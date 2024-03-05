@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { switchMap } from 'rxjs';
 
@@ -11,6 +12,7 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
+import { NxTagComponent } from '@components/tag/tag.component';
 import staticLang from '@language_static';
 import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
@@ -20,7 +22,14 @@ import { icons } from '@variables/static-variables';
     templateUrl: 'subchannel.component.html',
     styleUrls: ['subchannel.component.scss'],
     standalone: true,
-    imports: [RouterOutlet, CommonModule, NxTabsModule, AngularSvgIconModule],
+    imports: [
+        RouterOutlet,
+        CommonModule,
+        NxTabsModule,
+        AngularSvgIconModule,
+        NxTagComponent,
+        TranslateModule,
+    ],
 })
 export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
