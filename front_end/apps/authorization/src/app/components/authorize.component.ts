@@ -15,7 +15,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
 import { AuthService } from '@authorization/src/app/auth.service';
@@ -564,13 +564,17 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         // use factory if account properties are not needed outside of the create component
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
         this.createProcess = this.processService.createProcess(
-            () => this.cloudService.registerUser(
-                this.accountInfo.email,
-                this.accountInfo.password,
-                this.accountInfo.firstName,
-                this.accountInfo.lastName,
-                this.loginCode,
-            ),
+            () =>
+                firstValueFrom(
+                    this.authService.register(
+                        this.accountInfo.email,
+                        this.accountInfo.password,
+                        this.accountInfo.firstName,
+                        this.accountInfo.lastName,
+                        this.CONFIG.customization,
+                        this.loginCode,
+                    ),
+                ),
             { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
