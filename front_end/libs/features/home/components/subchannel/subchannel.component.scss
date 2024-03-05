@@ -11,4 +11,9 @@
       transform: rotate(180deg);
     }
   }
+
+  .name {
+    display: flex;
+    gap: .75rem;
+  }
 }

@@ -6,8 +6,25 @@
         <svg-icon [src]="icons.dirTextButtons + 'arrow_right.svg'"></svg-icon>
         All Partners</a
     >
-    <div class="pb-3">
-        <h2>{{ (currentSubchannel$ | async).name }}</h2>
+    <div class="name">
+        <div class="pb-3">
+            <h2>{{ (currentSubchannel$ | async).name }}</h2>
+        </div>
+        <div
+            *ngIf="
+                (currentSubchannel$ | async)?.effectiveState !== 'active' &&
+                (currentSubchannel$ | async)?.effectiveState as state
+            "
+        >
+            <nx-tag
+                [type]="state === 'suspended' ? 'warning' : 'danger'"
+                [size]="'large'"
+                [locked]="true"
+                [isStatusBadge]="true"
+            >
+                {{ state | translate | uppercase }}
+            </nx-tag>
+        </div>
     </div>
     <nx-tabs
         animated
