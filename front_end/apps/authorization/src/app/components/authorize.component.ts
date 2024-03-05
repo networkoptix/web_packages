@@ -641,12 +641,15 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
         this.createProcess = this.processService.createProcess(
             () =>
-                this.cloudService.registerUser(
-                    this.accountInfo.email,
-                    this.accountInfo.password,
-                    this.accountInfo.firstName,
-                    this.accountInfo.lastName,
-                    this.loginCode,
+                firstValueFrom(
+                    this.authService.register(
+                        this.accountInfo.email,
+                        this.accountInfo.password,
+                        this.accountInfo.firstName,
+                        this.accountInfo.lastName,
+                        nxConfig.customization,
+                        this.loginCode,
+                    ),
                 ),
             { ignoreError: true, timeoutMs },
             res => {
