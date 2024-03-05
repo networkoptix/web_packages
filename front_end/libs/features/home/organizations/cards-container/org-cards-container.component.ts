@@ -27,7 +27,6 @@ import {
     GroupItem,
     OrgCardItem,
     OrgPermissions,
-    Organization,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
@@ -38,6 +37,7 @@ import { search as searchConfig, icons } from '@variables/static-variables';
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
 import * as GroupActions from '../../store/groups/groups.actions';
 import {
+    selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentGroups,
     selectCurrentSystems,
@@ -81,15 +81,25 @@ export class NxOrganizationCardContainerComponent {
         );
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
-    rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
-    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
-    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
-    currentOrg$$ = this.store.selectSignal<Organization>(selectCurrentOrganization);
+    rootGroups$$ = this.store.selectSignal(selectRootGroups);
+    currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
+    currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
+    currentGroup$$ = this.store.selectSignal(selectCurrentGroup);
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     search = { value: '' };
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     groupName: string = '';
+    isGroupUser$$ = computed(() => {
+        const currentOrg = this.currentOrg$$();
+        if (currentOrg) {
+            const { ownPermissions } = currentOrg;
+            return ownPermissions.length === 0;
+        }
+        return false;
+    });
+
     constructor(
         private store: Store,
         private dialogsService: NxDialogsService,
@@ -109,12 +119,27 @@ export class NxOrganizationCardContainerComponent {
             const currentOrgId = this.currentOrgId$$();
             const currentGroupID = this.currentGroupId$$();
             const systemMap = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
-            if (this.inRoot && currentOrgId) {
+            if (this.inRoot && this.isGroupUser$$()) {
+                const groups = this.currentGroups$$();
+                if (groups) {
+                    const parentId = groups[0].parentId;
+                    // Todo: ensure call works from group user to group to fetch systems
+                    this.cpService.getGroup(parentId).subscribe(group => {
+                        this.groupName = group.name;
+                        const systems = group.systems.map(systemId => ({
+                            systemId,
+                            name: systemMap.get(systemId)?.name,
+                            type: OrgCardItem.SYSTEM,
+                        }));
+                        this.store.dispatch(GroupActions.setSystems({ systems }));
+                    });
+                }
+            } else if (this.inRoot && currentOrgId) {
                 this.cpService.getOrgSystems(currentOrgId).subscribe(orgSystems => {
                     const systems = orgSystems.map(sys => ({
                         ...sys,
-                        name: systemMap.get(sys.systemId)?.name,
                         type: OrgCardItem.SYSTEM,
+                        name: systemMap.get(sys.systemId)?.name,
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
@@ -125,7 +150,6 @@ export class NxOrganizationCardContainerComponent {
                         systemId,
                         name: systemMap.get(systemId)?.name,
                         type: OrgCardItem.SYSTEM,
-                        parentId: group.id,
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
