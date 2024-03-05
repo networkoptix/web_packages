@@ -271,6 +271,7 @@ check-python-licenses:
         - channel_partners/poetry.lock
         - channel_partners/pyproject.toml
   before_script:
+    - env
     - poetry -C /builds/dev/cloud_portal/channel_partners export --with test --without-hashes --without-urls -o /app/requirements.txt
     # temporary remove poetry until it is not updated
     - pip uninstall -y poetry
@@ -362,8 +363,6 @@ check-python-licenses:
 
 
 cp-checks:
-  needs:
-    - job: cp-lint
   extends: .cp-django-python
   image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
   stage: check
@@ -371,6 +370,7 @@ cp-checks:
     PYTHONPATH: "/builds/dev/cloud_portal/common/python"
     INSTANCE_NAME: test
   script:
+    - env
     - cd channel_partners/src
     - echo "Running safety check in $(pwd)"
     - python -m pip install safety==2.3.5
@@ -387,8 +387,6 @@ cp-checks:
 
 cp-unit-test-fast:
   extends: .cp-unit-test
-  needs:
-    - job: cp-checks
   artifacts:
     when: always
     reports:

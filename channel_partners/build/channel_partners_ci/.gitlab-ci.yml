@@ -15,7 +15,7 @@ docker:build-channel-partners:
   extends: .version-enforced-docker
   interruptible: true
   variables:
-    IMAGE_VERSION: '41007'
+    IMAGE_VERSION: '41212'
     BUILD_OPTIONS: |
       --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
@@ -23,6 +23,7 @@ docker:build-channel-partners:
   before_script:
   - !reference [".version-enforced-docker", "before_script"]
   - |
+    env
     DOCKER_DIR="channel_partners/build/channel_partners_ci"
     touch build-cp-django.env
     if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
@@ -32,6 +33,7 @@ docker:build-channel-partners:
 
     TARGET_IMAGE="${CP_DJANGO_PYTHON_IMAGE}"
     TARGET_IMAGE_TAG="${CP_DJANGO_PYTHON_IMAGE_TAG}"
+    env
   artifacts:
     reports:
       dotenv: build-cp-django.env
@@ -41,3 +43,6 @@ docker:build-channel-partners:
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
     - channel_partners/build/channel_partners_ci/*
+    - channel_partners/build/pyproject.toml
+    - channel_partners/build/poetry.lock
+    - channel_partners/build/poetry.toml
