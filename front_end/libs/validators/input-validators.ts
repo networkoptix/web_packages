@@ -13,6 +13,39 @@ export class NxValidators {
 
     constructor(private translate: TranslateService) {}
 
+    requiredURL(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.length === 0
+                ? {
+                      siteInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.siteRequired),
+                  }
+                : null;
+        };
+    }
+
+    requiredPhone(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.length === 0
+                ? {
+                      phoneInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.phoneRequired),
+                  }
+                : null;
+        };
+    }
+
+    requiredEmail(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.length === 0
+                ? {
+                      emailInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.emailRequired),
+                  }
+                : null;
+        };
+    }
+
     // to be used only with nx-info-form for now as it target FormArray
     // if any other usage is required - some mods need to be made.
     uniqueNumber(): ValidatorFn {
@@ -20,7 +53,7 @@ export class NxValidators {
             const value = control.value;
             const numbers = control.parent?.parent; // target FormArray controls
 
-            let unique = [];
+            let unique: AbstractControl[] = [];
 
             if (numbers?.controls) {
                 // @ts-expect-error mistype
@@ -31,8 +64,6 @@ export class NxValidators {
                     );
                 });
             }
-
-            // const phoneInvalid = new RegExp(simplePhoneRegex).test(value);
 
             return unique.length > 1 // match self and another one
                 ? {

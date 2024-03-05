@@ -2084,9 +2084,12 @@
         "darkLabel": "{hex} - dark{number}"
     },
     "customValidatorMsg": {
-        "siteInvalid": "URL is invalid",
-        "emailInvalid": "Email is invalid",
-        "phoneInvalid": "Phone number is invalid",
-        "phoneNotUnique": "Phone number is already added"
+        "siteInvalid": "Invalid URL",
+        "emailInvalid": "Invalid email",
+        "phoneInvalid": "Invalid phone number",
+        "phoneNotUnique": "Phone number already in use",
+        "siteRequired": "URL is required",
+        "emailRequired": "Email is required",
+        "phoneRequired": "Phone number is required"
     }
 }

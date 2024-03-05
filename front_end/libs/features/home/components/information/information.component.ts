@@ -74,16 +74,16 @@ export class NxChannelPartnerInformationComponent {
     };
 
     siteValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        Validators.required,
+        this.nxValidators.requiredURL(),
         this.nxValidators.URL(),
     ];
     phoneValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        Validators.required,
+        this.nxValidators.requiredPhone(),
         this.nxValidators.phone(),
         this.nxValidators.uniqueNumber(),
     ];
     emailValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        Validators.required,
+        this.nxValidators.requiredEmail(),
         this.nxValidators.email(),
     ];
     customValidators: Array<ValidationErrors | null | ValidatorFn> = [Validators.required];
