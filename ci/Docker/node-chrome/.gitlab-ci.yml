@@ -8,6 +8,8 @@ variables:
 
 docker:build-node-chrome:
   extends: .version-enforced-docker
+  variables:
+    IMAGE_VERSION: '41201'
   before_script:
   - !reference [".version-enforced-docker", "before_script"]
   - |

@@ -20,7 +20,7 @@ index 8430939..111cfb8 100755
          error: error => {
              if (options?.rejectErrors) {
 diff --git a/node_modules/@angular/core/index.d.ts b/node_modules/@angular/core/index.d.ts
-index a0386fe..32462b3 100755
+index 866a9f0..5481795 100755
 --- a/node_modules/@angular/core/index.d.ts
 +++ b/node_modules/@angular/core/index.d.ts
 @@ -13,6 +13,7 @@ import { SignalNode } from '@angular/core/primitives/signals';
@@ -31,7 +31,7 @@ index a0386fe..32462b3 100755
  
  /**
   * @description
-@@ -11067,8 +11068,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
+@@ -11367,8 +11368,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
      /**
       * Update the value of the signal based on its current value, and
       * notify any dependents.
@@ -45,4 +45,4 @@ index a0386fe..32462b3 100755
 +    update(updateFn: (value: Immutable<T>) => T | Immutable<T>): void;
      /**
       * Returns a readonly version of this signal. Readonly signals can be accessed to read their value
-      * but can't be changed using set, update or mutate methods. The readonly signals do _not_ have
+      * but can't be changed using set or update methods. The readonly signals do _not_ have
