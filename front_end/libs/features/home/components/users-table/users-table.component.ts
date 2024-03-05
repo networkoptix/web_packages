@@ -82,6 +82,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
 
     // headers: Record<string, Record<string, number | string>>;
     // records: Record<string, string | boolean | Record<string, string>[]>[];
+    selectedAll = false;
     selectedUsers: { [key: string]: UserRecord } = {};
     selectedUsersMap$$: WritableSignal<Map<string, boolean>> = signal(new Map());
     subLevels: boolean = false;
@@ -149,7 +150,23 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         }
     }
 
-    selectAll(): void {}
+    selectAll(): void {
+        let map: Map<string, boolean> = new Map();
+        if (!this.selectedAll) {
+            for (const record of this.records) {
+                if (!this.selectedUsers[record.userId]) {
+                    this.selectedUsers[record.userId] = record;
+                }
+            }
+            map = new Map(Object.keys(this.selectedUsers).map(user => [user, true]));
+            this.selectedUsersEmitter.emit(this.selectedUsers);
+            this.selectedAll = true;
+        } else {
+            this.selectedUsersEmitter.emit({});
+            this.selectedAll = false;
+        }
+        this.selectedUsersMap$$.set(map);
+    }
 
     selectRecord(user: UserRecord): void {
         let userId = user.userId;
