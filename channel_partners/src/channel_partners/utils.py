@@ -25,8 +25,8 @@ from rest_framework.settings import api_settings
 def standardize_path(path: str) -> str:
     # RegEx for UUID
     regex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-    regex_mail = "/.+@.+/"
-    return re.sub(regex_mail,'/<<email>>/', re.sub(regex, '<<UUID>>', path))
+    regex_mail = "[^\/]+@[^\/?]+"
+    return re.sub(regex_mail,'{email}', re.sub(regex, '{uuid}', path))
     
 
 
