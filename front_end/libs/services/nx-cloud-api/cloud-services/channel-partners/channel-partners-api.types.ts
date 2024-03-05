@@ -35,7 +35,7 @@ export interface ChannelPartnerRole {
 export interface ChannelPartnerUser {
     email: string;
     roles: string[];
-    roleIds: string[];
+    rolesIds: string[];
     title: string;
     fullName: string;
     created: string; // e.g. "2023-08-24T19:14:46.748Z"
@@ -242,7 +242,7 @@ export interface GroupRole {
     name: string;
     groupId: string;
     roles: string[];
-    roleIds: string[];
+    rolesIds: string[];
 }
 
 export interface CreateOrganizationUser {
@@ -314,7 +314,7 @@ export interface GroupUser {
     fullName: string;
     email: string;
     roles: string[];
-    roleIds: string[];
+    rolesIds: string[];
 }
 
 export interface UpdateGroupUser {

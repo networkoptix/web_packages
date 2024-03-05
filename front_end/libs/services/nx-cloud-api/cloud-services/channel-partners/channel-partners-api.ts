@@ -240,6 +240,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
     };
 
+    deleteBulkUserGroups = (orgId: string, email: string, groupIds: string[]): Observable<null> =>
+        this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email, 'remove_groups']), {
+            body: groupIds,
+        });
+
     /* Systems */
     getUserSystems = (): Observable<CloudSystem[]> => {
         return this.get<PaginatedCloudSystemList>('/cloud_systems/').pipe(getResults());

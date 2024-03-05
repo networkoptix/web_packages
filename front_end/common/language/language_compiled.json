@@ -185,6 +185,8 @@
     "Are you sure you want to continue?": "Are you sure you want to continue?",
     "Are you sure you want to delete <span class=\"text-white\">{count} users</span>?": "Are you sure you want to delete <span class=\"text-white\">{count} users</span>?",
     "Are you sure you want to delete <span class=\"text-white\">{name}</span>?": "Are you sure you want to delete <span class=\"text-white\">{name}</span>?",
+    "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{count} folders</span>?": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{count} folders</span>?",
+    "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{folder}</span>?": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{folder}</span>?",
     "Are you sure you want to delete the folder {folderName}?": "Are you sure you want to delete the folder {folderName}?",
     "Are you sure you want to delete user <span class=\"text-white\">{email}</span> with permission <span class=\"text-white\">{permission}</span>?": "Are you sure you want to delete user <span class=\"text-white\">{email}</span> with permission <span class=\"text-white\">{permission}</span>?",
     "Area": "Area",

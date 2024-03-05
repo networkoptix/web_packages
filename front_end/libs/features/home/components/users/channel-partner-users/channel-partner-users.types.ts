@@ -1,20 +1,22 @@
 import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+export interface AccessLevel {
+    id: string;
+    name: string;
+    membershipType: string;
+}
+
 export interface UserRecord {
     email: string;
     userId: string;
     fullName?: string;
     userType: UserType;
-    isOrgUser?: boolean;
     groupId?: string;
     roles?: string[];
-    roleIds?: string[];
+    rolesIds?: string[];
     groupRoles?: GroupRole[];
-    accessLevel?: {
-        id: string;
-        name: string;
-        membershipType: string;
-    };
+    isOrgUser?: boolean;
+    accessLevel?: AccessLevel;
 }
 
 export enum UserType {

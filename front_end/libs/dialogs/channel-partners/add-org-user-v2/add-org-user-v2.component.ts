@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, WritableSignal, computed, signal } from '@angular/core';
+import { Component, Inject, WritableSignal, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,8 +15,8 @@ import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxAccountService } from '@services/account.service';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     OrgRoleIds,
     type GroupItem,
@@ -53,6 +53,7 @@ import { OrgTreeStatuses } from './org-tree-selector/org-tree-selector.types';
     ],
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
+    orgUserStore = inject(OrgUsersStore);
     icons = icons;
     emailDisabled = false;
 
@@ -154,7 +155,6 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         @Inject(DIALOG_DATA) { organization, roles, users, groups, email }: DT['data'],
         processService: NxProcessService,
         private translate: TranslateService,
-        private cpService: NxChannelPartnersService,
         private account: NxAccountService,
     ) {
         super(dialogRef);
@@ -168,15 +168,15 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
             this.emailDisabled = true;
         }
         users.forEach(user => {
-            if (user.roles && user.roles[0]) {
-                // Has org role, is org user
-                this.userRoles.set(user.email, new Map([[organization.id, user.roles[0]]]));
-            } else {
+            if (user.groupRoles?.length) {
                 // Otherwise, group user
                 this.userRoles.set(
                     user.email,
                     new Map(user.groupRoles.map(r => [r.groupId, r.roles[0]])),
                 );
+            } else if (user.roles?.length) {
+                // Has org role, is org user
+                this.userRoles.set(user.email, new Map([[organization.id, user.roles[0]]]));
             }
         });
 
@@ -197,11 +197,9 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                     roleId: this.selectedRole$$(),
                 };
                 const folder = this.selectedFolder$$();
-                if (folder === this.organization.id) {
-                    return firstValueFrom(this.cpService.createOrganizationUser(folder, newUser));
-                } else {
-                    return firstValueFrom(this.cpService.updateGroupUser(folder, newUser));
-                }
+                return firstValueFrom(
+                    this.orgUserStore.addUser(this.organization, folder, newUser),
+                );
             },
             {},
             user => {

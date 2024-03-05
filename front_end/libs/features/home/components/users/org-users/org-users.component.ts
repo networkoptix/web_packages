@@ -10,43 +10,25 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { patchState, signalStore, withMethods } from '@ngrx/signals';
-import {
-    addEntity,
-    removeEntities,
-    removeEntity,
-    setAllEntities,
-    withEntities,
-} from '@ngrx/signals/entities';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { iif, map, Observable, zip } from 'rxjs';
+import { iif, map } from 'rxjs';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { selectGroupItems, selectRootGroups } from '@pages/home/store/groups/groups.selectors';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupItem,
-    GroupUser,
     GroupUserCanAccess,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
-
-const UserStore = signalStore(
-    withEntities<UserRecord>(),
-    withMethods(store => ({
-        addUser: user => patchState(store, addEntity(user, { idKey: 'userId' })),
-        removeUser: user => patchState(store, removeEntity(user)),
-        removeUsers: user => patchState(store, removeEntities(user)),
-        setUsers: users => patchState(store, setAllEntities(users, { idKey: 'userId' })),
-    })),
-);
 
 const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
     return users.map(user => ({
@@ -85,13 +67,12 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
-    providers: [UserStore],
     imports: [CommonModule, NxUsersTableComponent, TranslateModule],
 })
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
-    userStore = inject(UserStore);
+    orgUserStore = inject(OrgUsersStore);
 
     @Input({ transform: booleanAttribute }) inGroup: boolean;
     headers: HEADER_ITEM[];
@@ -111,7 +92,10 @@ export class NxOrganizationUsersComponent implements OnInit {
         private translateService: TranslateService,
         private router: Router,
         private route: ActivatedRoute,
-    ) {}
+    ) {
+        this.orgUserStore.setSelectedGroup(this.currentItemId$$);
+        this.orgUserStore.setGroups(this.groupItems$$);
+    }
 
     ngOnInit(): void {
         this.CPService.paramStateHandler.state$
@@ -127,7 +111,7 @@ export class NxOrganizationUsersComponent implements OnInit {
             this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
                 map(users => mapOrgUsers(users, this.groupItems$$())),
             ),
-        ).subscribe(users => this.userStore.setUsers(users));
+        ).subscribe(users => this.orgUserStore.setUsers(users));
         this.headers = [
             {
                 name: 'email',
@@ -144,21 +128,17 @@ export class NxOrganizationUsersComponent implements OnInit {
         ];
     }
 
-    newUserDialog(orgId: string): void {
-        const roles = this.orgRoles$$();
+    newUserDialog(): void {
+        const roles = this.orgRoles$$() || [];
         const org = this.currentOrg$$();
-        const groups = this.rootGroups$$();
+        const groups = this.rootGroups$$() || [];
         if (org) {
-            const users = this.userStore.entities();
-            this.dialogsService
-                .addOrgUserV2({ organization: org, roles, users, groups })
-                .then(user => {
-                    const userRecord =
-                        'groupRoles' in user
-                            ? mapOrgUsers([user], this.groupItems$$())
-                            : mapGroupUsers([user as GroupUserCanAccess]);
-                    this.userStore.addUser(userRecord[0]);
-                });
+            this.dialogsService.addOrgUserV2({
+                organization: org,
+                users: this.orgUserStore.tableUsers$$(),
+                roles,
+                groups,
+            });
         }
     }
 
@@ -175,7 +155,7 @@ export class NxOrganizationUsersComponent implements OnInit {
             : this.translateService.instant(
                   this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
                   {
-                      name: user.fullName,
+                      name: user.fullName || user.email,
                   },
               );
         this.dialogsService
@@ -192,101 +172,16 @@ export class NxOrganizationUsersComponent implements OnInit {
             })
             .then(confirm => {
                 if (confirm) {
-                    const requests: Observable<OrganizationUser[] | GroupUser[] | void>[] = [];
+                    const orgId = this.currentOrg$$().id;
+                    const folderId = this.currentItemId$$();
                     if (deleteMultiple) {
-                        const isOrgUser = (user: UserRecord): boolean => {
-                            return user.isOrgUser;
-                        };
-                        const partition = (
-                            arr: UserRecord[],
-                            isOrgUser: (user: UserRecord) => boolean,
-                        ): { orgUsers: UserRecord[]; groupUsers: UserRecord[] } => {
-                            return arr.reduce(
-                                (acc, user) => {
-                                    if (isOrgUser(user)) {
-                                        acc.orgUsers.push(user);
-                                    } else {
-                                        acc.groupUsers.push(user);
-                                    }
-                                    return acc;
-                                },
-                                { orgUsers: [], groupUsers: [] },
-                            );
-                        };
-
-                        const { orgUsers, groupUsers } = partition(
-                            Object.values(this.selectedUsers),
-                            isOrgUser,
+                        this.orgUserStore.removeUsers(
+                            orgId,
+                            folderId,
+                            Object.keys(this.selectedUsers),
                         );
-                        if (orgUsers.length) {
-                            requests.push(
-                                this.CPService.deleteBulkOrganizationUsers(
-                                    this.currentItemId$$(),
-                                    orgUsers.map(user => user.email),
-                                ),
-                            );
-                        }
-
-                        if (this.inGroup && groupUsers.length) {
-                            requests.push(
-                                this.CPService.deleteBulkGroupUsers(
-                                    this.currentItemId$$(),
-                                    groupUsers.map(user => user.email),
-                                ),
-                            );
-                        } else {
-                            const groupMap: { [key: string]: string[] } = {};
-                            for (const user of groupUsers) {
-                                for (const group of user.groupRoles) {
-                                    const { groupId } = group;
-                                    if (!groupMap[groupId]) {
-                                        groupMap[groupId] = [];
-                                    }
-                                    groupMap[groupId].push(user.email);
-                                }
-                            }
-
-                            Object.entries(groupMap).forEach(([id, users]) =>
-                                requests.push(this.CPService.deleteBulkGroupUsers(id, users)),
-                            );
-                        }
-                        zip(requests).subscribe(_ => {
-                            this.userStore.removeUsers(
-                                Object.values(this.selectedUsers).map(({ userId }) => userId),
-                            );
-                        });
                     } else {
-                        const { email, isOrgUser } = user;
-                        if (!isOrgUser) {
-                            if (this.inGroup) {
-                                requests.push(
-                                    this.CPService.deleteBulkGroupUsers(this.currentItemId$$(), [
-                                        email,
-                                    ]),
-                                );
-                            } else {
-                                user.groupRoles?.forEach(({ groupId }) => {
-                                    requests.push(
-                                        this.CPService.deleteBulkGroupUsers(groupId, [email]),
-                                    );
-                                });
-                            }
-                        } else {
-                            requests.push(
-                                this.CPService.deleteOrganizationUser(
-                                    this.currentItemId$$(),
-                                    email,
-                                ),
-                            );
-                        }
-                        zip(requests).subscribe({
-                            next: _ => {
-                                this.userStore.removeUser(email);
-                            },
-                            error: err => {
-                                console.error(err);
-                            },
-                        });
+                        this.orgUserStore.removeUser(orgId, folderId, user.email);
                     }
                 }
             });

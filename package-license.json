@@ -4014,6 +4014,13 @@
             "path": "cloud_portal/front_end/node_modules/@ngneat/until-destroy",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngneat/until-destroy/README.md"
         },
+        "@ngrx/component-store@17.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ngrx/platform",
+            "publisher": "NgRx",
+            "path": "cloud_portal/front_end/node_modules/@ngrx/component-store",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/component-store/LICENSE"
+        },
         "@ngrx/component@17.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/ngrx/platform",

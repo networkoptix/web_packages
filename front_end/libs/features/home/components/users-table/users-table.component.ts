@@ -10,6 +10,7 @@ import {
     booleanAttribute,
     computed,
     signal,
+    inject,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,6 +30,7 @@ import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -190,6 +192,8 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         return role.name === this.getDisplayRole(user);
     }
 
+    orgUsersStore = inject(OrgUsersStore);
+
     updateRole(user: UserRecord, roleId: string): void {
         if (user.userType === UserType.CHANNEL_PARTNER) {
             const currPartner = this.currentPartner$$();
@@ -204,6 +208,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
                     copy[index] = {
                         ...this.records[index],
                         roles: updatedUser.roles,
+                        rolesIds: updatedUser.rolesIds,
                     };
                     this.records = copy;
                     this.findAdmins(copy);
@@ -224,14 +229,9 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
                         this.store.dispatch(cpActions.setChannelPartners({ channelPartners }));
                     }
                 });
-        } else if (user.isOrgUser) {
-            this.cpService
-                .updateOrganizationUser(this.currentOrg$$()?.id, { roleId, email: user.email })
-                .subscribe();
         } else {
-            this.cpService
-                .updateGroupUser(user.groupRoles[0].groupId, { roleId, email: user.email })
-                .subscribe();
+            const folder = user?.groupRoles?.[0]?.groupId || '';
+            this.orgUsersStore.updateUser(this.currentOrg$$().id, folder, user.email, roleId);
         }
     }
 

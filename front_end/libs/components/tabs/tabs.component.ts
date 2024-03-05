@@ -45,11 +45,12 @@ export class NxTabsComponent implements AfterViewInit {
     @ContentChildren(NxBaseTabComponent, { descendants: true })
     tabItems: QueryList<NxBaseTabComponent>;
 
-    currentTabIndex$$ = signal<number>(0);
+    currentTabIndex$$ = signal<number | null>(null);
 
     handleTabClick = (tab: NxBaseTabComponent, index: number): void => {
         const childTabs = this.tabItems.toArray();
-        childTabs[this.currentTabIndex$$()].selected = false;
+        const currentIndex = this.currentTabIndex$$() ?? 0;
+        childTabs[currentIndex].selected = false;
         childTabs[index].selected = true;
         this.currentTabIndex$$.set(index);
         tab.tabClick.emit(index);
