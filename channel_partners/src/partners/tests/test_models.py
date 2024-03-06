@@ -331,8 +331,8 @@ class TestChannelPartnerCanAccess:
     def test_user_can_access_descendant_channel_partner(self):
         assert self.cp_child_lvl1.can_access(self.cptu_root.user)
 
-    def test_user_cannot_access_ancestor_channel_partner(self):
-        assert not self.cp_root.can_access(self.cptu_child.user)
+    def test_user_can_access_ancestor_channel_partner(self):
+        assert self.cp_root.can_access(self.cptu_child.user)
 
     def test_unrelated_user_cannot_access_channel_partner(self):
         assert not self.cp_root.can_access(self.cptu_unrelated.user)

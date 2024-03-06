@@ -396,9 +396,41 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.organization and self.organization.can_manage_systems(user)
 
     def can_access(self, user: CloudUser):
-        if self.system_group and self.system_group.can_access(user):
-            return True
-        return self.organization and self.organization.can_access_systems(user)
+        queryset = OrganizationToUser.objects.none().values('id')
+        if self.system_group_id:
+            group_qs = OrganizationToUser.objects.filter(
+                system_group_id__in=self.groups_path,
+                user=user
+            ).values('id')
+            queryset = queryset.union(group_qs)
+        if self.organization_id:
+            org_qs = OrganizationToUser.objects.filter(
+                organization_id=self.organization_id,
+                system_group_id__isnull=True,
+                user=user
+            ).values('id')
+            cp_qs = ChannelPartnerToUser.objects.filter(
+                channel_partner__id=self.visible_path[-1], user=user).values('id')
+            queryset = queryset.union(org_qs).union(cp_qs)
+        return queryset.exists()
+
+    def is_member_in_branch(self, user: CloudUser):
+        queryset = OrganizationToUser.objects.none().values('id')
+        if self.system_group_id:
+            group_qs = OrganizationToUser.objects.filter(
+                system_group_id__in=self.groups_path,
+                user=user
+            ).values('id')
+            queryset = queryset.union(group_qs)
+        if self.organization_id:
+            org_qs = OrganizationToUser.objects.filter(
+                organization_id=self.organization_id,
+                system_group_id__isnull=True,
+                user=user
+            ).values('id')
+            cp_qs = ChannelPartnerToUser.objects.filter(channel_partner__id__in=self.path, user=user).values('id')
+            queryset = queryset.union(org_qs).union(cp_qs)
+        return queryset.exists()
 
     def can_set_services(self, user: CloudUser):
         return self.organization and self.organization.can_modify_service_quantities(user)
@@ -591,9 +623,24 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     @property
     def groups_path(self):
-        if not self.system_group or not self.organization:
+        if not self.system_group or not self.organization_id:
             return []
-        return self.path[:self.path.index(self.organization_id)]
+        organization_idx = self.path.index(self.organization_id)
+        if organization_idx + 2 > len(self.path):
+            raise IndexError(f'organization_id or path is incorrect.')
+        return self.path[:organization_idx]
+
+    @property
+    def visible_path(self) -> List[uuid.UUID]:
+        """
+        Returns path up to organization's parent channel partner
+        """
+        if not self.organization_id:
+            return []
+        organization_idx = self.path.index(self.organization_id)
+        if organization_idx + 2 > len(self.path):
+            raise IndexError(f'organization_id or path is incorrect.')
+        return self.path[:organization_idx + 2]
 
     def get_organization_users(self, email=None) -> QuerySet[dict]:
         vms_roles = list(get_roles_with_vms_perms().keys())
@@ -763,20 +810,76 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return ChannelPartnerToUser.objects.filter(
             user=user, roles__overlap=allowed_role_uuid, channel_partner=self).exists()
 
-    def can_access(self, user: CloudUser):
-        partners_ids = get_path_from_parent(self)
-        return (ChannelPartnerToUser.objects.filter(
-            channel_partner_id__in=partners_ids, user=user).exists() or
-                OrganizationToUser.objects.filter(
-                    organization__channel_partner=self, user=user).exists())
+    def is_member_in_branch(self, user: CloudUser, perm=None) -> bool:
+        """
+        Checks if the user has role in channel partner or any of its ancestors.
+        Args:
+            user (CloudUser): The user whom permission is checked
+            perm (str, optional): looking permission codename, if given only
+             satisfying roles will be checked
+        Returns:
+            bool
+        """
+        queryset = ChannelPartnerToUser.objects.filter(
+            user=user,
+            channel_partner__id__in=get_path_from_parent(self)
+        )
+        if perm:
+            allowed_role_uuid = self.allowed_role_uuid(perm)
+            queryset = queryset.filter(roles__overlap=allowed_role_uuid)
+        return queryset.exists()
+
+    def is_member(self, user: CloudUser) -> bool:
+        """
+        Checks if the user has role in the channel partner.
+        Args:
+            user (CloudUser): The user whom permission is checked
+        Returns:
+            bool
+        """
+        return ChannelPartnerToUser.objects.filter(user=user, channel_partner=self).exists()
+
+    def can_access(self, user: CloudUser) -> bool:
+        """
+        Checks if the user can access the channel partner information. The most loose permission for
+        accessing channel partner. Can be used with exact channel partner only. Avoid using it
+        from any of CP children (SubCP, org, groups, etc.).
+        Args:
+            user (CloudUser): The user whom permission is checked
+        Returns:
+            bool
+        """
+        return (
+            # User has a role in this channel partner or any of its ancestors
+                self.is_member_in_branch(user) or
+                # User has a role in any of channel partner direct children channel partner
+                user.channel_partners.filter(parent_channel_partner=self).exists() or
+                # User has a role in any of channel partner direct organizations
+                OrganizationToUser.objects.filter(organization__channel_partner=self, user=user).exists()
+        )
 
     def can_manage(self, user: CloudUser):
+        """
+        Checks if the user can manage the channel partner services. Nx users can manage
+        root channel partner. Other partners users cannot manage channel partner services.
+        Args:
+            user (CloudUser): The user whom permission is checked
+        Returns:
+            bool
+        """
         if self.parent_channel_partner:
             return self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user)
         else:
-            return self.can_configure(user)
+            return self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner)
 
     def can_configure(self, user: CloudUser):
+        """
+        Check if user can configure channel partner information.
+        Args:
+            user (CloudUser): The user whom permission is checked
+        Returns:
+            bool
+        """
         if self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner):
             return True
         return (self.parent_channel_partner and
@@ -813,7 +916,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.has_perm(user, ChannelPartnerPermissions.administer_organization_systems)
 
     def can_view_service_reports(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.view_service_reports)
+        return self.is_member_in_branch(user, ChannelPartnerPermissions.view_service_reports)
 
     def can_modify_organization_service_quantities(self, user: CloudUser):
         # return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities) \
@@ -1035,6 +1138,10 @@ class ChannelPartnerToUser(models.Model):
 
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
+
+    @classmethod
+    def is_channel_partner_user(cls, user: CloudUser):
+        return cls.objects.filter(user=user).exists()
 
     @property
     def roles_name(self):
@@ -1314,8 +1421,26 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             return self.channel_partner_access_level_id in allowed_role_uuid
         return False
 
+    def is_member_in_branch(self, user: CloudUser, perm: str = None) -> bool:
+        if perm:
+           org_level_access = self.has_perm(user, perm)
+        else:
+           org_level_access = OrganizationToUser.objects.filter(user=user, organization=self).exists()
+
+        if org_level_access:
+            return True
+
+        is_member_in_ancestors = ChannelPartnerToUser.objects.filter(
+            user=user,
+            channel_partner_id__in=self.path
+        ).exists()
+        return is_member_in_ancestors
+
     def can_access(self, user: CloudUser):
-        return self.users.filter(pk=user.pk).exists() or self.channel_partner.can_access(user)
+        return (
+            self.users.filter(pk=user.pk).exists()
+            or self.channel_partner.users.filter(pk=user.pk).exists()
+        )
 
     def can_add_or_remove(self, user: CloudUser):
         return self.channel_partner.can_add_or_remove_organizations(user)
@@ -1324,7 +1449,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.channel_partner.can_modify_organization_service_quantities(user)
 
     def can_configure(self, user: CloudUser):
-        return self.has_perm(user, OrganizationPermissions.configure_organization)
+        return (
+            self.has_perm(user, OrganizationPermissions.configure_organization)
+        )
 
     def can_manage_systems(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.manage_systems)
@@ -1339,13 +1466,31 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return False
 
     def can_view_service_reports(self, user: CloudUser):
-        return self.has_perm(user, OrganizationPermissions.view_service_reports)
+        return (
+            self.has_perm(user, OrganizationPermissions.view_service_reports)
+            or self.channel_partner.is_member_in_branch(user, perm=ChannelPartnerPermissions.view_service_reports)
+        )
 
     def can_view_health_monitoring(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.view_health_monitoring)
 
     def can_access_systems(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.access_systems)
+
+    def can_access_organization_systems(self, user: CloudUser):
+        """
+        Checks if the user is allowed to access all organization systems list.
+        Group users is not allowed to do that. Permission is granted based on
+        membership only.
+        Arguments:
+            user (CloudUser): The user to check
+        Returns:
+            bool
+        """
+        return (
+            OrganizationToUser.objects.filter(organization=self, system_group__isnull=True, user=user).exists()
+            or self.channel_partner.is_member_in_branch(user)
+        )
 
     def can_alter_state(self, user: CloudUser):
         return self.channel_partner.can_alter_organization_state(user)

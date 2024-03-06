@@ -117,7 +117,7 @@ class TestCloudSystemViewSetRetrieve:
         mock_cdb_token_introspect(user=self.cp_user.user, system=self.group_system, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
-        assert response.status_code == 403
+        assert response.status_code == 200
 
     def test_token_200_system_user(self, mock_cdb_token_introspect, cloud_user_factory):
         vms_user = cloud_user_factory()
@@ -913,44 +913,83 @@ class TestChannelPartnerUserViewSet:
 
 
 class TestChannelPartnerNestedViewSet:
+    @pytest.fixture(autouse=True)
+    def setup(self, default_channel_partner, channel_partner_factory,
+              cloud_test_host, cloud_host_factory, mock_auth_with_user,
+              default_cp_admin, cp_user_factory, root_nx_channel_partner):
+        self.gen_count = 3
+        self.host = cloud_test_host
+        self.other_host = cloud_host_factory(hostname=f'{uuid4()}')
+        self.root_cp = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.root_cp_user = cp_user_factory(channel_partner=self.root_cp)
+        self.other_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=root_nx_channel_partner,
+                                                cloud_host=self.other_host)
+        self.default_subs = [
+            channel_partner_factory(parent_channel_partner=self.root_cp, cloud_host=self.host,
+                                    name=f'Default child {uuid4()}')
+            for _ in range(self.gen_count)
+        ]
+        self.default_subs += [
+            channel_partner_factory(parent_channel_partner=self.root_cp, cloud_host=cloud_host_factory(f'{uuid4()}'))
+            for _ in range(self.gen_count)
+        ]
+        self.other_subs = [channel_partner_factory(parent_channel_partner=self.other_cp, name=f'Other child {uuid4()}')
+                      for _ in range(self.gen_count)]
+        for sub in self.default_subs:
+            self.grand_child = channel_partner_factory(parent_channel_partner=sub, cloud_host=self.host,
+                                                       name=f'Default grandchild {uuid4()}')
+            channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host,
+                                    name=f'Default grandchild {uuid4()}')
+        for sub in self.other_subs:
+            channel_partner_factory(parent_channel_partner=sub, cloud_host=self.host,
+                                    name=f'Default grandchild {uuid4()}')
+            channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host,
+                                    name=f'Default grandchild {uuid4()}')
+        self.client = APIClient()
 
-    def test_get_queryset(self, default_channel_partner, channel_partner_factory,
-                          cloud_test_host, cloud_host_factory, mock_auth_with_user,
-                          default_cp_admin, cp_user_factory, arf):
-        gen_count = 3
-        host = cloud_test_host
-        other_host = cloud_host_factory(hostname=f'{uuid4()}')
-        root_cp = default_channel_partner
-        root_cp_user = cp_user_factory(channel_partner=root_cp)
-        other_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
-                                                cloud_host=other_host)
-        default_subs = [
-            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=host)
-            for _ in range(gen_count)
-        ]
-        default_subs += [
-            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}'))
-            for _ in range(gen_count)
-        ]
-        other_subs = [channel_partner_factory(parent_channel_partner=other_cp) for _ in range(gen_count)]
-        for sub in default_subs + other_subs:
-            channel_partner_factory(parent_channel_partner=sub, cloud_host=host)
-            channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host)
+    def test_get_queryset_own_cp(self):
         # Test root channel partner's subs
-        view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(root_cp.id)})
+        view = ChannelPartnerNestedViewSet(
+            kwargs={'parent_lookup_parent_channel_partner': str(self.root_cp.id)})
         view.request = MagicMock()
-        view.request.cloud_host = host
-        view.request.user = root_cp_user.user
+        view.request.cloud_host = self.host
+        view.request.user = self.root_cp_user.user
         qs = view.get_queryset()
-        assert qs.count() == len(default_subs)
+        assert qs.count() == len(self.default_subs)
 
+    def test_get_queryset_child_cp(self):
         # test second level partner's subs (has two children with different hosts)
-        view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(default_subs[0].id)})
+        view = ChannelPartnerNestedViewSet(
+            kwargs={'parent_lookup_parent_channel_partner': str(self.default_subs[0].id)})
         view.request = MagicMock()
-        view.request.cloud_host = host
-        view.request.user = root_cp_user.user
+        view.request.cloud_host = self.host
+        view.request.user = self.root_cp_user.user
         qs = view.get_queryset()
         assert qs.count() == 2
+
+    def test_permission_own_cp(self, mock_auth_with_user):
+        mock_auth_with_user(self.root_cp_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        path = reverse('channelpartners-subchannelpartner-list',
+                       kwargs={'parent_lookup_parent_channel_partner': str(self.root_cp.id)})
+        response = self.client.get(path, SERVER_NAME=self.host.hostname)
+        assert response.status_code == 200
+
+    def test_permission_lowest_lvl_cp(self, mock_auth_with_user):
+        mock_auth_with_user(self.root_cp_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        path = reverse('channelpartners-subchannelpartner-list',
+                       kwargs={'parent_lookup_parent_channel_partner': str(self.grand_child.id)})
+        response = self.client.get(path, SERVER_NAME=self.host.hostname)
+        assert response.status_code == 200
+
+    def test_permission_other_cp(self, mock_auth_with_user):
+        mock_auth_with_user(self.root_cp_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        path = reverse('channelpartners-subchannelpartner-list',
+                       kwargs={'parent_lookup_parent_channel_partner': str(self.other_cp.id)})
+        response = self.client.get(path, SERVER_NAME=self.host.hostname)
+        assert response.status_code == 403
 
 
 class TestChannelPartnerViewSet:
@@ -2613,3 +2652,2289 @@ class TestCloudStorageUsageReport:
         self.system.refresh_from_db()
         system = CloudSystemId.objects.get(system_id=self.system.system_id)
         assert self.system.usage_issue_detected is True
+
+
+class TestChannelPartnerViewSetPermissions:
+    @pytest.fixture(autouse=True)
+    def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory,
+              cp_user_factory, org_user_factory, cloud_user_factory, cloud_test_host):
+
+        self.root_user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        self.cp_lvl_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1)
+        self.cp_manager_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_1 = organization_factory(channel_partner=self.cp_lvl_1)
+        self.org_user_lvl_1 = org_user_factory(organization=self.org_lvl_1)
+
+        self.cp_lvl_2 = channel_partner_factory(parent_channel_partner=self.cp_lvl_1)
+        self.cp_admin_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2)
+        self.cp_manager_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_2 = organization_factory(channel_partner=self.cp_lvl_2)
+        self.org_user_lvl_2 = org_user_factory(organization=self.org_lvl_2)
+
+        self.cp_lvl_3 = channel_partner_factory(parent_channel_partner=self.cp_lvl_2)
+        self.cp_admin_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3)
+        self.cp_manager_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_3 = organization_factory(channel_partner=self.cp_lvl_3)
+        self.org_user_lvl_3 = org_user_factory(organization=self.org_lvl_3)
+
+        self.cp_other = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_other = cp_user_factory(channel_partner=self.cp_other)
+        self.org_other = organization_factory(channel_partner=self.cp_other)
+        self.org_user_other = org_user_factory(organization=self.org_other)
+
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path_list = reverse('channelpartner-list')
+        self.kwargs_lvl_1 = {'pk': str(self.cp_lvl_1.id)}
+        self.kwargs_lvl_2 = {'pk': str(self.cp_lvl_2.id)}
+        self.kwargs_lvl_3 = {'pk': str(self.cp_lvl_3.id)}
+        caches['default'].clear()
+
+    @property
+    def auth(self):
+        return f'Bearer {uuid4()}'
+    def test_list_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+
+        response = self.client.get(path=self.path_list)
+
+        assert response.status_code == 200
+
+    def test_list_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.org_user_lvl_1)
+        response = self.client.get(path=self.path_list)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 0
+
+    def test_retrieve_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        view_name = 'channelpartner-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_retrieve_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'channelpartner-detail'
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_partial_update_cp_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-detail'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_partial_update_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-detail'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_history_cp_users(self, mock_auth_with_user):
+        view_name = 'channelpartner-service-changes-history'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_history_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-service-changes-history'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_summary_cp_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-service-changes-summary'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_summary_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-service-changes-summary'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_aggregate_cp_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-aggregate'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_aggregate_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-aggregate'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_change_state_cp_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-change-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_manager_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_change_state_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-change-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_confirm_state_cp_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-confirm-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_manager_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_confirm_state_org_users(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-confirm-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_user_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+
+class TestOrganizationViewSetPermissions:
+    @pytest.fixture(autouse=True, scope='function')
+    def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory,
+              cp_user_factory, org_user_factory, cloud_user_factory, cloud_test_host, sys_group_user_factory):
+        self.root_user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        self.cp_lvl_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1)
+        self.cp_manager_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_1 = organization_factory(channel_partner=self.cp_lvl_1)
+        self.org_admin_lvl_1 = org_user_factory(organization=self.org_lvl_1)
+        self.org_viewer_lvl_1 = org_user_factory(organization=self.org_lvl_1, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_1 = sys_group_user_factory(self.org_lvl_1)
+
+        self.cp_lvl_2 = channel_partner_factory(parent_channel_partner=self.cp_lvl_1)
+        self.cp_admin_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2)
+        self.cp_manager_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_2 = organization_factory(channel_partner=self.cp_lvl_2)
+        self.org_admin_lvl_2 = org_user_factory(organization=self.org_lvl_2)
+        self.org_viewer_lvl_2 = org_user_factory(organization=self.org_lvl_2, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_2 = sys_group_user_factory(self.org_lvl_2)
+
+        self.cp_lvl_3 = channel_partner_factory(parent_channel_partner=self.cp_lvl_2)
+        self.cp_admin_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3)
+        self.cp_manager_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_3 = organization_factory(channel_partner=self.cp_lvl_3)
+        self.org_admin_lvl_3 = org_user_factory(organization=self.org_lvl_3)
+        self.org_viewer_lvl_3 = org_user_factory(organization=self.org_lvl_3, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_3 = sys_group_user_factory(self.org_lvl_3)
+
+        self.cp_other = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_other = cp_user_factory(channel_partner=self.cp_other)
+        self.org_other = organization_factory(channel_partner=self.cp_other)
+        self.org_admin_other = org_user_factory(organization=self.org_other)
+        self.org_viewer_other = org_user_factory(organization=self.org_other, role=OrganizationRoles.VIEWER)
+        self.group_user_other = sys_group_user_factory(self.org_other)
+
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path_list = reverse('organization-list')
+        self.kwargs_lvl_1 = {'pk': str(self.org_lvl_1.id)}
+        self.kwargs_lvl_2 = {'pk': str(self.org_lvl_2.id)}
+        self.kwargs_lvl_3 = {'pk': str(self.org_lvl_3.id)}
+        caches['default'].clear()
+
+    @property
+    def auth(self):
+        return f'Bearer {uuid4()}'
+
+    def test_list_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+
+        response = self.client.get(path=self.path_list)
+
+        assert response.status_code == 200
+
+    def test_list_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.org_admin_lvl_1)
+        response = self.client.get(path=self.path_list)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 1
+
+    def test_retrieve_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        view_name = 'organization-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_retrieve_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'organization-detail'
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_partial_update_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-detail'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_partial_update_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-detail'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_history_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-service-changes-history'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_history_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-service-changes-history'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_summary_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-service-changes-summary'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_changes_summary_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-service-changes-summary'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_aggregate_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-aggregate'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_aggregate_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-aggregate'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_change_state_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-change-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_manager_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_manager_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_change_state_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-change-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_confirm_state_cp_users(self, mock_auth_with_user):
+
+        view_name = 'organization-confirm-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_manager_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_manager_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_confirm_state_org_users(self, mock_auth_with_user):
+
+        view_name = 'organization-confirm-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_groups_structure_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        view_name = 'organization-groups-structure'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_groups_structure_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'organization-groups-structure'
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+
+class TestOrganizationNestedViewSetPermissions:
+    @pytest.fixture(autouse=True, scope='function')
+    def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory,
+              cp_user_factory, org_user_factory, cloud_user_factory, cloud_test_host, sys_group_user_factory):
+        self.root_user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        self.cp_lvl_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1)
+        self.cp_manager_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_1 = organization_factory(channel_partner=self.cp_lvl_1)
+        self.org_admin_lvl_1 = org_user_factory(organization=self.org_lvl_1)
+        self.org_viewer_lvl_1 = org_user_factory(organization=self.org_lvl_1, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_1 = sys_group_user_factory(self.org_lvl_1)
+
+        self.cp_lvl_2 = channel_partner_factory(parent_channel_partner=self.cp_lvl_1)
+        self.cp_admin_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2)
+        self.cp_manager_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_2 = organization_factory(channel_partner=self.cp_lvl_2)
+        self.org_admin_lvl_2 = org_user_factory(organization=self.org_lvl_2)
+        self.org_viewer_lvl_2 = org_user_factory(organization=self.org_lvl_2, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_2 = sys_group_user_factory(self.org_lvl_2)
+
+        self.cp_lvl_3 = channel_partner_factory(parent_channel_partner=self.cp_lvl_2)
+        self.cp_admin_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3)
+        self.cp_manager_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_3 = organization_factory(channel_partner=self.cp_lvl_3)
+        self.org_admin_lvl_3 = org_user_factory(organization=self.org_lvl_3)
+        self.org_viewer_lvl_3 = org_user_factory(organization=self.org_lvl_3, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_3 = sys_group_user_factory(self.org_lvl_3)
+
+        self.cp_other = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_other = cp_user_factory(channel_partner=self.cp_other)
+        self.org_other = organization_factory(channel_partner=self.cp_other)
+        self.org_admin_other = org_user_factory(organization=self.org_other)
+        self.org_viewer_other = org_user_factory(organization=self.org_other, role=OrganizationRoles.VIEWER)
+        self.group_user_other = sys_group_user_factory(self.org_other)
+
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.kwargs_lvl_1 = {'parent_lookup_channel_partner': str(self.cp_lvl_1.id)}
+        self.kwargs_lvl_2 = {'parent_lookup_channel_partner': str(self.cp_lvl_2.id)}
+        self.kwargs_lvl_3 = {'parent_lookup_channel_partner': str(self.cp_lvl_3.id)}
+        caches['default'].clear()
+        self.view_name = 'channelpartners-organization-list'
+
+    @property
+    def auth(self):
+        return f'Bearer {uuid4()}'
+
+    def test_list_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 403
+
+    def test_list_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+
+
+class TestCloudSystemNestedViewSetPermissions:
+    @pytest.fixture(autouse=True, scope='function')
+    def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory,
+              cp_user_factory, org_user_factory, cloud_user_factory, cloud_test_host, sys_group_user_factory):
+        self.root_user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        self.cp_lvl_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1)
+        self.cp_manager_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_1 = organization_factory(channel_partner=self.cp_lvl_1)
+        self.org_admin_lvl_1 = org_user_factory(organization=self.org_lvl_1)
+        self.org_viewer_lvl_1 = org_user_factory(organization=self.org_lvl_1, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_1 = sys_group_user_factory(self.org_lvl_1)
+
+        self.cp_lvl_2 = channel_partner_factory(parent_channel_partner=self.cp_lvl_1)
+        self.cp_admin_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2)
+        self.cp_manager_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_2 = organization_factory(channel_partner=self.cp_lvl_2)
+        self.org_admin_lvl_2 = org_user_factory(organization=self.org_lvl_2)
+        self.org_viewer_lvl_2 = org_user_factory(organization=self.org_lvl_2, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_2 = sys_group_user_factory(self.org_lvl_2)
+
+        self.cp_lvl_3 = channel_partner_factory(parent_channel_partner=self.cp_lvl_2)
+        self.cp_admin_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3)
+        self.cp_manager_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_3 = organization_factory(channel_partner=self.cp_lvl_3)
+        self.org_admin_lvl_3 = org_user_factory(organization=self.org_lvl_3)
+        self.org_viewer_lvl_3 = org_user_factory(organization=self.org_lvl_3, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_3 = sys_group_user_factory(self.org_lvl_3)
+
+        self.cp_other = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_other = cp_user_factory(channel_partner=self.cp_other)
+        self.org_other = organization_factory(channel_partner=self.cp_other)
+        self.org_admin_other = org_user_factory(organization=self.org_other)
+        self.org_viewer_other = org_user_factory(organization=self.org_other, role=OrganizationRoles.VIEWER)
+        self.group_user_other = sys_group_user_factory(self.org_other)
+
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.kwargs_lvl_1 = {'parent_lookup_organization': str(self.org_lvl_1.id)}
+        self.kwargs_lvl_2 = {'parent_lookup_organization': str(self.org_lvl_2.id)}
+        self.kwargs_lvl_3 = {'parent_lookup_organization': str(self.org_lvl_3.id)}
+        caches['default'].clear()
+        self.view_name = 'organizations-cloudsystem-list'
+
+    @property
+    def auth(self):
+        return f'Bearer {uuid4()}'
+
+    def test_list_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+
+        assert response.status_code == 403
+
+    def test_list_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+
+class TestCloudSystemViewSetPermissions:
+    @pytest.fixture(autouse=True, scope='function')
+    def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory, system_factory,
+              cp_user_factory, org_user_factory, cloud_user_factory, cloud_test_host, sys_group_user_factory,
+              system_group_factory):
+        self.root_user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        self.cp_lvl_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1)
+        self.cp_manager_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_1 = cp_user_factory(channel_partner=self.cp_lvl_1, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_1 = organization_factory(channel_partner=self.cp_lvl_1)
+        self.org_admin_lvl_1 = org_user_factory(organization=self.org_lvl_1)
+        self.org_viewer_lvl_1 = org_user_factory(organization=self.org_lvl_1, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_1 = sys_group_user_factory(self.org_lvl_1)
+        self.system_lvl_1 = system_factory(organization=self.org_lvl_1)
+
+        self.cp_lvl_2 = channel_partner_factory(parent_channel_partner=self.cp_lvl_1)
+        self.cp_admin_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2)
+        self.cp_manager_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_2 = cp_user_factory(channel_partner=self.cp_lvl_2, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_2 = organization_factory(channel_partner=self.cp_lvl_2)
+        self.org_admin_lvl_2 = org_user_factory(organization=self.org_lvl_2)
+        self.org_viewer_lvl_2 = org_user_factory(organization=self.org_lvl_2, role=OrganizationRoles.VIEWER)
+        self.group_user_lvl_2 = sys_group_user_factory(self.org_lvl_2)
+        self.system_lvl_2 = system_factory(organization=self.org_lvl_2)
+
+        self.cp_lvl_3 = channel_partner_factory(parent_channel_partner=self.cp_lvl_2)
+        self.cp_admin_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3)
+        self.cp_manager_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.MANAGER)
+        self.cp_accountant_lvl_3 = cp_user_factory(channel_partner=self.cp_lvl_3, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        self.org_lvl_3 = organization_factory(channel_partner=self.cp_lvl_3)
+        self.org_admin_lvl_3 = org_user_factory(organization=self.org_lvl_3)
+        self.org_viewer_lvl_3 = org_user_factory(organization=self.org_lvl_3, role=OrganizationRoles.VIEWER)
+        self.group_lvl_3 = system_group_factory(organization=self.org_lvl_3)
+        self.group_user_lvl_3 = sys_group_user_factory(self.org_lvl_3, group=self.group_lvl_3)
+        self.system_lvl_3 = system_factory(organization=self.org_lvl_3)
+        self.system_lvl_3_1 = system_factory(organization=self.org_lvl_3, system_group=self.group_lvl_3)
+
+        self.cp_other = channel_partner_factory(parent_channel_partner=root_nx_channel_partner)
+        self.cp_admin_other = cp_user_factory(channel_partner=self.cp_other)
+        self.org_other = organization_factory(channel_partner=self.cp_other)
+        self.org_admin_other = org_user_factory(organization=self.org_other)
+        self.org_viewer_other = org_user_factory(organization=self.org_other, role=OrganizationRoles.VIEWER)
+        self.group_user_other = sys_group_user_factory(self.org_other)
+
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path_list = reverse('cloudsystem-list')
+        self.kwargs_lvl_1 = {'id': str(self.system_lvl_1.system_id)}
+        self.kwargs_lvl_2 = {'id': str(self.system_lvl_2.system_id)}
+        self.kwargs_lvl_3 = {'id': str(self.system_lvl_3.system_id)}
+        self.kwargs_lvl_3_1 = {'id': str(self.system_lvl_3_1.system_id)}
+        caches['default'].clear()
+
+    @property
+    def auth(self):
+        return f'Bearer {uuid4()}'
+
+    def test_list_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+
+        response = self.client.get(path=self.path_list)
+
+        assert response.status_code == 200
+        assert len(response.data['results']) == 0
+
+    def test_list_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.org_admin_lvl_1)
+        response = self.client.get(path=self.path_list)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 1
+
+    def test_retrieve_cp_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_retrieve_org_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_partial_update_cp_users(self, mock_auth_with_user):
+
+        view_name = 'cloudsystem-detail'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 200
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_system_usage_report_org_users(self, mock_cdb_basic_auth, mock_auth_with_user):
+        view_name = 'cloudsystem-system-usage-report'
+
+        auth = mock_cdb_basic_auth(self.system_lvl_1)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+    def test_service_quantity_cp_users(self, mock_auth_with_user):
+
+        view_name = 'cloudsystem-service-quantity'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_quantity_org_users(self, mock_auth_with_user):
+
+        view_name = 'cloudsystem-service-quantity'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_services_cp_users(self, mock_auth_with_user):
+
+        view_name = 'cloudsystem-services'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_services_org_users(self, mock_auth_with_user):
+
+        view_name = 'cloudsystem-services'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_quantity_patch_org_users(self, mock_auth_with_user):
+        view_name = 'cloudsystem-service-quantity'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_service_quantity_patch_cp_user(self, mock_auth_with_user):
+        view_name = 'cloudsystem-service-quantity'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_manager_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 400
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.patch(path=path)
+        assert response.status_code == 403
+
+    def test_destroy_cp_users(self, mock_auth_with_user, mocker):
+        view_name = 'cloudsystem-detail'
+        cdb_response = MagicMock()
+        cdb_response.status_code = 200
+        mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        # 401 raised after permission check
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 204
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_destroy_org_users(self, mock_auth_with_user, mocker):
+        view_name = 'cloudsystem-detail'
+        cdb_response = MagicMock()
+        cdb_response.status_code = 200
+        mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.delete(path=path)
+        assert response.status_code == 204
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.delete(path=path)
+        assert response.status_code == 403
+
+    def test_saas_report_org_users(self, mock_auth_with_user, mocker):
+        view_name = 'cloudsystem-saas-report'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_viewer_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.group_user_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_saas_report_cp_users(self, mock_auth_with_user, mocker):
+
+        view_name = 'cloudsystem-saas-report'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403

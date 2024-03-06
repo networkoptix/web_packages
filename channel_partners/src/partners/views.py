@@ -6,6 +6,7 @@ import httpx
 import structlog
 from django.conf import settings
 from django.core.cache import caches
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models import (
     Prefetch,
     Q,
@@ -376,6 +377,7 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     def get_queryset(self):
         query = Q(
             Q(cloud_host=self.request.cloud_host) |
+            # TODO. Do we still need this query by grand parent?
             Q(
                 parent_channel_partner__in=Subquery(
                     ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner')),
@@ -386,7 +388,7 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
         return qs.filter(query)
 
     def get_permissions(self):
-        return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
+        return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.is_member_in_branch)
 
     def check_permissions(self, request):
         super().check_permissions(request)
@@ -602,12 +604,17 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action == 'retrieve':
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_access))
-        if self.action in ('partial_update'):
+        if self.action == 'aggregate':
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.is_member_in_branch))
+        if self.action in ('partial_update', 'update'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_configure))
         if self.action in ('service_changes_history', 'service_changes_summary'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_view_service_reports))
         if self.action in ('change_state', 'confirm_state'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_alter_state))
+        if len(perms) == 1 and self.detail:
+            raise ImproperlyConfigured('Must add a permission for a detail view')
+
         return perms
 
     def get_serializer_class(self):
@@ -617,49 +624,31 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             return ChannelPartnerSerializer
 
     def get_queryset(self):
+        if self.detail:
+            return self.queryset
+
         # common case with filtering by cloud_host and user's channel partners
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
                 ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
-
-        if self.action == 'retrieve':
-            # LIC-278
-            # If user is member of an organization, they should have read access to parent
-            query |= Q(id__in=Subquery(
-                OrganizationToUser.objects.filter(user=self.request.user).values('organization__channel_partner_id')))
-
-        if self.detail:
-            # Channel partner is a direct child of user's channel partner. For root channel partner's
-            # children host may be different. Other partners cannot create child with a different host
-            query |= Q(parent_channel_partner_id__in=Subquery(
-                ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
-
-            # LIC-277 Map channel partners to cloud host instead of cloud instance
-            # If channel partner’s parent has no parent (so it is the direct child of root channel partner)
-            #   and current user is member of root channel partner:
-            # /channel_partners/{id} should work even if the request is coming from a different cloud host
-            parent_channel_partners_query = (
-                ChannelPartnerToUser.objects
-                .filter(user=self.request.user, channel_partner__parent_channel_partner_id__isnull=True)
-                .values('channel_partner_id')
-            )
-            query |= Q(parent_channel_partner_id__in=Subquery(parent_channel_partners_query))
-            return self.queryset.filter(query)
         return self.queryset.filter(query)
 
-
-    @extend_schema(request=CreateChannelPartnerSerializer, responses=ChannelPartnerSerializer)
+    @extend_schema(request=CreateChannelPartnerSerializer,
+                   responses=ChannelPartnerSerializer,
+                   extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners}'
+                                               f' for Channel Partner'}
+                   )
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         parent_channel_partner = serializer.validated_data.get('parent_channel_partner')
-        channeL_partner = serializer.save(cloud_host=parent_channel_partner.cloud_host)
+        channel_partner = serializer.save(cloud_host=parent_channel_partner.cloud_host)
 
-        response_serializer = ChannelPartnerSerializer(channeL_partner, context={'request': request})
+        response_serializer = ChannelPartnerSerializer(channel_partner, context={'request': request})
         return Response(response_serializer.data)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceRecordSerializer(many=True),
-                   extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'})
+                   extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Channel Partner'})
     @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
     def service_changes_history(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
@@ -675,7 +664,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceSummarySerializer(many=True),
-                   extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'})
+                   extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports}'
+                                               f' for Channel Partner'})
     @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
     def service_changes_summary(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
@@ -745,7 +735,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     filterset_class = filters.OrganizationFilter
 
     def get_permissions(self):
-        return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
+        return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.is_member_in_branch)
 
     def check_permissions(self, request):
         super().check_permissions(request)
@@ -784,26 +774,30 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action == 'retrieve':
-            perms.append(CanPerformChannelPartnerAction(Organization.can_access))
-        if self.action in ('update'):
+        if self.action in ('retrieve', 'aggregate'):
+            perms.append(CanPerformChannelPartnerAction(Organization.is_member_in_branch))
+        if self.action in ('update', 'partial_update'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_configure))
-        if self.action in ('service_changes_history',):
+        if self.action in ('service_changes_history', 'service_changes_summary'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_view_service_reports))
         if self.action == 'groups_structure':
             perms.append(CanPerformChannelPartnerAction(Organization.can_access))
         if self.action in ('change_state', 'confirm_state'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_alter_state))
+        if len(perms) == 1 and self.detail:
+            raise ImproperlyConfigured('Must add a permission for a detail view')
+
         return perms
 
     def get_queryset(self):
         cloud_user: CloudUser = self.request.user
         cloud_host: CloudHost = self.request.cloud_host
-
+        if self.action in ('retrieve', 'service_changes_history', 'service_changes_summary', 'aggregate'):
+            return self.queryset
         if self.detail:
             return self.queryset.filter()
 
-        # Validate & Extract if valud
+        # Validate & Extract if valid
         param_serializer = OrganizationQueryParamsSerializer(data=self.request.query_params)
         if not param_serializer.is_valid():
             raise ValidationError(param_serializer.errors)
@@ -1084,7 +1078,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
         )
 
     def get_permissions(self):
-        return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_systems)
+        return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_organization_systems)
 
     def check_permissions(self, request):
         super().check_permissions(request)
@@ -1273,6 +1267,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         return f'views-cloud_system-service_quantity-{obj.id}'
 
     def get_queryset(self):
+        if self.action == 'retrieve' or (self.action == 'service_quantity' and self.request.method == 'GET'):
+            return self.queryset
         if self.detail:
             return self.queryset.filter(cloud_host=self.request.cloud_host)
         else:
@@ -1290,18 +1286,24 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.action == 'system_usage_report':
             return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_url_kwarg)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action in ('retrieve', 'services', 'saas_report', 'migrate_legacy_licenses'):
+        if self.action in ('retrieve', 'services') or (self.action == 'service_quantity' and self.request.method == 'GET'):
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.is_member_in_branch,
+                                                        system_allowed=True, direct_access_allowed=True))
+        if self.action in ('saas_report', 'migrate_legacy_licenses'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
                                                         system_allowed=True, direct_access_allowed=True))
         if self.action == 'destroy':
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage, system_allowed=True))
         if self.action == 'transfer_offer':
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_systems))
-        if self.action == 'service_quantity':
-            if self.request.method == 'PATCH':
-                perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
-            if self.request.method == 'GET':
-                perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access, direct_access_allowed=True))
+        if self.action in ('partial_update', 'update'):
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
+        if self.action == 'service_quantity' and self.request.method in ('PATCH'):
+                perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services,
+                                                            direct_access_allowed=True))
+        if len(perms) == 1 and self.detail:
+            raise ImproperlyConfigured('Must add a permission for a detail view')
+
         return perms
 
     @extend_schema(auth=[{'Cloud Oauth Token': []}], request=BindLocalSystemSerializer, responses=SystemBindResponseSerializer)

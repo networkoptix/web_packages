@@ -260,7 +260,7 @@ check-python-licenses:
     - ./cloud_helper.sh check_licenses
 
 .cp-backend-changes:
-  # extends: .retries
+  image: ${CP_DJANGO_PYTHON_IMAGE}:${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${CP_IMAGE_VERSION}
   needs:
     - job: docker:build-channel-partners
       optional: true
@@ -299,7 +299,6 @@ check-python-licenses:
 
 .cp-django-python:
   extends: .cp-backend-changes
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
   needs:
     - job: docker:build-channel-partners
       optional: true
@@ -366,7 +365,6 @@ check-python-licenses:
 
 cp-checks:
   extends: .cp-django-python
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
   stage: check
   variables:
     PYTHONPATH: "/builds/dev/cloud_portal/common/python"
@@ -404,7 +402,6 @@ cp-unit-test-fast:
 
 cp-lint:
   extends: .cp-django-python
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
   stage: check
   script:
     - cd /builds/dev/cloud_portal/channel_partners/
