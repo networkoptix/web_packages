@@ -1,6 +1,3 @@
-variables:
-  IMAGE_VERSION: '41156'
-
 .version-enforced-docker:
     extends: .docker.template
     interruptible: true
@@ -12,7 +9,7 @@ variables:
 
       if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" && "${IMAGE_VERSION}" != "${CI_MERGE_REQUEST_ID}" ]]; then
         echo "Please update the IMAGE_VERSION from ${IMAGE_VERSION} to ${CI_MERGE_REQUEST_ID}"
-        echo "see ci/Docker/.version-enforced.yml"
+        echo "see ${DOCKER_DIR}/.gitlab-ci.yml"
         exit 1
       fi
 

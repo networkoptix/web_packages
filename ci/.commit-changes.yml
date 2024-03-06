@@ -7,6 +7,8 @@
 
       if [[ $(git diff --stat) != '' ]]; then
         echo '${COMMIT_MESSAGE}, attempting to commit changes'
+        echo "USER: ${GITLAB_USER_EMAIL} ${GITLAB_USER_NAME}"
+        echo "TARGET BRANCH: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
         git config user.email "$GITLAB_USER_EMAIL"
         git config user.name "$GITLAB_USER_NAME"
         git remote add mr_upstream "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_PROJECT_PATH.git"
@@ -18,15 +20,29 @@
         git add .
         git commit -m "(${COMMIT_MESSAGE}) committed by pipeline"
 
-        if [[ $(git log --cherry-pick --right-only "mr_origin/$CI_COMMIT_REF_NAME...mr_upstream/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME") ]]; then
-            echo "Non cherry pick commits found ok to push commit to branch"
+        REACTIONS=$(curl -s --header "PRIVATE-TOKEN: $CANCEL_PIPELINE_ACCESS_TOKEN" "https://gitlab.nxvms.dev/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/award_emoji")
+
+        echo "Reactions: $REACTIONS"
+
+        # Check if the MR is robocat cherry pick
+        if echo $REACTIONS  | grep -q '"name":"fast_forward"'; then
+            echo "MR is robocat cherry pick"
+            # Check if the MR has name_badge reaction
+            if echo $REACTIONS | grep -q '"name":"name_badge"'; then
+              echo "Has name_badge reaction auto committing fixes"
+            else
+              echo "MR is robocat cherry pick and no name_badge 📛 reaction"
+              echo "To allow auto commit, please add name_badge 📛 reaction to the MR and re-run pipeline"
+              echo "$ERROR_MESSAGE"
+              exit $OVERRIDE_COMMIT_EXIT_CODE
+            fi
+
             git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
             echo 'pushed commit to branch'
         else
-            echo "Only cherry pick commits found, not pushing commit to branch"
-            echo "$ERROR_MESSAGE"
-            exit $OVERRIDE_COMMIT_EXIT_CODE
+            echo "Not Fast Forward"
         fi
+
       else
         echo "No changes to commit"
       fi
