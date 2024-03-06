@@ -46,15 +46,6 @@ frontend-lint:
       COMMIT_MESSAGE="FE lint auto fixed"
     - !reference [".commit-changes", "script"]
 
-frontend-builds:
-  extends: .frontend-node
-  stage: build
-  script:
-    - |
-      pushd "front_end"
-          npm run build:ci
-      popd
-
 frontend-tests:
   extends: .frontend-node
   stage: test
