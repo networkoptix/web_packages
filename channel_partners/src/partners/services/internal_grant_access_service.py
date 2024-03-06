@@ -133,19 +133,44 @@ class InternalGrantAccessService:
             raise ValueError(f"Unsupported user_type: {user_type}")
 
         # Channel Partner Stuff
-        channel_partner: ChannelPartner
-        cp_created: bool
-        channel_partner, cp_created = ChannelPartner.objects.get_or_create(
+        channel_partner_qs = ChannelPartner.objects.filter(
             parent_channel_partner=host_root_cp,
             name=channel_partner_name,
             cloud_host=cloud_host)
 
+        if channel_partner_qs.count() > 1:
+            logger.warning(
+                "Multiple channel partners found",
+                channel_partner_name=channel_partner_name,
+                parent_channel_partner=host_root_cp.name,
+                cloud_host=cloud_host.hostname)
+            channel_partner = channel_partner_qs.first()
+
+        elif channel_partner_qs.count() == 0:
+            channel_partner = ChannelPartner.objects.create(
+                parent_channel_partner=host_root_cp,
+                name=channel_partner_name,
+                cloud_host=cloud_host)
+        else:
+            channel_partner = channel_partner_qs.first()
+
         # Organization Stuff
-        organization: Organization
-        org_created: bool
-        organization, org_created = Organization.objects.get_or_create(
+        organization_qs = Organization.objects.filter(
             channel_partner=channel_partner,
             name=organization_name)
+        if organization_qs.count() > 1:
+            logger.warning(
+                "Multiple organizations found",
+                organization_name=organization_name,
+                parent_channel_partner=host_root_cp.name,
+                cloud_host=cloud_host.hostname)
+            organization = organization_qs.first()
+        elif organization_qs.count() == 0:
+            organization = Organization.objects.create(
+                channel_partner=channel_partner,
+                name=organization_name)
+        else:
+            organization = organization_qs.first()
 
         return channel_partner, organization
 
