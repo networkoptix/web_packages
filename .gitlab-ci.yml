@@ -384,15 +384,6 @@ frontend-lint:
         echo 'pushed lint fixes to branch'
       fi
 
-frontend-builds:
-  extends: .frontend-node
-  stage: build
-  script:
-    - |
-      pushd "front_end"
-          npm run build:ci
-      popd
-
 frontend-tests:
   extends: .frontend-node
   stage: test
@@ -550,10 +541,6 @@ create-vms-mr:
 on-other-frontend-checks:
   extends: .fail-on-frontend
   needs: ["other-frontend-checks"]
-
-on-frontend-builds:
-  extends: .fail-on-frontend
-  needs: ["frontend-builds"]
 
 on-frontend-tests:
   extends: .fail-on-frontend
