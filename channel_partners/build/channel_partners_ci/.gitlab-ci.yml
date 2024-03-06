@@ -3,8 +3,8 @@ include:
 
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_IMAGE_VERSION: '39589'
-  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${CP_IMAGE_VERSION}'
+  CP_IMAGE_VERSION: '41225'
+  CP_DJANGO_PYTHON_IMAGE_TAG: '${CP_IMAGE_VERSION}'
 
 
 # Required CI/CD variables, which should be defined on Gitlab instance layer
@@ -27,9 +27,7 @@ docker:build-channel-partners:
     env
     DOCKER_DIR="channel_partners/build/channel_partners_ci"
     touch build-cp-django.env
-    if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
-      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${IMAGE_VERSION}"
-    fi
+
     echo "CP_DJANGO_PYTHON_IMAGE_TAG=${CP_DJANGO_PYTHON_IMAGE_TAG}" > build-cp-django.env
 
     TARGET_IMAGE="${CP_DJANGO_PYTHON_IMAGE}"
