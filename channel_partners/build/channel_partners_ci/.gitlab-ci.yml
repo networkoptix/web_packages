@@ -3,7 +3,8 @@ include:
 
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${IMAGE_VERSION}'
+  CP_IMAGE_VERSION: '41216'
+  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${CP_IMAGE_VERSION}'
 
 
 # Required CI/CD variables, which should be defined on Gitlab instance layer
@@ -15,7 +16,7 @@ docker:build-channel-partners:
   extends: .version-enforced-docker
   interruptible: true
   variables:
-    IMAGE_VERSION: '41212'
+    IMAGE_VERSION: ${CP_IMAGE_VERSION}
     BUILD_OPTIONS: |
       --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple

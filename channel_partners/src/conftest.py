@@ -18,6 +18,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import (
     RSAPublicKey,
 )
 from django.conf import settings
+from django.core.cache import caches
 from django.utils import timezone
 from jwt.algorithms import RSAAlgorithm
 from jwt.utils import (
@@ -455,6 +456,11 @@ def mock_post_notification(httpx_mock, request_host):
 def mox_tasks_retries(mocker):
     mocker.patch('partners.tasks.notification.MAX_RETRIES', 1)
     mocker.patch('partners.tasks.notification.RETRY_TIMEOUT', 1)
+
+
+@pytest.fixture(autouse=True, scope='function')
+def clear_local_cache():
+    caches['local'].clear()
 
 
 @pytest.fixture()

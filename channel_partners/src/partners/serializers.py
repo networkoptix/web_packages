@@ -254,6 +254,7 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False)
     firstAdminEmail = serializers.EmailField(required=False)
+
     class Meta:
         model = ChannelPartner
         fields = [
