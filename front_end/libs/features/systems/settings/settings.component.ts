@@ -260,6 +260,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 'selectedDetailsSection',
                 this.menuService.selectedDetailsSection(),
             );
+            this.updateMenu();
         });
     }
 
