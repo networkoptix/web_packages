@@ -1,5 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import * as CPActions from '@store/channel-partners/channel-partners.actions';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
@@ -12,6 +15,13 @@ import { TabResolver } from '../resolvers/tab-resolver';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
 
+const setPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+    inject(Store).dispatch(
+        CPActions.setCurrentPartnerId({ currentPartnerId: route.params.partnerId }),
+    );
+    return true;
+};
+
 const CPRoutes: Routes = [
     {
         path: ':partnerId',
@@ -20,6 +30,7 @@ const CPRoutes: Routes = [
             currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
         },
+        canActivate: [setPartnerId],
         runGuardsAndResolvers: 'always',
         children: [
             {
