@@ -21,7 +21,7 @@ export const setChannelPartnersAndOrgs = createAction(
 );
 
 export const setCurrentPartnerId = createAction(
-    '[Channel Parnters] Set current partner id',
+    '[Channel Partners] Set current partner id',
     props<{ currentPartnerId: string }>(),
 );
 

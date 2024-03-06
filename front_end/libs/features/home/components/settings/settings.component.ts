@@ -26,6 +26,7 @@ import {
     State,
     UpdateChannelPartner,
     UpdateOrganization,
+    ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
@@ -93,9 +94,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
         } else if (this.orgSettings()) {
             state.item = this.currentOrg$$();
             state.view = settingsViews.ORGANIZATIONS;
-            state.canUpdateStatus = state.item?.ownPermissions.includes(
-                OrgPermissions.CONFIGURE_ORGANIZATION,
-            );
         } else if (this.subchannelSettings()) {
             const subchannelsMap = new Map<string, ChannelPartner>(
                 this.subchannelPartners$$().map(partner => [partner.id, partner]),
@@ -127,9 +125,9 @@ export class NxOrganizationSettingsComponent implements OnInit {
         return accessLevel;
     });
 
-    currentPartnerPermissions$$ = computed(() => {
+    currentPartnerPermissions$$ = computed<string[]>(() => {
         const currentPartner = this.currentPartner$$();
-        return Object.values(currentPartner?.ownPermissions || {});
+        return currentPartner?.ownPermissions || [];
     });
 
     isDirectParentCP$$ = computed(() => {
@@ -147,6 +145,13 @@ export class NxOrganizationSettingsComponent implements OnInit {
     isOrgAdmin$$ = computed(() => {
         return this.currentPartnerPermissions$$().includes('administer_organization_systems');
     });
+    canChangeState$$ = computed(
+        () =>
+            nxConfig.featureFlags.channelPartnersChangeStateUI &&
+            this.currentPartnerPermissions$$().includes(
+                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+            ),
+    );
     canUpdateOrg$$ = computed(() => {
         const currentState = this.currentState$$();
         return currentState.item?.ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION);

@@ -27,7 +27,7 @@
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>
         <nx-settings-state
-            *ngIf="canChangeStateUI && canUpdateOrg$$() && isDirectParentCP$$()"
+            *ngIf="canChangeState$$() && isDirectParentCP$$()"
             (updateState)="handleStateUpdate($event)"
             [currState]="currentState$ | async"
             [canChange]="state.canUpdateStatus"

@@ -193,12 +193,7 @@ export class NxChannelPartnersComponent implements OnInit {
     populateTabs(partnerAccess: { ownPermissions: string[]; ownRoles: string[] }): Tab[] {
         const tabs: Tab[] = [];
         const { ownRoles, ownPermissions } = partnerAccess;
-        if (
-            [
-                ChannelPartnerPermissions.CONFIGURE_ORGANIZATION,
-                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-            ].some(permission => ownPermissions.includes(permission))
-        ) {
+        if (ownPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS)) {
             tabs.splice(0, 0, {
                 displayName: this.LANG.channelPartners.tabNames.organizations,
                 route: '',

@@ -22,11 +22,11 @@ import { delay } from 'rxjs/operators';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectCurrentOrgId,
     selectCurrentOrganization,
     selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
+    selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -43,6 +43,7 @@ import {
     State,
     OrgPermissions,
     OrgCardItem,
+    ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
@@ -108,13 +109,13 @@ export class NxOrganizationsComponent implements OnInit {
     currentPartnerOrganizations$$ =
         this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
     currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
-    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
 
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
+    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
 
     constructor(
@@ -186,6 +187,10 @@ export class NxOrganizationsComponent implements OnInit {
                 )
                     .then(() => this.isChannelPartnerUser$$.set(true))
                     .catch(() => this.isChannelPartnerUser$$.set(false));
+
+                const partnerPermissions =
+                    (this.isChannelPartnerUser$$() && this.currentPartner$$()?.ownPermissions) ||
+                    [];
                 if (
                     ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
                     this.isChannelPartnerUser$$()
@@ -210,7 +215,12 @@ export class NxOrganizationsComponent implements OnInit {
                         route: 'reports',
                     });
                 }
-                if (ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)) {
+                if (
+                    partnerPermissions.includes(
+                        ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+                    ) ||
+                    ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
+                ) {
                     this.tabs.push({
                         displayName: this.LANG.channelPartners.tabNames.settings,
                         route: 'settings',

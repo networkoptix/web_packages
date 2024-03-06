@@ -7,15 +7,22 @@ import {
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, map, of, switchMap } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectCurrentOrgId,
     selectCurrentOrganization,
     selectCurrentPartnerId,
+    selectCurrentPartner,
+    selectHasStoreLoaded,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { OrgPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartnerPermissions,
+    OrgPermissions,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 
 export const orgTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -28,11 +35,21 @@ export const orgTabGuard: CanActivateFn = (
     const currOrg$$ = store.selectSignal(selectCurrentOrganization);
     const currOrgId$$ = store.selectSignal(selectCurrentOrgId);
     const currPartnerId$$ = store.selectSignal(selectCurrentPartnerId);
-    const checkPermissions = (permissions: string[] | undefined): boolean => {
-        if (permissions) {
+    const currentPartner$$ = store.selectSignal(selectCurrentPartner);
+    const checkPermissions = (
+        orgPermissions: string[] = [],
+        currentPartnerPermissions: string[] = [],
+    ): boolean => {
+        if (orgPermissions) {
             switch (path) {
                 case 'settings':
-                    if (permissions?.includes(OrgPermissions.CONFIGURE_ORGANIZATION)) {
+                    if (
+                        (nxConfig.featureFlags.channelPartnersChangeStateUI &&
+                            currentPartnerPermissions?.includes(
+                                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+                            )) ||
+                        orgPermissions?.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
+                    ) {
                         return true;
                     }
                     break;
@@ -40,12 +57,12 @@ export const orgTabGuard: CanActivateFn = (
                 case 'users/:email':
                 case 'group/:groupId/users':
                 case 'group/:groupId/users/:email':
-                    if (permissions?.includes(OrgPermissions.MANAGE_USERS)) {
+                    if (orgPermissions?.includes(OrgPermissions.MANAGE_USERS)) {
                         return true;
                     }
                     break;
                 case 'reports':
-                    if (permissions?.includes(OrgPermissions.VIEW_SERVICE_REPORTS)) {
+                    if (orgPermissions?.includes(OrgPermissions.VIEW_SERVICE_REPORTS)) {
                         return true;
                     }
                     break;
@@ -57,10 +74,14 @@ export const orgTabGuard: CanActivateFn = (
 
     const currOrg = currOrg$$();
     if (currOrg) {
-        return checkPermissions(currOrg.ownPermissions);
+        return checkPermissions(currOrg.ownPermissions, currentPartner$$()?.ownPermissions);
     } else {
         const id = currOrgId$$();
-        return cpService.getOrganizations().pipe(
+        store.dispatch(cpActions.loadChannelPartnersAndOrgs());
+        return store.select(selectHasStoreLoaded).pipe(
+            filter(Boolean),
+            take(1),
+            switchMap(() => cpService.getOrganizations()),
             switchMap(orgs => {
                 const org = orgs.find(org => org.id === id);
                 const partnerId = currPartnerId$$();
@@ -72,7 +93,7 @@ export const orgTabGuard: CanActivateFn = (
                         map(cpOrgs => {
                             store.dispatch(
                                 cpActions.setCurrentPartner({
-                                    currentPartnerId: id,
+                                    currentPartnerId: partnerId,
                                     currentPartnerOrganizations: cpOrgs,
                                 }),
                             );
@@ -84,7 +105,7 @@ export const orgTabGuard: CanActivateFn = (
                 }
                 return of(null);
             }),
-            map(org => checkPermissions(org?.ownPermissions)),
+            map(org => checkPermissions(org?.ownPermissions, currentPartner$$()?.ownPermissions)),
         );
     }
 };
