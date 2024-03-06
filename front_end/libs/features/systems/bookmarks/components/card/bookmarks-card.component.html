@@ -5,9 +5,9 @@
 <div
     (click)="openBookmarkModal()"
     role="button"
-    (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
+    (nxOnIntersect)="bookmark$$().isVisible = $event === 'Visible'"
     [intersectionThreshold]="0.01"
-    [nxTooltip]="enableTooltip ? bookmark.name : ''"
+    [nxTooltip]="enableTooltip ? bookmark$$().name : ''"
     alternateSecondary
     horizontal
     tooltipMediumFont
@@ -19,12 +19,12 @@
         </span>
         <div class="bookmarks-image">
             <div class="bookmarks-image-loaded">
-                <ng-container *ngIf="bookmark.isVisible">
-                    <ng-container *ngIf="bookmark.deviceName && bookmark.canViewBookmark">
+                <ng-container *ngIf="bookmark$$().isVisible">
+                    <ng-container *ngIf="bookmark$$().deviceName && bookmark$$().canViewBookmark">
                         <ng-template #thumbnailPreLoader>
                             <nx-pre-loader></nx-pre-loader>
                         </ng-template>
-                        <div *ngIf="bookmark.thumbnail | async; else thumbnailPreLoader">
+                        <div *ngIf="bookmark$$().thumbnail | async; else thumbnailPreLoader">
                             <ng-container *ngIf="!thumbnailError; else noThumbnail">
                                 <svg-icon
                                     nx-add-svg-src
@@ -33,8 +33,8 @@
                                     class="bookmarks-image-playIcon"
                                 ></svg-icon>
                                 <img
-                                    [src]="bookmark.thumbnail | async | safe: 'resourceUrl'"
-                                    [alt]="'thumbnail of ' + bookmark.name"
+                                    [src]="bookmark$$().thumbnail | async | safe: 'resourceUrl'"
+                                    [alt]="'thumbnail of ' + bookmark$$().name"
                                     (error)="thumbnailError = true"
                                 />
                             </ng-container>
@@ -47,7 +47,7 @@
                         </div>
                     </ng-container>
 
-                    <ng-container *ngIf="!bookmark.canViewBookmark && bookmark.deviceName">
+                    <ng-container *ngIf="!bookmark$$().canViewBookmark && bookmark$$().deviceName">
                         <nx-player-placeholder
                             class="noPermissions"
                             [description]="
@@ -57,7 +57,7 @@
                         ></nx-player-placeholder>
                     </ng-container>
 
-                    <ng-container *ngIf="bookmark.canViewBookmark && !bookmark.deviceName">
+                    <ng-container *ngIf="bookmark$$().canViewBookmark && !bookmark$$().deviceName">
                         <nx-player-placeholder
                             class="thumbnailError"
                             [description]="'Device permission required.' | translate"
@@ -79,9 +79,18 @@
             [viewLines]="2"
             (longText)="enableTooltip = $event"
         >
-            {{ bookmark.name }}
+            {{ bookmark$$().name }}
         </nx-ml-ellipsis>
-        <p class="bookmarks-info-name">{{ bookmark.deviceName }}</p>
+        <div class="bottom-row-container">
+            <p class="bookmarks-info-name">{{ bookmark$$().deviceName }}</p>
+            @if (isBookmarkShared$$()) {
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dir + 'shared.svg'"
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                ></svg-icon>
+            }
+        </div>
         <!-- FOR DEV DEBUGGING ONLY -->
         <!-- <div
             [ngStyle]="{
@@ -90,7 +99,7 @@
             }"
         >
             <span
-                *ngFor="let tag of bookmark.tags"
+                *ngFor="let tag of bookmark$$().tags"
                 [ngStyle]="{
                     background: 'var(--bookmarks-filter-button-bg)',
                     padding: '0 0.5rem',

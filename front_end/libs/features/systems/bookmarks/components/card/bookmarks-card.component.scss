@@ -140,6 +140,13 @@ nx-bookmarks-card {
                 font-size: 14px;
                 margin-top: auto;
             }
+
+            .bottom-row-container {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
         }
     }
 

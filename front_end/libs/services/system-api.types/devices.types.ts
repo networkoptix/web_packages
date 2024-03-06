@@ -312,6 +312,7 @@ export interface BookmarkV4 extends BookmarkV1 {
     // if share exists then bookmark is publicly visible
     share?: {
         expirationTimeMs: number;
+        password: '' | '******';
     };
 }
 

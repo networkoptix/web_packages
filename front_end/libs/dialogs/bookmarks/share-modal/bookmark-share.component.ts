@@ -76,8 +76,7 @@ export class NxBookmarkShareComponent {
     updateTextDetails(): void {
         if (this.bookmark.share) {
             this.expirationText = getExpirationText(new Date(this.bookmark.share.expirationTimeMs));
-            // TODO: figure out how we know password exists. Server team is working on it
-            const passwordExists = false;
+            const passwordExists = this.bookmark.share.password === '******';
             this.passwordDetailsText = passwordExists
                 ? this.LANG.bookmarkSharing.passwordProtected
                 : this.LANG.bookmarkSharing.notPasswordProtected;

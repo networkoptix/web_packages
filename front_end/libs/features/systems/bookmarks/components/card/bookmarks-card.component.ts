@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, computed, input } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -14,7 +14,7 @@ import { Bookmark } from '../../bookmarks.types';
     encapsulation: ViewEncapsulation.None,
 })
 export class NxBookmarksCardComponent implements OnInit {
-    @Input() bookmark: Bookmark;
+    bookmark$$ = input.required<Bookmark>({ alias: 'bookmark' });
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
 
@@ -24,6 +24,11 @@ export class NxBookmarksCardComponent implements OnInit {
     enableTooltip: boolean;
     thumbnailError: boolean;
 
+    isBookmarkShared$$ = computed(() => {
+        const bookmark = this.bookmark$$();
+        return 'share' in bookmark && !!bookmark.share;
+    });
+
     constructor(
         private dialogs: NxDialogsService,
         private language: NxLanguageProviderService,
@@ -31,7 +36,7 @@ export class NxBookmarksCardComponent implements OnInit {
 
     ngOnInit(): void {
         const currentLocale = this.language.currentLocale;
-        const startDate = new Date(this.bookmark.startTimeMs);
+        const startDate = new Date(this.bookmark$$().startTimeMs);
         const timeFormat = Intl.DateTimeFormat(currentLocale, {
             hour: 'numeric',
             minute: 'numeric',
@@ -40,7 +45,7 @@ export class NxBookmarksCardComponent implements OnInit {
         this.startTime = timeFormat.format(startDate);
         this.startDate = startDate.toLocaleString(currentLocale, { dateStyle: 'medium' });
 
-        const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark.durationMs);
+        const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark$$().durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
         this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds
             .toString()
@@ -48,6 +53,10 @@ export class NxBookmarksCardComponent implements OnInit {
     }
 
     openBookmarkModal(): void {
-        this.dialogs.bookmarkDetails(this);
+        this.dialogs.bookmarkDetails({
+            bookmark: this.bookmark$$(),
+            startTime: this.startTime,
+            startDate: this.startDate,
+        });
     }
 }
