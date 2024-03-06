@@ -8,7 +8,10 @@ import httpx
 import pytest
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
-from django.core.cache import caches
+from django.core.cache import (
+    cache,
+    caches,
+)
 from django.db import transaction
 from django.http import (
     HttpResponseForbidden,
@@ -393,10 +396,16 @@ class TestCloudSystemViewSet:
         assert response.data['services'][str(analytics_service.id)]['used'] == 0
         assert response.data['services'][str(analytics_service.id)]['quantity'] == quantity
 
-    def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
+
+    def test_service_quantity_patch(self, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
+
+        # This test has some issues due to the mocking of redisCache.
+        # Doing this fixes the test
+        cache.clear()
+        CloudSystemViewSet.throttle_classes = []
 
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)

@@ -18,6 +18,9 @@ from channel_partners.configuration.celery_cron_config import (
     CELERY_CRON_CONFIG,
 )
 from channel_partners.configuration.logging_config import configure_logging
+from channel_partners.configuration.throttling_config import (
+    configure_throttling,
+)
 from channel_partners.tools.config import get_default_host
 from tools.jwt.jwt_auth import get_jwk_client
 
@@ -49,24 +52,18 @@ elif LOCAL_ENV:
 else:
     ENV_NAME = EnvironmentEnum.prod
 
-local_env_path = os.path.join(BASE_DIR, 'config/.env.local')
-base_env_path = os.path.join(BASE_DIR, 'config/.env.dist')
+env_path = os.path.join(BASE_DIR, 'config/.env.local')
 
 if (
         (LOCAL_ENV or LOCAL_DOCKER or BUILD)
-        and os.path.exists(local_env_path)
+        and os.path.exists(env_path)
 ):
     # Load development environment.
-    env.read_env(local_env_path)
+    env.read_env(env_path)
 
 # Loading variable from environment
 
 BASE_COOKIE_PATH = env.str("BASE_COOKIE_PATH", "/partners")
-DB_HOST = env.str('DB_HOST')
-DB_NAME = env.str('DB_NAME')
-DB_PASSWORD = env.str('DB_PASSWORD')
-DB_PORT = env.str('DB_PORT', default=5432)
-DB_USER = env.str('DB_USER')
 DEBUG = env.bool("DEBUG", False)
 DOMAIN_NAME = env.str('DOMAIN_NAME')
 INSTANCE_NAME = env.str('INSTANCE_NAME')
@@ -74,14 +71,31 @@ LICENSE_SERVER = env.str("LICENSE_SERVER", default="https://nxlicensed.hdw.mx")
 NOTIFICATION_SECRET = env.str('NOTIFICATION_SECRET').split(':')
 NOTIFICATION_SECRET_PASSWORD = NOTIFICATION_SECRET[1]
 NOTIFICATION_SECRET_USER = NOTIFICATION_SECRET[0]
-QUEUE_CELERY_BROKER_URL = env.str('QUEUE_CELERY_BROKER_URL')
-QUEUE_PREFIX = env.str('QUEUE_PREFIX')
-REDIS_HOST = env.str("REDIS_HOST")
-REDIS_PORT = env.int("REDIS_PORT", default=6379)
-RUN_CELERY_EAGER = env.bool('RUN_CELERY_EAGER', False)
 SILK_ENABLED = env.bool('SILK_ENABLED', False)
 TRAFFIC_RELAY_DOMAIN = env.str('TRAFFIC_RELAY_DOMAIN')
 DEFAULT_HOST_NAME = get_default_host(INSTANCE_NAME, DOMAIN_NAME)
+
+## Database
+DB_HOST = env.str('DB_HOST')
+DB_NAME = env.str('DB_NAME')
+DB_PASSWORD = env.str('DB_PASSWORD')
+DB_PORT = env.str('DB_PORT', default=5432)
+DB_USER = env.str('DB_USER')
+
+## Celery
+QUEUE_CELERY_BROKER_URL = env.str('QUEUE_CELERY_BROKER_URL')
+QUEUE_PREFIX = env.str('QUEUE_PREFIX')
+RUN_CELERY_EAGER = env.bool('RUN_CELERY_EAGER', False)
+
+## Redis
+REDIS_HOST = env.str("REDIS_HOST")
+REDIS_PORT = env.int("REDIS_PORT", default=6379)
+
+## Rate Limiting Env. Variables
+ANON_RATE_LIMIT = env.str("ANON_RATE_LIMIT", None)
+SYSTEM_RATE_LIMIT = env.str("SYSTEM_RATE_LIMIT", None)
+USER_RATE_LIMIT = env.str("USER_RATE_LIMIT", None)
+
 if not IS_CELERY:
     # Only run for channel_partners application
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
@@ -215,7 +229,10 @@ DATABASES = {
 # Cache
 REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
 REDIS_CACHE_LOCATION = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+
 REDIS_CELERY_DB = 15
+REDIS_THROTTLING_DB = 12
+
 if MIGRATING:
     # Avoid issues with redis on migrations
     REDIS_CACHE_BACKEND = "django.core.cache.backends.dummy.DummyCache"
@@ -236,6 +253,11 @@ CACHES = {
         "LOCATION": f'{REDIS_CACHE_LOCATION}/{REDIS_CELERY_DB}',
         "TIMEOUT": None
     },
+    "throttling": {
+        "BACKEND": REDIS_CACHE_BACKEND,
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_THROTTLING_DB}",
+        "TIMEOUT": None
+    }
 }
 
 # Password validation
@@ -285,7 +307,8 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'tools.helpers.custom_exception_handler',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
-    ]
+    ],
+    **configure_throttling(USER_RATE_LIMIT, ANON_RATE_LIMIT, SYSTEM_RATE_LIMIT)
 }
 
 SPECTACULAR_SETTINGS = {
