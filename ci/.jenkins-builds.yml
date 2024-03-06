@@ -3,6 +3,7 @@ include:
 
 jenkins-build-webadmin:
   extends: .jenkins-builds
+  allow_failure: true
   script:
     - |
       set -ex

@@ -1,17 +1,13 @@
 include:
   - local: "front_end/ci/.front-end-common.yml"
 
-.schedule_when_cherry_pick:
+.scheduled_frontend:
   extends: .node-base
-  stage: check
   rules:
     - if: !reference [ .enable_for_schedule ]
-    - if: !reference [ .enable_for_mr ]
-      variables:
-         OVERRIDE_COMMIT_EXIT_CODE: 0
 
 node-license-check:
-  extends: .schedule_when_cherry_pick
+  extends: .scheduled_frontend
   artifacts:
     paths:
       - package-license.json
@@ -22,7 +18,7 @@ node-license-check:
     - !reference [".commit-changes", "script"]
 
 frontend-lang:
-  extends: .schedule_when_cherry_pick
+  extends: .scheduled_frontend
   script:
     - |
       pushd "front_end"

@@ -14,7 +14,6 @@ include:
 
 .frontend_changes:
   - front_end/**/*
-  - .gitlab-ci.yml
 
 .notification_changes:
  - desktop_notifications/**/*
