@@ -1,11 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    computed,
+    input,
+    signal,
+    inject,
+} from '@angular/core';
+import { Observable, firstValueFrom, map, shareReplay } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { nxConfig } from '@services/nx-config/config';
 import { servers } from '@static-variables';
+import { sha256 } from '@utils/sha256';
 
 import { SharedBookmarkPasswordComponent } from './shared-bookmark-password/shared-bookmark-password.component';
 import { SharedBookmarkViewerComponent } from './shared-bookmark-viewer/shared-bookmark-viewer.component';
@@ -22,6 +32,7 @@ type BookmarkData = {
 @Component({
     selector: 'nx-shared-bookmark',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['shared-bookmark.component.scss'],
     templateUrl: 'shared-bookmark.component.html',
     imports: [
@@ -32,65 +43,97 @@ type BookmarkData = {
     ],
 })
 export class SharedBookmarkComponent implements OnInit {
-    @Input() systemId: string;
-    @Input() bookmarkId: string;
+    http = inject(HttpClient);
+    systemId = input.required<string>();
+    bookmarkId = input.required<string>();
 
     CONFIG = nxConfig;
 
-    baseUrl: string;
-    pageState: 'loading' | 'password' | 'viewer' = 'loading';
-    password: string;
+    baseUrl = computed(
+        () =>
+            'https://' +
+            this.CONFIG.trafficRelayHost
+                .replace('{host}', window.location.host)
+                .replace('{systemId}', this.systemId()),
+    );
+
+    pageState = signal<'loading' | 'password' | 'viewer'>('loading');
+    password = signal<string>('');
+    passwordHash = signal<string>('');
+
+    serverSyncTime$: Observable<number>;
 
     // Bookmark Info
-    startTime: Date;
-    description: string;
-    title: string;
-    videoSource: string;
+    bookmarkInfo = signal({
+        title: '',
+        description: '',
+        startTime: new Date(),
+    });
+    videoSource = computed(
+        () =>
+            `${this.baseUrl()}/rest/v4/devices/*/bookmarks/${this.bookmarkId()}/media${this.passwordHash() ? '?passwordProtection=' + this.passwordHash() : ''}`,
+    );
 
-    constructor(
-        appStateService: NxAppStateService,
-        private http: HttpClient,
-    ) {
+    constructor(appStateService: NxAppStateService) {
         appStateService.headerVisibility = false;
     }
 
     ngOnInit(): void {
-        this.baseUrl = this.getUrlBase();
-        this.videoSource = `${this.baseUrl}/rest/v4/devices/*/bookmarks/${this.bookmarkId}/media`;
+        this.serverSyncTime$ = this.http.get(`${this.baseUrl()}/rest/v4/site/info`).pipe(
+            map((siteInfo: { synchronizedTimeMs: number }) => siteInfo.synchronizedTimeMs),
+            shareReplay({ bufferSize: 1, refCount: false }),
+        );
         this.getBookmarkInfo();
     }
 
-    getUrlBase(): string {
-        return (
-            'https://' +
-            this.CONFIG.trafficRelayHost
-                .replace('{host}', window.location.host)
-                .replace('{systemId}', this.systemId)
-        );
-    }
-
-    getBookmarkInfo(): void {
+    async getBookmarkInfo(password?: string): Promise<void> {
+        const queryParams: { passwordProtection?: string } = {};
+        if (password) {
+            this.passwordHash.set(await this.getPasswordHash(password));
+            queryParams.passwordProtection = this.passwordHash();
+        }
         this.http
             .get<BookmarkData>(
-                `${this.baseUrl}/rest/v4/devices/*/bookmarks/${this.bookmarkId}/description`,
+                `${this.baseUrl()}/rest/v4/devices/*/bookmarks/${this.bookmarkId()}/description`,
+                {
+                    params: queryParams,
+                },
             )
             .subscribe({
                 next: bookmarkData => {
-                    this.title = bookmarkData.name;
-                    this.description = bookmarkData.description;
-                    this.startTime = new Date(bookmarkData.startTimeMs);
-                    this.pageState = 'viewer';
+                    this.bookmarkInfo.set({
+                        title: bookmarkData.name,
+                        description: bookmarkData.description,
+                        startTime: new Date(bookmarkData.startTimeMs),
+                    });
+                    this.pageState.set('viewer');
                 },
                 error: error => {
                     // Password is incorrect or not provided or incorrect time sync
                     if (error.error.errorId === servers.errors.forbidden) {
-                        this.pageState = 'password';
+                        this.setServerSyncTime();
+                        this.pageState.set('password');
                     }
                 },
             });
     }
 
     checkPassword(): void {
-        // TODO: Handle password when server supports it
+        this.getBookmarkInfo(this.password());
+    }
+
+    /*
+     * password hash formula
+     * synchronizedTimeMs + ":" + sha256(sha256(bookmarkId + password) + synchronizedTimeMs))
+     */
+    async getPasswordHash(password: string): Promise<string> {
+        const syncTime = await firstValueFrom(this.serverSyncTime$);
+        const passwordHash = await sha256(this.bookmarkId() + password);
+        const syncTimeHash = await sha256(passwordHash + syncTime);
+        return `${syncTime}:${syncTimeHash}`;
+    }
+
+    setServerSyncTime(): void {
+        this.serverSyncTime$.subscribe();
     }
 }

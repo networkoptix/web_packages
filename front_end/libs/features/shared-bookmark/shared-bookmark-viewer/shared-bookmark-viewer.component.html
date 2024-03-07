@@ -6,13 +6,13 @@
         />
     </div>
     <nx-clip
-        [sourceUrl]="videoSource$$()"
+        [sourceUrl]="videoSource()"
         (error)="onError()"
         (loadeddata)="onLoadedData()"
     />
-    <div class="title-text">{{ title$$() }}</div>
+    <div class="title-text">{{ title() }}</div>
     <div class="date-text">
-        <span>{{ dateText$$() }} • {{ timeText$$() }}</span>
+        <span>{{ dateText() }} • {{ timeText() }}</span>
     </div>
-    <div class="description-text">{{ description$$() }}</div>
+    <div class="description-text">{{ description() }}</div>
 </div>

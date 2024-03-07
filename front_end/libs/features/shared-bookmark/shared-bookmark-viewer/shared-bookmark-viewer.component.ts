@@ -1,25 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
-import dateFormat from 'dateformat';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { ClipComponent } from '@components/clip/clip.component';
 import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
     selector: 'nx-shared-bookmark-viewer',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['shared-bookmark-viewer.component.scss'],
     templateUrl: 'shared-bookmark-viewer.component.html',
     imports: [CommonModule, ClipComponent],
 })
 export class SharedBookmarkViewerComponent {
-    videoSource$$ = input.required<string>({ alias: 'videoSource' });
-    startTime$$ = input<Date>(new Date(), { alias: 'startTime' });
-    title$$ = input<string>('', { alias: 'title' });
-    description$$ = input<string>('', { alias: 'description' });
+    videoSource = input.required<string>();
+    startTime = input<Date>(new Date());
+    title = input<string>('');
+    description = input<string>('');
 
-    dateText$$ = computed(() => dateFormat(this.startTime$$(), 'mmm d, yyyy'));
-    timeText$$ = computed(() => dateFormat(this.startTime$$(), 'h:MM TT'));
+    languageProvider = inject(NxLanguageProviderService);
+    dateText = computed(() =>
+        Intl.DateTimeFormat(this.languageProvider.currentLocale, { dateStyle: 'medium' }).format(
+            this.startTime(),
+        ),
+    );
+    timeText = computed(() =>
+        Intl.DateTimeFormat(this.languageProvider.currentLocale, {
+            hour: 'numeric',
+            minute: 'numeric',
+            numberingSystem: 'latn',
+        }).format(this.startTime()),
+    );
 
     // TODO: error handle
     onError(): void {
