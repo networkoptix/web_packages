@@ -42,7 +42,7 @@
                     *ngIf="partnerName.touched && partnerName.errors?.required"
                     class="input-error"
                     translate
-                    >Required</span
+                    >Partner name is required</span
                 >
             </div>
 
@@ -67,13 +67,13 @@
                         *ngIf="ownerEmail.errors?.required"
                         class="input-error"
                         translate
-                        >Required</span
+                        >Administrator is required</span
                     >
                     <span
                         *ngIf="ownerEmail.errors?.pattern"
                         class="input-error"
                         translate
-                        >Invalid email</span
+                        >Email is invalid</span
                     >
                 </ng-container>
             </div>
