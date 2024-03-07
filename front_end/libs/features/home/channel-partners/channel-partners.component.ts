@@ -28,6 +28,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -63,6 +64,7 @@ import { NxCardComponent } from '../components/card/card.component';
         NxCardComponent,
         NxTabsModule,
         NxAddSvgSrcDirective,
+        NxTagComponent,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
