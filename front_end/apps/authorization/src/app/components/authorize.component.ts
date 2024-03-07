@@ -239,9 +239,15 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.localStorageService.retrieve('client_type') ||
                 'loginCloud';
             this.clientType = ClientType[clientType];
-            this.viewType = this.initialData.view_type || 'web';
-            if (this.viewType === 'desktop') {
+
+            const viewType = this.initialData.view_type;
+            this.viewType =
+                viewType && ['desktop', 'mobile', 'web'].includes(viewType) ? viewType : 'web';
+
+            if (this.viewType !== 'web') {
                 this.themeService.setTheme('dark', undefined);
+            } else if (!nxConfig.featureFlags.themesEnabled) {
+                this.themeService.setTheme('light', undefined);
             }
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
