@@ -1448,7 +1448,8 @@
         },
         "noSystems": {
             "connected": "If the system is <span class=\"green-text\">connected</span> to the Cloud",
-            "notConnected": "If the system is <span class=\"red-text\">not connected</span> to the Cloud"
+            "notConnected": "If the system is <span class=\"red-text\">not connected</span> to the Cloud",
+            "login": "Log in to the system in %CLOUD_NAME%"
         }
     },
     "pleaseSelect": "Please select...",

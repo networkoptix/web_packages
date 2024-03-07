@@ -6,12 +6,10 @@
                 <p [innerHTML]="LANG.placeholderTexts.noSystems.notConnected | translate"></p>
                 <div class="number-row">
                     <div class="number-circle">1</div>
-                    <div
+                    <p
                         class="description-text"
-                        translate
-                    >
-                        Log in to the system in VMS Client
-                    </div>
+                        [innerHTML]="LANG.placeholderTexts.noSystems.login | translate"
+                    ></p>
                 </div>
                 <div class="number-row">
                     <div class="number-circle">2</div>
@@ -28,7 +26,7 @@
                         class="description-text"
                         translate
                     >
-                        Follow the steps of wizard.
+                        Follow the steps of wizard
                     </div>
                 </div>
             </div>
@@ -60,7 +58,7 @@
                         class="description-text"
                         translate
                     >
-                        Select "Connect to cloud" in System Administration
+                        Follow the steps wizard
                     </div>
                 </div>
             </div>
