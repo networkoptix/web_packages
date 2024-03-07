@@ -8,7 +8,7 @@
 <ng-template #showContent>
     <div class="actions p-3">
         <button
-            *ngIf="canCreateGroups$$()"
+            *ngIf="canManageSystems$$()"
             class="btn btn-default"
             translate
             (click)="newGroupDialog()"
@@ -33,11 +33,7 @@
     </div>
 </ng-template>
 
-<ng-template
-    #showGroups
-    let-groups="groups"
-    let-systems="systems"
->
+<ng-template #showGroups>
     <div class="px-3 cards-container">
         <div
             *ngFor="let group of filteredGroups$$(); trackBy: trackGroup"
@@ -49,6 +45,7 @@
         >
             <div
                 cdkDrag
+                [cdkDragDisabled]="!canManageSystems$$()"
                 [cdkDragData]="group"
             >
                 <div *cdkDragPlaceholder></div>
@@ -76,6 +73,7 @@
             <!-- Update to check if system requests ownership transfer -->
             <div
                 cdkDrag
+                [cdkDragDisabled]="!canManageSystems$$()"
                 [cdkDragData]="system"
             >
                 <div *cdkDragPlaceholder></div>

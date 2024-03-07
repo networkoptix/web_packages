@@ -80,6 +80,7 @@
                 <div
                     (click)="toggleOpenState(group.id)"
                     cdkDrag
+                    [cdkDragDisabled]="!canManageSystems$$()"
                     [cdkDragData]="group"
                     cdkDragBoundary=".sidebar"
                     class="group"

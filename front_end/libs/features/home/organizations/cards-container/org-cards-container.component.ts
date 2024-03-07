@@ -37,13 +37,11 @@ import { search as searchConfig, icons } from '@variables/static-variables';
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
 import * as GroupActions from '../../store/groups/groups.actions';
 import {
-    selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentGroups,
     selectCurrentSystems,
     selectGroupItems,
     selectHasGroups,
-    selectOpenGroups,
     selectRootGroups,
 } from '../../store/groups/groups.selectors';
 @Component({
@@ -71,10 +69,13 @@ export class NxOrganizationCardContainerComponent {
     icons = icons;
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
-    canCreateGroups$$ = computed(() => {
-        const currOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-        return currOrg$$()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
-    });
+
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    orgPermissions$$ = computed(() => this.currentOrg$$()?.ownPermissions || []);
+    canManageSystems$$ = computed<boolean>(() =>
+        this.orgPermissions$$().includes(OrgPermissions.MANAGE_SYSTEMS),
+    );
+
     hasEnoughGroupsOrSystems$$ = computed(() => {
         return (
             this.currentGroups$$().length + this.currentSystems$$().length >
@@ -82,25 +83,15 @@ export class NxOrganizationCardContainerComponent {
         );
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
-    openGroups$$ = this.store.selectSignal(selectOpenGroups);
     rootGroups$$ = this.store.selectSignal(selectRootGroups);
     currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
     currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
-    currentGroup$$ = this.store.selectSignal(selectCurrentGroup);
-    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     search = { value: '' };
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     groupName: string = '';
-    isGroupUser$$ = computed(() => {
-        const currentOrg = this.currentOrg$$();
-        if (currentOrg) {
-            const { ownPermissions } = currentOrg;
-            return ownPermissions.length === 0;
-        }
-        return false;
-    });
+    isGroupUser$$ = computed(() => this.orgPermissions$$()?.length === 0);
 
     constructor(
         private store: Store,
@@ -245,6 +236,9 @@ export class NxOrganizationCardContainerComponent {
     });
     groupActions$$ = computed<Record<string, ActionItems[]>>(() => {
         const groups = this.currentGroups$$() || [];
+        if (!this.canManageSystems$$()) {
+            return groups.reduce((groupActions, { id }) => ({ ...groupActions, [id]: [] }), {});
+        }
         const renameAction = this.translateService.instant(
             staticLang.channelPartners.orgs.groupAction.rename,
         );
@@ -381,13 +375,21 @@ export class NxOrganizationCardContainerComponent {
     });
     systemActions$$ = computed<Record<string, ActionItems[]>>(() => {
         const systems = this.currentSystems$$() || [];
+        const canMangeSystems = this.canManageSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
         const moveToAction = this.translateService.instant(
             staticLang.channelPartners.orgs.groupAction.moveTo,
         );
         return systems.reduce((systemActions, system) => {
-            systemActions[system.systemId] = [
+            const actions: ActionItems[] = [
                 {
+                    name: openVms,
+                    id: system.systemId,
+                    action: this.protocolFactory(system.systemId, true),
+                },
+            ];
+            if (canMangeSystems) {
+                actions.unshift({
                     name: moveToAction,
                     id: system.systemId,
                     action: () => {
@@ -428,13 +430,9 @@ export class NxOrganizationCardContainerComponent {
                                 );
                             });
                     },
-                },
-                {
-                    name: openVms,
-                    id: system.systemId,
-                    action: this.protocolFactory(system.systemId, true),
-                },
-            ];
+                });
+            }
+            systemActions[system.systemId] = actions;
             return systemActions;
         }, {});
     });

@@ -1,7 +1,7 @@
 import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -14,8 +14,10 @@ import {
     GroupItem,
     OrgCardItem,
     Organization,
+    OrgPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
+import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { OpenGroups } from '../../home.types';
 import * as GroupActions from '../../store/groups/groups.actions';
@@ -52,6 +54,10 @@ export class NxGroupsSidebarLevelComponent implements OnInit {
     currentGroup$$ = this.store.selectSignal(selectCurrentGroup);
     groupItems$$ = this.store.selectSignal<GroupItem[]>(selectGroupItems);
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    canManageSystems$$ = computed(() =>
+        this.currentOrg$$()?.ownPermissions?.includes(OrgPermissions.MANAGE_SYSTEMS),
+    );
 
     icons = icons;
     constructor(
