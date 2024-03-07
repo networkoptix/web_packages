@@ -39,7 +39,7 @@
                 )
                 const themeCookie = getCookieValue('theme');
                 const themeFromCookie = themeCookie in themes && themeCookie || 'auto';
-                const systemTheme = this.window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
                 const theme = themeFromCookie === 'auto' ? systemTheme : themeFromCookie;
                 document.querySelector('html').setAttribute('data-theme', theme);
                 document.querySelector('body').style.backgroundColor = themes[theme];

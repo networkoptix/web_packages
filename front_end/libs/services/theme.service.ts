@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
-import { AuthorizeParams } from './nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from './nx-config/config';
 enum AvailableThemes {
     auto = 'auto',
@@ -39,10 +39,21 @@ export class NxThemeService {
         private localStorageService: LocalStorageService,
         private sessionStorage: SessionStorageService,
         private cookieService: CookieService,
-        private route: ActivatedRoute,
+        private router: Router,
         private store: Store,
     ) {
-        this.viewType = this.route.snapshot.queryParams.view_type || 'web';
+        this.router.events
+            .pipe(
+                filter(e => e instanceof ActivationEnd),
+                take(1),
+            )
+            .subscribe(({ snapshot: { queryParams } }: ActivationEnd) => {
+                this.viewType =
+                    queryParams?.view_type ||
+                    document.documentElement.getAttribute('data-platform') ||
+                    'web';
+            });
+
         if (!nxConfig.featureFlags.themesEnabled) {
             return;
         }
@@ -57,15 +68,6 @@ export class NxThemeService {
                 dark: this.CONFIG.themeConfig.dark,
             });
         }
-
-        this.route.queryParams
-            .pipe(takeUntilDestroyed())
-            .subscribe(async (params: AuthorizeParams) => {
-                if (!params.view_type) {
-                    this.viewType = document.documentElement.getAttribute('data-platform');
-                }
-                this.viewType ||= 'web';
-            });
 
         this.sessionStorage
             .observe('theme')
@@ -123,6 +125,12 @@ export class NxThemeService {
         });
     }
 
+    private setCookie(theme: string): void {
+        if (nxConfig.featureFlags.themesEnabled) {
+            this.cookieService.set('theme', theme);
+        }
+    }
+
     async initTheme(): Promise<void> {
         // Don't initialize theme as desktop and mobile use ONLY dark mode
         if (this.viewType !== 'web') {
@@ -155,7 +163,7 @@ export class NxThemeService {
             const theme = NxConfigService.isDarkTheme ? 'dark' : 'light';
 
             document.documentElement.setAttribute('data-theme', this.getThemeRealName(theme));
-            this.cookieService.set('theme', theme);
+            this.setCookie(theme);
         });
     }
 
@@ -188,7 +196,7 @@ export class NxThemeService {
                     ? this.getThemeRealName('dark')
                     : this.getThemeRealName('light');
             document.documentElement.setAttribute('data-theme', theme);
-            this.cookieService.set('theme', theme);
+            this.setCookie(theme);
         } else {
             if (
                 docTheme === this.userTheme &&
@@ -203,11 +211,11 @@ export class NxThemeService {
                 'data-theme',
                 this.getThemeRealName(themeSelected),
             );
-            this.cookieService.set('theme', themeSelected);
+            this.setCookie(themeSelected);
             this.themeSelected = themeSelected;
         }
 
-        if (!themesEnabled) {
+        if (!nxConfig.featureFlags.themesEnabled) {
             return;
         }
 
@@ -231,7 +239,7 @@ export class NxThemeService {
     async setHSLTheme(setHSL: boolean): Promise<void> {
         const theme = setHSL ? 'hsl' : 'dark';
         this.sessionStorage.store('theme', theme);
-        this.cookieService.set('theme', theme);
+        this.setCookie(theme);
         this.themeSelected = theme;
 
         document.documentElement.setAttribute('data-theme', theme);
