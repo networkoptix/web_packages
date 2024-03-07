@@ -1290,7 +1290,7 @@
                 "singleAccessRole": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{folder}</span>?",
                 "multipleAccessRole": "Are you sure you want to delete access for <span class=\"text-white\">{name}</span> to <span class=\"text-white\">{count} folders</span>?",
                 "singleMessage": "Are you sure you want to delete <span class=\"text-white\">{name}</span>?",
-                "multipleMessage": "Are you sure you want to delete <span class=\"text-white\">{count} users</span>?",
+                "multipleMessage": "Are you sure you want to delete access <span class=\"text-white\">{count} users</span> to some parts of the organization?",
                 "channelPartner": {
                     "singleMessage": "Are you sure you want to delete user <span class=\"text-white\">{email}</span> with permission <span class=\"text-white\">{permission}</span>?"
                 },
