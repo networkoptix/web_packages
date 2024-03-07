@@ -3,6 +3,7 @@ import { Component, OnInit, Injector, Input, AfterViewInit } from '@angular/core
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { take, timer } from 'rxjs';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -66,7 +67,14 @@ export class DownloadHistoryComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         const hash = window.location.hash;
         if (hash) {
-            document.getElementById(hash.replace('#', ''))?.scrollIntoView();
+            timer(500)
+                .pipe(take(1))
+                .subscribe(() => {
+                    document.getElementById(hash.replace('#', ''))?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                    });
+                });
         }
     }
 

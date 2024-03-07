@@ -19,7 +19,9 @@ export const BuildGuard = async (
             delete data.updatesPrefix;
 
             const type = Object.keys(data).find(k =>
-                data[k].some(releaseType => releaseType.version === segment),
+                data[k].some(releaseType =>
+                    [releaseType.version, releaseType.buildNumber].includes(segment),
+                ),
             );
 
             if (type) {
