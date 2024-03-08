@@ -101,7 +101,7 @@ USER_RATE_LIMIT = env.str("USER_RATE_LIMIT", None)
 #  - celery beat service
 #  - django shell, it is needed for debugging sometimes even in containers where RSA key is missed
 if IS_CELERY or IS_DJANGO_SHELL:
-    RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True, default=None)
+    RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True, default='')
 else:
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 # End environment variables section
