@@ -1139,7 +1139,7 @@ class SystemGroupViewSet(NestedViewSetMixin,
         serializer = CreateGroupSerializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         system_group = serializer.save()
-        response_serializer = GroupSerializer(system_group)
+        response_serializer = self.get_serializer(instance=system_group)
         return Response(response_serializer.data)
 
 
