@@ -3,7 +3,7 @@ include:
 
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_IMAGE_VERSION: '41225'
+  CP_IMAGE_VERSION: '40910'
   CP_DJANGO_PYTHON_IMAGE_TAG: '${CP_IMAGE_VERSION}'
 
 
@@ -42,6 +42,5 @@ docker:build-channel-partners:
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
     - channel_partners/build/channel_partners_ci/*
-    - channel_partners/build/pyproject.toml
-    - channel_partners/build/poetry.lock
-    - channel_partners/build/poetry.toml
+    - channel_partners/pyproject.toml
+    - channel_partners/poetry.lock

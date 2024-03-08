@@ -5,3 +5,5 @@ src/config/.env.local
 # Jupyter Notebook for local testing
 src/notebooks
 *.iml
+**/.env
+**/.env.local

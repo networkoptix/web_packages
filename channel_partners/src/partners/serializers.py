@@ -694,7 +694,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 class SignSerializerMixin:
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        json_dump = json.dumps(ret, separators=(',', ':'), cls=JSONEncoder)
+        json_dump = json.dumps(ret, separators=(',', ':'), cls=JSONEncoder, ensure_ascii=False)
         ret['signature'] = llutil.sign(json_dump, settings.RSA_KEY4)
         return ret
 

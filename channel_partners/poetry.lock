@@ -2471,4 +2471,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "a41256816106bfe3f859e9f00d01fc7dacded4f077ccf70c1de05e1b2288e018"
+content-hash = "0e9a449c8608ec3f546d3d3d0fb38484c5d7229ef63cf4e2f710f58ee6c2c184"
