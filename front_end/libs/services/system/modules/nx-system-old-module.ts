@@ -9,8 +9,17 @@ import {
     Subject,
     timer,
     ReplaySubject,
+    of,
 } from 'rxjs';
-import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import {
+    auditTime,
+    catchError,
+    concatMap,
+    map,
+    shareReplay,
+    switchMap,
+    takeUntil,
+} from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
@@ -246,8 +255,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     private jsonRpc: WebSocketSubject<unknown>;
     private systemReady$ = new ReplaySubject<this>(1);
     private useRpcOverPolling(): void {
-        if (this.mediaserver instanceof NxSystemRestAPI3) {
-            this.mediaserver.buildRpcUrl().subscribe(url => {
+        if (!(this.mediaserver instanceof NxSystemRestAPI3)) {
+            return;
+        }
+        this.mediaserver.buildRpcUrl().subscribe({
+            next: url => {
                 this.jsonRpc = webSocket(url);
                 this.jsonRpc.pipe(takeUntil(this.killPoll$)).subscribe({
                     next: (v: Partial<{ method: string }>) => {
@@ -298,26 +310,25 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
                 // Replicates the system poll w/o updates
                 timer(0, updateInterval)
-                    .pipe(takeUntil(this.killPoll$))
+                    .pipe(
+                        switchMap(() => this.getInfo(true, false, true)),
+                        concatMap((value, index) => {
+                            if (index === 1) {
+                                this.systemReady$.next(this);
+                            }
+                            return of(value);
+                        }),
+                        takeUntil(this.killPoll$),
+                    )
                     .subscribe(() => {
                         this.infoSubject.next(this);
                     });
-
-                // Does the initial setup for the system
-                this.getInfo(true, false, true)
-                    .then(() =>
-                        this.isOnline
-                            ? this.proxied.cameraManager.updateSystemCameras()
-                            : Promise.reject({ offline: true }),
-                    )
-                    .then(() => firstValueFrom(this.proxied.serverManager.getForceServers(false)))
-                    .then(() => this.getUsers(true, true))
-                    .finally(() => {
-                        this.infoSubject.next(this);
-                        this.systemReady$.next(this);
-                    });
-            });
-        }
+            },
+            error: _ => {
+                this.isOnline = false;
+                this.systemReady$.next(this);
+            },
+        });
     }
 
     initSystem = (
