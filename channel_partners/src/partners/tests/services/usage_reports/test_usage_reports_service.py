@@ -42,7 +42,8 @@ class RecordDict(TypedDict):
 
 @pytest.fixture
 def report_records_factory(default_org_system_generator, cp_service_factory):
-    def report_records(records: List[RecordDict], save=False, as_queryset=False) -> Union[List[ChannelPartnerServiceRecord], QuerySet[ChannelPartnerServiceRecord]]:
+    def report_records(records: List[RecordDict], save=False, as_queryset=False) -> Union[
+        List[ChannelPartnerServiceRecord], QuerySet[ChannelPartnerServiceRecord]]:
         system = default_org_system_generator()
         service = cp_service_factory()
         record_instances = []
@@ -61,6 +62,7 @@ def report_records_factory(default_org_system_generator, cp_service_factory):
         if as_queryset:
             return ChannelPartnerServiceRecord.objects.filter(id__in=[instance.id for instance in record_instances])
         return record_instances
+
     return report_records
 
 
@@ -101,9 +103,10 @@ class TestRegularUsageCalculator:
             self, channel_partner_factory, cp_service_factory, service_record_factory, default_org_system_generator):
         regular_service = cp_service_factory()
         system = default_org_system_generator()
-        quantities = [(i+5)*10 for i in range(10)]
-        record_ids = [service_record_factory(service=regular_service, cloud_system=system, organization=system.organization,
-                                             quantity=qty).id for qty in quantities]
+        quantities = [(i + 5) * 10 for i in range(10)]
+        record_ids = [
+            service_record_factory(service=regular_service, cloud_system=system, organization=system.organization,
+                                   quantity=qty).id for qty in quantities]
         records_qa = ChannelPartnerServiceRecord.objects.filter(id__in=record_ids)
         usage_row = RegularUsageCalculator.calculate_beginning_usage_row(records_qa)
         total_quantity = sum(quantities)
@@ -115,9 +118,11 @@ class TestRegularUsageCalculator:
     @pytest.fixture()
     def usage_list_mocks(self, mocker):
         beginning_usage_mock = mocker.patch(
-            'partners.services.usage_reports_service.RegularUsageCalculator.calculate_beginning_usage_row', return_value='beginning_mock')
-        steps_mock = mocker.patch('partners.services.usage_reports_service.RegularUsageCalculator.calculate_steps_from_records',
-                                  return_value='steps_mock')
+            'partners.services.usage_reports_service.RegularUsageCalculator.calculate_beginning_usage_row',
+            return_value='beginning_mock')
+        steps_mock = mocker.patch(
+            'partners.services.usage_reports_service.RegularUsageCalculator.calculate_steps_from_records',
+            return_value='steps_mock')
         return beginning_usage_mock, steps_mock
 
     def test_generate_usage_list_first_month(self, usage_list_mocks, report_records_factory):
@@ -129,7 +134,8 @@ class TestRegularUsageCalculator:
         ]
         record_qs = report_records_factory(records, save=True, as_queryset=True)
         beginning_usage_mock, steps_mock = usage_list_mocks
-        usage_list = RegularUsageCalculator.generate_usage_list(record_qs, start_date=parser.parse('01-01-2024'), end_date=parser.parse('02-01-2024'))
+        usage_list = RegularUsageCalculator.generate_usage_list(record_qs, start_date=parser.parse('01-01-2024'),
+                                                                end_date=parser.parse('02-01-2024'))
         assert usage_list == steps_mock.return_value
         records_start = beginning_usage_mock.call_args.kwargs['records']
         records_steps = steps_mock.call_args.kwargs['records']
@@ -166,6 +172,7 @@ class TestRegularUsageCalculator:
             records_instance = report_records_factory(records, save=False, as_queryset=False)
             records_mock.iterator.return_value = records_instance
             return RegularUsageCalculator.calculate_steps_from_records(records_mock, beginning_usage)
+
         return steps_calculator
 
     def test_calculate_steps_from_records_first_month(self, steps_calculator_generic):
@@ -180,30 +187,36 @@ class TestRegularUsageCalculator:
 
         assert steps_calculator_generic(beginning_usage, records) == [
             beginning_usage,
-            RegularUsageDetailRecord(date=parser.parse('01-01-2024').date(), channels=50, monthly_rate=0, daily_rate=1500, transactions=1),
-            RegularUsageDetailRecord(date=parser.parse('01-15-2024').date(), channels=220, monthly_rate=0, daily_rate=3520,
+            RegularUsageDetailRecord(date=parser.parse('01-01-2024').date(), channels=50, monthly_rate=0,
+                                     daily_rate=1500, transactions=1),
+            RegularUsageDetailRecord(date=parser.parse('01-15-2024').date(), channels=220, monthly_rate=0,
+                                     daily_rate=3520,
                                      transactions=3),
-            RegularUsageDetailRecord(date=parser.parse('01-31-2024').date(), channels=-10, monthly_rate=0, daily_rate=-0,
+            RegularUsageDetailRecord(date=parser.parse('01-31-2024').date(), channels=-10, monthly_rate=0,
+                                     daily_rate=-0,
                                      transactions=1),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=260, monthly_rate=0, daily_rate=5020)
         ]
 
     def test_calculate_steps_from_records_case_1(self, steps_calculator_generic):
         # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2996142086/SaaS+Reports#Important-Example-1-%E2%80%93-Remove-Services-without-Adding-in-the-Current-Period
-        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200, daily_rate=0)
+        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200,
+                                                   daily_rate=0)
         records = [
             RecordDict(date_time='12-05-2023', quantity=-10),
         ]
 
         assert steps_calculator_generic(beginning_usage, records) == [
             beginning_usage,
-            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10, daily_rate=50, transactions=1),
+            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10,
+                                     daily_rate=50, transactions=1),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=190, monthly_rate=190, daily_rate=50)
         ]
 
     def test_calculate_steps_from_records_case_2(self, steps_calculator_generic):
         # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2996142086/SaaS+Reports#Important-Example-2-%E2%80%93-Remove-&-Add
-        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200, daily_rate=0)
+        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200,
+                                                   daily_rate=0)
         records = [
             RecordDict(date_time='12-05-2023', quantity=-10),
             RecordDict(date_time='12-10-2023', quantity=50),
@@ -211,15 +224,18 @@ class TestRegularUsageCalculator:
 
         assert steps_calculator_generic(beginning_usage, records) == [
             beginning_usage,
-            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10, daily_rate=50, transactions=1),
-            RegularUsageDetailRecord(date=parser.parse('12-10-2023').date(), channels=50, monthly_rate=0, daily_rate=1050,
+            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10,
+                                     daily_rate=50, transactions=1),
+            RegularUsageDetailRecord(date=parser.parse('12-10-2023').date(), channels=50, monthly_rate=0,
+                                     daily_rate=1050,
                                      transactions=1),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=240, monthly_rate=190, daily_rate=1100)
         ]
 
     def test_calculate_steps_from_records_case_3(self, steps_calculator_generic):
         # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2996142086/SaaS+Reports#Important-Example-3-%E2%80%93-More-Removals-and-Additions
-        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200, daily_rate=0)
+        beginning_usage = RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=200,
+                                                   daily_rate=0)
         records = [
             RecordDict(date_time='12-05-2023', quantity=-10),
             RecordDict(date_time='12-10-2023', quantity=50),
@@ -228,10 +244,13 @@ class TestRegularUsageCalculator:
 
         assert steps_calculator_generic(beginning_usage, records) == [
             beginning_usage,
-            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10, daily_rate=50, transactions=1),
-            RegularUsageDetailRecord(date=parser.parse('12-10-2023').date(), channels=50, monthly_rate=0, daily_rate=1050,
+            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=-10, monthly_rate=-10,
+                                     daily_rate=50, transactions=1),
+            RegularUsageDetailRecord(date=parser.parse('12-10-2023').date(), channels=50, monthly_rate=0,
+                                     daily_rate=1050,
                                      transactions=1),
-            RegularUsageDetailRecord(date=parser.parse('12-20-2023').date(), channels=-70, monthly_rate=-20, daily_rate=-150,
+            RegularUsageDetailRecord(date=parser.parse('12-20-2023').date(), channels=-70, monthly_rate=-20,
+                                     daily_rate=-150,
                                      transactions=1),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=170, monthly_rate=170, daily_rate=950)
         ]
@@ -258,11 +277,13 @@ class TestRegularUsageCalculator:
 
         assert steps_calculator_generic(beginning_usage, records) == [
             beginning_usage,
-            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=80, monthly_rate=0, daily_rate=2080,
+            RegularUsageDetailRecord(date=parser.parse('12-05-2023').date(), channels=80, monthly_rate=0,
+                                     daily_rate=2080,
                                      transactions=3),
             RegularUsageDetailRecord(date=parser.parse('12-10-2023').date(), channels=0, monthly_rate=0, daily_rate=0,
                                      transactions=4),
-            RegularUsageDetailRecord(date=parser.parse('12-15-2023').date(), channels=-100, monthly_rate=-20, daily_rate=-980,
+            RegularUsageDetailRecord(date=parser.parse('12-15-2023').date(), channels=-100, monthly_rate=-20,
+                                     daily_rate=-980,
                                      transactions=2),
             RegularUsageDetailRecord(date=parser.parse('12-20-2023').date(), channels=0, monthly_rate=-50,
                                      daily_rate=1550,
@@ -280,12 +301,16 @@ class TestOrganizationReportsService:
         systems = [baker.prepare('partners.CloudSystemId', system_id=uuid.uuid4(), name=f'sys_{i}') for i in range(3)]
         organization = baker.prepare('partners.Organization')
         service = mocker.Mock()
-        system_reports = OrganizationReportsService.get_system_reports(systems=systems, organization=organization, service=service, period_start=parser.parse('01-01-2024'))
+        system_reports = OrganizationReportsService.get_system_reports(systems=systems, organization=organization,
+                                                                       service=service,
+                                                                       period_start=parser.parse('01-01-2024'))
         assert system_regular_report_mock.has_calls(
-            [mocker.call(cloud_system=system.system_id, organization=organization, period_start=parser.parse('01-01-2024'), service=service) for system in systems]
+            [mocker.call(cloud_system=system.system_id, organization=organization,
+                         period_start=parser.parse('01-01-2024'), service=service) for system in systems]
         )
         assert system_reports == [
-            {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i+1}'} for i in range(3)
+            {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i + 1}'} for i in
+            range(3)
         ]
 
     def test_build_summary_from_reports(self):
@@ -297,7 +322,8 @@ class TestOrganizationReportsService:
             ]),
             SystemUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200, transactions=1),
+                RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
+                                         transactions=1),
                 RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
             ]),
             SystemUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
@@ -310,13 +336,17 @@ class TestOrganizationReportsService:
             ]),
         ]
 
-        assert OrganizationReportsService.build_service_summary_from_system_reports(reports) == OrganizationServiceReport(systems=[
-            SystemServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=100, monthly_rate=100, daily_rate=0, changes_count=0, last_changed=None),
-            SystemServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120, monthly_rate=100, daily_rate=200, changes_count=1, last_changed=parser.parse('01-21-2024')),
-            SystemServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140, monthly_rate=100, daily_rate=300, changes_count=2, last_changed=parser.parse('01-26-2024'))
+        assert OrganizationReportsService.build_service_summary_from_system_reports(
+            reports) == OrganizationServiceReport(systems=[
+            SystemServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=100, monthly_rate=100,
+                                 daily_rate=0, changes_count=0, last_changed=None),
+            SystemServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120, monthly_rate=100,
+                                 daily_rate=200, changes_count=1, last_changed=parser.parse('01-21-2024')),
+            SystemServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140, monthly_rate=100,
+                                 daily_rate=300, changes_count=2, last_changed=parser.parse('01-26-2024'))
         ],
-        summary=OrganizationServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
-    )
+            summary=OrganizationServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
+        )
 
 
 class TestChannelPartnerReportsService:
@@ -336,35 +366,47 @@ class TestChannelPartnerReportsService:
             organization_id=organizations[i].id, organization_name=organizations[i].name, report=f'detail_{i}'
         ) for i in range(len(organizations))]
 
-    def test_get_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner, channel_partner_factory):
-        channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
-        service = cp_service_factory(parent_service=None, channel_partner=channel_partner)
-        sub_channel_partners = [channel_partner_factory(parent_channel_partner=channel_partner) for _ in range(5)]
-        sub_services = []
-        for sub_channel in sub_channel_partners:
-            sub_services.append(cp_service_factory(parent_service=service, channel_partner=sub_channel))
-        detail_table_mock = mocker.patch(
-            'partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_detail_table',
-            return_value=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10, monthly_rate=0, transactions=1),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10, transactions=1)
-            ]
-        )
+    def test_get_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
+                                        channel_partner_factory, django_capture_on_commit_callbacks):
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
+            service = cp_service_factory(parent_service=None, channel_partner=channel_partner)
 
-        channe_partner_usages =  ChannelPartnerReportsService.get_channel_partner_usages(
-            channel_partner=channel_partner, service=service, period_start=parser.parse('01-01-2024')
-        )
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_channel_partners = [
+                channel_partner_factory(parent_channel_partner=channel_partner)
+                for _ in range(5)
+            ]
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_services = []
+            for sub_channel in sub_channel_partners:
+                sub_services.append(cp_service_factory(parent_service=service, channel_partner=sub_channel))
+
+            detail_table_mock = mocker.patch(
+                'partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_detail_table',
+                return_value=[
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
+                    RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10,
+                                             monthly_rate=0, transactions=1),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10,
+                                             transactions=1)
+                ]
+            )
+            channel_partner_usages = ChannelPartnerReportsService.get_channel_partner_usages(
+                channel_partner=channel_partner, service=service, period_start=parser.parse('01-01-2024')
+            )
 
         # One service is automatically created/inherited from parent, so total of two services for each sub channel
         assert detail_table_mock.call_count == 10
 
-        assert channe_partner_usages == [ChannelPartnerUsage(
+        assert channel_partner_usages == [ChannelPartnerUsage(
             channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=10, monthly_rate=10, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=20, daily_rate=20, monthly_rate=0,
+                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=20, daily_rate=20,
+                                         monthly_rate=0,
                                          transactions=2),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=30, monthly_rate=10, daily_rate=20, transactions=2)
+                RegularUsageDetailRecord(date=TotalUsageDate, channels=30, monthly_rate=10, daily_rate=20,
+                                         transactions=2)
             ]) for channel_partner in sub_channel_partners]
 
     def test_build_service_summary_from_sub_entity_reports(self):
@@ -397,7 +439,8 @@ class TestChannelPartnerReportsService:
             ])
         ]
 
-        service_summary = ChannelPartnerReportsService.build_service_summary_from_sub_entity_reports(organization_usages=org_usages, channel_partner_usages=cp_usages)
+        service_summary = ChannelPartnerReportsService.build_service_summary_from_sub_entity_reports(
+            organization_usages=org_usages, channel_partner_usages=cp_usages)
         assert service_summary == ChannelPartnerServiceReport(
             sub_entities=[
                 ChannelPartnerSubEntityServices(
@@ -421,15 +464,19 @@ class TestChannelPartnerReportsService:
                     type=CHANNEL_PARTNER
                 ),
             ],
-            summary=ChannelPartnerServiceSummary(channel_partners=2, organizations=2, channels=630, monthly_rate=400, daily_rate=700)
+            summary=ChannelPartnerServiceSummary(channel_partners=2, organizations=2, channels=630, monthly_rate=400,
+                                                 daily_rate=700)
         )
 
     def test_get_reports_for_services(self, cp_service_factory, mocker):
         services = [cp_service_factory() for _ in range(5)]
         channel_partner = baker.prepare('partners.ChannelPartner')
         mock_reports = [f'report_{service.id}' for service in services]
-        mocker.patch('partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_service_report', side_effect=mock_reports)
-        report = ChannelPartnerReportsService.get_reports_for_services(channel_partner=channel_partner, period_start=parser.parse('01-01-2024'), services=services)
+        mocker.patch('partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_service_report',
+                     side_effect=mock_reports)
+        report = ChannelPartnerReportsService.get_reports_for_services(channel_partner=channel_partner,
+                                                                       period_start=parser.parse('01-01-2024'),
+                                                                       services=services)
 
         assert report == {service.id: f'report_{service.id}' for service in services}
 
@@ -444,11 +491,12 @@ class TestChannelPartnerReportsService:
             ) for idx in range(len(services) - 1)
         }
 
-        cp_report = ChannelPartnerReportsService.build_channel_partner_report_from_service_reports(service_reports=reports, services=services)
+        cp_report = ChannelPartnerReportsService.build_channel_partner_report_from_service_reports(
+            service_reports=reports, services=services)
         assert cp_report == [
             ChannelPartnerUsageReportRecord(
                 service_id=services[idx].id, service_name=services[idx].name, used_by_organizations=2 * (idx + 1),
-                used_by_channel_partners=idx + 1, channels=100 * (idx + 1), daily_rate=200 * (idx + 1), expirations=[], monthly_rate=50 * (idx + 1)
+                used_by_channel_partners=idx + 1, channels=100 * (idx + 1), daily_rate=200 * (idx + 1), expirations=[],
+                monthly_rate=50 * (idx + 1)
             ) for idx in range(len(services) - 1)
         ]
-

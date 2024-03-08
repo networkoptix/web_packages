@@ -969,7 +969,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         super().save(*args, **kwargs)
 
         if self.parent_channel_partner and new:
-            new_channel_partner_created.apply_async(args=[self.pk])
+            transaction.on_commit(lambda: new_channel_partner_created.apply_async(args=[self.pk]))
         if name_changed:
             from partners.tasks.notification import (
                 run_partner_name_change_tasks,
@@ -1943,7 +1943,8 @@ class ChannelPartnerService(models.Model):
         super().save(*args, **kwargs)
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SERVICE_CHANGED, service=self)
         if new:
-            new_channel_partner_service_created.apply_async(args=[self.pk])
+            transaction.on_commit(lambda: new_channel_partner_service_created.apply_async(args=[self.pk]))
+
 
 
 class ServiceRecordTypes:
