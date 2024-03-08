@@ -2225,7 +2225,11 @@ class ServiceToOrganizationProperties(models.Model):
         ).values_list('service_id', flat=True))
         missing_service_ids = services_ids.difference(service_properties__service_ids)
         for id in missing_service_ids:
-            cls.objects.create(service_id=id, organization_id=organization_id)
+            props, created = cls.objects.get_or_create(service_id=id, organization_id=organization_id)
+            if not created:
+                logger.info("Service properties record already exists",
+                            organization_id=organization_id,
+                            service_id=id)
 
 
 class ChannelPartnerEvent(models.Model):
