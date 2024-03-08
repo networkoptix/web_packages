@@ -122,7 +122,7 @@ export class NxOrganizationCardContainerComponent {
                         this.groupName = group.name;
                         const systems = group.systems.map(systemId => ({
                             systemId,
-                            name: systemMap.get(systemId)?.name,
+                            ...systemMap.get(systemId),
                             type: OrgCardItem.SYSTEM,
                         }));
                         this.store.dispatch(GroupActions.setSystems({ systems }));
@@ -133,7 +133,7 @@ export class NxOrganizationCardContainerComponent {
                     const systems = orgSystems.map(sys => ({
                         ...sys,
                         type: OrgCardItem.SYSTEM,
-                        name: systemMap.get(sys.systemId)?.name,
+                        ...systemMap.get(sys.systemId),
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
@@ -142,7 +142,7 @@ export class NxOrganizationCardContainerComponent {
                     this.groupName = group.name;
                     const systems = group.systems.map(systemId => ({
                         systemId,
-                        name: systemMap.get(systemId)?.name,
+                        ...systemMap.get(systemId),
                         type: OrgCardItem.SYSTEM,
                     }));
                     this.store.dispatch(GroupActions.setSystems({ systems }));
@@ -323,14 +323,14 @@ export class NxOrganizationCardContainerComponent {
                                                 if ('systems' in res) {
                                                     systems = res.systems.map(systemId => ({
                                                         systemId,
-                                                        name: systemMap.get(systemId)?.name,
+                                                        ...systemMap.get(systemId),
                                                         type: OrgCardItem.SYSTEM,
                                                     }));
                                                 } else {
                                                     systems = res.map(sys => ({
                                                         ...sys,
                                                         type: OrgCardItem.SYSTEM,
-                                                        name: systemMap.get(sys.systemId)?.name,
+                                                        ...systemMap.get(sys.systemId),
                                                     }));
                                                 }
                                                 const groups = this.groupItems$$()?.filter(

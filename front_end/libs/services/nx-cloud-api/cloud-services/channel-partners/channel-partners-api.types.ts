@@ -287,6 +287,7 @@ export interface SystemItem {
     name: string | undefined;
     systemId: string;
     type: OrgCardItem;
+    system2faEnabled: boolean;
 }
 
 export enum OrgCardItem {
