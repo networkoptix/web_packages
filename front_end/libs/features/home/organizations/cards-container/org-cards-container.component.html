@@ -83,6 +83,11 @@
                     [dropdownItems]="systemActions$$()[system.systemId]"
                 >
                     <h3>{{ system.name }}</h3>
+                    <svg-icon
+                        *ngIf="system.system2faEnabled"
+                        [src]="icons.dir + 'key.svg'"
+                        [svgStyle]="{ 'height.px': '24' }"
+                    ></svg-icon>
                 </nx-card>
                 <div class="placeholder-shadow"></div>
             </div>
