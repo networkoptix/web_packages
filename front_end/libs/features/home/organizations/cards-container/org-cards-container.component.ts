@@ -147,9 +147,8 @@ export class NxOrganizationCardContainerComponent {
                     this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
             }
+            this.search.value = this.route.snapshot.queryParams.search;
         }, {});
-
-        this.search.value = this.route.snapshot.queryParams.search;
     }
 
     trackGroup(_index: number, item: GroupItem): string {

@@ -101,6 +101,19 @@
     }
 }
 
+.no-search-results {
+    margin: auto;
+    text-align: center;
+    
+    h3 {
+        color: var(--placehoder-v2-title-color)!important;
+    }
+
+    p {
+        color: var(--placehoder-v2-message-color)!important;
+    }
+}
+
 :host {
     height: 100%;
 }
