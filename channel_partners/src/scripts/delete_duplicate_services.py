@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def delete_nested_services(service: ChannelPartnerService):
+    service.channelpartnerservicerecord_set.all().delete()
     for sub_service in service.channelpartnerservice_set.all():
         delete_nested_services(sub_service)
     service.delete()
