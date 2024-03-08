@@ -14,8 +14,10 @@ import llutil
 import structlog
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.db import transaction
 from django.db.models import (
     Prefetch,
+    Q,
     Sum,
 )
 from django.utils import timezone
@@ -1568,9 +1570,16 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         email = attrs.get('user', {}).get('email')
         group: SystemGroup = self.context.get('group')
         user, _ = CloudUser.objects.get_or_create(email=email)
-        if group.has_overlaps(user):
-            raise exceptions.ValidationError({'email': [f'User {user.email} cannot add group'
-                                                        f' {group} because overlap occurs.']})
+        if group.has_cp_overlaps(user):
+            raise exceptions.ValidationError({
+                'email': [f'User {user.email} cannot be added to group {group} '
+                          f'because user has access to parent channel partner.']
+            })
+        if group.has_org_overlaps(user):
+            raise exceptions.ValidationError({
+                'email': [f'User {user.email} cannot be added to group {group} '
+                          f'because user has access to organization.']
+            })
         attrs['user'] = user
         return attrs
 
@@ -1580,26 +1589,34 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         organization = group.organization
         user = validated_data['user']
         created_by = self.context['request'].user
-        relations = OrganizationToUser.objects.filter(user=user, organization=organization,
-                                                      system_group=group).order_by('created_ts')
-        relation = relations.first()
-        if not relation:
-            relation = OrganizationToUser(user=user, organization=organization, system_group=group)
-            first_relation = (
-                OrganizationToUser.objects
-                .filter(organization=organization, user=user)
-                .order_by('created_ts').first()
-            )
-            if first_relation:
-                relation.created_ts = first_relation.created_ts
-        relation.roles = [role.id]
-        relation.save()
-        added_organization_role_task.apply_async(args=[
-            relation.organization_id, created_by.id, relation.user_id,
-            organization.channel_partner.cloud_host.hostname
-        ])
-        # Delete User's Organization Roles
-        OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=True).delete()
+        with transaction.atomic():
+            relations = OrganizationToUser.objects.filter(user=user, organization=organization,
+                                                          system_group=group).order_by('created_ts')
+            relation = relations.first()
+            if not relation:
+                relation = OrganizationToUser(user=user, organization=organization, system_group=group)
+                first_relation = (
+                    OrganizationToUser.objects
+                    .filter(organization=organization, user=user)
+                    .order_by('created_ts').first()
+                )
+                if first_relation:
+                    relation.created_ts = first_relation.created_ts
+            relation.roles = [role.id]
+            relation.save()
+            added_organization_role_task.apply_async(args=[
+                relation.organization_id, created_by.id, relation.user_id,
+                organization.channel_partner.cloud_host.hostname
+            ])
+            # Delete User's Organization Roles
+            (OrganizationToUser.objects
+             .filter(user=user, organization=organization, system_group__isnull=True)
+             .delete())
+            # Delete User's Groups roles in parents and children groups
+            (OrganizationToUser.objects
+             .filter(Q(system_group_id__in=group.groups_path) | Q(system_group__path__contains=[group.id]))
+             .filter(user=user, organization=organization)
+             .delete())
         return relation
 
 
