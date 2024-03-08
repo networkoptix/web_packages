@@ -595,10 +595,21 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelVie
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
 
-    def get_queryset(self):
+    def create_missing(self):
         _, organization_id = self.get_related_pair()
         ServiceToOrganizationProperties.create_missing(organization_id)
-        return super().get_queryset()
+
+    def list(self, request, *args, **kwargs):
+        self.create_missing()
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.create_missing()
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        self.create_missing()
+        return super().update(request, *args, **kwargs)
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
