@@ -549,8 +549,10 @@ class TestChannelPartnerRecordsParamSerializer:
 
 class TestGroupSerializer:
     @pytest.fixture(autouse=True)
-    def setup(self, organization_factory, system_group_factory, system_factory):
+    def setup(self, organization_factory, system_group_factory, system_factory, arf,
+              org_user_factory):
         self.organization = organization_factory()
+        self.org_user = org_user_factory(organization=self.organization)
         self.groups = []
         parent_group = None
         for _ in range(5):
@@ -559,6 +561,10 @@ class TestGroupSerializer:
             system = system_factory(organization=self.organization, system_group=parent_group)
         self.other_org = organization_factory()
         self.other_group = system_group_factory(organization=self.other_org)
+        self.request = arf.get('/')
+        self.request.cloud_host = self.organization.channel_partner.cloud_host
+        self.request.user = self.org_user.user
+        self.context = {'request': self.request}
 
     def test_validate_parentId(self):
         common_data = {
@@ -598,11 +604,21 @@ class TestGroupSerializer:
         assert 'path' not in serializer.validated_data
 
     def test_systemCount(self):
-        serializer = GroupSerializer(instance=self.other_group)
+        serializer = GroupSerializer(instance=self.other_group, context=self.context)
         assert serializer.data["systemCount"] == 0
         for i in range(5):
-            serializer = GroupSerializer(instance=self.groups[i])
+            serializer = GroupSerializer(instance=self.groups[i], context=self.context)
             assert serializer.data["systemCount"] == 5 - i
+
+    def test_cloudSystems(self):
+        serializer = GroupSerializer(instance=self.groups[0], context=self.context)
+        assert serializer.data["systemCount"] == 5
+        assert len(serializer.data["cloudSystems"]) == 1
+        assert len(serializer.data["systems"]) == 1
+        assert len(serializer.data["children"]) == 1
+        assert serializer.data["cloudSystems"][0]["name"]
+        assert serializer.data["cloudSystems"][0]["state"]
+        assert serializer.data["cloudSystems"][0]["effectiveState"]
 
 
 class TestOrganizationUserSerializer:

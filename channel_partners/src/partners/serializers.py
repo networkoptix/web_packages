@@ -419,6 +419,33 @@ class ServiceQuantitySerializer(serializers.Serializer):
     used = serializers.IntegerField(required=False, read_only=True)
 
 
+class CloudSystemLightSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
+    CONTENT_TYPE = "cloudsystemid"
+    state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
+    effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
+    systemId = serializers.UUIDField(source='system_id', read_only=True)
+    system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CODES, read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
+    groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(),
+                                                 allow_null=True)
+    organizationName = serializers.CharField(source='organization.name', read_only=True)
+
+    class Meta:
+        model = CloudSystemId
+        fields = [
+            'id', 'state', 'effectiveState', 'systemId', 'name',
+            'organization', 'created', 'system_state', 'groupId',
+            'organizationName'
+        ]
+        read_only_fields = [
+            'id', 'state', 'effectiveState', 'systemId', 'name',
+            'organization', 'created', 'system_state', 'groupId',
+            'organizationName'
+        ]
+
+
+
+
 class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = "cloudsystemid"
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
@@ -1445,6 +1472,7 @@ class CreateGroupSerializer(serializers.ModelSerializer):
         return attrs
 
 
+@extend_schema_serializer(deprecate_fields=('systems',))
 class GroupSerializer(serializers.ModelSerializer):
     class ChildGroupSerializer(serializers.ModelSerializer):
         class Meta:
@@ -1452,6 +1480,7 @@ class GroupSerializer(serializers.ModelSerializer):
             fields = ['id', 'name']
 
     systems = serializers.SlugRelatedField(slug_field='system_id', source='cloud_systems', read_only=True, many=True)
+    cloudSystems = CloudSystemLightSerializer(many=True, source='cloud_systems', read_only=True)
     children = ChildGroupSerializer(source='groups', read_only=True, many=True)
     parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(), allow_null=True)
     organizationId = serializers.UUIDField(source='organization_id', read_only=True)
@@ -1460,7 +1489,10 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SystemGroup
-        fields = ['id', 'name', 'systems', 'children', 'parentId', 'organizationId', 'path', 'systemCount']
+        fields = [
+            'id', 'name', 'systems', 'cloudSystems', 'children',
+            'parentId', 'organizationId', 'path', 'systemCount',
+        ]
 
     def validate_parentId(self, value: SystemGroup):
         if value:
