@@ -4,7 +4,6 @@ import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angul
 export class NxBaseTabComponent {
     @Input({ required: true }) displayName: string;
     @Input({ transform: booleanAttribute }) disabled: boolean;
-    @Input({ transform: booleanAttribute }) hidden: boolean;
     @Output() tabClick = new EventEmitter<number>();
     public selected: boolean = false;
 }

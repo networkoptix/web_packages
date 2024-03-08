@@ -1,13 +1,22 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, Input, OnInit, inject, signal } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    inject,
+    signal,
+    computed,
+    input,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { combineLatest, distinctUntilChanged, firstValueFrom, map, mergeMap, of } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, mergeMap, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -84,16 +93,36 @@ export class NxOrganizationsComponent implements OnInit {
     icons = icons;
     State = State;
     tabs: Tab[] = [];
+    currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+    tabs$$ = computed(() => {
+        const currOrg = this.currentOrganization$$();
+        const ownPermissions = currOrg?.ownPermissions || [];
+        const isChannelPartnerUser = this.isChannelPartnerUser$$();
+        if (!currOrg) {
+            return [];
+        }
+        return this.populateTabs(ownPermissions, currOrg, isChannelPartnerUser);
+    });
+    currentTabIndex$$ = computed(() => {
+        const tabs = this.tabs$$();
+        const currentTabRoute = this.currentTabRoute$$();
+        if (tabs?.length) {
+            for (const [index, tab] of tabs.entries()) {
+                if (tab.route === currentTabRoute) {
+                    return index;
+                }
+            }
+        }
+        return -1;
+    });
 
-    currentTabIndex$$ = signal(0);
     isLoading = true;
     userEmail: string;
     destroyRef = inject(DestroyRef);
-    isChannelPartnerUser$$ = signal<boolean | undefined>(undefined);
+    isChannelPartnerUser$$ = signal<boolean>(false);
     showAccessTable = false;
     accessTableUser: string = '';
     @Input() inChannelPartner: boolean = false;
-    @Input() currentTabRoute: string;
 
     private account$$ = this.store.selectSignal<Account>(selectCurrentUser);
     organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
@@ -152,7 +181,7 @@ export class NxOrganizationsComponent implements OnInit {
                 mergeMap(id => combineLatest([of(id), this.cpService.getOrgGroups(id)])),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(async ([id, groups]) => {
+            .subscribe(([id, groups]) => {
                 this.isLoading = true;
                 groups.sort(alphabeticalSort(g => g.name));
                 this.store.dispatch(
@@ -160,8 +189,6 @@ export class NxOrganizationsComponent implements OnInit {
                         groups: this.processGroups(groups),
                     }),
                 );
-
-                this.tabs = [];
                 const orgs = this.organizations$$();
                 const partnerOrgs = this.currentPartnerOrganizations$$();
                 const currOrg = this.currentOrganization$$();
@@ -171,59 +198,58 @@ export class NxOrganizationsComponent implements OnInit {
                 ) {
                     return this.router.navigate(['404']);
                 }
-                const { ownPermissions } = currOrg;
-                await firstValueFrom(
-                    this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner),
-                )
-                    .then(() => this.isChannelPartnerUser$$.set(true))
-                    .catch(() => this.isChannelPartnerUser$$.set(false));
 
-                const partnerPermissions =
-                    (this.isChannelPartnerUser$$() && this.currentPartner$$()?.ownPermissions) ||
-                    [];
-                if (
-                    ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
-                    this.isChannelPartnerUser$$()
-                ) {
-                    this.tabs.push({
-                        displayName: this.LANG.channelPartners.tabNames.systems,
-                        route: 'systems',
-                    });
-                }
-                if (ownPermissions.includes(OrgPermissions.MANAGE_USERS)) {
-                    this.tabs.push({
-                        displayName: this.LANG.channelPartners.tabNames.users,
-                        route: 'users',
-                    });
-                }
-                if (
-                    ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
-                    nxConfig.featureFlags.channelPartnersReportsUI
-                ) {
-                    this.tabs.push({
-                        displayName: this.LANG.channelPartners.tabNames.reports,
-                        route: 'reports',
-                    });
-                }
-                if (
-                    partnerPermissions.includes(
-                        ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-                    ) ||
-                    ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
-                ) {
-                    this.tabs.push({
-                        displayName: this.LANG.channelPartners.tabNames.settings,
-                        route: 'settings',
-                    });
-                }
-                for (const [index, tab] of this.tabs.entries()) {
-                    if (tab.route === this.currentTabRoute) {
-                        this.currentTabIndex$$.set(index);
-                        break;
-                    }
-                }
-                this.isLoading = false;
+                this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner).subscribe({
+                    next: () => this.isChannelPartnerUser$$.set(true),
+                    error: () => this.isChannelPartnerUser$$.set(false),
+                    complete: () => (this.isLoading = false),
+                });
             });
+    }
+
+    populateTabs(
+        ownPermissions: string[],
+        currOrg: Organization,
+        isChannelPartnerUser: boolean,
+    ): Tab[] {
+        const tabs: Tab[] = [];
+        const partnerPermissions =
+            (this.isChannelPartnerUser$$() && this.currentPartner$$()?.ownPermissions) || [];
+        if (
+            ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
+            this.isChannelPartnerUser$$()
+        ) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.systems,
+                route: 'systems',
+            });
+        }
+        if (ownPermissions.includes(OrgPermissions.MANAGE_USERS)) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.users,
+                route: 'users',
+            });
+        }
+        if (
+            ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
+            nxConfig.featureFlags.channelPartnersReportsUI
+        ) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.reports,
+                route: 'reports',
+            });
+        }
+        if (
+            partnerPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS) ||
+            ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
+        ) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.settings,
+                route: 'settings',
+            });
+        }
+
+        return tabs;
     }
 
     public handleSidebarTogglingEarClick(): void {
@@ -258,12 +284,11 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
+        const tabs = this.tabs$$();
         const currentGroupId = this.currentGroupId$$();
-        const tabRoute = this.tabs[newIndex].route;
+        const tabRoute = tabs ? tabs[newIndex].route : '';
         const route = currentGroupId ? ['group', currentGroupId, tabRoute] : [tabRoute];
-        this.router
-            .navigate(route, { relativeTo: this.route })
-            .then(() => this.currentTabIndex$$.set(newIndex));
+        this.router.navigate(route, { relativeTo: this.route });
     }
 
     trackItem(_index: number, item: Crumb): string {

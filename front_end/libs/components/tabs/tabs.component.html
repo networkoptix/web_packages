@@ -3,7 +3,7 @@
         <ng-container *ngFor="let tab of tabItems; index as i">
             <div
                 class="tab-container"
-                [ngClass]="{ hidden: tab.hidden, selected: tab.selected }"
+                [ngClass]="{ selected: tab.selected }"
             >
                 <input
                     class="tab"
