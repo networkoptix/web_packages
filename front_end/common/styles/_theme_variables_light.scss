@@ -704,6 +704,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --change-state-dialog-shutdown-btn-color: var(--light1);
 
     --add-user-dialog-color: #{$light16};
+    --add-partner-dialog-color: var(--light16);
 
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--light2) 0.43%, var(--brand-l4) 122.68%);

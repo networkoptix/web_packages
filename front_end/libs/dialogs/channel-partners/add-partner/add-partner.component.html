@@ -8,7 +8,7 @@
             class="modal-title"
             translate
         >
-            New Channel Partner
+            New Partner
         </h1>
         <button
             type="button"
@@ -27,7 +27,7 @@
             <label
                 for="partnerName"
                 translate
-                >Name</label
+                >Partner Name</label
             >
             <input
                 class="form-control"
@@ -49,7 +49,7 @@
             <label
                 for="ownerEmail"
                 translate
-                >Owner email</label
+                >Administrator</label
             >
             <nx-email-input
                 class="fs-mask form-component"
@@ -61,7 +61,19 @@
                 #ownerEmail="ngModel"
             >
             </nx-email-input>
-            <div class="warning-container">
+            <p
+                class="mt-1 sub-text"
+                translate
+            >
+                Enter the email of the administrator
+            </p>
+            <div
+                class="warning-container"
+                *ngIf="
+                    ownerEmail.touched &&
+                    (ownerEmail.errors?.required || ownerEmail.errors?.pattern)
+                "
+            >
                 <ng-container *ngIf="ownerEmail.touched">
                     <span
                         *ngIf="ownerEmail.errors?.required"
