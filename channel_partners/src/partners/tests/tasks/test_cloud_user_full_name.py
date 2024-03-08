@@ -58,6 +58,20 @@ class TestCloudUserFullName:
         assert result == [{"email": "user@example.com", "full_name": "User Example"}]
 
     @pytest.mark.django_db
+    def test_get_emails_from_internal_endpoint_not_exists(self, httpx_mock: HTTPXMock):
+        httpx_mock.add_response(
+            method="POST",
+            url=f"https://{self.host}/cdb/internal/accounts/info",
+            json=[{"email": "user@example.com"}],
+            status_code=200
+        )
+        emails = ["user@example.com"]
+
+        result = get_emails_from_internal_endpoint(emails)
+
+        assert result == []
+
+    @pytest.mark.django_db
     def test_get_emails_from_internal_endpoint_failure(self, httpx_mock):
         emails = ["user@example.com"]
         httpx_mock.add_response(

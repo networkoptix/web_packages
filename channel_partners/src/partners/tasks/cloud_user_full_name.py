@@ -48,11 +48,15 @@ def get_emails_from_internal_endpoint(emails: List[str]) -> List[UserInfo]:
         response.raise_for_status()
 
     users = response.json()
-    result: List[UserInfo] = [
-        {"email": user["email"], "full_name": user["fullName"]}
-        for user in users
-    ]
-
+    result: List[UserInfo] = []
+    for user in users:
+        if not (email := user["email"]):
+            # just in case
+            continue
+        if (full_name := user.get("fullName")) is None:
+            # data returned for non existing user contains just email
+            continue
+        result.append(UserInfo(email=email, full_name=full_name))
     return result
 
 

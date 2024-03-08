@@ -16,9 +16,13 @@ from nx_cloud_api_client.apis import CdbAccountAPIBase
 from partners.models import (
     ActionConfirmation,
     ChannelPartner,
+    ChannelPartnerRoles,
+    ChannelPartnerToUser,
     CloudUser,
     NotificationTypes,
     Organization,
+    OrganizationRoles,
+    OrganizationToUser,
 )
 
 
@@ -54,6 +58,47 @@ class TaskWithLogging(Task):
             exception=''.join(traceback.format_exception(exc)))
 
 
+def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
+    user = CloudUser.objects.filter(email=email).first()
+    if not user:
+        logger.error(
+            "Unable to find cloud user with email",
+            email=email)
+
+        task.update_state(
+            state=states.FAILURE,
+            meta='Cannot resolve initial data. Email not found.'
+        )
+        raise Ignore()
+    return user
+
+def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
+    """
+    Retrieves the CloudUser object associated with the specified email address.
+    
+    Args:
+        task (TaskWithLogging): The current celery task being executed.
+        email (str): The email address of the user to retrieve.
+        
+    Returns:
+        CloudUser: A CloudUser object corresponding to the provided email address. 
+        If no such user is found, an Ignore exception will be raised.
+    
+    Raises:
+        Ignore: If no CloudUser exists with the specified email address. 
+        This causes the current task and its dependencies to complete but 
+        prevents downstream tasks or chains from being triggered.
+    """
+    user = CloudUser.objects.filter(email=email).first()
+    if not user:
+        logger.error("Unable to find cloud user with email", email=email)
+
+        task.update_state(
+            state=states.FAILURE,
+            meta='Cannot resolve initial data. Email not found.'
+        )
+        raise Ignore()
+    return user
 def is_existing_user(host: str, email: str) -> bool:
     api = CdbAccountAPIBase(host=host, client=httpx.Client())
     response = api.status(email)
@@ -133,7 +178,7 @@ def notification_added_channel_partner_role(
         raise Ignore()
     message = {
         'partner_name': partner.name,
-        'sharer_name': user.full_name or sharer.email,
+        'sharer_name': sharer.full_name or sharer.email,
         'userFullName': user.full_name or user.email
     }
     user_exists = is_existing_user(host=cloud_host_name, email=user.email)
@@ -182,7 +227,7 @@ def notification_added_organization_role(
         raise Ignore()
     message = {
         'organization_name': organization.name,
-        'sharer_name': user.full_name or sharer.email,
+        'sharer_name': sharer.full_name or sharer.email,
         'userFullName': user.full_name or user.email
     }
     user_exists = is_existing_user(host=cloud_host_name, email=user.email)
@@ -206,18 +251,92 @@ def state_confirmation_task(self: TaskWithLogging, confirmation_id: int, cloud_h
             meta='Cannot resolve initial data.'
         )
         raise Ignore()
-    user = CloudUser.objects.filter(email=confirmation.created_by).first()
-
-    if not user:
-        logger.error(
-            "Unable to find cloud user with email",
-            email=confirmation.email)
-
-        self.update_state(
-            state=states.FAILURE,
-            meta='Cannot resolve initial data.'
-        )
-        raise Ignore()
+    user = get_user_by_email(self, confirmation.created_by)
     message = confirmation.get_state_confirmation_message()
     message_type = confirmation.get_notification_type()
     post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)
+
+
+def run_organization_name_change_tasks(
+        organization: Organization,
+        old_name: str,
+        new_name: str
+) -> None:
+    admins = OrganizationToUser.objects.filter(
+        organization=organization, roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
+    cloud_host_name = organization.channel_partner.cloud_host.hostname
+    for email in admins.values_list('user__email', flat=True):
+        organization_name_change_task.apply_async(
+            args=(
+                email,
+                old_name,
+                new_name,
+                cloud_host_name,
+            )
+        )
+
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def organization_name_change_task(
+        self: TaskWithLogging,
+        user_email: str,
+        organization_old_name: str,
+        organization_new_name: str,
+        cloud_host_name: str,
+) -> None:
+    user = get_user_by_email(self, user_email)
+    message = {
+        'userFullName': user.full_name or user.email,
+        'old_organization_name': organization_old_name,
+        'new_organization_name': organization_new_name,
+    }
+    post_notification(host=cloud_host_name,
+                      user=user,
+                      message_type=NotificationTypes.cps_organization_name_change,
+                      message=message)
+
+
+def run_partner_name_change_tasks(
+        partner: ChannelPartner,
+        old_name: str,
+        new_name: str
+):
+    admins = ChannelPartnerToUser.objects.filter(
+        channel_partner=partner, roles__contains=[ChannelPartnerRoles.ADMINISTRATOR])
+    cloud_host_name = partner.cloud_host.hostname
+    for email in admins.values_list('user__email', flat=True):
+        partner_name_change_task.apply_async(
+            args=(
+                email,
+                old_name,
+                new_name,
+                cloud_host_name,
+            )
+        )
+
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def partner_name_change_task(
+        self: TaskWithLogging,
+        user_email: str,
+        partner_old_name: str,
+        partner_new_name: str,
+        cloud_host_name: str,
+) -> None:
+    user = get_user_by_email(self, user_email)
+    message = {
+        'userFullName': user.full_name or user.email,
+        'old_partner_name': partner_old_name,
+        'new_partner_name': partner_new_name,
+    }
+    post_notification(host=cloud_host_name,
+                      user=user,
+                      message_type=NotificationTypes.cps_partner_name_change,
+                      message=message)
+

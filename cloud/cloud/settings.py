@@ -879,6 +879,9 @@ NOTIFICATIONS_CONFIG = {
     'cps_organization_state_suspended': {
         'engine': 'email'
     },
+    'cps_organization_name_change': {
+        'engine': 'email'
+    },
     'cps_partner_invite': {
         'engine': 'email'
     },
@@ -892,6 +895,9 @@ NOTIFICATIONS_CONFIG = {
         'engine': 'email'
     },
     'cps_partner_state_suspended': {
+        'engine': 'email'
+    },
+    'cps_partner_name_change': {
         'engine': 'email'
     },
 }
