@@ -159,8 +159,22 @@ class TestSystemGroupDelete:
         self.check_systems_path()
         assert spy_move_children.call_count == 0
 
-    def test_save_move_to_group(self, mocker):
+    def test_save_move_to_group(self, mocker, sys_group_user_factory):
         spy_move_children = mocker.spy(SystemGroup, 'move_children')
+        users = [
+            rel.user for rel in
+            OrganizationToUser.objects.filter(organization=self.org, system_group_id__isnull=False).all()
+        ]
+        users_0_0 = [rel.user for rel in self.group_0_0.organizationtouser_set.all()]
+        users_0_0_0 = [rel.user for rel in self.group_0_0_0.organizationtouser_set.all()]
+        rels_1_1 = [
+            sys_group_user_factory(organization=self.org, group=self.group_1_1, cloud_user=user)
+            for user in users_0_0
+        ]
+        rels_1 = [
+            sys_group_user_factory(organization=self.org, group=self.group_1, cloud_user=user)
+            for user in users_0_0_0
+        ]
         self.group_0_0.parent = self.group_1_1
         self.group_0_0.save()
         self.check_groups_path()
@@ -168,6 +182,18 @@ class TestSystemGroupDelete:
         self.group_0_0.refresh_from_db()
         assert self.group_0_0.path[0] == self.group_1_1.id
         assert spy_move_children.call_count == 1
+        for user in users_0_0:
+            assert OrganizationToUser.objects.filter(user=user).count() == 1
+        for user in users_0_0:
+            # check higher group membership exists
+            assert OrganizationToUser.objects.filter(user=user, system_group=self.group_1_1).exists()
+            # check lower group membership deleted
+            assert OrganizationToUser.objects.filter(user=user, system_group=self.group_0_0).exists() is False
+        for user in users_0_0_0:
+            # check higher group membership exists
+            assert OrganizationToUser.objects.filter(user=user, system_group=self.group_1).exists()
+            # check lower group membership deleted
+            assert OrganizationToUser.objects.filter(user=user, system_group=self.group_0_0_0).exists() is False
 
     def test_save_move_to_org(self):
         self.group_0_0.parent = None

@@ -763,7 +763,7 @@ class TestSystemGroupUserSerializer:
         self.org = organization_factory(channel_partner=self.cp)
         self.group = system_group_factory(organization=self.org)
         self.org_admin = org_user_factory(organization=self.org)
-        self.org_user = org_user_factory(email='test@networkoptix.com')
+        self.other_org_user = org_user_factory(email='test@networkoptix.com')
         self.users = [sys_group_user_factory(organization=self.org, group=self.group) for _ in range(5)]
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
@@ -773,7 +773,7 @@ class TestSystemGroupUserSerializer:
         self.org_power_user_name = 'Power User'
         self.request = arf.post('/')
         self.request.user = self.org_admin.user
-        mock_account_status(email=self.org_user.user.email, active=False)
+        mock_account_status(email=self.other_org_user.user.email, active=False)
         mock_get_customization_request()
         self.notification_send_url = mock_post_notification()
 
@@ -814,9 +814,9 @@ class TestSystemGroupUserSerializer:
             assert data['roles'] == self.users[i].roles_name
 
     def test_create(self):
-        user = self.org_user.user
+        user = self.other_org_user.user
         data = {
-            'email': self.org_user.user.email,
+            'email': self.other_org_user.user.email,
             'role': 'Administrator'
         }
 
@@ -829,18 +829,43 @@ class TestSystemGroupUserSerializer:
         user_rels = OrganizationToUser.objects.filter(organization=self.org, user=user)
         assert user_rels.count() == 1
 
-    def test_groups_overlap(self, sys_group_user_factory, system_group_factory):
-        child_group = system_group_factory(organization=self.org, parent=self.group)
-        child_group_rel = sys_group_user_factory(organization=self.org, group=child_group, cloud_user=self.org_user.user)
-        user = self.org_user.user
+    def test_groups_overlap_org_user(self, org_user_factory):
+        org_user = org_user_factory(organization=self.org)
         data = {
-            'email': self.org_user.user.email,
+            'email': org_user.user.email,
             'role': 'Administrator'
         }
 
-        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group})
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
         assert serializer.is_valid() is False
-        assert 'overlap' in serializer.errors['email'][0]
+        assert 'cannot be added to group' in serializer.errors['email'][0]
+
+    def test_groups_overlap_group_user(self, sys_group_user_factory):
+        child_group_rel = sys_group_user_factory(organization=self.org, group=self.sub_group)
+        user = child_group_rel.user
+        data = {
+            'email': child_group_rel.user.email,
+            'role': 'Administrator'
+        }
+
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
+        assert serializer.is_valid() is True
+        serializer.save()
+        new_rel = OrganizationToUser.objects.get(organization=self.org, user=user)
+        assert new_rel.system_group_id == self.group.id
+        assert new_rel.roles == [OrganizationRoles.ADMINISTRATOR]
+
+    def test_groups_overlap_cp_user(self, cp_user_factory):
+        cp_user_rel = cp_user_factory(channel_partner=self.org.channel_partner)
+        user = cp_user_rel.user
+        data = {
+            'email': cp_user_rel.user.email,
+            'role': 'Administrator'
+        }
+
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
+        assert serializer.is_valid() is False
+        assert 'cannot be added to group' in serializer.errors['email'][0]
 
 
 class TestOrganizationStateChangeSerializer:

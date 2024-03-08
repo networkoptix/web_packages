@@ -1599,11 +1599,12 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 403
 
-    def test_create_201(self, mock_auth_with_user, arf, org_user_factory,
+    def test_create_201(self, mock_auth_with_user, arf, sys_group_user_factory,
                         mock_account_status, mock_get_customization_request,
-                        mock_post_notification, httpx_mock):
+                        mock_post_notification, httpx_mock, system_group_factory):
         view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
-        user_rel = org_user_factory(organization=self.org)
+        group_1 = system_group_factory(organization=self.org, parent=self.group)
+        user_rel = sys_group_user_factory(organization=self.org, group=group_1)
         user = user_rel.user
         data = {
             'email': user.email,

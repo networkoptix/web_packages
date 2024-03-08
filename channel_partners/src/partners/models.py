@@ -1671,6 +1671,15 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         org_groups = self.organization.groups.all().values_list('id', flat=True)
         CloudSystemId.invalidate_groups_system_counters(org_groups)
 
+        # Deleted overlapping in users memberships
+        users_above = OrganizationToUser.objects.filter(
+            organization=self.organization, system_group_id__in=self.path)
+        overlaps_below = (OrganizationToUser.objects
+                          .filter(organization=self.organization)
+                          .filter(Q(system_group_id=self.id) | Q(system_group__path__contains=[self.id]))
+                          .filter(user_id__in=users_above.values('user_id')))
+        overlaps_below.delete()
+
     def delete(self, using=None, keep_parents=False):
         with transaction.atomic():
             organization_id = self.organization_id
@@ -1772,6 +1781,24 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         ids_arr = user_groups().annotate(ids=models.Func('id', function='array_agg')).values('ids')
         overlaps = user_groups().filter(path__overlap=Subquery(ids_arr))
         return overlaps.exists()
+
+    def has_cp_overlaps(self, user: CloudUser) -> bool:
+        """
+        Checks if user has access to parent channel partner.
+        Any membership in an organization does not matter as soon it will be rewritten.
+        """
+        return ChannelPartnerToUser.objects.filter(
+            user=user, channel_partner_id=self.visible_path[-1]
+        ).exists()
+
+    def has_org_overlaps(self, user: CloudUser) -> bool:
+        """
+        Checks if user has access to organization.
+        Any membership in an organization does not matter as soon it will be rewritten.
+        """
+        return OrganizationToUser.objects.filter(
+            user=user, organization_id=self.organization_id, system_group_id__isnull=True,
+        ).exists()
 
     @property
     def system_count(self) -> int:
