@@ -1,0 +1,5 @@
+Hello, {{message.userFullName}}
+
+The name of partner "{{message.old_partner_name}}" has been changed to "{{message.new_partner_name}}".
+
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

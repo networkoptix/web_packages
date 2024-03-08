@@ -34,9 +34,6 @@ class EnvironmentEnum(StrEnum):
     prod = 'prod'
 
 
-IS_CELERY = 'celery' in sys.argv
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_ENV = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 LOCAL_DOCKER = os.getenv('LOCAL_DOCKER', False)
@@ -44,6 +41,8 @@ CI = os.getenv('CI', False)
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 BUILD = 'collectstatic' in sys.argv
+IS_CELERY = 'celery' in sys.argv[0]
+IS_DJANGO_SHELL = ('shell' in sys.argv and 'manage.py' in sys.argv)
 
 if CI:
     ENV_NAME = EnvironmentEnum.ci
@@ -66,6 +65,7 @@ if (
 BASE_COOKIE_PATH = env.str("BASE_COOKIE_PATH", "/partners")
 DEBUG = env.bool("DEBUG", False)
 DOMAIN_NAME = env.str('DOMAIN_NAME')
+ECS_CONTAINER_METADATA_URI = env.str('ECS_CONTAINER_METADATA_URI', default=None)
 INSTANCE_NAME = env.str('INSTANCE_NAME')
 LICENSE_SERVER = env.str("LICENSE_SERVER", default="https://nxlicensed.hdw.mx")
 NOTIFICATION_SECRET = env.str('NOTIFICATION_SECRET').split(':')
@@ -96,8 +96,13 @@ ANON_RATE_LIMIT = env.str("ANON_RATE_LIMIT", None)
 SYSTEM_RATE_LIMIT = env.str("SYSTEM_RATE_LIMIT", None)
 USER_RATE_LIMIT = env.str("USER_RATE_LIMIT", None)
 
-if not IS_CELERY:
-    # Only run for channel_partners application
+# RSA key must be required in most cases, excepting:
+#  - celery service
+#  - celery beat service
+#  - django shell, it is needed for debugging sometimes even in containers where RSA key is missed
+if IS_CELERY or IS_DJANGO_SHELL:
+    RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True, default=None)
+else:
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 # End environment variables section
 

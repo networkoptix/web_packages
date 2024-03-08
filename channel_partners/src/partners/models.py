@@ -743,7 +743,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
-    observed_fields = ('state', 'effective_state')
+    observed_fields = ('state', 'effective_state', 'name')
 
     tree = CTEManager()
 
@@ -954,7 +954,8 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         # and for second level of channel partners (direct children of Nx Channel Partner) only
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
-
+        name_changed = not new and self.name != self._original_name
+        old_name = self._original_name
         if new:
             if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
                 if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
@@ -969,6 +970,11 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
         if self.parent_channel_partner and new:
             new_channel_partner_created.apply_async(args=[self.pk])
+        if name_changed:
+            from partners.tasks.notification import (
+                run_partner_name_change_tasks,
+            )
+            run_partner_name_change_tasks(self, old_name=old_name, new_name=self.name)
 
     @staticmethod
     def invalidate_cache(pk: str) -> None:
@@ -1269,7 +1275,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
-    observed_fields = ('state', 'effective_state', 'channel_partner_id')
+    observed_fields = ('state', 'effective_state', 'channel_partner_id', 'name')
 
     class Meta:
         permissions = [
@@ -1292,15 +1298,20 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def save(self, *args, **kwargs):
         new = self._state.adding
+        name_changed = not new and self.name != self._original_name
+        old_name = self._original_name
         if new:
             self.id = self.id or uuid.uuid4()
             if self.channel_partner_id:
                 self.path = get_path_from_parent(self.channel_partner)
             self.invalidate_channel_partner_org_count(self.channel_partner)
         self.update_state()
-
-
         super().save(*args, **kwargs)
+        if name_changed:
+            from partners.tasks.notification import (
+                run_organization_name_change_tasks,
+            )
+            run_organization_name_change_tasks(self, old_name=old_name, new_name=self.name)
 
     @property
     def system_count(self) -> int:
@@ -2527,11 +2538,13 @@ class NotificationTypes(enum.StrEnum):
     cps_organization_state_active = 'cps_organization_state_active'
     cps_organization_state_confirmation = 'cps_organization_state_confirmation'
     cps_organization_state_suspended = 'cps_organization_state_suspended'
+    cps_organization_name_change = 'cps_organization_name_change'
     cps_partner_invite = 'cps_partner_invite'
     cps_partner_share = 'cps_partner_share'
     cps_partner_state_active = 'cps_partner_state_active'
     cps_partner_state_confirmation = 'cps_partner_state_confirmation'
     cps_partner_state_suspended = 'cps_partner_state_suspended'
+    cps_partner_name_change = 'cps_partner_name_change'
 
 
 class MigrationRecord(models.Model):
