@@ -54,21 +54,33 @@
 
 .card-content {
   h3 {
-    width: 90%;
+    width: 75% !important;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
 }
 
-  .no-partners-placeholder {
-    margin: auto;
-    text-align: center;
-    h3 {
-      color: var(--placehoder-v2-title-color)!important;
-    }
+.icon-with-fill1 {
+  fill: var(--svg-placeholder-elm2-color);
+}
 
-    p {
-      color: var(--placehoder-v2-message-color)!important;
-    }
+.icon-with-fill2 {
+  fill: var(--brand-core);
+}
+
+.icon-with-fill3 {
+  fill: var(--light6);
+}
+
+.no-partners-placeholder {
+  margin: auto;
+  text-align: center;
+  h3 {
+    color: var(--placehoder-v2-title-color)!important;
   }
+
+  p {
+    color: var(--placehoder-v2-message-color)!important;
+  }
+}

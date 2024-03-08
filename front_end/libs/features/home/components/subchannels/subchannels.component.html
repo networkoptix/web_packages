@@ -38,6 +38,7 @@
                         class="card-content"
                         (click)="handleChannelClick(channel.id)"
                         [icon]="icons.dir + 'partner.svg'"
+                        [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
                     >
                         <h3>{{ channel.name }}</h3>
                         <div>
