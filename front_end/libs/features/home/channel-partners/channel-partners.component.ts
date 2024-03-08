@@ -223,11 +223,6 @@ export class NxChannelPartnersComponent implements OnInit {
                 route: 'settings',
             });
         }
-
-        if (this.initializedTabs) {
-            this.router.navigate(['home', 'channelPartners', this.currentPartner$$().id]);
-        }
-        this.initializedTabs = true;
         return tabs;
     }
 }

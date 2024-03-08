@@ -49,7 +49,7 @@ export class NxTabsComponent implements AfterViewInit {
 
     handleTabClick = (tab: NxBaseTabComponent, index: number): void => {
         const childTabs = this.tabItems.toArray();
-        const currentIndex = this.currentTabIndex$$() ?? 0;
+        const currentIndex = childTabs[this.currentTabIndex$$()] ? this.currentTabIndex$$() : 0;
         childTabs[currentIndex].selected = false;
         childTabs[index].selected = true;
         this.currentTabIndex$$.set(index);
@@ -58,13 +58,22 @@ export class NxTabsComponent implements AfterViewInit {
     };
 
     ngAfterViewInit(): void {
+        this.initTabs();
         this.tabItems.changes.subscribe(tabs => {
+            const currTabIndex = this.currentTabIndex$$();
             const items = tabs.toArray();
-            const selected = items.some(tab => tab.selected);
-
-            if (!selected && items.length > 0) {
-                this.handleTabClick(items[0], 0);
+            if (currTabIndex && items[currTabIndex]) {
+                items[currTabIndex].selected = true;
             }
+            this.initTabs();
         });
+    }
+
+    initTabs(): void {
+        const items = this.tabItems.toArray();
+        const selected = items.some(tab => tab.selected);
+        if (!selected && items.length > 0) {
+            this.handleTabClick(items[0], 0);
+        }
     }
 }

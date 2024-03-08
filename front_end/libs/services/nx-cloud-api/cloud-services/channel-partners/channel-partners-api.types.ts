@@ -61,6 +61,7 @@ export interface ChannelPartner {
     created: string;
     ownPermissions: string[];
     ownRoles: string[];
+    ownRolesIds: string[];
     name: string;
     effective_state: number;
     created_ts: string;

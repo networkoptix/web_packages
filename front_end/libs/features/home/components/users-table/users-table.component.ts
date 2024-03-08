@@ -12,6 +12,7 @@ import {
     signal,
     inject,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -108,6 +109,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         private store: Store,
         private cpService: NxChannelPartnersService,
         private accountService: NxAccountService,
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -244,6 +246,11 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
                             ownRoles: updatedUser.roles,
                         };
                         this.store.dispatch(cpActions.setChannelPartners({ channelPartners }));
+                        this.router.navigate([
+                            'home',
+                            'channelPartners',
+                            this.currentPartner$$().id,
+                        ]);
                     }
                 });
         } else {
