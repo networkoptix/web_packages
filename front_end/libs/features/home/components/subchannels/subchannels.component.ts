@@ -127,7 +127,7 @@ export class NxSubchannelsComponent {
     }
 
     handleChannelClick(id: string): void {
-        this.router.navigate([id], { relativeTo: this.route });
+        this.router.navigate([id, 'settings'], { relativeTo: this.route });
     }
 
     displayPartners(): void {

@@ -18,7 +18,7 @@
 >
     <ng-container *ngIf="state.item">
         <nx-settings-general
-            *ngIf="canUpdateOrg$$()"
+            *ngIf="canUpdateOrg$$() || subchannelSettings()"
             [view]="state.view"
             [name]="currentName$ | async"
             [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
@@ -27,7 +27,10 @@
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>
         <nx-settings-state
-            *ngIf="canChangeState$$() && isDirectParentCP$$()"
+            *ngIf="
+                (canChangeStateUI && canUpdateOrg$$() && isDirectParentCP$$()) ||
+                subchannelSettings()
+            "
             (updateState)="handleStateUpdate($event)"
             [currState]="currentState$ | async"
             [canChange]="state.canUpdateStatus"
