@@ -1,4 +1,6 @@
 import { computed, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
@@ -177,7 +179,7 @@ export class PermissionManager {
         const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
 
         let accessRole = '';
-        if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds) {
+        if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds.length) {
             accessRole = (user as RestV3User).groupIds
                 .map(groupId => groups.find(({ id }) => groupId === id)?.name)
                 .filter(role => !!role)
@@ -293,8 +295,18 @@ export class PermissionManager {
     }
 
     async getCurrentUserFromCloud(): Promise<void> {
-        this.cloudApi.users(this.systemId).subscribe(users => {
-            const user = users.find(({ accountEmail }) => accountEmail === this.currentUserEmail);
+        try {
+            const user = await firstValueFrom(
+                this.cloudApi
+                    .users(this.systemId)
+                    .pipe(
+                        map(users =>
+                            users.find(
+                                ({ accountEmail }) => accountEmail === this.currentUserEmail,
+                            ),
+                        ),
+                    ),
+            );
             if (user) {
                 const { customPermissions, permissions } = user || {};
                 this.user$$.set({
@@ -309,7 +321,24 @@ export class PermissionManager {
                     groupIds: [],
                 });
             }
-        });
+        } catch {
+            const [systemInfo] = await firstValueFrom(this.cloudApi.systems(this.systemId));
+            this.user$$.set({
+                accessRole: systemInfo.accessRole,
+                email: this.currentUserEmail,
+                fullName: '',
+                id: '',
+                isEnabled: true,
+                isCloud: true,
+                name: '',
+                permissions: '',
+                type: 'cloud',
+                attributes: '',
+                groupIds: [],
+                resourceAccessRights: {},
+                hasCustomPermissions: false,
+            });
+        }
     }
 
     async checkCurrentUser(): Promise<void> {

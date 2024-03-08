@@ -85,7 +85,7 @@ export const SystemGuard: CanActivateFn = (
 
     return accountPromise.then(async account => {
         if (!account) {
-            return;
+            return false;
         }
         let currSystem = systemService.getCurrentSystem();
 
