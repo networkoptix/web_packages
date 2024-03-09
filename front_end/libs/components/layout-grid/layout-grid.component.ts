@@ -35,9 +35,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
-    firstValueFrom,
     BehaviorSubject,
     combineLatest,
+    firstValueFrom,
     forkJoin,
     from,
     fromEvent,
@@ -67,6 +67,7 @@ import { v4 as uuid } from 'uuid';
 
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
+import { NxLayoutGridItemPlaceholderComponent } from '@components/layout-grid-item-placeholder/layout-grid-item-placeholder.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
@@ -80,13 +81,13 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import {
     ConnectionError,
-    WebRTCStreamManager,
     isRequiresTranscoding,
+    WebRTCStreamManager,
 } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
-import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
+import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
@@ -119,14 +120,15 @@ import {
     ParsedLayout,
     ParsedLayoutItem,
     ParsedLayoutItems,
+    ParsedLayoutWithItems,
     PlaceholderClasses,
+    placeholderNameLookup,
     PlaceholderState,
     Position,
     ResourceNode,
     ResourceType,
     Setting,
     Size,
-    placeholderNameLookup,
 } from './layout-grid.types';
 
 const SETTINGS_CONFIG: Setting[] = [
@@ -332,6 +334,7 @@ const calculateResize = (
         NxClickElsewhereDirective,
         PortalModule,
         NxLayoutGridItemOverlayComponent,
+        NxLayoutGridItemPlaceholderComponent,
         CdkContextMenuTrigger,
         NxWebGLCanvasComponent,
         NxPagePlaceholderComponent,
@@ -487,11 +490,7 @@ export class NxLayoutGridComponent {
     addingItem$$ = signal(false);
     addOffset = 0;
     changingLayout: string | boolean = true;
-    errors: Record<string, string> = {};
     skipDefaultCredentialsCheck: Record<string, true> = {};
-    errorIcons: Record<string, string> = {};
-    additionalErrorMessages: Record<string, Translatable> =
-        this.LANG.layouts.additionalErrorMessages;
     icons = icons;
     readonly RESOURCE_TYPE = ResourceType;
     readonly EDGE_GAP = 60;
@@ -509,8 +508,7 @@ export class NxLayoutGridComponent {
     #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
-    // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = combineLatest([
+    layout$: Observable<ParsedLayoutWithItems> = combineLatest([
         this.initialLayout$,
         this.#wrapperSize$,
         this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
@@ -935,10 +933,13 @@ export class NxLayoutGridComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
         private store: Store,
+        public layoutItemsStore: LayoutItemsErrorsStore,
     ) {
         if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
+
+        this.layoutItemsStore.reset();
 
         // TODO - start - following should be moved to layout-greed-tree
         layoutGridService.changeView
@@ -977,7 +978,7 @@ export class NxLayoutGridComponent {
             for (const { id, primary, secondary } of transcodingDisabled) {
                 if (
                     ![ConnectionError.mjpegDisabled, ConnectionError.transcodingDisabled].includes(
-                        this.errors[id] as ConnectionError,
+                        this.layoutItemsStore.errors$$()[id] as ConnectionError,
                     )
                 ) {
                     continue;
@@ -987,9 +988,11 @@ export class NxLayoutGridComponent {
                 const usePrimary = currentResolution === Resolution.HIGH && !primary;
 
                 if (usePrimary || useSecondary || ![primary, secondary].some(Boolean)) {
-                    delete this.errors[id];
-                    delete this.errorIcons[id];
-                    delete this.additionalErrorMessages[id];
+                    this.layoutItemsStore.remove({
+                        errorId: id,
+                        iconId: id,
+                        messageId: id,
+                    });
                 }
             }
         });
@@ -1137,9 +1140,11 @@ export class NxLayoutGridComponent {
 
                 if (assertResourceOfType.camera(camera)) {
                     camera.details.status = CameraStatus.Online;
-                    delete this.errors[cameraId];
-                    delete this.errorIcons[cameraId];
-                    delete this.additionalErrorMessages[cameraId];
+                    this.layoutItemsStore.remove({
+                        errorId: cameraId,
+                        iconId: cameraId,
+                        messageId: cameraId,
+                    });
                 }
             });
 
@@ -1173,12 +1178,21 @@ export class NxLayoutGridComponent {
                 return;
             }
         } catch ({ message }) {
-            this.additionalErrorMessages[id] = message;
+            this.layoutItemsStore.set({
+                id,
+                message,
+            });
         }
+
         if (!loaded) {
-            this.errors[id] = `${ResourceType.WEB_PAGE}_error`;
-        } else if (id in this.additionalErrorMessages) {
-            delete this.additionalErrorMessages[id];
+            this.layoutItemsStore.set({
+                id,
+                error: `${ResourceType.WEB_PAGE}_error`,
+            });
+        } else if (id in this.layoutItemsStore.messages$$()) {
+            this.layoutItemsStore.remove({
+                messageId: id,
+            });
         }
 
         if (loaded) {
@@ -1236,7 +1250,7 @@ export class NxLayoutGridComponent {
         status: string,
     ): void => {
         const hasAdditionalMessage = Boolean(
-            this.additionalErrorMessages[this.layoutItemLookup[id]?.details.id || status],
+            this.layoutItemsStore.messages$$?.()[this.layoutItemLookup[id]?.details.id || status],
         );
         const iconSizeConfigs: {
             minWidth: number;
@@ -1324,6 +1338,28 @@ export class NxLayoutGridComponent {
                 : config.maxSize;
         this.cd.detectChanges();
     };
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    getItem = ({
+        item,
+        layoutItemLookup,
+    }: {
+        item: ParsedLayoutItem;
+        layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
+    }) => layoutItemLookup?.[item.resourceId];
+
+    itemHasNoErrors = ({
+        itemDetail,
+        errors,
+    }: {
+        itemDetail: ReturnType<NxLayoutGridComponent['getItem']>;
+        errors: Record<string, string>;
+    }): boolean =>
+        !errors[itemDetail.details.id] &&
+        !(assertResourceOfType.camera(itemDetail) && itemDetail.details.unauthorized) &&
+        (((assertResourceOfType.camera(itemDetail) || assertResourceOfType.server(itemDetail)) &&
+            itemDetail.details.online) ||
+            assertResourceOfType.webpage(itemDetail));
 
     generateItemRenderConfig =
         (layoutRenderConfig: LayoutRenderConfig, wrapperSize: Size, layout: ParsedLayout) =>
@@ -1631,14 +1667,17 @@ export class NxLayoutGridComponent {
 
         if (id && id !== cleanIdLegacy(this.layout.id)) {
             this.changingLayout = id;
-            this.errors = {};
-            this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
+            this.layoutItemsStore.reset();
             if (
                 !this.system.permissionManager.permissions$$().editCameras ||
                 !this.CONFIG.featureFlags.layoutsAuthorizeCamera
             ) {
-                delete this.additionalErrorMessages.defaultPassword;
-                delete this.additionalErrorMessages.unauthorized;
+                this.layoutItemsStore.remove({
+                    messageId: 'defaultPassword',
+                });
+                this.layoutItemsStore.remove({
+                    messageId: 'unauthorized',
+                });
             }
             this.layoutStateService.portal = null;
             this.layoutChanged.emit(id);
@@ -1661,22 +1700,31 @@ export class NxLayoutGridComponent {
         }>,
         error: string,
     ): void {
+        const itemId = itemDetail.details.id;
         const showOfflineError = (): void => {
             itemDetail.details.online = false;
-            this.errors[itemDetail.details.id] = staticLang.common.cameraStates.unavailable;
-            this.errorIcons[itemDetail.details.id] = 'offline';
-            this.additionalErrorMessages[itemDetail.details.id] =
-                staticLang.layouts.additionalErrorMessages.UNAVAILABLE;
+            this.layoutItemsStore.set({
+                id: itemId,
+                error: staticLang.common.cameraStates.unavailable,
+                icon: 'offline',
+                message: staticLang.layouts.additionalErrorMessages.UNAVAILABLE,
+            });
         };
 
         const showTranscodingDisabledError = (error: ConnectionError): void => {
-            this.errors[itemDetail.details.id] = error;
-            this.errorIcons[itemDetail.details.id] = 'warning';
+            this.layoutItemsStore.set({
+                id: itemId,
+                error,
+                icon: 'warning',
+            });
         };
 
         const showDefaultPasswordError = (): void => {
-            this.errors[itemDetail.details.id] = 'defaultPassword';
-            this.errorIcons[itemDetail.details.id] = 'warning';
+            this.layoutItemsStore.set({
+                id: itemId,
+                error: 'defaultPassword',
+                icon: 'warning',
+            });
         };
 
         const isConnectionError = (error: string): error is ConnectionError =>
@@ -1773,8 +1821,10 @@ export class NxLayoutGridComponent {
                         ToastType.Warning,
                     );
                 } else {
-                    delete this.errors[selectedCamera.id];
-                    delete this.errorIcons[selectedCamera.id];
+                    this.layoutItemsStore.remove({
+                        errorId: selectedCamera.id,
+                        iconId: selectedCamera.id,
+                    });
                     if (defaultPassword) {
                         this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
                     }

@@ -582,7 +582,7 @@ h2.auto-save-overlay {
 .locked {
     .layout-item,
     .layout-item-wrapper {
-        &:not(.focus) {
+        &:not(.focused-item) {
             outline: unset !important;
         }
         cursor: unset !important;
@@ -620,7 +620,7 @@ h2.auto-save-overlay {
 
     &:active,
     :focus,
-    &.focus {
+    &.focused-item {
         outline: 2px solid var(--brand-core);
     }
 

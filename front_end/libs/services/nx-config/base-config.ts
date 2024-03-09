@@ -211,6 +211,7 @@ const FeatureFlagKeys = [
     'layoutsItemStatus',
     'layoutsChangeResolution',
     'layoutsItemChangeResolution',
+    'layoutsItemNewPlaceholder',
     'layoutsAuthorizeCamera',
     'layoutsCameraGroups',
     'layoutsIoDevices',

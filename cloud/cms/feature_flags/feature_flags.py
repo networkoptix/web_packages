@@ -90,6 +90,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_cross_editing = ('Show other systems to allow full cross system layout editing features for layouts', 'layoutsCrossSystemEditing', '%LAYOUTS_CROSS_SYSTEM_EDITING%')
     layouts_updated_cross_system_menu = ('Show updated cross system menu separated from the tree', 'layoutsUpdatedCrossSystemMenu')
     layouts_camera_groups = ('Show camera groups in the tree', 'layoutsCameraGroups')
+    layouts_item_new_placeholder = ('Show camera groups in the tree', 'layoutsItemNewPlaceholder')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

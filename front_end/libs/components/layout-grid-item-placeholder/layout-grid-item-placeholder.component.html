@@ -1,0 +1,26 @@
+@if (!adjustedStatus$$()) {
+    <div
+        class="not-supported"
+        translate
+    >
+        Not supported
+    </div>
+} @else if (!layoutsItemNewPlaceholder) {
+    <nx-layout-grid-item-placeholder-template-legacy
+        [placeholderIcon]="placeholderIcon$$()"
+        [placeholderMessage]="placeholderMessage$$()"
+        [placeholderAdditionalMessage]="placeholderAdditionalMessage$$()"
+        [action]="action$$()"
+        [hasAction]="hasAction$$()"
+        [notSupported]="notSupported$$()"
+        [renderConfig]="renderConfig$$()"
+    >
+    </nx-layout-grid-item-placeholder-template-legacy>
+} @else {
+    <nx-layout-grid-item-placeholder-template
+        [placeholderIcon]="placeholderIcon$$()"
+        [placeholderMessage]="placeholderMessage$$()"
+        [placeholderAdditionalMessage]="placeholderAdditionalMessage$$()"
+    >
+    </nx-layout-grid-item-placeholder-template>
+}

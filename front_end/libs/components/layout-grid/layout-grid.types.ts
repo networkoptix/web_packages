@@ -77,6 +77,11 @@ export interface ParsedLayoutItem extends LayoutItem {
 
 export type ParsedLayoutItems = ParsedLayoutItem[];
 
+export interface ParsedLayoutWithItems extends ParsedLayout {
+    items: ParsedLayoutItems;
+    renderConfig: LayoutRenderConfig;
+}
+
 export interface Position {
     id?: string;
     top: number;

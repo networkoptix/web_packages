@@ -1,0 +1,11 @@
+<div>
+    <svg-icon
+        nx-add-svg-src
+        [src]="placeholderIcon"
+    >
+    </svg-icon>
+    <h3>{{ placeholderMessage | nxTranslate }}</h3>
+    @if (placeholderAdditionalMessage) {
+        <h4>{{ placeholderAdditionalMessage | nxTranslate }}</h4>
+    }
+</div>

@@ -1,0 +1,43 @@
+<div
+    (click)="action?.()"
+    [ngClass]="{
+        'not-supported': notSupported,
+        'has-action': hasAction,
+        'has-secondary-panel': renderConfig.hasSecondaryPanel,
+        small: renderConfig.placeholderClass === 'small',
+        medium: renderConfig.placeholderClass === 'medium',
+        large: renderConfig.placeholderClass === 'large'
+    }"
+    class="item-error content-container"
+>
+    <svg-icon
+        nx-add-svg-src
+        [ngClass]="{
+            'main-panel': renderConfig.placeholderState >= PLACEHOLDER_STATE.ICON_ONLY
+        }"
+        [src]="placeholderIcon"
+        [svgStyle]="{
+            'width.%': '100%',
+            'height.%': '100%',
+            'width.px': renderConfig.maxPlaceholderSize,
+            'height.px': renderConfig.maxPlaceholderSize
+        }"
+    >
+    </svg-icon>
+    <h3
+        [ngClass]="{
+            'main-panel': renderConfig.placeholderState >= PLACEHOLDER_STATE.WITH_TITLE
+        }"
+    >
+        {{ placeholderMessage | nxTranslate }}
+    </h3>
+    @if (placeholderAdditionalMessage) {
+        <h4
+            [ngClass]="{
+                'main-panel': renderConfig.placeholderState === PLACEHOLDER_STATE.FULL
+            }"
+        >
+            {{ placeholderAdditionalMessage | nxTranslate }}
+        </h4>
+    }
+</div>
