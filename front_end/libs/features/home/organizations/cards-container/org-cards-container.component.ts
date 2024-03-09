@@ -275,13 +275,15 @@ export class NxOrganizationCardContainerComponent {
                     id: group.id,
                     action: () => {
                         this.dialogsService.updateGroupName(group.id).then(updatedGroup => {
-                            const groups = [...this.groupItems$$()];
-                            const currGroupIndex = groups.findIndex(gr => gr.id === group.id);
-                            groups[currGroupIndex] = {
-                                ...groups[currGroupIndex],
-                                name: updatedGroup.name,
-                            };
-                            this.store.dispatch(GroupActions.setGroups({ groups }));
+                            if (updatedGroup) {
+                                const groups = [...this.groupItems$$()];
+                                const currGroupIndex = groups.findIndex(gr => gr.id === group.id);
+                                groups[currGroupIndex] = {
+                                    ...groups[currGroupIndex],
+                                    name: updatedGroup.name,
+                                };
+                                this.store.dispatch(GroupActions.setGroups({ groups }));
+                            }
                         });
                     },
                 },
