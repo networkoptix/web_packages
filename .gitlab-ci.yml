@@ -414,3 +414,28 @@ cp-lint:
     - isort /builds/dev/cloud_portal/channel_partners/
     - COMMIT_MESSAGE="CPS lint auto fixed"
     - !reference [".commit-changes", "script"]
+
+approval-check:
+  stage: check
+  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+  rules:
+    - if: !reference [ .enable_for_mr ]
+  script:
+    - |
+        REACTIONS=$(curl -s --header "PRIVATE-TOKEN: $CANCEL_PIPELINE_ACCESS_TOKEN" "https://gitlab.nxvms.dev/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/award_emoji")
+
+        echo "Reactions: $REACTIONS"
+
+        # Check if the MR is robocat cherry pick
+        if echo $REACTIONS  | grep -q '"name":"fast_forward","user":{"id":78'; then
+          echo "MR is robocat cherry pick and has fast_forward reaction. Auto approving."
+        else
+          git config user.email "$GITLAB_USER_EMAIL"
+          git config user.name "$GITLAB_USER_NAME"
+          git remote add mr_upstream "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_PROJECT_PATH.git"
+          echo "Attempting to fetch origin"
+          git fetch mr_upstream $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+          pushd "/builds/dev/cloud_portal"
+            python3 approval-check.py "https://@gitlab.nxvms.dev/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/approvals" "$CANCEL_PIPELINE_ACCESS_TOKEN" "$(git rev-parse mr_upstream/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME)"
+          popd
+        fi
