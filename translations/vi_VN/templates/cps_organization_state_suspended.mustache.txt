@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Xin chào, {{message.userFullName}}
 
-The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.
+Trạng thái của tổ chức {{message.organization_name}} được thay đổi thành {{message.status_name}}.
 
-Please contact your partner for more details.
+Vui lòng liên hệ với đối tác của bạn để biết thêm chi tiết.
