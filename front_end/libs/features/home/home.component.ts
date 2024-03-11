@@ -30,6 +30,11 @@ import { isUserSystem } from '@utils/nx';
 @Component({
     selector: 'nx-home',
     templateUrl: 'home.component.html',
+    styles: `
+        :host {
+            height: 100%;
+        }
+    `,
     imports: [NxPreLoaderComponent, RouterModule, CommonModule, NxNoSystemsComponent],
     standalone: true,
 })
