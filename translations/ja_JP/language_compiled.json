@@ -517,7 +517,7 @@
     "Duplicate \"{name}\" layout": "\"{name}\" レイアウトを複製",
     "ENABLED": "有効",
     "Earlier versions of %VMS_NAME% Client do not support two-factor authentication.": "古いバージョンの %VMS_NAME% クライアントは、二要素認証をサポートしていません。",
-    "Edge": "Edge",
+    "Edge": "エッジ",
     "Edit Credentials": "認証情報を編集",
     "Edit Layout": "レイアウトを編集",
     "Edit user - {user}": "ユーザーの編集 - {user}",
