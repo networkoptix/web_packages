@@ -39,10 +39,11 @@ export class NxSubchannelComponent implements OnInit {
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     currentTabIndex$$ = signal(0);
     tabs: Tab[] = [
-        {
-            displayName: this.LANG.channelPartners.tabNames.information,
-            route: '',
-        },
+        // We may use the 'information' tab in the future
+        // {
+        //     displayName: this.LANG.channelPartners.tabNames.information,
+        //     route: '',
+        // },
     ];
 
     @Input() currentTabRoute: string;
@@ -57,18 +58,20 @@ export class NxSubchannelComponent implements OnInit {
 
     ngOnInit(): void {
         const { ownPermissions } = this.currentPartner$$();
+        // Only the 'settings' tab will be in tabs[] for now. 'reports' tab will be added to tabs later
         if (ownPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_SUB_CHANNEL_PARTNERS)) {
             this.tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.settings,
                 route: 'settings',
             });
         }
-        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
-            this.tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.users,
-                route: 'users',
-            });
-        }
+        // We may use the 'users' tab in the future
+        // if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+        //     this.tabs.push({
+        //         displayName: this.LANG.channelPartners.tabNames.users,
+        //         route: 'users',
+        //     });
+        // }
         for (const [index, tab] of this.tabs.entries()) {
             if (tab.route === this.currentTabRoute) {
                 this.currentTabIndex$$.set(index);
