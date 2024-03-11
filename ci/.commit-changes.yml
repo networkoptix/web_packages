@@ -36,11 +36,14 @@
               echo "$ERROR_MESSAGE"
               exit $OVERRIDE_COMMIT_EXIT_CODE
             fi
-
+            echo "MR is robocat cherry pick and has name_badge 📛 reaction attempting to push commit"
             git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
             echo 'pushed commit to branch'
         else
-            echo "Not Fast Forward"
+            echo "Not Fast Forward attempting to push commit"
+
+            git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
+            echo 'pushed commit to branch'
         fi
 
       else

@@ -13,9 +13,6 @@
 nx-app {
     .mainContainer {
         background-color: var(--body-bg);
-        &.withFooter {
-            padding-bottom: 16px;
-        }
     }
 
     .altMainBackground {

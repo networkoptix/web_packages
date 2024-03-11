@@ -2,6 +2,7 @@
 
 .nx-new-table-container {
   margin: 0;
+  height: calc(100% - 3rem) !important;
 
   .no-users-placeholder {
     margin: auto;
