@@ -21,12 +21,12 @@ import { settingsViews } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
+    ChannelPartnerPermissions,
     OrgPermissions,
     Organization,
     State,
     UpdateChannelPartner,
     UpdateOrganization,
-    ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
@@ -134,16 +134,20 @@ export class NxOrganizationSettingsComponent implements OnInit {
         const currentOrg = this.currentOrg$$();
         const currentPartner = this.currentPartner$$();
         const permissions = this.currentPartnerPermissions$$();
+        const canAlterSubCP = this.canAlterSubCP$$();
         if (!permissions.length) {
             return false;
         }
-        const canAlterState = permissions.includes('alter_state_organizations');
-        const canAlterSubCP = permissions.includes('alter_state_sub_channel_partners');
+        const canAlterState = permissions.includes(
+            ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+        );
         return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP) || false;
     });
 
     isOrgAdmin$$ = computed(() => {
-        return this.currentPartnerPermissions$$().includes('administer_organization_systems');
+        return this.currentPartnerPermissions$$().includes(
+            ChannelPartnerPermissions.ADMINISTER_ORGANIZATION_SYSTEMS,
+        );
     });
     canChangeState$$ = computed(
         () =>
@@ -155,6 +159,11 @@ export class NxOrganizationSettingsComponent implements OnInit {
     canUpdateOrg$$ = computed(() => {
         const currentState = this.currentState$$();
         return currentState.item?.ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION);
+    });
+    canAlterSubCP$$ = computed(() => {
+        return this.currentPartnerPermissions$$().includes(
+            ChannelPartnerPermissions.ALTER_STATE_SUB_CHANNEL_PARTNERS,
+        );
     });
     hasUpdate = false;
 
