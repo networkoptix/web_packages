@@ -969,7 +969,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         super().save(*args, **kwargs)
 
         if self.parent_channel_partner and new:
-            new_channel_partner_created.apply_async(args=[self.pk])
+            transaction.on_commit(lambda: new_channel_partner_created.apply_async(args=[self.pk]))
         if name_changed:
             from partners.tasks.notification import (
                 run_partner_name_change_tasks,
@@ -1943,7 +1943,8 @@ class ChannelPartnerService(models.Model):
         super().save(*args, **kwargs)
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SERVICE_CHANGED, service=self)
         if new:
-            new_channel_partner_service_created.apply_async(args=[self.pk])
+            transaction.on_commit(lambda: new_channel_partner_service_created.apply_async(args=[self.pk]))
+
 
 
 class ServiceRecordTypes:
@@ -2224,7 +2225,11 @@ class ServiceToOrganizationProperties(models.Model):
         ).values_list('service_id', flat=True))
         missing_service_ids = services_ids.difference(service_properties__service_ids)
         for id in missing_service_ids:
-            cls.objects.create(service_id=id, organization_id=organization_id)
+            props, created = cls.objects.get_or_create(service_id=id, organization_id=organization_id)
+            if not created:
+                logger.info("Service properties record already exists",
+                            organization_id=organization_id,
+                            service_id=id)
 
 
 class ChannelPartnerEvent(models.Model):

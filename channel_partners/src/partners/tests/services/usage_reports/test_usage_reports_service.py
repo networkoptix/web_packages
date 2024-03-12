@@ -336,35 +336,47 @@ class TestChannelPartnerReportsService:
             organization_id=organizations[i].id, organization_name=organizations[i].name, report=f'detail_{i}'
         ) for i in range(len(organizations))]
 
-    def test_get_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner, channel_partner_factory):
-        channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
-        service = cp_service_factory(parent_service=None, channel_partner=channel_partner)
-        sub_channel_partners = [channel_partner_factory(parent_channel_partner=channel_partner) for _ in range(5)]
-        sub_services = []
-        for sub_channel in sub_channel_partners:
-            sub_services.append(cp_service_factory(parent_service=service, channel_partner=sub_channel))
-        detail_table_mock = mocker.patch(
-            'partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_detail_table',
-            return_value=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10, monthly_rate=0, transactions=1),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10, transactions=1)
-            ]
-        )
+    def test_get_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
+                                        channel_partner_factory, django_capture_on_commit_callbacks):
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
+            service = cp_service_factory(parent_service=None, channel_partner=channel_partner)
 
-        channe_partner_usages =  ChannelPartnerReportsService.get_channel_partner_usages(
-            channel_partner=channel_partner, service=service, period_start=parser.parse('01-01-2024')
-        )
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_channel_partners = [
+                channel_partner_factory(parent_channel_partner=channel_partner)
+                for _ in range(5)
+            ]
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_services = []
+            for sub_channel in sub_channel_partners:
+                sub_services.append(cp_service_factory(parent_service=service, channel_partner=sub_channel))
+
+            detail_table_mock = mocker.patch(
+                'partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_detail_table',
+                return_value=[
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
+                    RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10,
+                                             monthly_rate=0, transactions=1),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10,
+                                             transactions=1)
+                ]
+            )
+            channel_partner_usages = ChannelPartnerReportsService.get_channel_partner_usages(
+                channel_partner=channel_partner, service=service, period_start=parser.parse('01-01-2024')
+            )
 
         # One service is automatically created/inherited from parent, so total of two services for each sub channel
         assert detail_table_mock.call_count == 10
 
-        assert channe_partner_usages == [ChannelPartnerUsage(
+        assert channel_partner_usages == [ChannelPartnerUsage(
             channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=10, monthly_rate=10, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=20, daily_rate=20, monthly_rate=0,
+                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=20, daily_rate=20,
+                                         monthly_rate=0,
                                          transactions=2),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=30, monthly_rate=10, daily_rate=20, transactions=2)
+                RegularUsageDetailRecord(date=TotalUsageDate, channels=30, monthly_rate=10, daily_rate=20,
+                                         transactions=2)
             ]) for channel_partner in sub_channel_partners]
 
     def test_build_service_summary_from_sub_entity_reports(self):
@@ -397,7 +409,8 @@ class TestChannelPartnerReportsService:
             ])
         ]
 
-        service_summary = ChannelPartnerReportsService.build_service_summary_from_sub_entity_reports(organization_usages=org_usages, channel_partner_usages=cp_usages)
+        service_summary = ChannelPartnerReportsService.build_service_summary_from_sub_entity_reports(
+            organization_usages=org_usages, channel_partner_usages=cp_usages)
         assert service_summary == ChannelPartnerServiceReport(
             sub_entities=[
                 ChannelPartnerSubEntityServices(
