@@ -400,11 +400,7 @@ export class NxMenusService {
         }
 
         // Services
-        if (
-            nxConfig.featureFlags.channelPartnersChangeServicesUI &&
-            'organizationId' in activeSystem.info &&
-            permissions.isAdmin
-        ) {
+        if (nxConfig.featureFlags.channelPartners && 'organizationId' in activeSystem.info) {
             const servicesNode = new MenuNode(
                 'Services',
                 this.getUrl(activeSystem.id, { services: true }),
