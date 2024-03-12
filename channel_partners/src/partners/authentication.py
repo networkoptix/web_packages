@@ -336,8 +336,16 @@ class NxCloudOauthTokenAuthentication(TokenAuthentication):
 class NxCloudOauthIntrospectAuthentication(NxCloudOauthTokenAuthentication):
 
     def get_user_from_token(self, token, request=None):
+        # TODO. get rid off this authentication class when JWT is fully tested.
         kwargs = request.parser_context.get('kwargs', {})
         system_id = (kwargs.get('system_id') or kwargs.get('id'))
+        try:
+            # check JWT token, is it is not authorized do not proceed
+            if authenticate_jwt_token(token) is None:
+                return None
+        except FallbackToRegToken as ex:
+            logger.info("Fallback to regular token authentication",
+                        exception=str(ex), reason=ex.reason)
         email, system_id, system_roles_ids = CdbInternalAuthentication.introspect_with_system(
             token, request.cloud_host.hostname, system_id
         )

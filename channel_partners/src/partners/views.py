@@ -1285,10 +1285,12 @@ class CloudSystemViewSet(NestedViewSetMixin,
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action in ('retrieve', 'services') or (self.action == 'service_quantity' and self.request.method == 'GET'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.is_member_in_branch,
-                                                        system_allowed=True, direct_access_allowed=True))
+                                                        system_allowed=True,
+                                                        direct_access_allowed=VmsRoles.ALL_ROLES))
         if self.action in ('saas_report', 'migrate_legacy_licenses'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
-                                                        system_allowed=True, direct_access_allowed=True))
+                                                        system_allowed=True,
+                                                        direct_access_allowed=VmsRoles.ALL_ROLES))
         if self.action == 'destroy':
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage, system_allowed=True))
         if self.action == 'transfer_offer':
@@ -1296,8 +1298,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.action in ('partial_update', 'update'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
         if self.action == 'service_quantity' and self.request.method in ('PATCH'):
-                perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services,
-                                                            direct_access_allowed=True))
+                perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
         if len(perms) == 1 and self.detail:
             raise ImproperlyConfigured('Must add a permission for a detail view')
 
