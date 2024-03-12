@@ -9,6 +9,7 @@ const proxyTargetConfig = {
     regress: 'https://regress.cloud.hdw.mx',
     regress2: 'https://regress2.cloud.hdw.mx',
     qa: 'https://qa.cloud.hdw.mx',
+    'meta-cloud-test': 'https://metavms.cloud-test.hdw.mx',
 };
 const cloudTarget = process.env.CLOUD_TARGET || 'cloud-test';
 const target = proxyTargetConfig[cloudTarget] || cloudTarget;

@@ -3,9 +3,15 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+export const enum LoadingState {
+    INIT = 'INIT',
+    LOADING = 'LOADING',
+    LOADED = 'LOADED',
+}
+
 export interface ChannelPartnersState {
     arePartnerOrgsLoading: boolean;
-    areChannelPartnersAndOrgsLoading: boolean;
+    channelPartnersAndOrgsLoadState: LoadingState;
     currentPartnerId: string;
     currentOrgId: string;
     currentSubchannels: ChannelPartner[];

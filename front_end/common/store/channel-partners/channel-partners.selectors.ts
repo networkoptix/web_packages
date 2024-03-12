@@ -16,7 +16,7 @@ export const selectArePartnerOrgsLoading = createSelector(
 
 export const selectAreChannelPartnersAndOrgsLoading = createSelector(
     selectChannelPartnersState,
-    state => state.areChannelPartnersAndOrgsLoading,
+    state => state.channelPartnersAndOrgsLoadState,
 );
 
 export const selectHasStoreLoaded = createSelector(
