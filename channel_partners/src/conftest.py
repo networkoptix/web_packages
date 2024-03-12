@@ -86,6 +86,10 @@ def cloud_test_host(db):
 
 
 @pytest.fixture()
+def meta_cloud_host(db):
+    return CloudHost.objects.get_or_create(hostname='meta-cloud-test.hdw.mx')[0]
+
+@pytest.fixture()
 def cloud_host_factory(db):
     def factory(hostname=None) -> CloudHost:
         if not hostname:
