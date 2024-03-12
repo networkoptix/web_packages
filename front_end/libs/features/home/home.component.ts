@@ -24,6 +24,7 @@ import type {
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUserSystemInfo } from '@services/systems.service.types';
+import { LoadingState } from '@store/channel-partners/channel-partners.state';
 import { isUserSystem } from '@utils/nx';
 
 @Component({
@@ -34,9 +35,10 @@ import { isUserSystem } from '@utils/nx';
 })
 export class NxHomeComponent implements OnInit {
     readonly LANG = staticLang;
-    areChannelPartnersAndOrgsLoading$ = this.store.select<boolean>(
+    areChannelPartnersAndOrgsLoading$ = this.store.select<LoadingState>(
         selectAreChannelPartnersAndOrgsLoading,
     );
+
     organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
     channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
@@ -44,7 +46,7 @@ export class NxHomeComponent implements OnInit {
     loadingSubscription = this.areChannelPartnersAndOrgsLoading$
         .pipe(
             takeUntilDestroyed(),
-            filter(loading => !loading),
+            filter(loadState => loadState === LoadingState.LOADED),
             switchMap(() => {
                 const userSystems$ = this.systemsService.systemsSubject.pipe(
                     map(systems => systems.filter(isUserSystem)),
@@ -135,8 +137,6 @@ export class NxHomeComponent implements OnInit {
             this.router.navigateByUrl(`home/${redirectPath}`);
         }
 
-        if (redirectPath && this.isPageLoading) {
-            this.isPageLoading = false;
-        }
+        this.isPageLoading = false;
     }
 }

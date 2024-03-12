@@ -201,7 +201,10 @@ export class NxOrganizationsComponent implements OnInit {
 
                 this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner).subscribe({
                     next: () => this.isChannelPartnerUser$$.set(true),
-                    error: () => this.isChannelPartnerUser$$.set(false),
+                    error: () => {
+                        this.isChannelPartnerUser$$.set(false);
+                        this.isLoading = false;
+                    },
                     complete: () => (this.isLoading = false),
                 });
             });
@@ -219,13 +222,13 @@ export class NxOrganizationsComponent implements OnInit {
             ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
             this.isChannelPartnerUser$$()
         ) {
-            this.tabs.push({
+            tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.systems,
                 route: 'systems',
             });
         }
         if (ownPermissions.includes(OrgPermissions.MANAGE_USERS)) {
-            this.tabs.push({
+            tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.users,
                 route: 'users',
             });
@@ -234,7 +237,7 @@ export class NxOrganizationsComponent implements OnInit {
             ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
             nxConfig.featureFlags.channelPartnersReportsUI
         ) {
-            this.tabs.push({
+            tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.reports,
                 route: 'reports',
             });
@@ -243,7 +246,7 @@ export class NxOrganizationsComponent implements OnInit {
             partnerPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS) ||
             ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
         ) {
-            this.tabs.push({
+            tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.settings,
                 route: 'settings',
             });

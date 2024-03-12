@@ -5,6 +5,7 @@ const proxyTargetConfig = {
     local: 'http://localhost:8000',
     prod: 'https://nxvms.com',
     stage: 'https://stage.nxvms.com/',
+    'meta-cloud-test': 'https://metavms.cloud-test.hdw.mx',
 };
 const target = process.env.CLOUD_TARGET || 'cloud-test';
 
