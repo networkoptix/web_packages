@@ -4,13 +4,17 @@
   padding-top: .35rem;
   color: var(--add-user-dialog-color);
 
-  &.error {
-    color: var(--error);
-  }
-
   &.description {
     padding-bottom: .5rem;
   }
+}
+
+.error {
+  color: var(--error) !important;
+}
+
+.input-error {
+  border-color: var(--error) !important;
 }
 
 label {

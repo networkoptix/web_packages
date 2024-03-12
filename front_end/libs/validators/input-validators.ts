@@ -129,4 +129,18 @@ export class NxValidators {
                 : null;
         };
     }
+
+    uniqueEmail(existingEmails: Set<string>): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (!control.value) {
+                return null;
+            }
+            return existingEmails.has(control.value)
+                ? {
+                      existingEmail: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.emailNotUnique),
+                  }
+                : null;
+        };
+    }
 }

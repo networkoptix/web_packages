@@ -191,18 +191,22 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                     take(1),
                 )
                 .subscribe(id => {
-                    this.dialogsService.addPartnerUser(id).then(user => {
-                        if (user) {
-                            this.recordStore.addRecord(mapCpUser(user));
-                        }
-                    });
+                    this.dialogsService
+                        .addPartnerUser({ partnerId, users: this.recordStore.entities() })
+                        .then(user => {
+                            if (user) {
+                                this.recordStore.addRecord(mapCpUser(user));
+                            }
+                        });
                 });
         } else {
-            this.dialogsService.addPartnerUser(partnerId).then(user => {
-                if (user) {
-                    this.recordStore.addRecord(mapCpUser(user));
-                }
-            });
+            this.dialogsService
+                .addPartnerUser({ partnerId, users: this.recordStore.entities() })
+                .then(user => {
+                    if (user) {
+                        this.recordStore.addRecord(mapCpUser(user));
+                    }
+                });
         }
     }
 

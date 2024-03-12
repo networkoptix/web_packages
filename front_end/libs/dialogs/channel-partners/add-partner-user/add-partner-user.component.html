@@ -22,33 +22,32 @@
         </button>
     </div>
     <div class="modal-body">
-        <form
-            #createUserForm="ngForm"
-            class="form"
-        >
-            <div class="form-group">
+        <form class="form">
+            <div
+                class="form-group"
+                [formGroup]="form"
+            >
                 <label
                     for="email"
                     translate
                     >Email</label
                 >
-                <nx-email-input
-                    name="email"
-                    componentId="email"
-                    class="fs-mask form-component"
-                    [(ngModel)]="email"
-                    [form]="createUserForm"
-                    [setFocus]="true"
-                    [isUsername]="true"
-                    #createUser="ngModel"
-                    (ngModelChange)="validateEmail($event)"
-                ></nx-email-input>
-                <div
-                    *ngIf="!hasValidEmail$$()"
-                    class="subtext error"
-                    translate
-                >
-                    Invalid email
+                <input
+                    id="email"
+                    class="form-control"
+                    formControlName="email"
+                    [ngClass]="{ 'input-error': emailInput?.invalid }"
+                />
+                <div *ngIf="emailInput?.invalid && (emailInput?.touched || emailInput?.dirty)">
+                    <div
+                        *ngIf="
+                            emailInput?.errors['emailInvalid'] ||
+                            emailInput?.errors['existingEmail']
+                        "
+                        class="subtext error"
+                    >
+                        {{ emailInput?.errors?.msg }}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -72,7 +71,7 @@
     </div>
     <div class="modal-footer">
         <nx-process-button
-            [buttonDisabled]="!email || !hasValidEmail$$() || !selectedRole.value"
+            [buttonDisabled]="!emailInput?.value || emailInput?.invalid || !selectedRole.value"
             [process]="createUserProcess"
             [buttonText]="'Add' | translate"
         ></nx-process-button>

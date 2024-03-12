@@ -150,7 +150,10 @@ export type PasswordChange2fa = DialogType<
 /* Channel partners */
 export type AddChannelPartner = DialogType<string, ChannelPartner>;
 export type EditChannelPartner = DialogType<ChannelPartner, ChannelPartner>;
-export type AddPartnerUser = DialogType<string, ChannelPartnerUser>;
+export type AddPartnerUser = DialogType<
+    { partnerId: string; users: UserRecord[] },
+    ChannelPartnerUser
+>;
 export type EditPartnerUser = DialogType<
     { channelPartner: string; user: ChannelPartnerUser },
     ChannelPartnerUser
