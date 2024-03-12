@@ -406,7 +406,7 @@ class CdbInternalAuthentication:
     ) -> Tuple[None, None, None] | Tuple[str, uuid.UUID, List[uuid.UUID]]:
         cached = TokenCache.get_token_system(token, system_id)
         if cached:
-            return cached[0], system_id, cached[1]
+            return cached[0], cast_uuid(system_id), cached[1]
         cdb_client = NxCloudApiClientFactory.get_sync_client(
             host=cloud_host_name,
             access_token=token,
