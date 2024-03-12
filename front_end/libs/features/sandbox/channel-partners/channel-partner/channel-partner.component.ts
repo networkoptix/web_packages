@@ -3,10 +3,11 @@ import type { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { LetDirective, PushPipe } from '@ngrx/component';
-import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
+import { catchError, map, merge, mergeMap, of, Subject, take } from 'rxjs';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { UserType } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
@@ -112,11 +113,20 @@ export class NxChannelPartnerComponent implements OnInit {
     }
 
     newPartnerUser(channelPartner: string): void {
-        this.dialogs.addPartnerUser(channelPartner).then(res => {
-            if (res) {
-                this.refresh$.next();
-                this.toastService.notify(`Added new partner user ${res.email}`);
-            }
+        this.users$.pipe(take(1)).subscribe(users => {
+            const mappedUsers = users.map(user => ({
+                ...user,
+                userType: UserType.CHANNEL_PARTNER,
+                userId: user.email,
+            }));
+            this.dialogs
+                .addPartnerUser({ partnerId: channelPartner, users: mappedUsers })
+                .then(res => {
+                    if (res) {
+                        this.refresh$.next();
+                        this.toastService.notify(`Added new partner user ${res.email}`);
+                    }
+                });
         });
     }
 
