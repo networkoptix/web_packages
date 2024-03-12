@@ -113,7 +113,7 @@ cloud-deploy:
   environment:
     name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
     url: https://${CLOUD_HOST}
-    on_stop: cloud-remove-deployment
+    on_stop: cloud-remove-deployment:no-bot-start
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .frontend_changes ]
@@ -122,7 +122,10 @@ cloud-deploy:
 # may be invoked using manual UI action to verify clean deployment
 # also triggered when MR branch deleted (MR merged)
 # ref: https://docs.gitlab.com/ee/ci/environments/#stop-an-environment-when-a-branch-is-deleted
-cloud-remove-deployment:
+#
+# The job's name should have `no-bot-start` to prevent triggering by robocat bots
+# https://networkoptix.atlassian.net/browse/INFRA-273
+cloud-remove-deployment:no-bot-start:
   extends: .jenkins-builds
   stage: deploy
   variables:
