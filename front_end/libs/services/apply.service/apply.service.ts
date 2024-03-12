@@ -55,7 +55,6 @@ export class NxApplyService {
     private discardFunctions: (() => void)[] = [];
     private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
     private nonSystem$ = new BehaviorSubject(true);
-    private form: NgForm;
     private watchers: Watcher<any>[];
     private isInvalid: boolean;
     private invalidFieldsSet: Set<string> = new Set();
@@ -492,11 +491,7 @@ export class NxApplyService {
         return sectionWatcher;
     };
 
-    applyDialog(
-        applyFunc: Process,
-        discardFunc: () => void,
-        form: NgForm,
-    ): Promise<DialogTypes['return']> {
+    applyDialog(applyFunc: Process, discardFunc: () => void): Promise<DialogTypes['return']> {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
@@ -527,7 +522,7 @@ export class NxApplyService {
         this.popupActive = true;
         this.applyOnNavSubject.next('');
 
-        return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
+        return this.applyDialog(this.applyFunction, this.discardFunction)
             .then(
                 status => {
                     this.applyOnNavSubject.next(status);
@@ -579,7 +574,6 @@ export class NxApplyService {
     }
 
     public setForm(form: NgForm): void {
-        this.form = form;
         this.applyComponentRef.instance.form = form;
     }
 
