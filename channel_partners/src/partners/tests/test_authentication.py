@@ -240,7 +240,27 @@ class TestNxCloudOauthIntrospectAuthentication:
         user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
         assert user == self.cloud_user
         assert token == self.token
-        assert str(self.request.introspected_system_id) == str(self.cloud_system.system_id)
+        assert self.request.introspected_system_id == self.cloud_system.system_id
+        assert self.request.introspected_system_roles_ids == [VmsRoles.ADMINISTRATOR]
+        assert TokenCache.get_token(self.token) == self.cloud_user.email
+        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
+                (self.cloud_user.email, [VmsRoles.ADMINISTRATOR]))
+
+    def test_success_using_cached_data(self, httpx_mock):
+        data = {
+            "active": True,
+            "username": self.cloud_user.email,
+            "token_type": "bearer",
+            "system_role_ids": {
+                f"{self.cloud_system.system_id}": [str(VmsRoles.ADMINISTRATOR)]
+            }
+        }
+        httpx_mock.add_response(url=self.url, json=data, status_code=200)
+        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
+        assert user == self.cloud_user
+        assert token == self.token
+        assert self.request.introspected_system_id == self.cloud_system.system_id
         assert self.request.introspected_system_roles_ids == [VmsRoles.ADMINISTRATOR]
         assert TokenCache.get_token(self.token) == self.cloud_user.email
         assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
