@@ -283,10 +283,11 @@ def cdb_introspect_url(cloud_test_host):
 
 
 @pytest.fixture()
-def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
+def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_email):
     def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
              system: CloudSystemId = None, system_id: uuid.UUID = None,
-             active: bool = True, system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR):
+             active: bool = True, system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR,
+             jwt_is_valid: bool = True):
         if system and system_id:
             raise ValueError('Cannot specify both system and system_id.')
         if user is None:
@@ -307,6 +308,11 @@ def mock_cdb_token_introspect(httpx_mock, cdb_introspect_url, random_email):
             "token_type": "bearer",
             **roles
         }
+        # mocking jwt authentication to email or none, to control this feature in tests
+        mocker.patch(
+            'partners.authentication.authenticate_jwt_token',
+            return_value=email if jwt_is_valid else None
+        )
         httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
         return email
 

@@ -4948,3 +4948,164 @@ class TestCloudSystemViewSetPermissions:
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
+
+    def test_retrieve_system_user_jwt_expired(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, jwt_is_valid=False)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 401
+
+    def test_retrieve_system_user_ok(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_retrieve_system_user_no_roles(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_retrieve_system_user_no_system(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_retrieve_system_user_viewer_ok(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-detail'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_saas_report_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-saas-report'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_saas_report_system_admin(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-saas-report'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_saas_report_system_user_no_roles(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-saas-report'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_service_quantity_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-service-quantity'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_service_quantity_system_admin(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-service-quantity'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_service_quantity_system_user_no_roles(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-service-quantity'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_services_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-services'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_services_system_admin(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-services'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+    def test_services_system_user_no_roles(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-services'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+    def test_migrate_legacy_licenses_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-migrate-legacy-licenses'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        # validation error expected
+        assert response.status_code == 400
+        assert response.data
+
+    def test_migrate_legacy_licenses_system_admin(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-migrate-legacy-licenses'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        # validation error expected
+        assert response.status_code == 400
+        assert response.data
+
+    def test_migrate_legacy_licenses_system_user_no_roles(self, mock_cdb_token_introspect, cloud_user_factory):
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        view_name = 'cloudsystem-migrate-legacy-licenses'
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.post(path=path)
+        assert response.status_code == 403
+
+
+
+

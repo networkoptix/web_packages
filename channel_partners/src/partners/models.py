@@ -1213,6 +1213,15 @@ class VmsRoles:
     LIVE_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000004')
     SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000005')
 
+    ALL_ROLES = [
+        ADMINISTRATOR,
+        POWER_USER,
+        ADVANCED_VIEWER,
+        VIEWER,
+        LIVE_VIEWER,
+        SYSTEM_HEALTH_VIEWER,
+    ]
+
 
 class OrganizationRole(models.Model):
 

@@ -1,4 +1,9 @@
-from typing import Any
+from typing import (
+    Any,
+    Callable,
+    List,
+)
+from uuid import UUID
 
 from rest_framework.permissions import BasePermission
 
@@ -37,22 +42,30 @@ class IsAuthenticatedCloudUserOrSystem(BasePermission):
 
 
 class CanPerformChannelPartnerAction(BasePermission):
-    def __init__(self, check_function, system_allowed=False, direct_access_allowed=False):
+    def __init__(
+            self,
+            check_function: Callable,
+            system_allowed: bool = False,
+            direct_access_allowed: List[UUID] = False
+    ):
         self.check_function = check_function
         self.system_allowed = system_allowed
 
         # Allow access if user is system administrator of the system (directly, not org-level)
-        self.direct_access_allowed = direct_access_allowed
+        if direct_access_allowed:
+            self.direct_access_allowed = set(direct_access_allowed)
+        else:
+            self.direct_access_allowed = None
 
     def has_object_permission(self, request, view, obj: Any):
         if system := getattr(request, 'cloud_system', None):
             return system == obj and self.system_allowed
-        if introspected_system_id := getattr(request, 'introspected_system_id', None):
-            if (
-                introspected_system_id == getattr(obj, 'system_id', None)
-                and getattr(request, 'introspected_system_roles_ids', None)
-            ):
-                return True
+        if self.direct_access_allowed is not None:
+            introspected_system_id = getattr(request, 'introspected_system_id', None)
+            if introspected_system_id == getattr(obj, 'system_id', None):
+                introspected_system_roles_ids = getattr(request, 'introspected_system_roles_ids', None)
+                if self.direct_access_allowed.intersection(set(introspected_system_roles_ids)):
+                    return True
         if request.user and request.user.is_authenticated and request.auth:
             if self.check_function:
                 return self.check_function(obj, request.user)
