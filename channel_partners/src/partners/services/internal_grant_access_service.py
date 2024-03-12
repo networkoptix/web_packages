@@ -14,7 +14,6 @@ from partners.models import (
     ChannelPartner,
     ChannelPartnerRoles,
     ChannelPartnerToUser,
-    CloudHost,
     CloudUser,
     Organization,
     OrganizationRoles,
@@ -53,17 +52,18 @@ class InternalGrantAccessService:
     """
 
     @classmethod
-    def process(cls, email: str, hostname: str) -> InternalGrantAccessResult:
+    def process(cls, email: str) -> InternalGrantAccessResult:
         """
         Processes the granting of access for an internal user.
         """
         base_user: str = email.split("@")[0]
-        cloud_host: CloudHost = CloudHost.objects.get(hostname=hostname)
+
         with transaction.atomic():
             # Create Default Things
             nx_admin, cp_admin, org_admin = cls.__get_cloud_users(base_user, UserType.NX)
-            nx_cp: ChannelPartner = cls.__get_root_channel_partner(cloud_host)
-            cp, org = cls.__get_or_create_org_and_partners(nx_cp, base_user, cloud_host, UserType.NX)
+            nx_cp: ChannelPartner = cls.__get_root_channel_partner()
+
+            cp, org = cls.__get_or_create_org_and_partners(nx_cp, base_user, UserType.NX)
 
             cls.__apply_channel_partner_role(nx_admin, nx_cp)
             cls.__apply_channel_partner_role(cp_admin, cp)
@@ -72,7 +72,7 @@ class InternalGrantAccessService:
             # Create Meta Things
             meta_admin, meta_cp_admin, meta_org_admin = cls.__get_cloud_users(base_user, UserType.META)
             meta_nx_cp: ChannelPartner = cls.__get_meta_root_channel_partner(nx_cp)
-            meta_cp, meta_org = cls.__get_or_create_org_and_partners(meta_nx_cp, base_user, cloud_host, UserType.META)
+            meta_cp, meta_org = cls.__get_or_create_org_and_partners(meta_nx_cp, base_user, UserType.META)
 
             cls.__apply_channel_partner_role(meta_admin, meta_nx_cp)
             cls.__apply_channel_partner_role(meta_cp_admin, meta_cp)
@@ -96,11 +96,11 @@ class InternalGrantAccessService:
             }
 
     @classmethod
-    def __get_root_channel_partner(cls, cloud_host: CloudHost) -> ChannelPartner:
+    def __get_root_channel_partner(cls) -> ChannelPartner:
         """
-        Gets the root channel partner for a given cloud host.
+        Gets the root channel partner
         """
-        return ChannelPartner.objects.filter(parent_channel_partner__isnull=True, cloud_host=cloud_host).first()
+        return ChannelPartner.objects.filter(parent_channel_partner__isnull=True).first()
 
     @classmethod
     def __get_meta_root_channel_partner(cls, parent_channel_partner: ChannelPartner) -> ChannelPartner:
@@ -114,7 +114,6 @@ class InternalGrantAccessService:
             cls,
             host_root_cp: ChannelPartner,
             base_user: str,
-            cloud_host: CloudHost,
             user_type: UserType
     ) -> Tuple['ChannelPartner', 'Organization']:
         """
@@ -135,22 +134,19 @@ class InternalGrantAccessService:
         # Channel Partner Stuff
         channel_partner_qs = ChannelPartner.objects.filter(
             parent_channel_partner=host_root_cp,
-            name=channel_partner_name,
-            cloud_host=cloud_host)
+            name=channel_partner_name)
 
         if channel_partner_qs.count() > 1:
             logger.warning(
                 "Multiple channel partners found",
                 channel_partner_name=channel_partner_name,
-                parent_channel_partner=host_root_cp.name,
-                cloud_host=cloud_host.hostname)
+                parent_channel_partner=host_root_cp.name)
             channel_partner = channel_partner_qs.first()
 
         elif channel_partner_qs.count() == 0:
             channel_partner = ChannelPartner.objects.create(
                 parent_channel_partner=host_root_cp,
-                name=channel_partner_name,
-                cloud_host=cloud_host)
+                name=channel_partner_name)
         else:
             channel_partner = channel_partner_qs.first()
 
@@ -162,8 +158,7 @@ class InternalGrantAccessService:
             logger.warning(
                 "Multiple organizations found",
                 organization_name=organization_name,
-                parent_channel_partner=host_root_cp.name,
-                cloud_host=cloud_host.hostname)
+                parent_channel_partner=host_root_cp.name)
             organization = organization_qs.first()
         elif organization_qs.count() == 0:
             organization = Organization.objects.create(

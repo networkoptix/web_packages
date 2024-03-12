@@ -2142,9 +2142,10 @@ class TestGrantAccessView:
     def setUp(self,mock_auth_with_user,
               system_factory, cp_service_factory,
               service_record_factory, cp_user_factory,
-              organization_factory, channel_partner_factory, org_user_factory):
-        root = channel_partner_factory(parent_channel_partner=None)
-        meta_root = channel_partner_factory(parent_channel_partner=None, name="metavms")
+              organization_factory, channel_partner_factory, org_user_factory,
+              cloud_host_factory, meta_cloud_host, root_nx_channel_partner):
+        root = root_nx_channel_partner
+        meta_root = channel_partner_factory(parent_channel_partner=root, cloud_host=meta_cloud_host, name="metavms")
         child = channel_partner_factory(parent_channel_partner=root)
         root_user = cp_user_factory(channel_partner=root)
         child_user = cp_user_factory(channel_partner=child)
@@ -2173,7 +2174,6 @@ class TestGrantAccessView:
     def test_grant_access_debug_true_valid_email(self):
         data = {'email': 'test@networkoptix.com'}
         request = self.factory.post(self.url, data=data)
-        request.cloud_host = 'cloud-test.hdw.mx'
         response = grant_access(request)
 
 

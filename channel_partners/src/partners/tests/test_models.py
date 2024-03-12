@@ -67,6 +67,20 @@ class TestChannelPartner:
         assert sub_partner.id
         assert sub_partner.cloud_host == cloud_test_host
 
+    def test_create_from_root(self, cloud_test_host):
+        root = ChannelPartner.objects.create(
+            name=f'{uuid4()}',
+            parent_channel_partner=None,
+            cloud_host=cloud_test_host
+        )
+
+        partner = ChannelPartner.objects.create(
+            name=f'{uuid4()}',
+            parent_channel_partner=root,
+        )
+        assert partner.id
+        assert partner.cloud_host == cloud_test_host
+
     def test_get_ancestors(self, channel_partner_factory, root_nx_channel_partner):
         count = 10
         partners = []

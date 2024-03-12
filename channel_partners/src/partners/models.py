@@ -952,7 +952,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         new = self._state.adding
         # creation of channel partner with a different host is available through django admin site
         # and for second level of channel partners (direct children of Nx Channel Partner) only
-        if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
+        if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host_id):
             self.cloud_host = self.parent_channel_partner.cloud_host
         name_changed = not new and self.name != self._original_name
         old_name = self._original_name

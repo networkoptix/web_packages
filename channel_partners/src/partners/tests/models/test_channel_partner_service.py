@@ -1,17 +1,13 @@
 import io
 import logging
 import sys
-from contextlib import contextmanager
+from unittest.mock import patch
 
 import pytest
-from django.test import TestCase
+from django.db import transaction
 
-from conftest import channel_partner_factory
-from conftest import cp_service_factory
 from partners.models import ChannelPartnerService
 from partners.tasks.services import new_channel_partner_service_created
-from django.db import transaction
-from unittest.mock import patch
 
 
 @pytest.mark.django_db(transaction=False)

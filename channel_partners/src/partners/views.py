@@ -164,10 +164,7 @@ def grant_access(request):
     if request.method == 'POST' and form.is_valid():
 
         email: str = form.cleaned_data.get("email")
-        hostname: str = request.cloud_host or 'cloud-test.hdw.mx'
-
-        # internal_grant_access: InternalGrantAccess = InternalGrantAccess()
-        result: InternalGrantAccessResult = InternalGrantAccessService.process(email, hostname)
+        result: InternalGrantAccessResult = InternalGrantAccessService.process(email)
 
         context = {'form': form, **result}
         return render(request, 'grant_access.html', context)

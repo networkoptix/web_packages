@@ -1,11 +1,13 @@
-from decimal import Decimal
 from uuid import uuid4
 
 import pytest
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from partners.models import ChannelPartnerService, ServiceToOrganizationProperties
+from partners.models import (
+    ChannelPartnerService,
+    ServiceToOrganizationProperties,
+)
 
 
 class TestOrganizationServiceViewSet:
