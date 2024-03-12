@@ -120,7 +120,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
 
     accessLevel$$ = computed<string>(() => {
         const currentStateItem = this.currentState$$().item;
-        const accessLevel = (currentStateItem as Organization)?.channelPartnerAccessLevel || '';
+        const accessLevel = (currentStateItem as Organization)?.channelPartnerAccessLevel || null;
         this.currentPartnerAccess$.next(accessLevel);
         return accessLevel;
     });
@@ -270,11 +270,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
             orgBody.name = this.currentName$.value;
         }
         if (this.accessLevel$$() !== this.currentPartnerAccess$.value) {
-            if (this.currentPartnerAccess$.value === 'serviceManagementOnly') {
-                orgBody.channelPartnerAccessLevel = null;
-            } else if (this.currentPartnerAccess$.value) {
-                orgBody.channelPartnerAccessLevel = this.currentPartnerAccess$.value;
-            }
+            orgBody.channelPartnerAccessLevel = this.currentPartnerAccess$.value;
         }
         return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
     }
