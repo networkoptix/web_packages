@@ -79,10 +79,7 @@ export class NxHomeComponent implements OnInit {
         this.store.dispatch(CPActions.loadChannelPartnersAndOrgs());
     }
 
-    private initChannelPartners(
-        homeNode: MenuNode | undefined,
-        userSystems: NxUserSystemInfo[],
-    ): void {
+    private initChannelPartners(homeNode: MenuNode | undefined, systems: NxUserSystemInfo[]): void {
         const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         let redirectPath = '';
 
@@ -109,7 +106,7 @@ export class NxHomeComponent implements OnInit {
         ];
         nodes[0].invisible = true;
 
-        if (userSystems.some(sys => sys.accessRole === 'owner')) {
+        if (systems.some(sys => sys.accessRole === 'owner')) {
             redirectPath = 'personal';
             nodes.push(
                 new MenuNode(
@@ -119,7 +116,7 @@ export class NxHomeComponent implements OnInit {
             );
         }
 
-        if (userSystems.some(sys => sys.accessRole !== 'owner')) {
+        if (systems.some(sys => sys.accessRole !== 'owner')) {
             if (redirectPath !== 'personal') {
                 redirectPath = 'shared';
             }
