@@ -485,3 +485,9 @@ export function extractVideoLayout(videoLayout: string): {
         gridAspect,
     };
 }
+
+export function getParameterByName(name: string): string | null {
+    const params = new URLSearchParams(window.location.search);
+
+    return params.get(name);
+}
