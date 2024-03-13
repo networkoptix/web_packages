@@ -34,7 +34,7 @@ export class NxThemeSwitcherComponent implements OnInit {
     LANG = staticLang;
     images = images;
 
-    selectedTheme: string;
+    selectedTheme: string | null;
 
     constructor(public themeService: NxThemeService) {}
 

@@ -1,20 +1,20 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
+import { getParameterByName } from '@utils/general';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
 import { nxConfig } from './nx-config/config';
+
 enum AvailableThemes {
     auto = 'auto',
     light = 'light',
@@ -41,22 +41,14 @@ export class NxThemeService {
         private localStorageService: LocalStorageService,
         private sessionStorage: SessionStorageService,
         private cookieService: CookieService,
-        private router: Router,
         private store: Store,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) protected document: Document,
     ) {
-        this.router.events
-            .pipe(
-                filter(e => e instanceof ActivationEnd),
-                take(1),
-            )
-            .subscribe(({ snapshot: { queryParams } }: ActivationEnd) => {
-                this.viewType =
-                    queryParams?.view_type ||
-                    this.window.document.documentElement.getAttribute('data-platform') ||
-                    'web';
-            });
+        this.viewType =
+            getParameterByName('view_type') ||
+            this.window.document.documentElement.getAttribute('data-platform') ||
+            'web';
 
         if (!nxConfig.featureFlags.themesEnabled) {
             return;
@@ -184,7 +176,7 @@ export class NxThemeService {
         return this.availThemes[targetTheme];
     }
 
-    async setTheme(themeSelected: string, username: string): Promise<void> {
+    async setTheme(themeSelected: string | null, username: string | undefined): Promise<void> {
         if (!this.darkThemeMq) {
             this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
         }
