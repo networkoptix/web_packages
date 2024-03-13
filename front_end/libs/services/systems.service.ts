@@ -14,14 +14,23 @@ import {
     filter,
     withLatestFrom,
 } from 'rxjs';
-import { distinctUntilChanged, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import {
+    distinctUntilChanged,
+    first,
+    map,
+    shareReplay,
+    startWith,
+    switchMap,
+} from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
+import type { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxToastService } from '@services/toast.service';
+import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 import { isUserSystem } from '@utils/nx';
@@ -66,6 +75,17 @@ export class NxSystemsService {
     );
 
     systems$$ = toSignal(this.systemsSubject, { initialValue: [] });
+    organizations$ = this.store.select<Organization[]>(selectRootOrganizations);
+
+    directAccessSystems$ = combineLatest([this.organizations$, this.systemsSubject]).pipe(
+        map(([organizations, systems]) => {
+            const orgIds: Set<string> = new Set(organizations.map(({ id }) => id));
+            return systems.filter(system => isUserSystem(system) || !orgIds.has(system.id));
+        }),
+        startWith([]),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+    directAccessSystems$$ = toSignal(this.directAccessSystems$, { initialValue: [] });
 
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {

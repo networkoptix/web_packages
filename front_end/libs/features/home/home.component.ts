@@ -23,9 +23,8 @@ import type {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxUserSystemInfo } from '@services/systems.service.types';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { LoadingState } from '@store/channel-partners/channel-partners.state';
-import { isUserSystem } from '@utils/nx';
 
 @Component({
     selector: 'nx-home',
@@ -48,17 +47,16 @@ export class NxHomeComponent implements OnInit {
             takeUntilDestroyed(),
             filter(loadState => loadState === LoadingState.LOADED),
             switchMap(() => {
-                const userSystems$ = this.systemsService.systemsSubject.pipe(
-                    map(systems => systems.filter(isUserSystem)),
+                const systems$ = this.systemsService.directAccessSystems$.pipe(
                     distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
                 );
                 const homeNode$ = this.headerService.nodes$.pipe(
                     map(nodes => nodes?.find(node => node.url === '/home')),
                 );
-                return combineLatest([homeNode$, userSystems$]);
+                return combineLatest([homeNode$, systems$]);
             }),
         )
-        .subscribe(([homeNode, userSystems]) => this.initChannelPartners(homeNode, userSystems));
+        .subscribe(([homeNode, systems]) => this.initChannelPartners(homeNode, systems));
 
     constructor(
         private router: Router,
@@ -72,10 +70,7 @@ export class NxHomeComponent implements OnInit {
         this.store.dispatch(CPActions.loadChannelPartnersAndOrgs());
     }
 
-    private initChannelPartners(
-        homeNode: MenuNode | undefined,
-        userSystems: NxUserSystemInfo[],
-    ): void {
+    private initChannelPartners(homeNode: MenuNode | undefined, systems: NxSystemInfo[]): void {
         const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         let redirectPath = '';
 
@@ -102,7 +97,7 @@ export class NxHomeComponent implements OnInit {
         ];
         nodes[0].invisible = true;
 
-        if (userSystems.some(sys => sys.accessRole === 'owner')) {
+        if (systems.some(sys => sys.accessRole === 'owner')) {
             redirectPath = 'personal';
             nodes.push(
                 new MenuNode(
@@ -112,7 +107,7 @@ export class NxHomeComponent implements OnInit {
             );
         }
 
-        if (userSystems.some(sys => sys.accessRole !== 'owner')) {
+        if (systems.some(sys => sys.accessRole !== 'owner')) {
             if (redirectPath !== 'personal') {
                 redirectPath = 'shared';
             }
