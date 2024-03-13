@@ -392,6 +392,14 @@ export class NxDialogsService {
         { width: '360px' },
     );
 
+    changeService = this.dialogV2Factory<Dt.ChangeService>(
+        () =>
+            import('./channel-partners/change-service/change-service.component').then(
+                m => m.NxChangeServiceModalContent,
+            ),
+        { width: '400px' },
+    );
+
     /* Admin */
     connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(() =>
         import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),

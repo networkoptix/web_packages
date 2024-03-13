@@ -1,102 +1,153 @@
-@if (debugMode) {
-    <div>
-        <h1>{{ 'Testing section(Will not exist later)' }}</h1>
-        <button (click)="this.systemId$.next(this.systemId$.value)">
-            {{ 'Refresh Page' }}
-        </button>
-    </div>
-    <div>
-        <h1>{{ 'System Info' }}</h1>
-        <pre>{{ systemInfo$ | async | json }}</pre>
-    </div>
-}
-<!--    Putting this as a spacer prettier does weird things with no control syntax   -->
-@if (systemSassReport$ | async; as sassReport) {
-    <div>
-        <h1>{{ 'System Sass Report' }}</h1>
-        <pre>{{ sassReport | json }}</pre>
-    </div>
-}
-<div>
-    <nx-table
-        class="services-table"
-        [set-id-prop-name]="'serviceId'"
-        [data]="servicesForTable$$()"
-        (onRowClick)="openChangeDialog($event)"
+@if (!loading) {
+    <nav
+        class="sidebar"
+        [ngClass]="{ 'sidebar--closed': !sidebarOpen }"
     >
-        <ng-template #header>
+        @if (sidebarOpen) {
             <div
-                *ngFor="let head of headers"
-                [attr.id]="head.name"
-                [attr.data-sort]="head.sort"
-                [style.justify-content]="head.align || 'flex-start'"
+                tabindex="0"
+                translate
+                (click)="typeFilter.set(null)"
+                (keydown.Enter)="typeFilter.set(null)"
+                (keydown.Space)="typeFilter.set(null)"
+                class="sidebar-item"
+                [ngClass]="{
+                    'sidebar-item--highlight': typeFilter() === null
+                }"
             >
-                <span
-                    class="head-title ellipsis caption"
-                    title="{{ head.value }}"
-                    >{{ head.value }}</span
-                >
+                All Services
             </div>
-        </ng-template>
-        <ng-template
-            #rows
-            let-row
+            <ul>
+                <li
+                    tabindex="0"
+                    (click)="typeFilter.set('local_recording')"
+                    (keydown.Enter)="typeFilter.set('local_recording')"
+                    (keydown.Space)="typeFilter.set('local_recording')"
+                    class="sidebar-item"
+                    [ngClass]="{
+                        'sidebar-item--highlight': typeFilter() === 'local_recording'
+                    }"
+                >
+                    <svg-icon
+                        class="camera-icon"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        [src]="icons.dir + 'camera.svg'"
+                    ></svg-icon>
+                    <span translate>Local Recording</span>
+                </li>
+                <!-- <li
+                    tabindex="0"
+                    (click)="typeFilter.set('cloud_storage')"
+                    (keydown.Enter)="typeFilter.set('cloud_storage')"
+                    (keydown.Space)="typeFilter.set('cloud_storage')"
+                    class="sidebar-item"
+                    [ngClass]="{
+                        'sidebar-item--highlight': typeFilter() === 'cloud_storage'
+                    }"
+                >
+                    <svg-icon
+                        class="cloud-storage-icon"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        [src]="icons.dirTextButtons + 'cloud_solid.svg'"
+                    ></svg-icon>
+                    <span translate>Cloud Storage</span>
+                </li>
+                <li
+                    tabindex="0"
+                    (click)="typeFilter.set('analytics')"
+                    (keydown.Enter)="typeFilter.set('analytics')"
+                    (keydown.Space)="typeFilter.set('analytics')"
+                    class="sidebar-item"
+                    [ngClass]="{
+                        'sidebar-item--highlight': typeFilter() === 'analytics'
+                    }"
+                >
+                    <div style="height: 24px; width: 24px"></div>
+                    <span translate>Analytics</span>
+                </li> -->
+                <!-- TODO: Analytics icon -->
+            </ul>
+        }
+        <button
+            class="sidebar__toggle"
+            (click)="sidebarOpen = !sidebarOpen"
         >
-            <div>{{ row.displayName }}</div>
-            <div>{{ row.quantity }}</div>
-            <div>{{ row.used }}</div>
-        </ng-template>
-    </nx-table>
-</div>
-<div class="fake-dialog">
-    <h1>{{ 'Change Service' }}</h1>
-    <form [formGroup]="serviceForm">
-        <div class="form-group">
-            <label
-                for="service"
-                class=""
-                >{{ 'Service Name' }}</label
-            >
-            <nx-dropdown
-                id="service"
-                [selected]="serviceForm.controls.service.value"
-                (selectedChange)="serviceForm.controls.service.setValue($event)"
-                [placeholder]="'Select a service'"
-            >
-                @for (service of availableServices$$(); track service.id) {
-                    <nx-simple-dropdown-item [value]="service.id"
-                        >{{ service.displayName }}
-                    </nx-simple-dropdown-item>
-                } @empty {
-                    <nx-simple-dropdown-item [disabled]="true"
-                        >No Services Available
-                    </nx-simple-dropdown-item>
-                }
-            </nx-dropdown>
+            <svg-icon
+                [svgStyle]="{ 'height.px': '14' }"
+                [src]="icons.dirTextButtons + 'arrow_left.svg'"
+            ></svg-icon>
+        </button>
+    </nav>
+}
+<div class="body">
+    @if (loading) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else {
+        @if (sidebarOpen) {
+            <div class="left-spacer"></div>
+        }
+        <div class="center-content">
+            <table>
+                <thead>
+                    <tr class="header-row">
+                        <th class="header-row__service-name">
+                            <span translate>Service Name</span>
+                            <svg-icon
+                                [ngClass]="{
+                                    flip: !ascendingSort()
+                                }"
+                                (click)="ascendingSort.set(!ascendingSort())"
+                                [svgStyle]="{ 'width.px': '16', 'height.px': '16' }"
+                                [src]="icons.dir + 'sorting.svg'"
+                            ></svg-icon>
+                        </th>
+                        <th
+                            class="header-row__usage"
+                            translate
+                        >
+                            Available / Total
+                        </th>
+                        <th
+                            class="header-row__used"
+                            translate
+                        >
+                            In use
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of displayRows(); track row.id) {
+                        <tr
+                            class="body-row"
+                            [class.body-row--selectable]="hasChangePermission"
+                            [class.body-row--selected]="selectedRow === row.id"
+                            (click)="hasChangePermission && selectRow($event, row)"
+                        >
+                            <td class="body-row__service-name">{{ row.displayName }}</td>
+                            <td class="body-row__usage">
+                                <div
+                                    class="body-row__usage-bar"
+                                    [ngStyle]="{
+                                        border: !row.quantity
+                                            ? '1px solid var(--dark11)'
+                                            : undefined,
+                                        background: row.barBackground
+                                    }"
+                                ></div>
+                                <span class="body-row__usage-text"
+                                    >{{ row.remaining }} / {{ row.quantity }}</span
+                                >
+                            </td>
+                            <td class="body-row__used">
+                                {{ row.used }}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <label for="servicesCount">{{ 'Total' }}</label>
-            <input
-                class="w-100"
-                formControlName="quantity"
-                id="servicesCount"
-                type="number"
-            />
-        </div>
-        <div class="d-flex justify-content-end">
-            <button
-                class="btn btn-secondary mr-2"
-                (click)="resetForm()"
-            >
-                {{ 'Cancel' }}
-            </button>
-            <button
-                class="btn btn-primary"
-                (click)="updateService()"
-                [disabled]="!serviceForm.controls.service.value"
-            >
-                {{ 'Update service' }}
-            </button>
-        </div>
-    </form>
+        @if (sidebarOpen) {
+            <div class="right-spacer"></div>
+        }
+    }
 </div>

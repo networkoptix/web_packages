@@ -82,6 +82,19 @@ const lazyRoutes: Routes = [
         },
     },
     {
+        path: 'systems/:systemId/services-placeholder',
+        loadComponent: () =>
+            import('@pages/systems/services-placeholder/services.component').then(
+                c => c.NxServicesPlaceholderComponent,
+            ),
+        canMatch: [FeatureGuardMatch],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        title: SystemTitleResolver,
+        data: {
+            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
+        },
+    },
+    {
         path: 'systems/:systemId/health',
         loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule),
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],

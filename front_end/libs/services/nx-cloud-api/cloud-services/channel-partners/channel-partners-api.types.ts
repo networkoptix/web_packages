@@ -255,15 +255,17 @@ export interface CreateOrganizationUser {
 export type UpdateOrganizationUser = CreateOrganizationUser;
 
 /* System Services */
-export interface Service {
+export interface ServiceQuantity {
     quantity: number;
     used: number;
 }
 
-export interface SystemServices {
-    services: Record<string, Service>;
+/** Annoying response type with extra layer */
+export interface ServiceQuantitiesResp {
+    services: ServiceQuantities;
 }
-export interface ServiceData {
+export type ServiceQuantities = Record<string, ServiceQuantity>;
+export interface SystemService {
     id: string;
     type: string;
     state: string;
@@ -344,14 +346,14 @@ export interface Security {
 }
 
 export interface SassReport {
-    channelPartner: ChannelPartner;
+    channelPartner: Pick<ChannelPartner, 'id' | 'name' | 'supportInformation'>;
     cloudSystemId: string;
     organization: {
         id: string;
         name: string;
     };
     security: Security;
-    services: SystemServices;
+    services: ServiceQuantities;
     signature: string;
     state: string;
 }
