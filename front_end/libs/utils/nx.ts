@@ -2,6 +2,13 @@
 /* Specific-purpose utility functions. If a function/type only involves
 primitives it should probaly go in general.ts intead.  */
 
+import type {
+    ConnectedPosition,
+    HorizontalConnectionPos,
+    OriginConnectionPosition,
+    OverlayConnectionPosition,
+    VerticalConnectionPos,
+} from '@angular/cdk/overlay';
 import type { TranslateService } from '@ngx-translate/core';
 import { zip } from 'lodash-es';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
@@ -459,4 +466,62 @@ export function isUserSystem(system: System): system is UserSystem;
 export function isUserSystem(system: NxSystemInfo): system is NxUserSystemInfo;
 export function isUserSystem(system: System | NxSystemInfo): boolean {
     return 'ownerAccountId' in system;
+}
+
+enum Compass8 {
+    N = 'North',
+    NE = 'Northeast',
+    E = 'East',
+    SE = 'Southeast',
+    S = 'South',
+    SW = 'Southwest',
+    W = 'West',
+    NW = 'Northwest',
+}
+type Compass8Shorthand = keyof typeof Compass8;
+
+function compass8ToAngularPosition(direction: Compass8Shorthand): {
+    x: HorizontalConnectionPos;
+    y: VerticalConnectionPos;
+} {
+    switch (direction) {
+        case 'N':
+            return { x: 'center', y: 'top' };
+        case 'NE':
+            return { x: 'end', y: 'top' };
+        case 'E':
+            return { x: 'end', y: 'center' };
+        case 'SE':
+            return { x: 'end', y: 'bottom' };
+        case 'S':
+            return { x: 'center', y: 'bottom' };
+        case 'SW':
+            return { x: 'start', y: 'bottom' };
+        case 'W':
+            return { x: 'start', y: 'center' };
+        case 'NW':
+            return { x: 'start', y: 'top' };
+    }
+}
+function originPosition(direction: Compass8Shorthand): OriginConnectionPosition {
+    const { x, y } = compass8ToAngularPosition(direction);
+    return { originX: x, originY: y };
+}
+function overlayPosition(direction: Compass8Shorthand): OverlayConnectionPosition {
+    const { x, y } = compass8ToAngularPosition(direction);
+    return { overlayX: x, overlayY: y };
+}
+
+export function connectedPosition(
+    position: {
+        originPoint: Compass8Shorthand;
+        overlayPoint: Compass8Shorthand;
+    } & Omit<ConnectedPosition, `origin${'X' | 'Y'}` | `overlay${'X' | 'Y'}`>,
+): ConnectedPosition {
+    const { originPoint, overlayPoint, ...other } = position;
+    return {
+        ...originPosition(originPoint),
+        ...overlayPosition(overlayPoint),
+        ...other,
+    };
 }

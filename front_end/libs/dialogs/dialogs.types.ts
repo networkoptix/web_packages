@@ -6,6 +6,7 @@ import type { Observable } from 'rxjs';
 import type { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
 import type { SELECTION_DATE_RANGE } from '@components/nx-webgl-canvas/services/webgl.types';
 import type { Bookmark, BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
+import type { Row } from '@pages/systems/services/services.types';
 import type { TimelineSelectionService } from '@pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
 import type { Translatable } from '@pipes/nx-translate.types';
 import type {
@@ -17,8 +18,10 @@ import type {
     Organization,
     OrganizationRole,
     OrganizationUser,
+    ServiceQuantities,
     State,
     SystemItem,
+    SystemService,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     CloudResponse,
@@ -190,6 +193,19 @@ export type AddOrgUserV2 = DialogType<
         email?: string;
     },
     OrganizationUser | GroupUser
+>;
+
+export type ChangeService = DialogType<
+    {
+        systemId: string;
+        service: Row;
+        partner: {
+            id: string;
+            hasChangePermission: boolean;
+            monthlyServiceCap: number | null;
+        };
+    },
+    [SystemService[], ServiceQuantities, monthlyServiceCap: number | null]
 >;
 
 /* Admin */

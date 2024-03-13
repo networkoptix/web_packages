@@ -1,12 +1,204 @@
-:host-context {
-    display: flex;
-    flex-direction: column;
-    margin: 1.5rem 1rem 0 1rem;
-}
+@use "typography";
 
-.fake-dialog {
-    height: 244px;
-    width: 400px;
-    border: 1px solid white;
-    padding: 0.5rem;
+:host {
+    position: relative;
+    display: block;
+    height: 100%;
+
+    .sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        background: var(--groups-sidebar-bg);
+        border-right: 1px solid var(--groups-sidebar-border);
+        padding: 1rem;
+        width: 360px;
+
+        ul {
+            padding: 0;
+        }
+
+        li {
+            padding-inline-start: 20px;
+            list-style-type: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        &-item {
+            &:hover,
+            &--highlight {
+                background-color: var(--groups-sidebar-highlight);
+            }
+
+            font-size: 16px;
+            line-height: 24px;
+            padding: 0 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+
+            .camera-icon svg path {
+                stroke: none;
+                fill: var(--groups-sidebar-folder-icon-body-fill);
+            }
+
+            .cloud-storage-icon svg path {
+                fill: var(--groups-sidebar-folder-icon-body-fill);
+            }
+        }
+
+        &__toggle {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+
+            height: 32px !important;
+            width: 14px;
+            padding: 0 !important;
+            background: var(--control-color);
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+
+        }
+
+        &--closed {
+            padding: 0;
+            width: 0;
+
+            .sidebar__toggle {
+                transform: translate(100%, -50%) scaleX(-1);
+            }
+        }
+    }
+
+    .body {
+        display: flex;
+        justify-content: center;
+        // align-items: stretch;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    nx-pre-loader {
+        align-self: center;
+    }
+
+    /* Keeping the table horizontally centered in the browser with a sidebar
+    - If the sidebar is closed, the table is centered
+    - If the sidebar is open
+        - And there is enough space, the table is centered
+        - And there is not enough space, the table does not go under the
+          sidebar and the space on the right collapses */
+    .left-spacer {
+        flex-grow: 1;
+        flex-shrink: 0;
+        min-width: 360px;
+    }
+
+    .center-content {
+        padding: 1rem;
+        overflow-x: auto;
+        align-self: stretch;
+    }
+    // https://stackoverflow.com/a/36247448
+    // https://www.bigbinary.com/blog/understanding-the-automatic-minimum-size-of-flex-items
+
+    .right-spacer {
+        flex-grow: 1;
+    }
+
+    table {
+        border-collapse: collapse;
+        &, th, td {
+            border: 1px solid var(--border-color);
+        }
+
+        thead {
+            height: var(--table-header-height);
+            background-color: var(--card-header-bg);
+
+            .header-row {
+                th {
+                    @include typography.medium13nocolor;
+                    color: var(--card-header-text);
+                    padding: 1rem;
+                }
+
+                &__service-name {
+                    min-width: 200px;
+                    text-align: start;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    svg-icon {
+                        cursor: pointer;
+                    }
+
+                    svg {
+                        display: flex;
+                    }
+
+                    .flip {
+                        transform: scaleY(-1);
+                    }
+                }
+                &__usage {
+                    min-width: 310px;
+                    text-align: start;
+                }
+                &__used {
+                    text-align: end;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        tbody {
+            .body-row {
+                height: var(--table-row-height);
+
+                &--selectable {
+                    cursor: pointer;
+                    &.body-row--selected,
+                    &:hover {
+                        color: var(--card-header-text);
+                        background: var(--table-row-hover-bg);
+                    }
+                }
+
+                td {
+                    padding: 0.75rem;
+                }
+
+                &__service-name {
+                    text-align: start;
+                }
+                &__usage {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 40px;
+
+                    &-bar {
+                        width: 217px;
+                        height: 6px;
+                    }
+
+                    &-text {
+                        white-space: nowrap;
+                        text-align: end;
+                    }
+                }
+                &__used {
+                    text-align: end;
+                }
+            }
+        }
+    }
+
 }

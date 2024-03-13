@@ -30,8 +30,8 @@ import {
     PaginatedOrganizationList,
     PaginatedCloudSystemList,
     Page,
-    ServiceData,
-    SystemServices,
+    SystemService,
+    ServiceQuantitiesResp,
     GroupItem,
     CreateGroup,
     PatchGroup,
@@ -40,6 +40,7 @@ import {
     UpdateGroupUser,
     GroupUserCanAccess,
     SassReport,
+    ServiceQuantities,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -282,19 +283,21 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'saas_report']));
     };
 
-    getSystemServiceQuantity = (id: string): Observable<SystemServices> => {
-        return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']));
+    getSystemServiceQuantities = (id: string): Observable<ServiceQuantities> => {
+        return this.get<ServiceQuantitiesResp>(
+            this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']),
+        ).pipe(map(({ services }) => services));
     };
-    getSystemServices = (id: string): Observable<ServiceData[]> => {
+    getSystemServices = (id: string): Observable<SystemService[]> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'services']));
     };
 
     updateSystemServiceQuantity = (
         id: string,
-        data: SystemServices,
-    ): Observable<SystemServices> => {
+        newQuantities: Record<string, { quantity: number }>,
+    ): Observable<ServiceQuantitiesResp> => {
         return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']), {
-            body: data,
+            body: { services: newQuantities },
         });
     };
 

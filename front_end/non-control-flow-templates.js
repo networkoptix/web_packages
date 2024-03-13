@@ -279,7 +279,7 @@ module.exports = [
     "libs/features/systems/bookmarks/components/device-filter/device-filter.component.html",
     "libs/features/systems/bookmarks/components/tag-filter/tag-filter.component.html",
     "libs/features/systems/bookmarks/components/time-selector/time-selector.component.html",
-    "libs/features/systems/services/services.component.html",
+    "libs/features/systems/services-placeholder/services.component.html",
     "libs/features/systems/settings/admin/admin.component.html",
     "libs/features/systems/settings/admin/advanced/advanced.component.html",
     "libs/features/systems/settings/admin/alexa/alexa.component.html",

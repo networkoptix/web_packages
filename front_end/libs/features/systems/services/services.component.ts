@@ -1,134 +1,195 @@
+import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { Component, computed, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { combineLatest, switchMap, tap } from 'rxjs';
 
-import { NxApplyComponent } from '@components/apply/apply.component';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
-import { NxBaseTableComponent } from '@components/table/table.component';
-import { HEADER_ITEM } from '@pages/home/home.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { SystemServices } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxFormBuilder } from '@utils/reactive-form-builder';
+import {
+    ChannelPartnerPermissions,
+    ServiceQuantity,
+    ServiceQuantities,
+    SystemService,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { icons } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
+import { connectedPosition } from '@utils/nx';
 
-interface ServiceForm {
-    service: string;
-    count: number;
+import type { Row } from './services.types';
+
+function barBackground({ quantity, used }: ServiceQuantity): string {
+    if (!quantity) {
+        return 'none';
+    }
+    const percent = ((quantity - used) / quantity) * 100;
+    const intRounded = Math.round(percent);
+    if (intRounded === 0) {
+        return 'var(--dark8)';
+    } else if (intRounded === 100) {
+        return 'var(--brand-core)';
+    } else {
+        const floatRounded = percent.toFixed(1);
+        return `linear-gradient(to right, var(--brand-core) ${floatRounded}%, var(--dark8) ${floatRounded}%)`;
+    }
 }
 
-interface ServiceTableData {
-    serviceId: string;
-    displayName: string;
-    quantity: number;
-    used: number;
-}
+// For design testing
+// function randomQuantity(): { quantity: number; used: number } {
+//     const quantity = random(0, 100);
+//     const used = random(0, quantity);
+//     return { quantity, used };
+// }
 
 @Component({
     selector: 'nx-system-services',
     standalone: true,
-    imports: [
-        CommonModule,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
-        ReactiveFormsModule,
-        NxApplyComponent,
-        NxBaseTableComponent,
-    ],
+    imports: [CommonModule, OverlayModule, AngularSvgIconModule, NxPreLoaderComponent],
     templateUrl: './services.component.html',
     styleUrl: './services.component.scss',
 })
 export class NxServicesComponent {
-    readonly debugMode = false;
-    readonly headers: HEADER_ITEM[] = [
-        {
-            name: 'displayName',
-            value: 'Service Name',
-            sort: 'string',
-        },
-        {
-            name: 'total',
-            value: 'Total',
-            sort: 'number',
-        },
-        {
-            name: 'used',
-            value: 'Used',
-            sort: 'number',
-        },
-    ];
-    systemService = inject(NxCloudApiService).cloudChannelPartnersApi;
-    systemId$ = new BehaviorSubject<string>('');
+    icons = icons;
 
-    systemServices$$ = signal<SystemServices>({ services: {} });
-    @Input() set systemId(systemId: string) {
-        this.systemId$.next(systemId);
-    }
+    private partnerId: string;
+    private systemId: string;
+    hasChangePermission = false;
 
-    systemInfo$: Observable<unknown> = this.systemId$.pipe(
-        filter(() => this.debugMode),
-        switchMap(id => this.systemService.getSystem(id)),
-    );
+    loading = true;
+    sidebarOpen = true;
 
-    systemSassReport$: Observable<unknown> = this.systemId$.pipe(
-        filter(() => this.debugMode),
-        switchMap(id => this.systemService.getSystemSassReport(id)),
-    );
+    private data = signal<{
+        services: SystemService[];
+        quantities: ServiceQuantities;
+    }>({ services: [], quantities: {} });
 
-    availableServices$$ = toSignal(
-        this.systemId$.pipe(switchMap(id => this.systemService.getSystemServices(id))),
-        { initialValue: [] },
-    );
-
-    servicesForTable$$ = computed<ServiceTableData[]>(() => {
-        const availableServices = this.availableServices$$();
-        const systemServices = this.systemServices$$();
-        if (!(availableServices.length && Object.keys(systemServices.services).length)) {
-            return [];
-        }
-        return Object.entries(systemServices.services).map(([serviceId, { quantity, used }]) => ({
-            serviceId,
-            displayName:
-                availableServices.find(({ id }) => id === serviceId)?.displayName ?? serviceId,
-            quantity,
-            used,
-        }));
+    private rows = computed<Row[]>(() => {
+        const { services, quantities } = this.data();
+        return services
+            .map(({ id, type, displayName }) => {
+                const quantity = quantities[id] ?? { quantity: 0, used: 0 };
+                return {
+                    id,
+                    type,
+                    displayName,
+                    ...quantity,
+                    remaining: quantity.quantity - quantity.used,
+                    barBackground: barBackground(quantity),
+                };
+            })
+            .filter(row => row.type === 'local_recording');
+        // Only local recording in alpha
     });
 
-    serviceForm = NxFormBuilder<ServiceForm>({ service: '', quantity: 0 });
+    displayRows = computed(() => {
+        const [rows, typeFilter, ascendingSort] = [
+            this.rows(),
+            this.typeFilter(),
+            this.ascendingSort(),
+        ];
 
-    constructor() {
-        this.systemId$
-            .pipe(
-                switchMap(id => this.systemService.getSystemServiceQuantity(id)),
-                takeUntilDestroyed(),
-            )
-            .subscribe(services => this.systemServices$$.set(services));
-    }
-
-    /* Helpers for the fake dialog */
-    updateService(): void {
-        const { service, quantity } = this.serviceForm.getRawValue();
-        if (!service) {
-            alert('invalid service');
-            return;
+        let displayRows = rows;
+        if (typeFilter) {
+            displayRows = displayRows.filter(row => row.type === typeFilter);
         }
-        const data = this.systemServices$$();
-        data.services[service] = { quantity, used: data.services?.[service]?.used || 0 };
-        this.systemService.updateSystemServiceQuantity(this.systemId$.value, data).subscribe({
-            next: updatedServices => this.systemServices$$.set(updatedServices),
-            error: () => alert('Something failed. Check the network tab!'),
-        });
+
+        return displayRows.sort(alphabeticalSort(row => row.displayName, ascendingSort));
+    });
+
+    ascendingSort = signal(true);
+    typeFilter = signal<null | 'local_recording' | 'cloud_storage' | 'analytics'>(null);
+
+    private monthlyServiceCap: number | null = null;
+    selectedRow: string | null = null;
+
+    constructor(
+        route: ActivatedRoute,
+        private overlay: Overlay,
+        private dialogs: NxDialogsService,
+        { cloudChannelPartnersApi: channelPartnersApi }: NxCloudApiService,
+    ) {
+        this.systemId = route.snapshot.params.systemId;
+        combineLatest([
+            channelPartnersApi.getSystemSassReport(this.systemId),
+            channelPartnersApi.getSystemServices(this.systemId),
+        ])
+            .pipe(
+                tap(([report, services]) => {
+                    this.partnerId = report.channelPartner.id;
+                    this.data.set({ services, quantities: report.services });
+                }),
+                switchMap(([report]) =>
+                    channelPartnersApi.getChannelPartner(report.channelPartner.id),
+                ),
+                tap(partner => {
+                    this.hasChangePermission = partner.ownPermissions.includes(
+                        ChannelPartnerPermissions.ADD_REMOVE_SERVICE_QUANTITIES,
+                    );
+                    // @ts-expect-error A sort of partial 403. Not sure how this should be handled yet
+                    if (partner.monthlyAdditionalServiceLimit !== '**REDACTED**') {
+                        this.monthlyServiceCap = partner.monthlyAdditionalServiceLimit;
+                    }
+                }),
+                takeUntilDestroyed(), // In case user navigates away while loading things
+            )
+            .subscribe(() => {
+                this.loading = false;
+            });
     }
 
-    openChangeDialog(data: ServiceTableData): void {
-        this.serviceForm.controls.service.setValue(data.serviceId);
-        this.serviceForm.controls.quantity.setValue(data.quantity);
-    }
+    selectRow(event: MouseEvent, row: Row): void {
+        this.selectedRow = row.id;
 
-    resetForm(): void {
-        this.serviceForm.reset();
+        const rowElem = event.currentTarget as HTMLTableRowElement;
+        const rowClientX = rowElem.getBoundingClientRect().x;
+        const mouseClientX = event.clientX;
+        const offsetX = mouseClientX - rowClientX;
+        // Calculate the X offset from row start to click X
+
+        const { systemId, monthlyServiceCap, hasChangePermission, partnerId } = this;
+        this.dialogs
+            .changeService(
+                {
+                    systemId,
+                    service: row,
+                    partner: {
+                        id: partnerId,
+                        hasChangePermission,
+                        monthlyServiceCap,
+                    },
+                },
+                {
+                    /*
+                     II |  I
+                    ----|----
+                    III | IV
+
+                    Priority: IV => I => III => II
+
+                    Show dialog above or below row to not block it
+                    */
+                    positionStrategy: this.overlay
+                        .position()
+                        .flexibleConnectedTo(rowElem)
+                        .withPush(true)
+                        .withPositions([
+                            connectedPosition({ originPoint: 'SW', overlayPoint: 'NW', offsetX }),
+                            connectedPosition({ originPoint: 'NW', overlayPoint: 'SW', offsetX }),
+                            connectedPosition({ originPoint: 'SW', overlayPoint: 'NE', offsetX }),
+                            connectedPosition({ originPoint: 'NW', overlayPoint: 'SE', offsetX }),
+                        ]),
+                },
+            )
+            .then(res => {
+                if (res) {
+                    const [services, quantities, monthlyServiceCap] = res;
+                    this.data.set({ services, quantities });
+                    this.monthlyServiceCap = monthlyServiceCap;
+                }
+                this.selectedRow = null;
+            });
     }
 }
