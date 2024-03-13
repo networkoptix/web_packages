@@ -1552,8 +1552,8 @@ class SystemSerializer(serializers.ModelSerializer):
 
 @extend_schema_serializer(deprecate_fields=('system_id', 'membership_type',))
 class SystemMembershipSerializer(serializers.Serializer):
-    system_id = serializers.UUIDField()
-    systemId = serializers.UUIDField(source='system_id')
+    system_id = serializers.UUIDField(source='sys_id')
+    systemId = serializers.UUIDField(source='sys_id')
     vmsRoles = serializers.SerializerMethodField(method_name='get_vms_roles')
     membership_type = serializers.CharField()
     membershipType = serializers.CharField(source='membership_type')
