@@ -1,7 +1,7 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 
-<ng-container *ngIf="!currentGroups$$(); else showContent">
+<ng-container *ngIf="!groupsStore.currentGroups$$(); else showContent">
     <nx-pre-loader></nx-pre-loader>
 </ng-container>
 
@@ -26,7 +26,10 @@
         ></nx-search>
     </div>
     <div
-        *ngIf="!currentGroups$$().length && !currentSystems$$()?.length; else showGroups"
+        *ngIf="
+            !groupsStore.currentGroups$$().length && !groupsStore.currentSystems$$()?.length;
+            else showGroups
+        "
         class="no-systems"
     >
         <nx-no-systems-cards></nx-no-systems-cards>

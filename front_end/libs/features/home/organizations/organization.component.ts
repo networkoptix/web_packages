@@ -16,7 +16,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { combineLatest, distinctUntilChanged, map, mergeMap, of } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -48,18 +48,11 @@ import {
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
-import { alphabeticalSort } from '@utils/general';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
-import { GroupsItem, Crumb, OpenGroups } from '../home.types';
-import * as groupActions from '../store/groups/groups.actions';
-import {
-    selectCurrentGroupId,
-    selectHasGroups,
-    selectOpenGroups,
-    selectRootGroups,
-} from '../store/groups/groups.selectors';
+import { GroupsItem, Crumb } from '../home.types';
+import { GroupsStore } from '../store/groups/groups.store';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
 
@@ -93,6 +86,7 @@ export class NxOrganizationsComponent implements OnInit {
     icons = icons;
     State = State;
     tabs: Tab[] = [];
+    groupsStore = inject(GroupsStore);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     tabs$$ = computed(() => {
         const currOrg = this.currentOrganization$$();
@@ -130,13 +124,11 @@ export class NxOrganizationsComponent implements OnInit {
         this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
     currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
 
-    openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
-    hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
+    currentGroupId$$ = computed(() => this.cpService.paramStateHandler.state$$()?.params?.groupId);
     currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
-    rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
+    rootGroups$$ = this.groupsStore.groupsEntities;
 
     constructor(
         private store: Store,
@@ -178,17 +170,9 @@ export class NxOrganizationsComponent implements OnInit {
             .pipe(
                 map(({ params }) => params.organizationId),
                 distinctUntilChanged(),
-                mergeMap(id => combineLatest([of(id), this.cpService.getOrgGroups(id)])),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(([id, groups]) => {
-                this.isLoading = true;
-                groups.sort(alphabeticalSort(g => g.name));
-                this.store.dispatch(
-                    groupActions.setGroups({
-                        groups: this.processGroups(groups),
-                    }),
-                );
+            .subscribe(id => {
                 const orgs = this.organizations$$();
                 const partnerOrgs = this.currentPartnerOrganizations$$();
                 const currOrg = this.currentOrganization$$();

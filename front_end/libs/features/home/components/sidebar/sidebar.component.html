@@ -1,8 +1,4 @@
 <div class="sidebar">
     <!--Groups Sidebar-->
-    <nx-sidebar-level
-        [rootOrg]="currentOrg"
-        [groups]="rootGroupItems$ | async"
-        [openGroups]="openGroups"
-    ></nx-sidebar-level>
+    <nx-sidebar-level [groups]="groups$$()"></nx-sidebar-level>
 </div>

@@ -18,7 +18,7 @@ import { selectCurrentOrganization } from '@common/store/channel-partners/channe
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { selectGroupItems, selectRootGroups } from '@pages/home/store/groups/groups.selectors';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -73,15 +73,16 @@ export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
     orgUserStore = inject(OrgUsersStore);
+    groupsStore = inject(GroupsStore);
 
     @Input({ transform: booleanAttribute }) inGroup: boolean;
     headers: HEADER_ITEM[];
 
     currentItemId$$ = signal<string>('');
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    rootGroups$$ = this.store.selectSignal(selectRootGroups);
+    rootGroups$$ = this.groupsStore.groupsEntities;
     orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
-    groupItems$$ = this.store.selectSignal(selectGroupItems);
+    groupItems$$ = this.groupsStore.currentGroups$$;
     selectedUsers: { [key: string]: UserRecord } = {};
     destroyRef = inject(DestroyRef);
 

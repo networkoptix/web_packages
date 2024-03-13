@@ -30,7 +30,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -61,8 +61,9 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
 })
 export class NxUsersTableComponent implements OnInit, OnChanges {
     UserType = UserType;
+    groupsStore = inject(GroupsStore);
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
-    currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
+    currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
 

@@ -1,48 +1,35 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
+import { Component, Input, booleanAttribute, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, map, switchMap } from 'rxjs';
-import stringify from 'safe-stable-stringify';
+import { map, switchMap } from 'rxjs';
 
-import {
-    selectCurrentOrgId,
-    selectCurrentOrganization,
-} from '@common/store/channel-partners/channel-partners.selectors';
+import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
     GroupItem,
-    OrgCardItem,
     OrgPermissions,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxSystemsService } from '@services/systems.service';
 import { NxVmsClientService } from '@services/vms-client.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
-import * as GroupActions from '../../store/groups/groups.actions';
-import {
-    selectCurrentGroupId,
-    selectCurrentGroups,
-    selectCurrentSystems,
-    selectGroupItems,
-    selectRootGroups,
-} from '../../store/groups/groups.selectors';
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -64,6 +51,8 @@ import {
     ],
 })
 export class NxOrganizationCardContainerComponent {
+    groupsStore = inject(GroupsStore);
+
     LANG = staticLang;
     icons = icons;
     searchConfig = searchConfig;
@@ -77,17 +66,11 @@ export class NxOrganizationCardContainerComponent {
 
     hasEnoughGroupsOrSystems$$ = computed(() => {
         return (
-            this.currentGroups$$().length + this.currentSystems$$().length >
+            this.groupsStore.currentGroups$$().length + this.groupsStore.currentSystems$$().length >
             searchConfig.channelPartners.searchMinimumCards
         );
     });
-    rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
-    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
-    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
-    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     search = { value: '' };
-    currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
-    groupItems$$ = this.store.selectSignal(selectGroupItems);
     groupName: string = '';
     isGroupUser$$ = computed(() => this.orgPermissions$$()?.length === 0);
 
@@ -95,59 +78,11 @@ export class NxOrganizationCardContainerComponent {
         private store: Store,
         private dialogsService: NxDialogsService,
         protected route: ActivatedRoute,
+        protected router: Router,
         private cpService: NxChannelPartnersService,
-        private systemsService: NxSystemsService,
         private translateService: TranslateService,
-        private vmsService: NxVmsClientService,
-    ) {
-        this.cpService.paramStateHandler.state$
-            .pipe(distinctUntilChanged((a, b) => stringify(a) === stringify(b)))
-            .subscribe(({ params: { groupId } }) => {
-                this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
-            });
-
-        effect(() => {
-            const currentOrgId = this.currentOrgId$$();
-            const currentGroupID = this.currentGroupId$$();
-            const systemMap = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
-            if (this.inRoot && this.isGroupUser$$()) {
-                const groups = this.currentGroups$$();
-                if (groups) {
-                    const parentId = groups[0].parentId;
-                    // Todo: ensure call works from group user to group to fetch systems
-                    this.cpService.getGroup(parentId).subscribe(group => {
-                        this.groupName = group.name;
-                        const systems = group.systems.map(systemId => ({
-                            systemId,
-                            ...systemMap.get(systemId),
-                            type: OrgCardItem.SYSTEM,
-                        }));
-                        this.store.dispatch(GroupActions.setSystems({ systems }));
-                    });
-                }
-            } else if (this.inRoot && currentOrgId) {
-                this.cpService.getOrgSystems(currentOrgId).subscribe(orgSystems => {
-                    const systems = orgSystems.map(sys => ({
-                        ...sys,
-                        type: OrgCardItem.SYSTEM,
-                        ...systemMap.get(sys.systemId),
-                    }));
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
-                });
-            } else if (currentGroupID) {
-                this.cpService.getGroup(currentGroupID).subscribe(group => {
-                    this.groupName = group.name;
-                    const systems = group.systems.map(systemId => ({
-                        systemId,
-                        ...systemMap.get(systemId),
-                        type: OrgCardItem.SYSTEM,
-                    }));
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
-                });
-            }
-            this.search.value = this.route.snapshot.queryParams.search;
-        }, {});
-    }
+        private vmsClient: NxVmsClientService,
+    ) {}
 
     trackGroup(_index: number, item: GroupItem): string {
         return item.id;
@@ -163,51 +98,20 @@ export class NxOrganizationCardContainerComponent {
         }
         const dragged = event.item.data;
         const droppedOn = event.container.data;
-        if (dragged.type === OrgCardItem.GROUP) {
-            this.cpService
-                .patchGroup(dragged.id, { parentId: droppedOn.id })
-                .subscribe(updatedGroup => {
-                    this.updateGroup(updatedGroup, dragged);
-                });
-        } else if (dragged.type === OrgCardItem.SYSTEM) {
-            this.cpService
-                .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
-                .subscribe(_ => {
-                    const systems = this.currentSystems$$().filter(
-                        sys => sys.systemId !== dragged.systemId,
-                    );
-                    const groups = structuredClone(this.groupItems$$());
-                    const groupIndex = groups.findIndex(group => group.id === droppedOn.id);
-                    if (groups && groupIndex !== -1) {
-                        groups[groupIndex].systemCount += 1;
-                        this.store.dispatch(GroupActions.setGroups({ groups }));
-                    }
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
-                });
-        }
+        this.groupsStore.moveItem(dragged, droppedOn).subscribe();
     }
 
     newGroupDialog(): void {
-        const currGroupId = this.currentGroupId$$();
+        const { organizationId, groupId } = this.cpService.paramStateHandler.state$$().params || {};
         this.dialogsService
             .createSystemGroup({
-                parentGroup: currGroupId,
-                orgId: this.currentOrgId$$(),
+                parentGroup: groupId!,
+                orgId: organizationId!,
                 parentGroupName: this.groupName,
             })
             .then(group => {
                 if (group) {
-                    const groups = structuredClone(this.groupItems$$()) || [];
-                    if (group.parentId) {
-                        const currGroupIndex = groups.findIndex(group => group.id === currGroupId);
-                        groups[currGroupIndex] = {
-                            ...groups[currGroupIndex],
-                            children: [...groups[currGroupIndex].children, group],
-                        };
-                    } else {
-                        groups.push(group);
-                    }
-                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                    this.groupsStore.addItemWithUndo(group);
                 }
             });
     }
@@ -215,7 +119,7 @@ export class NxOrganizationCardContainerComponent {
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
     filteredGroups$$ = computed(() => {
         const search = this.search$$();
-        const groups = this.currentGroups$$();
+        const groups = this.groupsStore.currentGroups$$();
         if (!search) {
             return groups;
         }
@@ -223,14 +127,14 @@ export class NxOrganizationCardContainerComponent {
     });
     filteredSystems$$ = computed(() => {
         const search = this.search$$();
-        const systems = this.currentSystems$$();
+        const systems = this.groupsStore.currentSystems$$();
         if (!search) {
             return systems;
         }
         return systems.filter(system => caseInsenstiveSearch(system.name, search));
     });
     groupActions$$ = computed<Record<string, ActionItems[]>>(() => {
-        const groups = this.currentGroups$$() || [];
+        const groups = this.groupsStore.currentGroups$$() || [];
         if (!this.canManageSystems$$()) {
             return groups.reduce((groupActions, { id }) => ({ ...groupActions, [id]: [] }), {});
         }
@@ -253,16 +157,13 @@ export class NxOrganizationCardContainerComponent {
                             .moveOrgItem({
                                 item: group,
                                 organization: this.currentOrg$$(),
-                                groups: this.rootGroups$$(),
+                                groups: this.groupsStore.groupsEntities(),
                             })
                             .then(newGroup => {
                                 if (newGroup && 'parentId' in newGroup) {
-                                    const processedGroup = {
-                                        ...group,
-                                        ...newGroup,
-                                        children: group.children,
-                                    };
-                                    this.updateGroup(processedGroup, group);
+                                    this.groupsStore.moveItemWithUndo(group, {
+                                        id: newGroup.parentId,
+                                    });
                                 }
                             });
                     },
@@ -273,13 +174,7 @@ export class NxOrganizationCardContainerComponent {
                     action: () => {
                         this.dialogsService.updateGroupName(group.id).then(updatedGroup => {
                             if (updatedGroup) {
-                                const groups = [...this.groupItems$$()];
-                                const currGroupIndex = groups.findIndex(gr => gr.id === group.id);
-                                groups[currGroupIndex] = {
-                                    ...groups[currGroupIndex],
-                                    name: updatedGroup.name,
-                                };
-                                this.store.dispatch(GroupActions.setGroups({ groups }));
+                                this.groupsStore.renameItemWithUndo(group.id, updatedGroup.name);
                             }
                         });
                     },
@@ -303,60 +198,21 @@ export class NxOrganizationCardContainerComponent {
                             })
                             .then(confirm => {
                                 if (confirm) {
+                                    const currentOrgId =
+                                        this.cpService.paramStateHandler.state$$().params
+                                            .organizationId!;
                                     const systemsSource = this.inRoot
-                                        ? this.cpService.getOrgSystems(this.currentOrgId$$())
+                                        ? this.cpService.getOrgSystems(currentOrgId)
                                         : this.cpService.getGroup(group.parentId);
                                     this.cpService
                                         .deleteGroup(group.id)
                                         .pipe(switchMap(() => systemsSource))
                                         .subscribe(
                                             res => {
-                                                const systemMap = new Map(
-                                                    this.systemsService.systems.map(sys => [
-                                                        sys.id,
-                                                        sys,
-                                                    ]),
+                                                this.groupsStore.deleteGroupWithUndo(
+                                                    group.id,
+                                                    currentOrgId,
                                                 );
-                                                let systems: SystemItem[] = [];
-                                                if ('systems' in res) {
-                                                    systems = res.systems.map(systemId => ({
-                                                        systemId,
-                                                        ...systemMap.get(systemId),
-                                                        type: OrgCardItem.SYSTEM,
-                                                    }));
-                                                } else {
-                                                    systems = res.map(sys => ({
-                                                        ...sys,
-                                                        type: OrgCardItem.SYSTEM,
-                                                        ...systemMap.get(sys.systemId),
-                                                    }));
-                                                }
-                                                const groups = this.groupItems$$()?.filter(
-                                                    obj => obj.id !== group.id,
-                                                );
-                                                if (groups) {
-                                                    if (group.parentId) {
-                                                        const parentIndex = groups?.findIndex(
-                                                            gr => gr.id === group.parentId,
-                                                        );
-                                                        if (parentIndex !== -1) {
-                                                            groups[parentIndex] = {
-                                                                ...groups[parentIndex],
-                                                                children: groups[
-                                                                    parentIndex
-                                                                ].children.filter(
-                                                                    child => child.id !== group.id,
-                                                                ),
-                                                            };
-                                                        }
-                                                    }
-                                                    this.store.dispatch(
-                                                        GroupActions.setGroupsAndSystems({
-                                                            groups,
-                                                            systems,
-                                                        }),
-                                                    );
-                                                }
                                             },
                                             () => {
                                                 // TODO: Waiting for direction from design on error handling//
@@ -371,7 +227,7 @@ export class NxOrganizationCardContainerComponent {
         }, {});
     });
     systemActions$$ = computed<Record<string, ActionItems[]>>(() => {
-        const systems = this.currentSystems$$() || [];
+        const systems = this.groupsStore.currentSystems$$() || [];
         const canMangeSystems = this.canManageSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
         const moveToAction = this.translateService.instant(
@@ -394,37 +250,15 @@ export class NxOrganizationCardContainerComponent {
                             .moveOrgItem({
                                 item: system,
                                 organization: this.currentOrg$$(),
-                                groups: this.rootGroups$$(),
+                                groups: this.groupsStore.groupsEntities(),
                             })
                             .then(newSystem => {
-                                let groups: GroupItem[];
-                                if (newSystem) {
-                                    groups = structuredClone(this.groupItems$$());
-                                    if (groups) {
-                                        const parentIndex = groups?.findIndex(
-                                            group => group.id === this.currentGroupId$$(),
-                                        );
-                                        if (parentIndex !== -1) {
-                                            groups[parentIndex].systemCount -= 1;
-                                        }
-                                        if ('groupId' in newSystem) {
-                                            const targetIndex = groups?.findIndex(
-                                                group => group.id === newSystem.groupId,
-                                            );
-                                            if (targetIndex !== -1) {
-                                                groups[targetIndex].systemCount += 1;
-                                            }
-                                            this.store.dispatch(GroupActions.setGroups({ groups }));
-                                        }
-                                    }
-                                }
-                                const currSystems = [...this.currentSystems$$()];
-                                const updatedSystems = currSystems.filter(
-                                    sys => sys.systemId !== system.systemId,
-                                );
-                                this.store.dispatch(
-                                    GroupActions.setSystems({ systems: updatedSystems }),
-                                );
+                                this.groupsStore.moveItemWithUndo(system, {
+                                    id:
+                                        'parentId' in newSystem
+                                            ? newSystem.parentId
+                                            : newSystem.groupId,
+                                });
                             });
                     },
                 });
@@ -435,30 +269,5 @@ export class NxOrganizationCardContainerComponent {
     });
 
     protocolFactory = (id: string, useRest: boolean) => () =>
-        this.vmsService.openClient({ id, useRest });
-
-    updateGroup = (updatedGroup: GroupItem, oldGroup: GroupItem): void => {
-        const groups: GroupItem[] = [...this.groupItems$$()];
-        const movedToGroup = groups.find(group => group.id === updatedGroup.parentId);
-        const parentId = oldGroup.parentId;
-        if (parentId) {
-            const parentIndex = groups.findIndex(group => group.id === parentId);
-            const parent = structuredClone(groups[parentIndex]);
-            parent.children = parent.children.filter(child => child.id !== updatedGroup.id);
-            groups[parentIndex] = parent;
-        }
-        if (movedToGroup) {
-            const droppedOnGroup = structuredClone(movedToGroup);
-            if (droppedOnGroup.children) {
-                droppedOnGroup.children.push(updatedGroup);
-            } else {
-                droppedOnGroup.children = [updatedGroup];
-            }
-            const droppedOnIndex = groups?.findIndex(gr => gr.id === movedToGroup.id);
-            groups[droppedOnIndex] = droppedOnGroup;
-        }
-        const movedGroupIndex = groups.findIndex(gr => gr.id === oldGroup.id);
-        groups[movedGroupIndex] = updatedGroup;
-        this.store.dispatch(GroupActions.setGroups({ groups }));
-    };
+        this.vmsClient.openClient({ id, useRest });
 }
