@@ -69,7 +69,7 @@ class TestChannelPartnerUserSerializer:
         # Roles
         self.cp_admin_role: uuid.UUID = ChannelPartnerRoles.ADMINISTRATOR
         self.context = create_context(cp=self.nx_cp, created_by=self.user, cloud_host=self.cloud_host)
-
+        self.mock_notification = mock_new_partner_user_role_notification
 
         self.request = arf.post('/')
         self.request.cloud_host = self.cloud_host
@@ -99,6 +99,8 @@ class TestChannelPartnerUserSerializer:
         assert isinstance(instance, ChannelPartnerToUser), "Should create a ChannelPartnerToUser instance"
         assert instance.title == 'New Title', "Title should be set correctly"
 
+        self.mock_notification.assert_called_once()
+
     def test_serializer_with_invalid_data(self):
         serializer_data = {
             'email': 'not-an-email',
@@ -122,6 +124,8 @@ class TestChannelPartnerUserSerializer:
         assert serializer.is_valid(), "Serializer should be valid with attributes"
         instance = serializer.save()
         assert instance.attributes == {'key1': 'value1', 'key2': 'value2'}, "Attributes should be set correctly"
+        self.mock_notification.assert_called_once()
+
 
     def test_update_attributes(self):
         relation = create_relation(
@@ -150,6 +154,8 @@ class TestChannelPartnerUserSerializer:
             'key1': 'new_value',
             'key2': 'value2'
         }, "Attributes should be updated correctly"
+        self.mock_notification.assert_called_once()
+
 
     def test_unset_attribute(self, cp_user_factory):
         relation = cp_user_factory(email=self.user.email, channel_partner=self.nx_cp)
@@ -173,7 +179,7 @@ class TestChannelPartnerUserSerializer:
         assert updated_instance.attributes.get('key2') == 'value2', "Other attributes should remain unchanged"
 
     def test_creating_admin_role(self, channel_partner_factory, random_email,
-                                      cp_user_factory, arf, mock_post_notification):
+                                 httpx_mock, cp_user_factory, arf):
         cp = channel_partner_factory()
         user = cp_user_factory(channel_partner=cp)
         self.request.user = user
@@ -188,11 +194,12 @@ class TestChannelPartnerUserSerializer:
             "roleId": self.cp_admin_role,
         }
         serializer = ChannelPartnerUserSerializer(data=data, context=context)
-        instance = serializer.is_valid()
+        serializer.is_valid()
         instance = serializer.save()
         assert instance.user.email == data['email']
         assert instance.channel_partner == cp
         assert instance.roles == [ChannelPartnerRoles.ADMINISTRATOR]
+        self.mock_notification.assert_called_once()
 
     def test_changing_only_admin_role(self, channel_partner_factory,
                                           cp_user_factory, arf, mock_post_notification):
@@ -211,6 +218,7 @@ class TestChannelPartnerUserSerializer:
         serializer = ChannelPartnerUserSerializer(data=data, context=context)
         assert serializer.is_valid() is False
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+        self.mock_notification.assert_not_called()
 
     def test_changing_second_admin_role(self, channel_partner_factory,
                                       cp_user_factory, arf, mock_post_notification):
@@ -231,6 +239,8 @@ class TestChannelPartnerUserSerializer:
         serializer = ChannelPartnerUserSerializer(data=data, context=context)
         assert serializer.is_valid() is True
         serializer.save()
+        self.mock_notification.assert_not_called()
+
 
     def test_changing_only_admin_role_2_users(self, channel_partner_factory,
                                         cp_user_factory, arf, mock_post_notification):
@@ -250,3 +260,4 @@ class TestChannelPartnerUserSerializer:
         serializer = ChannelPartnerUserSerializer(data=data, context=context)
         assert serializer.is_valid() is False
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+        self.mock_notification.assert_not_called()

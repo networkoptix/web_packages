@@ -7,7 +7,10 @@ from dataclasses import (
     dataclass,
     field,
 )
-from typing import List
+from typing import (
+    List,
+    Tuple,
+)
 
 import httpx
 import llutil
@@ -521,15 +524,15 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
             self,
             user: CloudUser,
             channel_partner: ChannelPartner
-    ) -> ChannelPartnerToUser:
+    ) -> Tuple[ChannelPartnerToUser, bool]:
         try:
-            return ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)[0]
+            return ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
         except ChannelPartnerToUser.MultipleObjectsReturned:
             relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by(
                 'created_ts')
             relation = relations.first()
             relations.exclude(id=relation.id).delete()
-            return relation
+            return relation, False
 
     def validate(self, attrs):
         user = attrs.get('user').get('email')
@@ -551,7 +554,7 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         title = validated_data.get('title')
         channel_partner = self.context.get('channel_partner')
         created_by = getattr(self.context.get('request'), 'user', None)
-        relation = self.get_or_create_relation(user, channel_partner)
+        relation, created = self.get_or_create_relation(user, channel_partner)
         # Set attributes
         if 'attributes' in validated_data:
             # Todo. Looks like it works not like it is supposed to do.
@@ -561,10 +564,11 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         relation.title = title
         relation.roles = [role.id]
         relation.save()
-        added_channel_partner_role_task.apply_async(args=[
-            relation.channel_partner_id, created_by.id, relation.user_id,
-            channel_partner.cloud_host.hostname
-        ])
+        if created:
+            added_channel_partner_role_task.apply_async(args=[
+                relation.channel_partner_id, created_by.id, relation.user_id,
+                channel_partner.cloud_host.hostname
+            ])
         return relation
 
 
@@ -694,27 +698,33 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         title = validated_data.get('title', '')
         organization = self.context.get('organization')
         created_by = self.context['request'].user
-        try:
-            relation, created = OrganizationToUser.objects.get_or_create(
-                user=user, organization=organization, system_group=None)
-        except OrganizationToUser.MultipleObjectsReturned:
-            relations = (OrganizationToUser.objects
-                         .filter(user=user, organization=organization, system_group=None)
-                         .order_by('created_ts'))
-            relation = relations.first()
+        # User can be moved from group to organization level. If user has any
+        # group or organization membership then it is not a new role.
+        with transaction.atomic():
+            try:
+                relation, created = OrganizationToUser.objects.get_or_create(
+                    user=user, organization=organization)
+            except OrganizationToUser.MultipleObjectsReturned:
+                relations = (OrganizationToUser.objects
+                             .filter(user=user, organization=organization)
+                             .order_by('created_ts'))
+                relation = relations.first()
+                created = False
 
-        relation.title = title
-        relation.roles = [role.id] if role else []
-        relation.save()
-        added_organization_role_task.apply_async(args=[
-            relation.organization_id, created_by.id, relation.user_id,
-            organization.channel_partner.cloud_host.hostname
-        ])
-        OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=False).delete()
-        user = CloudUser.objects.prefetch_related(
-            Prefetch('organizationtouser_set',
-                     queryset=OrganizationToUser.objects.all(),
-                     to_attr='organization_relations')).distinct().get_or_create(email=user.email)[0]
+            relation.system_group = None
+            relation.title = title
+            relation.roles = [role.id] if role else []
+            relation.save()
+            OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=False).delete()
+            user = CloudUser.objects.prefetch_related(
+                Prefetch('organizationtouser_set',
+                         queryset=OrganizationToUser.objects.filter(organization=organization),
+                         to_attr='organization_relations')).distinct().get_or_create(email=user.email)[0]
+        if created:
+            added_organization_role_task.apply_async(args=[
+                relation.organization_id, created_by.id, relation.user_id,
+                organization.channel_partner.cloud_host.hostname
+            ])
         return user
 
 
@@ -1625,6 +1635,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
             relations = OrganizationToUser.objects.filter(user=user, organization=organization,
                                                           system_group=group).order_by('created_ts')
             relation = relations.first()
+            created = False
             if not relation:
                 relation = OrganizationToUser(user=user, organization=organization, system_group=group)
                 first_relation = (
@@ -1634,12 +1645,11 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
                 )
                 if first_relation:
                     relation.created_ts = first_relation.created_ts
-            relation.roles = [role.id]
-            relation.save()
-            added_organization_role_task.apply_async(args=[
-                relation.organization_id, created_by.id, relation.user_id,
-                organization.channel_partner.cloud_host.hostname
-            ])
+                else:
+                    created = True
+
+                relation.roles = [role.id]
+                relation.save()
             # Delete User's Organization Roles
             (OrganizationToUser.objects
              .filter(user=user, organization=organization, system_group__isnull=True)
@@ -1649,6 +1659,11 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
              .filter(Q(system_group_id__in=group.groups_path) | Q(system_group__path__contains=[group.id]))
              .filter(user=user, organization=organization)
              .delete())
+        if created:
+            added_organization_role_task.apply_async(args=[
+                relation.organization_id, created_by.id, relation.user_id,
+                organization.channel_partner.cloud_host.hostname
+            ])
         return relation
 
 

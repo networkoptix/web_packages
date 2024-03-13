@@ -544,6 +544,28 @@ class TestCloudSystemViewSet:
 
 class TestOrganizationUserViewSet:
 
+    def test_get_200(
+            self, organization_factory, org_user_factory, system_factory,
+            mock_auth_with_user, arf, random_email, mock_account_status,
+            mock_get_customization_request, mock_post_notification, httpx_mock
+    ):
+        other_org = organization_factory()
+        org = organization_factory()
+        other_org_user = org_user_factory(organization=other_org)
+        org_admin = org_user_factory(organization=org)
+        org_user = org_user_factory(
+            organization=org,
+            email=other_org_user.user.email,
+            role=OrganizationRoles.VIEWER
+        )
+        request = arf.get('/')
+        mock_auth_with_user(org_admin)
+        view = OrganizationUserViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
+        response = view(request, parent_lookup_organization=org.id, email=org_user.user.email)
+        assert response.status_code == 200
+        assert response.data['email'] == org_user.user.email
+        assert response.data['rolesIds'] == org_user.roles
+
     def test_create_200(self, organization_factory, org_user_factory, system_factory,
                         mock_auth_with_user, arf, random_email, mock_account_status,
                         mock_get_customization_request, mock_post_notification, httpx_mock):
@@ -1599,13 +1621,59 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 403
 
-    def test_create_201(self, mock_auth_with_user, arf, sys_group_user_factory,
-                        mock_account_status, mock_get_customization_request,
-                        mock_post_notification, httpx_mock, system_group_factory):
+    def test_update_group_user_201(
+            self, mock_auth_with_user, arf, sys_group_user_factory,
+            mock_account_status, mock_get_customization_request,
+            mock_post_notification, httpx_mock, system_group_factory):
+
         view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
         group_1 = system_group_factory(organization=self.org, parent=self.group)
         user_rel = sys_group_user_factory(organization=self.org, group=group_1)
         user = user_rel.user
+        data = {
+            'email': user.email,
+            'role': 'Power User'
+        }
+        request = arf.post('/', data=data)
+        mock_auth_with_user(self.org_user)
+        mock_account_status(email=user.email, active=True)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
+        assert response.status_code == 201
+        assert response.data['email'] == user.email
+        assert response.data['fullName'] == user.full_name
+        assert response.data['roles'] == ['Power User']
+        assert response.data['rolesIds'] == [str(OrganizationRoles.POWER_USER)]
+        assert httpx_mock.get_request(url=notification_send_url) is None
+
+    def test_update_org_user_400(
+            self, mock_auth_with_user, arf, org_user_factory,
+            mock_account_status, mock_get_customization_request,
+            mock_post_notification, httpx_mock):
+
+        view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
+        org_admin = org_user_factory(organization=self.org)
+        user_rel = org_user_factory(organization=self.org)
+        user = user_rel.user
+        data = {
+            'email': user.email,
+            'role': 'Power User'
+        }
+        request = arf.post('/', data=data)
+        mock_auth_with_user(self.org_user)
+        mock_account_status(email=user.email, active=True)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
+        assert response.status_code == 400
+        assert 'cannot be added to group' in response.data['email'][0]
+
+    def test_create_201(self, mock_auth_with_user, arf, org_user_factory,
+                        mock_account_status, mock_get_customization_request,
+                        mock_post_notification, httpx_mock, cloud_user_factory):
+        view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
+        user = cloud_user_factory()
         data = {
             'email': user.email,
             'role': 'Power User'
@@ -1625,7 +1693,7 @@ class TestSystemGroupUserViewSet:
         assert not OrganizationToUser.objects.filter(
             organization=self.org, user=user, system_group__isnull=True
         ).exists()
-
+        assert OrganizationToUser.objects.filter(user=user, organization=self.org).count() == 1
 
     def test_bulk_delete_403(self, channel_partner_factory, organization_factory, org_user_factory,
                              mock_auth_with_user, arf):

@@ -512,11 +512,11 @@ def cloud_storage_usage_factory():
 
 @pytest.fixture()
 def mock_new_partner_user_role_notification(mocker):
-    mocker.patch('partners.tasks.notification.notification_added_channel_partner_role')
+    return mocker.patch('partners.tasks.notification.notification_added_channel_partner_role')
 
 @pytest.fixture()
 def mock_new_org_user_role_notification(mocker):
-    mocker.patch('partners.tasks.notification.notification_added_organization_role')
+    return mocker.patch('partners.tasks.notification.notification_added_organization_role')
 
 @pytest.fixture()
 def private_key_factory():
