@@ -6,12 +6,9 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { HomeSystemListComponent } from '@pages/home/components/systems-list/systems-list.component';
 import { Account } from '@services/account.service/account';
-import type { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { NgChanges } from '@utils/ng-changes';
-import { isOrgSystem } from '@utils/nx';
 
 import { SystemsDisplayMode } from '../home.types';
 
@@ -28,7 +25,6 @@ export class NxSystemsComponent implements OnChanges {
     systemsService = inject(NxSystemsService);
     showPersonal$$ = signal<boolean>(false);
     currentUser$$ = this.store.selectSignal<Account>(selectCurrentUser);
-    private rootOrgs$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
 
     /** Systems which the user has direct access to:
      * 1. Systems owned by the user
@@ -39,17 +35,11 @@ export class NxSystemsComponent implements OnChanges {
      */
     directAccessSystems$$ = computed<NxSystemInfo[]>(() => {
         const showPersonal = this.showPersonal$$();
-        const systems = this.systemsService.systems$$();
-        const orgs = this.rootOrgs$$();
-
-        if (showPersonal) {
-            return systems.filter(sys => sys.isMine);
-        } else {
-            const orgIds = new Set<string>(orgs.map(org => org.id));
-            return systems.filter(
-                sys => !sys.isMine && !(isOrgSystem(sys) && orgIds.has(sys.organizationId)),
-            );
-        }
+        const systems = this.systemsService.directAccessSystems$$();
+        const filterByIsMine = showPersonal
+            ? (sys: NxSystemInfo) => sys.isMine
+            : (sys: NxSystemInfo) => !sys.isMine;
+        return systems.filter(filterByIsMine);
     });
 
     ngOnChanges(changes: NgChanges<NxSystemsComponent>): void {
