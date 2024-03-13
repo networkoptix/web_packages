@@ -1931,3 +1931,7 @@ class LicensesMigrationResultSerializer(serializers.Serializer):
     migratedLicenses = serializers.ListField(child=serializers.CharField())
     skippedLicenses = serializers.ListField(child=serializers.CharField())
     failedLicenses = serializers.ListField(child=serializers.CharField())
+
+
+class OrganizationSystemsQueryParamsSerializer(serializers.Serializer):
+    rootOnly = serializers.BooleanField(default=False, required=False)
