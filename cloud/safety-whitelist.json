@@ -200,5 +200,9 @@
   "64438": {
     "name": "pillow",
     "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through ImageFont.getmask glyph size. As a fix, PIL.ImageFont.ImageFont now trims the size of individual glyphs so that they do not extend beyond the bitmap image.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64438://data.safetycli.com/v/64227/f17"
+  },
+  "64976": {
+    "name": "Django",
+    "note": "CVE-2024-24680: Affected versions of Django are vulnerable to potential denial-of-service in intcomma template filter when used with very long strings."
   }
 }
