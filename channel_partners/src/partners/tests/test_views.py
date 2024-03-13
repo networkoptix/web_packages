@@ -28,7 +28,10 @@ from rest_framework import exceptions
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from partners.authentication import TokenCache
+from partners.authentication import (
+    CREDENTIALS_REMOVED_PERMANENTLY,
+    TokenCache,
+)
 from partners.models import (
     ActionConfirmation,
     ChannelPartnerRole,
@@ -541,6 +544,78 @@ class TestCloudSystemViewSet:
 
         response_data = response.data
         assert response_data.get("requestId") == ""
+
+    def test_services_no_organization(self, channel_partner_factory, organization_factory, system_factory,
+                                      mocker, arf_basic_auth):
+        cp = channel_partner_factory()
+        system = system_factory(organization=None)
+        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+                                    return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
+        system_id = f'{system.system_id}'
+        password = f'{uuid4()}'
+        auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
+        view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
+        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        response = view(request, id=system.system_id)
+        assert response.status_code == 401
+        assert response.data['detail'] == 'Not an organization system.'
+
+    def test_services_deleted_form_cps(self, channel_partner_factory, organization_factory, system_factory,
+                                      mocker, arf_basic_auth):
+        cp = channel_partner_factory()
+        system = system_factory(organization=None)
+        system.system_state = CloudSystemStates.DELETED
+        system.save()
+        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+                                    return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
+        system_id = f'{system.system_id}'
+        password = f'{uuid4()}'
+        auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
+        view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
+        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        response = view(request, id=system.system_id)
+        assert response.status_code == 401
+        assert response.data['detail'] == 'System has been disconnected.'
+        assert response.data['resultCode'] == CREDENTIALS_REMOVED_PERMANENTLY
+
+    def test_services_deleted_form_cdb(self, channel_partner_factory, organization_factory, system_factory,
+                                      mocker, arf_basic_auth):
+        cp = channel_partner_factory()
+        system = system_factory(organization=organization_factory())
+        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+                                    return_value=(False, CloudSystemStates.DELETED, 'Test'))
+        system_id = f'{system.system_id}'
+        password = f'{uuid4()}'
+        auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
+        view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
+        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        with transaction.atomic():
+            response = view(request, id=system.system_id)
+        assert response.status_code == 401
+        assert response.data['detail'] == 'Invalid system id or auth key'
+        assert response.data['resultCode'] == CREDENTIALS_REMOVED_PERMANENTLY
+        # check if system changes are not rolled back on raising exception
+        system.refresh_from_db()
+        assert system.system_state == CloudSystemStates.DELETED
+
+    def test_services_invalid_host(self, channel_partner_factory, organization_factory, system_factory,
+                                   mocker, arf_basic_auth, cloud_host_factory):
+        cp = channel_partner_factory()
+        cloud_host = cloud_host_factory()
+        system = system_factory(organization=None, cloud_host=cloud_host)
+        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+                                    return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
+        system_id = f'{system.system_id}'
+        password = f'{uuid4()}'
+        auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
+        view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
+        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        request.cloud_host = cp.cloud_host
+        response = view(request, id=system.system_id)
+        assert response.status_code == 404
+        assert response.data == {'detail': f'System {system_id} not found.'}
+
+
 
 class TestOrganizationUserViewSet:
 
