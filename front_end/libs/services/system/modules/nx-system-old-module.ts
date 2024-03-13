@@ -313,7 +313,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     .pipe(
                         switchMap(() => this.getInfo(true, false, true)),
                         concatMap((value, index) => {
-                            if (index === 1) {
+                            if (index === 0) {
                                 this.systemReady$.next(this);
                             }
                             return of(value);
