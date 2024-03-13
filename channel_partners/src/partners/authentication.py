@@ -46,6 +46,7 @@ from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 logger = structlog.getLogger(__name__)
 
+CREDENTIALS_REMOVED_PERMANENTLY = 'credentialsRemovedPermanently'
 
 class TokenCache:
     timeout: int = 600
@@ -163,7 +164,7 @@ def check_system_credentials(
 
     if response.headers.get('content-type') == 'application/json':
         error = response.json()
-        if error.get('resultCode') == 'credentialsRemovedPermanently':
+        if error.get('resultCode') == CREDENTIALS_REMOVED_PERMANENTLY:
             return False, CloudSystemStates.DELETED, None
     # CLOUD-12908. Let's count any error status code as unauthorized
     logger.info('Authentication failed',
@@ -183,8 +184,17 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
     @staticmethod
     def get_or_create_system(system_id, request=None):
         if system := CloudSystemId.objects.filter(system_id=system_id, cloud_host=request.cloud_host).first():
+            if system.system_state == CloudSystemStates.DELETED:
+                raise exceptions.NotAuthenticated(detail={
+                    'detail': 'System has been disconnected.',
+                    'resultCode': CREDENTIALS_REMOVED_PERMANENTLY,
+                })
+            if not system.organization:
+                raise exceptions.NotAuthenticated(detail={
+                    'detail': 'Not an organization system.',
+                })
             return system
-        return CloudSystemId.objects.create(system_id=system_id, cloud_host=request.cloud_host)
+        raise exceptions.NotFound(f'System {system_id} not found.')
 
     def authenticate_credentials(self, userid, password, request=None):
         auth_header = request.headers.get('authorization')
@@ -213,7 +223,8 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
                 if cloud_system.name != system_name:
                     cloud_system.name = system_name
                     needs_update = True
-                if cloud_system.system_state != system_status:
+                # do not remove deleted state from organization system
+                if cloud_system.system_state not in (system_status, CloudSystemStates.DELETED):
                     cloud_system.system_state = system_status
                     needs_update = True
                 if needs_update:
@@ -221,6 +232,15 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
         if authenticated:
             request.cloud_system = cloud_system
             return get_user_model()(), None
+
+        if system_status == CloudSystemStates.DELETED:
+            raise APIErrorWithoutRollback(
+                detail={
+                    'detail': 'Invalid system id or auth key',
+                    'resultCode': CREDENTIALS_REMOVED_PERMANENTLY,
+                },
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
 
         raise APIErrorWithoutRollback(
             detail='Invalid system id or auth key',
