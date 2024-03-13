@@ -127,6 +127,7 @@ from partners.serializers import (
     OrganizationServiceRecordSerializer,
     OrganizationStateChangeSerializer,
     OrganizationStateConfirmationSerializer,
+    OrganizationSystemsQueryParamsSerializer,
     OrganizationUserSerializer,
     SaaSReportSerializer,
     ServiceSerializer,
@@ -1070,7 +1071,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     summary='Get list of Systems for an Organization',
     extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'},
     parameters=[
-        OpenApiParameter('rootOnly', OpenApiTypes.BOOL, default=False),
+        OrganizationSystemsQueryParamsSerializer,
         OpenApiParameter('parent_lookup_organization', location='path', type=OpenApiTypes.UUID)
     ]
 )
@@ -1085,8 +1086,9 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     filterset_class = filters.CreatedTsAndIdAndNameFilter
 
     def get_queryset(self):
-        root_only = self.request.query_params.get('rootOnly', False)
-        if root_only:
+        param_serializer = OrganizationSystemsQueryParamsSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        if param_serializer.validated_data.get('rootOnly'):
             return super().get_queryset().filter(
                 organization__channel_partner__cloud_host=self.request.cloud_host,
                 system_state=CloudSystemStates.ACTIVATED, system_group=None

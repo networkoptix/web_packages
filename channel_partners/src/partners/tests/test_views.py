@@ -4430,6 +4430,46 @@ class TestCloudSystemNestedViewSetPermissions:
         response = self.client.get(path=path)
         assert response.status_code == 403
 
+class TestCloudSystemNestedViewSetRootOnlyParam:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory,
+              system_group_factory, system_factory, org_user_factory,
+              cloud_test_host, mock_auth_with_user):
+        cp = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=cp)
+        system_factory(organization=self.organization)
+        group_0 = system_group_factory(organization=self.organization)
+        system_factory(organization=self.organization, system_group=group_0)
+        group_1 = system_group_factory(organization=self.organization, parent=group_0)
+        system_factory(organization=self.organization, system_group=group_1)
+        group_2 = system_group_factory(organization=self.organization, parent=group_1)
+        system_factory(organization=self.organization, system_group=group_2)
+        self.user = org_user_factory(organization=self.organization)
+        mock_auth_with_user(self.user)
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        kwargs = {'parent_lookup_organization': str(self.organization.id)}
+        self.base_url = reverse('organizations-cloudsystem-list', kwargs=kwargs)
+
+    def test_no_param(self):
+        response = self.client.get(self.base_url)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 4
+
+    def test_true(self):
+        for value in ['true', 'True', 'on', 'yes', '1']:
+            response = self.client.get(self.base_url + f'?rootOnly={value}')
+            assert response.status_code == 200
+            assert len(response.data['results']) == 1
+
+    def test_false(self):
+        for value in ['false', 'False', 'off', 'no', '0']:
+            response = self.client.get(self.base_url + f'?rootOnly={value}')
+            assert response.status_code == 200
+            assert len(response.data['results']) == 4
+
+
 class TestCloudSystemViewSetPermissions:
     @pytest.fixture(autouse=True, scope='function')
     def setup(self, root_nx_channel_partner, channel_partner_factory, organization_factory, system_factory,
