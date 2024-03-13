@@ -1932,6 +1932,8 @@ class TestUserSystems:
         org_sys = system_factory(organization=org)
         group = system_group_factory(organization=org)
         group_sys = system_factory(organization=org, system_group=group)
+        sub_group = system_group_factory(organization=org, parent=group)
+        sub_group_sys = system_factory(organization=org, system_group=sub_group)
         self.cp_admin = cp_user_factory(channel_partner=cp)
         self.org_admin = org_user_factory(organization=org)
         self.org_viewer = org_user_factory(organization=org, role=OrganizationRoles.VIEWER)
@@ -1962,7 +1964,7 @@ class TestUserSystems:
         self.client.force_authenticate(self.cp_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
-        assert len(response.data) == 2
+        assert len(response.data) == 3
 
     def test_org_admin_ok(self):
         url_args = {
@@ -1972,7 +1974,7 @@ class TestUserSystems:
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
-        assert len(response.data) == 2
+        assert len(response.data) == 3
 
     def test_group_user_ok(self):
         url_args = {
@@ -1982,7 +1984,7 @@ class TestUserSystems:
         self.client.force_authenticate(self.group_user.user)
         response = self.client.get(url)
         assert response.status_code == 200
-        assert len(response.data) == 1
+        assert len(response.data) == 2
 
     def test_org_viewer(self):
         url_args = {
@@ -1992,7 +1994,7 @@ class TestUserSystems:
         self.client.force_authenticate(self.org_viewer.user)
         response = self.client.get(url)
         assert response.status_code == 200
-        assert len(response.data) == 2
+        assert len(response.data) == 3
 
     def test_incorrect_email(self):
         url_args = {

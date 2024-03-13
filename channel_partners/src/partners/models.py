@@ -175,39 +175,51 @@ class CloudUser(models.Model):
         cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
         organization_sys = (
             OrganizationToUser.objects
-            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=True)
+            .filter(
+                user=self,
+                roles__overlap=roles_with_sys_perm,
+                system_group__isnull=True,
+                organization__cloud_systems__system_id__isnull=False)
             .annotate(
                 org_id=F('organization_id'),
-                system_id=F('organization__cloud_systems__system_id'),
+                sys_id=F('organization__cloud_systems__system_id'),
                 membership_type=Value('organization'),
                 org_roles=F('roles')
             )
-            .values('org_id', 'system_id', 'membership_type', 'org_roles')
-        )
-        group_sys = (
-            OrganizationToUser.objects
-            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=False)
-            .annotate(
-                org_id=F('organization_id'),
-                system_id=F('system_group__cloud_systems__system_id'),
-                membership_type=Value('organization'),
-                org_roles=F('roles'))
-            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+            .values('org_id', 'sys_id', 'membership_type', 'org_roles')
         )
         channel_partner_sys = (
-            Organization.objects.filter(
-                channel_partner_access_level__in=roles_with_sys_perm,
-                channel_partner__channelpartnertouser__user=self,
-                channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+            CloudSystemId.objects.filter(
+                organization__channel_partner_access_level__in=roles_with_sys_perm,
+                organization__channel_partner__channelpartnertouser__user=self,
+                organization__channel_partner__channelpartnertouser__roles__overlap=cp_roles,
             ).annotate(
-                org_id=F('id'),
-                system_id=F('cloud_systems__system_id'),
+                org_id=F('organization_id'),
+                sys_id=F('system_id'),
                 membership_type=Value('channel_partner')
             )
-            .annotate(org_roles=ArrayAgg('channel_partner_access_level_id'))
-            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+            .annotate(org_roles=ArrayAgg('organization__channel_partner_access_level_id'))
+            .values('org_id', 'sys_id', 'membership_type', 'org_roles')
         )
-        return organization_sys.union(group_sys).union(channel_partner_sys)
+        group_roles = OrganizationToUser.objects.filter(
+            user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=False)
+        queryset = organization_sys.union(channel_partner_sys)
+        for group_role in group_roles:
+            group_sys = (
+                CloudSystemId.objects.filter(
+                    organization_id=group_role.organization_id,
+                    path__contains=[group_role.system_group_id])
+                .annotate(
+                    org_id=F('organization_id'),
+                    sys_id=F('system_id'),
+                    membership_type=Value('organization'),
+                    org_roles=Value(group_role.roles, output_field=ArrayField(base_field=models.UUIDField())))
+                .values('org_id', 'sys_id', 'membership_type', 'org_roles')
+            )
+            queryset = queryset.union(group_sys)
+
+        return queryset
+
 
     def all_systems(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
