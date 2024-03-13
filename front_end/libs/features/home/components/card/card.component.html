@@ -13,6 +13,9 @@
         *ngIf="dropdownItems.length"
         class="dropdown"
     >
-        <nx-three-dot [items]="dropdownItems"></nx-three-dot>
+        <nx-three-dot
+            [items]="dropdownItems"
+            (toggleShow)="toggleShow.emit($event)"
+        ></nx-three-dot>
     </div>
 </div>

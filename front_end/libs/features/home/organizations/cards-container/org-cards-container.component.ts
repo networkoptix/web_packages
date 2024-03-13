@@ -1,14 +1,14 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
+import { Component, Input, booleanAttribute, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, map, switchMap } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map, switchMap } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
 import {
@@ -21,10 +21,12 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
     GroupItem,
+    GroupUser,
     OrgCardItem,
     OrgPermissions,
     SystemItem,
@@ -43,6 +45,7 @@ import {
     selectGroupItems,
     selectRootGroups,
 } from '../../store/groups/groups.selectors';
+
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -69,6 +72,7 @@ export class NxOrganizationCardContainerComponent {
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 
+    orgUserStore = inject(OrgUsersStore);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     orgPermissions$$ = computed(() => this.currentOrg$$()?.ownPermissions || []);
     canManageSystems$$ = computed<boolean>(() =>
@@ -213,6 +217,14 @@ export class NxOrganizationCardContainerComponent {
             });
     }
 
+    groupUsers?: Promise<GroupUser[]>;
+
+    prefetchDependencies(): void {
+        this.groupUsers = firstValueFrom(
+            this.cpService.getGroupUsers(this.currentGroupId$$()),
+        ).catch(() => []);
+    }
+
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
     filteredGroups$$ = computed(() => {
         const search = this.search$$();
@@ -288,10 +300,28 @@ export class NxOrganizationCardContainerComponent {
                 {
                     name: deleteAction,
                     id: group.id,
-                    action: () => {
+                    action: async () => {
+                        const groupUsers = (await this.groupUsers) || [];
+                        const warning =
+                            groupUsers.length && group.systemCount
+                                ? ({
+                                      type: 'warning',
+                                      title: staticLang.channelPartners.orgs.groupAction
+                                          .deleteWarning.title,
+                                      message: {
+                                          value: staticLang.channelPartners.orgs.groupAction
+                                              .deleteWarning.message,
+                                          params: {
+                                              systemCount: group.systemCount.toString(),
+                                              userCount: groupUsers.length.toString(),
+                                          },
+                                      },
+                                  } as const)
+                                : undefined;
                         this.dialogsService
                             .confirm({
                                 title: deleteAction,
+                                warning,
                                 footer: {
                                     actionLabel: deleteAction,
                                     cancelLabel: staticLang.channelPartners.orgs.groupAction.cancel,

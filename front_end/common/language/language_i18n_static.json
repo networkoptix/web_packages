@@ -1301,6 +1301,10 @@
                 "cancel": "Cancel",
                 "deleteMessage": "Are you sure you want to delete the folder {folderName}?",
                 "delete":  "Delete",
+                "deleteWarning": {
+                    "title": "WARNING",
+                    "message": "{userCount, plural, one{# user} other{# users}} will lose access to {systemCount, plural, one{# system} other{# systems}}"
+                },
                 "moveTo": "Move To...",
                 "rename": "Rename..."
             }

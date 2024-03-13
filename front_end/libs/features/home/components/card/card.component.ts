@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
@@ -26,4 +26,5 @@ export class NxCardComponent {
         'width.px': '0',
         'height.px': '0',
     };
+    @Output() toggleShow = new EventEmitter<boolean>();
 }

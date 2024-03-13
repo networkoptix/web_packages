@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
@@ -33,6 +33,7 @@ export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
     @Input() name: string;
     @Input() componentId: string = 'three-dot-menu';
+    @Output() toggleShow = new EventEmitter<boolean>();
 
     constructor() {
         super();
@@ -41,6 +42,7 @@ export class NxThreeDotDropdown extends BaseDropdown {
     handleShow(event: MouseEvent): void {
         event.stopPropagation();
         this.show = !this.show;
+        this.toggleShow.emit(this.show);
     }
 
     change(item: ActionItems, event: MouseEvent): void {

@@ -1,3 +1,5 @@
+@use "typography";
+
 .modal-title {
     max-width: 480px;
 }
@@ -25,4 +27,27 @@
 
 .long-cancel-button > .btn-default {
     max-width: 360px;
+}
+
+.warning-block {
+    @include typography.regular14nocolor;
+    margin: 20px 0;
+    // We should move these colors to the theme palette at some point
+    // Not sure though on how they would be incorporated into the design system
+    background-color: #524620;
+    border: 1px solid #937A30;
+    padding: 12px;
+    color: var(--light1);
+
+    .warning-heading {
+        svg-icon {
+            margin-right: 6px;
+            height: 20px;
+            display: inline;
+        }
+    }
+
+    .warning-message {
+        margin-top: 8px;
+    }
 }
