@@ -8,7 +8,7 @@
             class="modal-title"
             translate
         >
-            Create Group
+            New Folder
         </h1>
         <button
             type="button"
@@ -22,36 +22,18 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="groupName">{{
-                !hasGroups ? ('Name' | translate) : ('New Group Name' | translate)
-            }}</label>
+            <label for="groupName">
+                {{ 'Name' | translate }} <span class="input-error">*</span>
+            </label>
             <input
                 #groupName="ngModel"
                 class="form-control"
-                [ngClass]="{ 'no-groups': !hasGroups }"
                 id="groupName"
                 name="groupName"
                 [(ngModel)]="name"
                 autofocus
                 required
             />
-            <p
-                class="modal-paragraph-light"
-                *ngIf="!hasGroups; else subsequentGroups"
-            >
-                {{ LANG.dialogs.systemGroups.createFirstGroup | translate }}
-            </p>
-
-            <ng-template #subsequentGroups>
-                <p class="modal-paragraph-light">
-                    {{
-                        (parentGroupName
-                            ? LANG.dialogs.systemGroups.createdInsideSelectedGroup
-                            : LANG.dialogs.systemGroups.createdInCurrentGroup
-                        ) | translate: { parentGroupName }
-                    }}
-                </p>
-            </ng-template>
         </div>
         <!-- <div class="form-group">
             <label for="groupParent" translate>Group Parent</label>

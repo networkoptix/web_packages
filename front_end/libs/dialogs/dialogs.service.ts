@@ -347,7 +347,7 @@ export class NxDialogsService {
             import('./create-system-group/create-system-group.component').then(
                 m => m.CreateSystemGroupModalContent,
             ),
-        { autoFocus: 'input' },
+        { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
     );
 
     updateGroupName = this.dialogV2Factory<Dt.UpdateSystemGroup>(

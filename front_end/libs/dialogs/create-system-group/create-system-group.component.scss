@@ -1,3 +1,6 @@
-.no-groups {
-    width: 299px !important;
+:host {
+
+    .modal-body {
+        padding: 13px !important;
+    }
 }

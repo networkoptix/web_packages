@@ -41,7 +41,6 @@ import {
     selectCurrentGroups,
     selectCurrentSystems,
     selectGroupItems,
-    selectHasGroups,
     selectRootGroups,
 } from '../../store/groups/groups.selectors';
 @Component({
@@ -82,7 +81,6 @@ export class NxOrganizationCardContainerComponent {
             searchConfig.channelPartners.searchMinimumCards
         );
     });
-    hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     rootGroups$$ = this.store.selectSignal<GroupItem[]>(selectRootGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
@@ -195,7 +193,6 @@ export class NxOrganizationCardContainerComponent {
             .createSystemGroup({
                 parentGroup: currGroupId,
                 orgId: this.currentOrgId$$(),
-                hasGroups: this.hasGroups$$(),
                 parentGroupName: this.groupName,
             })
             .then(group => {
