@@ -1648,8 +1648,8 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
                 else:
                     created = True
 
-                relation.roles = [role.id]
-                relation.save()
+            relation.roles = [role.id]
+            relation.save()
             # Delete User's Organization Roles
             (OrganizationToUser.objects
              .filter(user=user, organization=organization, system_group__isnull=True)

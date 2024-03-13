@@ -1238,7 +1238,8 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
             .filter(Q(system_group__isnull=True) | Q(system_group_id__in=[*system_group.groups_path, system_group.id]))
             .select_related('organization', 'system_group').order_by('created_ts')
         )
-        serializer = SystemGroupUserSerializer(queryset, many=True)
+        serializer = self.get_serializer(queryset, many=True)
+        # serializer = SystemGroupUserSerializer(queryset, many=True, context=self.get_serializer_context())
         return Response(serializer.data)
 
 
