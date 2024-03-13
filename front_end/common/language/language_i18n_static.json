@@ -936,7 +936,6 @@
             "title": "Your session has expired"
         },
         "systemGroups": {
-            "createFirstGroup": "Enter a new group name",
             "createdInRoot": "New group will be created in root",
             "createdInCurrentGroup": "New group will be created in current group",
             "createdInsideSelectedGroup": "New group will be created in { parentGroupName }"

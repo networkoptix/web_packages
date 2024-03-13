@@ -157,7 +157,6 @@ export type ChangeCpState = DialogType<
 
 export type CreateSystemGroup = DialogType<
     {
-        hasGroups: boolean;
         orgId: string;
         parentGroup: string;
         parentGroupName?: string;
