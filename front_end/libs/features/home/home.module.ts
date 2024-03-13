@@ -10,7 +10,6 @@ import { SystemsDisplayMode } from '@pages/home/home.types';
 import { NxHomeComponent } from './home.component';
 import { OrgResolver } from './resolvers/org-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
-import { groupsReducer } from './store/groups/groups.reducer';
 
 const homeRoutes: Routes = [
     {
@@ -69,7 +68,6 @@ const homeRoutes: Routes = [
         NxHomeComponent,
         CommonModule,
         RouterModule.forChild(homeRoutes),
-        StoreModule.forFeature('groups', groupsReducer),
         StoreModule.forFeature('account', accountReducer),
     ],
 })

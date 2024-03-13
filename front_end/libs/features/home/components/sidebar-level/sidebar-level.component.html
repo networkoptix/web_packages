@@ -1,10 +1,10 @@
 <ul
-    *ngIf="openGroups"
+    *ngIf="groupsStore.openGroups$$() as openGroups"
     [ngClass]="{
         'closed-level': groupId ? !openGroups[groupId] : false
     }"
 >
-    <li *ngIf="rootOrg; else level">
+    <li *ngIf="!groupId && currentOrg$$() as rootOrg; else level">
         <div
             class="group-drop-list"
             [ngClass]="{ selected: !this.currentGroupId$$() }"
@@ -12,7 +12,7 @@
             (cdkDropListDropped)="moveToRoot($event)"
         >
             <svg-icon
-                (click)="toggleOpenState(rootOrg.id)"
+                (click)="groupsStore.toggleOpenState(rootOrg.id)"
                 nx-add-svg-src
                 [src]="
                     icons.dirTextButtons +
@@ -38,7 +38,6 @@
         <nx-sidebar-level
             [groups]="groups"
             [groupId]="rootOrg.id"
-            [openGroups]="openGroups"
         ></nx-sidebar-level>
     </li>
     <ng-template #level>
@@ -55,7 +54,7 @@
                 (cdkDropListDropped)="onDrop($event)"
             >
                 <svg-icon
-                    (click)="toggleOpenState(group.id)"
+                    (click)="groupsStore.toggleOpenState(group.id)"
                     *ngIf="group.children.length; else spacer"
                     nx-add-svg-src
                     [src]="
@@ -78,11 +77,10 @@
                     svgClass="folder"
                 ></svg-icon>
                 <div
-                    (click)="toggleOpenState(group.id)"
+                    (click)="groupsStore.toggleOpenState(group.id)"
                     cdkDrag
                     [cdkDragDisabled]="!canManageSystems$$()"
                     [cdkDragData]="group"
-                    cdkDragBoundary=".sidebar"
                     class="group"
                 >
                     <span *cdkDragPlaceholder></span>
@@ -98,7 +96,6 @@
                 *ngIf="group.children.length"
                 [groups]="group.children"
                 [groupId]="group.id"
-                [openGroups]="openGroups"
             ></nx-sidebar-level>
         </li>
     </ng-template>

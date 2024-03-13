@@ -300,6 +300,7 @@ export enum OrgCardItem {
 
 export interface GetGroupItem extends GroupItem {
     systems: string[];
+    cloudSystems: CloudSystem[];
 }
 
 export interface CreateGroup {

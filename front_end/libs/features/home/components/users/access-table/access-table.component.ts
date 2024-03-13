@@ -20,12 +20,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import {
-    selectCurrentGroupId,
-    selectCurrentGroups,
-    selectCurrentPath,
-    selectInGroup,
-} from '@pages/home/store/groups/groups.selectors';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     GroupRole,
@@ -72,16 +67,20 @@ export class NxAccessTableComponent implements OnInit {
 
     @Input() email: string = '';
 
-    inGroup$$ = this.store.selectSignal(selectInGroup);
     orgRoles$$ = toSignal(this.cpService.getOrganizationRoles());
     headers: HEADER_ITEM[];
     fullName$$ = signal('');
     selectedGroups: { [key: string]: UserRecord } = {};
 
+    groupsStore = inject(GroupsStore);
+
+    inGroup$$ = computed(() => !this.groupsStore.currentGroupId$$().isRoot);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
-    currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
-    groupsPath$$ = this.store.selectSignal(selectCurrentPath);
+    currentGroupId$$ = computed(
+        () => this.cpService.paramStateHandler.state$$().params?.groupId || '',
+    );
+    currentGroups$$ = this.groupsStore.currentGroups$$;
+    groupsPath$$ = this.groupsStore.groupsPath$$;
     currentPath$$ = computed(() => {
         // Todo:
         // Add all organizations if current user is a CP user
