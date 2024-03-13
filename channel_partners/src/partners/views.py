@@ -934,14 +934,25 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     lookup_field = 'email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = CloudUser.objects.all().prefetch_related(Prefetch('organizationtouser_set', queryset=OrganizationToUser.objects.all(), to_attr='organization_relations')).distinct()
+    queryset = CloudUser.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.UserFilter
     _organization = None
 
     def get_queryset(self):
         organization = self.get_organization()
-        return self.queryset.filter(organizations=organization)
+        prefetched_relations = Prefetch(
+            'organizationtouser_set',
+            queryset=OrganizationToUser.objects.filter(organization=organization),
+            to_attr='organization_relations'
+        )
+        queryset = (
+            self.queryset
+            .filter(organizations=organization)
+            .prefetch_related(prefetched_relations)
+            .distinct()
+        )
+        return queryset
 
     def get_permissions(self):
         perms = [IsAuthenticated()]

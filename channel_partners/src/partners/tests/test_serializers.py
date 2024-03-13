@@ -630,14 +630,16 @@ class TestOrganizationUserSerializer:
         self.org = organization_factory(channel_partner=self.cp)
         self.groups = [system_group_factory(organization=self.org) for _ in range(4)]
         self.user = cloud_user_factory(email='test@networkoptix.com')
+        # create another user relation to test prefetched data
+        org_user_factory(organization=organization_factory(), email=self.user.email,
+                         role=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
         self.org_adm_name = 'Organization Administrator'
         self.org_power_user_name = 'Power User'
 
     def test_create_valid(self, sys_group_user_factory, arf, org_user_factory, mock_account_status,
-                          mock_get_customization_request, mock_post_notification, httpx_mock):
-
+                          mock_get_customization_request, mock_post_notification, httpx_mock, mocker):
         data = {
             'email': self.user.email,
             'role': self.org_adm_name
@@ -676,7 +678,7 @@ class TestOrganizationUserSerializer:
             prefetch_related(
                 Prefetch(
                     'organizationtouser_set',
-                    queryset=OrganizationToUser.objects.all(),
+                    queryset=OrganizationToUser.objects.filter(organization=self.org),
                     to_attr='organization_relations'
                 )
             ).distinct().get(email=self.user.email))
@@ -693,7 +695,7 @@ class TestOrganizationUserSerializer:
             prefetch_related(
                 Prefetch(
                     'organizationtouser_set',
-                    queryset=OrganizationToUser.objects.all(),
+                    queryset=OrganizationToUser.objects.filter(organization=self.org),
                     to_attr='organization_relations'
                 )
             ).distinct().get(email=group_user.user.email))
@@ -704,7 +706,8 @@ class TestOrganizationUserSerializer:
             'rolesIds': [str(OrganizationRoles.ORGANIZATION_ADMINISTRATOR)]
         }
         assert serializer.data['roles'] == []
-
+        httpx_mock.reset(False)
+        notification_send_url = mock_post_notification()
         user = group_user.user
         data = {
             'email': user.email,
@@ -721,7 +724,12 @@ class TestOrganizationUserSerializer:
         assert serializer.data['fullName'] == user.full_name
         assert len(serializer.data['groupRoles']) == 0
         assert serializer.data['roles'] == [self.org_adm_name]
-        assert not OrganizationToUser.objects.filter(user=user, organization=self.org, system_group__isnull=False).exists()
+        # Group role deleted
+        assert not (OrganizationToUser.objects
+                    .filter(user=user, organization=self.org, system_group__isnull=False)
+                    .exists())
+        # Notification is not sent
+        assert httpx_mock.get_request(url=notification_send_url) is None
 
     def test_create_invalid_system_group(self):
         data = {
@@ -767,6 +775,7 @@ class TestOrganizationUserSerializer:
 
         assert serializer.is_valid() is False
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+
 
 class TestSystemGroupUserSerializer:
 
