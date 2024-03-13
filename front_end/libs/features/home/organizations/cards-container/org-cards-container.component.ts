@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { map, switchMap } from 'rxjs';
+import { firstValueFrom, map, switchMap } from 'rxjs';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
@@ -18,10 +18,12 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
     GroupItem,
+    GroupUser,
     OrgPermissions,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -30,6 +32,7 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
+
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -58,6 +61,7 @@ export class NxOrganizationCardContainerComponent {
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 
+    orgUserStore = inject(OrgUsersStore);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     orgPermissions$$ = computed(() => this.currentOrg$$()?.ownPermissions || []);
     canManageSystems$$ = computed<boolean>(() =>
@@ -78,7 +82,6 @@ export class NxOrganizationCardContainerComponent {
         private store: Store,
         private dialogsService: NxDialogsService,
         protected route: ActivatedRoute,
-        protected router: Router,
         private cpService: NxChannelPartnersService,
         private translateService: TranslateService,
         private vmsClient: NxVmsClientService,
@@ -114,6 +117,14 @@ export class NxOrganizationCardContainerComponent {
                     this.groupsStore.addItemWithUndo(group);
                 }
             });
+    }
+
+    groupUsers?: Promise<GroupUser[]>;
+
+    prefetchDependencies(): void {
+        this.groupUsers = firstValueFrom(
+            this.cpService.getGroupUsers(this.groupsStore.currentGroupId$$().id),
+        ).catch(() => []);
     }
 
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
@@ -182,10 +193,28 @@ export class NxOrganizationCardContainerComponent {
                 {
                     name: deleteAction,
                     id: group.id,
-                    action: () => {
+                    action: async () => {
+                        const groupUsers = (await this.groupUsers) || [];
+                        const warning =
+                            groupUsers.length && group.systemCount
+                                ? ({
+                                      type: 'warning',
+                                      title: staticLang.channelPartners.orgs.groupAction
+                                          .deleteWarning.title,
+                                      message: {
+                                          value: staticLang.channelPartners.orgs.groupAction
+                                              .deleteWarning.message,
+                                          params: {
+                                              systemCount: group.systemCount.toString(),
+                                              userCount: groupUsers.length.toString(),
+                                          },
+                                      },
+                                  } as const)
+                                : undefined;
                         this.dialogsService
                             .confirm({
                                 title: deleteAction,
+                                warning,
                                 footer: {
                                     actionLabel: deleteAction,
                                     cancelLabel: staticLang.channelPartners.orgs.groupAction.cancel,

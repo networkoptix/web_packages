@@ -2023,5 +2023,6 @@
     "{title} - webadmin - %VMS_NAME%": "{title} - webadmin - %VMS_NAME%",
     "{usageSpace} ({percentage}%)": "{usageSpace} ({percentage}%)",
     "{used} of {total} ({percent}%) is used": "{used} of {total} ({percent}%) is used",
+    "{userCount, plural, one{# user} other{# users}} will lose access to {systemCount, plural, one{# system} other{# systems}}": "{userCount, plural, one{# user} other{# users}} will lose access to {systemCount, plural, one{# system} other{# systems}}",
     "\u2013 Different Values \u2013": "\u2013 Different Values \u2013"
 }

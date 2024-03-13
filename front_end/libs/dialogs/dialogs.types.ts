@@ -86,10 +86,18 @@ export interface Alert extends Generic {
     data: AlertData;
 }
 
-interface ConfirmData extends GenericData {
-    footer: Omit<ActionableGenericFooter, 'actionable'>;
+interface ConfirmWarning {
+    type: 'warning'; // Only including warning for now.
+    title: Translatable;
+    message: Translatable;
 }
-export interface Confirm extends Generic {
+
+interface ConfirmData extends Omit<GenericData, 'footer'> {
+    warning?: ConfirmWarning;
+    footer: Omit<ActionableGenericFooter, 'actionable'> &
+        Partial<Pick<ActionableGenericFooter, 'actionable'>>;
+}
+export interface Confirm extends DialogType<ConfirmData, boolean> {
     data: ConfirmData;
 }
 

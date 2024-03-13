@@ -27,6 +27,22 @@
     <ng-template #safe>
         <p [innerHTML]="message | nxTranslate | safe: 'html'"></p>
     </ng-template>
+    @if (dialogData.warning; as warning) {
+        <div
+            class="warning-block"
+            [ngClass]="'type-' + warning.type"
+        >
+            <div class="warning-heading">
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [src]="icons.dirNonStandard + warning.type + '.svg'"
+                ></svg-icon>
+                <span>{{ warning.title | nxTranslate }}</span>
+            </div>
+            <div class="warning-message">{{ warning.message | nxTranslate }}</div>
+        </div>
+    }
 </div>
 
 <div
