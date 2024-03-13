@@ -851,7 +851,7 @@ class TestSystemGroupUserSerializer:
         group_rel = serializer.save()
         assert group_rel.roles == [OrganizationRoles.ADMINISTRATOR]
         assert group_rel.user == user
-        user_rels = OrganizationToUser.objects.filter(organization=self.org, user=user)
+        user_rels = OrganizationToUser.objects.filter(organization=self.org, user=user, system_group=self.group)
         assert user_rels.count() == 1
 
     def test_groups_overlap_org_user(self, org_user_factory):

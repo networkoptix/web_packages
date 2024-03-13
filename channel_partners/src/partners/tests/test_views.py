@@ -1632,7 +1632,7 @@ class TestSystemGroupUserViewSet:
         user = user_rel.user
         data = {
             'email': user.email,
-            'role': 'Power User'
+            'roleId': str(OrganizationRoles.POWER_USER)
         }
         request = arf.post('/', data=data)
         mock_auth_with_user(self.org_user)
@@ -1646,6 +1646,7 @@ class TestSystemGroupUserViewSet:
         assert response.data['roles'] == ['Power User']
         assert response.data['rolesIds'] == [str(OrganizationRoles.POWER_USER)]
         assert httpx_mock.get_request(url=notification_send_url) is None
+        assert OrganizationToUser.objects.filter(organization=self.org, system_group=self.group, user=user).exists()
 
     def test_update_org_user_400(
             self, mock_auth_with_user, arf, org_user_factory,
@@ -1693,7 +1694,7 @@ class TestSystemGroupUserViewSet:
         assert not OrganizationToUser.objects.filter(
             organization=self.org, user=user, system_group__isnull=True
         ).exists()
-        assert OrganizationToUser.objects.filter(user=user, organization=self.org).count() == 1
+        assert OrganizationToUser.objects.filter(user=user, organization=self.org, system_group=self.group).exists()
 
     def test_bulk_delete_403(self, channel_partner_factory, organization_factory, org_user_factory,
                              mock_auth_with_user, arf):
@@ -4337,6 +4338,22 @@ class TestCloudSystemNestedViewSetPermissions:
         response = self.client.get(path=path)
         assert response.status_code == 403
 
+    def test_list_group_user(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.group_user_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.group_user_lvl_2)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_admin_lvl_1)
+        path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
 
 class TestCloudSystemViewSetPermissions:
     @pytest.fixture(autouse=True, scope='function')
