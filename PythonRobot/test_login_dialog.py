@@ -20,24 +20,23 @@ from pages.systems_page import SystemsPage
 from variables import ENV
 
 
-def allows_login_with_correct_credentials_and_log_out(cloud_user: CloudAccount):
+def allows_login_with_correct_credentials_and_log_out(driver, cloud_user: CloudAccount):
     """C24212    C24213    smoke    ci    C94717    C94719."""
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        login = LoginDialog(driver)
-        login.email_input().input_text(cloud_user.email)
-        login.next_button().click()
-        login.password_input().input_text(cloud_user.password)
-        login.login_button().click()
-        SystemsPage(driver).no_systems().wait_until_visible()
-        header.account_dropdown().click()
-        header.log_out_option().click()
-        landing_page = LandingPage(driver)
-        landing_page.wait_until_loaded()
-        landing_page.location_is_correct(url=f"{ENV}/")
-        print("pass")
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login = LoginDialog(driver)
+    login.email_input().input_text(cloud_user.email)
+    login.next_button().click()
+    login.password_input().input_text(cloud_user.password)
+    login.login_button().click()
+    SystemsPage(driver).no_systems().wait_until_visible()
+    header.account_dropdown().click()
+    header.log_out_option().click()
+    landing_page = LandingPage(driver)
+    landing_page.wait_until_loaded()
+    landing_page.location_is_correct(url=f"{ENV}/")
+    print("pass")
 
 
 def allows_log_in_with_existing_email_in_uppercase(cloud_user: CloudAccount):

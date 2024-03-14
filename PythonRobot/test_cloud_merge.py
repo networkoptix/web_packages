@@ -16,28 +16,28 @@ from variables import ENV
 rb = RobotVariables("en_US")
 
 
-def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaserver):
-    with get_chrome() as driver:
-        url = ENV + f"/systems/{first_server.id}"
-        driver.get(url)
-        first_server_owner = first_server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
-        sys_admin = SystemAdmin(driver)
-        sys_admin.merge_with_another_system_button().click()
-        merge_dialog = MergeDialog(driver)
-        merge_dialog.ensure_system_online(second_server.name, timeout=20)
-        merge_dialog.primary_first_system().wait_until_visible()
-        merge_dialog.primary_second_system().wait_until_visible()
-        merge_dialog.get_next_button().click()
-        merge_dialog.merge_systems_button().click()
-        sys_admin.system_is_being_merged_header().wait_until_visible()
-        message = sys_admin.systems_merged_success_toast_notification(first_server.name, second_server.name)
-        message.wait_until_visible(90)
-        message.wait_until_not_visible(10)
-        driver.refresh()
-        left_menu = SystemLeftMenu(driver)
-        left_menu.servers_button().click()
-        assert left_menu.servers_count() == 2, f"Len was {left_menu.servers_count()}"
+def merge_from_primary_system(driver, first_server: Mediaserver, second_server: Mediaserver):
+    # with get_chrome() as driver:
+    url = ENV + f"/systems/{first_server.id}"
+    driver.get(url)
+    first_server_owner = first_server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
+    sys_admin = SystemAdmin(driver)
+    sys_admin.merge_with_another_system_button().click()
+    merge_dialog = MergeDialog(driver)
+    merge_dialog.ensure_system_online(second_server.name, timeout=20)
+    merge_dialog.primary_first_system().wait_until_visible()
+    merge_dialog.primary_second_system().wait_until_visible()
+    merge_dialog.get_next_button().click()
+    merge_dialog.merge_systems_button().click()
+    sys_admin.system_is_being_merged_header().wait_until_visible()
+    message = sys_admin.systems_merged_success_toast_notification(first_server.name, second_server.name)
+    message.wait_until_visible(90)
+    message.wait_until_not_visible(10)
+    driver.refresh()
+    left_menu = SystemLeftMenu(driver)
+    left_menu.servers_button().click()
+    assert left_menu.servers_count() == 2, f"Len was {left_menu.servers_count()}"
 
 
 def merge_from_secondary_system(first_server: Mediaserver, second_server: Mediaserver):

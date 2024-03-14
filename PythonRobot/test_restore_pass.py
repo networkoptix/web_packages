@@ -8,58 +8,56 @@ from pages.login import ResetPasswordForm
 from variables import ENV
 
 
-def sets_new_password_and_successfully_logs_in(user: CloudAccount):
+def sets_new_password_and_successfully_logs_in(driver, user: CloudAccount):
     """C26260 email."""
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        login = LoginDialog(driver)
-        login.email_input().input_text(user.email)
-        login.next_button().click()
-        login.forgot_password_button().click()
-        login.reset_password_email_input().wait_until_text_is(user.email)
-        login.reset_password_button().click()
-        with EmailClient(email_alias=user.email) as client:
-            email_message = client.wait_for_reset_password_email()
-            link = email_message.get_restore_password_link()
-            client.delete_email(email_message)
-        driver.get(link)
-        reset_password = ResetPasswordForm(driver)
-        reset_password.wait_until_visible()
-        reset_password.type_new_password(user.password)
-        reset_password.click_next()
-        assert reset_password.get_reset_success_text() == "Password is set!"
-        reset_password.click_next()
-        login.password_input().input_text(user.password)
-        login.login_button().click()
-        assert header.is_logged_in()
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login = LoginDialog(driver)
+    login.email_input().input_text(user.email)
+    login.next_button().click()
+    login.forgot_password_button().click()
+    login.reset_password_email_input().wait_until_text_is(user.email)
+    login.reset_password_button().click()
+    with EmailClient(email_alias=user.email) as client:
+        email_message = client.wait_for_reset_password_email()
+        link = email_message.get_restore_password_link()
+        client.delete_email(email_message)
+    driver.get(link)
+    reset_password = ResetPasswordForm(driver)
+    reset_password.wait_until_visible()
+    reset_password.type_new_password(user.password)
+    reset_password.click_next()
+    assert reset_password.get_reset_success_text() == "Password is set!"
+    reset_password.click_next()
+    login.password_input().input_text(user.password)
+    login.login_button().click()
+    assert header.is_logged_in()
 
 
-def check_restore_password_email(user: CloudAccount):
+def check_restore_password_email(driver, user: CloudAccount):
     """Email."""
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        login = LoginDialog(driver)
-        login.email_input().input_text(user.email)
-        login.next_button().click()
-        login.forgot_password_button().click()
-        login.reset_password_button().click()
-        with EmailClient(email_alias=user.email) as client:
-            email = client.wait_for_reset_password_email()
-            assert email.get_button_color(ENV) == "#2FA2DB"
-            assert email.is_cloud_name_present("VMS Demo Cloud")
-            assert email.get_subject() == "Reset your password"
-            expected_links = [
-                "https://support.networkoptix.com",
-                "https://networkoptix.com",
-                ENV,
-                f'{ENV}/authorize/restore_password',
-                ]
-            email.find_links_in_body(expected_links)
-            client.delete_email(email)
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login = LoginDialog(driver)
+    login.email_input().input_text(user.email)
+    login.next_button().click()
+    login.forgot_password_button().click()
+    login.reset_password_button().click()
+    with EmailClient(email_alias=user.email) as client:
+        email = client.wait_for_reset_password_email()
+        assert email.get_button_color(ENV) == "#2FA2DB"
+        assert email.is_cloud_name_present("VMS Demo Cloud")
+        assert email.get_subject() == "Reset your password"
+        expected_links = [
+            "https://support.networkoptix.com",
+            "https://networkoptix.com",
+            ENV,
+            f'{ENV}/authorize/restore_password',
+            ]
+        email.find_links_in_body(expected_links)
+        client.delete_email(email)
 
 
 def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):

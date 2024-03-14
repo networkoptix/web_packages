@@ -23,16 +23,15 @@ login = "noptixautoqa+owner@gmail.com"
 rb = RobotVariables("en_US")
 
 
-def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
+def test_can_access_account_page_from_dropdown(driver, cloud_user: CloudAccount):
     """1 Can access the account page from dropdown."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        header.account_dropdown().click()
-        header.account_settings_option().click()
-        AccountPage(driver).wait_until_loaded()
+    driver.get(rb.ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+    header.account_dropdown().click()
+    header.account_settings_option().click()
+    AccountPage(driver).wait_until_loaded()
 
 
 def test_can_access_account_page_from_direct_link():
@@ -58,66 +57,64 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
         AccountPage(driver).wait_until_loaded()
 
 
-def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
+def test_changing_first_name_and_saving_maintains_that_setting(driver,cloud_user: CloudAccount):
     """5 changing first name and saving maintains that setting."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV + "/account")
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        HeaderNav(driver).account_dropdown().wait_until_visible()
-        account_page = AccountPage(driver)
+    with get_chrome() as setup_driver:
+        setup_driver.get(rb.ENV + "/account")
+        LoginDialog(setup_driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(setup_driver).account_dropdown().wait_until_visible()
+        account_page = AccountPage(setup_driver)
         account_page.wait_until_loaded()
         account_page.first_name().input_text("namechanged")
         # todo: the save button doesn't appear.
         account_page.save_button().click()
-        success_toast = SuccessToast(driver)
+        success_toast = SuccessToast(setup_driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
         success_toast.wait_until_not_visible()
-    with get_chrome() as driver:
-        url1 = rb.ENV + "/account"
-        driver.get(url1)
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        HeaderNav(driver).account_dropdown().wait_until_visible()
-        account_page = AccountPage(driver)
-        account_page.wait_until_loaded()
-        text = account_page.first_name().get_text()
-        assert text == "namechanged", "Name was not 'namechanged'"
-        account_page.first_name().input_text(rb.TEST_FIRST_NAME)
-        account_page.save_button().click()
-        success_toast = SuccessToast(driver)
-        success_toast.wait_until_visible()
-        assert success_toast.get_text() == "Your account is successfully saved"
-        success_toast.wait_until_not_visible()
+    url1 = rb.ENV + "/account"
+    driver.get(url1)
+    LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+    HeaderNav(driver).account_dropdown().wait_until_visible()
+    account_page = AccountPage(driver)
+    account_page.wait_until_loaded()
+    text = account_page.first_name().get_text()
+    assert text == "namechanged", "Name was not 'namechanged'"
+    account_page.first_name().input_text(rb.TEST_FIRST_NAME)
+    account_page.save_button().click()
+    success_toast = SuccessToast(driver)
+    success_toast.wait_until_visible()
+    assert success_toast.get_text() == "Your account is successfully saved"
+    success_toast.wait_until_not_visible()
 
 
-def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
+def test_changing_last_name_and_saving_maintains_that_setting(driver, cloud_user: CloudAccount):
     """6 changing last name and saving maintains that setting."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV + "/account")
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        HeaderNav(driver).account_dropdown().wait_until_visible()
-        account_page = AccountPage(driver)
+    with get_chrome() as setup_driver:
+        setup_driver.get(rb.ENV + "/account")
+        LoginDialog(setup_driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(setup_driver).account_dropdown().wait_until_visible()
+        account_page = AccountPage(setup_driver)
         account_page.wait_until_loaded()
         account_page.last_name().input_text("namechanged")
         account_page.save_button().click()
-        success_toast = SuccessToast(driver)
+        success_toast = SuccessToast(setup_driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
         success_toast.wait_until_not_visible()
-    with get_chrome() as driver:
-        url1 = rb.ENV + "/account"
-        driver.get(url1)
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        HeaderNav(driver).account_dropdown().wait_until_visible()
-        account_page = AccountPage(driver)
-        account_page.wait_until_loaded()
-        assert account_page.last_name().get_text() == "namechanged"
-        account_page.last_name().input_text("hamill")
-        account_page.save_button().click()
-        success_toast = SuccessToast(driver)
-        success_toast.wait_until_visible()
-        assert success_toast.get_text() == "Your account is successfully saved"
-        success_toast.wait_until_not_visible()
+    url1 = rb.ENV + "/account"
+    driver.get(url1)
+    LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+    HeaderNav(driver).account_dropdown().wait_until_visible()
+    account_page = AccountPage(driver)
+    account_page.wait_until_loaded()
+    assert account_page.last_name().get_text() == "namechanged"
+    account_page.last_name().input_text("hamill")
+    account_page.save_button().click()
+    success_toast = SuccessToast(driver)
+    success_toast.wait_until_visible()
+    assert success_toast.get_text() == "Your account is successfully saved"
+    success_toast.wait_until_not_visible()
 
 
 def test_first_name_is_required():

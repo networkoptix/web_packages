@@ -22,42 +22,38 @@ CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 
 
-def can_log_in_to_system_from_direct_link(server: Mediaserver):
+def can_log_in_to_system_from_direct_link(driver, server: Mediaserver):
     """Smoke    ci    C30825."""
-    with get_chrome() as driver:
-        url = ENV + f"/systems/{server.id}"
-        driver.get(url)
-        LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
-        HeaderNav(driver).account_dropdown()
-        SystemAdmin(driver)
-        print("pass")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
+    HeaderNav(driver).account_dropdown()
+    SystemAdmin(driver)
 
 
-def owner_can_disconnect_system_from_cloud(server: Mediaserver):
+def owner_can_disconnect_system_from_cloud(driver, server: Mediaserver):
     """C41883   C47020    webadmin    smoke    ci    C69845."""
-    with get_chrome() as driver:
-        url = ENV + f"/systems/{server.id}"
-        driver.get(url)
-        owner = server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(owner.email, password)
-        HeaderNav(driver).account_dropdown()
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, password)
+    HeaderNav(driver).account_dropdown()
 
-        sys_admin = SystemAdmin(driver)
-        sys_admin.disconnect_from_cloud_button().click()
-        sys_admin.disconnect_modal_close_button().click()
-        sys_admin.merge_with_another_system_button().wait_until_visible()
-        sys_admin.disconnect_from_cloud_button().click()
-        sys_admin.disconnect_modal_cancel_button().click()
-        sys_admin.merge_with_another_system_button().wait_until_visible()
-        sys_admin.disconnect_from_cloud_button().click()
-        sys_admin.disconnect_system_modal_button().click()
-        message = sys_admin.disconnect_from_cloud_toast_notification()
-        message.wait_until_visible()
-        message.wait_until_not_visible(10)
-        assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, (
-            "Number of systems owned was not 0"
-            )
-        print("pass")
+    sys_admin = SystemAdmin(driver)
+    sys_admin.disconnect_from_cloud_button().click()
+    sys_admin.disconnect_modal_close_button().click()
+    sys_admin.merge_with_another_system_button().wait_until_visible()
+    sys_admin.disconnect_from_cloud_button().click()
+    sys_admin.disconnect_modal_cancel_button().click()
+    sys_admin.merge_with_another_system_button().wait_until_visible()
+    sys_admin.disconnect_from_cloud_button().click()
+    sys_admin.disconnect_system_modal_button().click()
+    message = sys_admin.disconnect_from_cloud_toast_notification()
+    message.wait_until_visible()
+    message.wait_until_not_visible(10)
+    assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, (
+        "Number of systems owned was not 0"
+        )
 
 
 def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_viewer: CloudAccount):

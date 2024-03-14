@@ -24,55 +24,51 @@ def download_sdk_link():
         Footer(driver).wait_until_footer_is_visible_webadmin()
 
 
-def support_link():
+def support_link(driver):
     """3. Support leads to the proper support site."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        footer = Footer(driver)
-        footer.wait_until_footer_is_visible_cloud()
-        footer.support_link().click()
-        driver.wait_until_number_of_tabs_are_open(2)
-        driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
-        driver.location_should_contain(rb.SUPPORT_URL)
+    driver.get(rb.ENV)
+    footer = Footer(driver)
+    footer.wait_until_footer_is_visible_cloud()
+    footer.support_link().click()
+    driver.wait_until_number_of_tabs_are_open(2)
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+    driver.location_should_contain(rb.SUPPORT_URL)
 
 
-def copyright_link():
+def copyright_link(driver):
     """4. Copyright leads to the proper site."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        footer = Footer(driver)
-        footer.wait_until_footer_is_visible_cloud()
-        time.sleep(1)
-        footer.copyright_link().click()
-        driver.wait_until_number_of_tabs_are_open(2)
-        driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
-        driver.location_should_be(rb.COPYRIGHT_URL)
+    driver.get(rb.ENV)
+    footer = Footer(driver)
+    footer.wait_until_footer_is_visible_cloud()
+    time.sleep(1)
+    footer.copyright_link().click()
+    driver.wait_until_number_of_tabs_are_open(2)
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+    driver.location_should_be(rb.COPYRIGHT_URL)
 
 
-def terms_link():
+def terms_link(driver):
     """5. Terms leads to the proper EULA site."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        footer = Footer(driver)
-        footer.wait_until_footer_is_visible_cloud()
-        footer.terms_link().click()
-        time.sleep(2)
-        driver.location_should_contain(rb.TERMS_URL)
+    driver.get(rb.ENV)
+    footer = Footer(driver)
+    footer.wait_until_footer_is_visible_cloud()
+    footer.terms_link().click()
+    time.sleep(2)
+    driver.location_should_contain(rb.TERMS_URL)
 
 
-def privacy_link():
+def privacy_link(driver):
     """6. Privacy leads to the proper page."""
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        footer = Footer(driver)
-        footer.wait_until_footer_is_visible_cloud()
-        footer.privacy_link().click()
-        driver.wait_until_number_of_tabs_are_open(2)
-        driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
-        driver.location_should_be(rb.PRIVACY_POLICY_FULL_URL)
+    driver.get(rb.ENV)
+    footer = Footer(driver)
+    footer.wait_until_footer_is_visible_cloud()
+    footer.privacy_link().click()
+    driver.wait_until_number_of_tabs_are_open(2)
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+    driver.location_should_be(rb.PRIVACY_POLICY_FULL_URL)
 
 
 if __name__ == "__main__":

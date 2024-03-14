@@ -12,14 +12,13 @@ from pages.register_form import RegisterForm
 rb = RobotVariables("en_US")
 
 
-def register_and_activate():
+def register_and_activate(driver):
     """1. Register and Activate."""
-    with get_chrome() as driver:
-        random_email = get_random_email(sendemail=True)
-        with CloudAccount(random_email) as user:
-            user.activate()
-            driver.get(rb.ENV + "/account")
-            LoginDialog(driver).basic_cloud_login(user.email, user.password)
+    random_email = get_random_email(sendemail=True)
+    with CloudAccount(random_email) as user:
+        user.activate()
+        driver.get(rb.ENV + "/account")
+        LoginDialog(driver).basic_cloud_login(user.email, user.password)
 
 
 def register_and_activate_curly_text():

@@ -20,16 +20,15 @@ rb = RobotVariables("en_US")
 CLOUD_API = CloudPortalAPI()
 
 
-def page_in_anonymous_state_register_header():
+def page_in_anonymous_state_register_header(driver):
     """
     1. Should open register page in anonymous state by clicking Register button on top right corner.
 
     [tags]    smoke    ci
     """
-    with get_chrome() as driver:
-        driver.get(rb.ENV)
-        HeaderNav(driver).create_account().click()
-        RegisterForm(driver)
+    driver.get(rb.ENV)
+    HeaderNav(driver).create_account().click()
+    RegisterForm(driver)
 
 
 def open_from_success_page():
@@ -75,18 +74,17 @@ def page_in_anonymouse_state_navigation():
         RegisterForm(driver)
 
 
-def register_user_with_correct_credentials():
+def register_user_with_correct_credentials(driver):
     """
     5. Should register user with correct credentials.
 
     [tags]    smoke    ci
     """
     email = get_random_email(sendemail=True)
-    with get_chrome() as driver:
-        driver.get(f'{rb.ENV}/authorize?client_type=create')
-        register_form = RegisterForm(driver)
-        register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
-        register_form.account_creation_success()
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    register_form.account_creation_success()
 
 
 def valid_inputs_no_errors():
@@ -268,19 +266,18 @@ def cant_register_email_already_activated(activated_cloud_user: CloudAccount):
         register_form.account_already_exists_error()
 
 
-def check_register_email():
+def check_register_email(driver):
     """
     21. Check registration email links, colors, cloud name, and user name.
 
     [tags]    C24211    C43021    Customizations    smoke    ci
     """
-    with get_chrome() as driver:
-        email = get_random_email(sendemail=True)
-        driver.get(rb.ENV)
-        HeaderNav(driver).create_account().click()
-        register_form = RegisterForm(driver)
-        register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
-        time.sleep(10)
+    email = get_random_email(sendemail=True)
+    driver.get(rb.ENV)
+    HeaderNav(driver).create_account().click()
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    time.sleep(10)
 
     with EmailClient(email_alias=email) as client:
         email_message = client.wait_for_activate_account_email()

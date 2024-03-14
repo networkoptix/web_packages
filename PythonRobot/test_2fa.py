@@ -16,73 +16,71 @@ from variables import ENV
 CLOUD_API = CloudPortalAPI()
 
 
-def enable_and_login_with_2fa(server: Mediaserver):
+def enable_and_login_with_2fa(driver, server: Mediaserver):
     """
     1. Enable and perform login with 2fa
     [tags]    smoke    ci    C107768    C107769
     """
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        owner = server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-        header.account_dropdown().click()
-        header.security_option().click()
-        security_form = SecurityForm(driver)
-        security_form.turn_on_2fa(owner)
-        security_form.twofa_enabled_badge()
-        time.sleep(2)
-        header.log_out()
-        header.log_in_button().click()
-        LoginDialog(driver).twofa_cloud_login(
-            owner.email,
-            owner.password,
-            owner.get_otp(),
-            )
-        header.account_dropdown().click()
-        CLOUD_API.toggle_2fa_off_api(
-            owner,
-            verification_code=owner.get_otp()
-            )
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)
+    security_form.turn_on_2fa(owner)
+    security_form.twofa_enabled_badge()
+    time.sleep(2)
+    header.log_out()
+    header.log_in_button().click()
+    LoginDialog(driver).twofa_cloud_login(
+        owner.email,
+        owner.password,
+        owner.get_otp(),
+        )
+    header.account_dropdown().click()
+    CLOUD_API.toggle_2fa_off_api(
+        owner,
+        verification_code=owner.get_otp()
+        )
 
 
-def login_with_backup_code(server: Mediaserver):
+def login_with_backup_code(driver, server: Mediaserver):
     """
     2. 2fa login with random backup code
     [Tags]    smoke    ci    C107770
     """
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(
+        owner.email,
+        owner.password
+        )
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)
+    security_form.turn_on_2fa(owner)
+    security_form.twofa_enabled_badge()
+    backup_code = owner.pop_backup_code()
+    for _ in range(2):
+        time.sleep(2)
+        header.log_out()
         header.log_in_button().click()
-        owner = server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(
+        LoginDialog(driver).twofa_backup_cloud_login(
             owner.email,
-            owner.password
+            owner.password,
+            backup_code,
             )
-        SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-        header.account_dropdown().click()
-        header.security_option().click()
-        security_form = SecurityForm(driver)
-        security_form.turn_on_2fa(owner)
-        security_form.twofa_enabled_badge()
-        backup_code = owner.pop_backup_code()
-        for _ in range(2):
-            time.sleep(2)
-            header.log_out()
-            header.log_in_button().click()
-            LoginDialog(driver).twofa_backup_cloud_login(
-                owner.email,
-                owner.password,
-                backup_code,
-                )
-        security_form.twofa_backup_code_error().wait_until_visible()
-        CLOUD_API.toggle_2fa_off_api(
-            owner,
-            verification_code=owner.get_otp()
-            )
+    security_form.twofa_backup_code_error().wait_until_visible()
+    CLOUD_API.toggle_2fa_off_api(
+        owner,
+        verification_code=owner.get_otp()
+        )
 
 
 def login_with_qr_code(server: Mediaserver):
@@ -116,103 +114,100 @@ def login_with_qr_code(server: Mediaserver):
         )
 
 
-def disabling_2fa(server: Mediaserver):
+def disabling_2fa(driver, server: Mediaserver):
     """
     5. Successful disabling 2FA for user with enabled 2FA for the whole account
     [Tags]    smoke    ci    C107771
     """
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        owner = server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-        header.account_dropdown().click()
-        header.security_option().click()
-        security_form = SecurityForm(driver)
-        security_form.turn_on_2fa(owner)
-        security_form.twofa_enabled_badge()
-        assert security_form.twofa_verification_checkbox().is_checked()
-        security_form.turn_off_2fa(owner.get_otp())
-        security_form.twofa_disabled_badge()
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)
+    security_form.turn_on_2fa(owner)
+    security_form.twofa_enabled_badge()
+    assert security_form.twofa_verification_checkbox().is_checked()
+    security_form.turn_off_2fa(owner.get_otp())
+    security_form.twofa_disabled_badge()
 
 
-def system_2fa_required(server: Mediaserver):
+def system_2fa_required(driver, server: Mediaserver):
     """
     6.1 2fa is required when accessing only system with 2fa required
     [Tags]    smoke    ci    C110067
     """
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        owner = server.get_cloud_owner()
-        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-        header.account_dropdown().click()
-        header.security_option().click()
-        security_form = SecurityForm(driver)
-        security_form.turn_on_2fa(owner)
-        security_form.twofa_enabled_badge()
-        driver.get(f"{ENV}/systems/{server.id}")
-        system_admin_page = SystemAdmin(driver)
-        system_admin_page.mandatory_2fa_checkbox().select()
-        system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
-        system_admin_page.twofa_enable_button().click()
-        time.sleep(2)
-        header.log_out()
-        header.log_in_button().click()
-        LoginDialog(driver).twofa_cloud_login(
-            owner.email,
-            owner.password,
-            owner.get_otp(),
-            )
-        header.account_dropdown().click()
-        CLOUD_API.toggle_2fa_off_api(
-            owner,
-            verification_code=owner.get_otp(),
-            )
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)
+    security_form.turn_on_2fa(owner)
+    security_form.twofa_enabled_badge()
+    driver.get(f"{ENV}/systems/{server.id}")
+    system_admin_page = SystemAdmin(driver)
+    system_admin_page.mandatory_2fa_checkbox().select()
+    system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
+    system_admin_page.twofa_enable_button().click()
+    time.sleep(2)
+    header.log_out()
+    header.log_in_button().click()
+    LoginDialog(driver).twofa_cloud_login(
+        owner.email,
+        owner.password,
+        owner.get_otp(),
+        )
+    header.account_dropdown().click()
+    CLOUD_API.toggle_2fa_off_api(
+        owner,
+        verification_code=owner.get_otp(),
+        )
 
 
-def twofa_not_required_when_more_than_one_system(server: Mediaserver):
+def twofa_not_required_when_more_than_one_system(driver, server: Mediaserver):
     """
     6.2 2fa is not required when accessing systems page with more than one system
     [Tags]    smoke    ci    C110067
     """
-    with get_chrome() as driver:
-        driver.get(ENV)
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        driver.get(f"{ENV}/systems/{server.id}")
-        owner = server.get_cloud_owner()
+    driver.get(ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    driver.get(f"{ENV}/systems/{server.id}")
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    time.sleep(2)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)
+    security_form.turn_on_2fa(owner)
+    security_form.twofa_enabled_badge()
+    assert security_form.twofa_verification_checkbox().is_checked()
+    security_form.twofa_verification_checkbox().unselect()
+    security_form.twofa_settings_modal_check()
+    security_form.twofa_settings_modal_off_instructions().wait_until_visible()
+    security_form.twofa_settings_modal_apply()
+    security_form.twofa_settings_modal_cancel()
+    security_form.twofa_totp_input().input_text(owner.get_otp())
+    security_form.twofa_settings_modal_apply().click()
+    time.sleep(2)
+    header.log_out()
+    with Suite() as suite:
+        second_server = suite.create_cloud_server(owner)
+        driver.get(f"{ENV}/systems/{second_server.id}")
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        time.sleep(2)
-        SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-        header.account_dropdown().click()
-        header.security_option().click()
-        security_form = SecurityForm(driver)
-        security_form.turn_on_2fa(owner)
-        security_form.twofa_enabled_badge()
-        assert security_form.twofa_verification_checkbox().is_checked()
-        security_form.twofa_verification_checkbox().unselect()
-        security_form.twofa_settings_modal_check()
-        security_form.twofa_settings_modal_off_instructions().wait_until_visible()
-        security_form.twofa_settings_modal_apply()
-        security_form.twofa_settings_modal_cancel()
-        security_form.twofa_totp_input().input_text(owner.get_otp())
-        security_form.twofa_settings_modal_apply().click()
-        time.sleep(2)
-        header.log_out()
-        with Suite() as suite:
-            second_server = suite.create_cloud_server(owner)
-            driver.get(f"{ENV}/systems/{second_server.id}")
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-            SystemAdmin(driver)
-            CLOUD_API.toggle_2fa_off_api(
-                owner,
-                verification_code=owner.get_otp(),
-                )
+        SystemAdmin(driver)
+        CLOUD_API.toggle_2fa_off_api(
+            owner,
+            verification_code=owner.get_otp(),
+            )
 
 
 def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserver):

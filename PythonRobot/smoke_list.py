@@ -31,13 +31,16 @@ from test_system_users import owner_can_remove_user
 from test_system_users import share_with_registered_user_sends_notification
 from test_system_users import share_with_registered_user_works
 from test_system_users import share_with_unregistered_user_sends_notification
+from NoptixLibrary.test_runner import Reporter
+from NoptixLibrary.test_runner import Test
 
 # Todo:
 # ipvd
 # integrations
 
 if __name__ == "__main__":
-    with Suite() as suite:
+    r = Reporter()
+    with Suite(r) as suite:
         cloud_users = suite.create_cloud_accounts()
 
         cloud_owner = suite.create_cloud_account()
@@ -55,43 +58,43 @@ if __name__ == "__main__":
 
         cloud_server_seven = suite.create_cloud_server(cloud_owner_six)
 
-        merge_from_primary_system(cloud_server_seven, cloud_server_six)
+        Test(r, merge_from_primary_system, cloud_server_seven, cloud_server_six).run()
 
-        owner_can_remove_user(cloud_server)
-        share_with_registered_user_works(cloud_server)
-        share_with_unregistered_user_sends_notification(cloud_server)
-        share_with_registered_user_sends_notification(cloud_server)
-        email_is_locked_when_unregistered_user_is_invited(cloud_server)
+        Test(r, owner_can_remove_user, cloud_server).run()
+        Test(r, share_with_registered_user_works, cloud_server).run()
+        Test(r, share_with_unregistered_user_sends_notification, cloud_server).run()
+        Test(r, share_with_registered_user_sends_notification,cloud_server).run()
+        Test(r, email_is_locked_when_unregistered_user_is_invited, cloud_server).run()
 
-        owner_can_disconnect_system_from_cloud(cloud_server_second)
-        can_log_in_to_system_from_direct_link(cloud_server)
+        Test(r, owner_can_disconnect_system_from_cloud,cloud_server_second).run()
+        Test(r, can_log_in_to_system_from_direct_link,cloud_server).run()
 
-        enable_and_login_with_2fa(cloud_server_third)
-        login_with_backup_code(cloud_server_third)
-        disabling_2fa(cloud_server_third)
-        system_2fa_required(cloud_server_third)
-        twofa_not_required_when_more_than_one_system(cloud_server_fourth)
+        Test(r, enable_and_login_with_2fa,cloud_server_third).run()
+        Test(r, login_with_backup_code,cloud_server_third).run()
+        Test(r, disabling_2fa,cloud_server_third).run()
+        Test(r, system_2fa_required,cloud_server_third).run()
+        Test(r, twofa_not_required_when_more_than_one_system,cloud_server_fourth).run()
 
         dummy_account = suite.create_cloud_account()
-        test_changing_first_name_and_saving_maintains_that_setting(dummy_account)
-        test_changing_last_name_and_saving_maintains_that_setting(dummy_account)
-        test_can_access_account_page_from_dropdown(dummy_account)
+        Test(r, test_changing_first_name_and_saving_maintains_that_setting,dummy_account).run()
+        Test(r, test_changing_last_name_and_saving_maintains_that_setting,dummy_account).run()
+        Test(r, test_can_access_account_page_from_dropdown,dummy_account).run()
         with CloudAccount(get_random_email(sendemail=True)) as user:
             user.activate()
-            sets_new_password_and_successfully_logs_in(user)
-            check_restore_password_email(user)
+            Test(r, sets_new_password_and_successfully_logs_in,user).run()
+            Test(r, check_restore_password_email,user).run()
 
-        password_is_actually_changed_and_login_works_with_new_password(cloud_owner)
+        Test(r, password_is_actually_changed_and_login_works_with_new_password,cloud_owner).run()
 
-        support_link()
-        copyright_link()
-        privacy_link()
-        terms_link()
+        Test(r, support_link).run()
+        Test(r, copyright_link).run()
+        Test(r, privacy_link).run()
+        Test(r, terms_link).run()
 
-        register_and_activate()
+        Test(r, register_and_activate).run()
 
-        allows_login_with_correct_credentials_and_log_out()
+        Test(r, allows_login_with_correct_credentials_and_log_out).run()
 
-        page_in_anonymous_state_register_header()
-        register_user_with_correct_credentials()
-        check_register_email()
+        Test(r, page_in_anonymous_state_register_header).run()
+        Test(r, register_user_with_correct_credentials).run()
+        Test(r, check_register_email).run()

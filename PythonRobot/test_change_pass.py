@@ -34,28 +34,26 @@ def can_be_accessed_via_direct_url(user):
     print("pass")
 
 
-def password_is_actually_changed_and_login_works_with_new_password(user):
-    with get_chrome() as driver:
-        driver.get(f"{ENV}/account/password")
-        LoginDialog(driver).basic_cloud_login(user.email, user.password)
+def password_is_actually_changed_and_login_works_with_new_password(driver, user):
+    driver.get(f"{ENV}/account/password")
+    LoginDialog(driver).basic_cloud_login(user.email, user.password)
 
-        change_pass_form = ChangePassForm(driver)
-        change_pass_form.current_password_input().input_text(user.password)
-        new_password = "qweasd1234"
-        change_pass_form.new_password_input().input_text(new_password)
-        change_pass_form.save_button().click()
-        time.sleep(1)
-        HeaderNav(driver).log_out()
-        header = HeaderNav(driver)
-        header.log_in_button().click()
-        login_dialog = LoginDialog(driver)
-        login_dialog.email_input().input_text(user.email)
-        login_dialog.next_button().click()
-        login_dialog.password_input().input_text(user.password)
-        login_dialog.login_button().click()
-        login_dialog.password_input_error_message()
-        user.password = new_password
-    print("pass")
+    change_pass_form = ChangePassForm(driver)
+    change_pass_form.current_password_input().input_text(user.password)
+    new_password = "qweasd1234"
+    change_pass_form.new_password_input().input_text(new_password)
+    change_pass_form.save_button().click()
+    time.sleep(1)
+    HeaderNav(driver).log_out()
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login_dialog = LoginDialog(driver)
+    login_dialog.email_input().input_text(user.email)
+    login_dialog.next_button().click()
+    login_dialog.password_input().input_text(user.password)
+    login_dialog.login_button().click()
+    login_dialog.password_input_error_message()
+    user.password = new_password
 
 
 def password_with_symbols_is_valid(user):
