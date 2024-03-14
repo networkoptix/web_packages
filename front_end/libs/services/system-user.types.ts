@@ -13,6 +13,7 @@ export interface Permissions {
     viewArchives: boolean;
     viewBookmarks: boolean;
     viewLogs: boolean;
+    viewServices: boolean;
 }
 
 /* Types for dealing with roles.

@@ -287,6 +287,7 @@ export interface GroupItem extends SystemItem {
 
 export interface SystemItem {
     name: string | undefined;
+    groupId: string | null;
     systemId: string;
     type: OrgCardItem;
     system2faEnabled: boolean;

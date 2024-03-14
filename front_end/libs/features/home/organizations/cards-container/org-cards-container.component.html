@@ -83,7 +83,11 @@
                 <div *cdkDragPlaceholder></div>
                 <nx-card
                     class="card-content"
-                    [routerLink]="['/systems', system.systemId]"
+                    [routerLink]="
+                        openServices$$()
+                            ? ['/systems', system.systemId, 'services']
+                            : ['/systems', system.systemId]
+                    "
                     [dropdownItems]="systemActions$$()[system.systemId]"
                 >
                     <h3>{{ system.name }}</h3>

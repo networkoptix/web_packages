@@ -10,7 +10,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom, map, switchMap } from 'rxjs';
 
-import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
+import {
+    selectCurrentOrganization,
+    selectCurrentPartner,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -18,7 +21,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
-import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
@@ -61,8 +63,15 @@ export class NxOrganizationCardContainerComponent {
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 
-    orgUserStore = inject(OrgUsersStore);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
+    openServices$$ = computed(() => {
+        const currentOrg = this.currentOrg$$();
+        return (
+            currentOrg?.channelPartner === this.currentPartner$$()?.id &&
+            currentOrg?.channelPartnerAccessLevel === null
+        );
+    });
     orgPermissions$$ = computed(() => this.currentOrg$$()?.ownPermissions || []);
     canManageSystems$$ = computed<boolean>(() =>
         this.orgPermissions$$().includes(OrgPermissions.MANAGE_SYSTEMS),
@@ -76,7 +85,6 @@ export class NxOrganizationCardContainerComponent {
     });
     search = { value: '' };
     groupName: string = '';
-    isGroupUser$$ = computed(() => this.orgPermissions$$()?.length === 0);
 
     constructor(
         private store: Store,

@@ -539,19 +539,22 @@ export const GroupsStore = signalStore(
 
             const currentSystems$$ = computed(() => {
                 const systems = store.systemsEntityMap();
-                const currentGroupId = currentGroupId$$().id;
+                const { id, isRoot } = currentGroupId$$();
                 const twoFactorEnabled = twoFactorEnabled$$();
-                const currentGroup = systems[currentGroupId];
+                const currentGroup = systems[id];
                 const cloudSystems = currentGroup?.cloudSystems || [];
                 const systemItems = cloudSystems.map(
-                    ({ systemId, name }): SystemItem => ({
+                    ({ systemId, groupId, name }): SystemItem => ({
                         type: OrgCardItem.SYSTEM,
+                        groupId,
                         systemId,
                         name,
                         system2faEnabled: !!twoFactorEnabled[systemId],
                     }),
                 );
-                return systemItems.sort((a, b) => a.name!.localeCompare(b.name!));
+                return systemItems
+                    .filter(({ groupId }) => (isRoot ? groupId === null : groupId === id))
+                    .sort((a, b) => a.name!.localeCompare(b.name!));
             });
 
             const groupFlatMap$$ = computed(() => {

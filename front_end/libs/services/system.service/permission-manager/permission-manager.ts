@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -38,6 +39,7 @@ const initializePermissions = (isOwner = false, isAdmin = false): Permissions =>
         viewArchives: isAdmin,
         viewBookmarks: isAdmin,
         viewLogs: isAdmin,
+        viewServices: isAdmin,
     };
 };
 
@@ -133,6 +135,9 @@ export class PermissionManager {
             viewArchives: isAdmin || deviceGroupAccessRights.viewArchive,
             viewBookmarks: isAdmin || deviceGroupAccessRights.viewBookmarks,
             viewLogs: isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewLogs),
+            viewServices:
+                nxConfig.featureFlags.channelPartnersChangeServicesUI &&
+                (isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewMetrics)),
         });
     });
     private userResourceAccessRights$$ = signal<ResourceAccessRights>({});
@@ -282,6 +287,7 @@ export class PermissionManager {
             viewBookmarks:
                 isAdmin || permissions.includes(PermissionStrings.globalViewBookmarksPermission),
             viewLogs: isAdmin,
+            viewServices: false, // Sass only so its only visible with user groups starting with 6.0
         });
     });
 
