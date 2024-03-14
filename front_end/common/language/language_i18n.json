@@ -872,5 +872,6 @@
     "value": "value",
     "width": "width",
     "you": "you",
+    "{name} ({state})": "{name} ({state})",
     "{serverName} , error:": "{serverName} , error:"
 }

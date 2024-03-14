@@ -80,7 +80,11 @@ export class BindToCloudService {
                     headers: this.buildRequestHeaders(),
                 }),
             ),
-            map(res => res.results),
+            map(res =>
+                res.results.filter(({ ownPermissions }) =>
+                    ownPermissions.includes('manage_systems'),
+                ),
+            ),
         );
     }
 

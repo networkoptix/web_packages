@@ -4,13 +4,28 @@
         class="scroll-area"
         [itemSize]="50"
     >
-        <div
-            class="scroll-item"
-            *ngFor="let org of visibleOrgs$$()"
-            (click)="selectedOrg$$.set(org)"
-            [class]="{ 'selected-scroll-item': selectedOrg$$()?.id === org.id }"
-        >
-            {{ org.name }}
-        </div>
+        @for (org of visibleOrgs$$(); track org.id) {
+            <div
+                class="scroll-item"
+                (click)="org.effectiveState === 'active' && selectedOrg$$.set(org)"
+                [class]="{
+                    'selected-scroll-item': selectedOrg$$()?.id === org.id,
+                    disabled: org.effectiveState !== 'active'
+                }"
+            >
+                @if (org.effectiveState === 'active') {
+                    {{ org.name }}
+                } @else {
+                    {{
+                        '{name} ({state})'
+                            | translate
+                                : {
+                                      name: org.name,
+                                      state: org.effectiveState | translate | uppercase
+                                  }
+                    }}
+                }
+            </div>
+        }
     </cdk-virtual-scroll-viewport>
 </div>
