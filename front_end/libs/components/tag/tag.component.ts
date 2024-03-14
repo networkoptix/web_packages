@@ -45,7 +45,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input('name') _name: string = '';
     @Input('id') _id: string = '';
     @Input() size: string = 'small';
-    @Input() isStatusBadge: boolean;
+    @Input() customClass: string = '';
     @Input({ transform: booleanAttribute }) clickable: boolean = true;
     @Input({ transform: booleanAttribute }) locked: boolean;
     @Input() link: string;

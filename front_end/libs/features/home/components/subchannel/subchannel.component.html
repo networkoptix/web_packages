@@ -20,7 +20,7 @@
                 [type]="state === 'suspended' ? 'warning' : 'danger'"
                 [size]="'large'"
                 [locked]="true"
-                [isStatusBadge]="true"
+                [customClass]="'status'"
             >
                 {{ state | translate | uppercase }}
             </nx-tag>
