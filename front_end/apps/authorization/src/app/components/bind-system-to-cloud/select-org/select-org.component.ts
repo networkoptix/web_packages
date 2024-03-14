@@ -1,11 +1,12 @@
 import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { Component, computed, Input, Output, signal } from '@angular/core';
+import { Component, computed, input, Output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 
+import { NxTagComponent } from '@components/tag/tag.component';
 import { SignalEventEmitter } from '@utils/signals';
 
 import { Org } from '../../../types/cloud-bind.types';
@@ -24,13 +25,11 @@ import { SearchInputComponent } from '../../basic-search-input/basic-search-inpu
         CdkVirtualScrollViewport,
         CdkFixedSizeVirtualScroll,
         SearchInputComponent,
+        NxTagComponent,
     ],
 })
 export class SelectOrgComponent {
-    orgs$$ = signal<Org[]>([]);
-    @Input() set orgs(orgs: Org[]) {
-        this.orgs$$.set(orgs);
-    }
+    orgs$$ = input<Org[]>([], { alias: 'orgs' });
     selectedOrg$$ = signal<Org | undefined>(undefined);
     @Output() selectedOrg = new SignalEventEmitter<Org | undefined>(this.selectedOrg$$);
 

@@ -23,21 +23,24 @@
         [src]="icons.dir + 'organization.svg'"
         [svgStyle]="{ width: '64px', height: '64px' }"
     ></svg-icon>
-    <ng-container [ngSwitch]="orgCount$$()">
-        <div
-            *ngSwitchCase="0"
-            translate
-        >
-            No organizations
-        </div>
-        <div *ngSwitchCase="1">
-            {{ orgs$$()[0].name }}
-        </div>
-        <div
-            *ngSwitchDefault
-            translate
-        >
-            Organizations
-        </div>
-    </ng-container>
+    @switch (orgCount$$()) {
+        @case (0) {
+            <div translate>No organizations</div>
+        }
+        @case (1) {
+            @if (orgs$$()[0]; as org) {
+                <div>{{ org.name }}</div>
+                @if (org.effectiveState !== 'active') {
+                    <nx-tag
+                        class="pt-2"
+                        [type]="org.effectiveState === 'suspended' ? 'warning' : 'danger'"
+                        >{{ org.effectiveState | translate | uppercase }}</nx-tag
+                    >
+                }
+            }
+        }
+        @default {
+            <div translate>Organizations</div>
+        }
+    }
 </div>

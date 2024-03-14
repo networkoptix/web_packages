@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 
@@ -12,7 +14,13 @@ import { BindType, Org } from '../../../types/cloud-bind.types';
     templateUrl: './select-bind-type.component.html',
     styleUrls: ['./select-bind-type.component.scss'],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, NxAddSvgSrcDirective],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        NxTagComponent,
+    ],
 })
 export class SelectBindTypeComponent {
     protected readonly icons = icons;
