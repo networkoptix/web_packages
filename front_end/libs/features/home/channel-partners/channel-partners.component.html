@@ -19,7 +19,7 @@
                 [type]="currentPartner.effectiveState === 'suspended' ? 'warning' : 'danger'"
                 size="large"
                 [locked]="true"
-                [isStatusBadge]="true"
+                [customClass]="'status'"
             >
                 {{ currentPartner.effectiveState | translate | uppercase }}
             </nx-tag>
