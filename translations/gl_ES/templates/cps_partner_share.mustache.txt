@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Ola, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} compartiu o acceso á canle asociada "{{message.partner_name}}" contigo.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Ver no portal %CLOUD_NAME% usando esta ligazón: {{ config.portal_url }}
