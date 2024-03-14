@@ -22,8 +22,7 @@ Notes
 @shared_task
 def check_expired_services_task():
     from partners.models import ChannelPartnerServiceRecord
-    with transaction.atomic():
-        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+    negation_records = ChannelPartnerServiceRecord.check_expired_services()
     logger.info("Expired services are checked.", negation_records_count=len(negation_records))
 
 

@@ -67,6 +67,7 @@ from partners.utils.db import (
 from tools.helpers import (
     get_path_from_parent,
     get_period_start,
+    get_today,
 )
 
 
@@ -2012,12 +2013,10 @@ class ChannelPartnerServiceRecord(models.Model):
         records = cls.objects.filter(cloud_system__in=systems)
         return cls.negate_services(records)
 
-
     @classmethod
     def negate_services(
             cls,
             queryset: QuerySet['ChannelPartnerServiceRecord'],
-            convert_services: bool = False,
     ) -> List['ChannelPartnerServiceRecord']:
         negation_quantities = (
             queryset.values('service_id', 'cloud_system_id', 'organization_id')
@@ -2038,7 +2037,6 @@ class ChannelPartnerServiceRecord(models.Model):
                 record_type=ServiceRecordTypes.NEGATION,
             ))
         cls.objects.bulk_create(negation_records, batch_size=100)
-        conversion_services = []
         for record in negation_records:
             (queryset
              .exclude(record_type=ServiceRecordTypes.NEGATION)
@@ -2048,42 +2046,82 @@ class ChannelPartnerServiceRecord(models.Model):
                 cloud_system_id=record.cloud_system_id,
                 service_id=record.service_id
             ).update(negation_record=record.id))
-            if convert_services:
-                if record.service.conversion_service:
-                    conversion_services.append(cls(
-                        service=record.service.conversion_service,
-                        quantity=-record.quantity,
-                        organization_id=record.organization_id,
-                        cloud_system_id=record.cloud_system_id,
-                        in_effect=True,
-                        record_type=ServiceRecordTypes.CONVERSION,
-                        effective_ts=now,
-                    ))
-        if convert_services and conversion_services:
-            cls.objects.bulk_create(conversion_services, batch_size=100)
         return negation_records
 
     @classmethod
     def check_expired_services(cls) -> List['ChannelPartnerServiceRecord']:
-        system_states = [ChannelPartnerStates.ACTIVE, ChannelPartnerStates.SUSPENDED]
-        queryset = (
-            cls.objects
-            # not a negation record
-            .exclude(record_type=ServiceRecordTypes.NEGATION)
-            .filter(
-                # not negated yet
-                negation_record__isnull=True,
-                # system is not shut down
-                cloud_system__effective_state__in=system_states,
-                # service has duration
-                service__duration__gt=0,
-                created_ts__lt=models.ExpressionWrapper(
-                    datetime.date.today() - MonthInterval("service__duration"),
-                    output_field=models.DateTimeField()
+        with transaction.atomic():
+            system_states = [ChannelPartnerStates.ACTIVE, ChannelPartnerStates.SUSPENDED]
+            base_queryset = (
+                cls.objects
+                # not a negation record
+                .exclude(record_type=ServiceRecordTypes.NEGATION)
+                .filter(
+                    # not negated yet
+                    negation_record__isnull=True,
+                    # system is not shut down
+                    cloud_system__effective_state__in=system_states,
+                    # service has duration
+                    service__duration__gt=0,
                 )
             )
-        )
-        negation_records = cls.negate_services(queryset, convert_services=True)
+            # made for tests
+            today = get_today()
+            # lookup for expired services
+            expired_records = (
+                base_queryset
+                .filter(
+                    created_ts__lt=models.ExpressionWrapper(
+                        today - MonthInterval("service__duration"),
+                        output_field=models.DateTimeField()
+                    )
+                ).distinct('service_id', 'cloud_system_id', 'organization_id')
+            )
+            negation_records = []
+            conversion_services = []
+            for expired_record in expired_records:
+                now = timezone.now()
+                negation_quantities = base_queryset.filter(
+                    service_id=expired_record.service_id,
+                    cloud_system_id=expired_record.cloud_system_id,
+                    organization_id=expired_record.organization_id,
+                ).aggregate(Sum('quantity'))
+                # create negation for expired trial/demo
+                negation_record = cls(
+                    id=uuid.uuid4(),
+                    organization_id=expired_record.organization_id,
+                    cloud_system_id=expired_record.cloud_system_id,
+                    service_id=expired_record.service_id,
+                    quantity=-negation_quantities['quantity__sum'],
+                    effective_ts=now,
+                    in_effect=True,
+                    created_by=None,
+                    record_type=ServiceRecordTypes.NEGATION,
+                )
+                negation_records.append(negation_record)
+                # creating converted service records
+                if negation_record.service.conversion_service:
+                    conversion_services.append(cls(
+                        service=negation_record.service.conversion_service,
+                        quantity=-negation_record.quantity,
+                        organization_id=negation_record.organization_id,
+                        cloud_system_id=negation_record.cloud_system_id,
+                        in_effect=True,
+                        record_type=ServiceRecordTypes.CONVERSION,
+                        effective_ts=now,
+                    ))
+            # saving negations
+            cls.objects.bulk_create(negation_records, batch_size=100)
+            for expired_record, negation_record in zip(expired_records, negation_records):
+                # set records as negated
+                base_queryset.filter(
+                    organization_id=expired_record.organization_id,
+                    cloud_system_id=expired_record.cloud_system_id,
+                    service_id=expired_record.service_id
+                ).update(negation_record_id=negation_record.id)
+            if conversion_services:
+                # saving conversions
+                cls.objects.bulk_create(conversion_services, batch_size=100)
         return negation_records
 
 

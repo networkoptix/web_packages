@@ -1,6 +1,8 @@
+import datetime
 from datetime import timedelta
 
 import pytest
+from django.db.models import Sum
 from django.utils import timezone
 
 from partners.models import (
@@ -11,7 +13,7 @@ from partners.models import (
 )
 
 
-class TestChannelPartnerServiceRecord:
+class TestServiceRecordsExpiredServices:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, organization_factory, system_factory,
               cp_service_factory, service_record_factory):
@@ -144,17 +146,24 @@ class TestChannelPartnerServiceRecord:
         )
         service_record.created_ts = timezone.now() - timedelta(days=37)
         service_record.save()
+        existing_records = ChannelPartnerServiceRecord.objects.filter(
+            service=self.cloud_storage_service,
+            cloud_system=system,
+        )
+        existing_records_quantity = existing_records.aggregate(Sum('quantity'))['quantity__sum']
+        assert existing_records_quantity == 15
         assert ChannelPartnerServiceRecord.objects.all().count() == self.initial_records_count + 3
         negation_records = ChannelPartnerServiceRecord.check_expired_services()
         assert len(negation_records) == 1
-        assert (ChannelPartnerServiceRecord.objects.all().count() ==
-                self.initial_records_count + 3 + 1)
-        assert ChannelPartnerServiceRecord.objects.filter(negation_record_id=negation_records[0].id).count() == 3
-        negated_record = ChannelPartnerServiceRecord.objects.filter(negation_record_id=negation_records[0].id).first()
-        assert negated_record.cloud_system == system
         assert negation_records[0].cloud_system == system
         assert negation_records[0].service == self.cloud_storage_service
-        assert negation_records[0].quantity == -self.service_quantity
+        assert negation_records[0].quantity == -existing_records_quantity
+
+        assert (ChannelPartnerServiceRecord.objects.all().count() ==
+                self.initial_records_count + 3 + 1)
+        assert ChannelPartnerServiceRecord.objects.filter(negation_record_id=negation_records[0].id).count() == 3 + self.services_count
+        negated_record = ChannelPartnerServiceRecord.objects.filter(negation_record_id=negation_records[0].id).first()
+        assert negated_record.cloud_system == system
 
         other_records = service_record_factory(
             service=self.cloud_storage_service,
@@ -220,3 +229,177 @@ class TestChannelPartnerServiceRecord:
         assert conversion_record.quantity == self.service_quantity
         assert conversion_record.automated is True
         assert conversion_record.organization == self.organization
+
+    def test_services_quantity_partial_decrease(self, system_factory, service_record_factory, mocker):
+        ChannelPartnerServiceRecord.objects.all().delete()
+        tz = timezone.get_default_timezone()
+        return_01_16 = datetime.datetime(2024,1,16, 0,0,0, tzinfo=tz)
+        return_02_02 = datetime.datetime(2024,2,2, 0,0,0, tzinfo=tz)
+        return_02_11 = datetime.datetime(2024,2,11, 0,0,0, tzinfo=tz)
+        return_02_16 = datetime.datetime(2024,2,16, 0,0,0, tzinfo=tz)
+        system = system_factory(organization=self.organization)
+        record_01_01 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=10
+        )
+        record_01_01.created_ts = datetime.datetime(2024,1,1, 0,0,0, tzinfo=tz)
+        record_01_01.save()
+        record_01_10 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=10
+        )
+        record_01_10.created_ts = datetime.datetime(2024, 1, 10, 0, 0, 0, tzinfo=tz)
+        record_01_10.save()
+        record_01_15 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=-5
+        )
+        record_01_15.created_ts = datetime.datetime(2024, 1, 15, 0, 0, 0, tzinfo=tz)
+        record_01_15.save()
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_01_16)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_01_16.date())
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        # no expire services
+        mocked_today.assert_called_once()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+        existing_service_quantity = ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum']
+        assert existing_service_quantity == 15
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] is None
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_02)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_02.date())
+
+        # one record is expired but remains are still valid
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_called()
+        assert len(negation_records) == 1
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_11)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_11.date())
+        # one record expired and remains are invalid
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_16)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_16.date())
+
+        # all record is already negated
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+
+
+    def test_services_quantity_total_decrease(self, system_factory, service_record_factory, mocker):
+        ChannelPartnerServiceRecord.objects.all().delete()
+        tz = timezone.get_default_timezone()
+        return_01_16 = datetime.datetime(2024,1,16, 0,0,0, tzinfo=tz)
+        return_02_02 = datetime.datetime(2024,2,2, 0,0,0, tzinfo=tz)
+        return_02_11 = datetime.datetime(2024,2,11, 0,0,0, tzinfo=tz)
+        return_02_16 = datetime.datetime(2024,2,16, 0,0,0, tzinfo=tz)
+        system = system_factory(organization=self.organization)
+        record_01_01 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=10
+        )
+        record_01_01.created_ts = datetime.datetime(2024,1,1, 0,0,0, tzinfo=tz)
+        record_01_01.save()
+        record_01_10 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=10
+        )
+        record_01_10.created_ts = datetime.datetime(2024, 1, 10, 0, 0, 0, tzinfo=tz)
+        record_01_10.save()
+        record_01_15 = service_record_factory(
+            service=self.local_recording_conversion_service,
+            cloud_system=system,
+            quantity=-15
+        )
+        record_01_15.created_ts = datetime.datetime(2024, 1, 15, 0, 0, 0, tzinfo=tz)
+        record_01_15.save()
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_01_16)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_01_16.date())
+        existing_service_quantity = ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum']
+        # no expired records
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] is None
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_02)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_02.date())
+
+        # one record expired but remains are less than negation, negating all
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_called()
+        assert len(negation_records) == 1
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_11)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_11.date())
+
+        # there is no non negated and expired records
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
+
+        mocked_now = mocker.patch('django.utils.timezone.now', return_value=return_02_16)
+        mocked_today = mocker.patch('partners.models.get_today', return_value=return_02_16.date())
+
+        # there is no non negated and expired records
+        negation_records = ChannelPartnerServiceRecord.check_expired_services()
+        mocked_now.assert_not_called()
+        assert len(negation_records) == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_conversion_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == 0
+        assert ChannelPartnerServiceRecord.objects.filter(
+            service=self.local_recording_service
+        ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
