@@ -48,6 +48,7 @@ export const SystemGuard: CanActivateFn = (
         'layouts',
         'bookmarks',
         'view',
+        'services',
     ];
     const currentRoute = restrictedRoutes.find(route => state.url.includes(route));
     const systemId =
@@ -71,6 +72,7 @@ export const SystemGuard: CanActivateFn = (
                 deviceService.isMobile() || deviceService.isTablet(),
             ),
             view: system.canViewADevice(),
+            services: permissions.viewServices,
         };
 
         return (

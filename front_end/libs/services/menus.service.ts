@@ -399,7 +399,7 @@ export class NxMenusService {
         }
 
         // Services
-        if (nxConfig.featureFlags.channelPartners && 'organizationId' in activeSystem.info) {
+        if ('organizationId' in activeSystem.info && permissions.viewServices) {
             const servicesNode = new MenuNode(
                 'Services',
                 this.getUrl(activeSystem.id, { services: true }),
