@@ -3,7 +3,9 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { Component, OnChanges, forwardRef } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { of } from 'rxjs';
 
+import { PipesModule } from '@pipes/pipes.module';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdownComponent } from './base-dropdown.component';
@@ -34,7 +36,7 @@ Going to mostly borrow behavior from Material Select for now
 - Dropdown options DO NOT loop from increment/decrement
 */
 @Component({
-    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule],
+    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule, PipesModule],
     selector: 'nx-dropdown',
     templateUrl: 'dropdown.component.html',
     styleUrls: ['dropdown.component.scss'],
@@ -110,14 +112,12 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     protected setPlaceholderOrDisplayText(): void {
         // If no option is selected, show the placeholder
         if (this.selectedOptionComponent === undefined) {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(this.placeholder);
+            this.displayText = of(this.placeholder);
             this.showPlaceholder = true;
         } else {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(
-                this.selectedOptionComponent.getOptionHtml(),
-            );
+            this.displayText = this.selectedOptionComponent.getOptionHtml();
+            this.showPlaceholder = false;
         }
-        this.showPlaceholder = false;
     }
 
     private decrementSelect(): void {

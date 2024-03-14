@@ -5,8 +5,10 @@ import { Component, OnChanges, forwardRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { of } from 'rxjs';
 
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdownComponent } from './base-dropdown.component';
@@ -15,7 +17,7 @@ import { BaseDropdownInjectionToken } from './dropdown.types';
 import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
 
 @Component({
-    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule],
+    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule, PipesModule],
     selector: 'nx-multi-dropdown',
     templateUrl: 'dropdown.component.html',
     styleUrls: ['dropdown.component.scss'],
@@ -84,23 +86,23 @@ export class NxMultiDropdownComponent<T>
     protected setPlaceholderOrDisplayText(): void {
         // If no option is selected, show the placeholder
         if (this.selectedOptionComponents.length === 0) {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(this.placeholder);
+            this.displayText = of(this.placeholder);
             this.showPlaceholder = true;
             return;
         }
         // Option has been selected, show the appropriate text
         if (this.selectedOptionComponents.length === 1) {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(
-                this.selectedOptionComponents[0].getOptionHtml(),
-            );
+            this.displayText = this.selectedOptionComponents[0].getOptionHtml();
         } else {
             /* This is currently how legacy dropdowns handle multiple selected options
                     There is probably a better way to do this involving getOptionHtml() but it's complicated
                     We can come back to this if a use case shows up where customizable placeholder is needed
                 */
-            this.displayText = this.translate.instant(this.LANG.search.selected, {
-                count: this.selectedOptionComponents.length,
-            });
+            this.displayText = of(
+                this.translate.instant(this.LANG.search.selected, {
+                    count: this.selectedOptionComponents.length,
+                }),
+            );
         }
         this.showPlaceholder = false;
     }

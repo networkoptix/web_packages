@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { map, timer } from 'rxjs';
 
 import { SearchInputComponent } from '@authorization/src/app/components/basic-search-input/basic-search-input.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
@@ -222,6 +223,11 @@ export class MultiSelectComponent {
     isSelected(item: ComplicatedObject): boolean {
         return this.selectedComplicatedObjects?.some(i => i.userId === item.userId);
     }
+
+    // Changing Dropdown Options
+    timer1 = timer(0, 1000);
+    timer2 = timer(500, 1000).pipe(map(x => x * 13));
+    selectedTimer = 0;
 
     logOnChange(event: unknown): void {
         console.log('onChange', event);

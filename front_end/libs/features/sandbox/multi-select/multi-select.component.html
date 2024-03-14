@@ -104,6 +104,25 @@
     <div class="col-4 dropdownPadding">
         <div>Selected: {{ itemsSelectedTooMany | json }}</div>
     </div>
+    <div class="col-4 dropdownPadding">
+        <nx-dropdown
+            placeholder="Changing Dropdown Options"
+            [(selected)]="selectedTimer"
+        >
+            <nx-simple-dropdown-item
+                [value]="0"
+                [selected]="selectedTimer === 0"
+            >
+                {{ timer1 | async }}
+            </nx-simple-dropdown-item>
+            <nx-simple-dropdown-item
+                [value]="1"
+                [selected]="selectedTimer === 1"
+            >
+                {{ timer2 | async }}
+            </nx-simple-dropdown-item>
+        </nx-dropdown>
+    </div>
 </div>
 <div
     class="mb-3 row m-0 p-3"

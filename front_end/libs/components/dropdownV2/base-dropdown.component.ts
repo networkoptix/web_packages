@@ -14,8 +14,8 @@ import {
     signal,
     computed,
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { take } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { take, Observable } from 'rxjs';
 
 import { icons } from '@static-variables';
 import { scrollItemIntoView } from '@utils/general';
@@ -48,7 +48,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     @ViewChild(CdkPortal) contentTemplate: CdkPortal;
 
     overlayRef: OverlayRef;
-    displayText: SafeHtml;
+    displayText: Observable<string>;
     // TODO: refactor to signals/computed when signal inputs are ready https://github.com/angular/angular/discussions/49682
     showPlaceholder: boolean = true;
     // Using a Symbol here to avoid undefined/null value clash

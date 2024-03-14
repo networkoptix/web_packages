@@ -7,6 +7,7 @@ import {
     Input,
     computed,
 } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { BaseDropdownComponent } from '../../base-dropdown.component';
 import { BaseDropdownInjectionToken } from '../../dropdown.types';
@@ -44,5 +45,5 @@ export abstract class BaseDropdownItem<T> {
     ) {}
 
     // This can be any html string that you want displayed in the selected portion of the dropdown
-    abstract getOptionHtml(): string;
+    abstract getOptionHtml(): Observable<string>;
 }

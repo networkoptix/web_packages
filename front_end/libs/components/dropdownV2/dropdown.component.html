@@ -13,7 +13,7 @@
         #select
         [attr.id]="inputId"
         [attr.aria-label]="ariaLabel || null"
-        [innerHTML]="displayText"
+        [innerHTML]="(displayText | async) || '' | safe: 'html'"
         class="select-box"
         [ngClass]="{
             error: error,
