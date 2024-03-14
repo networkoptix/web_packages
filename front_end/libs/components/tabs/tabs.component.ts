@@ -11,6 +11,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { startWith } from 'rxjs';
 
 import { NxBaseTabComponent } from './tab/tab.component';
 
@@ -58,8 +59,7 @@ export class NxTabsComponent implements AfterViewInit {
     };
 
     ngAfterViewInit(): void {
-        this.initTabs();
-        this.tabItems.changes.subscribe(tabs => {
+        this.tabItems.changes.pipe(startWith(this.tabItems)).subscribe(tabs => {
             const currTabIndex = this.currentTabIndex$$();
             const items = tabs.toArray();
             if (currTabIndex && items[currTabIndex]) {
