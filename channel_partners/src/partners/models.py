@@ -612,7 +612,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                                current_services=list(used_services.keys()),
                                service_id=service_id,
                                service_type=usage['service__type'])
-                used_services[service_id] = {'used': used, 'total': 0}
+                used_services[service_id] = {'used': used, 'quantity': 0}
             else:
                 used_services[service_id]['used'] = used
         return used_services
