@@ -28,12 +28,14 @@
         ></nx-settings-general>
         <nx-settings-state
             *ngIf="
-                (canChangeStateUI && canUpdateOrg$$() && isDirectParentCP$$()) ||
-                subchannelSettings()
+                canChangeStateUI &&
+                ((canChangeState$$() && isDirectParentCP$$()) ||
+                    canUpdateOrg$$() ||
+                    subchannelSettings())
             "
             (updateState)="handleStateUpdate($event)"
             [currState]="currentState$ | async"
-            [canChange]="state.canUpdateStatus"
+            [canChange]="state.canUpdateStatus || canChangeState$$()"
         ></nx-settings-state>
         <!-- <nx-settings-disconnect
             [organizationId]="currentOrg$$().id"
