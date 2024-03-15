@@ -123,7 +123,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
             this.system.version > 5.1 && nxConfig.featureFlags.channelPartners
         );
         if (this.channelPartnersEnabled) {
-            this.partnersService.getOrganizations().subscribe(orgs => {
+            this.partnersService.getOrganizations(true).subscribe(orgs => {
                 const items = orgs.reduce((orgs, org) => {
                     if (org.ownPermissions.includes('manage_systems')) {
                         orgs.push({
