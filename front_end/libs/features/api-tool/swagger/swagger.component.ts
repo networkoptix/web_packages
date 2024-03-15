@@ -5,6 +5,7 @@ import {
     ElementRef,
     Input,
     OnChanges,
+    OnDestroy,
     OnInit,
     Renderer2,
     Type,
@@ -49,7 +50,7 @@ import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
     templateUrl: './swagger.component.html',
     encapsulation: ViewEncapsulation.None,
 })
-export class NxSwaggerComponent implements OnChanges, OnInit {
+export class NxSwaggerComponent implements OnChanges, OnInit, OnDestroy {
     @ViewChild('viewContainerRef', { read: ViewContainerRef }) VCR: ViewContainerRef;
     @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
@@ -70,6 +71,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
     resetButtonListener$: Subscription;
+    downloadListener: undefined | (() => void) = undefined;
 
     constructor(
         public APIToolSystemService: NxAPIToolSystemService,
@@ -291,7 +293,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
             this.addResetButtonEventListener();
-            this.replaceHTMLAsterisk();
+            this.replaceDirectDownloadURL();
             if (this.openAPIJSONService.searchQuery) {
                 this.highlightSearchMoreQuery(this.openAPIJSONService.searchQuery);
             }
@@ -362,6 +364,32 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         if (requestBody) {
             requestBody.innerText = 'Body';
         }
+    };
+
+    private replaceDirectDownloadURL = (): void => {
+        const requestURLWrapper = document.querySelector('.request-url');
+        const downloadLink: HTMLAnchorElement | null = document.querySelector('a[download]');
+        const requestURL = requestURLWrapper?.querySelector('.microlight')?.innerHTML;
+        if (downloadLink && requestURL) {
+            if (this.downloadListener) {
+                this.downloadListener(); // Removes the event listener
+            }
+            this.downloadListener = this.renderer2.listen(downloadLink, 'click', event =>
+                this.handleDownload(event, requestURL),
+            );
+        }
+    };
+
+    private handleDownload = (event: Event, requestURL: string): void => {
+        event.preventDefault();
+
+        const anchor = document.createElement('a');
+        anchor.href = requestURL;
+        anchor.download = requestURL;
+        document.body.appendChild(anchor);
+        anchor.click();
+
+        document.body.removeChild(anchor);
     };
 
     private modifyCodeBlocksAndTextareas = (): void => {
@@ -624,6 +652,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 this.textareaMap = {};
             }
             this.initSwagger(node.name, expand);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.downloadListener) {
+            this.downloadListener();
         }
     }
 }
