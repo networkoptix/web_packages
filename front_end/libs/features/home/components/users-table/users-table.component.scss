@@ -30,3 +30,16 @@
         }
     }
 }
+
+.folders-tooltip {
+  padding: 8px 12px;
+  & > div {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    svg-icon {
+      margin-right: 8px;
+    }
+  }
+}

@@ -92,10 +92,31 @@
 
                 <div
                     class="div-container-wrapper"
+                    #roleWrapper
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: accessLevel"
                     *ngIf="userType !== UserType.CHANNEL_PARTNER"
+                    toggleOnClick
+                    reversePositionOrder
+                    ignoreMaxWidth
+                    [nxTooltip]="row.groupRoles?.length > 1 && foldersTooltip"
                 >
+                    <ng-template #foldersTooltip>
+                        <div
+                            [style.width.px]="roleWrapper.clientWidth - 16"
+                            class="folders-tooltip"
+                        >
+                            @for (role of row.groupRoles; track role.groupId) {
+                                <div>
+                                    <svg-icon
+                                        [src]="icons.dir + 'folder2.svg'"
+                                        [svgStyle]="{ 'width.px': '20px' }"
+                                    ></svg-icon>
+                                    {{ groupsStore.groupPathMap$$()[role.groupId].pathString }}
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
                     <ng-container *ngIf="userType === UserType.ORGANIZATION; else group">
                         <ng-container *ngIf="row.isOrgUser; else showFolder">
                             <svg-icon

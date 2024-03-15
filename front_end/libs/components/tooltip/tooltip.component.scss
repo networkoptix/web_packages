@@ -12,7 +12,9 @@
         text-align: left;
         word-wrap: break-word;
         word-break: break-word;
-        max-width: 200px;
+        &:not(.ignoreMaxWidth) {
+            max-width: 200px;
+        }
 
         &.alternate,
         &.alternateSecondary {

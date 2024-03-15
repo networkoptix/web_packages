@@ -40,7 +40,7 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 
-import { sortGroups } from './groups-utils';
+import { generatePath, sortGroups } from './groups-utils';
 import {
     GroupsState,
     MethodsWithUndo,
@@ -579,17 +579,26 @@ export const GroupsStore = signalStore(
                 const groups = groupFlatMap$$();
                 const currentGroupId = currentGroupId$$().id;
 
-                function* generatePath(groupId: string): Generator<GroupFlatItem> {
-                    let currentGroup = groups[groupId];
-                    while (currentGroup) {
-                        yield currentGroup;
-                        currentGroup = groups[currentGroup.parentId];
-                    }
-                }
-
-                const path = [...generatePath(currentGroupId)].reverse();
+                const path = [...generatePath(groups, currentGroupId)].reverse();
 
                 return path;
+            });
+
+            const groupPathMap$$ = computed(() => {
+                const groups = groupFlatMap$$();
+
+                return Object.keys(groups).reduce(
+                    (acc, groupId) => {
+                        const path = [...generatePath(groups, groupId)].reverse();
+                        const pathString = ['', ...path.map(({ name }) => name)].join(' / ').trim();
+                        acc[groupId] = {
+                            path,
+                            pathString,
+                        };
+                        return acc;
+                    },
+                    {} as Record<string, { path: GroupFlatItem[]; pathString: string }>,
+                );
             });
 
             return {
@@ -601,6 +610,7 @@ export const GroupsStore = signalStore(
                 openGroups$$,
                 groupsPath$$,
                 groupFlatMap$$,
+                groupPathMap$$,
             };
         },
     ),
