@@ -1,6 +1,6 @@
 Ola, {{message.userFullName}}
 
-O estado da/o socia/o {{message.partner_name}} cambia a {{message.status_name}}.
+O estado do partner {{message.partner_name}} cambia a {{message.status_name}}.
 A funcionalidade está agora totalmente dispoñible.
 
 Ver no portal %CLOUD_NAME% usando esta ligazón: {{ config.portal_url }}

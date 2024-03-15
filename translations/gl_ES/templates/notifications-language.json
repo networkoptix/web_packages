@@ -39,33 +39,33 @@
     "emailSubject": "O sistema de vídeo {{{message.system_name}}} compartiuse contigo"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} convídate a %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{{message.organization_name}}} was shared with you"
+    "emailSubject": "A organización {{{message.organization_name}}} compartiuse contigo"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "O estado da organización {{{message.organization_name}}} cambia a {{message.status_name}}"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{{message.organization_name}}} to the status {{message.status_name}}"
+    "emailSubject": "Confirma a transferencia da organización {{{message.organization_name}}} ao estado {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "O estado da organización {{{message.organization_name}}} cambia a {{message.status_name}}"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} convídate a %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{{message.partner_name}}} was shared with you"
+    "emailSubject": "O partner {{{message.partner_name}}} compartiuse contigo"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "O estado do partner {{{message.partner_name}}} cambia a {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "Confirma a transferencia do partner {{{message.partner_name}}} ao estado {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "O estado do partner {{{message.partner_name}}} cambia a {{message.status_name}} "
   }
 }
