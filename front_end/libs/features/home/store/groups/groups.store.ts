@@ -14,7 +14,6 @@ import {
     removeEntity,
     setEntities,
     setEntity,
-    updateEntity,
     withEntities,
 } from '@ngrx/signals/entities';
 import { isEqual } from 'lodash-es';
@@ -218,26 +217,26 @@ export const GroupsStore = signalStore(
                     );
             },
             addItemWithUndo: (item: GroupItem): Undo => {
-                const parentItem = findItem(store.groupsEntities(), item.parentId)!;
+                const groups = store.groupsEntities();
+                const parentItem = findItem(groups, item.parentId);
+
+                if (!parentItem) {
+                    return () => {};
+                }
+
                 parentItem.children.push(item);
-                patchState(
-                    store,
-                    setEntity(item, groupsEntity),
-                    setEntity(parentItem, groupsEntity),
-                );
+                patchGroupChanges(groups);
+
                 return () => {
-                    const parentItem = findItem(store.groupsEntities(), item.parentId)!;
-                    patchState(
-                        store,
-                        removeEntity(item.id, groupsEntity),
-                        setEntity(
-                            {
-                                ...parentItem,
-                                children: parentItem.children.filter(({ id }) => id !== item.id),
-                            },
-                            groupsEntity,
-                        ),
-                    );
+                    const groups = store.groupsEntities();
+                    const parentItem = findItem(groups, item.parentId);
+
+                    if (!parentItem) {
+                        return;
+                    }
+
+                    parentItem.children = parentItem.children.filter(({ id }) => id !== item.id);
+                    patchGroupChanges(groups);
                 };
             },
             deleteGroupWithUndo: (id: string, orgId: string): Undo => {
@@ -295,13 +294,25 @@ export const GroupsStore = signalStore(
                 };
             },
             renameItemWithUndo: (id: string, name: string): Undo => {
-                const currentName = store.groupsEntities().find(group => group.id === id)!.name;
-                patchState(store, updateEntity({ id, changes: { name } }, groupsEntity));
-                return () =>
-                    patchState(
-                        store,
-                        updateEntity({ id, changes: { name: currentName } }, groupsEntity),
-                    );
+                const groups = store.groupsEntities();
+                const item = findItem(store.groupsEntities(), id);
+
+                if (!item) {
+                    return () => {};
+                }
+
+                const currentName = item.name;
+                item.name = name;
+
+                patchGroupChanges(groups);
+                return () => {
+                    const groups = store.groupsEntities();
+                    const item = findItem(store.groupsEntities(), id);
+                    if (item) {
+                        item.name = currentName;
+                        patchGroupChanges(groups);
+                    }
+                };
             },
         } as const;
         return methods as MethodsWithUndo<typeof methods>;
