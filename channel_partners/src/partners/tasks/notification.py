@@ -1,5 +1,6 @@
 import traceback
 import uuid
+from typing import List
 
 import httpx
 import structlog
@@ -17,6 +18,7 @@ from partners.models import (
     ActionConfirmation,
     ChannelPartner,
     ChannelPartnerRoles,
+    ChannelPartnerStates,
     ChannelPartnerToUser,
     CloudUser,
     NotificationTypes,
@@ -267,12 +269,12 @@ def run_organization_name_change_tasks(
     cloud_host_name = organization.channel_partner.cloud_host.hostname
     for email in admins.values_list('user__email', flat=True):
         organization_name_change_task.apply_async(
-            args=(
+            args=[
                 email,
                 old_name,
                 new_name,
                 cloud_host_name,
-            )
+            ]
         )
 
 
@@ -309,12 +311,12 @@ def run_partner_name_change_tasks(
     cloud_host_name = partner.cloud_host.hostname
     for email in admins.values_list('user__email', flat=True):
         partner_name_change_task.apply_async(
-            args=(
+            args=[
                 email,
                 old_name,
                 new_name,
                 cloud_host_name,
-            )
+            ]
         )
 
 
@@ -340,3 +342,108 @@ def partner_name_change_task(
                       message_type=NotificationTypes.cps_partner_name_change,
                       message=message)
 
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def run_organization_state_changed_tasks(
+        self: TaskWithLogging,
+        organizations_ids: List[str]
+) -> None:
+    queryset = OrganizationToUser.objects.filter(
+        organization_id__in=organizations_ids,
+        roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
+    ).values(
+        'user__email',
+        'organization__effective_state',
+        'organization__name',
+        'organization__channel_partner__cloud_host__hostname'
+    )
+    for relation in queryset:
+        notification_organization_state_changed_task.apply_async(args=[
+            relation['user__email'],
+            relation['organization__effective_state'],
+            relation['organization__name'],
+            relation['organization__channel_partner__cloud_host__hostname']
+        ])
+
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def run_partner_state_changed_tasks(
+        self: TaskWithLogging,
+        partners_ids: List[str]
+) -> None:
+    queryset = ChannelPartnerToUser.objects.filter(
+        channel_partner__id__in=partners_ids,
+        roles__contains=[ChannelPartnerRoles.ADMINISTRATOR]
+    ).values(
+        'user__email',
+        'channel_partner__effective_state',
+        'channel_partner__name',
+        'channel_partner__cloud_host__hostname'
+    )
+    for relation in queryset:
+        notification_partner_state_changed_task.apply_async(args=[
+            relation['user__email'],
+            relation['channel_partner__effective_state'],
+            relation['channel_partner__name'],
+            relation['channel_partner__cloud_host__hostname']
+        ])
+
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def notification_organization_state_changed_task(
+        self: TaskWithLogging,
+        user_email: str,
+        organization_state: int,
+        organization_name: str,
+        cloud_host_name: str,
+) -> None:
+    user = get_user_by_email(self, user_email)
+    message = {
+        'userFullName': user.full_name or user.email,
+        'status_name': ChannelPartnerStates.STATE_NAMES[organization_state],
+        'organization_name': organization_name,
+    }
+    if organization_state == ChannelPartnerStates.ACTIVE:
+        message_type = NotificationTypes.cps_organization_state_active
+    else:
+        message_type = NotificationTypes.cps_organization_state_suspended
+    post_notification(host=cloud_host_name,
+                      user=user,
+                      message_type=message_type,
+                      message=message)
+
+
+@shared_task(bind=True,
+             base=TaskWithLogging,
+             autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def notification_partner_state_changed_task(
+        self: TaskWithLogging,
+        user_email: str,
+        channel_partner_state: int,
+        channel_partner_name: str,
+        cloud_host_name: str,
+) -> None:
+    user = get_user_by_email(self, user_email)
+    message = {
+        'userFullName': user.full_name or user.email,
+        'status_name': ChannelPartnerStates.STATE_NAMES[channel_partner_state],
+        'partner_name': channel_partner_name,
+    }
+    if channel_partner_state == ChannelPartnerStates.ACTIVE:
+        message_type = NotificationTypes.cps_partner_state_active
+    else:
+        message_type = NotificationTypes.cps_partner_state_suspended
+    post_notification(host=cloud_host_name,
+                      user=user,
+                      message_type=message_type,
+                      message=message)

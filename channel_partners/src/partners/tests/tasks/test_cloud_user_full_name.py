@@ -22,6 +22,7 @@ def count_log_records(caplog, logger_name, level, message):
     )
 
 
+@pytest.mark.no_tasks_autofix
 class TestCloudUserFullName:
     host: str = settings.DEFAULT_HOST_NAME
 

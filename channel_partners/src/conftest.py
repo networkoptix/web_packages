@@ -1,6 +1,7 @@
 import datetime
 import json
 import random
+import re
 import typing
 import uuid
 from uuid import (
@@ -119,10 +120,18 @@ def default_organization(default_channel_partner):
 @pytest.fixture()
 def organization_factory(default_channel_partner):
 
-    def factory(name=None, channel_partner=default_channel_partner,
-                channel_partner_access_level_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR) -> Organization:
+    def factory(
+            name=None,
+            channel_partner=default_channel_partner,
+            channel_partner_access_level_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
+            state=ChannelPartnerStates.ACTIVE,
+            effective_state=None
+    ) -> Organization:
+
         return Organization.objects.create(
             name=name or f"Organization {uuid4()}",
+            state=state,
+            effective_state=effective_state or state,
             channel_partner=channel_partner,
             channel_partner_access_level_id=channel_partner_access_level_id
         )
@@ -135,7 +144,7 @@ def channel_partner_factory(default_channel_partner, cloud_test_host, root_nx_ch
     def factory(name=None,
                 parent_channel_partner=default_channel_partner,
                 cloud_host=cloud_test_host,
-                # acs=False
+                state=ChannelPartnerStates.ACTIVE,
                 ) -> ChannelPartner:
         cp_id = uuid4()
         return ChannelPartner.objects.create(
@@ -143,7 +152,7 @@ def channel_partner_factory(default_channel_partner, cloud_test_host, root_nx_ch
             id=cp_id,
             parent_channel_partner=parent_channel_partner or root_nx_channel_partner,
             cloud_host=cloud_host,
-            # allow_changing_services=acs,
+            state=state
         )
 
     return factory
@@ -431,6 +440,17 @@ def random_email():
 def request_host():
     return settings.DEFAULT_HOST_NAME
 
+
+@pytest.fixture(autouse=True)
+def auto_mock_get_customization(request, httpx_mock, request_host):
+    if request.node.get_closest_marker('no_tasks_autofix'):
+        return
+    url = re.compile(r'https://.*/api/utils/customization')
+    httpx_mock.add_response(url=url,
+                            json={'name': 'default'},
+                            status_code=200)
+
+
 @pytest.fixture()
 def mock_get_customization_request(httpx_mock, request_host):
     def mock_request(customization_name: str = 'default', status: int = 200):
@@ -442,6 +462,13 @@ def mock_get_customization_request(httpx_mock, request_host):
 
     return mock_request
 
+@pytest.fixture(autouse=True)
+def auto_mock_account_status(request, httpx_mock, request_host):
+    if request.node.get_closest_marker('no_tasks_autofix'):
+        return
+    url = re.compile(r'https://.*/cdb/account/.*/status')
+    httpx_mock.add_response(url=url, json={}, status_code=200)
+
 
 @pytest.fixture()
 def mock_account_status(httpx_mock, request_host):
@@ -450,6 +477,16 @@ def mock_account_status(httpx_mock, request_host):
         httpx_mock.add_response(url=url, json={}, status_code=200 if active else 404)
 
     return mock_request
+
+
+@pytest.fixture(autouse=True)
+def auto_mock_post_notification(request, httpx_mock, request_host):
+    if request.node.get_closest_marker('no_tasks_autofix'):
+        return
+    # url = f'https://{request_host}/notifications/send'
+    url = re.compile(r'https://.*/notifications/send')
+    httpx_mock.add_response(url=url, json={}, status_code=201)
+    return url
 
 
 @pytest.fixture()
@@ -461,6 +498,11 @@ def mock_post_notification(httpx_mock, request_host):
 
     return mock_request
 
+@pytest.fixture(autouse=True)
+def auto_mock_full_name_update(request, mocker):
+    if request.node.get_closest_marker('no_tasks_autofix'):
+        return
+    mocker.patch('partners.tasks.cloud_user_full_name.update_cloud_user_full_name.apply_async')
 
 @pytest.fixture(autouse=True, scope='function')
 def mox_tasks_retries(mocker):

@@ -120,6 +120,12 @@ class ChannelPartnerStates:
         SHUTDOWN: 'shut down'
     }
 
+    STATE_NAMES = {
+        ACTIVE: 'active',
+        SUSPENDED: 'suspended',
+        SHUTDOWN: 'shutdown'
+    }
+
 
 class ExternalIdTargetManagerQueryset(models.QuerySet):
     @staticmethod
@@ -963,31 +969,44 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def save(self, *args, **kwargs):
         new = self._state.adding
-        # creation of channel partner with a different host is available through django admin site
-        # and for second level of channel partners (direct children of Nx Channel Partner) only
-        if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host_id):
-            self.cloud_host = self.parent_channel_partner.cloud_host
-        name_changed = not new and self.name != self._original_name
-        old_name = self._original_name
-        if new:
-            if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
-                if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
-                    raise ValidationError({'parent_channel_partner_id': 'Only one root channel partner is allowed.'})
+        with transaction.atomic():
+            # creation of channel partner with a different host is available through django admin site
+            # and for second level of channel partners (direct children of Nx Channel Partner) only
             if self.parent_channel_partner:
-                self.invalidate_cache(str(self.parent_channel_partner.id))
+                if self.parent_channel_partner.parent_channel_partner or not self.cloud_host_id:
+                    self.cloud_host = self.parent_channel_partner.cloud_host
+            name_changed = not new and self.name != self._original_name
+            old_name = self._original_name
+            if new:
+                if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
+                    if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
+                        raise ValidationError({'parent_channel_partner_id': 'Only one root channel partner is allowed.'})
+                if self.parent_channel_partner:
+                    self.invalidate_cache(str(self.parent_channel_partner.id))
 
-            if self.parent_channel_partner_id:
-                self.path = get_path_from_parent(self.parent_channel_partner)
-        self.update_state()
-        super().save(*args, **kwargs)
+                if self.parent_channel_partner_id:
+                    self.path = get_path_from_parent(self.parent_channel_partner)
+            updated_descendants = self.update_state()
+            super().save(*args, **kwargs)
 
-        if self.parent_channel_partner and new:
-            transaction.on_commit(lambda: new_channel_partner_created.apply_async(args=[self.pk]))
-        if name_changed:
-            from partners.tasks.notification import (
-                run_partner_name_change_tasks,
-            )
-            run_partner_name_change_tasks(self, old_name=old_name, new_name=self.name)
+            if self.parent_channel_partner and new:
+                transaction.on_commit(
+                    lambda: new_channel_partner_created.apply_async(args=[self.pk]))
+            if name_changed:
+                from partners.tasks.notification import (
+                    run_partner_name_change_tasks,
+                )
+                run_partner_name_change_tasks(self, old_name=old_name, new_name=self.name)
+            if updated_descendants:
+                from partners.tasks.notification import (
+                    run_organization_state_changed_tasks,
+                    run_partner_state_changed_tasks,
+                )
+                transaction.on_commit(
+                    lambda: run_partner_state_changed_tasks.apply_async(args=[updated_descendants]))
+                transaction.on_commit(
+                    lambda: run_organization_state_changed_tasks.apply_async(args=[updated_descendants]))
+
 
     @staticmethod
     def invalidate_cache(pk: str) -> None:
@@ -1107,18 +1126,23 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         # exclude records which do not require for changing state
         queryset = queryset.exclude(
             effective_state=Greatest(F("state"), models.Value(parent_effective_state)))
+        updated_ids = []
         for channel_partner in queryset:
             effective_state = max(channel_partner.state, parent_effective_state)
             if effective_state == channel_partner.effective_state:
                 continue
             channel_partner.effective_state = max(channel_partner.state, parent_effective_state)
             cp_to_update.append(channel_partner)
-            Organization.update_effective_states(channel_partner.organizations, parent_effective_state=effective_state)
-            cls.update_effective_states(
+            updated_ids.append(channel_partner.id)
+            updated_ids += Organization.update_effective_states(
+                channel_partner.organizations,
+                parent_effective_state=effective_state)
+            updated_ids += cls.update_effective_states(
                 cls.objects.filter(parent_channel_partner=channel_partner),
                 parent_effective_state=effective_state
             )
         cls.objects.bulk_update(cp_to_update, fields=['effective_state'])
+        return updated_ids
 
     def update_state(self):
         """
@@ -1134,9 +1158,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             return
         if self.effective_state == self._original_effective_state:
             return
-        Organization.update_effective_states(self.organizations, parent_effective_state=self.effective_state)
-        self.update_effective_states(self.channel_partners, parent_effective_state=self.effective_state)
-
+        updated_ids = Organization.update_effective_states(self.organizations, parent_effective_state=self.effective_state)
+        updated_ids += self.update_effective_states(self.channel_partners, parent_effective_state=self.effective_state)
+        return updated_ids + [self.id]
 
 class ChannelPartnerToUser(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE)
@@ -1322,18 +1346,25 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         new = self._state.adding
         name_changed = not new and self.name != self._original_name
         old_name = self._original_name
-        if new:
-            self.id = self.id or uuid.uuid4()
-            if self.channel_partner_id:
-                self.path = get_path_from_parent(self.channel_partner)
-            self.invalidate_channel_partner_org_count(self.channel_partner)
-        self.update_state()
-        super().save(*args, **kwargs)
-        if name_changed:
-            from partners.tasks.notification import (
-                run_organization_name_change_tasks,
-            )
-            run_organization_name_change_tasks(self, old_name=old_name, new_name=self.name)
+        with transaction.atomic():
+            if new:
+                self.id = self.id or uuid.uuid4()
+                if self.channel_partner_id:
+                    self.path = get_path_from_parent(self.channel_partner)
+                self.invalidate_channel_partner_org_count(self.channel_partner)
+            state_changed = self.update_state()
+            super().save(*args, **kwargs)
+            if name_changed:
+                from partners.tasks.notification import (
+                    run_organization_name_change_tasks,
+                )
+                run_organization_name_change_tasks(self, old_name=old_name, new_name=self.name)
+            if state_changed:
+                from partners.tasks.notification import (
+                    run_organization_state_changed_tasks,
+                )
+                transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[self.id]))
+
 
     @property
     def system_count(self) -> int:
@@ -1535,14 +1566,17 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     @classmethod
     def update_effective_states(cls, queryset, parent_effective_state):
         org_updated = []
+        updated_ids = []
         queryset = queryset.exclude(
             effective_state=Greatest("state", models.Value(parent_effective_state)))
         for organization in queryset:
             effective_state = max(organization.state, parent_effective_state)
             organization.effective_state = max(organization.state, parent_effective_state)
             org_updated.append(organization)
+            updated_ids.append(organization.id)
             organization.update_systems_effective_states(organization_effective_state=effective_state)
         cls.objects.bulk_update(org_updated, fields=['effective_state'], batch_size=100)
+        return updated_ids
 
     def update_systems_effective_states(self, organization_effective_state):
         if organization_effective_state == ChannelPartnerStates.SHUTDOWN:
@@ -1551,7 +1585,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         self.cloud_systems.update(
             effective_state=Greatest("state", models.Value(organization_effective_state)))
 
-    def update_state(self):
+    def update_state(self) -> bool:
         """
         Updates Organization.effective_state due to state changes, if effective_state
          changed then updates effective states on all children systems and negates services when needed.
@@ -1559,12 +1593,13 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         """
         self.effective_state = max(self.state, self.channel_partner.effective_state)
         if self._state.adding:
-            return
+            return False
         if self.state == self._original_state:
-            return
+            return False
         if self.effective_state == self._original_effective_state:
-            return
+            return False
         self.update_systems_effective_states(organization_effective_state=self.effective_state)
+        return True
 
     def system_group_member_dict(self, user: CloudUser):
         return {rel['system_group_id']: rel for rel in
