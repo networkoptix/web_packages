@@ -964,6 +964,7 @@ class TestChannelPartnerUserViewSet:
         assert not ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
         assert CloudUser.objects.filter(email=user.user.email).exists()
 
+    @pytest.mark.no_tasks_autofix
     def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email,
                     mock_account_status, mock_get_customization_request, mock_post_notification, httpx_mock):
         email = random_email

@@ -185,10 +185,6 @@
     "name": "Pillow",
     "note": "CVE-2023-44271: It is a Denial of Service that uncontrollably allocates memory to process a given task, potentially causing a service to crash by having it run out of memory. This occurs for true type in ImageFont when text length in an ImageDraw instance operates on a long text argument.https://github.com/python- pillow/Pillow/pull/7244 CVE-2023-44271 For more information, please visit https://data.safetycli.com/v/62156/f17"
   },
-  "63154": {
-    "name": "jwcrypto",
-    "note": "PVE-2023-63154: Jwcrypto version 1.5.1 addresses a potential DoS issue with p2c headers, limiting the default maximum to 16384 to prevent excessive resource usage. For applications requiring more iterations, the jwa default max needs to be adjusted manually.https://github.com/latchset/jwcrypto/commit/d2655d370586cb830e49acfb450f87598da60be8"
-  },
   "64227": {
     "name": "jinja2",
     "note": "Jinja2 before 3.1.3 is affected by a Cross-Site Scripting vulnerability. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template. The Jinja 'xmlattr' filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based. CVE-2024-22195 For more information, please visit https://data.safetycli.com/v/64227/f17"
@@ -199,10 +195,14 @@
   },
   "64437": {
     "name": "pillow",
-    "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through PIL.ImageFont.ImageFont.getmask(). A decompression bomb check has also been added to the affected function.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64437://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64438://data.safetycli.com/v/64227/f17"
+    "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through PIL.ImageFont.ImageFont.getmask(). A decompression bomb check has also been added to the affected function.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64437"
   },
   "64438": {
     "name": "pillow",
     "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through ImageFont.getmask glyph size. As a fix, PIL.ImageFont.ImageFont now trims the size of individual glyphs so that they do not extend beyond the bitmap image.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64438://data.safetycli.com/v/64227/f17"
+  },
+  "64976": {
+    "name": "Django",
+    "note": "CVE-2024-24680: Affected versions of Django are vulnerable to potential denial-of-service in intcomma template filter when used with very long strings."
   }
 }

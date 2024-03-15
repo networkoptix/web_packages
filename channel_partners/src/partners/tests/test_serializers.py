@@ -638,6 +638,7 @@ class TestOrganizationUserSerializer:
         self.org_adm_name = 'Organization Administrator'
         self.org_power_user_name = 'Power User'
 
+    @pytest.mark.no_tasks_autofix
     def test_create_valid(self, sys_group_user_factory, arf, org_user_factory, mock_account_status,
                           mock_get_customization_request, mock_post_notification, httpx_mock, mocker):
         data = {

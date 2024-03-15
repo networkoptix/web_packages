@@ -522,7 +522,7 @@ class TestEffectiveStates:
 
     @pytest.fixture(autouse=True, scope='function')
     def setup(self, channel_partner_factory, organization_factory, system_factory,
-              cp_service_factory, service_record_factory):
+              cp_service_factory, service_record_factory, mocker):
         self.degree = 2
         depth = 3
 
@@ -551,6 +551,10 @@ class TestEffectiveStates:
         self.changed_organizations = Organization.objects.filter(
             channel_partner__in=ChannelPartner.get_successors(self.changed_parent.id, include_ancestor=False))
         self.last_system = (CloudSystemId.objects.filter(organization__in=self.changed_organizations).last())
+        self.org_state_changed_notification_mock = (
+            mocker.patch('partners.tasks.notification.run_organization_state_changed_tasks.apply_async'))
+        self.cp_state_changed_notification_mock = (
+            mocker.patch('partners.tasks.notification.run_partner_state_changed_tasks.apply_async'))
 
     def ensure_unchanged(self):
         unchanged_tree = ChannelPartner.get_successors(self.unchanged_parent.id)
