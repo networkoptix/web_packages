@@ -1,7 +1,6 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
-    AfterViewInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -9,11 +8,13 @@ import {
     Input,
     QueryList,
     ViewChild,
-    EventEmitter,
-    Output,
     signal,
     computed,
+    model,
+    WritableSignal,
+    effect,
 } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { take, Observable } from 'rxjs';
 
@@ -27,13 +28,11 @@ type SelectedType<Value, Multiple extends boolean> = Multiple extends true
     ? Value[]
     : Value | undefined;
 @Component({ template: '' })
-export abstract class BaseDropdownComponent<T, M extends boolean> implements AfterViewInit {
-    @Input() selected: SelectedType<T, M>;
-    @Output() selectedChange = new EventEmitter<SelectedType<T, M>>();
-    @Output() onChange = new EventEmitter<SelectedType<T, M>>();
+export abstract class BaseDropdownComponent<T, M extends boolean> implements ControlValueAccessor {
+    protected abstract selected$$: WritableSignal<SelectedType<T, M>>;
     @Input('id') inputId: string = '';
     @Input() placeholder: string = '';
-    @Input() disabled: boolean = false;
+    disabled = model(false);
     @Input() error: boolean = false;
     // TODO: Search is not implemented yet
     @Input() search: boolean = false;
@@ -64,14 +63,36 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     dropdownClosing$$ = computed(() => this.openState$$() === DropdownState.Closing);
     dropdownAbortingOpen$$ = computed(() => this.openState$$() === DropdownState.AbortingOpen);
 
+    onChangeOfSelected = effect(() => {
+        this.selected$$();
+        this.manuallySetSelectedOption();
+        this.setPlaceholderOrDisplayText();
+    });
+
     constructor(
         public overlay: Overlay,
         public domSanitizer: DomSanitizer,
     ) {}
 
-    ngAfterViewInit(): void {
-        this.manuallySetSelectedOption();
-        this.setPlaceholderOrDisplayText();
+    // ControlValueAccessor methods
+    writeValue(updatedSelected: SelectedType<T, M>): void {
+        this.selected$$.set(updatedSelected);
+    }
+    _onChangeCallback: ((newSelectedValue: SelectedType<T, M>) => void) | undefined;
+    registerOnChange(onChange: (newSelectedValue: SelectedType<T, M>) => void): void {
+        this._onChangeCallback = onChange;
+    }
+    _onTouchedCallback: (() => void) | undefined;
+    registerOnTouched(onTouched: () => void): void {
+        this._onTouchedCallback = onTouched;
+    }
+    setDisabledState?(isDisabled: boolean): void {
+        this.disabled.set(isDisabled);
+    }
+
+    updateSelected(selected: SelectedType<T, M>): void {
+        this.selected$$.set(selected);
+        this._onChangeCallback?.(selected);
     }
 
     abstract handleSelectionChange(): void;
@@ -118,10 +139,10 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
         this.overlayRef.detach();
     }
     toggleDropdown(): void {
-        if (this.disabled) {
-            // eslint-disable-next-line no-useless-return
+        if (this.disabled()) {
             return;
-        } else if (this.dropdownClosed$$()) {
+        }
+        if (this.dropdownClosed$$()) {
             this.showDropdown();
         } else if (this.dropdownOpen$$()) {
             this.hideDropdown();
@@ -161,13 +182,14 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     }
 
     abstract onKeyDown(event: KeyboardEvent): void;
-    abstract onBlur(event: FocusEvent): void;
+
+    onBlur(event: FocusEvent): void {
+        this._onTouchedCallback?.();
+    }
 
     handleOptionSelected(option: BaseDropdownItem<T>): void {
         // Set the selected option(s) stored in the component
         this.updateSelectedOptionComponent(option);
-        // Update the placeholder/displayText based on the new selected option(s)
-        this.setPlaceholderOrDisplayText();
         // Emit the new values
         this.handleSelectionChange();
     }

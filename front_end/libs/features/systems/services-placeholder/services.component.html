@@ -59,8 +59,8 @@
             >
             <nx-dropdown
                 id="service"
-                [selected]="serviceForm.controls.service.value"
-                (selectedChange)="serviceForm.controls.service.setValue($event)"
+                [ngModel]="serviceForm.controls.service.value"
+                (ngModelChange)="serviceForm.controls.service.setValue($event)"
                 [placeholder]="'Select a service'"
             >
                 @for (service of availableServices$$(); track service.id) {

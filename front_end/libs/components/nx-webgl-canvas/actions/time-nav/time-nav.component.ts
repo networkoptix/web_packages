@@ -1,5 +1,6 @@
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -24,13 +25,13 @@ import { icons } from '@static-variables';
         NxSimpleDropdownItemComponent,
         TranslateModule,
         KeyValuePipe,
+        FormsModule,
     ],
 })
 export class WebGlTimelineTimeNavComponent {
     @Output() onChange = new EventEmitter<Record<string, unknown>>();
 
     protected readonly ButtonType = ButtonType;
-    protected readonly ButtonAction = ButtonAction;
     protected readonly icons = icons;
 
     selectedJumpTarget: number;
@@ -42,6 +43,14 @@ export class WebGlTimelineTimeNavComponent {
     };
 
     handleCalendarClick(): void {}
+
+    handleJumpTargetChange(jumpTarget: number | undefined): void {
+        this.selectedJumpTarget = jumpTarget as number;
+        this.handleActionClick({
+            action: ButtonAction.actionJumpTo,
+            param: this.selectedJumpTarget,
+        });
+    }
 
     handleActionClick(e: Record<string, unknown>): void {
         this.onChange.emit({ actin: e.action, param: e.param });

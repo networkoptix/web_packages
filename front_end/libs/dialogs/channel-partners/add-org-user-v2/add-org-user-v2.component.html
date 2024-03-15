@@ -53,8 +53,8 @@
             >Permission Group</label
         >
         <nx-dropdown
-            [selected]="selectedRole$$()"
-            (selectedChange)="selectedRole$$.set($event!)"
+            [ngModel]="selectedRole$$()"
+            (ngModelChange)="selectedRole$$.set($event!)"
             name="permission-group"
             class="d-block mb-3"
         >

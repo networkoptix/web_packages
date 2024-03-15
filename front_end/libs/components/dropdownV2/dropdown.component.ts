@@ -1,12 +1,12 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, forwardRef } from '@angular/core';
+import { Component, forwardRef, signal } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { of } from 'rxjs';
 
 import { PipesModule } from '@pipes/pipes.module';
-import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdownComponent } from './base-dropdown.component';
 import { BaseDropdownInjectionToken, DropdownState } from './dropdown.types';
@@ -46,23 +46,22 @@ Going to mostly borrow behavior from Material Select for now
             provide: BaseDropdownInjectionToken,
             useExisting: forwardRef(() => NxDropdownComponent),
         },
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxDropdownComponent),
+            multi: true,
+        },
     ],
 })
-export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> implements OnChanges {
+export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> {
     // The selected DropdownItem
     private selectedOptionComponent: BaseDropdownItem<T | undefined> | undefined;
 
-    ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
-        if (changes.selected) {
-            this.manuallySetSelectedOption();
-            this.setPlaceholderOrDisplayText();
-        }
-    }
+    selected$$ = signal<T | undefined>(undefined);
 
     handleSelectionChange(): void {
         const updatedSelect = this.selectedOptionComponent?.value;
-        this.selectedChange.emit(updatedSelect);
-        this.onChange.emit(updatedSelect);
+        this.updateSelected(updatedSelect);
     }
 
     override handleOptionSelected(option: BaseDropdownItem<T>): void {
@@ -74,14 +73,15 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
         // Timeout for dropdown element to become accessible
         setTimeout(() => {
             this.setOverlayWidth();
-            const selectedItem = this.dropdownItems.find(item => item.value === this.selected);
-            if (this.selected === undefined || !selectedItem) {
+            const selected = this.selected$$();
+            const selectedItem = this.dropdownItems.find(item => item.value === selected);
+            if (selected === undefined || !selectedItem) {
                 const first = this.getFirstEnabled();
                 if (first) {
                     this.highlightValue$$.set(first.value);
                 }
             } else {
-                this.highlightValue$$.set(this.selected);
+                this.highlightValue$$.set(selected);
                 this.scrollOptionIntoView(selectedItem);
             }
             this.openState$$.set(DropdownState.Open);
@@ -98,11 +98,12 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
 
     // Called when the selected value is set or changed outside of this component
     protected manuallySetSelectedOption(): void {
-        if (this.selected !== undefined) {
+        const selected = this.selected$$();
+        if (selected !== undefined) {
             // find the dropdownItem that matches the selected value
-            const selected = this.dropdownItems.find(item => item.value === this.selected);
-            if (selected) {
-                this.selectedOptionComponent = selected;
+            const selectedFound = this.dropdownItems.find(item => item.value === selected);
+            if (selectedFound) {
+                this.selectedOptionComponent = selectedFound;
             }
         } else {
             this.selectedOptionComponent = undefined;
@@ -121,32 +122,28 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     }
 
     private decrementSelect(): void {
-        if (
-            this.selected === undefined ||
-            !this.dropdownItems.find(item => item.value === this.selected)
-        ) {
+        const selected = this.selected$$();
+        if (selected === undefined || !this.dropdownItems.find(item => item.value === selected)) {
             return;
         }
-        const prev = this.getPrevEnabled(this.selected);
+        const prev = this.getPrevEnabled(selected);
         if (prev) {
-            this.selectedChange.emit(prev.value);
+            this.updateSelected(prev.value);
         }
     }
 
     private incrementSelect(): void {
-        if (
-            this.selected === undefined ||
-            !this.dropdownItems.find(item => item.value === this.selected)
-        ) {
+        const selected = this.selected$$();
+        if (selected === undefined || !this.dropdownItems.find(item => item.value === selected)) {
             const first = this.getFirstEnabled();
             if (first) {
-                this.selectedChange.emit(first.value);
+                this.updateSelected(first.value);
             }
             return;
         }
-        const next = this.getNextEnabled(this.selected);
+        const next = this.getNextEnabled(selected);
         if (next) {
-            this.selectedChange.emit(next.value);
+            this.updateSelected(next.value);
         }
     }
 
@@ -193,13 +190,13 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     private selectHighlighted(): void {
         const highlighted = this.highlightValue$$();
         if (typeof highlighted !== 'symbol') {
-            this.selectedChange.emit(highlighted);
+            this.updateSelected(highlighted);
             this.hideDropdown();
         }
     }
 
     override onKeyDown(event: KeyboardEvent): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             if (event.key === 'Tab') {
                 return; // Allow tabbing away on disabled after click
             } else {
@@ -239,7 +236,8 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
     }
 
     override onBlur(event: FocusEvent): void {
-        if (this.disabled) {
+        super.onBlur(event);
+        if (this.disabled()) {
             return;
         }
         if (this.dropdownOpening$$()) {

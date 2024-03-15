@@ -386,7 +386,7 @@
                 <span class="text-right">Aspect Ratio</span>
             </div>
             <div class="grid-item mb-2 mb-lg-0">
-                <nx-dropdown [(selected)]="selectedAspect">
+                <nx-dropdown [(ngModel)]="selectedAspect">
                     <nx-simple-dropdown-item
                         *ngFor="let aspectRatio of aspectRatioOptions | keyvalue"
                         [value]="aspectRatio.value"
@@ -399,7 +399,7 @@
                 <span class="text-right">Rotation</span>
             </div>
             <div class="grid-item">
-                <nx-dropdown [(selected)]="selectedRotation">
+                <nx-dropdown [(ngModel)]="selectedRotation">
                     <nx-simple-dropdown-item
                         *ngFor="let rotation of rotations"
                         [value]="rotation"

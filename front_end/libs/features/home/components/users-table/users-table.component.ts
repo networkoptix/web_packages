@@ -12,6 +12,7 @@ import {
     signal,
     inject,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -57,6 +58,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxAddSvgSrcDirective,
         NxDropdownModule,
         NxTooltipDirective,
+        FormsModule,
     ],
 })
 export class NxUsersTableComponent implements OnInit, OnChanges {

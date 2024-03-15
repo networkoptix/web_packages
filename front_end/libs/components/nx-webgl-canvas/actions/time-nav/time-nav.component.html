@@ -20,10 +20,8 @@
     <div id="jump-to-nav">
         <nx-dropdown
             [placeholder]="'Jump to...' | translate"
-            [(selected)]="selectedJumpTarget"
-            (onChange)="
-                handleActionClick({ action: ButtonAction.actionJumpTo, param: selectedJumpTarget })
-            "
+            [ngModel]="selectedJumpTarget"
+            (ngModelChange)="handleJumpTargetChange($event)"
         >
             <nx-simple-dropdown-item
                 class="text-action"

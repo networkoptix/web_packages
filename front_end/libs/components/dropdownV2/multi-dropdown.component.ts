@@ -1,7 +1,8 @@
 import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, forwardRef } from '@angular/core';
+import { Component, forwardRef, signal } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -9,10 +10,8 @@ import { of } from 'rxjs';
 
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
-import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdownComponent } from './base-dropdown.component';
-import { NxDropdownComponent } from './dropdown.component';
 import { BaseDropdownInjectionToken } from './dropdown.types';
 import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
 
@@ -27,13 +26,16 @@ import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item
             provide: BaseDropdownInjectionToken,
             useExisting: forwardRef(() => NxMultiDropdownComponent),
         },
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxMultiDropdownComponent),
+            multi: true,
+        },
     ],
 })
-export class NxMultiDropdownComponent<T>
-    extends BaseDropdownComponent<T, true>
-    implements OnChanges
-{
+export class NxMultiDropdownComponent<T> extends BaseDropdownComponent<T, true> {
     override ariaMultiselectable = true;
+    selected$$ = signal<T[]>([]);
 
     constructor(
         overlay: Overlay,
@@ -47,19 +49,11 @@ export class NxMultiDropdownComponent<T>
     // This could be a computed signal when signal inputs are ready (performance test needed)
     private selectedOptionComponents: BaseDropdownItem<T>[] = [];
 
-    ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
-        if (changes.selected) {
-            this.manuallySetSelectedOption();
-            this.setPlaceholderOrDisplayText();
-        }
-    }
-
     override handleSelectionChange(): void {
         const updatedSelect = this.selectedOptionComponents.map(
             selectedOptionComponent => selectedOptionComponent.value,
         );
-        this.selectedChange.emit(updatedSelect);
-        this.onChange.emit(updatedSelect);
+        this.updateSelected(updatedSelect);
     }
 
     protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
@@ -79,7 +73,8 @@ export class NxMultiDropdownComponent<T>
     protected manuallySetSelectedOption(): void {
         // Compare the 2 arrays (selected and dropdownItems) and set the selectedOptionsComponent array
         this.selectedOptionComponents = this.dropdownItems.filter(item =>
-            this.selected.includes(item.value),
+            // Because of an Angular issue selected will be `null` for short period after the construction phase https://github.com/angular/angular/issues/14988
+            this.selected$$()?.includes(item.value),
         );
     }
 
@@ -111,5 +106,7 @@ export class NxMultiDropdownComponent<T>
 
     // TODO: Add keyboard navigation
     override onKeyDown(event: KeyboardEvent): void {}
-    override onBlur(event: FocusEvent): void {}
+    override onBlur(event: FocusEvent): void {
+        super.onBlur(event);
+    }
 }

@@ -1,7 +1,7 @@
 import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { map, timer } from 'rxjs';
 
@@ -228,6 +228,19 @@ export class MultiSelectComponent {
     timer1 = timer(0, 1000);
     timer2 = timer(500, 1000).pipe(map(x => x * 13));
     selectedTimer = 0;
+
+    dropdownForm = new FormGroup({
+        singleStateDropdown: new FormControl(this.states[0]),
+        multiStateDropdown: new FormControl<string[]>([]),
+    });
+    onDropdownFormSubmit(): void {
+        alert(JSON.stringify(this.dropdownForm.value));
+    }
+    onFormReset(): void {
+        this.dropdownForm.controls.singleStateDropdown.setValue(this.states[0]);
+        this.dropdownForm.controls.multiStateDropdown.setValue([this.states[0]]);
+        this.dropdownForm.markAsPristine();
+    }
 
     logOnChange(event: unknown): void {
         console.log('onChange', event);

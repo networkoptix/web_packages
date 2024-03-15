@@ -5,7 +5,7 @@
     <div class="col-4 dropdownPadding">
         <nx-multi-dropdown
             placeholder="Placeholder text"
-            [(selected)]="selectedStates"
+            [(ngModel)]="selectedStates"
         >
             <nx-multi-select-dropdown-item
                 *ngFor="let state of states; index as i"
@@ -20,7 +20,7 @@
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Placeholder text"
-            [(selected)]="selectedState"
+            [(ngModel)]="selectedState"
         >
             <nx-simple-dropdown-item
                 *ngFor="let state of states; index as i"
@@ -35,7 +35,7 @@
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Placeholder text"
-            [(selected)]="selectedState"
+            [(ngModel)]="selectedState"
             [disabled]="true"
         >
             <nx-simple-dropdown-item
@@ -57,7 +57,7 @@
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Select a user"
-            [(selected)]="selectedComplicatedObjectV2"
+            [(ngModel)]="selectedComplicatedObjectV2"
             (onChange)="logOnChange($event)"
         >
             <nx-simple-dropdown-item *ngIf="selectedComplicatedObjectV2 !== undefined">
@@ -76,7 +76,7 @@
     <div class="col-4 dropdownPadding">
         <nx-multi-dropdown
             placeholder="Select a user"
-            [(selected)]="selectedComplicatedObjects"
+            [(ngModel)]="selectedComplicatedObjects"
             (onChange)="logOnChange($event)"
         >
             <nx-simple-dropdown-item
@@ -89,25 +89,10 @@
             </nx-simple-dropdown-item>
         </nx-multi-dropdown>
     </div>
-
-    <div class="col-4 dropdownPadding">
-        <nx-multi-select
-            [componentId]="'sandboxDropdownsTooManyMultiSelect'"
-            name="ddTooManyMultiSelect"
-            [dataType]="DATA_TYPE.PERMISSIONS"
-            [items]="tooManyItems"
-            [ngModel]="itemsSelectedTooMany"
-            (ngModelChange)="modelChangedTooMany($event)"
-        >
-        </nx-multi-select>
-    </div>
-    <div class="col-4 dropdownPadding">
-        <div>Selected: {{ itemsSelectedTooMany | json }}</div>
-    </div>
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Changing Dropdown Options"
-            [(selected)]="selectedTimer"
+            [(ngModel)]="selectedTimer"
         >
             <nx-simple-dropdown-item
                 [value]="0"
@@ -122,6 +107,70 @@
                 {{ timer2 | async }}
             </nx-simple-dropdown-item>
         </nx-dropdown>
+    </div>
+</div>
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <h2>Form Dropdown</h2>
+    <div style="width: 100%">
+        <form
+            [formGroup]="dropdownForm"
+            (ngSubmit)="onDropdownFormSubmit()"
+            class="col-4"
+        >
+            <nx-dropdown formControlName="singleStateDropdown">
+                @for (state of states; track state) {
+                    <nx-simple-dropdown-item
+                        [value]="state"
+                        [selected]="dropdownForm.controls.singleStateDropdown.value === state"
+                    >
+                        {{ state }}
+                    </nx-simple-dropdown-item>
+                }
+            </nx-dropdown>
+            <nx-multi-dropdown formControlName="multiStateDropdown">
+                @for (state of states; track state) {
+                    <nx-multi-select-dropdown-item
+                        [value]="state"
+                        [selected]="
+                            !!dropdownForm.controls.multiStateDropdown.value?.includes(state)
+                        "
+                    >
+                        {{ state }}
+                    </nx-multi-select-dropdown-item>
+                }
+            </nx-multi-dropdown>
+            <div style="display: flex">
+                <button type="submit">Submit</button>
+                <button
+                    type="button"
+                    (click)="onFormReset()"
+                >
+                    Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <div class="col-4 dropdownPadding">
+        <nx-multi-select
+            [componentId]="'sandboxDropdownsTooManyMultiSelect'"
+            name="ddTooManyMultiSelect"
+            [dataType]="DATA_TYPE.PERMISSIONS"
+            [items]="tooManyItems"
+            [ngModel]="itemsSelectedTooMany"
+            (ngModelChange)="modelChangedTooMany($event)"
+        >
+        </nx-multi-select>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <div>Selected: {{ itemsSelectedTooMany | json }}</div>
     </div>
 </div>
 <div

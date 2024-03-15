@@ -147,7 +147,7 @@
                                 >
                             </div>
                             <div class="grid-item mb-2 mb-md-0">
-                                <nx-dropdown [(selected)]="selectedAspectWatcher.value">
+                                <nx-dropdown [(ngModel)]="selectedAspectWatcher.value">
                                     <nx-simple-dropdown-item
                                         [value]="defaultAspectRatio"
                                         [selected]="
@@ -175,7 +175,7 @@
                                 >
                             </div>
                             <div class="grid-item">
-                                <nx-dropdown [(selected)]="selectedRotationWatcher.value">
+                                <nx-dropdown [(ngModel)]="selectedRotationWatcher.value">
                                     <nx-simple-dropdown-item
                                         *ngFor="let rotation of rotationOptions"
                                         [value]="rotation"

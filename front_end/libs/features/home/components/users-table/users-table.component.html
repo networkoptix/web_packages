@@ -170,8 +170,8 @@
                         </div>
                         <ng-template #dropdown>
                             <nx-dropdown
-                                [selected]="getRowRoleId(row)"
-                                (selectedChange)="updateRole(row, $event)"
+                                [ngModel]="getRowRoleId(row)"
+                                (ngModelChange)="updateRole(row, $event)"
                             >
                                 <ng-container *ngFor="let role of roles">
                                     <nx-simple-dropdown-item [value]="role.id">
