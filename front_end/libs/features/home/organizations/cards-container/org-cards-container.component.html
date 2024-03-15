@@ -59,7 +59,7 @@
                     [routerLink]="['group', group.id]"
                     [relativeTo]="route.parent"
                     [dropdownItems]="groupActions$$()[group.id]"
-                    (toggleShow)="$event && prefetchDependencies()"
+                    (toggleShow)="$event && getGroupUsers(group.id)"
                 >
                     <h3>{{ group.name }}</h3>
                     <div>{{ group.systemCount }}</div>

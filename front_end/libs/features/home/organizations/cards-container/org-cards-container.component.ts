@@ -128,12 +128,19 @@ export class NxOrganizationCardContainerComponent {
             });
     }
 
-    groupUsers?: Promise<GroupUser[]>;
+    #groupUsers: Record<string, Promise<GroupUser[]> | null> = {};
 
-    prefetchDependencies(): void {
-        this.groupUsers = firstValueFrom(
-            this.cpService.getGroupUsers(this.groupsStore.currentGroupId$$().id),
-        ).catch(() => []);
+    getGroupUsers(groupId: string, clearExisting = true): Promise<GroupUser[]> {
+        if (!this.#groupUsers[groupId] || clearExisting) {
+            this.#groupUsers[groupId] = firstValueFrom(this.cpService.getGroupUsers(groupId)).catch(
+                () => {
+                    this.#groupUsers[groupId] = null;
+                    return [];
+                },
+            );
+        }
+
+        return this.#groupUsers[groupId] as Promise<GroupUser[]>;
     }
 
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
@@ -203,7 +210,7 @@ export class NxOrganizationCardContainerComponent {
                     name: deleteAction,
                     id: group.id,
                     action: async () => {
-                        const groupUsers = (await this.groupUsers) || [];
+                        const groupUsers = await this.getGroupUsers(group.id, false);
                         const warning =
                             groupUsers.length && group.systemCount
                                 ? ({
