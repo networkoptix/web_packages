@@ -25,14 +25,20 @@ import { takeUntil } from 'rxjs/operators';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { NgChanges } from '@utils/ng-changes';
 
+import { NxClickElsewhereDirective } from './nx-click-elsewhere';
+
 @UntilDestroy()
-@Directive({ selector: '[nxTooltip]', standalone: true })
+@Directive({
+    selector: '[nxTooltip]',
+    standalone: true,
+    hostDirectives: [NxClickElsewhereDirective],
+})
 export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private overlayRef: OverlayRef;
     private destroy$ = new Subject<boolean>();
     private positionStrategy: FlexibleConnectedPositionStrategy;
 
-    @Input('nxTooltip') content: string | TemplateRef<unknown>;
+    @Input('nxTooltip') content: false | string | TemplateRef<unknown>;
     @Input() alternativeTargetRef: Element;
 
     @Input({ transform: booleanAttribute }) horizontal: boolean;
@@ -42,13 +48,19 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @Input({ transform: booleanAttribute }) forceDark: boolean;
     @Input({ transform: booleanAttribute }) forceLight: boolean;
     @Input({ transform: booleanAttribute }) tooltipMediumFont: boolean;
+    @Input({ transform: booleanAttribute }) toggleOnClick: boolean;
+    @Input({ transform: booleanAttribute }) reversePositionOrder: boolean;
+    @Input({ transform: booleanAttribute }) ignoreMaxWidth: boolean;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
         private elementRef: ElementRef,
         private overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-    ) {}
+        clickAnywhere: NxClickElsewhereDirective,
+    ) {
+        clickAnywhere.nxClickElsewhere.pipe(takeUntil(this.destroy$)).subscribe(() => this.close());
+    }
 
     ngOnInit(): void {
         let positions: ConnectedPosition[];
@@ -105,7 +117,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         }
         this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.alternativeTargetRef || this.elementRef)
-            .withPositions(positions);
+            .withPositions(this.reversePositionOrder ? positions.reverse() : positions);
 
         this.overlayRef = this.overlay.create({
             positionStrategy: this.positionStrategy,
@@ -130,6 +142,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     @HostListener('mouseleave')
+    hide(): void {
+        if (!this.toggleOnClick) {
+            this.close();
+        }
+    }
+
     private close = (): void => {
         this.destroy$.next(true);
         this.overlayRef?.detach();
@@ -137,7 +155,24 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     @HostListener('mouseenter')
     show(): void {
-        timer(300)
+        if (!this.toggleOnClick) {
+            this.open();
+        }
+    }
+
+    @HostListener('click')
+    toggle(): void {
+        if (this.toggleOnClick) {
+            if (this.overlayRef?.hasAttached()) {
+                this.close();
+            } else {
+                this.open(0);
+            }
+        }
+    }
+
+    private open = (delay = 300): void => {
+        timer(delay)
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => {
                 if (!this.content) {
@@ -154,6 +189,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.forceDark,
                         !!this.forceLight,
                         !!this.tooltipMediumFont,
+                        !!this.ignoreMaxWidth,
                     );
                 } else {
                     tooltipRef.attachText(
@@ -163,8 +199,9 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.forceDark,
                         !!this.forceLight,
                         !!this.tooltipMediumFont,
+                        !!this.ignoreMaxWidth,
                     );
                 }
             });
-    }
+    };
 }
