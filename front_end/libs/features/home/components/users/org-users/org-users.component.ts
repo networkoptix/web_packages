@@ -34,7 +34,7 @@ const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
     return users.map(user => ({
         email: user.email,
         userId: user.email,
-        fullName: 'N/A',
+        fullName: user.fullName || 'N/A',
         roles: user.roles,
         isOrgUser: user.hasAccessTo?.membershipType === 'organization',
         accessLevel: user.hasAccessTo,
@@ -49,6 +49,7 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
     };
     return users.map(user => ({
         ...user,
+        fullName: user.fullName || 'N/A',
         groupRoles: user?.groupRoles?.map(group => ({
             ...group,
             name: groups?.find(groupItem => groupItem.id === group.groupId)?.name,
