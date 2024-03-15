@@ -149,12 +149,10 @@ export class NxOrganizationSettingsComponent implements OnInit {
             ChannelPartnerPermissions.ADMINISTER_ORGANIZATION_SYSTEMS,
         );
     });
-    canChangeState$$ = computed(
-        () =>
-            nxConfig.featureFlags.channelPartnersChangeStateUI &&
-            this.currentPartnerPermissions$$().includes(
-                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-            ),
+    canChangeState$$ = computed(() =>
+        this.currentPartnerPermissions$$().includes(
+            ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
+        ),
     );
     canUpdateOrg$$ = computed(() => {
         const currentState = this.currentState$$();
