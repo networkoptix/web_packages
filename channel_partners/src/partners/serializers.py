@@ -1899,29 +1899,51 @@ class LegacyLicensesSerializer(serializers.Serializer):
                 logger.error("Request to license server failed.",
                              exception=str(ex))
                 raise exceptions.APIException(detail="Cannot proceed request.")
-            if lic_response.is_success:
-                lic_data = lic_response.json()
-                if not lic_data:
-                    continue
-                lic_data = lic_data[0]
-                quantity += lic_data['count']
-                results.migratedLicenses.append(license_key)
+            if not lic_response.is_success:
+                # error returned
+                results.failedLicenses.append(license_key)
                 continue
-            results.failedLicenses.append(license_key)
+            try:
+                # not parseable json
+                lic_data = lic_response.json()
+            except:
+                logger.error("Cannot decode response from license server",
+                             conten=lic_response.content)
+                results.failedLicenses.append(license_key)
+                continue
+            if not lic_data or not isinstance(lic_data, list):
+                # success response is a List[dict]
+                results.failedLicenses.append(license_key)
+                continue
+            lic_data = lic_data[0]
+            if (
+                    not isinstance(lic_data, dict)
+                    or lic_data.get('key') != license_key
+                    or lic_data.get('status')
+                    or 'count' not in lic_data
+            ):
+                # not a dict, 'key' is not equal to posted license key,
+                # field 'status' means some error, 'count' field is required
+                results.failedLicenses.append(license_key)
+                continue
+            quantity += lic_data['count']
+            results.migratedLicenses.append(license_key)
         if results.migratedLicenses:
-            service_record = ChannelPartnerServiceRecord.objects.create(
-                cloud_system=system,
-                service=service,
-                quantity=quantity,
-                record_type=ServiceRecordTypes.LICENSE_MIGRATION,
-                in_effect=True,
-                effective_ts=now,
-            )
-            migration_records = [
-                MigrationRecord(license_key=license_key, service_record_id=service_record.id)
-                for license_key in results.migratedLicenses
-            ]
-            MigrationRecord.objects.bulk_create(migration_records, batch_size=100)
+            with transaction.atomic():
+                service_record = ChannelPartnerServiceRecord.objects.create(
+                    cloud_system=system,
+                    service=service,
+                    quantity=quantity,
+                    record_type=ServiceRecordTypes.LICENSE_MIGRATION,
+                    in_effect=True,
+                    effective_ts=now,
+                )
+                migration_records = [
+                    MigrationRecord(license_key=license_key, service_record_id=service_record.id)
+                    for license_key in results.migratedLicenses
+                ]
+                MigrationRecord.objects.bulk_create(migration_records, batch_size=100)
+                system.calculate_current_services(organization_id=system.organization_id, save_results=True)
         return results
 
 

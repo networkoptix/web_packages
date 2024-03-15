@@ -250,7 +250,8 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             "4NSW-Q6ZR-6V6N-D9P2",
             "4NSW-Q6ZR-6V6N-D9P3",
             "4NSW-Q6ZR-6V6N-D9P4",
-            "4NSW-Q6ZR-6V6N-D9P35"
+            "4NSW-Q6ZR-6V6N-D9P5",
+            "4NSW-Q6ZR-6V6N-D9P6",
         ]
         self.valid_data = {
             "licenses": self.licenses,
@@ -278,25 +279,75 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         caches['local'].clear()
         caches['default'].clear()
 
-    def test_all_ok(self, httpx_mock, mock_cdb_basic_auth):
+    def lic_server_data(self, license_key, count=20):
+        return [{
+            "key": license_key,
+            "count": count,
+        }]
+
+    def test_success(self, httpx_mock, mock_cdb_basic_auth):
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
-            json=self.lic_response_data,
+            json=self.lic_server_data(
+                self.licenses[0],
+                10
+            ),
+            match_json={"licenses": [self.licenses[0]], "hardwareIds": self.hardware_ids}
+        )
+        httpx_mock.add_response(
+            status_code=200,
+            url=self.url,
+            json=self.lic_server_data(
+                self.licenses[1],
+                20
+            ),
+            match_json={"licenses": [self.licenses[1]], "hardwareIds": self.hardware_ids}
+        )
+        # http status error
+        httpx_mock.add_response(
+            status_code=400,
+            url=self.url,
+            json=self.lic_server_data(
+                self.licenses[2],
+                30
+            ),
+            match_json={"licenses": [self.licenses[2]], "hardwareIds": self.hardware_ids}
+        )
+        httpx_mock.add_response(
+            status_code=200,
+            url=self.url,
+            json=self.lic_server_data(
+                self.licenses[3],
+                20
+            ),
+            match_json={"licenses": [self.licenses[3]], "hardwareIds": self.hardware_ids}
+        )
+        # incorrect license key
+        httpx_mock.add_response(
+            status_code=400,
+            url=self.url,
+            json=self.lic_server_data(
+                self.licenses[3],
+                50
+            ),
+            match_json={"licenses": [self.licenses[4]], "hardwareIds": self.hardware_ids}
         )
         auth = mock_cdb_basic_auth(self.system)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
         response = self.client.post(self.path, data=self.valid_data)
         assert response.status_code == 200
         data = response.json()
-        assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 4
+        assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 3
         migration_record = MigrationRecord.objects.filter(license_key__in=self.licenses).last()
         assert migration_record.service_record.quantity == 30
         assert migration_record.service_record.cloud_system == self.system
-        skipped = self.licenses.pop(1)
-        assert data['migratedLicenses'] == self.licenses
-        assert data['skippedLicenses'] == [skipped]
-        assert data['failedLicenses'] == []
+        failed = [self.licenses[2], self.licenses[4]]
+        skipped = [self.licenses[1]]
+        success = [self.licenses[0], self.licenses[3]]
+        assert data['migratedLicenses'] == success
+        assert data['skippedLicenses'] == skipped
+        assert data['failedLicenses'] == failed
 
     def test_all_failed(self, httpx_mock, mock_cdb_basic_auth):
         httpx_mock.add_response(
