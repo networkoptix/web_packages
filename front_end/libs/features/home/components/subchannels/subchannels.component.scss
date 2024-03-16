@@ -54,7 +54,7 @@
 
 .card-content {
   h3 {
-    width: 75% !important;
+    max-width: 65% !important;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
