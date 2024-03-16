@@ -35,7 +35,7 @@ export = createRule({
                 }
                 if (
                     value.type === AST_NODE_TYPES.NewExpression &&
-                    (value.callee as TSESTree.Identifier).name.endsWith('Subject') &&
+                    (value.callee as TSESTree.Identifier).name?.endsWith('Subject') &&
                     !value.typeParameters &&
                     !typeAnnotation
                     // Subject type annotations require a generic argument

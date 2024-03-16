@@ -73,7 +73,7 @@ import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
-import { VideoPlayerModule } from '@components/video-player/video-player.module';
+import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
@@ -328,7 +328,7 @@ const calculateResize = (
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        VideoPlayerModule,
+        NxVideoPlayerComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxClickElsewhereDirective,

@@ -31,6 +31,7 @@ export type RestV1CameraCompat = Pick<
     | 'backupContentType'
     | 'backupPolicy'
     | 'backupQuality'
+    | 'dewarpingParams'
 > & { deviceType: DeviceType; scheduleTasks: ScheduleTask[]; parameters: CamParameters };
 
 export type ScheduleTask = NxRecursivePick<
@@ -51,6 +52,82 @@ export interface RestV2CameraCompat extends RestV1CameraCompat {
 }
 
 export type PreprocessCamera = ec2CameraEx | RestV1CameraCompat | RestV2CameraCompat;
+
+/**
+ * See enum in nx monorepo open/vms/libs/nx_vms_api/src/nx/vms/api/types/dewarping_types.h
+ */
+export enum FisheyeCameraMount {
+    WALL = 'wall',
+    CEILING = 'ceiling',
+    TABLE = 'table',
+}
+
+/**
+ * This is a compatibility enum for the old camera mount types
+ */
+export enum FisheyeCameraMountCompatibility {
+    // Compatibility section.
+    HORIZONTAL = 'Horizontal', // Same as wall
+    VERTICAL_UP = 'Vertical', // Same as table
+    VERTICAL_DOWN = 'VerticalDown', // Same as ceiling
+}
+
+/**
+ * Values we expect to receive server for dewarpingParams.cameraProjection
+ */
+export const FisheyeCameraMountRaw = {
+    ...FisheyeCameraMount,
+    ...FisheyeCameraMountCompatibility,
+} as const;
+
+/**
+ * Initially we'll only be able to support equisolid for fisheye dewarping
+ */
+export enum CameraProjection {
+    EQUIDISTANT = 'equidistant',
+    EQUISOLID = 'equisolid',
+    STEREOGRAPHIC = 'stereographic',
+    EQUIRECTANGULAR_360 = 'equirectangular360',
+}
+
+/**
+ * Camera projections that we're able to support for dewarping
+ */
+export type SupportedCameraProjection = CameraProjection.EQUISOLID | CameraProjection.EQUIDISTANT;
+
+/**
+ * Base interface for dewarping params
+ */
+interface DewarpingParamsBase<
+    Enabled extends boolean = boolean,
+    Projection extends `${CameraProjection}` = `${CameraProjection}`,
+> {
+    enabled: Enabled;
+    cameraProjection: Projection;
+    fovRot: number;
+    hStretch: number;
+    radius: number;
+    sphereAlpha: number;
+    sphereBeta: number;
+    viewMode: `${FisheyeCameraMount}`;
+    xCenter: number;
+    yCenter: number;
+}
+
+/**
+ * Narrowed type for cameras not capable of dewarping
+ */
+export interface DewarpingParamsDisabled extends Partial<DewarpingParamsBase> {
+    enabled: false;
+}
+
+/**
+ * Narrowed type for cameras capable of dewarping
+ */
+export interface DewarpingParamsCapable
+    extends DewarpingParamsBase<true, `${SupportedCameraProjection}`> {}
+
+export type DewarpingParams = DewarpingParamsDisabled | DewarpingParamsCapable;
 
 export interface NxSystemCamera {
     // Shared
@@ -91,6 +168,7 @@ export interface NxSystemCamera {
     recordingSettings: RecordingSettings;
     recordingStatus: RecordingStatus;
     webRtcUrl: ((param: { position: string | null }, resolvedRelay?: string) => string) | null;
+    dewarpingParams: DewarpingParams;
 }
 
 export enum CameraStatus {

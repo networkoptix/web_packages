@@ -91,6 +91,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_updated_cross_system_menu = ('Show updated cross system menu separated from the tree', 'layoutsUpdatedCrossSystemMenu')
     layouts_camera_groups = ('Show camera groups in the tree', 'layoutsCameraGroups')
     layouts_item_new_placeholder = ('Show camera groups in the tree', 'layoutsItemNewPlaceholder')
+    layouts_fisheye = ('Show fisheye de-warping', 'layoutsFisheye')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

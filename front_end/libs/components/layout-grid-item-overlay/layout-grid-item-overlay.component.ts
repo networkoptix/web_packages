@@ -8,7 +8,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Input,
+    input,
     Output,
     signal,
     WritableSignal,
@@ -56,7 +56,6 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { VideoPlayerModule } from '@components/video-player/video-player.module';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -67,6 +66,7 @@ import { LayoutStateService } from '@services/layout-state/layout-state.service'
 import { selectActiveLayoutState } from '@services/layout-state/store/active-layout/active-layout.selectors';
 import { selectCameraResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -75,7 +75,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
-import { cleanId } from '@utils/general';
+import { cleanId, isDewarpingCapable } from '@utils/general';
 
 const LANG = staticLang.layouts.overlay.menuActions;
 
@@ -107,7 +107,6 @@ const EMPTY_MENU_ACTION = {
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        VideoPlayerModule,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
@@ -116,29 +115,31 @@ const EMPTY_MENU_ACTION = {
         CdkContextMenuTrigger,
     ],
     hostDirectives: [NxResizeObserver],
+    exportAs: 'overlay',
 })
 export class NxLayoutGridItemOverlayComponent {
-    item$$ = signal<LayoutItem | undefined>(undefined);
-    @Input() set item(value: LayoutItem) {
-        this.item$$.set(value);
-    }
-    node$$ = signal<BaseResourceNode | null>(null);
-    @Input() set node(value: BaseResourceNode) {
-        this.node$$.set(value);
-    }
-    hideRemove$$ = signal(false);
-    @Input() set hideRemove(value: boolean) {
-        this.hideRemove$$.set(value);
-    }
-    @Input() hide: boolean;
-    @Input() fullScreenTarget: HTMLElement;
-    canEdit$$ = signal(true);
-    @Input() set canEdit(value: boolean) {
-        this.canEdit$$.set(value);
-    }
-    @Input() system: NxSystem;
+    item$$ = input.required<LayoutItem | undefined>({ alias: 'item' });
+    node$$ = input.required<BaseResourceNode | null>({ alias: 'node' });
+    hideRemove$$ = input.required({ alias: 'hideRemove' });
+
+    hideInput$$ = input.required({ alias: 'hide' });
+    fullScreenTarget$$ = input.required<HTMLElement | null>({ alias: 'fullScreenTarget' });
+    canEdit$$ = input.required({ alias: 'canEdit' });
+    system$$ = input.required<NxSystem>({ alias: 'system' });
 
     @Output() removeItem = new EventEmitter<LayoutItem>();
+
+    toggleShowFishEye$ = signal<boolean | null>(null);
+
+    showFisheye$$ = computed(() => {
+        const toggled = this.toggleShowFishEye$();
+
+        if (toggled !== null) {
+            return toggled;
+        }
+
+        return !!this.item$$()?.dewarpingParams?.enabled;
+    });
 
     isFullscreen$$ = signal(false);
     isMenuOpened$$ = signal(false);
@@ -251,7 +252,7 @@ export class NxLayoutGridItemOverlayComponent {
         const primaryStream = this.primaryStream$$();
         if (primaryStream) {
             const nonWebRtcCodec = primaryStream && [7, 173].includes(primaryStream.codec);
-            if (!nonWebRtcCodec || this.system.version >= 6) {
+            if (!nonWebRtcCodec || this.system$$().version >= 6) {
                 return true;
             }
         }
@@ -268,7 +269,7 @@ export class NxLayoutGridItemOverlayComponent {
         distinctUntilChanged(),
         switchMap(displayInfo => {
             const cameraNode = this.checkGetCameraNode();
-            const mediaserver = this.system.mediaserver;
+            const mediaserver = this.system$$().mediaserver;
 
             if (!displayInfo || !cameraNode) {
                 return EMPTY;
@@ -356,7 +357,7 @@ export class NxLayoutGridItemOverlayComponent {
 
     @HostListener('document:fullscreenchange')
     onFullscreenChange(): void {
-        this.isFullscreen$$.set(document.fullscreenElement === this.fullScreenTarget);
+        this.isFullscreen$$.set(document.fullscreenElement === this.fullScreenTarget$$());
     }
 
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
@@ -375,7 +376,8 @@ export class NxLayoutGridItemOverlayComponent {
             id: 'fisheye',
             icon: icons.dirLayoutsOverlay + 'fisheye.svg',
             ...LANG.fisheye,
-            ...EMPTY_MENU_ACTION,
+            checked$$: this.showFisheye$$,
+            action: () => this.toggleShowFishEye$.set(!this.showFisheye$$()),
         },
         motion: {
             id: 'motion',
@@ -517,7 +519,7 @@ export class NxLayoutGridItemOverlayComponent {
             icon: icons.dirLayoutsOverlay + 'full_screen.svg',
             ...LANG.fullscreenOn,
             action: () => {
-                this.fullScreenTarget.requestFullscreen({
+                this.fullScreenTarget$$()?.requestFullscreen({
                     navigationUI: 'hide',
                 });
             },
@@ -562,12 +564,17 @@ export class NxLayoutGridItemOverlayComponent {
     };
 
     quickActions$$ = computed(() => {
-        if (!this.checkGetCameraNode()) {
+        const cameraNode = this.checkGetCameraNode();
+
+        if (!cameraNode) {
             return null;
         }
+
         return [
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.ptz,
-            this.allowDebugMode && this.MENU_ITEMS.fisheye,
+            nxConfig.featureFlags.layoutsFisheye &&
+                isDewarpingCapable(cameraNode.details.dewarpingParams) &&
+                this.MENU_ITEMS.fisheye,
             this.allowDebugMode && this.MENU_ITEMS.motion,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.object,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.zoomWindow,
@@ -624,7 +631,7 @@ export class NxLayoutGridItemOverlayComponent {
     );
 
     hide$$ = computed(() => {
-        return this.hide || (!this.isMenuOpened$$() && this.mouseInactive$$());
+        return this.hideInput$$() || (!this.isMenuOpened$$() && this.mouseInactive$$());
     });
 
     menuItemsByType: Partial<{

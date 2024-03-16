@@ -26,7 +26,7 @@ import { NxLayoutGridItemPlaceholderTemplateComponent } from '@components/layout
 import { NxLayoutGridItemPlaceholderTemplateLegacyComponent } from '@components/layout-grid-item-placeholder-template-legacy/layout-grid-item-placeholder-template-legacy.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { VideoPlayerModule } from '@components/video-player/video-player.module';
+import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -56,7 +56,7 @@ import { icons } from '@static-variables';
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        VideoPlayerModule,
+        NxVideoPlayerComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxTooltipDirective,

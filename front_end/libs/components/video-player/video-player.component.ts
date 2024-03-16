@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, effect, runInInjectionContext, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, input, runInInjectionContext } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -25,6 +25,14 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { nxConfig } from '@services/nx-config/config';
 
+import { NxFisheyeViewerComponent } from '../fisheye-viewer/fisheye-viewer.component';
+import { CommonModule } from '@angular/common';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxRotateDirective } from '@directives/nx-rotate.directive';
+import { PipesModule } from '@pipes/pipes.module';
+import { ServiceModule } from '@services/services.module';
+import { isDewarpingCapable } from '@utils/general';
+
 type DrawImagePartialTuple = [number, number, number, number];
 
 type DrawImageFullTuple = [number, number, number, number, number, number, number, number];
@@ -45,30 +53,43 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
 //     constructor(private sampleSizeSeconds: number = 10) { }
 // }
 
+
 @UntilDestroy()
 @Component({
     selector: 'nx-video-player',
     templateUrl: 'video-player.component.html',
-    styleUrls: ['video-player.component.scss']
+    styleUrls: ['video-player.component.scss'],
+    standalone: true,
+    imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent],
 })
 export class NxVideoPlayerComponent {
-    camera$$ = signal<NxSystemCamera | null>(null)
-    @Input({ required: true }) set camera(camera: NxSystemCamera) {
-        this.camera$$.set(camera);
-    };
+    camera$$ = input.required<NxSystemCamera>({ alias: 'camera'})
 
     get camera(): NxSystemCamera | null {
         return this.camera$$();
     }
     @Input() rotation: number;
-    @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
+    renderParams = input.required<Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft' | 'dewarpingParams' | 'id'>>();
+
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
 
-    resolution$$ = signal(Resolution.AUTO)
-    @Input() set resolution(resolution: Resolution) {
-        this.resolution$$.set(resolution);
-    }
+    resolution$$ = input.required<Resolution>({ alias: 'resolution'})
+
+    showFisheye = input.required<boolean>()
+
+    dewarpingParams$$ = computed(() => {
+        if (this.showFisheye()) {
+            const dewarpingParamsCamera = this.camera$$()?.dewarpingParams;
+            if (dewarpingParamsCamera && isDewarpingCapable(dewarpingParamsCamera)) {
+                const dewarpingParamsItem = this.renderParams().dewarpingParams
+                return {
+                    dewarpingParamsCamera,
+                    dewarpingParamsItem,
+                };
+            }
+        }
+    })
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
@@ -120,11 +141,13 @@ export class NxVideoPlayerComponent {
         private injector: Injector,
     ) {
         this.playerId = uuid();
-        WebRTCStreamManager.RELAY_URL = this.CONFIG.trafficRelayHost;
+        if (this.CONFIG.trafficRelayHost) {
+            WebRTCStreamManager.RELAY_URL = this.CONFIG.trafficRelayHost;
+        }
     }
 
     calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
-        const { zoomTop, zoomRight, zoomBottom, zoomLeft } = this.zoom || {};
+        const { zoomTop, zoomRight, zoomBottom, zoomLeft } = this.renderParams() || {};
         const [_x, _y, width, height] = drawParams;
 
         if ([zoomTop, zoomRight, zoomBottom, zoomLeft].some(Boolean)) {
@@ -145,7 +168,7 @@ export class NxVideoPlayerComponent {
         video.muted = true;
         video.srcObject = stream;
 
-        if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.zoom?.[key])) {
+        if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.renderParams()?.[key])) {
             return video.captureStream();
         }
 

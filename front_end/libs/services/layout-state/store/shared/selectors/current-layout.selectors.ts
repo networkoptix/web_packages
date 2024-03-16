@@ -9,6 +9,7 @@ import { selectCrossSystemLayoutsState } from '../../cross-system-layouts/cross-
 import { selectLocalLayoutsState } from '../../local-layouts/local-layouts.selectors';
 import { selectUnsavedLayoutsState } from '../../unsaved-layouts/unsaved-layouts.selectors';
 import { LayoutState, LayoutTypes } from '../types/layout-state.types';
+import { toCrossSystemLayoutState, toLocalLayoutState } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const findLayoutFactory =
@@ -25,8 +26,8 @@ export const selectCurrentLayoutState = createSelector(
         const findLayout = findLayoutFactory(selectedLayoutId);
 
         return (findLayout(unsavedLayouts) ||
-            findLayout(localLayouts) ||
-            findLayout(crossSystemLayouts)) as LayoutState;
+            findLayout(localLayouts.map(toLocalLayoutState)) ||
+            findLayout(crossSystemLayouts.map(toCrossSystemLayoutState))) as LayoutState;
     },
 );
 

@@ -885,6 +885,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             isAudioEnabled: audioEnabled,
             isControlEnabled: controlEnabled,
             isDualStreamingDisabled,
+            dewarpingParams,
             ...backupOpts
         } = options;
         const { deviceType = DeviceType.Camera, ...parameters } = params;
@@ -892,6 +893,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const { isEnabled: scheduleEnabled, tasks: scheduleTasks } = schedule;
         return {
             ...rest,
+            dewarpingParams,
             parentId: serverId,
             audioEnabled,
             controlEnabled,

@@ -185,6 +185,7 @@ export const cameraKeyMapV1 = {
         isAudioEnabled: true,
         isControlEnabled: true,
         isDualStreamingDisabled: true,
+        dewarpingParams: true,
     },
     parameters: {
         bitrateInfos: {

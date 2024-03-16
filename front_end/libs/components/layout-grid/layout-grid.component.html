@@ -567,16 +567,6 @@
                                                         Not supported
                                                     </div>
                                                 </ng-template>
-
-                                                <ng-template #unavailable>
-                                                    <div
-                                                        class="not-supported"
-                                                        translate
-                                                    >
-                                                        Unavailable
-                                                    </div>
-                                                </ng-template>
-
                                                 <ng-template
                                                     #itemStatusPlaceholder
                                                     let-status="status"
@@ -641,6 +631,9 @@
                                                                                 class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
                                                                             >
                                                                                 <nx-video-player
+                                                                                    [showFisheye]="
+                                                                                        overlay.showFisheye$$()
+                                                                                    "
                                                                                     [camera]="
                                                                                         itemDetail.details
                                                                                     "
@@ -658,7 +651,9 @@
                                                                                             $event
                                                                                         )
                                                                                     "
-                                                                                    [zoom]="item"
+                                                                                    [renderParams]="
+                                                                                        item
+                                                                                    "
                                                                                     [lostConnectionPlaceholder]="
                                                                                         offlinePlaceholder
                                                                                     "
@@ -827,6 +822,7 @@
                                                     }
                                                 }
                                                 <nx-layout-grid-item-overlay
+                                                    #overlay="overlay"
                                                     cdkDragHandle
                                                     [cdkDragHandleDisabled]="
                                                         !!layout.locked ||

@@ -11,7 +11,7 @@ import { NxContextMenu } from '@components/context-menu/context-menu';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { VideoPlayerModule } from '@components/video-player/video-player.module';
+import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -37,7 +37,7 @@ import { PipesModule } from '@pipes/pipes.module';
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        VideoPlayerModule,
+        NxVideoPlayerComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxTooltipDirective,

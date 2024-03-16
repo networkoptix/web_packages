@@ -13,7 +13,7 @@ interface ContrastParams extends BaseParams {
     gamma: float;
 }
 
-interface DewarpingParams extends BaseParams {
+export interface DewarpingParamsLayoutItem extends BaseParams {
     xAngle: int;
     yAngle: int;
     fov: int;
@@ -34,7 +34,7 @@ export interface LayoutItem {
     zoomBottom: float;
     zoomTargetId: uuid;
     contrastParams: ContrastParams;
-    dewarpingParams: DewarpingParams;
+    dewarpingParams: DewarpingParamsLayoutItem;
     displayInfo: boolean;
     controlPtz: boolean;
     displayAnalyticsObjects: boolean;

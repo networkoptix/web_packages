@@ -8,6 +8,14 @@ import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import {
+    CameraProjection,
+    DewarpingParams,
+    FisheyeCameraMount,
+    FisheyeCameraMountCompatibility,
+    DewarpingParamsCapable,
+    SupportedCameraProjection,
+} from '@services/system.service/camera-manager/camera-manager-types';
 
 /* String */
 /** @deprecated Old version has nullish coalescing for undefined argument, but this shouldn't ever happen.
@@ -491,3 +499,112 @@ export function getParameterByName(name: string): string | null {
 
     return params.get(name);
 }
+
+/**
+ * Check if a string is a valid FisheyeCameraMount and narrows type
+ */
+export const isFisheyeCameraMount = (value: string): value is FisheyeCameraMount =>
+    Object.values(FisheyeCameraMount).includes(value as FisheyeCameraMount);
+
+/**
+ * Check if a string is a FisheyeCameraMountCompatibility and narrows type.
+ *
+ * Used to check if we need to map the compatibility to FisheyeCameraMount.
+ */
+export const isFisheyeCameraMountCompatibility = (
+    value: string,
+): value is FisheyeCameraMountCompatibility =>
+    Object.values(FisheyeCameraMountCompatibility).includes(
+        value as FisheyeCameraMountCompatibility,
+    );
+
+/**
+ * Map FisheyeCameraMountCompatibility to FisheyeCameraMount.
+ *
+ * Fallback to FisheyeCameraMount.CEILING if not a valid compatibility.
+ */
+const parseFisheyeViewModeCompatibility = (viewMode: string): FisheyeCameraMount => {
+    if (isFisheyeCameraMount(viewMode)) {
+        return viewMode;
+    }
+
+    if (!isFisheyeCameraMountCompatibility(viewMode)) {
+        return FisheyeCameraMount.CEILING;
+    }
+
+    return {
+        [FisheyeCameraMountCompatibility.HORIZONTAL]: FisheyeCameraMount.WALL,
+        [FisheyeCameraMountCompatibility.VERTICAL_UP]: FisheyeCameraMount.TABLE,
+        [FisheyeCameraMountCompatibility.VERTICAL_DOWN]: FisheyeCameraMount.CEILING,
+    }[viewMode];
+};
+
+/**
+ * Parses dewarpingParams string from mediaserver and returns DewarpingParams object.
+ *
+ * Returns DewarpingParamsDisabled if dewarpingParams is empty or invalid.
+ */
+export const parseDewarpingParams = (dewarpingParams: string): DewarpingParams => {
+    try {
+        if (!dewarpingParams) {
+            throw new Error('No dewarping params');
+        }
+
+        const {
+            cameraProjection = CameraProjection.EQUISOLID,
+            enabled = false,
+            fovRot = 0,
+            hStretch = 1,
+            radius = 0.5,
+            sphereAlpha = 0,
+            sphereBeta = 0,
+            viewMode: viewModeInitial = FisheyeCameraMount.CEILING,
+            xCenter = 0.5,
+            yCenter = 0.5,
+        } = JSON.parse(dewarpingParams);
+
+        if (!Object.values(CameraProjection).includes(cameraProjection)) {
+            throw new Error('Invalid camera projection');
+        }
+
+        const viewMode = parseFisheyeViewModeCompatibility(viewModeInitial);
+
+        return {
+            cameraProjection,
+            enabled,
+            fovRot,
+            hStretch,
+            radius,
+            sphereAlpha,
+            sphereBeta,
+            viewMode,
+            xCenter,
+            yCenter,
+        };
+    } catch (_) {
+        return { enabled: false };
+    }
+};
+
+/**
+ * Check if a camera projection is a supported for dewarping.
+ */
+export const isSupportedCameraProjection = (
+    projection: DewarpingParams['cameraProjection'],
+): projection is SupportedCameraProjection =>
+    [CameraProjection.EQUIDISTANT, CameraProjection.EQUISOLID].includes(
+        projection as SupportedCameraProjection,
+    );
+
+/**
+ * Checks if dewarping is capable and enabled for camera and narrows type.
+ */
+export const isDewarpingCapable = (
+    dewarpingParams: DewarpingParams,
+): dewarpingParams is DewarpingParamsCapable => {
+    return (
+        !!dewarpingParams.cameraProjection &&
+        isSupportedCameraProjection(dewarpingParams.cameraProjection) &&
+        dewarpingParams.enabled
+    );
+};

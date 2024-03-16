@@ -221,6 +221,7 @@ const FeatureFlagKeys = [
     'layoutsCrossSystemEditing',
     'layoutsRemoveItemDialog',
     'layoutsUpdatedCrossSystemMenu',
+    'layoutsFisheye',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

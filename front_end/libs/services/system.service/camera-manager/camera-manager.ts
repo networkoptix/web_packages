@@ -7,7 +7,13 @@ import type { ec2CameraEx } from '@services/system-api.types/devices.types';
 import type { ServerTime } from '@services/system-api.types/servers.types';
 import type { CameraValues } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { cleanIdLegacy, KeyFilter, MS, extractVideoLayout } from '@utils/general';
+import {
+    cleanIdLegacy,
+    KeyFilter,
+    MS,
+    extractVideoLayout,
+    parseDewarpingParams,
+} from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 
@@ -170,7 +176,10 @@ export class CameraManager {
             scheduleTasks,
             backupPolicy,
             backupContentType,
+            dewarpingParams: dewarpingParamsRaw,
         } = camera;
+
+        const dewarpingParams = parseDewarpingParams(dewarpingParamsRaw);
 
         const getAccessToken = (): string =>
             'accessToken' in this.serverManager.mediaserver
@@ -209,6 +218,7 @@ export class CameraManager {
             recordingSettings,
             recordingStatus,
             webRtcUrl,
+            dewarpingParams,
         };
     };
 

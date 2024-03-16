@@ -374,6 +374,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 isAudioEnabled: audioEnabled,
                 isControlEnabled: controlEnabled,
                 isDualStreamingDisabled,
+                dewarpingParams,
                 ...backupOpts
             } = options;
             const { type: motionType, mask: motionMask } = motion;
@@ -383,6 +384,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 parentId: serverId,
                 audioEnabled,
                 controlEnabled,
+                dewarpingParams,
                 disableDualStreaming: isDualStreamingDisabled,
                 ...backupOpts,
                 parameters,

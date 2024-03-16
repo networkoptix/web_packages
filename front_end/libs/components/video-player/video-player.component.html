@@ -30,6 +30,15 @@
     [nxRotate]="rotation"
 ></video>
 
+@if (dewarpingParams$$(); as dewarpingParams) {
+    <nx-fisheye-viewer
+        [source]="webRtcStream"
+        [dewarpingParams]="dewarpingParams"
+        [layoutItemId]="renderParams().id"
+        class="fisheye-viewer"
+    ></nx-fisheye-viewer>
+}
+
 @if (!error && (loading || lostConnection || !webRtcStream.currentTime)) {
     <nx-pre-loader></nx-pre-loader>
 }

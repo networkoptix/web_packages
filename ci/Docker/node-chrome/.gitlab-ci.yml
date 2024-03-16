@@ -3,7 +3,7 @@ include:
 
 variables:
   NODE_JS_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_node_js'
-  NODE_IMAGE_VERSION: '41461'
+  NODE_IMAGE_VERSION: '41186'
   NODE_JS_IMAGE_TAG: '${NODE_IMAGE_VERSION}'
   DOCKER_DIR: 'ci/Docker/node-chrome'
 

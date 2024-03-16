@@ -18,7 +18,6 @@ export class FpsMeterService {
         if (typeof document === 'object') {
             const script = document.createElement('script');
             script.onload = () => {
-                // @ts-expect-error
                 const stats = new Stats();
                 document.body.appendChild(stats.dom);
 
