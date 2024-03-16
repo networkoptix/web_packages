@@ -175,6 +175,10 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         return !!this.selectedUsersLength;
     }
 
+    get hasSelectedMultipleUsers(): boolean {
+        return this.selectedUsersLength > 1;
+    }
+
     get selectedUsersLength(): number {
         return Object.keys(this.selectedUsers).length;
     }
@@ -215,17 +219,21 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     }
 
     deleteChannelPartnerUser(user?: UserRecord): void {
-        const message = this.hasSelectedUsers
+        if (!user) {
+            user = this.selectedUsers[Object.keys(this.selectedUsers)[0]];
+        }
+        const message = this.hasSelectedMultipleUsers
             ? this.translateService.instant(
-                  this.LANG.channelPartners.usersTable.deleteDialog.multipleMessage,
+                  this.LANG.channelPartners.usersTable.deleteDialog.channelPartner.multipleMessage,
                   {
                       count: this.selectedUsersLength,
                   },
               )
             : this.translateService.instant(
-                  this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
+                  this.LANG.channelPartners.usersTable.deleteDialog.channelPartner.singleMessage,
                   {
-                      name: user.fullName,
+                      email: user.email,
+                      permission: user.roles[0],
                   },
               );
         this.dialogsService
@@ -246,7 +254,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             .then(confirm => {
                 if (confirm) {
                     const id = this.currentPartnerId$$();
-                    if (id && this.hasSelectedUsers) {
+                    if (id && this.hasSelectedMultipleUsers) {
                         // Todo: update this to bulk delete once added to API
                         const requests: Observable<void>[] = [];
                         for (const user of Object.values(this.selectedUsers)) {
