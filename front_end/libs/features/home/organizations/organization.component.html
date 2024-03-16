@@ -1,3 +1,4 @@
+<ng-template #loading><nx-pre-loader></nx-pre-loader></ng-template>
 <ng-template #body>
     <div class="name pb-3">
         <h2>{{ currentOrganization$$().name }}</h2>
@@ -17,7 +18,6 @@
         </ng-container>
     </div>
     <nx-tabs
-        [style.visibility]="isLoading ? 'hidden' : ''"
         animated
         [currentTabIndex]="currentTabIndex$$()"
     >
@@ -31,63 +31,67 @@
     </nx-tabs>
 </ng-template>
 
-<div
-    id="groups"
-    cdkDropListGroup
-    *ngIf="!showAccessTable; else accessTable"
->
-    <button
-        *ngIf="rootGroups$$()?.length && !isLoading"
-        class="sidebar-toggling-ear-wrapper"
-        type="button"
-        [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
-        (click)="handleSidebarTogglingEarClick()"
+<ng-container *ngIf="!isLoading; else loading">
+    <div
+        id="groups"
+        cdkDropListGroup
+        *ngIf="!showAccessTable; else accessTable"
     >
-        <div class="sidebar-toggling-ear">
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-            >
-            </svg-icon>
-        </div>
-    </button>
+        <button
+            *ngIf="rootGroups$$()?.length"
+            class="sidebar-toggling-ear-wrapper"
+            type="button"
+            [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
+            (click)="handleSidebarTogglingEarClick()"
+        >
+            <div class="sidebar-toggling-ear">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                >
+                </svg-icon>
+            </div>
+        </button>
 
-    <div
-        *ngIf="
-            (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
-            (sidebarSettings.value$ | async)?.showSidebarState
-        "
-    >
-        <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
-        <ng-template #sidebar>
-            <nx-groups-sidebar></nx-groups-sidebar>
-        </ng-template>
-    </div>
-    <div
-        class="cards"
-        [ngClass]="{ 'back-button': inChannelPartner }"
-    >
-        <nx-pre-loader *ngIf="isLoading && !currentOrganization$$(); else cards"></nx-pre-loader>
-        <ng-template #cards>
-            <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
-                <ng-template [ngTemplateOutlet]="body"></ng-template>
-                <router-outlet></router-outlet>
-            </ng-container>
-            <ng-template #channelPartnerView>
-                <a
-                    (click)="toRoot()"
-                    translate
-                >
-                    All Organizations</a
-                >
-                <ng-template [ngTemplateOutlet]="body"></ng-template>
-                <router-outlet></router-outlet>
+        <div
+            *ngIf="
+                (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
+                (sidebarSettings.value$ | async)?.showSidebarState
+            "
+        >
+            <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
+            <ng-template #sidebar>
+                <nx-groups-sidebar></nx-groups-sidebar>
             </ng-template>
-        </ng-template>
-        <!-- TODO: Replace with actual placeholder -->
-        <!-- eslint-disable-next-line nx/template/no-untranslated -->
+        </div>
+        <div
+            class="cards"
+            [ngClass]="{ 'back-button': inChannelPartner }"
+        >
+            <nx-pre-loader
+                *ngIf="isLoading && !currentOrganization$$(); else cards"
+            ></nx-pre-loader>
+            <ng-template #cards>
+                <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
+                    <ng-template [ngTemplateOutlet]="body"></ng-template>
+                    <router-outlet></router-outlet>
+                </ng-container>
+                <ng-template #channelPartnerView>
+                    <a
+                        (click)="toRoot()"
+                        translate
+                    >
+                        All Organizations</a
+                    >
+                    <ng-template [ngTemplateOutlet]="body"></ng-template>
+                    <router-outlet></router-outlet>
+                </ng-template>
+            </ng-template>
+            <!-- TODO: Replace with actual placeholder -->
+            <!-- eslint-disable-next-line nx/template/no-untranslated -->
+        </div>
     </div>
-</div>
+</ng-container>
 
 <ng-template #accessTable>
     <nx-access-table [email]="accessTableUser"></nx-access-table>
