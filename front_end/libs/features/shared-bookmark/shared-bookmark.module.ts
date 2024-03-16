@@ -16,8 +16,6 @@ const appRoutes: Routes = [
     },
     {
         path: ':systemId/:bookmarkId',
-        // TODO: title?
-        title: '',
         component: SharedBookmarkComponent,
     },
 ];

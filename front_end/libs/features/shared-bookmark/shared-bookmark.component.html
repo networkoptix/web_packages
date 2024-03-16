@@ -1,6 +1,8 @@
 <div
     class="background-container"
-    [ngClass]="{ 'container-password-variant': pageState() === 'password' }"
+    [ngClass]="{
+        'background-container-centered': pageState() === 'password' || pageState() === '404'
+    }"
 >
     @if (pageState() === 'loading') {
         <nx-pre-loader class="pre-loader" />
@@ -18,5 +20,7 @@
             [password]="password()"
             (passwordChange)="password.set($event)"
         />
+    } @else if (pageState() === '404') {
+        <nx-shared-bookmark-404 />
     }
 </div>

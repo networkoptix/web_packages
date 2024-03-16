@@ -1,0 +1,12 @@
+@use "typography";
+
+.description-text {
+    @include typography.medium24nocolor;
+    color: var(--bookmark-sharing-viewer-text-color);
+    margin-top: 24px;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+}

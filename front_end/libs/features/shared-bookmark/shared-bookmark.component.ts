@@ -17,6 +17,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { servers } from '@static-variables';
 import { sha256 } from '@utils/sha256';
 
+import { SharedBookmark404Component } from './shared-bookmark-404/shared-bookmark-404.component';
 import { SharedBookmarkPasswordComponent } from './shared-bookmark-password/shared-bookmark-password.component';
 import { SharedBookmarkViewerComponent } from './shared-bookmark-viewer/shared-bookmark-viewer.component';
 
@@ -37,9 +38,10 @@ type BookmarkData = {
     templateUrl: 'shared-bookmark.component.html',
     imports: [
         CommonModule,
-        SharedBookmarkViewerComponent,
         NxPreLoaderComponent,
+        SharedBookmarkViewerComponent,
         SharedBookmarkPasswordComponent,
+        SharedBookmark404Component,
     ],
 })
 export class SharedBookmarkComponent implements OnInit {
@@ -57,7 +59,7 @@ export class SharedBookmarkComponent implements OnInit {
                 .replace('{systemId}', this.systemId()),
     );
 
-    pageState = signal<'loading' | 'password' | 'viewer'>('loading');
+    pageState = signal<'loading' | 'password' | 'viewer' | '404'>('loading');
     password = signal<string>('');
     passwordHash = signal<string>('');
 
@@ -109,10 +111,13 @@ export class SharedBookmarkComponent implements OnInit {
                     this.pageState.set('viewer');
                 },
                 error: error => {
-                    // Password is incorrect or not provided or incorrect time sync
-                    if (error.error.errorId === servers.errors.forbidden) {
+                    if (error?.error?.errorId === servers.errors.forbidden) {
+                        // Password is incorrect or not provided or incorrect time sync
                         this.setServerSyncTime();
                         this.pageState.set('password');
+                    } else {
+                        // Server doesn't exist or bookmark doesn't exist
+                        this.pageState.set('404');
                     }
                 },
             });
