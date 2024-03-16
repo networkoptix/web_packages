@@ -28,9 +28,13 @@ def create_code_owner_rule(pattern, code_owners=None, required_approvals=1):
 # Define the rules to check. Currently we only have rules created by the create_code_owner_rule factory.
 # We'll probably add more sophisticated rules in the future.
 rules = [
+    create_code_owner_rule('build_scripts/**/*'),
+    create_code_owner_rule('ci/**/*'),
     create_code_owner_rule('cloud/**/*'),
-    create_code_owner_rule('front-end/**/*', [ttsolov]),
-    create_code_owner_rule('**/*')
+    create_code_owner_rule('deploy/**/*'),
+    create_code_owner_rule('front_end/**/*', [ttsolov] + default_code_owners),
+    create_code_owner_rule('webadmin/**/*')
+    # create_code_owner_rule('**/*') # Maybe we use this in the future.
 ]
 
 def check_approval_rules(approval_endpoint, access_token, target_commit):

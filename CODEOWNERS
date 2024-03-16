@@ -1,11 +1,3 @@
-[Backend]
-/cloud/ @rbarsegian @nhartleb
-
-[Frontend]
-/front_end/ @nhartleb @ttsolov @rbarsegian
-
-[Build/CI]
-/ci/ @rbarsegian @nhartleb
-/deploy/ @rbarsegian @nhartleb
-/build_scripts/ @rbarsegian @nhartleb
-/webadmin/ @rbarsegian @nhartleb
+[Rules]
+.gitlab-ci.yml
+approval-check.py
