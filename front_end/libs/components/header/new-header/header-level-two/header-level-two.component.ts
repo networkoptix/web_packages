@@ -8,6 +8,7 @@ import {
     signal,
     ViewChild,
 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -66,6 +67,7 @@ export class NxHeaderLevelTwoComponent {
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
         private scrollMechanics: NxScrollMechanicsService,
+        private router: Router,
         nxApplyService: NxApplyService,
     ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
@@ -80,6 +82,14 @@ export class NxHeaderLevelTwoComponent {
             .subscribe(() => {
                 this.optimisticSelectedSubNode = undefined;
             });
+
+        this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                if (event.url !== this.optimisticSelectedSubNode?.url) {
+                    this.optimisticSelectedSubNode = undefined;
+                }
+            }
+        });
     }
 
     handleLogoClick(clickType: logoClickType): void {
