@@ -14,6 +14,7 @@
     nxFocusMe
     [setFocus]="setFocus"
     [autocomplete]="isUsername ? 'username' : 'email'"
+    [placeholder]="placeholder"
 />
 
 <input
@@ -25,4 +26,5 @@
     [ngClass]="{ 'hide-errors': hideErrors }"
     [(ngModel)]="value"
     readonly
+    [placeholder]="placeholder"
 />
