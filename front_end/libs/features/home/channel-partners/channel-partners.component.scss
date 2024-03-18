@@ -46,6 +46,10 @@
                 color: var(--placehoder-v2-title-color) !important;
             }
 
+             svg-icon svg .icon-with-fill {
+                fill: var(--placehoder-body-color) !important;
+            }
+
     p {
       color: var(--placehoder-v2-message-color)!important;
     }
