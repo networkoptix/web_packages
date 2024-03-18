@@ -22,10 +22,7 @@ import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    GroupRole,
-    OrgCardItem,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
@@ -61,7 +58,6 @@ const GroupStore = signalStore(
 export class NxAccessTableComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
-    OrgCardItem = OrgCardItem;
     icons = icons;
     groupStore = inject(GroupStore);
 
@@ -85,13 +81,8 @@ export class NxAccessTableComponent implements OnInit {
         // Todo:
         // Add all organizations if current user is a CP user
         const groupsPath = this.groupsPath$$();
-        const currentOrg = this.currentOrg$$();
-        return [
-            { type: OrgCardItem.ORG, name: currentOrg?.name, id: currentOrg?.id },
-            ...groupsPath
-                .reverse()
-                .map(group => ({ type: OrgCardItem.GROUP, name: group.name, id: group.id })),
-        ];
+        const currentOrg = this.currentOrg$$()!;
+        return [currentOrg, ...groupsPath.reverse()];
     });
 
     constructor(
@@ -193,11 +184,11 @@ export class NxAccessTableComponent implements OnInit {
         });
     }
 
-    onPathItemClick(item: { type: OrgCardItem; name: string; id: string }): void {
-        if (item.type === OrgCardItem.ORG) {
-            this.router.navigate(['home', 'organization', item.id]);
+    onPathItemClick(id: string): void {
+        if (id === this.currentOrg$$()!.id) {
+            this.router.navigate(['home', 'organization', id]);
         } else {
-            this.router.navigate(['group', item.id], { relativeTo: this.route });
+            this.router.navigate(['group', id], { relativeTo: this.route });
         }
     }
 

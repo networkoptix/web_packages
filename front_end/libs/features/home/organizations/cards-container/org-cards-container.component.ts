@@ -21,6 +21,7 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
+import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -28,10 +29,10 @@ import {
     GroupItem,
     GroupUser,
     OrgPermissions,
-    SystemCardItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxVmsClientService } from '@services/vms-client.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
@@ -106,7 +107,7 @@ export class NxOrganizationCardContainerComponent {
         return item.systemId;
     }
 
-    onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
+    onDrop(event: CdkDragDrop<GroupItem, DraggableItem, DraggableItem>): void {
         if (!event.isPointerOverContainer || event.container === event.previousContainer) {
             return;
         }
@@ -154,7 +155,7 @@ export class NxOrganizationCardContainerComponent {
         }
         return groups.filter(group => caseInsenstiveSearch(group.name, search));
     });
-    filteredSystems$$ = computed<SystemCardItem[]>(() => {
+    filteredSystems$$ = computed<(SystemItem & Pick<NxSystemInfo, 'stateOfHealth'>)[]>(() => {
         const search = this.search$$();
         const cdbSystems = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
         const systems = this.groupsStore.currentSystems$$().map(sys => {

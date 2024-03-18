@@ -30,24 +30,18 @@ import {
     firstValueFrom,
 } from 'rxjs';
 
+import type { DraggableItem } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
+    Group,
     GroupItem,
-    OrgCardItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 
-import { generatePath, sortGroups } from './groups-utils';
-import {
-    GroupsState,
-    MethodsWithUndo,
-    SystemsByOrgOrGroup,
-    Undo,
-    GroupFlatMap,
-    GroupFlatItem,
-} from './groups.types';
+import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
+import type { SystemsByOrgOrGroup, Undo, GroupFlatMap, GroupFlatItem } from './groups.types';
 
 const initialState = {
     loadingGroups: true,
@@ -62,7 +56,7 @@ const GROUPS_STATE = new InjectionToken<typeof initialState>('GroupsState', {
     factory: () => initialState,
 });
 
-const findItem = (items: GroupItem[], id: string, remove = false): GroupItem | undefined => {
+const findItem = (items: GroupItem[], id: string | null, remove = false): GroupItem | undefined => {
     for (let index = 0; index < items.length; index++) {
         const item = items[index];
         const found = item.id === id;
@@ -146,7 +140,7 @@ export const GroupsStore = signalStore(
             }
         };
 
-        const moveSystem = (systemId: string, targetGroupId: string): string => {
+        const moveSystem = (systemId: string, targetGroupId: string | null): string => {
             const systemsByGroup = store.systemsEntities();
             const targetGroup: SystemsByOrgOrGroup = systemsByGroup.find(
                 ({ id }) => id === targetGroupId,
@@ -192,7 +186,7 @@ export const GroupsStore = signalStore(
                 return () => patchState(store, { loadingGroups: false });
             },
             moveItemWithUndo: (
-                movedItem: GroupItem | SystemItem,
+                movedItem: DraggableItem,
                 targetItem: Pick<GroupItem, 'id'> | { id: null },
             ): Undo => {
                 const movedGroupId = 'id' in movedItem ? movedItem.id : '';
@@ -201,7 +195,7 @@ export const GroupsStore = signalStore(
 
                 // Handle system move
 
-                if (movedItem.type === OrgCardItem.SYSTEM) {
+                if (isSystemItem(movedItem)) {
                     const originalGroupId = moveSystem(movedItem.systemId, targetParentId!);
 
                     return () => moveSystem(movedItem.systemId, originalGroupId);
@@ -216,7 +210,9 @@ export const GroupsStore = signalStore(
                         moveById(movedGroupId, originalParentId, store.groupsEntities()),
                     );
             },
-            addItemWithUndo: (item: GroupItem): Undo => {
+            addItemWithUndo: (group: Group): Undo => {
+                // children types are incompatible but new groups have none
+                const item = { ...group, children: [] } as GroupItem;
                 const groups = store.groupsEntities();
                 const parentItem = findItem(groups, item.parentId);
 
@@ -314,8 +310,8 @@ export const GroupsStore = signalStore(
                     }
                 };
             },
-        } as const;
-        return methods as MethodsWithUndo<typeof methods>;
+        };
+        return methods;
     }),
     // 3. Define data persistence methods
     withMethods((store, channelPartnerService = inject(NxChannelPartnersService)) => ({
@@ -325,11 +321,11 @@ export const GroupsStore = signalStore(
             patchState(store, setEntity({ id, open }, { collection: 'openGroups' }));
         },
         moveItem: (
-            movedItem: GroupItem,
+            movedItem: DraggableItem,
             targetItem: Pick<GroupItem, 'id'> | { id: null } = { id: null },
         ) => {
             if (
-                targetItem.id &&
+                isGroupItem(movedItem) &&
                 movedItem.children &&
                 findItem(movedItem.children, targetItem.id)
             ) {
@@ -337,12 +333,11 @@ export const GroupsStore = signalStore(
             }
 
             const undo = store.moveItemWithUndo(movedItem, targetItem);
-            const persist$ =
-                movedItem.type === OrgCardItem.GROUP
-                    ? channelPartnerService.patchGroup(movedItem.id, { parentId: targetItem.id })
-                    : channelPartnerService.updateSystemGroup(movedItem.systemId, {
-                          groupId: targetItem.id,
-                      });
+            const persist$ = isGroupItem(movedItem)
+                ? channelPartnerService.patchGroup(movedItem.id, { parentId: targetItem.id })
+                : channelPartnerService.updateSystemGroup(movedItem.systemId, {
+                      groupId: targetItem.id,
+                  });
             return (persist$ as Observable<GroupItem | CloudSystem>).pipe(
                 catchError((_, caught) => {
                     undo();
@@ -358,12 +353,12 @@ export const GroupsStore = signalStore(
          */
         initializeGroups: (orgId: string) => {
             const undo = store.initializeGroupsWithUndo();
-            return channelPartnerService.getOrgGroups(orgId).pipe(
+            return channelPartnerService.getGroupsStructure(orgId).pipe(
                 tap(groups =>
                     patchState(
                         store,
                         removeAllEntities(groupsEntity),
-                        setEntities(groups, groupsEntity),
+                        setEntities(groups as GroupItem[], groupsEntity),
                     ),
                 ),
                 catchError((_, caught) => {
@@ -463,13 +458,11 @@ export const GroupsStore = signalStore(
                 const groups: GroupItem[] = [];
                 const getChildren = (group: GroupItem): void => {
                     for (const child of group.children) {
-                        child.type = OrgCardItem.GROUP;
                         groups.push(child);
                         getChildren(child);
                     }
                 };
                 for (const group of orgGroups) {
-                    group.type = OrgCardItem.GROUP;
                     groups.push(group);
                     getChildren(group);
                 }
@@ -478,20 +471,20 @@ export const GroupsStore = signalStore(
 
             const sortedGroups$$ = computed(() => sortGroups(store.groupsEntities()));
 
-            const groupStateAdapter$$ = computed((): GroupsState => {
-                const groups = processGroups(sortedGroups$$());
-                const openGroups = Object.fromEntries(
-                    store.openGroupsEntities().map(({ id, open }) => [id, open]),
-                );
-                const systems = store.systemsEntities() as unknown as SystemItem[];
-                const currentGroupId = store.currentGroupId();
-                return {
-                    groups,
-                    openGroups,
-                    systems,
-                    currentGroupId,
-                };
-            });
+            // const groupStateAdapter$$ = computed((): GroupsState => {
+            //     const groups = processGroups(sortedGroups$$());
+            //     const openGroups = Object.fromEntries(
+            //         store.openGroupsEntities().map(({ id, open }) => [id, open]),
+            //     );
+            //     const systems = store.systemsEntities() as unknown as SystemItem[];
+            //     const currentGroupId = store.currentGroupId();
+            //     return {
+            //         groups,
+            //         openGroups,
+            //         systems,
+            //         currentGroupId,
+            //     };
+            // });
 
             const currentGroups$$ = computed(() => {
                 const groups = sortedGroups$$();
@@ -548,15 +541,14 @@ export const GroupsStore = signalStore(
                 };
             });
 
-            const currentSystems$$ = computed(() => {
+            const currentSystems$$ = computed<SystemItem[]>(() => {
                 const systems = store.systemsEntityMap();
                 const { id, isRoot } = currentGroupId$$();
                 const twoFactorEnabled = twoFactorEnabled$$();
                 const currentGroup = systems[id];
                 const cloudSystems = currentGroup?.cloudSystems || [];
                 const systemItems = cloudSystems.map(
-                    ({ systemId, groupId, name, effectiveState }): SystemItem => ({
-                        type: OrgCardItem.SYSTEM,
+                    ({ systemId, groupId, name, effectiveState }) => ({
                         effectiveState,
                         groupId,
                         systemId,
@@ -612,7 +604,7 @@ export const GroupsStore = signalStore(
 
             return {
                 sortedGroups$$,
-                groupStateAdapter$$,
+                // groupStateAdapter$$,
                 currentGroupId$$,
                 currentGroups$$,
                 currentSystems$$,
