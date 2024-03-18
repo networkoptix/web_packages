@@ -20,7 +20,7 @@
                 [type]="state === 'suspended' ? 'warning' : 'danger'"
                 [size]="'large'"
                 [locked]="true"
-                [customClass]="'status'"
+                [customClass]="'status' + (state === 'suspended' ? ' dark-text' : '')"
             >
                 {{ state | translate | uppercase }}
             </nx-tag>

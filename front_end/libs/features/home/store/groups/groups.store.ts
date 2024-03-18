@@ -385,7 +385,7 @@ export const GroupsStore = signalStore(
                               cloudSystems,
                           })),
                       )
-                    : channelPartnerService.getOrgSystems(orgId).pipe(
+                    : channelPartnerService.getOrgSystems(orgId, true).pipe(
                           map(cloudSystems => ({
                               id: orgId,
                               cloudSystems,
@@ -555,8 +555,9 @@ export const GroupsStore = signalStore(
                 const currentGroup = systems[id];
                 const cloudSystems = currentGroup?.cloudSystems || [];
                 const systemItems = cloudSystems.map(
-                    ({ systemId, groupId, name }): SystemItem => ({
+                    ({ systemId, groupId, name, effectiveState }): SystemItem => ({
                         type: OrgCardItem.SYSTEM,
+                        effectiveState,
                         groupId,
                         systemId,
                         name,
@@ -589,10 +590,7 @@ export const GroupsStore = signalStore(
             const groupsPath$$ = computed(() => {
                 const groups = groupFlatMap$$();
                 const currentGroupId = currentGroupId$$().id;
-
-                const path = [...generatePath(groups, currentGroupId)].reverse();
-
-                return path;
+                return [...generatePath(groups, currentGroupId)].reverse();
             });
 
             const groupPathMap$$ = computed(() => {

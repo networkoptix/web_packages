@@ -213,6 +213,7 @@ export interface CloudSystem {
     systemId: string;
     organizationName: string;
     system_state: string;
+    effectiveState: string;
 }
 
 export type PaginatedCloudSystemList = Page<CloudSystem>;
@@ -276,7 +277,7 @@ export interface SystemService {
     created: string;
 }
 /* Groups */
-export interface GroupItem extends SystemItem {
+export interface GroupItem extends Omit<SystemItem, 'stateOfHealth'> {
     id: string;
     roles: string[];
     name: string;
@@ -291,6 +292,11 @@ export interface SystemItem {
     systemId: string;
     type: OrgCardItem;
     system2faEnabled: boolean;
+    effectiveState: string;
+}
+
+export interface SystemCardItem extends SystemItem {
+    stateOfHealth: string;
 }
 
 export enum OrgCardItem {

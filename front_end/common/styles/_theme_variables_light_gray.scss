@@ -629,6 +629,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --group-card-border-color: var(--light_gray_10);
 
     --channel-partner-card-status-background: var(--light_gray_10);
+    --channel-partner-card-status-dark: var(--dark1);
 
     --subchannel-partner-card-id-background: var(--light_gray_16);
     --subchannel-partner-card-id-color: var(--light_gray_2);
@@ -641,6 +642,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --system-card-offline-color: var(--light_gray_4);
     --system-card-border-color: var(--light_gray_5);
     --system-card-owner-color: var(--light_gray_16);
+
+    --group-system-card-color: var(--dark_gray_15);
 
     --card-subtext-color: var(--light_gray_16);
     --card-menu-dots-fill: var(--light_gray_16);

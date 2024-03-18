@@ -19,7 +19,9 @@
                 [type]="currentPartner.effectiveState === 'suspended' ? 'warning' : 'danger'"
                 size="large"
                 [locked]="true"
-                [customClass]="'status'"
+                [customClass]="
+                    'status' + (currentPartner.effectiveState === 'suspended' ? ' dark-text' : '')
+                "
             >
                 {{ currentPartner.effectiveState | translate | uppercase }}
             </nx-tag>

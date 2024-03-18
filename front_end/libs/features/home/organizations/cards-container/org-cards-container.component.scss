@@ -52,6 +52,12 @@
       white-space: nowrap;
       overflow: hidden;
     }
+
+    &.offline-system {
+        h3 {
+            color: var(--group-system-card-color) !important;
+        }
+    }
 }
 
 .system-card.cdk-drop-list-receiving .card,
