@@ -40,6 +40,7 @@ interface SettingsState {
     view?: string;
     item?: ChannelPartner | Organization;
     canUpdateStatus?: boolean;
+    canConfigure?: boolean;
 }
 
 @Component({
@@ -87,7 +88,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
     );
 
     currentState$$ = computed<SettingsState>(() => {
-        const state: SettingsState = {};
+        const state: SettingsState = { canConfigure: false };
         if (this.cpSettings()) {
             state.item = this.currentPartner$$();
             state.view = settingsViews.CHANNEL_PARTNERS;
@@ -101,6 +102,9 @@ export class NxOrganizationSettingsComponent implements OnInit {
             state.item = subchannelsMap.get(this.subChannelId$$());
             state.view = settingsViews.SUBCHANNELS;
             state.canUpdateStatus = true;
+            state.canConfigure = state.item?.ownPermissions?.includes(
+                ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER,
+            );
         }
         return state;
     });
