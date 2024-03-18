@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
 import { OrgTreeStatuses } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.types';
 import type {
-    GroupItem,
+    GroupStructureItem,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -80,12 +80,12 @@ const dummyGroups = [
         name: 'Kuiper belt',
         children: [
             { id: 'Pluto Id', name: 'Pluto', children: [] },
-            { id: 'Eris Id', name: 'Eris', children: [] as GroupItem[] },
+            { id: 'Eris Id', name: 'Eris', children: [] as GroupStructureItem[] },
             // Bad interaction with empty array type
         ],
     },
     // { id: 'Planet 9 Id', name: 'Planet 9', children: [] },
-] as GroupItem[];
+] as GroupStructureItem[];
 
 const dummyStatuses = new Map([
     ['Mars Id', { type: 'warn', msg: 'Terraforming in progress' }],

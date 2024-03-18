@@ -9,6 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import {
     GroupItem,
@@ -55,7 +56,7 @@ export class NxGroupsSidebarLevelComponent {
         return item.id;
     }
 
-    onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
+    onDrop(event: CdkDragDrop<GroupItem, DraggableItem, DraggableItem>): void {
         if (!event.isPointerOverContainer || event.previousContainer === event.container) {
             return;
         }
@@ -64,10 +65,7 @@ export class NxGroupsSidebarLevelComponent {
         this.groupsStore.moveItem(dragged, droppedOn).subscribe();
     }
 
-    moveToRoot(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
-        if (!event.isPointerOverContainer || event.previousContainer === event.container) {
-            return;
-        }
+    moveToRoot(event: CdkDragDrop<undefined, DraggableItem, DraggableItem>): void {
         const dragged = event.item.data;
         this.groupsStore.moveItem(dragged).subscribe();
     }

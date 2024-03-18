@@ -5,14 +5,14 @@
     >
         @for (path of currentPath; track $index) {
             <div class="item">
-                @if (path.type === OrgCardItem.GROUP) {
+                @if ($index > 0) {
                     <svg-icon
                         nx-add-svg-src
                         [src]="icons.dir + 'folder2.svg'"
                         [svgStyle]="{ 'width.px': '10px', 'height.px': '10px' }"
                     ></svg-icon>
                 }
-                <a (click)="onPathItemClick(path)">{{ path.name }}</a>
+                <a (click)="onPathItemClick(path.id)">{{ path.name }}</a>
             </div>
             @if ($index !== currentPath.length - 1 && currentPath.length !== 1) {
                 /

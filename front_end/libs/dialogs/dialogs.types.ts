@@ -12,6 +12,7 @@ import type {
     ChannelPartner,
     ChannelPartnerUser,
     CloudSystem,
+    Group,
     GroupItem,
     GroupUser,
     Organization,
@@ -172,10 +173,10 @@ export type CreateSystemGroup = DialogType<
         parentGroup: string;
         parentGroupName?: string;
     },
-    GroupItem
+    Group
 >;
 
-export type UpdateSystemGroup = DialogType<string, GroupItem>;
+export type UpdateSystemGroup = DialogType<string, Group>;
 
 export type MoveOrgItem = DialogType<
     {
@@ -183,7 +184,7 @@ export type MoveOrgItem = DialogType<
         organization: Organization;
         groups: GroupItem[];
     },
-    GroupItem | CloudSystem
+    Group | CloudSystem
 >;
 
 export type AddOrgUserV2 = DialogType<

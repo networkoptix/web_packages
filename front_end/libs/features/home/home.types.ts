@@ -1,44 +1,7 @@
-import type { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-
-export interface BaseGroupItem {
-    groups: BaseGroupItem[];
-    id: string;
-    name: string;
-    org_id: string;
-    parent_group_id: string | null;
-    systems: BaseSystemItem[];
-    systemsCount: number;
-    type: 'group';
-    users: unknown[];
-}
-
-export type SystemInfo = System;
-
-export interface BaseSystemItem {
-    type: 'system';
-    id: string;
-    group_id: string | null;
-}
-
-export type SystemItem = BaseSystemItem & System;
-
-export interface GroupItem extends BaseGroupItem {
-    groups: GroupItem[];
-    systems: SystemItem[];
-}
-
-export type BaseGroupsItem = BaseGroupItem | BaseSystemItem;
-
-export type GroupsItem = GroupItem | SystemItem;
-
-export interface BaseItems {
-    groups: GroupItem[];
-    systems: SystemItem[];
-}
-
-export interface SharedItems {
-    [email: string]: BaseItems;
-}
+import type {
+    GroupItem,
+    SystemItem,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export interface Crumb {
     id: string;
@@ -77,3 +40,5 @@ export const settingsViews = {
     ORGANIZATIONS: 'organizations',
     SUBCHANNELS: 'subchannels',
 };
+
+export type DraggableItem = GroupItem | SystemItem;

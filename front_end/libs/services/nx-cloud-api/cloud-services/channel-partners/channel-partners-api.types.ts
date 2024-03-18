@@ -208,7 +208,7 @@ export interface CloudSystem {
     groupId: string | null;
     name: string;
     organization: string;
-    services: Record<string, unknown>;
+    services: ServiceQuantities;
     state: string;
     systemId: string;
     organizationName: string;
@@ -277,37 +277,41 @@ export interface SystemService {
     created: string;
 }
 /* Groups */
-export interface GroupItem extends Omit<SystemItem, 'stateOfHealth'> {
+/** `/organizations/{orgId}/groups_structure/` */
+export interface GroupStructureItem {
     id: string;
     roles: string[];
     name: string;
-    parentId: string;
-    children: GroupItem[];
+    parentId: string | null;
+    children: GroupStructureItem[];
     systemCount: number;
 }
 
-export interface SystemItem {
-    name: string | undefined;
-    groupId: string | null;
-    systemId: string;
-    type: OrgCardItem;
-    system2faEnabled: boolean;
-    effectiveState: string;
-}
-
-export interface SystemCardItem extends SystemItem {
-    stateOfHealth: string;
-}
-
-export enum OrgCardItem {
-    SYSTEM = 'system',
-    GROUP = 'group',
-    ORG = 'org',
-}
-
-export interface GetGroupItem extends GroupItem {
+/** `/groups/{groupId}/` */
+export interface Group {
+    id: string;
+    name: string;
+    /** @deprecated Use `cloudSystems` property instead */
     systems: string[];
     cloudSystems: CloudSystem[];
+    /** Only direct desendants */
+    children: { id: string; name: string }[];
+    parentId: string | null;
+    organizationId: string;
+    /** Bottom to top: [...parentGroupIds, orgId, partnerId]  */
+    path: string[];
+    systemCount: number;
+}
+
+// TODO: Move these to groups.types
+export interface GroupItem extends Omit<GroupStructureItem, 'roles' | 'children'> {
+    children: GroupItem[];
+}
+export interface SystemItem {
+    systemId: string;
+    name: string;
+    system2faEnabled: boolean;
+    effectiveState: string;
 }
 
 export interface CreateGroup {

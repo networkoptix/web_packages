@@ -32,15 +32,15 @@ import {
     Page,
     SystemService,
     ServiceQuantitiesResp,
-    GroupItem,
     CreateGroup,
     PatchGroup,
-    GetGroupItem,
+    Group,
     GroupUser,
     UpdateGroupUser,
     GroupUserCanAccess,
     SassReport,
     ServiceQuantities,
+    GroupStructureItem,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -303,7 +303,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     updateSystemGroup = (
         id: string,
-        body: { groupId: string | number },
+        body: { groupId: string | number | null },
     ): Observable<CloudSystem> => {
         const groupId = body.groupId ? String(body.groupId) : null;
         return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body: { groupId } });
@@ -312,23 +312,23 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     /* Internal */
 
     /* Groups */
-    getOrgGroups = (orgId: string): Observable<GroupItem[]> => {
+    getGroupsStructure = (orgId: string): Observable<GroupStructureItem[]> => {
         return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'groups_structure']));
     };
 
-    getGroup = (groupId: string): Observable<GetGroupItem> => {
+    getGroup = (groupId: string): Observable<Group> => {
         return this.get(this.makeUrl(urlBases.GROUPS, [groupId]));
     };
 
-    createGroup = (body: CreateGroup): Observable<GroupItem> => {
+    createGroup = (body: CreateGroup): Observable<Group> => {
         return this.post('/groups/', { body });
     };
 
-    deleteGroup = (groupId: string): Observable<GroupItem> => {
+    deleteGroup = (groupId: string): Observable<Group> => {
         return this.delete(this.makeUrl(urlBases.GROUPS, [groupId]));
     };
 
-    patchGroup = (groupId: string, body: PatchGroup): Observable<GroupItem> => {
+    patchGroup = (groupId: string, body: PatchGroup): Observable<Group> => {
         return this.patch(this.makeUrl(urlBases.GROUPS, [groupId]), { body });
     };
 

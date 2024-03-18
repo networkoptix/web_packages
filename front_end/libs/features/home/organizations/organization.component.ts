@@ -1,4 +1,4 @@
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -38,11 +38,9 @@ import { Account } from '@services/account.service/account';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
-    GroupItem,
     Organization,
     State,
     OrgPermissions,
-    OrgCardItem,
     ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -51,7 +49,7 @@ import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
-import { GroupsItem, Crumb } from '../home.types';
+import { Crumb } from '../home.types';
 import { GroupsStore } from '../store/groups/groups.store';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
@@ -246,23 +244,6 @@ export class NxOrganizationsComponent implements OnInit {
         }, true);
     }
 
-    processGroups = (orgGroups: GroupItem[]): GroupItem[] => {
-        const groups: GroupItem[] = [];
-        const getChildren = (group: GroupItem): void => {
-            for (const child of group.children) {
-                child.type = OrgCardItem.GROUP;
-                groups.push(child);
-                getChildren(child);
-            }
-        };
-        for (const group of orgGroups) {
-            group.type = OrgCardItem.GROUP;
-            groups.push(group);
-            getChildren(group);
-        }
-        return groups;
-    };
-
     dismiss(): void {
         this.sidebarSettings.update(curr => {
             curr.showSidebarState = false;
@@ -280,14 +261,6 @@ export class NxOrganizationsComponent implements OnInit {
 
     trackItem(_index: number, item: Crumb): string {
         return item.id;
-    }
-
-    moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
-        // Placeholder function
-    }
-
-    __crash(): void {
-        // Placeholder function
     }
 
     toRoot(): void {

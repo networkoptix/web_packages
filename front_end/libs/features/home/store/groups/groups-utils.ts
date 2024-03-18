@@ -1,4 +1,7 @@
-import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import type {
+    GroupItem,
+    SystemItem,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { GroupFlatItem, GroupFlatMap } from './groups.types';
 
@@ -16,4 +19,12 @@ export function* generatePath(groupsMap: GroupFlatMap, groupId: string): Generat
         yield currentGroup;
         currentGroup = groupsMap[currentGroup.parentId];
     }
+}
+
+export function isSystemItem(item: SystemItem | GroupItem): item is SystemItem {
+    return 'systemId' in item;
+}
+
+export function isGroupItem(item: GroupItem | SystemItem): item is GroupItem {
+    return 'id' in item;
 }

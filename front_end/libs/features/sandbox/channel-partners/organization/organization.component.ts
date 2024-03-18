@@ -12,7 +12,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
-    GroupItem,
+    GroupStructureItem,
     Organization,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -51,17 +51,17 @@ export class NxOrganizationComponent {
     );
     users$$ = toSignal(this.users$);
     groups$ = this.update$.pipe(
-        mergeMap(this.cpService.getOrgGroups),
+        mergeMap(this.cpService.getGroupsStructure),
         catchError((err: HttpErrorResponse) => {
             this.usersError = { code: err.status, msg: err.error.detail };
-            return of<GroupItem[]>([]);
+            return of<GroupStructureItem[]>([]);
         }),
     );
     groups$$ = toSignal(this.groups$);
     flatGroups$ = this.groups$.pipe(
         map(groups => {
-            const flatGroups: (Omit<GroupItem, 'children'> & { level: number })[] = [];
-            function append(group: GroupItem, level: number): void {
+            const flatGroups: (Omit<GroupStructureItem, 'children'> & { level: number })[] = [];
+            function append(group: GroupStructureItem, level: number): void {
                 const { children, ...flatItem } = group;
                 flatGroups.push({ ...flatItem, level });
                 children.forEach(g => append(g, level + 1));
