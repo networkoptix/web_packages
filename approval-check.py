@@ -10,7 +10,7 @@ ttsolov = 'ttsolov'
 default_code_owners = [nhartleb, rbarsegian]
 
 def check_glob_pattern(pattern, filenames):
-    return fnmatch.filter(filenames, pattern)
+    return fnmatch.filter(filenames, pattern if any(pattern.startswith(substr) for substr in ['*', '.']) else f'./{pattern}')
 
 def create_code_owner_rule(pattern, code_owners=None, required_approvals=1):
     code_owners = code_owners or default_code_owners
