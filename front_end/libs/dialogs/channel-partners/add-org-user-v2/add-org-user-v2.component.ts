@@ -28,8 +28,8 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
 
-import { NxOrgTreeSelectorComponent } from './org-tree-selector/org-tree-selector.component';
-import { OrgTreeStatuses } from './org-tree-selector/org-tree-selector.types';
+import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
+import { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
 
 @Component({
     selector: 'nx-add-org-user-v2',

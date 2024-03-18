@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -8,6 +7,8 @@ import {
     OnInit,
     Output,
     ViewChild,
+    booleanAttribute,
+    input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,18 +46,20 @@ export class NxOrgTreeSelectorComponent implements OnInit {
 
     @Input({ required: true }) organization: Organization;
     @Input({ required: true }) groups: GroupItem[];
-    @Input() statuses: OrgTreeStatuses = new Map();
+    @Input() statuses?: OrgTreeStatuses;
+    hideStatusMessages$$ = input(false, {
+        transform: booleanAttribute,
+        alias: 'hideStatusMessages',
+    });
+    /** Minimum lines of space for the messages container to avoid height pop
+     *
+     * - If the tallest message is used, there might be empty space for shorter ones
+     * - If the shortest messages is used, there might be some height pop for taller ones
+     */
+    messagesNumLines$$ = input<number>(1, { alias: 'messagesNumLines' });
 
-    private _selected: string;
-    get selected(): string {
-        return this._selected;
-    }
-    set selected(folder: string) {
-        this._selected = folder;
-        this.select.emit(folder);
-    }
-
-    @Output() select = new EventEmitter<string>();
+    @Input() selected: string;
+    @Output() selectedChange = new EventEmitter<string>();
 
     private flatGroups: TreeItem[] = [];
     private groupInfoMap = new Map<
@@ -75,12 +78,15 @@ export class NxOrgTreeSelectorComponent implements OnInit {
     private lastVisibleIndex: number | null = null;
 
     ngOnInit(): void {
-        this.selected = this.organization.id;
         this.groups.forEach(group => {
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
         });
         this.folderSearchResults = this.flatGroups;
+
+        if (this.selected !== this.organization.id) {
+            this.highlightIndex = this.flatGroups.findIndex(g => g.id === this.selected);
+        }
 
         // Opens all folders for easier testing
         // this.folderSearchResults.forEach(g => {
@@ -103,7 +109,7 @@ export class NxOrgTreeSelectorComponent implements OnInit {
     }
 
     selectFolder(id: string, index: number = this.highlightIndex): void {
-        this.selected = id;
+        this.selectedChange.emit(id);
         if (index !== this.highlightIndex) {
             this.highlightIndex = index;
         }

@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/add-org-user-v2/org-tree-selector/org-tree-selector.component';
+import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -38,7 +38,7 @@ export class MoveOrgItemModalContent extends ModalBase<DT['return']> {
     groups: GroupItem[];
     item: SystemItem | GroupItem;
 
-    selectedFolder$$: WritableSignal<string | null>;
+    selectedFolder$$: WritableSignal<string>;
 
     constructor(
         private cpService: NxChannelPartnersService,
