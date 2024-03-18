@@ -18,7 +18,7 @@
 >
     <ng-container *ngIf="state.item">
         <nx-settings-general
-            *ngIf="canUpdateOrg$$() || subchannelSettings()"
+            *ngIf="canUpdateOrg$$() || state.canConfigure"
             [view]="state.view"
             [name]="currentName$ | async"
             [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
