@@ -673,6 +673,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --group-card-border-color: var(--dark10);
 
     --channel-partner-card-status-background: var(--dark11);
+    --channel-partner-card-status-dark: var(--dark1);
 
     --subchannel-partner-card-id-background: var(--light16);
     --subchannel-partner-card-id-color: var(--dark4);
@@ -685,6 +686,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --system-card-offline-color: var(--light4);
     --system-card-border-color: var(--dark10);
     --system-card-owner-color: var(--dark16);
+
+    --group-system-card-color: var(--dark15);
 
     --card-subtext-color: var(--light4);
     --card-menu-dots-fill: var(--light4);

@@ -87,14 +87,27 @@
                             ? ['/systems', system.systemId, 'services']
                             : ['/systems', system.systemId]
                     "
+                    [ngClass]="{
+                        'offline-system':
+                            system.effectiveState !== 'active' || system.stateOfHealth === 'offline'
+                    }"
                     [dropdownItems]="systemActions$$()[system.systemId]"
                 >
                     <h3>{{ system.name }}</h3>
                     <svg-icon
-                        *ngIf="system.system2faEnabled"
+                        *ngIf="system.system2faEnabled && system.stateOfHealth === 'online'"
                         [src]="icons.dir + 'key.svg'"
                         [svgStyle]="{ 'height.px': '24' }"
                     ></svg-icon>
+                    <nx-tag
+                        *ngIf="system.stateOfHealth === 'offline'"
+                        [clickable]="false"
+                        [customClass]="'status'"
+                        type="default"
+                        size="large"
+                        translate
+                        >OFFLINE</nx-tag
+                    >
                 </nx-card>
                 <div class="placeholder-shadow"></div>
             </div>

@@ -17,6 +17,7 @@ import {
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
@@ -27,14 +28,15 @@ import {
     GroupItem,
     GroupUser,
     OrgPermissions,
+    SystemCardItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxVmsClientService } from '@services/vms-client.service';
+import { NxSystemsService } from '@services/systems.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
-
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -53,6 +55,7 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         NxSearchComponent,
         FormsModule,
         RouterLink,
+        NxTagComponent,
     ],
 })
 export class NxOrganizationCardContainerComponent {
@@ -92,6 +95,7 @@ export class NxOrganizationCardContainerComponent {
         private cpService: NxChannelPartnersService,
         private translateService: TranslateService,
         private vmsClient: NxVmsClientService,
+        private systemsService: NxSystemsService,
     ) {}
 
     trackGroup(_index: number, item: GroupItem): string {
@@ -150,9 +154,17 @@ export class NxOrganizationCardContainerComponent {
         }
         return groups.filter(group => caseInsenstiveSearch(group.name, search));
     });
-    filteredSystems$$ = computed(() => {
+    filteredSystems$$ = computed<SystemCardItem[]>(() => {
         const search = this.search$$();
-        const systems = this.groupsStore.currentSystems$$();
+        const cdbSystems = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
+        const systems = this.groupsStore.currentSystems$$().map(sys => {
+            const currSystem = cdbSystems.get(sys.systemId);
+            return {
+                ...sys,
+                name: currSystem.name,
+                stateOfHealth: currSystem.stateOfHealth,
+            };
+        });
         if (!search) {
             return systems;
         }

@@ -1,21 +1,21 @@
 <ng-template #loading><nx-pre-loader></nx-pre-loader></ng-template>
 <ng-template #body>
-    <div class="name pb-3">
-        <h2>{{ currentOrganization$$().name }}</h2>
+    <div
+        class="name pb-3"
+        *ngIf="currentOrganization$$() as currentOrg"
+    >
+        <h2>{{ currentOrg.name }}</h2>
         <nx-tag
-            *ngIf="currentOrganization$$().effectiveState !== 'active'"
-            [type]="currentOrganization$$().effectiveState === 'suspended' ? 'warning' : 'danger'"
+            *ngIf="currentOrg.effectiveState !== 'active'"
+            [type]="currentOrg.effectiveState === 'suspended' ? 'warning' : 'danger'"
             [size]="'large'"
             [locked]="true"
-            [customClass]="'status'"
+            [customClass]="
+                'status' + (currentOrg.effectiveState === 'suspended' ? ' dark-text' : '')
+            "
         >
-            {{ currentOrganization$$().effectiveState | translate | uppercase }}
+            {{ currentOrg.effectiveState | translate | uppercase }}
         </nx-tag>
-        <ng-container
-            class="status"
-            [ngSwitch]="currentOrganization$$().effectiveState"
-        >
-        </ng-container>
     </div>
     <nx-tabs
         animated
