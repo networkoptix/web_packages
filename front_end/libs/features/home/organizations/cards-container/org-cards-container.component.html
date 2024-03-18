@@ -19,7 +19,6 @@
             *ngIf="hasEnoughGroupsOrSystems$$()"
             class="input-overlay"
             [style.width.px]="searchConfig.channelPartners.searchWidth"
-            [ngModel]="search"
             layout="compact"
             [placeholder]="'Search' | translate"
             instant
@@ -101,7 +100,7 @@
             </div>
         </div>
         <div
-            *ngIf="!filteredSystems$$().length && !filteredGroups$$().length && search.value"
+            *ngIf="!filteredSystems$$().length && !filteredGroups$$().length && search$$()"
             class="no-search-results"
         >
             <svg-icon

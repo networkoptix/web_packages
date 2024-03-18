@@ -83,7 +83,6 @@ export class NxOrganizationCardContainerComponent {
             searchConfig.channelPartners.searchMinimumCards
         );
     });
-    search = { value: '' };
     groupName: string = '';
 
     constructor(
