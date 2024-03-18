@@ -1,4 +1,5 @@
 import time
+import logging
 from typing import Collection
 
 from selenium.webdriver.common.by import By
@@ -9,8 +10,10 @@ from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
 from pages.system_tile import SystemTile
+from generic_elements import ElementNotVisible
 from variables import ENV
 
+_logger = logging.getLogger(__name__)
 
 class SystemsPage:
 
@@ -60,7 +63,11 @@ class SystemsPage:
         self.driver.location_should_be(f"{ENV}/systems")
 
     def wait_until_visible(self):
-        self._wait_until_page_contains_systems_list()
+        try:
+            Pane(self.driver, "//nx-no-systems").wait_until_visible(3)
+            _logger.debug("There are no systems accessible to this user.")
+        except ElementNotVisible:
+            self._wait_until_page_contains_systems_list()
         self._location_is_correct()
 
     def get_tiles_with_owner(self, expected_owner: str) -> Collection[SystemTile]:
