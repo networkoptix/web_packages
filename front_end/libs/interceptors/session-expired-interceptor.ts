@@ -84,10 +84,9 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
                                 const mediaserver = system.mediaserver as NxSystemRestAPI;
                                 const accessToken = mediaserver.accessToken;
                                 request = request.clone({
-                                    headers: request.headers.set(
-                                        'Authorization',
-                                        `Bearer ${accessToken}`,
-                                    ),
+                                    headers: request.headers
+                                        .set('Authorization', `Bearer ${accessToken}`)
+                                        .set('x-runtime-guid', accessToken),
                                 });
                                 return next.handle(request);
                             }
