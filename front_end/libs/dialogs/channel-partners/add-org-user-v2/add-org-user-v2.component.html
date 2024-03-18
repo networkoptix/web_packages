@@ -76,24 +76,10 @@
             [organization]="organization"
             [groups]="groups"
             [statuses]="orgTreeStatuses$$()"
-            (select)="selectedFolder$$.set($event)"
+            [messagesNumLines]="2"
+            [selected]="selectedFolder$$()"
+            (selectedChange)="selectedFolder$$.set($event)"
         ></nx-org-tree-selector>
-        <div class="mt-2 error-container">
-            <ng-container *ngIf="orgTreeStatuses$$().get(selectedFolder$$()) as status">
-                <div
-                    *ngIf="status.type === 'warn'"
-                    class="warning"
-                >
-                    {{ status.msg }}
-                </div>
-                <div
-                    *ngIf="status.type === 'error'"
-                    class="error-label"
-                >
-                    {{ status.msg }}
-                </div>
-            </ng-container>
-        </div>
     </div>
     <div class="modal-footer">
         <nx-process-button

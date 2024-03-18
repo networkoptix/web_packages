@@ -119,7 +119,7 @@ module.exports = [
     "libs/dialogs/change-password/change-password.component.html",
     "libs/dialogs/change-storage/change-storage.component.html",
     "libs/dialogs/channel-partners/add-org-user-v2/add-org-user-v2.component.html",
-    "libs/dialogs/channel-partners/add-org-user-v2/org-tree-selector/org-tree-selector.component.html",
+    "libs/dialogs/channel-partners/org-tree-selector/org-tree-selector.component.html",
     "libs/dialogs/channel-partners/add-org-user/add-org-user.component.html",
     "libs/dialogs/channel-partners/add-organization/add-organization.component.html",
     "libs/dialogs/channel-partners/add-partner-user/add-partner-user.component.html",

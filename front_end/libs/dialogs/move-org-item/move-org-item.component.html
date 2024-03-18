@@ -20,7 +20,8 @@
         <nx-org-tree-selector
             [organization]="organization"
             [groups]="groups"
-            (select)="selectedFolder$$.set($event)"
+            [selected]="selectedFolder$$()"
+            (selectedChange)="selectedFolder$$.set($event)"
         ></nx-org-tree-selector>
     </div>
     <div class="modal-footer">

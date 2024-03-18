@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/add-org-user-v2/org-tree-selector/org-tree-selector.component';
-import { OrgTreeStatuses } from '@dialogs/channel-partners/add-org-user-v2/org-tree-selector/org-tree-selector.types';
+import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
+import { OrgTreeStatuses } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.types';
 import type {
     GroupItem,
     Organization,

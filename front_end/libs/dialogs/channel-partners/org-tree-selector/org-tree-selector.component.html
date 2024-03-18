@@ -28,8 +28,8 @@ to the action buttons. -->
     #orgTree
     class="org-tree"
     [ngClass]="{
-        'org-tree--warning': statuses.get(selected)?.type === 'warn',
-        'org-tree--error': statuses.get(selected)?.type === 'error'
+        'org-tree--warning': statuses?.get(selected)?.type === 'warn',
+        'org-tree--error': statuses?.get(selected)?.type === 'error'
     }"
     (keydown.arrowup)="$event.preventDefault(); up()"
     (keydown.arrowdown)="$event.preventDefault(); down()"
@@ -57,7 +57,7 @@ to the action buttons. -->
         ></svg-icon>
         <span>{{ organization.name }}</span>
         <ng-container
-            *ngTemplateOutlet="statusIcon; context: { status: statuses.get(organization.id) }"
+            *ngTemplateOutlet="statusIcon; context: { status: statuses?.get(organization.id) }"
         >
         </ng-container>
     </li>
@@ -102,12 +102,32 @@ to the action buttons. -->
             ></span>
 
             <ng-container
-                *ngTemplateOutlet="statusIcon; context: { status: statuses.get(group.id) }"
+                *ngTemplateOutlet="statusIcon; context: { status: statuses?.get(group.id) }"
             >
             </ng-container>
         </li>
     </ng-container>
 </ul>
+@if (statuses && !hideStatusMessages$$()) {
+    <div
+        class="mt-2 error-container"
+        [ngStyle]="{
+            minHeight: 1.25 * messagesNumLines$$() + 'rem'
+        }"
+    >
+        @if (selected && statuses.get(selected); as status) {
+            @if (status.type === 'warn') {
+                <div class="warning">
+                    {{ status.msg }}
+                </div>
+            } @else if (status.type === 'error') {
+                <div class="error-label">
+                    {{ status.msg }}
+                </div>
+            }
+        }
+    </div>
+}
 
 <ng-template
     #statusIcon
