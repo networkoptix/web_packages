@@ -1586,7 +1586,7 @@ def system_user(request, system_id, email):
         system = CloudSystemId.objects.filter(system_id=system_id).first()
     else:
         system = get_authorized_system(request, system_id)
-    if not system:
+    if not system or not system.organization:
         raise exceptions.NotFound('System not found')
     user_rel = system.get_user_role_by_email(email=email)
     if not user_rel:
@@ -1606,7 +1606,7 @@ def system_user(request, system_id, email):
 @permission_classes([IsAuthenticated])
 def system_users(request, system_id):
     system = get_authorized_system(request, system_id)
-    if not system:
+    if not system or not system.organization:
         raise exceptions.NotFound('System not found')
     all_user_role_rels = system.get_all_users()
     serializer = SystemUserSerializer(all_user_role_rels, many=True)
