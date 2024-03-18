@@ -1,4 +1,6 @@
-<div class="sidebar">
-    <!--Groups Sidebar-->
-    <nx-sidebar-level [groups]="groups$$()"></nx-sidebar-level>
-</div>
+@if (groups$$().length) {
+    <div class="sidebar">
+        <!--Groups Sidebar-->
+        <nx-sidebar-level [groups]="groups$$()"></nx-sidebar-level>
+    </div>
+}
