@@ -19,6 +19,7 @@ import {
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -53,6 +54,7 @@ import { NxCardComponent } from '../card/card.component';
         TranslateModule,
         NxAddSvgSrcDirective,
         NxCardComponent,
+        NxTagComponent,
     ],
 })
 export class NxSubchannelsComponent {

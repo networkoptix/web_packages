@@ -72,7 +72,28 @@
                                 [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                             >
                                 <h3>{{ organization.name }}</h3>
-                                <div>{{ organization.systemCount }}</div>
+
+                                @if (organization.effectiveState === 'active') {
+                                    <div>{{ organization.systemCount }}</div>
+                                } @else {
+                                    <nx-tag
+                                        [type]="
+                                            organization.effectiveState === 'suspended'
+                                                ? 'warning'
+                                                : 'danger'
+                                        "
+                                        size="large"
+                                        [locked]="true"
+                                        [customClass]="
+                                            'status' +
+                                            (organization.effectiveState === 'suspended'
+                                                ? ' dark-text'
+                                                : '')
+                                        "
+                                    >
+                                        {{ organization.effectiveState | translate | uppercase }}
+                                    </nx-tag>
+                                }
                             </nx-card>
                         </ng-container>
                     </div>
