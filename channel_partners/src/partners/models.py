@@ -1182,6 +1182,11 @@ class ChannelPartnerToUser(models.Model):
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
+    def can_delete(self, user: CloudUser):
+        if self.user == user:
+            return True
+        return self.can_manage(user)
+
     @classmethod
     def is_channel_partner_user(cls, user: CloudUser):
         return cls.objects.filter(user=user).exists()
