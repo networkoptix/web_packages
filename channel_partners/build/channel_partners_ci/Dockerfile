@@ -17,3 +17,12 @@ RUN set -ex \
     && poetry config virtualenvs.create false --local \
     && poetry config installer.no-binary false --local \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
+
+
+FROM builder AS runtime
+COPY channel_partners/pyproject.toml /app/
+COPY channel_partners/poetry.lock /app/
+COPY channel_partners/llutil-0.6.tar.gz /app/llutil-0.6.tar.gz
+WORKDIR /app
+RUN set -ex \
+    && poetry install --no-root --with test

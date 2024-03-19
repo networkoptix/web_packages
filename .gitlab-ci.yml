@@ -273,10 +273,6 @@ check-python-licenses:
         - channel_partners/pyproject.toml
   before_script:
     - env
-    - poetry -C /builds/dev/cloud_portal/channel_partners export --with test --without-hashes --without-urls -o /app/requirements.txt
-    # temporary remove poetry until it is not updated
-    - pip uninstall -y poetry
-    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
     - >
       for i in {1..60}; do
         if ! nc 0.0.0.0 5432
