@@ -31,8 +31,8 @@ import {
     SystemCardItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxVmsClientService } from '@services/vms-client.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxVmsClientService } from '@services/vms-client.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
