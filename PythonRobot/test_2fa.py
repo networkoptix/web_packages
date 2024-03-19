@@ -1,6 +1,7 @@
 import datetime
 import time
 from pathlib import Path
+import sys
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
@@ -12,8 +13,11 @@ from pages.security_form import SecurityForm
 from pages.system_admin import SystemAdmin
 from variables import ENV
 
-
-CLOUD_API = CloudPortalAPI()
+if len(sys.argv) >= 2:
+    _CLOUD_HOST = sys.argv[1]
+else:
+    _CLOUD_HOST = "https://test.ft-cloud.hdw.mx"
+CLOUD_API = CloudPortalAPI(env=_CLOUD_HOST)
 
 
 def enable_and_login_with_2fa(driver, server: Mediaserver):
@@ -32,7 +36,7 @@ def enable_and_login_with_2fa(driver, server: Mediaserver):
     security_form = SecurityForm(driver)
     security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
-    time.sleep(2)
+    time.sleep(3)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
