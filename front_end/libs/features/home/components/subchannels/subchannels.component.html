@@ -41,12 +41,29 @@
                         [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
                     >
                         <h3>{{ channel.name }}</h3>
-                        <div>
-                            <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
-                            {{ channel.organizationCount }}
-                            <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
-                            {{ channel.partnerCount }}
-                        </div>
+
+                        @if (channel.effectiveState === 'active') {
+                            <div>
+                                <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+                                {{ channel.organizationCount }}
+                                <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+                                {{ channel.partnerCount }}
+                            </div>
+                        } @else {
+                            <nx-tag
+                                [type]="
+                                    channel.effectiveState === 'suspended' ? 'warning' : 'danger'
+                                "
+                                size="large"
+                                [locked]="true"
+                                [customClass]="
+                                    'status' +
+                                    (channel.effectiveState === 'suspended' ? ' dark-text' : '')
+                                "
+                            >
+                                {{ channel.effectiveState | translate | uppercase }}
+                            </nx-tag>
+                        }
                     </nx-card>
                 </ng-container>
             </div>
