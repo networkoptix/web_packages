@@ -82,6 +82,18 @@ export class NxPagePlaceholderV2Component implements OnInit {
                     this.LANG.placeholderV2Texts.noInfo.buttonText,
                 );
                 break;
+            case PAGE_PLACEHOLDER.NO_USERS:
+                this.imagePath = icons.dirPageV2Placeholder + 'no_users.svg';
+                this.title = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.noUsers.title,
+                );
+                this.message = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.noUsers.message,
+                );
+                this.buttonText = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.noUsers.buttonText,
+                );
+                break;
         }
     }
 
