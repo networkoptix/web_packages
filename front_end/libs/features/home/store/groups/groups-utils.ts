@@ -2,6 +2,7 @@ import type {
     GroupItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { alphaNumericSort } from '@utils/general';
 
 import { GroupFlatItem, GroupFlatMap } from './groups.types';
 
@@ -11,7 +12,7 @@ export const sortGroups = (groups: GroupItem[]): GroupItem[] =>
             ...group,
             children: sortGroups(children),
         }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .sort(alphaNumericSort(group => group.name));
 
 export function* generatePath(groupsMap: GroupFlatMap, groupId: string): Generator<GroupFlatItem> {
     let currentGroup = groupsMap[groupId];
