@@ -101,13 +101,13 @@ def share_with_registered_user_sends_notification(browser, server: Mediaserver):
 
 def share_with_unregistered_user_sends_notification(driver, server: Mediaserver):
     """Email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445."""
-    tmp_user = CloudAccount(get_random_email(sendemail=True))
-    server.share_with_user(tmp_user, 'viewer')
+    tmp_user = get_random_email(sendemail=True)
+    server.share_with_unregistered_email(tmp_user, 'viewer')
     owner = server.get_cloud_owner()
-    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT.replace("{{message.system_name}}", server.name)
     subject = rb.replace_nested_variables(subject)
-    with EmailClient(email_alias=tmp_user.email) as client:
-        email_message = client.wait_for_email_subject(subject)
+    with EmailClient(email_alias=tmp_user) as client:
+        email_message = client.wait_for_email_subject(subject, timeout=120)
     assert email_message.get_button_color(ENV) == rb.THEME_COLOR
     assert email_message.is_cloud_name_present(rb.PRODUCT_NAME)
     expected_links = [
@@ -118,7 +118,7 @@ def share_with_unregistered_user_sends_notification(driver, server: Mediaserver)
         f'{rb.ENV}/authorize/register',
         ]
     email_message.find_links_in_body(expected_links)
-    # User cannot be deleted unless activated
+    # Verifying that the user can be registered and activated via email link
     registration_link = email_message.get_register_account_link()
     driver.get(registration_link)
     register_form = RegisterForm(driver)
@@ -127,7 +127,8 @@ def share_with_unregistered_user_sends_notification(driver, server: Mediaserver)
     register_form.password_input().input_text(password)
     register_form.terms_and_conditions_checkbox().select()
     register_form.create_account_button().click()
-    tmp_user.delete_account()
+    register_form.login_button().wait_until_visible()
+    CloudAccount(tmp_user, "Mark", "Hamill", password).delete_account()
 
 
 def email_is_locked_when_unregistered_user_is_invited(driver, server: Mediaserver):

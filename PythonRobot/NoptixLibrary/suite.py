@@ -369,6 +369,13 @@ class Mediaserver:
         user.id = user_response['id'].strip("{}")
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
 
+    def share_with_unregistered_email(self, email: str, access_role: str):
+        user_response = self.api.add_cloud_user(
+            CloudAccount.PERMISSIONS[access_role],
+            email,
+        )
+        print(f'MediaServer {self.name} shared with unregistered {email} as {access_role}.')
+
     def reset_settings(self):
         self.api.set_system_settings(self._default_settings)
 
