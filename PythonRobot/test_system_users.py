@@ -133,29 +133,25 @@ def share_with_unregistered_user_sends_notification(driver, server: Mediaserver)
 
 def email_is_locked_when_unregistered_user_is_invited(driver, server: Mediaserver):
     """Email    C41889    cloud    CLOUD-8643    smoke    ci."""
-    tmp_user = CloudAccount(get_random_email(sendemail=True))
-    server.share_with_user(tmp_user, 'viewer')
-    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
+    tmp_user = get_random_email(sendemail=True)
+    server.share_with_unregistered_email(tmp_user, 'viewer')
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT.replace("{{message.system_name}}", server.name)
     subject = rb.replace_nested_variables(subject)
-    with EmailClient(email_alias=tmp_user.email) as client:
-        email_message = client.wait_for_email_subject(subject)
+    with EmailClient(email_alias=tmp_user) as client:
+        email_message = client.wait_for_email_subject(subject, timeout=120)
     link = email_message.get_register_account_link()
     driver.get(link)
-    try:
-        RegisterForm(driver).email_input_locked().wait_until_visible()
-    except Exception:
-        raise
-    else:
-        # User cannot be deleted unless activated
-        registration_link = email_message.get_register_account_link()
-        driver.get(registration_link)
-        register_form = RegisterForm(driver)
-        register_form.first_name_input().input_text("Mark")
-        register_form.last_name_input().input_text("Hamill")
-        register_form.password_input().input_text(password)
-        register_form.terms_and_conditions_checkbox().select()
-        register_form.create_account_button().click()
-        tmp_user.delete_account()
+    RegisterForm(driver).email_input_locked().wait_until_visible()
+    registration_link = email_message.get_register_account_link()
+    driver.get(registration_link)
+    register_form = RegisterForm(driver)
+    register_form.first_name_input().input_text("Mark")
+    register_form.last_name_input().input_text("Hamill")
+    register_form.password_input().input_text(password)
+    register_form.terms_and_conditions_checkbox().select()
+    register_form.create_account_button().click()
+    register_form.login_button().wait_until_visible()
+    CloudAccount(tmp_user, "Mark", "Hamill", password).delete_account()
 
 
 def share_with_registered_user_works(driver, server: Mediaserver):
