@@ -902,7 +902,12 @@ export const nxConfig: IConfig = {
         maxVirtualCameraArchiveSynchronizationThreads: { type: 'number' },
         maxEventLogRecords: { type: 'number' },
 
-        forceLiveCacheForPrimaryStream: { type: 'text' }
+        forceLiveCacheForPrimaryStream: { type: 'text' },
+        backupSettings: { type: 'text' },
+        clientUpdateSettings: { type: 'text' },
+        cloudConnectRelayingOverSslForced: { type: 'checkbox' },
+        masterCloudSyncList: { type: 'text' },
+        system2faEnabled: { type: 'checkbox', hiddenInAdvanced: true }
     },
     metaDefaults,
     webadminRoutesLookup: [

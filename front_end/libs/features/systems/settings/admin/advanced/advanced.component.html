@@ -43,7 +43,7 @@
                                 [ngModel]="systemSettings[setting.key]"
                             >
                             </nx-checkbox>
-                            <div [innerText]="getDescription(setting.key)"></div>
+                            <div [innerText]="getDescription(setting.key) | translate"></div>
                         </div>
                     </div>
 
@@ -91,14 +91,16 @@
                                     "
                                     class="form-control-static input-sm m-0"
                                 >
-                                    {{ systemSettings[setting.key] || 'empty' }}
+                                    {{ systemSettings[setting.key] || 'empty' | translate }}
                                 </p>
 
                                 <div
                                     class="help-block text-left"
                                     *ngIf="CONFIG.settingsConfig[setting.key]?.alert"
                                     [innerHTML]="
-                                        CONFIG.settingsConfig[setting.key]?.alert | safe: 'html'
+                                        CONFIG.settingsConfig[setting.key]?.alert
+                                            | translate
+                                            | safe: 'html'
                                     "
                                 ></div>
                             </div>

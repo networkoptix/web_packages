@@ -834,7 +834,14 @@ export interface SettingsConfig {
     syncTimeEpsilon:Setting,
     maxVirtualCameraArchiveSynchronizationThreads:Setting,
     maxEventLogRecords:Setting,
-    forceLiveCacheForPrimaryStream: Setting
+    forceLiveCacheForPrimaryStream: Setting,
+
+    // New w/ 5.1_patch
+    backupSettings: Setting,
+    clientUpdateSettings: Setting,
+    cloudConnectRelayingOverSslForced: Setting,
+    masterCloudSyncList: Setting,
+    system2faEnabled: Setting,
 }
 
 // export interface LoggersConfig {
