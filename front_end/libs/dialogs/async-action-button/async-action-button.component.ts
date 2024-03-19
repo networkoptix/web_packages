@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    EventEmitter,
     Input,
-    OnChanges,
     OnInit,
-    SimpleChanges,
-    WritableSignal,
+    Output,
     booleanAttribute,
     inject,
     signal,
@@ -26,13 +25,21 @@ import { AsyncAction } from './create-async-action';
     standalone: true,
     imports: [CommonModule, TranslateModule, NxPreLoaderComponent],
 })
-export class NxAsyncActionButtonComponent<T> implements OnInit, OnChanges {
+export class NxAsyncActionButtonComponent<T> implements OnInit {
     @Input({ required: true }) action: AsyncAction<T>;
     @Input() disabled?: boolean;
     @Input({ transform: booleanAttribute }) disableFormValidation?: boolean;
-    @Input() busy$$: WritableSignal<boolean> = signal(false);
-    // Pass in from dialog to sync, otherwise only internal state
     @Input() buttonType: 'default' | 'primary' | 'danger' = 'primary';
+
+    /* Compatibility patch for 23.3.X branches. No Angular version bumps means no access to model
+    <[(busy)]="busy$$"> but new dialogs are still being created so we have to settle for
+    <[busy]="busy$$()" (busyChange)="busy$$.set($event)"> which will make it easier to convert
+    on develop when the time comes */
+    @Input() set busy(state: boolean) {
+        this.busy$$.set(state);
+    }
+    @Output() busyChange = new EventEmitter<boolean>();
+    busy$$ = signal(false);
 
     CONFIG = nxConfig;
     form?: NgForm;
@@ -54,19 +61,9 @@ export class NxAsyncActionButtonComponent<T> implements OnInit, OnChanges {
         }
     }
 
-    // Signals extend function so gets excluded from NgChanges
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    ngOnChanges({ busy$$ }: SimpleChanges): void {
-        if (busy$$ && !busy$$.firstChange) {
-            this.busy$$ = busy$$.previousValue;
-            throw Error(
-                'Change to busy$$ reference reverted, signals passed as inputs should be constant',
-            );
-        }
-    }
-
     execute(): void {
         this.busy$$.set(true);
+        this.busyChange.emit(true);
         const { action, success, error = console.error, postError } = this.action;
         const action$ = typeof action === 'function' ? defer(action) : action;
 
@@ -74,10 +71,12 @@ export class NxAsyncActionButtonComponent<T> implements OnInit, OnChanges {
             next: res => {
                 success(res);
                 this.busy$$.set(false);
+                this.busyChange.emit(false);
             },
             error: err => {
                 error(err);
                 this.busy$$.set(false);
+                this.busyChange.emit(false);
                 postError?.();
             },
         });

@@ -136,7 +136,8 @@
     <div class="modal-footer">
         <nx-async-action-button
             [action]="addUserAction"
-            [busy$$]="busy$$"
+            [busy]="busy$$()"
+            (busyChange)="busy$$.set($event)"
             data-testid="addUserBtn"
         >
             {{ 'Add' | translate }}

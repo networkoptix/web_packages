@@ -25,7 +25,7 @@ Dialogs are handled by the `NxDialogsService` and the [Angular CDK](https://mate
 
     a. The three ways of closing the dialog above should be disabled
 
-    b. All inputs should be disabled
+    b. All inputs should be made readonly/disabled
 
 5. If the action errors, focus the first offending input if there is one
 
@@ -113,13 +113,11 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
         <!-- If the dialog action isn't async a normal <button> can be used here instead -->
         <nx-async-action-button
             [action]="resetCameraAction"
-            [busy$$]="busy$$"
+            [busy]="busy$$()"
+            (busyChange)="busy$$.set($event)"
         >
             {{ 'Reset' | translate }}
         </nx-async-action-button>
-        <!-- Passing busy$$ to the button will sync its state to the dialog.
-        When it starts/finishes the async task it will set busy$$, which
-        propogates to all the other places that change on busy state -->
         <button
             type="button"
             class="btn btn-default"
@@ -177,7 +175,7 @@ If you do require special behavior for whatever reason, you can use `openV2` dir
 
 The config options for the Angular CDK are specified [here](https://material.angular.io/cdk/dialog/api#DialogConfig). The most used:
 
-- `autoFocus`: A CSS selector for what to focus when the dialog opens. This will fail if the target is behind a `*ngIf`
+- `autoFocus`: A CSS selector for what to focus when the dialog opens. This will fail if the target is behind a `*ngIf`/`@if`
 
 - `disableClose`: Whether to disable quick close
 

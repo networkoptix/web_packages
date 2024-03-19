@@ -12,17 +12,19 @@
     >
         <ng-content></ng-content>
     </div>
-    <div
-        *ngIf="busy$$()"
-        class="loading-dots"
-        [ngClass]="{
-            'loading-dots--light-default': !CONFIG.isDarkTheme && buttonType === 'default'
-        }"
-    >
+    @if (busy$$()) {
         <div
-            *ngFor="let _ of [].constructor(3); index as i"
-            class="loading-dots__dot"
-            [ngClass]="'loading-dots__dot--' + i"
-        ></div>
-    </div>
+            class="loading-dots"
+            [ngClass]="{
+                'loading-dots--light-default': !CONFIG.isDarkTheme && buttonType === 'default'
+            }"
+        >
+            @for (_ of [].constructor(3); track $index) {
+                <div
+                    class="loading-dots__dot"
+                    [ngClass]="'loading-dots__dot--' + $index"
+                ></div>
+            }
+        </div>
+    }
 </button>

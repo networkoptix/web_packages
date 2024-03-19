@@ -111,7 +111,6 @@ module.exports = [
     "libs/dialogs/add-user/add-user.component.html",
     "libs/dialogs/add-widget/add-widget.component.html",
     "libs/dialogs/apply/apply.component.html",
-    "libs/dialogs/async-action-button/async-action-button.component.html",
     "libs/dialogs/bookmarks/card-modal/bookmarks-card-modal.component.html",
     "libs/dialogs/bookmarks/more-devices/more-devices.component.html",
     "libs/dialogs/bookmarks/more-filters-base/more-filters-base.component.html",
