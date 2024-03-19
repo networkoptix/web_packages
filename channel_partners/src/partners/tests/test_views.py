@@ -38,7 +38,6 @@ from partners.models import (
     ChannelPartnerRoles,
     ChannelPartnerService,
     ChannelPartnerStates,
-    ChannelPartnerToUser,
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
@@ -54,7 +53,6 @@ from partners.models import (
 )
 from partners.views import (
     ChannelPartnerNestedViewSet,
-    ChannelPartnerUserViewSet,
     ChannelPartnerViewSet,
     CloudSystemViewSet,
     OrganizationUserViewSet,
@@ -920,154 +918,6 @@ class TestOrganizationUserViewSet:
         assert response.status_code == 400
         assert (f"User {cp_admin.user.email} has a role in the organization parent channel partner"
                 in response.data['email'][0])
-
-class TestChannelPartnerUserViewSet:
-
-    def test_destroy_last_admin(self, channel_partner_factory, cp_user_factory, default_channel_partner,
-                                mock_auth_with_user, arf, default_cp_admin):
-        # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
-        cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
-        user = cp_user_factory(channel_partner=cp)
-        user_2 = cp_user_factory(channel_partner=cp)
-        request = arf.delete('/')
-        mock_auth_with_user(default_cp_admin)
-        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
-        with transaction.atomic():
-            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
-        assert response.status_code == 403
-
-        mock_auth_with_user(user)
-        with transaction.atomic():
-            response = view(request, parent_lookup_channel_partner=cp.id, email=user_2.user.email)
-        assert not ChannelPartnerToUser.objects.filter(user__email=user_2.user.email).exists()
-        assert CloudUser.objects.filter(email=user_2.user.email).exists()
-        assert response.status_code == 204
-
-        with transaction.atomic():
-            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
-        assert ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
-        assert response.status_code == 409
-        assert response.data['detail']
-        assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
-
-    def test_destroy_self(self, channel_partner_factory, cp_user_factory, default_channel_partner,
-                                mock_auth_with_user, arf, default_cp_admin):
-        # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
-        cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
-        user = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
-        request = arf.delete('/')
-        mock_auth_with_user(user)
-        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
-        with transaction.atomic():
-            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
-        assert response.status_code == 204
-        assert not ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
-        assert CloudUser.objects.filter(email=user.user.email).exists()
-
-    @pytest.mark.no_tasks_autofix
-    def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email,
-                    mock_account_status, mock_get_customization_request, mock_post_notification, httpx_mock):
-        email = random_email
-        cp = channel_partner_factory()
-        cp_admin = cp_user_factory(channel_partner=cp)
-        data = {
-            'email': email,
-            'role': 'Administrator',
-            'title': 'cp user'
-        }
-        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
-        request = arf.post('/', data=data, format='json')
-        mock_account_status(email=email, active=False)
-        mock_get_customization_request()
-        notification_send_url = mock_post_notification()
-        mock_auth_with_user(cp_admin)
-        response = view(request, parent_lookup_channel_partner=cp.id)
-        assert response.status_code == 200
-        notification_send_request = httpx_mock.get_request(url=notification_send_url)
-        notification_data = json.loads(notification_send_request.content)
-        assert notification_data['type'] == 'cps_partner_invite'
-        assert notification_data['user_email'] == email
-        assert notification_data['message']['partner_name'] == cp.name
-        # Checking against Email since, by default full_name is None
-        assert notification_data['message']['sharer_name'] == cp_admin.user.email
-
-    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
-                             mock_auth_with_user, arf, org_user_factory, random_email):
-        email = random_email
-        cp = channel_partner_factory()
-        cp_admin = cp_user_factory(channel_partner=cp)
-        data = {
-            'email': email,
-            'role': 'Administrator',
-            'title': 'cp user'
-        }
-        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
-        mock_auth_with_user(cp_admin)
-
-        organization = organization_factory(channel_partner=cp)
-        org_user = org_user_factory(email=email, organization=organization)
-        request = arf.post('/', data=data, format='json')
-        response = view(request, parent_lookup_channel_partner=cp.id)
-        assert response.status_code == 400
-        assert f"User {email} has a role in the channel partner child organization" in response.data['email'][0]
-
-    def test_bulk_delete_403(self, channel_partner_factory, cp_user_factory,
-                             mock_auth_with_user, arf):
-        cp = channel_partner_factory()
-        other_cp = channel_partner_factory()
-        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
-        emails = [u.user.email for u in users]
-        other_user = cp_user_factory(channel_partner=other_cp)
-        data = emails + [other_user.user.email]
-        request = arf.post('/', data=data, format='json')
-        mock_auth_with_user(other_user)
-        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
-        response = view(request, parent_lookup_channel_partner=cp.id)
-        assert response.status_code == 403
-
-    def test_bulk_delete_400(self, channel_partner_factory, cp_user_factory,
-                             mock_auth_with_user, arf):
-        cp = channel_partner_factory()
-        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
-        emails = [u.user.email for u in users]
-        admin = cp_user_factory(channel_partner=cp)
-        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
-        data = emails + ['invalid_email']
-        request = arf.post('/', data=data, format='json')
-        mock_auth_with_user(admin)
-        response = view(request, parent_lookup_channel_partner=cp.id)
-        assert response.status_code == 400
-
-    def test_bulk_delete_409(self, channel_partner_factory, cp_user_factory,
-                             mock_auth_with_user, arf):
-        cp = channel_partner_factory()
-        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
-        emails = [u.user.email for u in users]
-        admin = cp_user_factory(channel_partner=cp)
-        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
-        # test all admins
-        data = emails + [admin.user.email]
-        request = arf.post('/', data=data, format='json')
-        mock_auth_with_user(admin)
-        response = view(request, parent_lookup_channel_partner=cp.id)
-        assert response.status_code == 409
-
-    def test_bulk_delete(self, channel_partner_factory, cp_user_factory,
-                         mock_auth_with_user, arf, random_email):
-        cp = channel_partner_factory()
-        users = [cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
-        emails = [u.user.email for u in users]
-        admin = cp_user_factory(channel_partner=cp)
-        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
-        # test all admins
-        data = emails + [random_email]
-        request = arf.post('/', data=data, format='json')
-        mock_auth_with_user(admin)
-        response = view(request, parent_lookup_channel_partner=cp.id)
-
-        assert response.status_code == 200
-        assert 'emails' in response.data
-        assert set(response.data['emails']) == set(emails)
 
 
 class TestChannelPartnerNestedViewSet:

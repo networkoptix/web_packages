@@ -271,8 +271,10 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         perms = [IsAuthenticated()]
         if self.action in ('create', 'list', 'bulk_delete'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage_users))
-        if self.action in ('retrieve', 'destroy'):
+        if self.action in ('retrieve',):
             perms.append(CanPerformChannelPartnerAction(ChannelPartnerToUser.can_manage))
+        if self.action in ('destroy',):
+            perms.append(CanPerformChannelPartnerAction(ChannelPartnerToUser.can_delete))
         return perms
 
     @extend_schema(summary='Get user record for the current user', methods=['GET'])
@@ -288,20 +290,14 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         self._channel_partner = get_object_or_404(ChannelPartner, pk=val)
         return self._channel_partner
 
-
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['channel_partner'] = self.get_channel_partner()
         return context
 
-    def check_object_permissions(self, request, obj):
-        if self.action == 'destroy' and obj.user == request.user:
-            return
-        super().check_object_permissions(request, obj)
-
     def check_permissions(self, request):
         super().check_permissions(request)
-        if self.action == 'list':
+        if self.action in ('create', 'list', 'bulk_delete'):
             channel_partner = self.get_channel_partner()
             self.check_object_permissions(request, channel_partner)
 
