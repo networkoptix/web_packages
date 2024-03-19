@@ -468,6 +468,32 @@ class CloudPortalAPI(object):
             return False
         return True
 
+    def get_services(self, email, password, uuid):
+        with self._session(email, password) as s:
+            s.headers.update({"Referer": self.env})
+            refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
+            refresh_response.raise_for_status()
+            logger.debug(f"/api/account json: {refresh_response.json()}")
+            s.headers.update({"Authorization": f"Bearer {refresh_response.json()['access_token']}"})
+            return s.get(f'{self.env}/partners/api/v2/cloud_systems/{uuid}/services')
+
+    def change_sub(self, email, password, uuid, id, amount):
+        body = {
+            "services": {
+                id: {
+                    "quantity": amount
+                }
+            }
+        }
+        with self._session(email, password) as s:
+            s.headers.update({"Referer": self.env})
+            refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
+            refresh_response.raise_for_status()
+            logger.debug(f"/api/account json: {refresh_response.json()}")
+            s.headers.update({"Authorization": f"Bearer {refresh_response.json()['access_token']}"})
+            r = s.patch(f'{self.env}/partners/api/v2/cloud_systems/{uuid}/service_quantity/', json=body)
+            r.raise_for_status()
+            return r
 
 class CannotSetFeatureFlags(Exception):
     pass
