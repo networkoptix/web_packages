@@ -1,0 +1,75 @@
+<div class="edit-container">
+    <form [formGroup]="shareForm">
+        <div class="input-section">
+            <div
+                class="input-header"
+                translate
+            >
+                Lifetime
+            </div>
+            <nx-dropdown formControlName="expiresTime">
+                <nx-simple-dropdown-item [value]="initialExpirationTime()">
+                    {{ (initialExpirationTimeString() | async) || '' | nxTranslate }}
+                </nx-simple-dropdown-item>
+                <nx-simple-dropdown-item
+                    [value]="nowTime + TIMES.hr"
+                    translate
+                >
+                    Expires in an hour
+                </nx-simple-dropdown-item>
+                <nx-simple-dropdown-item
+                    [value]="nowTime + TIMES.day"
+                    translate
+                >
+                    Expires in a day
+                </nx-simple-dropdown-item>
+                <nx-simple-dropdown-item
+                    [value]="oneMonthFromNow"
+                    translate
+                >
+                    Expires in a month
+                </nx-simple-dropdown-item>
+                <nx-simple-dropdown-item
+                    [value]="0"
+                    translate
+                >
+                    Never expires
+                </nx-simple-dropdown-item>
+            </nx-dropdown>
+        </div>
+        <div class="input-section input-section-password">
+            <div
+                class="input-header"
+                translate
+            >
+                Protect with Password
+            </div>
+            <input
+                #passwordInput
+                autocomplete="off"
+                class="form-control input-sm"
+                [placeholder]="LANG.bookmarkSharing.notPasswordProtected"
+                (click)="passwordInput.select()"
+                (keydown)="onPasswordInputKeydown()"
+                formControlName="password"
+            />
+        </div>
+        <div class="buttons-section">
+            <nx-button
+                type="Brand"
+                (onClick)="onConfirm()"
+                [disabled]="!shareForm.valid || shareForm.pristine"
+                translate
+            >
+                Confirm
+            </nx-button>
+            <nx-button
+                type="Secondary"
+                (onClick)="onCancelClick.emit()"
+                translate
+            >
+                Cancel
+            </nx-button>
+        </div>
+    </form>
+</div>

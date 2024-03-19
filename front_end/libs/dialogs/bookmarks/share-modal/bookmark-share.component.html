@@ -1,16 +1,17 @@
 <div
     class="outer-container"
-    [ngStyle]="{ visibility: loading ? 'hidden' : 'visible' }"
+    [ngStyle]="{ visibility: loading() ? 'hidden' : 'visible' }"
 >
-    @if (loading) {
+    @if (loading()) {
         <nx-pre-loader class="pre-loader-visible" />
     }
     <div class="modal-header">
-        <div
-            class="header-title"
-            translate
-        >
-            Share
+        <div class="header-title">
+            @if (pageState() === 'details') {
+                <span translate>Share</span>
+            } @else if (pageState() === 'edit') {
+                <span translate>Edit Link Parameters</span>
+            }
         </div>
         <button
             type="button"
@@ -22,11 +23,20 @@
             <span class="close-content"></span>
         </button>
     </div>
-    <nx-bookmark-share-details
-        [shareUrl]="shareUrl"
-        [onEditClick]="onEditClick"
-        [onDeleteClick]="onDeleteClick"
-        [expirationText]="(expirationText | async) || '' | nxTranslate"
-        [passwordDetailsText]="passwordDetailsText"
-    />
+    @if (pageState() === 'details') {
+        <nx-bookmark-share-details
+            [shareUrl]="shareUrl"
+            [onEditClick]="onEditClick"
+            [onDeleteClick]="onDeleteClick"
+            [expirationText]="(expirationText | async) || '' | nxTranslate"
+            [passwordDetailsText]="passwordDetailsText"
+        />
+    } @else if (pageState() === 'edit') {
+        <nx-bookmark-share-edit
+            (onConfirmClick)="onSaveClick($event)"
+            (onCancelClick)="onCancelEditClick()"
+            [initialExpirationTime]="bookmark.share!.expirationTimeMs"
+            [hasExistingPassword]="bookmark.share!.password === '******'"
+        />
+    }
 </div>

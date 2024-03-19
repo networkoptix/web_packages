@@ -1,0 +1,28 @@
+@use "theme_variables_common" as *;
+@use "typography";
+
+.edit-container {
+    padding: 16px;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .input-header {
+        @include typography.medium14nocolor;
+    }
+
+    &-password {
+        padding-top: 16px;
+    }
+}
+
+.buttons-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-top: 16px;
+    gap: 8px;
+}

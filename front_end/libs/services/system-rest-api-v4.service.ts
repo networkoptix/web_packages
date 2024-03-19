@@ -13,8 +13,8 @@ import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
 import { NxUriCacheService } from './uri-cache.service';
 
 type UpdateBookmarkShareParams = {
-    expirationTimeMs: number;
-    password: string;
+    expirationTimeMs?: number;
+    password?: string;
 };
 
 export class NxSystemRestAPI4 extends NxSystemRestAPI3 {

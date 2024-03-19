@@ -1,20 +1,23 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import type { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
 import type { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxSystemRestAPI4 } from '@services/system-rest-api-v4.service';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxToastService } from '@services/toast.service';
 
 import { BookmarkShare as DT } from '../../dialogs.types';
 
 import { getExpirationText } from './bookmark-sharing.util';
 import { NxShareDetailsComponent } from './share-details/share-details.component';
+import { NxShareEditComponent } from './share-edit/share-edit.component';
 
 const DEFAULT_SHARE_PARAMS = {
     expirationTimeMs: 0,
@@ -31,6 +34,7 @@ const DEFAULT_SHARE_PARAMS = {
         TranslateModule,
         NxPreLoaderComponent,
         NxShareDetailsComponent,
+        NxShareEditComponent,
         PipesModule,
     ],
 })
@@ -38,37 +42,27 @@ export class NxBookmarkShareComponent {
     mediaServer: NxSystemRestAPI4;
 
     shareUrl: string;
-    loading = true;
+    loading = signal(true);
 
     expirationText: Observable<Translatable>;
     passwordDetailsText: string;
 
-    constructor(
-        public dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) private bookmark: DT['data'],
-        private systemService: NxSystemService,
-    ) {
+    pageState = signal<'details' | 'edit'>('details');
+
+    bookmark: DT['data'] = inject(DIALOG_DATA);
+    systemService = inject(NxSystemService);
+    toastService = inject(NxToastService);
+
+    constructor(public dialogRef: DialogRef<DT['return']>) {
         const currentSystem = this.systemService.getCurrentSystem();
         this.mediaServer = currentSystem.mediaserver as NxSystemRestAPI4;
-        this.shareUrl = `${window.location.origin}/share/${currentSystem.systemId}/${bookmark.id}`;
+        this.shareUrl = `${window.location.origin}/share/${currentSystem.systemId}/${this.bookmark.id}`;
 
         // When the user clicks Share and opens this dialog we want to share the bookmark if it's not already shared
-        if (!bookmark.share) {
-            this.mediaServer
-                .updateBookmarkShare({
-                    bookmarkId: bookmark.id,
-                    deviceId: bookmark.deviceId,
-                    updateBookmarkShareParams: DEFAULT_SHARE_PARAMS,
-                })
-                .subscribe(updatedBookmark => {
-                    this.loading = false;
-                    // Slight anti-pattern. This updates the bookmark all the way back to the BookmarkCard.
-                    // We should update this logic in the future when we have a better data layer
-                    bookmark.share = updatedBookmark.share;
-                    this.updateTextDetails();
-                });
+        if (!this.bookmark.share) {
+            this.updateBookmarkShareData(DEFAULT_SHARE_PARAMS);
         } else {
-            this.loading = false;
+            this.loading.set(false);
             this.updateTextDetails();
         }
     }
@@ -83,8 +77,42 @@ export class NxBookmarkShareComponent {
         }
     }
 
-    onEditClick(): void {}
+    onEditClick = (): void => {
+        this.pageState.set('edit');
+    };
     onDeleteClick(): void {}
+    onSaveClick(saveOptions: { password?: string; expirationTimeMs?: number }): void {
+        this.updateBookmarkShareData(saveOptions);
+        this.pageState.set('details');
+    }
+
+    updateBookmarkShareData(updateParams: { password?: string; expirationTimeMs?: number }): void {
+        this.loading.set(true);
+        this.mediaServer
+            .updateBookmarkShare({
+                bookmarkId: this.bookmark.id,
+                deviceId: this.bookmark.deviceId,
+                updateBookmarkShareParams: updateParams,
+            })
+            .subscribe({
+                next: updatedBookmark => {
+                    this.loading.set(false);
+                    this.bookmark.share = updatedBookmark.share;
+                    this.updateTextDetails();
+                },
+                error: () => {
+                    this.loading.set(false);
+                    this.toastService.show(
+                        this.LANG.bookmarkSharing.errorUpdatingSharedBookmark,
+                        ToastType.Danger,
+                    );
+                },
+            });
+    }
+
+    onCancelEditClick(): void {
+        this.pageState.set('details');
+    }
 
     close(): void {
         this.dialogRef.close();

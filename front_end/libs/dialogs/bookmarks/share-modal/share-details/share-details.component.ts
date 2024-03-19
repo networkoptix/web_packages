@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ClipboardService } from 'ngx-clipboard';
@@ -13,6 +13,7 @@ import { icons } from '@static-variables';
     templateUrl: 'share-details.component.html',
     styleUrls: ['share-details.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AngularSvgIconModule,
         CommonModule,
@@ -29,7 +30,7 @@ export class NxShareDetailsComponent {
     expirationText = input.required<string>();
     passwordDetailsText = input.required<string>();
 
-    constructor(private clipboardService: ClipboardService) {}
+    clipboardService = inject(ClipboardService);
 
     copyToClipboard(): void {
         this.clipboardService.copy(this.shareUrl());
