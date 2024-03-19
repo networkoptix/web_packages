@@ -1,4 +1,5 @@
-import { inject } from '@angular/core';
+import { inject, Injector, runInInjectionContext } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
@@ -6,7 +7,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { firstValueFrom, map } from 'rxjs';
+import { filter, firstValueFrom, map } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -23,6 +24,7 @@ export const SystemGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ): Promise<boolean> | boolean => {
     const router: Router = inject(Router);
+    const injector = inject(Injector);
     const accountService: NxAccountService = inject(NxAccountService);
     const systemService: NxSystemService = inject(NxSystemService);
     const systemsService: NxSystemsService = inject(NxSystemsService);
@@ -136,7 +138,12 @@ export const SystemGuard: CanActivateFn = (
         if (!currSystem.permissionManager.currentUser$$()) {
             await currSystem.update();
         }
-        menusService.currentUser = currSystem.permissionManager.currentUser$$();
+
+        menusService.currentUser = await firstValueFrom(
+            runInInjectionContext(injector, () =>
+                toObservable(currSystem.permissionManager.currentUser$$),
+            ).pipe(filter(Boolean)),
+        );
         menusService.updateActiveSystemMenu(currSystem);
 
         if (currentRoute) {

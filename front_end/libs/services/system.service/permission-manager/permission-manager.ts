@@ -168,42 +168,13 @@ export class PermissionManager {
         if (!user) {
             return;
         }
-        const groups = this.groups$$();
-        const roles = this.roles$$();
 
         const isOwner = this.isOwner$$();
         const isAdmin = this.isAdmin$$();
         const permissions = this.permissions$$();
-        const customRole = this.customRole$$();
+        const accessRole = this.accessRole$$();
         const permissionsString = user.permissions.split('|').sort().join('|');
         const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
-
-        let accessRole = '';
-        if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds.length) {
-            accessRole = (user as RestV3User).groupIds
-                .map(groupId => groups.find(({ id }) => groupId === id)?.name)
-                .filter(role => !!role)
-                .join(', ');
-        } else if (roles.length) {
-            accessRole =
-                roles.find(
-                    role =>
-                        'isOwner' in role &&
-                        role.isOwner === isOwner &&
-                        role.permissions === permissionsString,
-                )?.name || '';
-            if (!accessRole && customRole) {
-                accessRole = customRole.name;
-            }
-        } else if (!environment.isLocal) {
-            // If roles is empty that means we couldn't fetch them from the system.
-            // As a fallback for cloud we can try to get the accessRole from cdb.
-            accessRole = (user as CloudUserCompat)?.accessRole;
-        }
-
-        if (!accessRole) {
-            accessRole = this.LANG.accessRoles.custom.label;
-        }
 
         return {
             ...user,
@@ -229,7 +200,8 @@ export class PermissionManager {
             isOwner ||
             user.permissions.includes(PermissionStrings.globalAdminPermissionFlag) ||
             ('groupIds' in user && user.groupIds.includes(AdminGroups.powerUserGroup)) ||
-            permissions.includes(PermissionStringsV3.powerUser)
+            permissions.includes(PermissionStringsV3.powerUser) ||
+            ['owner', 'admin', 'cloudAdmin'].includes(this.accessRole$$())
         );
     });
     isCloud$$ = computed<boolean>(() => this.type$$() === UserType.cloud);
@@ -238,17 +210,58 @@ export class PermissionManager {
     isLocal$$ = computed<boolean>(
         () => this.type$$() === UserType.local || this.isTemporaryLocal$$(),
     );
-    isOwner$$ = computed<boolean>(() => {
-        const user = this.user$$();
+    private checkIsOwner = (user: SystemUser, ownerEmail: string): boolean => {
         if (!user) {
             return false;
         }
-        const ownerEmail = this.ownerEmail$$();
         return (
             (ownerEmail && ownerEmail === user?.email) ||
             ('isOwner' in user && user.isOwner) ||
             ('groupIds' in user && user.groupIds.includes(AdminGroups.administratorGroup))
         );
+    };
+    isOwner$$ = computed<boolean>(() => {
+        const user = this.user$$();
+        const ownerEmail = this.ownerEmail$$();
+        return this.checkIsOwner(user, ownerEmail) || this.accessRole$$() === 'owner';
+    });
+    accessRole$$ = computed<string>(() => {
+        const user = this.user$$();
+        const customRole = this.customRole$$();
+        const groups = this.groups$$();
+        const roles = this.roles$$();
+        const ownerEmail = this.ownerEmail$$();
+        const isOwner = this.checkIsOwner(user, ownerEmail);
+
+        if (!user) {
+            return '';
+        }
+
+        const permissionsString = user.permissions.split('|').sort().join('|');
+
+        if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds.length) {
+            return (user as RestV3User).groupIds
+                .map(groupId => groups.find(({ id }) => groupId === id)?.name)
+                .filter(role => !!role)
+                .join(', ');
+        } else if (roles.length) {
+            return (
+                roles.find(
+                    role =>
+                        'isOwner' in role &&
+                        role.isOwner === isOwner &&
+                        role.permissions === permissionsString,
+                )?.name ||
+                customRole?.name ||
+                ''
+            );
+        } else if (!environment.isLocal) {
+            // If roles is empty that means we couldn't fetch them from the system.
+            // As a fallback for cloud we can try to get the accessRole from cdb.
+            return (user as CloudUserCompat)?.accessRole;
+        }
+
+        return this.LANG.accessRoles.custom.label;
     });
     permissions$$ = computed<Permissions>(() => {
         const isOwner = this.isOwner$$();
