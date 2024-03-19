@@ -15,6 +15,11 @@
 
     p {
       color: var(--placehoder-v2-message-color) !important;
+      padding-bottom: 20px;
+    }
+
+    .btn.add-user {
+      display: unset !important;
     }
   }
 }

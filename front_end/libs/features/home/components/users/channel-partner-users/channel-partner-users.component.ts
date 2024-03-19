@@ -119,6 +119,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     roles$$ = toSignal(this.CPService.getChannelPartnerRoles());
     filteredRecords$$: WritableSignal<UserRecord[] | undefined> = signal(undefined);
     selectedUsers: { [key: string]: UserRecord } = {};
+    totalRecords: number;
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -168,6 +169,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             )
             .subscribe(records => {
                 this.recordStore.setRecords(records);
+                this.totalRecords = this.recordStore.filteredRecords$$().length;
             });
     }
 
@@ -187,7 +189,8 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         this.recordStore.setSearchQuery(model.query);
     }
 
-    newUserDialog(partnerId: string): void {
+    newUserDialog(id?: string): void {
+        const partnerId = id || this.currentPartnerId$$();
         if (this.inSubchannel) {
             this.CPService.paramStateHandler.state$
                 .pipe(

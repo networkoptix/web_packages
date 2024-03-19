@@ -1423,6 +1423,11 @@
             "title": "No Information",
             "message": "You have not yet added any information.",
             "buttonText": "Add Information"
+        },
+          "noUsers": {
+            "title": "No User",
+            "message": "You have not yet added any users.",
+            "buttonText": "Add User"
         }
     },
     "placeholderTexts": {

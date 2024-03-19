@@ -26,6 +26,8 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
@@ -59,6 +61,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxDropdownModule,
         NxTooltipDirective,
         FormsModule,
+        NxPagePlaceholderV2Component,
     ],
 })
 export class NxUsersTableComponent implements OnInit, OnChanges {
@@ -76,10 +79,12 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     @Input() records: UserRecord[];
     @Input() selectedRecordId: string = '';
     @Input() roles: Omit<OrganizationRole[] | ChannelPartnerRole[], 'permissions'> = [];
+    @Input() searching: boolean = false;
 
     @Output() public onDeleteClick = new EventEmitter<UserRecord>();
     @Output() public onRowClick = new EventEmitter<UserRecord>();
     @Output() public onExpandClick = new EventEmitter<UserRecord>();
+    @Output() public onAdduser = new EventEmitter<never>();
     @Output() public selectedUsersEmitter = new EventEmitter<{ [key: string]: UserRecord }>();
 
     LANG = staticLang;
@@ -292,8 +297,14 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         this.hasOnlyOneAdmin$$.set(true);
     }
 
+    newUserDialog = (): void => {
+        this.onAdduser.emit();
+    };
+
     sortUsers(): void {
         // Temporary as unsure how this should sort the users
         this.records = [...structuredClone(this.records).reverse()];
     }
+
+    protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 }
