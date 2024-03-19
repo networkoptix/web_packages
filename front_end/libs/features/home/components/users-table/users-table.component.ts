@@ -267,8 +267,9 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
 
     showRole(row: UserRecord): boolean {
         const currentGroupId = this.currentGroupId$$();
+        const orgId = this.currentOrg$$()?.id;
         return (
-            (currentGroupId && row?.accessLevel?.id !== currentGroupId) ||
+            (currentGroupId !== orgId && row?.accessLevel?.id !== currentGroupId) ||
             this.hasMultipleRoles(row) ||
             !this.canManageUsers$$()
         );
