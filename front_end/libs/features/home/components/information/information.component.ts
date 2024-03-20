@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect } from '@angular/core';
-import { ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -86,7 +86,14 @@ export class NxChannelPartnerInformationComponent {
         this.nxValidators.requiredEmail(),
         this.nxValidators.email(),
     ];
-    customValidators: Array<ValidationErrors | null | ValidatorFn> = [Validators.required];
+
+    labelValidators: Array<ValidationErrors | null | ValidatorFn> = [
+        this.nxValidators.requiredLabel(),
+    ];
+
+    valueValidators: Array<ValidationErrors | null | ValidatorFn> = [
+        this.nxValidators.requiredValue(),
+    ];
 
     validForms: Record<string, boolean> = {
         phones: true,
@@ -99,7 +106,8 @@ export class NxChannelPartnerInformationComponent {
         phones: this.phoneValidators,
         emails: this.emailValidators,
         sites: this.siteValidators,
-        custom: this.customValidators,
+        label: this.labelValidators,
+        value: this.valueValidators,
     };
 
     mapInfoFor(type: string, psi: InfoDataServer[]): void {
@@ -134,7 +142,8 @@ export class NxChannelPartnerInformationComponent {
             }
 
             if (type === CPInfoType.CUSTOM) {
-                newItem.description.validation = this.validationType[type];
+                newItem.data.validation = this.validationType.label;
+                newItem.description.validation = this.validationType.value;
             }
 
             this.information[type].push(newItem);

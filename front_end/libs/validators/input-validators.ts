@@ -149,4 +149,26 @@ export class NxValidators {
                 : null;
         };
     }
+
+    requiredLabel(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.length === 0
+                ? {
+                      labelInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.labelRequired),
+                  }
+                : null;
+        };
+    }
+
+    requiredValue(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return control.value.length === 0
+                ? {
+                      valueInvalid: true,
+                      msg: this.translate.instant(this.LANG.customValidatorMsg.valueRequired),
+                  }
+                : null;
+        };
+    }
 }
