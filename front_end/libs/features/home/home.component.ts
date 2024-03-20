@@ -44,8 +44,8 @@ export class NxHomeComponent implements OnInit {
         selectAreChannelPartnersAndOrgsLoading,
     );
 
-    organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
-    channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
+    organizations$$ = this.store.select<Organization[]>(selectRootOrganizations);
+    channelPartners$$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
     isNoSystemsOrgOrChP: boolean = false;
 
@@ -60,10 +60,17 @@ export class NxHomeComponent implements OnInit {
                 const homeNode$ = this.headerService.nodes$.pipe(
                     map(nodes => nodes?.find(node => node.url === '/home')),
                 );
-                return combineLatest([homeNode$, systems$]);
+                return combineLatest([
+                    homeNode$,
+                    systems$,
+                    this.organizations$$,
+                    this.channelPartners$$,
+                ]);
             }),
         )
-        .subscribe(([homeNode, systems]) => this.initChannelPartners(homeNode, systems));
+        .subscribe(([homeNode, systems, orgs, cps]) => {
+            this.initChannelPartners(homeNode, systems, orgs, cps);
+        });
 
     constructor(
         private router: Router,
@@ -77,7 +84,12 @@ export class NxHomeComponent implements OnInit {
         this.store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
     }
 
-    private initChannelPartners(homeNode: MenuNode | undefined, systems: NxSystemInfo[]): void {
+    private initChannelPartners(
+        homeNode: MenuNode | undefined,
+        systems: NxSystemInfo[],
+        organizations: Organization[],
+        channelPartners: ChannelPartner[],
+    ): void {
         const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         let redirectPath = '';
 
@@ -85,22 +97,24 @@ export class NxHomeComponent implements OnInit {
             return;
         }
 
-        const channelPartners = (this.channelPartners$$() || []).filter(
+        const filteredChannelPartners = channelPartners.filter(
             partner =>
                 !partner.ownPermissions.includes(
                     ChannelPartnerPermissions.FIELD_ACCESS_CP_ACCOUNTANT,
                 ),
         );
-        const organizations = (this.organizations$$() || [])
+        const filteredOrganizations = organizations
             .filter(org => !channelPartners.some(partner => org.channelPartner === partner.id))
             .sort((a, b) => a.name.localeCompare(b.name));
 
         const nodes = [
             new MenuNode('', '/home'),
-            ...channelPartners.map(
+            ...filteredChannelPartners.map(
                 partner => new MenuNode(partner.name, `/home/channelPartners/${partner.id}`),
             ),
-            ...organizations.map(org => new MenuNode(org.name, `/home/organization/${org.id}`)),
+            ...filteredOrganizations.map(
+                org => new MenuNode(org.name, `/home/organization/${org.id}`),
+            ),
         ];
         nodes[0].invisible = true;
 
