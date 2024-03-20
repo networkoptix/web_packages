@@ -206,7 +206,11 @@ export interface CloudSystem {
     created: string;
     id: number;
     groupId: string | null;
-    name: string;
+    /** API sometimes forgets the system name, don't use for now
+     *
+     * https://networkoptix.atlassian.net/browse/CLOUD-13056
+     */
+    name: never;
     organization: string;
     services: ServiceQuantities;
     state: string;
@@ -309,9 +313,11 @@ export interface GroupItem extends Omit<GroupStructureItem, 'roles' | 'children'
 }
 export interface SystemItem {
     systemId: string;
+    groupId: string | null;
     name: string;
     system2faEnabled: boolean;
     effectiveState: string;
+    stateOfHealth: string;
 }
 
 export interface CreateGroup {

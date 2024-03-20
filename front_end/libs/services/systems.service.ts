@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, computed } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -75,6 +75,10 @@ export class NxSystemsService {
     );
 
     systems$$ = toSignal(this.systemsSubject, { initialValue: [] });
+    systemInfoMap$$ = computed<Map<string, NxSystemInfo>>(() => {
+        const systems = this.systems$$();
+        return new Map(systems.map(s => [s.id, s]));
+    });
     organizations$ = this.store.select<Organization[]>(selectRootOrganizations);
 
     directAccessSystems$ = combineLatest([this.organizations$, this.systemsSubject]).pipe(

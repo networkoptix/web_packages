@@ -31,8 +31,6 @@ import {
     OrgPermissions,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxSystemsService } from '@services/systems.service';
-import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxVmsClientService } from '@services/vms-client.service';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
@@ -96,7 +94,6 @@ export class NxOrganizationCardContainerComponent {
         private cpService: NxChannelPartnersService,
         private translateService: TranslateService,
         private vmsClient: NxVmsClientService,
-        private systemsService: NxSystemsService,
     ) {}
 
     trackGroup(_index: number, item: GroupItem): string {
@@ -155,17 +152,9 @@ export class NxOrganizationCardContainerComponent {
         }
         return groups.filter(group => caseInsenstiveSearch(group.name, search));
     });
-    filteredSystems$$ = computed<(SystemItem & Pick<NxSystemInfo, 'stateOfHealth'>)[]>(() => {
+    filteredSystems$$ = computed<SystemItem[]>(() => {
         const search = this.search$$();
-        const cdbSystems = new Map(this.systemsService.systems.map(sys => [sys.id, sys]));
-        const systems = this.groupsStore.currentSystems$$().map(sys => {
-            const currSystem = cdbSystems.get(sys.systemId);
-            return {
-                ...sys,
-                name: currSystem.name,
-                stateOfHealth: currSystem.stateOfHealth,
-            };
-        });
+        const systems = this.groupsStore.currentSystems$$();
         if (!search) {
             return systems;
         }
