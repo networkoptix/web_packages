@@ -31,12 +31,12 @@ def allows_login_with_correct_credentials_and_log_out(driver, cloud_user: CloudA
     login.password_input().input_text(cloud_user.password)
     login.login_button().click()
     SystemsPage(driver).no_systems().wait_until_visible()
+    time.sleep(5)
     header.account_dropdown().click()
     header.log_out_option().click()
     landing_page = LandingPage(driver)
     landing_page.wait_until_loaded()
     landing_page.location_is_correct(url=f"{ENV}/")
-    print("pass")
 
 
 def allows_log_in_with_existing_email_in_uppercase(cloud_user: CloudAccount):

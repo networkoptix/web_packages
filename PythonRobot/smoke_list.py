@@ -93,7 +93,9 @@ if __name__ == "__main__":
 
         Test(r, register_and_activate).run()
 
-        Test(r, allows_login_with_correct_credentials_and_log_out).run()
+        with CloudAccount(get_random_email(sendemail=True)) as user:
+            user.activate()
+            Test(r, allows_login_with_correct_credentials_and_log_out, user).run()
 
         Test(r, page_in_anonymous_state_register_header).run()
         Test(r, register_user_with_correct_credentials).run()
