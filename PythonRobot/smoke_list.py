@@ -51,11 +51,8 @@ if __name__ == "__main__":
         cloud_server_third = suite.create_cloud_server(cloud_owner_third)
         cloud_owner_fourth = suite.create_cloud_account()
         cloud_server_fourth = suite.create_cloud_server(cloud_owner_fourth)
-        cloud_owner_fifth = suite.create_cloud_account()
-        cloud_server_fifth = suite.create_cloud_server(cloud_owner_fourth)
         cloud_owner_six = suite.create_cloud_account()
         cloud_server_six = suite.create_cloud_server(cloud_owner_six)
-
         cloud_server_seven = suite.create_cloud_server(cloud_owner_six)
 
         Test(r, merge_from_primary_system, cloud_server_seven, cloud_server_six).run()
@@ -74,7 +71,7 @@ if __name__ == "__main__":
         Test(r, disabling_2fa,cloud_server_third).run()
         Test(r, system_2fa_required,cloud_server_third).run()
         Test(r, twofa_not_required_when_more_than_one_system,cloud_server_fourth).run()
-
+        # No server tests below
         dummy_account = suite.create_cloud_account()
         Test(r, test_changing_first_name_and_saving_maintains_that_setting,dummy_account).run()
         Test(r, test_changing_last_name_and_saving_maintains_that_setting,dummy_account).run()
