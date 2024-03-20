@@ -35,8 +35,10 @@ def merge_from_primary_system(driver, first_server: Mediaserver, second_server: 
     message.wait_until_visible(90)
     message.wait_until_not_visible(10)
     driver.refresh()
+    sys_admin_servers = SystemAdmin(driver).get_tab_settings()
     left_menu = SystemLeftMenu(driver)
     left_menu.servers_button().click()
+    sys_admin_servers.get_servers_section().get_default_server_page().wait_until_visible_owner_elements()
     assert left_menu.servers_count() == 2, f"Len was {left_menu.servers_count()}"
 
 
