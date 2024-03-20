@@ -1,7 +1,7 @@
-import {createReducer, on} from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import * as ChannelPartnerActions from './channel-partners.actions';
-import {ChannelPartnersState, LoadingState} from './channel-partners.state';
+import { ChannelPartnersState, LoadingState } from './channel-partners.state';
 
 const initialState: ChannelPartnersState = {
     arePartnerOrgsLoading: false,
@@ -11,6 +11,7 @@ const initialState: ChannelPartnersState = {
     currentSubchannels: [],
     currentPartnerOrganizations: [],
     channelPartners: [],
+    organizations: [],
     rootOrganizations: [],
     hasStoreLoaded: false,
 };
@@ -39,7 +40,7 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
-        ChannelPartnerActions.setOrganizations,
+        ChannelPartnerActions.setRootOrganizations,
         (state, { rootOrganizations }): ChannelPartnersState => ({
             ...state,
             rootOrganizations,
@@ -47,6 +48,16 @@ export const channelPartnersReducer = createReducer(
     ),
     on(
         ChannelPartnerActions.setChannelPartnersAndOrgs,
+        (state, { channelPartners, organizations }): ChannelPartnersState => ({
+            ...state,
+            hasStoreLoaded: true,
+            channelPartnersAndOrgsLoadState: LoadingState.LOADED,
+            channelPartners,
+            organizations,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setChannelPartnersAndRootOrgs,
         (state, { channelPartners, rootOrganizations }): ChannelPartnersState => ({
             ...state,
             hasStoreLoaded: true,

@@ -17,6 +17,7 @@ export interface ChannelPartnersState {
     currentSubchannels: ChannelPartner[];
     currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
+    organizations: Organization[];
     rootOrganizations: Organization[];
     hasStoreLoaded: boolean;
 }

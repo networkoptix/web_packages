@@ -77,7 +77,7 @@ export const orgTabGuard: CanActivateFn = (
         return checkPermissions(currOrg.ownPermissions, currentPartner$$()?.ownPermissions);
     } else {
         const id = currOrgId$$();
-        store.dispatch(cpActions.loadChannelPartnersAndOrgs());
+        store.dispatch(cpActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
         return store.select(selectHasStoreLoaded).pipe(
             filter(Boolean),
             take(1),
@@ -85,7 +85,7 @@ export const orgTabGuard: CanActivateFn = (
             switchMap(orgs => {
                 const org = orgs.find(org => org.id === id);
                 const partnerId = currPartnerId$$();
-                store.dispatch(cpActions.setOrganizations({ rootOrganizations: orgs }));
+                store.dispatch(cpActions.setRootOrganizations({ rootOrganizations: orgs }));
                 if (org) {
                     return of(org);
                 } else if (partnerId) {

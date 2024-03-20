@@ -10,8 +10,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectChannelPartners,
-    selectAreChannelPartnersAndOrgsLoading,
     selectRootOrganizations,
+    selectAreChannelPartnersAndOrgsLoading,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -74,7 +74,7 @@ export class NxHomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.store.dispatch(CPActions.loadChannelPartnersAndOrgs());
+        this.store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
     }
 
     private initChannelPartners(homeNode: MenuNode | undefined, systems: NxSystemInfo[]): void {

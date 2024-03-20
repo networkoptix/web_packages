@@ -52,6 +52,7 @@ export class NxChannelPartnersService {
     getChannelPartner = this.cpApi.getChannelPartner;
     updateChannelPartner = this.cpApi.updateChannelPartner;
     removeChannelPartner = this.cpApi.removeChannelPartner;
+    getPartnerServiceChanges = this.cpApi.getPartnerServiceChanges;
 
     /* Channel Partner Users */
     getChannelPartnerRoles = this.cpApi.getChannelPartnerRoles;
@@ -72,6 +73,7 @@ export class NxChannelPartnersService {
     getOrganization = this.cpApi.getOrganization;
     updateOrganization = this.cpApi.updateOrganization;
     removeOrganization = this.cpApi.removeOrganization;
+    getOrganizationServiceChanges = this.cpApi.getOrganizationServiceChanges;
 
     /* Organization Users */
     getOrganizationRoles = this.cpApi.getOrganizationRoles;

@@ -1,10 +1,16 @@
-<h4 translate>[Partner/Organization Name]</h4>
+<h4>{{ selectedEntityName$$() }}</h4>
 <h2
     translate
     class="mb-4"
 >
     Service Changes
 </h2>
-<div class="service-changes-table-wrapper">
-    <nx-service-changes-table></nx-service-changes-table>
-</div>
+@if (serviceChangesStore.isLoading()) {
+    <nx-pre-loader></nx-pre-loader>
+} @else {
+    <div class="service-changes-table-wrapper">
+        <nx-service-changes-table
+            [records]="serviceChangesStore.records()"
+        ></nx-service-changes-table>
+    </div>
+}
