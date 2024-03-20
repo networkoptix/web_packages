@@ -455,6 +455,33 @@ export const GroupsStore = signalStore(
                 ),
             );
         },
+        initializeOpenGroupsSync: () =>
+            channelPartnerService.paramStateHandler.state$.pipe(
+                map(({ queryParams: { openGroups } }) => openGroups || []),
+                take(1),
+                switchMap(openGroups => {
+                    patchState(
+                        store,
+                        setEntities(
+                            openGroups.map(id => ({
+                                id,
+                                open: true,
+                            })),
+                            { collection: 'openGroups' },
+                        ),
+                    );
+                    return toObservable(store.openGroupsEntities);
+                }),
+                skip(1),
+                tap(openGroupsState => {
+                    const openGroups = openGroupsState.flatMap(({ id, open }) =>
+                        open ? [id] : [],
+                    );
+                    channelPartnerService.paramStateHandler.state$$.set({
+                        queryParams: { openGroups },
+                    });
+                }),
+            ),
     })),
     // 4. Define side effects
     withHooks({
@@ -500,6 +527,7 @@ export const GroupsStore = signalStore(
                     takeUntilDestroyed(),
                 )
                 .subscribe();
+            store.initializeOpenGroupsSync().pipe(takeUntilDestroyed()).subscribe();
         },
     }),
     // 5. Define Computed state

@@ -23,13 +23,16 @@ export class NxChannelPartnersService {
         private paramStateService: NxParamStateService,
     ) {}
 
-    paramStateHandler = this.paramStateService.getStateHandler(({ params }) => ({
+    paramStateHandler = this.paramStateService.getStateHandler(({ params, queryParams }) => ({
         params: {
             organizationId: params.organizationId,
             partnerId: params.partnerId,
             groupId: params.groupId,
             email: params.email,
             subchannelId: params.subchannelId,
+        },
+        queryParams: {
+            openGroups: queryParams.openGroups,
         },
     }));
 

@@ -57,6 +57,7 @@
                     [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                     [routerLink]="['group', group.id]"
                     [relativeTo]="route.parent"
+                    queryParamsHandling="merge"
                     [dropdownItems]="groupActions$$()[group.id]"
                     (toggleShow)="$event && getGroupUsers(group.id)"
                 >

@@ -71,10 +71,13 @@ export class NxGroupsSidebarLevelComponent {
     }
 
     toGroup(groupId: string): void {
-        this.router.navigate(['group', groupId], { relativeTo: this.route });
+        this.router.navigate(['group', groupId], {
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+        });
     }
 
     toRoot(): void {
-        this.router.navigate(['./'], { relativeTo: this.route });
+        this.router.navigate(['./'], { relativeTo: this.route, queryParamsHandling: 'merge' });
     }
 }
