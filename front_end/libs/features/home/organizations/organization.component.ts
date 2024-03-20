@@ -29,6 +29,7 @@ import {
     selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -77,6 +78,7 @@ interface SidebarSettings {
         NxAccessTableComponent,
         NxTagComponent,
         TranslateModule,
+        NxRibbonStandaloneComponent,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {

@@ -1,76 +1,117 @@
-<ng-container *ngIf="visibility">
-    <div
-        class="clearfix ribbon"
-        *ngIf="!type"
-    >
-        <div
-            class="message"
-            data-testid="ribbonMessage"
-        >
-            {{ message | nxTranslate }}
-        </div>
-        <div class="action">
-            <ng-container *ngFor="let action of actions">
-                <ng-container *ngIf="action.type === 'link'">
+@if (visibility) {
+    @switch (type) {
+        @case ('alert') {
+            <div class="clearfix alert-ribbon ribbon">
+                <div class="message">
+                    <div class="message-content">
+                        <div class="message-content-wrapper">
+                            <div
+                                [innerHTML]="message | nxTranslate"
+                                data-testid="systemMessage"
+                            ></div>
+                            <a
+                                *ngIf="updateFunction"
+                                (click)="updateFunction()"
+                                target="_blank"
+                                class="action-link"
+                            >
+                                <svg-icon
+                                    *ngIf="actions.length && actions[0].text === 'Refresh'"
+                                    nx-add-svg-src
+                                    [src]="icons.dirTextButtons + 'reload.svg'"
+                                    [svgStyle]="{ 'height.px': '20' }"
+                                    title="Reload"
+                                ></svg-icon>
+                                <span>{{ actions[0].text | nxTranslate }}</span>
+                            </a>
+                        </div>
+                    </div>
                     <a
-                        *ngIf="!action.external"
-                        [routerLink]="action.value"
+                        *ngIf="actions.length && actions[0] && !updateFunction"
+                        [href]="actions[0].value"
                         target="_blank"
-                        >{{ action.text | nxTranslate }}</a
+                        class="ml-2"
+                        >{{ actions[0].text | nxTranslate }}</a
                     >
-                    <a
-                        *ngIf="action.external"
-                        [href]="action.value"
-                        target="_blank"
-                        >{{ action.text | nxTranslate }}</a
-                    >
-                </ng-container>
-                <nx-process-button
-                    *ngIf="action.type === 'process-button'"
-                    [buttonText]="action.text | nxTranslate"
-                    [actionType]="'default'"
-                    [customClass]="'small-button'"
-                    [process]="action.value"
-                ></nx-process-button>
-            </ng-container>
-        </div>
-    </div>
-
-    <div
-        class="clearfix alert-ribbon ribbon"
-        *ngIf="type === 'alert'"
-    >
-        <div class="message">
-            <div class="message-content">
-                <div class="message-content-wrapper">
-                    <div
-                        [innerHTML]="message | nxTranslate"
-                        data-testid="systemMessage"
-                    ></div>
-                    <a
-                        *ngIf="updateFunction"
-                        (click)="updateFunction()"
-                        target="_blank"
-                        class="action-link"
-                    >
-                        <svg-icon
-                            *ngIf="actions.length && actions[0].text === 'Refresh'"
-                            nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'reload.svg'"
-                            [svgStyle]="{ 'height.px': '20' }"
-                            title="Reload"
-                        ></svg-icon>
-                        <span>{{ actions[0].text | nxTranslate }}</span>
-                    </a>
                 </div>
             </div>
-            <a
-                *ngIf="actions.length && actions[0] && !updateFunction"
-                [href]="actions[0].value"
-                target="_blank"
-                class="ml-2"
-                >{{ actions[0].text | nxTranslate }}</a
-            >
-        </div>
-    </div>
-</ng-container>
+        }
+        @case ('groups-error') {
+            <div class="clearfix groups-error-ribbon ribbon">
+                <div class="message">
+                    <div class="message-content">
+                        <div class="message-content-wrapper">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirNonStandard + 'error.svg'"
+                                [svgStyle]="{ 'height.px': '20' }"
+                                title="Error"
+                            ></svg-icon>
+                            <div
+                                [innerHTML]="message | nxTranslate"
+                                data-testid="systemMessage"
+                            ></div>
+                            <a
+                                *ngIf="updateFunction"
+                                (click)="updateFunction()"
+                                target="_blank"
+                                class="action-link"
+                            >
+                                <svg-icon
+                                    *ngIf="actions.length && actions[0].text === 'Refresh'"
+                                    nx-add-svg-src
+                                    [src]="icons.dirTextButtons + 'reload.svg'"
+                                    [svgStyle]="{ 'height.px': '20' }"
+                                    title="Reload"
+                                ></svg-icon>
+                                <span>{{ actions[0].text | nxTranslate }}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <a
+                        *ngIf="actions.length && actions[0] && !updateFunction"
+                        [href]="actions[0].value"
+                        target="_blank"
+                        class="ml-2"
+                        >{{ actions[0].text | nxTranslate }}</a
+                    >
+                </div>
+            </div>
+        }
+        @default {
+            <div class="clearfix ribbon">
+                <div
+                    class="message"
+                    data-testid="ribbonMessage"
+                >
+                    {{ message | nxTranslate }}
+                </div>
+                <div class="action">
+                    <ng-container *ngFor="let action of actions">
+                        <ng-container *ngIf="action.type === 'link'">
+                            <a
+                                *ngIf="!action.external"
+                                [routerLink]="action.value"
+                                target="_blank"
+                                >{{ action.text | nxTranslate }}</a
+                            >
+                            <a
+                                *ngIf="action.external"
+                                [href]="action.value"
+                                target="_blank"
+                                >{{ action.text | nxTranslate }}</a
+                            >
+                        </ng-container>
+                        <nx-process-button
+                            *ngIf="action.type === 'process-button'"
+                            [buttonText]="action.text | nxTranslate"
+                            [actionType]="'default'"
+                            [customClass]="'small-button'"
+                            [process]="action.value"
+                        ></nx-process-button>
+                    </ng-container>
+                </div>
+            </div>
+        }
+    }
+}

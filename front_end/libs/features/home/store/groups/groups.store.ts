@@ -1,5 +1,5 @@
 import { InjectionToken, computed, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     signalStore,
     type,
@@ -28,9 +28,16 @@ import {
     tap,
     from,
     firstValueFrom,
+    NEVER,
+    timer,
+    take,
+    skip,
+    merge,
 } from 'rxjs';
 
+import staticLang from '@language_static';
 import type { DraggableItem } from '@pages/home/home.types';
+import { Translatable, isTranslatable } from '@pipes/nx-translate.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
@@ -41,11 +48,18 @@ import {
 import { NxSystemsService } from '@services/systems.service';
 
 import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
-import type { SystemsByOrgOrGroup, Undo, GroupFlatMap, GroupFlatItem } from './groups.types';
+import type {
+    SystemsByOrgOrGroup,
+    Undo,
+    GroupFlatMap,
+    GroupFlatItem,
+    RibbonContextState,
+} from './groups.types';
 
 const initialState = {
     loadingGroups: true,
     currentGroupId: '',
+    ribbonContext: { showForSeconds: 0 } as RibbonContextState,
 };
 
 const groupsEntity = { collection: 'groups' } as const;
@@ -136,6 +150,7 @@ export const GroupsStore = signalStore(
                     store,
                     removeAllEntities(groupsEntity),
                     setEntities(groups, groupsEntity),
+                    { ribbonContext: { showForSeconds: 0 } },
                 );
             }
         };
@@ -171,11 +186,31 @@ export const GroupsStore = signalStore(
                 store,
                 setEntities([targetGroup, originalGroup], systemsEntity),
                 setEntities(groups, groupsEntity),
+                { ribbonContext: { showForSeconds: 0 } },
             );
             return originalGroup.id;
         };
 
+        const hideRibbon = (): void => patchState(store, { ribbonContext: { showForSeconds: 0 } });
+
+        const showRibbon = (ribbonContext: RibbonContextState | Translatable): Undo => {
+            if (isTranslatable(ribbonContext)) {
+                ribbonContext = {
+                    showForSeconds: 5,
+                    context: {
+                        message: ribbonContext,
+                        actions: [],
+                        type: 'groups-error',
+                    },
+                };
+            }
+            patchState(store, { ribbonContext });
+            return hideRibbon;
+        };
+
         const methods = {
+            showRibbon,
+            hideRibbon,
             initializeGroupsWithUndo: (): Undo => {
                 patchState(
                     store,
@@ -253,6 +288,7 @@ export const GroupsStore = signalStore(
                     store,
                     removeAllEntities(groupsEntity),
                     setEntities(groups, groupsEntity),
+                    { ribbonContext: { showForSeconds: 0 } },
                 ] as const;
                 if (systemsWithinGroup?.systems.length) {
                     const targetGroup = systemsByGroup[deletedGroup.parentId || orgId] || {
@@ -289,6 +325,18 @@ export const GroupsStore = signalStore(
                     // TODO: Implement undo for deleteGroupWithUndo if we need it
                 };
             },
+            getTargetGroupId: (movedItem: DraggableItem): string | null => {
+                const targetGroupId = isGroupItem(movedItem)
+                    ? movedItem.parentId
+                    : store
+                          .systemsEntities()
+                          .find(({ systems }) => systems.includes(movedItem.systemId))!.id;
+                return targetGroupId ===
+                    store.getChannelPartnersService().paramStateHandler.state$$().params
+                        ?.organizationId
+                    ? null
+                    : targetGroupId;
+            },
             renameItemWithUndo: (id: string, name: string): Undo => {
                 const groups = store.groupsEntities();
                 const item = findItem(store.groupsEntities(), id);
@@ -322,14 +370,28 @@ export const GroupsStore = signalStore(
         },
         moveItem: (
             movedItem: DraggableItem,
-            targetItem: Pick<GroupItem, 'id'> | { id: null } = { id: null },
+            targetItem: GroupItem | { id: null } = { id: null },
         ) => {
+            const { draggableType, errorMsg } = staticLang.systemGroups;
+            const type = {
+                value: isGroupItem(movedItem) ? draggableType.folder : draggableType.system,
+            };
             if (
                 isGroupItem(movedItem) &&
                 movedItem.children &&
                 findItem(movedItem.children, targetItem.id)
             ) {
-                return from(Promise.reject('Cannot move item into its own children.'));
+                const value = errorMsg.childInFolder;
+                store.showRibbon({ value, params: { type } });
+                return from(Promise.reject(value));
+            }
+
+            const targetGroupId = store.getTargetGroupId(movedItem);
+
+            if (targetGroupId === targetItem.id) {
+                const value = targetGroupId ? errorMsg.alreadyInFolder : errorMsg.alreadyInRoot;
+                store.showRibbon({ value, params: { type } });
+                return from(Promise.reject(value));
             }
 
             const undo = store.moveItemWithUndo(movedItem, targetItem);
@@ -401,6 +463,10 @@ export const GroupsStore = signalStore(
                 map(({ params }) => params),
                 filter(({ organizationId }) => !!organizationId),
             );
+            const orgOrGroupChange$ = paramState$.pipe(
+                map(({ organizationId, groupId }) => ({ organizationId, groupId })),
+                distinctUntilChanged((a, b) => isEqual(a, b)),
+            );
             paramState$
                 .pipe(
                     map(({ organizationId }) => organizationId),
@@ -409,13 +475,28 @@ export const GroupsStore = signalStore(
                     takeUntilDestroyed(),
                 )
                 .subscribe();
-            paramState$
+            orgOrGroupChange$
                 .pipe(
-                    map(({ organizationId, groupId }) => ({ organizationId, groupId })),
-                    distinctUntilChanged((a, b) => isEqual(a, b)),
                     tap(({ organizationId, groupId }) =>
                         firstValueFrom(store.initializeSystems(organizationId, groupId)),
                     ),
+                    takeUntilDestroyed(),
+                )
+                .subscribe();
+            // Handles auto-hiding of ribbon
+            toObservable(store.ribbonContext)
+                .pipe(
+                    distinctUntilChanged((a, b) => isEqual(a, b)),
+                    switchMap(context => {
+                        if (context.showForSeconds) {
+                            return merge(
+                                timer(context.showForSeconds * 1000),
+                                orgOrGroupChange$.pipe(skip(1)),
+                            ).pipe(take(1));
+                        }
+                        return NEVER;
+                    }),
+                    tap(() => store.hideRibbon()),
                     takeUntilDestroyed(),
                 )
                 .subscribe();
@@ -608,6 +689,13 @@ export const GroupsStore = signalStore(
                 );
             });
 
+            const currentRibbonContext$$ = computed(() => {
+                const context = store.ribbonContext();
+                if (context.showForSeconds && context.context?.message) {
+                    return { visibility: true, ...context.context };
+                }
+            });
+
             return {
                 sortedGroups$$,
                 // groupStateAdapter$$,
@@ -618,6 +706,7 @@ export const GroupsStore = signalStore(
                 groupsPath$$,
                 groupFlatMap$$,
                 groupPathMap$$,
+                currentRibbonContext$$,
             };
         },
     ),

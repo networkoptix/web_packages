@@ -15,7 +15,6 @@ describe('NxRibbonComponent', () => {
 
     it('should be initialized', async () => {
         const { component } = await setupRibbonComponent();
-        component.ngOnInit();
 
         expect(component.visibility).toBeFalsy();
         expect(component.type).toBeUndefined();

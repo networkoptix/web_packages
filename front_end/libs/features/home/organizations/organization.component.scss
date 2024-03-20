@@ -24,12 +24,12 @@
         z-index: 3;
         cursor: pointer;
 
-        .sidebar-toggling-ear {   
+        .sidebar-toggling-ear {
             svg {
                 transform: rotate(270deg);
             }
         }
-        
+
         &:hover {
             opacity: 1.0;
         }
@@ -46,10 +46,13 @@
             }
         }
     }
-    
+
     .cards {
         flex: 1;
-        padding: 1rem;
+
+        & > *:not(nx-ribbon-standalone) {
+            margin: 1rem;
+        }
 
         display: flex;
         flex-direction: column;

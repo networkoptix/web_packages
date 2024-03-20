@@ -1,3 +1,4 @@
+import { RibbonContext } from '@components/ribbon/ribbon.types';
 import {
     CloudSystem,
     GroupItem,
@@ -25,3 +26,8 @@ export interface SystemsByOrgOrGroup {
 export type GroupFlatItem = Omit<GroupItem, 'children'>;
 
 export type GroupFlatMap = Record<string, GroupFlatItem>;
+
+export type RibbonContextState = {
+    showForSeconds: number;
+    context?: Omit<RibbonContext, 'visibility'>;
+};

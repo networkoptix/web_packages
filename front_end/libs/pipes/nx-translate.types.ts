@@ -9,3 +9,14 @@ export interface SingleTranslateObject {
 }
 
 export type Translatable = string | TranslateObject | SingleTranslateObject;
+
+export const isTranslatable = (value: unknown): value is Translatable => {
+    if (typeof value === 'string') {
+        return true;
+    }
+
+    if (typeof value === 'object' && value !== null) {
+        return 'value' in value;
+    }
+    return false;
+};
