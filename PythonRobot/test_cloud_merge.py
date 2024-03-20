@@ -17,7 +17,6 @@ rb = RobotVariables("en_US")
 
 
 def merge_from_primary_system(driver, first_server: Mediaserver, second_server: Mediaserver):
-    # with get_chrome() as driver:
     url = ENV + f"/systems/{first_server.id}"
     driver.get(url)
     first_server_owner = first_server.get_cloud_owner()
@@ -30,7 +29,8 @@ def merge_from_primary_system(driver, first_server: Mediaserver, second_server: 
     merge_dialog.primary_second_system().wait_until_visible()
     merge_dialog.get_next_button().click()
     merge_dialog.merge_systems_button().click()
-    sys_admin.system_is_being_merged_header().wait_until_visible()
+    # Commenting out below step because merge can complete so fast that this header msg never shows up.
+    # sys_admin.system_is_being_merged_header().wait_until_visible()
     message = sys_admin.systems_merged_success_toast_notification(first_server.name, second_server.name)
     message.wait_until_visible(90)
     message.wait_until_not_visible(10)
