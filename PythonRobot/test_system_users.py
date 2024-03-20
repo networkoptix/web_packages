@@ -1,9 +1,13 @@
 import time
+import sys
+import logging
 from pathlib import Path
 
+from typing import Callable
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.test_runner import Reporter
 from NoptixLibrary.test_runner import Test
 from RobotVariables import RobotVariables
@@ -20,12 +24,19 @@ from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
 from variables import ENV
 
+_logger = logging.getLogger(__name__)
+
 password = "qweasd 123"
 rb = RobotVariables("en_US")
 permissions = CloudAccount.PERMISSIONS
 viewer_permissions = permissions['viewer']
 admin_permissions = permissions['cloudAdmin']
 liveViewer_permissions = permissions['liveViewer']
+if len(sys.argv) >= 2:
+    _CLOUD_HOST = sys.argv[1]
+else:
+    _CLOUD_HOST = "https://test.ft-cloud.hdw.mx"
+CLOUD_API = CloudPortalAPI(env=_CLOUD_HOST)
 
 
 def owner_can_remove_user(driver, server: Mediaserver):
@@ -128,7 +139,7 @@ def share_with_unregistered_user_sends_notification(driver, server: Mediaserver)
     register_form.terms_and_conditions_checkbox().select()
     register_form.create_account_button().click()
     register_form.login_button().wait_until_visible()
-    CloudAccount(tmp_user, "Mark", "Hamill", password).delete_account()
+    _teardown(5, .5, CLOUD_API.delete_account, tmp_user, password)
 
 
 def email_is_locked_when_unregistered_user_is_invited(driver, server: Mediaserver):
@@ -151,7 +162,7 @@ def email_is_locked_when_unregistered_user_is_invited(driver, server: Mediaserve
     register_form.terms_and_conditions_checkbox().select()
     register_form.create_account_button().click()
     register_form.login_button().wait_until_visible()
-    CloudAccount(tmp_user, "Mark", "Hamill", password).delete_account()
+    _teardown(5, .5, CLOUD_API.delete_account, tmp_user, password)
 
 
 def share_with_registered_user_works(driver, server: Mediaserver):
@@ -729,6 +740,16 @@ def disable_enable_correctly_affects_user(driver, server: Mediaserver, user: Clo
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(viewer.email, viewer.password)
     SystemAdmin(driver)
+
+
+def _teardown(retries: int, retry_interval: float, function: Callable, *args, **kwargs):
+        for _ in range(retries):
+            try:
+                function(*args, **kwargs)
+                break
+            except Exception:
+                _logger.debug(Exception)
+                time.sleep(retry_interval)
 
 
 if __name__ == "__main__":
