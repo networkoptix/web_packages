@@ -2097,7 +2097,7 @@
         "phoneRequired": "Phone number is required",
         "siteInvalid": "URL is invalid",
         "emailInvalid": "Email is invalid",
-        "emailNotUnique": "Email is already added",
+        "emailNotUnique": "This email has already been registered",
         "phoneInvalid": "Phone number is invalid",
         "phoneNotUnique": "Phone number is already added"
     },

@@ -36,19 +36,21 @@
                     id="email"
                     class="form-control"
                     formControlName="email"
-                    [ngClass]="{ 'input-error': emailInput?.invalid }"
+                    [ngClass]="{ 'input-error': emailInput?.invalid && emailInput?.touched }"
                 />
-                <div *ngIf="emailInput?.invalid && (emailInput?.touched || emailInput?.dirty)">
-                    <div
+                <ng-container
+                    *ngIf="emailInput?.invalid && (emailInput?.touched || emailInput?.dirty)"
+                >
+                    <span
                         *ngIf="
+                            emailInput?.errors['requiredEmail'] ||
                             emailInput?.errors['emailInvalid'] ||
                             emailInput?.errors['existingEmail']
                         "
-                        class="subtext error"
+                        class="input-error"
+                        >{{ emailInput?.errors?.msg }}</span
                     >
-                        {{ emailInput?.errors?.msg }}
-                    </div>
-                </div>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label
@@ -62,10 +64,20 @@
                     [items]="roles"
                     [selected]="selectedRole"
                     [(ngModel)]="selectedRole"
+                    (focusout)="partnerAddUserRoleFocused$$.set(true)"
                 ></nx-select>
-                <div class="subtext description">
+                <div
+                    *ngIf="selectedRole.value"
+                    class="subtext description"
+                >
                     {{ roleDescriptionMap[selectedRole.name] | translate }}
                 </div>
+                <span
+                    *ngIf="!selectedRole.value && partnerAddUserRoleFocused$$()"
+                    class="input-error"
+                    translate
+                    >The "Permission group" is empty</span
+                >
             </div>
         </form>
     </div>
