@@ -432,14 +432,6 @@ export const GroupsStore = signalStore(
                 return channelPartnersService.paramStateHandler.state$$().params;
             });
 
-            const twoFactorEnabled$$ = computed(() =>
-                Object.fromEntries(
-                    systemsService
-                        .systems$$()
-                        .map(({ id, system2faEnabled }) => [id, system2faEnabled]),
-                ),
-            );
-
             const currentGroupId$$ = computed(() => {
                 const params = params$$();
                 if (params?.groupId) {
@@ -544,18 +536,32 @@ export const GroupsStore = signalStore(
             const currentSystems$$ = computed<SystemItem[]>(() => {
                 const systems = store.systemsEntityMap();
                 const { id, isRoot } = currentGroupId$$();
-                const twoFactorEnabled = twoFactorEnabled$$();
+                const systemInfoMap = systemsService.systemInfoMap$$();
+
                 const currentGroup = systems[id];
                 const cloudSystems = currentGroup?.cloudSystems || [];
-                const systemItems = cloudSystems.map(
-                    ({ systemId, groupId, name, effectiveState }) => ({
+                const systemItems: SystemItem[] = [];
+                for (const system of cloudSystems) {
+                    const systemInfo = systemInfoMap.get(system.systemId);
+                    if (!systemInfo) {
+                        continue;
+                        // Ignore zombie systems that have been disconnected from cloud but
+                        // not removed from orgs
+                    }
+
+                    const { systemId, groupId, effectiveState } = system;
+                    // API sometimes forgets the system name on CloudSystem, patch for now
+                    // https://networkoptix.atlassian.net/browse/CLOUD-13056?focusedCommentId=194015
+                    const { system2faEnabled, stateOfHealth, name } = systemInfo;
+                    systemItems.push({
                         effectiveState,
                         groupId,
                         systemId,
                         name,
-                        system2faEnabled: !!twoFactorEnabled[systemId],
-                    }),
-                );
+                        system2faEnabled,
+                        stateOfHealth,
+                    });
+                }
                 return systemItems
                     .filter(({ groupId }) => (isRoot ? groupId === null : groupId === id))
                     .sort((a, b) => a.name!.localeCompare(b.name!));
