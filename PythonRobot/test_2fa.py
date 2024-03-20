@@ -203,7 +203,7 @@ def twofa_not_required_when_more_than_one_system(driver, server: Mediaserver):
     security_form.twofa_settings_modal_cancel()
     security_form.twofa_totp_input().input_text(owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
-    time.sleep(2)
+    time.sleep(4)
     header.log_out()
     with Suite() as suite:
         second_server = suite.create_cloud_server(owner)

@@ -10,6 +10,7 @@ from typing import Mapping
 import certifi
 import requests
 import urllib3
+from requests.exceptions import ReadTimeout
 from urllib.parse import unquote
 from requests import HTTPError
 from requests.auth import HTTPBasicAuth
@@ -432,7 +433,7 @@ class CloudPortalAPI(object):
             url=f'{self.env}/api/robot/set_flags',
             data=features_dict,
             verify=_ssl_certs_path,
-            )
+            timeout=10)
         if set_flags_response.status_code != 200:
             raise CannotSetFeatureFlags()
 
@@ -463,7 +464,7 @@ class CloudPortalAPI(object):
     def _check_debug_status(self):
         try:
             self.set_feature_flags({})
-        except CannotSetFeatureFlags:
+        except (CannotSetFeatureFlags, ReadTimeout):
             print(f"Debug is not enabled on the {self.env} instance")
             return False
         return True
