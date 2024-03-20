@@ -5,18 +5,33 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+export const loadPartnerOrgs = createAction(
+    '[Channel Partners] Load partner organizations',
+    props<{ partnerId: string }>(),
+);
+
+export const loadChannelPartnersAndOrgs = createAction(
+    '[Channel Partners] Load channel partners and organizations',
+    props<{ includeChildOrgs: boolean }>(),
+);
+
 export const setChannelPartners = createAction(
     '[Channel Partners] Set channel partners',
     props<{ channelPartners: ChannelPartner[] }>(),
 );
 
-export const setOrganizations = createAction(
-    '[Channel Partners] Set Organiations',
+export const setRootOrganizations = createAction(
+    '[Channel Partners] Set Root Organizations',
     props<{ rootOrganizations: Organization[] }>(),
 );
 
 export const setChannelPartnersAndOrgs = createAction(
     '[Channel Partners] Set Channel Partners and Orgs',
+    props<{ channelPartners: ChannelPartner[]; organizations: Organization[] }>(),
+);
+
+export const setChannelPartnersAndRootOrgs = createAction(
+    '[Channel Partners] Set Channel Partners and Root Orgs',
     props<{ channelPartners: ChannelPartner[]; rootOrganizations: Organization[] }>(),
 );
 
@@ -43,13 +58,4 @@ export const addPartnerOrg = createAction(
 export const setCurrentSubchannelPartners = createAction(
     '[Channel Partners] Set current subchannels',
     props<{ currentSubchannels: ChannelPartner[] }>(),
-);
-
-export const loadPartnerOrgs = createAction(
-    '[Channel Partners] Load partner organizations',
-    props<{ partnerId: string }>(),
-);
-
-export const loadChannelPartnersAndOrgs = createAction(
-    '[Channel Partners] Load channel partners and organizations',
 );

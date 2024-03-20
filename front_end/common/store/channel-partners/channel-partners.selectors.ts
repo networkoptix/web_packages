@@ -37,6 +37,11 @@ export const selectRootOrganizations = createSelector(selectChannelPartnersState
     sortEntityByName(state.rootOrganizations),
 );
 
+export const selectOrganizations = createSelector(
+    selectChannelPartnersState,
+    state => state.organizations,
+);
+
 export const selectCurrentPartnerId = createSelector(
     selectChannelPartnersState,
     state => state.currentPartnerId,

@@ -32,7 +32,9 @@ export class NxSettingsDisconnectComponent {
             .deleteOrganizationUser(this.organizationId(), this.email$$())
             .subscribe(_ => {
                 this.router.navigate(['home']).then(_ => {
-                    this.store.dispatch(partnerActions.loadChannelPartnersAndOrgs());
+                    this.store.dispatch(
+                        partnerActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }),
+                    );
                 });
             });
     }

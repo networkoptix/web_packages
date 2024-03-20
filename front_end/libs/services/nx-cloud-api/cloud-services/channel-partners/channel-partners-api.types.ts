@@ -369,3 +369,28 @@ export interface SassReport {
     signature: string;
     state: string;
 }
+
+interface PartnerServiceChangeEntry {
+    serviceId: string;
+    organizationId: string;
+    channelPartnerId: string;
+    changeQuantity: number;
+    date: string;
+}
+
+export interface PartnerServiceChangesResponse {
+    results: PartnerServiceChangeEntry[];
+}
+
+interface OrgServiceChangeEntry {
+    service: {
+        id: string;
+        displayName: string;
+    };
+    changeQuantity: number;
+    date: string;
+}
+
+export interface OrgServiceChangesResponse {
+    results: OrgServiceChangeEntry[];
+}

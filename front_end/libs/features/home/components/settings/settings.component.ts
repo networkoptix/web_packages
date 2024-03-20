@@ -280,7 +280,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
         const partnerOrgIndex = partnerOrgs.findIndex(org => org.id === updatedOrg.id);
         if (rootOrgIndex !== -1) {
             rootOrgs[rootOrgIndex] = updatedOrg;
-            this.store.dispatch(cpActions.setOrganizations({ rootOrganizations: rootOrgs }));
+            this.store.dispatch(cpActions.setRootOrganizations({ rootOrganizations: rootOrgs }));
         } else if (partnerOrgIndex !== -1) {
             partnerOrgs[partnerOrgIndex] = updatedOrg;
             this.store.dispatch(

@@ -27,24 +27,31 @@ export class ChannelPartnersEffects {
     loadChannelPartnersAndOrgs$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ChannelPartnerActions.loadChannelPartnersAndOrgs),
-            switchMap(() =>
+            switchMap(({ includeChildOrgs }) =>
                 forkJoin([
                     this.CPService.getChannelPartners(),
-                    this.CPService.getOrganizations(),
+                    this.CPService.getOrganizations(includeChildOrgs),
                 ]).pipe(
-                    map(([partners, orgs]) => {
+                    map(([partners, organizations]) => {
                         const channelPartnerIds = new Set<string>(
                             partners.map(partner => partner.id),
                         );
-                        return {
-                            type: ChannelPartnerActions.setChannelPartnersAndOrgs.type,
-                            channelPartners: partners.filter(
-                                partner =>
-                                    !partner.parentChannelPartner ||
-                                    !channelPartnerIds.has(partner.parentChannelPartner),
-                            ),
-                            rootOrganizations: orgs,
-                        };
+                        const filteredPartners = partners.filter(
+                            partner =>
+                                !partner.parentChannelPartner ||
+                                !channelPartnerIds.has(partner.parentChannelPartner),
+                        );
+                        return includeChildOrgs
+                            ? {
+                                  type: ChannelPartnerActions.setChannelPartnersAndOrgs.type,
+                                  channelPartners: filteredPartners,
+                                  organizations,
+                              }
+                            : {
+                                  type: ChannelPartnerActions.setChannelPartnersAndRootOrgs.type,
+                                  channelPartners: filteredPartners,
+                                  rootOrganizations: organizations,
+                              };
                     }),
                 ),
             ),

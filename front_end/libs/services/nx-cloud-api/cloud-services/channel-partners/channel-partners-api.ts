@@ -41,6 +41,8 @@ import {
     SassReport,
     ServiceQuantities,
     GroupStructureItem,
+    PartnerServiceChangesResponse,
+    OrgServiceChangesResponse,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -136,6 +138,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
     };
 
+    getPartnerServiceChanges = (
+        partnerId: string,
+        startTs: string,
+        endTs: string,
+    ): Observable<PartnerServiceChangesResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'service_changes_history']),
+            {
+                params: {
+                    startTs,
+                    endTs,
+                },
+            },
+        );
+    };
+
     /* Channel Partner Users */
     getChannelPartnerRoles = (): Observable<ChannelPartnerRole[]> => {
         return this.get('/channel_partner_roles');
@@ -199,6 +217,19 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     removeOrganization = (orgId: string): Observable<void> => {
         return this.delete(this.makeUrl(urlBases.ORGANIZATIONS, [orgId]));
+    };
+
+    getOrganizationServiceChanges = (
+        orgId: string,
+        startTs: string,
+        endTs: string,
+    ): Observable<OrgServiceChangesResponse> => {
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'service_changes_history']), {
+            params: {
+                startTs,
+                endTs,
+            },
+        });
     };
 
     /* Organization Users */
