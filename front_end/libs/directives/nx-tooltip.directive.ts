@@ -34,9 +34,11 @@ import { NxClickElsewhereDirective } from './nx-click-elsewhere';
     hostDirectives: [NxClickElsewhereDirective],
 })
 export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
-    private overlayRef: OverlayRef;
+    private overlayRef: OverlayRef | undefined;
     private destroy$ = new Subject<boolean>();
     private positionStrategy: FlexibleConnectedPositionStrategy;
+    private tooltipPortal: ComponentPortal<NxTooltipComponent>;
+    private tooltipRef: NxTooltipComponent | undefined;
 
     @Input('nxTooltip') content: false | string | TemplateRef<unknown>;
     @Input() alternativeTargetRef: Element;
@@ -119,10 +121,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
             .flexibleConnectedTo(this.alternativeTargetRef || this.elementRef)
             .withPositions(this.reversePositionOrder ? positions.reverse() : positions);
 
-        this.overlayRef = this.overlay.create({
-            positionStrategy: this.positionStrategy,
-            scrollStrategy: this.overlay.scrollStrategies?.reposition(),
-        });
+        this.tooltipPortal = new ComponentPortal(NxTooltipComponent);
     }
 
     ngOnChanges(changes: NgChanges<NxTooltipDirective>): void {
@@ -138,7 +137,6 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy(): void {
         this.close();
-        this.overlayRef = undefined;
     }
 
     @HostListener('mouseleave')
@@ -150,7 +148,8 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     private close = (): void => {
         this.destroy$.next(true);
-        this.overlayRef?.detach();
+        this.overlayRef?.dispose();
+        this.overlayRef = undefined;
     };
 
     @HostListener('mouseenter')
@@ -179,10 +178,14 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                     return;
                 }
 
-                const tooltipPortal = new ComponentPortal(NxTooltipComponent);
-                const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
+                this.overlayRef = this.overlay.create({
+                    positionStrategy: this.positionStrategy,
+                    scrollStrategy: this.overlay.scrollStrategies?.reposition(),
+                });
+
+                this.tooltipRef = this.overlayRef.attach(this.tooltipPortal).instance;
                 if (this.content instanceof TemplateRef) {
-                    tooltipRef.attachTemplate(
+                    this.tooltipRef.attachTemplate(
                         new TemplatePortal(this.content, this._viewContainerRef),
                         !!this.alternateStyle,
                         !!this.alternateSecondary,
@@ -192,7 +195,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.ignoreMaxWidth,
                     );
                 } else {
-                    tooltipRef.attachText(
+                    this.tooltipRef.attachText(
                         this.content,
                         !!this.alternateStyle,
                         !!this.alternateSecondary,
