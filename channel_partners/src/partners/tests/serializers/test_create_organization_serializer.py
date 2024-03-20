@@ -98,7 +98,7 @@ class TestCreateOrganizationSerializer:
         self.notification_mock.assert_called_once_with(
             args=[
                 user_rel.organization_id,
-                cloud_user.id,
+                self.cp_user.user.id,
                 user_rel.user_id,
                 instance.channel_partner.cloud_host.hostname
             ]

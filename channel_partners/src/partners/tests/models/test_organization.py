@@ -24,7 +24,7 @@ class TestOrganizationStateChangeNotification:
             self.organization.save()
         assert len(callbacks) == 1
         callbacks[0]()
-        self.mocked_task.assert_called_once_with(args=[self.organization.id])
+        self.mocked_task.assert_called_once_with(args=[[self.organization.id]])
 
     def test_shutdown(self, django_capture_on_commit_callbacks):
         self.organization.state = ChannelPartnerStates.SHUTDOWN
@@ -32,4 +32,4 @@ class TestOrganizationStateChangeNotification:
             self.organization.save()
         assert len(callbacks) == 1
         callbacks[0]()
-        self.mocked_task.assert_called_once_with(args=[self.organization.id])
+        self.mocked_task.assert_called_once_with(args=[[self.organization.id]])

@@ -1394,8 +1394,8 @@ class TestOrganizationViewSet:
         assert response.data[0]['id'] == str(org_groups[-2][-1].id)
         assert len(response.data[0]['children']) == 3
 
-    def test_partial_update(self, channel_partner_factory, cp_user_factory, organization_factory,
-                            org_user_factory, arf, mock_auth_with_user):
+    def test_partial_update_org_admin(self, channel_partner_factory, cp_user_factory, organization_factory,
+                                      org_user_factory, arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         org = organization_factory(channel_partner=cp)
@@ -1408,6 +1408,46 @@ class TestOrganizationViewSet:
         assert response.status_code == 200
         org.refresh_from_db()
         assert org.name == data['name']
+        data = {'name': f'{uuid4()}', 'state': 'suspended'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(org_user)
+        with transaction.atomic():
+            response = view(request, pk=org.id)
+        assert response.status_code == 400
+        assert response.data['state']
+        assert 'name' not in response.data
+
+    def test_partial_update_cp_admin(self, channel_partner_factory, cp_user_factory, organization_factory,
+                                      org_user_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
+        data = {'name': f'{uuid4()}'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        org.refresh_from_db()
+        assert org.name == data['name']
+        data = {'name': f'{uuid4()}', 'state': 'suspended'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(cp_user)
+        with transaction.atomic():
+            response = view(request, pk=org.id)
+        assert response.status_code == 200
+        #     disabling cpal
+        org.channel_partner_access_level = None
+        org.save()
+        data = {'name': f'{uuid4()}', 'state': 'suspended'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(cp_user)
+        with transaction.atomic():
+            response = view(request, pk=org.id)
+        assert response.status_code == 400
+        assert response.data['name']
+        assert 'state' not in response.data
 
     def test_list(self, channel_partner_factory, organization_factory, cp_user_factory, org_user_factory,
                   arf, mock_auth_with_user):

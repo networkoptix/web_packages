@@ -286,7 +286,9 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
             user_rel = ChannelPartnerToUser.objects.create(user=cloud_user, channel_partner=instance,
                                                 roles=[ChannelPartnerRoles.ADMINISTRATOR])
             added_channel_partner_role_task.apply_async(args=[
-                user_rel.channel_partner_id, cloud_user.id, user_rel.user_id,
+                user_rel.channel_partner_id,
+                self.context['request'].user.id,
+                user_rel.user_id,
                 instance.cloud_host.hostname
             ])
         return instance
@@ -410,7 +412,7 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
                                               roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
             added_organization_role_task.apply_async(args=[
                 user_rel.organization_id,
-                cloud_user.id,
+                self.context['request'].user.id,
                 user_rel.user_id,
                 instance.channel_partner.cloud_host.hostname
             ])
