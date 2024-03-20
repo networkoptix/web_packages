@@ -71,8 +71,8 @@ def login_with_backup_code(driver, server: Mediaserver):
     security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     backup_code = owner.pop_backup_code()
-    for _ in range(2):
-        time.sleep(2)
+    for x in range(2):
+        time.sleep(4)
         header.log_out()
         header.log_in_button().click()
         LoginDialog(driver).twofa_backup_cloud_login(
@@ -80,6 +80,8 @@ def login_with_backup_code(driver, server: Mediaserver):
             owner.password,
             backup_code,
             )
+        if x == 0:
+            SystemAdmin(driver)
     security_form.twofa_backup_code_error().wait_until_visible()
     CLOUD_API.toggle_2fa_off_api(
         owner,
