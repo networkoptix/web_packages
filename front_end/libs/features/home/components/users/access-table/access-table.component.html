@@ -1,4 +1,17 @@
 <div class="header">
+    <button
+        class="btn btn-default svg-icon"
+        (click)="goBack()"
+        type="button"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'arrow_right.svg'"
+            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+            [applyClass]="true"
+        ></svg-icon>
+        <span translate>Back</span>
+    </button>
     <div
         class="path"
         *ngIf="currentPath$$() as currentPath"

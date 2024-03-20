@@ -277,4 +277,8 @@ export class NxAccessTableComponent implements OnInit {
     updateSelectedUsers(groups: { [key: string]: UserRecord }): void {
         this.selectedGroups = groups;
     }
+
+    goBack(): void {
+        this.router.navigate(['home', 'organization', this.currentOrg$$()?.id, 'users']);
+    }
 }
