@@ -51,21 +51,23 @@
             </button>
         </div>
     </div>
-}
-<div
-    #tableContainer
-    class="m-0 px-3 table-grid"
->
-    <div [style.display]="'block'">
-        <nx-users-table
-            [userType]="UserType.CHANNEL_PARTNER"
-            [headers]="headers"
-            [records]="recordStore.filteredRecords$$()"
-            (onDeleteClick)="deleteChannelPartnerUser($event)"
-            (selectedUsersEmitter)="updateSelectedUsers($event)"
-            (onAdduser)="newUserDialog()"
-            [roles]="roles$$()"
-            [searching]="searchModel.query !== ''"
-        ></nx-users-table>
+    <div
+        #tableContainer
+        class="m-0 px-3 table-grid"
+    >
+        <div [style.display]="'block'">
+            <nx-users-table
+                [userType]="UserType.CHANNEL_PARTNER"
+                [headers]="headers"
+                [records]="recordStore.filteredRecords$$()"
+                (onDeleteClick)="deleteChannelPartnerUser($event)"
+                (selectedUsersEmitter)="updateSelectedUsers($event)"
+                (onAdduser)="newUserDialog()"
+                [roles]="roles$$()"
+                [searching]="searchModel.query !== ''"
+            ></nx-users-table>
+        </div>
     </div>
-</div>
+} @else {
+    <nx-pre-loader></nx-pre-loader>
+}
