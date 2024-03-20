@@ -258,7 +258,7 @@ export class NxOrganizationsComponent implements OnInit {
         const currentGroupId = this.currentGroupId$$();
         const tabRoute = tabs ? tabs[newIndex].route : '';
         const route = currentGroupId ? ['group', currentGroupId, tabRoute] : [tabRoute];
-        this.router.navigate(route, { relativeTo: this.route });
+        this.router.navigate(route, { relativeTo: this.route, queryParamsHandling: 'merge' });
     }
 
     trackItem(_index: number, item: Crumb): string {
