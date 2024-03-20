@@ -24,6 +24,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap, zip } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -102,6 +103,7 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
         AngularSvgIconModule,
         NxResizeObserver,
         NxSearchComponent,
+        NxPreLoaderComponent,
     ],
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
