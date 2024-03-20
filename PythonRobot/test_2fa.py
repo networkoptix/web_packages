@@ -162,7 +162,7 @@ def system_2fa_required(driver, server: Mediaserver):
     system_admin_page.mandatory_2fa_checkbox().select()
     system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
     system_admin_page.twofa_enable_button().click()
-    time.sleep(2)
+    time.sleep(3)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
