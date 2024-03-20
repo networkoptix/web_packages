@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, WritableSignal, signal } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -13,7 +13,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -35,7 +34,6 @@ import { NxToastService } from '@services/toast.service';
         FormsModule,
         TranslateModule,
         ReactiveFormsModule,
-        NxEmailComponent,
         NxGenericDropdownModule,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
@@ -44,9 +42,9 @@ import { NxToastService } from '@services/toast.service';
 export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     roles: DropdownItem<string>[] = [];
-    users$$: WritableSignal<Set<string>>;
     selectedRole: DropdownItem<string>;
     roleDescriptionMap = this.LANG.channelPartners.usersTable.roleDescriptions;
+    partnerAddUserRoleFocused$$ = signal(false);
 
     createUserProcess: Process;
     form: FormGroup;
@@ -58,7 +56,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         processService: NxProcessService,
         toastService: NxToastService,
         private formBuilder: FormBuilder,
-        private NxValidators: NxValidators,
+        private nxValidators: NxValidators,
     ) {
         super(dialogRef);
         // There's probably a smarter place to put this so we only have
@@ -70,11 +68,11 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
                 value: role.id,
             }));
         });
-        this.users$$ = signal(new Set(users.map(user => user.email)));
         this.form = this.formBuilder.group({
             email: this.formBuilder.control({ value: '', disabled: false }, [
-                this.NxValidators.uniqueEmail(this.users$$()),
-                this.NxValidators.email(),
+                this.nxValidators.requiredEmail(),
+                this.nxValidators.email(),
+                this.nxValidators.uniqueEmail(new Map(users.map(user => [user.email, user]))),
             ]),
         });
 
