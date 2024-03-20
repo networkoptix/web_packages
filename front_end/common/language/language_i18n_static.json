@@ -2099,6 +2099,8 @@
         "darkLabel": "{hex} - dark{number}"
     },
     "customValidatorMsg": {
+        "valueRequired": "Value is required",
+        "labelRequired": "Label is required",
         "siteRequired": "URL is required",
         "emailRequired": "Email is required",
         "phoneRequired": "Phone number is required",
