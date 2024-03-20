@@ -61,7 +61,7 @@ def owner_can_remove_user(driver, server: Mediaserver):
         users_page = SystemUsers(driver)
         users_page.remove_user_button().click()
         users_page.remove_user_modal_button().click()
-        time.sleep(2)
+        time.sleep(5)
         header.log_out()
         LandingPage(driver).location_is_correct(url=f"{ENV}/")
         header.log_in_button().click()
