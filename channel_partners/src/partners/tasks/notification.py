@@ -143,8 +143,10 @@ def get_customization(cloud_host_name: str):
              retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
 def added_channel_partner_role_task(
         self: TaskWithLogging,
-        channel_partner_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str
+        channel_partner_id: uuid.UUID | str,
+        sharer_id: int,
+        user_id: str,
+        cloud_host_name: str
 ) -> None:
 
     notification_added_channel_partner_role(

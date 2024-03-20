@@ -1368,7 +1368,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                 from partners.tasks.notification import (
                     run_organization_state_changed_tasks,
                 )
-                transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[self.id]))
+                transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[[self.id]]))
 
 
     @property
@@ -1518,9 +1518,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.channel_partner.can_modify_organization_service_quantities(user)
 
     def can_configure(self, user: CloudUser):
-        return (
-            self.has_perm(user, OrganizationPermissions.configure_organization)
-        )
+        if self.has_perm(user, OrganizationPermissions.configure_organization):
+            return True
+        # TODO: move changing state to another request handler with proper
+        #  permissions. For now permissions are handled by access matrix.
+        return self.can_alter_state(user)
 
     def can_manage_systems(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.manage_systems)

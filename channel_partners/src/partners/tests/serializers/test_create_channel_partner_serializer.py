@@ -144,7 +144,7 @@ class TestCreateChannelPartnerSerializer:
         self.notification_mock.assert_called_once_with(
             args=[
                 user_rel.channel_partner_id,
-                cloud_user.id,
+                self.cp_user.user.id,
                 user_rel.user_id,
                 instance.cloud_host.hostname
             ]
