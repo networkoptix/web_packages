@@ -19,7 +19,7 @@ import {
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
-import { isEqual } from 'lodash-es';
+import { clamp, isEqual } from 'lodash-es';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -165,9 +165,13 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     initPageRows(): void {
         if (this.tableBodyContainer) {
             if (this.setAutoRows && this.data?.length) {
-                const autoRows = Math.floor(
-                    (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) /
-                        ROW_HEIGHT,
+                const autoRows = clamp(
+                    Math.floor(
+                        (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) /
+                            ROW_HEIGHT,
+                    ),
+                    1,
+                    this.data?.length || 1,
                 );
                 this.perPageSelectedOption = { name: 'auto', value: autoRows };
             } else {
@@ -243,7 +247,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
         const pageNum = this.params?.page ? Number(this.params.page) : 1;
 
-        this.setPage(pageNum);
+        this.setPage(Math.min(pageNum, this.numPages));
     }
 
     onResize(event: Size): void {
