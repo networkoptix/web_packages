@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -10,11 +9,11 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { BaseRibbonComponent } from './base-ribbon';
-import { NxRibbonService } from './ribbon.service';
+import { RibbonContext } from './ribbon.types';
 
 @UntilDestroy()
 @Component({
-    selector: 'nx-ribbon',
+    selector: 'nx-ribbon-standalone',
     templateUrl: 'ribbon.component.html',
     styleUrls: ['ribbon.component.scss'],
     standalone: true,
@@ -28,6 +27,6 @@ import { NxRibbonService } from './ribbon.service';
     ],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxRibbonComponent extends BaseRibbonComponent {
-    ribbonContext$$ = toSignal(inject(NxRibbonService).contextSubject);
+export class NxRibbonStandaloneComponent extends BaseRibbonComponent {
+    ribbonContext$$ = input.required<RibbonContext | undefined>({ alias: 'context' });
 }

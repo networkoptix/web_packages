@@ -52,7 +52,6 @@
                 </svg-icon>
             </div>
         </button>
-
         <div
             *ngIf="
                 (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
@@ -68,6 +67,10 @@
             class="cards"
             [ngClass]="{ 'back-button': inChannelPartner }"
         >
+            <nx-ribbon-standalone
+                [context]="groupsStore.currentRibbonContext$$()"
+            ></nx-ribbon-standalone>
+
             <nx-pre-loader
                 *ngIf="isLoading && !currentOrganization$$(); else cards"
             ></nx-pre-loader>

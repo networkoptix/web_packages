@@ -94,6 +94,54 @@
     }
 }
 
+.groups-error-ribbon {
+    @include typography.regular12nocolor;
+    border-bottom: 1px solid var(--red_d1_lighter);
+    background-color: var(--red_d1_lighter) !important;
+    min-height: 40px;
+
+    .message-content-wrapper > svg-icon {
+        margin-right: 12px;
+    }
+
+    .message {
+        color: var(--light-4);
+        text-align: left;
+
+        &-content {
+            justify-content: left;
+        }
+
+        .larger {
+            @include typography.regular18nocolor;
+        }
+
+        .action-link {
+            span {
+                color: var(--light-4);
+            }
+
+            &:hover {
+                span {
+                    color: var(--light-4);
+                }
+
+                svg * {
+                    stroke: var(--light-4);
+                }
+            }
+
+            svg * {
+                stroke: var(--light-4);
+            }
+        }
+    }
+
+    a:hover {
+        opacity: .8;
+    }
+}
+
 .message-content-wrapper {
     display: flex;
     align-items: center;
