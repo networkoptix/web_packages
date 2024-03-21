@@ -48,7 +48,7 @@
       padding: 0.5rem .25rem;
       display: flex;
       align-items: center;
-      color: var(--tabs-color);
+      color: var(--tabs-color) !important;
     }
   }
 }
