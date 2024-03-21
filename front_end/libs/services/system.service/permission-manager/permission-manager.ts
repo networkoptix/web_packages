@@ -1,6 +1,8 @@
-import { computed, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injector, computed, runInInjectionContext, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { identity } from 'lodash-es';
+import { Observable, firstValueFrom } from 'rxjs';
+import { filter, map, take, timeout } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
@@ -419,6 +421,22 @@ export class PermissionManager {
         });
         return accessRightsObj;
     }
+
+    /**
+     * Returns an observable that emits the currentUser after permissions have been resolved.
+     *
+     * Timeout is set to 10 seconds, if the permissions for a user is not resolved by then, it will emit the currentUser.
+     * This state probably isn't really possible except if the requests to get the user's permissions are failing.
+     *
+     * @param injector - The injector to use for the context. This is required to convert the signal to an observable
+     * @returns currentUser - The currentUser after permissions have been resolved
+     */
+    public permissionsInitialized = (injector: Injector): Observable<CurrentUser> =>
+        runInInjectionContext(injector, () => toObservable(this.currentUser$$)).pipe(
+            filter(user => user && Object.values(user.permissions).some(identity)),
+            timeout({ first: 10000, with: () => Promise.resolve(this.currentUser$$()) }),
+            take(1),
+        );
 
     canViewDevice = (deviceId: string): boolean =>
         this.permissions$$().view ||
