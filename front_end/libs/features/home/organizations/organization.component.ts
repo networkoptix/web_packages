@@ -257,7 +257,10 @@ export class NxOrganizationsComponent implements OnInit {
         const tabs = this.tabs$$();
         const currentGroupId = this.currentGroupId$$();
         const tabRoute = tabs ? tabs[newIndex].route : '';
-        const route = currentGroupId ? ['group', currentGroupId, tabRoute] : [tabRoute];
+        const route =
+            currentGroupId && tabRoute !== 'settings'
+                ? ['group', currentGroupId, tabRoute]
+                : [tabRoute];
         this.router.navigate(route, { relativeTo: this.route, queryParamsHandling: 'merge' });
     }
 

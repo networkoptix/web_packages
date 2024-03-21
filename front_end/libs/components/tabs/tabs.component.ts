@@ -39,7 +39,7 @@ export class NxTabsComponent implements AfterViewInit {
     @Input({ transform: booleanAttribute }) animated: boolean = false;
     @Input() animationSpeed: string;
     @Input() set currentTabIndex(index: number) {
-        this.currentTabIndex$$.set(index);
+        this.handleTabClick(index);
     }
     @Output() currentTabIndexChange = new EventEmitter<number>();
 
@@ -48,13 +48,13 @@ export class NxTabsComponent implements AfterViewInit {
 
     currentTabIndex$$ = signal<number | null>(null);
 
-    handleTabClick = (tab: NxBaseTabComponent, index: number, emit = true): void => {
+    handleTabClick = (index: number, tab?: NxBaseTabComponent, emit = true): void => {
         const childTabs = this.tabItems.toArray();
         const currentIndex = childTabs[this.currentTabIndex$$()] ? this.currentTabIndex$$() : 0;
         childTabs[currentIndex].selected = false;
         childTabs[index].selected = true;
         this.currentTabIndex$$.set(index);
-        if (emit) {
+        if (tab && emit) {
             tab.tabClick.emit(index);
         }
         this.currentTabIndexChange.emit(index);
@@ -75,7 +75,7 @@ export class NxTabsComponent implements AfterViewInit {
         const items = this.tabItems.toArray();
         const selected = items.some(tab => tab.selected);
         if (!selected && items.length > 0) {
-            this.handleTabClick(items[0], 0, false);
+            this.handleTabClick(0, items[0], false);
         }
     }
 }
