@@ -54,6 +54,10 @@
         *ngIf="hasChange"
     >
         <nx-process-button
+            [buttonDisabled]="
+                !currentName$.getValue()?.length ||
+                currentName$.getValue()?.length > MAX_ORG_NAME_LENGTH
+            "
             [process]="updateStateProcess"
             [buttonText]="'Save' | translate"
         >

@@ -1,5 +1,12 @@
-<nx-pre-loader *ngIf="isPageLoading; else outlet"></nx-pre-loader>
-
+<nx-pre-loader *ngIf="isPageLoading; else nosystem"></nx-pre-loader>
+<ng-template #nosystem>
+    <div
+        class="container"
+        *ngIf="isNoSystemsOrgOrChP; else outlet"
+    >
+        <nx-no-systems></nx-no-systems>
+    </div>
+</ng-template>
 <ng-template #outlet>
     <router-outlet></router-outlet>
 </ng-template>

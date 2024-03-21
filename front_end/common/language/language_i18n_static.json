@@ -2102,6 +2102,8 @@
         "valueRequired": "Value is required",
         "labelRequired": "Label is required",
         "siteRequired": "URL is required",
+        "nameRequired": "Name is required",
+        "nameTooLong": "Name length exceeds {chars} characters",
         "emailRequired": "Email is required",
         "phoneRequired": "Phone number is required",
         "siteInvalid": "URL is invalid",

@@ -1,9 +1,15 @@
+@use "bootstrap_utils" as bootstrap;
+
 .settings{
   display: flex;
   flex-direction: column;
   padding: 1rem;
   gap: 1rem;
-  width: 50%;
+  width: 70%;
+
+  @include bootstrap.media-breakpoint-down(lg){
+    width: 100%;
+  }
 
   .footer {
     display: flex;

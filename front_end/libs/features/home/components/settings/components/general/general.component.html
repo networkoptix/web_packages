@@ -8,37 +8,75 @@
             <form
                 name="settingsGeneralForm"
                 #settingsGeneralForm="ngForm"
+                novalidate
             >
-                <div class="input">
-                    <label
-                        for="name"
-                        translate
-                        >Name</label
+                <div class="row m-0">
+                    <div
+                        class="label d-flex align-items-center justify-content-end text-nowrap text-right col-3"
                     >
-                    <input
-                        id="name"
-                        class="form-control ml-2"
-                        [disabled]="disableNameInput()"
-                        [ngModel]="name()"
-                        [name]="name()"
-                        (ngModelChange)="onNameChange($event)"
-                    />
+                        <label
+                            for="orgName"
+                            class="control-label"
+                            translate
+                            >Name</label
+                        >
+                    </div>
+
+                    <div class="col-9">
+                        <input
+                            type="text"
+                            class="fs-mask form-control"
+                            name="orgName"
+                            id="orgName"
+                            #orgName="ngModel"
+                            [disabled]="disableNameInput()"
+                            [ngModel]="name()"
+                            (ngModelChange)="onNameChange($event)"
+                            nxFocusMe
+                        />
+                    </div>
+                    <div
+                        class="col-9 offset-3"
+                        *ngIf="orgName.invalid && orgName.touched"
+                    >
+                        <span
+                            *ngIf="orgName.errors.required"
+                            class="input-error"
+                            >{{ LANG.customValidatorMsg.nameRequired | translate }}</span
+                        >
+                        <span
+                            *ngIf="orgName.errors.tooLong"
+                            class="input-error"
+                            >{{
+                                LANG.customValidatorMsg.nameTooLong | translate: { chars: 15 }
+                            }}</span
+                        >
+                    </div>
                 </div>
+
                 <div
-                    class="input"
+                    class="row m-0 pt-3"
                     *ngIf="view() === settingsViews.ORGANIZATIONS"
                 >
-                    <label
-                        for="role"
-                        translate
-                        >Channel Partner Access</label
+                    <div
+                        class="label d-flex align-items-center justify-content-end text-nowrap text-right col-3"
                     >
-                    <nx-select
-                        [componentId]="'channelPartnerAccessSelect'"
-                        [items]="partnerAccess"
-                        [selected]="currAccess$$()"
-                        (onSelected)="updateAccess.emit($event.value)"
-                    ></nx-select>
+                        <label
+                            for="channelPartnerAccessSelect"
+                            class="control-label"
+                            translate
+                            >Channel Partner Access</label
+                        >
+                    </div>
+
+                    <div class="col-9">
+                        <nx-select
+                            [componentId]="'channelPartnerAccessSelect'"
+                            [items]="partnerAccess"
+                            [selected]="currAccess$$()"
+                            (onSelected)="updateAccess.emit($event.value)"
+                        ></nx-select>
+                    </div>
                 </div>
             </form>
         </div>

@@ -978,6 +978,8 @@
     "NVR": "NVR",
     "NVR Error": "NVR Error",
     "Name": "Name",
+    "Name is required": "Name is required",
+    "Name length exceeds {chars} characters": "Name length exceeds {chars} characters",
     "Need help?": "Need help?",
     "Network (smb), added through VMS": "Network (smb), added through VMS",
     "Network Interfaces": "Network Interfaces",
