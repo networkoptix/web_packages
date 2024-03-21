@@ -1,5 +1,4 @@
-import { inject, Injector, runInInjectionContext } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { inject, Injector } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
@@ -7,7 +6,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { filter, firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -140,9 +139,7 @@ export const SystemGuard: CanActivateFn = (
         }
 
         menusService.currentUser = await firstValueFrom(
-            runInInjectionContext(injector, () =>
-                toObservable(currSystem.permissionManager.currentUser$$),
-            ).pipe(filter(Boolean)),
+            currSystem.permissionManager.permissionsInitialized(injector),
         );
         menusService.updateActiveSystemMenu(currSystem);
 
