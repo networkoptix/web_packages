@@ -1,22 +1,35 @@
 import { CommonModule } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     Input,
     OnInit,
-    Output,
     ViewChild,
     booleanAttribute,
+    effect,
+    forwardRef,
+    inject,
     input,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+    ControlValueAccessor,
+    FormControl,
+    FormsModule,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    NgForm,
+    NgModel,
+    ValidationErrors,
+    Validator,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { throttle } from '@decorators/throttle';
+import { environment } from '@environments/environment';
 import type {
     GroupItem,
     Organization,
@@ -38,28 +51,39 @@ import type { OrgTreeStatuses, TreeItem } from './org-tree-selector.types';
         TranslateModule,
         NxSearchHighlightComponent,
     ],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxOrgTreeSelectorComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxOrgTreeSelectorComponent),
+            multi: true,
+        },
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NxOrgTreeSelectorComponent implements OnInit {
+export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validator, OnInit {
     icons = icons;
 
     @ViewChild('orgTree') private orgTreeRef: ElementRef<HTMLUListElement>;
 
     @Input({ required: true }) organization: Organization;
     @Input({ required: true }) groups: GroupItem[];
-    @Input() statuses?: OrgTreeStatuses;
-    hideStatusMessages$$ = input(false, {
-        transform: booleanAttribute,
-        alias: 'hideStatusMessages',
-    });
+    /** **This is required for form validation to work!!** */
+    @Input() model?: NgModel;
+    statuses = input<OrgTreeStatuses>();
+    hideStatusMessages = input(false, { transform: booleanAttribute });
     /** Minimum lines of space for the messages container to avoid height pop
      *
      * - If the tallest message is used, there might be empty space for shorter ones
      * - If the shortest messages is used, there might be some height pop for taller ones
      */
-    messagesNumLines$$ = input<number>(1, { alias: 'messagesNumLines' });
+    messagesNumLines = input<number>(1);
 
-    @Input() selected: string;
-    @Output() selectedChange = new EventEmitter<string>();
+    selected: string;
 
     private flatGroups: TreeItem[] = [];
     private groupInfoMap = new Map<
@@ -77,7 +101,58 @@ export class NxOrgTreeSelectorComponent implements OnInit {
     highlightIndex: number = -1;
     private lastVisibleIndex: number | null = null;
 
+    private form?: NgForm;
+    constructor() {
+        try {
+            this.form = inject(NgForm);
+        } catch (e) {
+            if (e.name !== 'NullInjectorError') {
+                throw e;
+            }
+        }
+    }
+
+    _statusEffect = effect(() => {
+        const statuses = this.statuses();
+        if (this.model && statuses) {
+            const status = statuses.get(this.selected);
+            if (status && status.type === 'error') {
+                this.model.control.setErrors({ invalid: true });
+            } else {
+                this.model.control.setErrors(null);
+            }
+        }
+    });
+
+    validate(control: FormControl<string>): ValidationErrors | null {
+        const status = this.statuses()?.get(control.value);
+        if (status && status.type === 'error') {
+            return { invalid: true };
+        }
+
+        return null;
+    }
+
+    writeValue(value: string): void {
+        this.selected = value;
+        this.onChange(value);
+        this.onTouched();
+    }
+
+    private onChange = (_: string): void => {};
+    private onTouched = (): void => {};
+    registerOnChange(fn: (value: string) => void): void {
+        this.onChange = fn;
+    }
+    registerOnTouched(fn: () => void): void {
+        this.onTouched = fn;
+    }
+
     ngOnInit(): void {
+        if (this.form && !this.model && !environment.production) {
+            console.warn('Form detected, but model has not been provided for validation');
+        }
+
         this.groups.forEach(group => {
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
@@ -109,7 +184,7 @@ export class NxOrgTreeSelectorComponent implements OnInit {
     }
 
     selectFolder(id: string, index: number = this.highlightIndex): void {
-        this.selectedChange.emit(id);
+        this.writeValue(id);
         if (index !== this.highlightIndex) {
             this.highlightIndex = index;
         }

@@ -73,12 +73,15 @@
             >Folder</label
         >
         <nx-org-tree-selector
+            name="targetFolder"
+            #targetFolder="ngModel"
+            [model]="targetFolder"
             [organization]="organization"
             [groups]="groups"
             [statuses]="orgTreeStatuses$$()"
             [messagesNumLines]="2"
-            [selected]="selectedFolder$$()"
-            (selectedChange)="selectedFolder$$.set($event)"
+            [ngModel]="selectedFolder$$()"
+            (ngModelChange)="selectedFolder$$.set($event)"
         ></nx-org-tree-selector>
     </div>
     <div class="modal-footer">
@@ -86,7 +89,7 @@
             [process]="addOrgUserProcess"
             [buttonText]="'Confirm' | translate"
             [buttonDisabled]="
-                !!selectedFolderError$$() || !userEmail$$() || userEmail.errors?.pattern
+                targetFolder.errors?.invalid || !userEmail$$() || userEmail.errors?.pattern
             "
             [form]="addOrgUserForm"
         ></nx-process-button>
