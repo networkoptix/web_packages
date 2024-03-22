@@ -142,6 +142,14 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = this.LANG.errorCodes.failedToAccessSystem;
                     this.iconName = 'NoAccess';
                     break;
+                case 'SYSTEM_SUSPENDED_SHUTDOWN':
+                    this.placeholderTitle = {
+                        value: this.LANG.pageTitles.systemSuspendedShutdown,
+                        params: { systemName: this.data.systemName },
+                    };
+                    this.message = this.LANG.errorCodes.systemSuspendedShutdown;
+                    this.iconName = 'NoAccess';
+                    break;
                 case 'FAILED_TO_ACCESS_CAMERA':
                     this.placeholderTitle = this.LANG.pageTitles.failedToAccessCamera;
                     this.message = this.LANG.errorCodes.failedToAccessCamera;

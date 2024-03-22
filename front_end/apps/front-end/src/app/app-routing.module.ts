@@ -6,6 +6,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { BuildGuard } from '@guards/buildGuard';
 import { ChannelPartnerGuard } from '@guards/channelPartnerGuard';
 import { FeatureGuardActivate, FeatureGuardMatch } from '@guards/feature.guard';
+import { OrgStateGuard } from '@guards/orgStateGuard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -58,14 +59,14 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/view',
         loadChildren: () =>
             import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
     },
     {
         path: 'systems/:systemId/layouts',
         loadChildren: () =>
             import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
         canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
         data: {
             flag: FeatureFlagStrings.layouts,
         },
@@ -75,7 +76,7 @@ const lazyRoutes: Routes = [
         loadComponent: () =>
             import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
         canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
         title: SystemTitleResolver,
         data: {
             flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
@@ -88,7 +89,7 @@ const lazyRoutes: Routes = [
                 c => c.NxServicesPlaceholderComponent,
             ),
         canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
         title: SystemTitleResolver,
         data: {
             flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
@@ -97,26 +98,34 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/:systemId/health',
         loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
     },
     {
         path: 'systems/:systemId/bookmarks',
         loadChildren: () =>
             import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
     },
     {
         path: 'systems/:systemId/monitoring',
         loadChildren: () =>
             import('@pages/monitoring/monitoring.module').then(m => m.NxMonitoringModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
+    },
+    {
+        path: 'systems/:systemId/noAccess/:systemName',
+        loadComponent: () =>
+            import('@components/placeholders/no-access/no-access.component').then(
+                c => c.NxSystemNoAccessComponent,
+            ),
     },
     {
         path: 'systems/:systemId',
         loadChildren: () =>
             import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
     },
-    // Order matters when going to systems. When you click on a system in and org it will get stuck on the home page.
+    // Order matters when going to systems. When you click on a system in and org
+    // it will get stuck on the home page.
     {
         path: 'systems',
         title: 'systems',

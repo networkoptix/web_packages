@@ -31,8 +31,9 @@ import {
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-
 // import { NxSettingsDisconnectComponent } from './components/disconnect/disconnect.component';
+import { MAX_ORG_NAME_LENGTH } from '@static-variables';
+
 import { NxSettingsGeneralComponent } from './components/general/general.component';
 import { NxSettingsStateComponent } from './components/state/state.component';
 
@@ -321,4 +322,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
             }),
         );
     }
+
+    protected readonly MAX_ORG_NAME_LENGTH = MAX_ORG_NAME_LENGTH;
 }
