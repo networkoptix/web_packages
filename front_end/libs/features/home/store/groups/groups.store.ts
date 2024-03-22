@@ -250,12 +250,7 @@ export const GroupsStore = signalStore(
                 const item = { ...group, children: [] } as GroupItem;
                 const groups = store.groupsEntities();
                 const parentItem = findItem(groups, item.parentId);
-
-                if (!parentItem) {
-                    return () => {};
-                }
-
-                parentItem.children.push(item);
+                (parentItem?.children || groups).push(item);
                 patchGroupChanges(groups);
 
                 return () => {
