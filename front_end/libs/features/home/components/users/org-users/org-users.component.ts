@@ -15,6 +15,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { iif, map } from 'rxjs';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
+import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
@@ -161,17 +162,20 @@ export class NxOrganizationUsersComponent implements OnInit {
                   },
               );
         this.dialogsService
-            .confirm({
-                message,
-                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
-                footer: {
-                    actionLabel:
-                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
-                    cancelLabel:
-                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
-                    buttonClass: 'btn-danger',
+            .confirm(
+                {
+                    message,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    footer: {
+                        actionLabel:
+                            this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                        cancelLabel:
+                            this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                        buttonClass: 'btn-danger',
+                    },
                 },
-            })
+                { width: DIALOG_SIZE.MICRO_SMALL },
+            )
             .then(confirm => {
                 if (confirm) {
                     const orgId = this.currentOrg$$().id;

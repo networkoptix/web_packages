@@ -229,7 +229,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         }
         const message = this.hasSelectedMultipleUsers
             ? this.translateService.instant(
-                  this.LANG.channelPartners.usersTable.deleteDialog.channelPartner.multipleMessage,
+                  this.LANG.channelPartners.usersTable.deleteDialog.multipleMessage,
                   {
                       count: this.selectedUsersLength,
                   },
