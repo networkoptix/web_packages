@@ -41,6 +41,7 @@
   max-width: 250px;
   text-align: center;
   gap: 12px;
+  margin: auto;
 }
 
 .placeholder-heading {
@@ -59,6 +60,10 @@
     white-space: nowrap;
     overflow: hidden;
   }
+}
+
+svg-icon svg .icon-with-fill {
+ fill: var(--placehoder-v2-message-color);
 }
 
 .icon-with-fill1 {
