@@ -9,7 +9,6 @@ import {
     Subject,
     timer,
     ReplaySubject,
-    of,
 } from 'rxjs';
 import {
     auditTime,
@@ -311,11 +310,22 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 timer(0, updateInterval)
                     .pipe(
                         switchMap(() => this.getInfo(true, false, true)),
-                        concatMap((value, index) => {
+                        concatMap(async (value, index) => {
                             if (index === 0) {
+                                if (this.isOnline) {
+                                    try {
+                                        await this.proxied.cameraManager.updateSystemCameras();
+                                        await firstValueFrom(
+                                            this.proxied.serverManager.getForceServers(false),
+                                        );
+                                        await this.getUsers(true, true);
+                                    } catch {
+                                        // Something went wrong getting the initial data
+                                    }
+                                }
                                 this.systemReady$.next(this);
                             }
-                            return of(value);
+                            return value;
                         }),
                         takeUntil(this.killPoll$),
                     )

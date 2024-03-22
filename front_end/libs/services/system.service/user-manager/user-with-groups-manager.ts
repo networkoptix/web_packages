@@ -13,6 +13,7 @@ import {
     UserGroupDropdown,
     UserType,
 } from '@services/system-user.types';
+import { DefaultUserGroupsToId } from '@services/system.service/user-manager/default-groups';
 import { alphabeticalSort, cleanIdLegacy } from '@utils/general';
 
 import { UserManager } from './user-manager';
@@ -25,7 +26,7 @@ export class UserWithGroupsManager extends UserManager {
     LANG = staticLang;
 
     protected override mediaserver: NxSystemRestAPI3;
-    userGroups: IdToGroup;
+    userGroups: IdToGroup = DefaultUserGroupsToId;
     private powerUserGroups = new Set<string>([AdminGroups.powerUserGroup]);
     protected override _ownerEmail: string;
     // isMySystem: boolean;
@@ -228,6 +229,17 @@ export class UserWithGroupsManager extends UserManager {
     override processUsers(usersWithGroups: NxUser[]): NxUser[] {
         if (!Array.isArray(usersWithGroups)) {
             return [];
+        }
+        // This is only true when you get users from clouddb.
+        if (usersWithGroups?.[0].accessRole) {
+            usersWithGroups = usersWithGroups.map(user => ({
+                ...user,
+                attributes: 'readonly',
+                groupIds: [user.userRoleId],
+                permissions: 'none',
+                resourceAccessRights: {},
+                type: 'cloud',
+            })) as NxUser[];
         }
         /**
          * individual camera rights set by `resourceAccessRights` on the user object, but not implemented yet
