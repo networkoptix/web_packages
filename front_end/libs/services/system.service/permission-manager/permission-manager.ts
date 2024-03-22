@@ -238,16 +238,16 @@ export class PermissionManager {
         if (!user) {
             return '';
         }
-
+        let accessRole = '';
         const permissionsString = user.permissions.split('|').sort().join('|');
 
         if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds.length) {
-            return (user as RestV3User).groupIds
+            accessRole = (user as RestV3User).groupIds
                 .map(groupId => groups.find(({ id }) => groupId === id)?.name)
                 .filter(role => !!role)
                 .join(', ');
         } else if (roles.length) {
-            return (
+            accessRole =
                 roles.find(
                     role =>
                         'isOwner' in role &&
@@ -255,12 +255,15 @@ export class PermissionManager {
                         role.permissions === permissionsString,
                 )?.name ||
                 customRole?.name ||
-                ''
-            );
+                '';
         } else if (!environment.isLocal) {
             // If roles is empty that means we couldn't fetch them from the system.
             // As a fallback for cloud we can try to get the accessRole from cdb.
-            return (user as CloudUserCompat)?.accessRole;
+            accessRole = (user as CloudUserCompat).accessRole;
+        }
+
+        if (accessRole) {
+            return accessRole;
         }
 
         return this.LANG.accessRoles.custom.label;
