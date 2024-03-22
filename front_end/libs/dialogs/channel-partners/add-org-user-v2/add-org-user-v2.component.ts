@@ -145,10 +145,6 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
 
         return statuses;
     });
-    selectedFolderError$$ = computed(() => {
-        const [orgTreeErrors, folder] = [this.orgTreeStatuses$$(), this.selectedFolder$$()];
-        return orgTreeErrors.get(folder)?.type === 'error';
-    });
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
