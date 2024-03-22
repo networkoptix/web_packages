@@ -72,6 +72,7 @@ export const formatError = (error, errorCodes, lang): string | false => {
     return errorText ?? lang.errorCodes.unknownError;
 };
 
+/** @deprecated */
 export class Process {
     private LANG = staticLang;
     public settings: ProcessSettings = {

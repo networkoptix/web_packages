@@ -82,24 +82,6 @@ export class NxDialogsService {
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
-    /* ANGULAR CDK DIALOGS */
-    /* General steps for migrating a dialog to angular CDK
-    1. Add data and return types to dialogs.types.ts.
-    2. Replace dialogRef and DIALOG_DATA in the dialog component with the CDK equivalents.
-       DialogRef should have the dialog's return type as the generic, and DIALOG_DATA should
-       be the dialog's data type.
-    3. Extend dialog class with ModalBase with the dialog's return type as the generic.
-       a. Remove the existing .close() method unless overriding with additional behavior
-    4. Delete existing closable property if present
-       a. IMPORTANT: Because the default behavior is closing the dialog when
-          clicking outside of it, make sure to use the .lock() method at the beginning
-          of the Process if the dialog has one, and to .unlock() when the Process
-          completes without closing or errors.
-    5. Replace the dialog method in dialogs.service.ts
-       a. If you don't require any special behavior, use the dialogV2Factory
-       b. If you do require special behavior, use openV2 directly
-     */
-
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
         customconfig: DialogConfig<D> = {},

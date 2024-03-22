@@ -21,8 +21,6 @@ module.exports = {
     'libs/components/dropdowns/injDropdown.ts': 9,
     'libs/components/dropdowns/language/language.component.ts': 6,
     'libs/components/dropdowns/nav-location/nav.component.ts': 2,
-    'libs/components/dynamic-widget/dynamic-widget.component.ts': 9,
-    'libs/components/dynamic-widget/register-widget.ts': 2,
     'libs/components/editable/editable.component.ts': 13,
     'libs/components/editable/heading/editable-heading.component.ts': 9,
     'libs/components/email-input/email.component.ts': 11,
@@ -39,7 +37,6 @@ module.exports = {
     'libs/components/open-client-button/client-button.component.ts': 5,
     'libs/components/password-input-tag-validation/password-tag-validation.component.ts': 1,
     'libs/components/password-input/password.component.ts': 15,
-    'libs/components/process-button/process-button.component.ts': 6,
     'libs/components/radio/radio.component.ts': 3,
     'libs/components/summary/summary.component.ts': 1,
     'libs/components/systems-list/list.component.ts': 1,
@@ -131,8 +128,6 @@ module.exports = {
     'libs/services/nx-config/base-config.ts': 3,
     'libs/services/nx-header.service.ts': 22,
     'libs/services/oauth.service.ts': 8,
-    'libs/services/process.service/process.service.ts': 3,
-    'libs/services/process.service/process.ts': 29,
     'libs/services/system-legacy-api.service.ts': 85,
     'libs/services/system-rest-api-v2.service.ts': 12,
     'libs/services/system-rest-api.service.ts': 62,
@@ -526,14 +521,6 @@ libs/components/password-input/password.component.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Untyped argument                          nx/no-untyped-arg
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
-libs/components/process-button/process-button.component.ts
-  Missing Input type               nx/explicit-angular-boundary-types
-  Missing Input type               nx/explicit-angular-boundary-types
-  Missing Input type               nx/explicit-angular-boundary-types
-  Missing Input type               nx/explicit-angular-boundary-types
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
 
 libs/components/radio/radio.component.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1769,45 +1756,6 @@ libs/services/oauth.service.ts
   Untyped argument                 nx/no-untyped-arg
   Untyped argument                 nx/no-untyped-arg
 
-libs/services/process.service/process.service.ts
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
-libs/services/process.service/process.ts
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped property                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-init
-  Untyped subject                                                                                                                                                                                                                                                                                                                                                                                                     nx/no-untyped-subject
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Untyped subject                                                                                                                                                                                                                                                                                                                                                                                                     nx/no-untyped-subject
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Constraining the generic type `_T` to `any` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unnecessary-type-constraint
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-
 libs/services/system-legacy-api.service.ts
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2119,12 +2067,6 @@ libs/utils/logger.ts
   Untyped argument                          nx/no-untyped-arg
   Untyped argument                          nx/no-untyped-arg
   Missing return type on function           @typescript-eslint/explicit-function-return-type
-
-packages/dashboard-widget-state/types.ts
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 ✖ 1656 problems (1656 errors, 0 warnings)
 

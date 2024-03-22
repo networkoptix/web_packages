@@ -206,7 +206,24 @@ module.exports = {
             the entire codebase is typed, at which point it can be merged
             into the main TS override. */
             files: ['*.ts'],
-            excludedFiles: Object.keys(typeLintErrorCount),
+            excludedFiles: [
+                // Development stopped
+                'libs/features/dashboard/**',
+                '**/*widget*/**',
+
+                // Unused
+                'libs/features/debug/**',
+
+                // Replaced, but keep for reference
+                'libs/dialogs/merge/merge.component.ts',
+                'libs/dialogs/merge/stateForMergeDialog.ts',
+                'libs/dialogs/merge/stateMachine.ts',
+
+                // Deprecated
+                'libs/*/process*/**',
+
+                ...Object.keys(typeLintErrorCount),
+            ],
             extends: ['plugin:@typescript-eslint/recommended'],
             rules: {
                 'nx/explicit-angular-boundary-types': 'error',
@@ -442,7 +459,9 @@ module.exports = {
         },
         {
             files: ['*.component.html'],
-            excludedFiles: nonControlFlowTemplates.map(t => t.endsWith('.html') ? t : `${t}/*inline-template-*.component.html `),
+            excludedFiles: nonControlFlowTemplates.map(t =>
+                t.endsWith('.html') ? t : `${t}/*inline-template-*.component.html `,
+            ),
             rules: {
                 '@angular-eslint/template/prefer-control-flow': 'error',
             },

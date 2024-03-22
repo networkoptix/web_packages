@@ -14,6 +14,7 @@ interface SvgData {
     width?: string;
 }
 
+/** @deprecated Use `NxAsyncActionButtonComponent` instead */
 @Component({
     selector: 'nx-process-button',
     templateUrl: 'process-button.component.html',

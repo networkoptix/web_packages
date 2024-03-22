@@ -1,0 +1,30 @@
+<button
+    type="submit"
+    (click)="execute()"
+    class="btn"
+    [ngClass]="'btn-' + buttonType"
+    [disabled]="busy$$() || disabled || (form && form.invalid)"
+>
+    <div
+        [ngStyle]="{
+            visibility: busy$$() ? 'hidden' : undefined
+        }"
+    >
+        <ng-content></ng-content>
+    </div>
+    @if (busy$$()) {
+        <div
+            class="loading-dots"
+            [ngClass]="{
+                'loading-dots--light-default': !CONFIG.isDarkTheme && buttonType === 'default'
+            }"
+        >
+            @for (_ of [].constructor(3); track $index) {
+                <div
+                    class="loading-dots__dot"
+                    [ngClass]="'loading-dots__dot--' + $index"
+                ></div>
+            }
+        </div>
+    }
+</button>
