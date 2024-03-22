@@ -21,6 +21,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { IsCloudGuard } from '@guards/environment.guard';
+import { OrgStateGuard } from '@guards/orgStateGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import staticLang from '@language_static';
@@ -91,7 +92,7 @@ export const cloudSettingsRoutes: Routes = [
     {
         path: '',
         component: NxSystemSettingsComponent,
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
         resolve: { system: currentSystemResolver },
         children: [
             {

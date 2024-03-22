@@ -16,6 +16,7 @@
         *ngIf="systemNoAccess"
         type="FAILED_TO_ACCESS_SYSTEM"
         withFooter
+        [data]="{ systemName: systemName }"
         [showMainButton]="true"
     >
     </nx-page-placeholder>
