@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -16,12 +16,19 @@ import { nxConfig } from '@services/nx-config/config';
 })
 export class SharedBookmarkPasswordComponent {
     @Output() onConfirmPressed = new EventEmitter<string>();
-    @Input() password: string;
-    @Output() passwordChange = new EventEmitter<string>();
+    password = model.required<string>();
+    passwordError = model(false);
+    disabled = model(false);
 
     CONFIG = nxConfig;
 
     handleConfirmPressed(): void {
-        this.onConfirmPressed.emit(this.password);
+        if (this.password().length > 0) {
+            this.passwordError.set(false);
+            this.disabled.set(true);
+            this.onConfirmPressed.emit(this.password());
+        } else {
+            this.passwordError.set(true);
+        }
     }
 }

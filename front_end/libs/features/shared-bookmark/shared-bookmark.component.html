@@ -17,8 +17,9 @@
     } @else if (pageState() === 'password') {
         <nx-shared-bookmark-password
             (onConfirmPressed)="checkPassword()"
-            [password]="password()"
-            (passwordChange)="password.set($event)"
+            [(password)]="password"
+            [(passwordError)]="incorrectPasswordError"
+            [(disabled)]="inputFieldsDisabled"
         />
     } @else if (pageState() === '404') {
         <nx-shared-bookmark-404 />

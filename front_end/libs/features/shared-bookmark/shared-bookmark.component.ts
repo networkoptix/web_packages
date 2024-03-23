@@ -61,6 +61,8 @@ export class SharedBookmarkComponent implements OnInit {
 
     pageState = signal<'loading' | 'password' | 'viewer' | '404'>('loading');
     password = signal<string>('');
+    incorrectPasswordError = signal(false);
+    inputFieldsDisabled = signal(false);
     passwordHash = signal<string>('');
 
     serverSyncTime$: Observable<number>;
@@ -113,8 +115,13 @@ export class SharedBookmarkComponent implements OnInit {
                 error: error => {
                     if (error?.error?.errorId === servers.errors.forbidden) {
                         // Password is incorrect or not provided or incorrect time sync
+                        if (password) {
+                            // Password is incorrect
+                            this.incorrectPasswordError.set(true);
+                        }
                         this.setServerSyncTime();
                         this.pageState.set('password');
+                        this.inputFieldsDisabled.set(false);
                     } else {
                         // Server doesn't exist or bookmark doesn't exist
                         this.pageState.set('404');
