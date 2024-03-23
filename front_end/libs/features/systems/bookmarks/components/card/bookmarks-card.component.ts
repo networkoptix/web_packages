@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, computed, input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, input } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import type { BookmarkV4 } from '@services/system-api.types/devices.types';
 import { icons } from '@static-variables';
 import { msToParts } from '@utils/general';
 
@@ -18,16 +19,14 @@ export class NxBookmarksCardComponent implements OnInit {
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
 
+    // used just to cast in template
+    BookmarkV4: BookmarkV4;
+
     startTime: string;
     startDate: string;
     duration: string;
     enableTooltip: boolean;
     thumbnailError: boolean;
-
-    isBookmarkShared$$ = computed(() => {
-        const bookmark = this.bookmark$$();
-        return 'share' in bookmark && !!bookmark.share;
-    });
 
     constructor(
         private dialogs: NxDialogsService,

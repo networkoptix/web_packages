@@ -26,8 +26,8 @@
     @if (pageState() === 'details') {
         <nx-bookmark-share-details
             [shareUrl]="shareUrl"
-            [onEditClick]="onEditClick"
-            [onDeleteClick]="onDeleteClick"
+            (onEditClick)="onEditClick()"
+            (onDeleteClick)="onDeleteClick()"
             [expirationText]="(expirationText | async) || '' | nxTranslate"
             [passwordDetailsText]="passwordDetailsText"
         />

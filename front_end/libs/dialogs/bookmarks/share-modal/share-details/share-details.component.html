@@ -26,13 +26,13 @@
     <nx-button
         type="Secondary"
         translate
-        (onClick)="onEditClick()()"
+        (onClick)="onEditClick.emit()"
     >
         Edit
     </nx-button>
     <nx-button
         type="Text"
-        (onClick)="onDeleteClick()()"
+        (onClick)="onDeleteClick.emit()"
     >
         <svg-icon
             nx-add-svg-src

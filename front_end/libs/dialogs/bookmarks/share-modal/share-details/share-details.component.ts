@@ -1,5 +1,12 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    EventEmitter,
+    Output,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ClipboardService } from 'ngx-clipboard';
@@ -25,8 +32,8 @@ import { icons } from '@static-variables';
 })
 export class NxShareDetailsComponent {
     shareUrl = input.required<string>();
-    onEditClick = input.required<() => void>();
-    onDeleteClick = input.required<() => void>();
+    @Output() onEditClick = new EventEmitter<void>();
+    @Output() onDeleteClick = new EventEmitter<void>();
     expirationText = input.required<string>();
     passwordDetailsText = input.required<string>();
 

@@ -83,7 +83,7 @@
         </nx-ml-ellipsis>
         <div class="bottom-row-container">
             <p class="bookmarks-info-name">{{ bookmark$$().deviceName }}</p>
-            @if (isBookmarkShared$$()) {
+            @if ((bookmark$$() | as: BookmarkV4).share) {
                 <svg-icon
                     nx-add-svg-src
                     [src]="icons.dir + 'shared.svg'"

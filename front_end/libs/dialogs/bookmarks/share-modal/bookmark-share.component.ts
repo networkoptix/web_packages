@@ -80,7 +80,18 @@ export class NxBookmarkShareComponent {
     onEditClick = (): void => {
         this.pageState.set('edit');
     };
-    onDeleteClick(): void {}
+    onDeleteClick(): void {
+        this.loading.set(true);
+        this.mediaServer
+            .deleteBookmarkShare({
+                bookmarkId: this.bookmark.id,
+                deviceId: this.bookmark.deviceId,
+            })
+            .subscribe(updatedBookmark => {
+                this.bookmark.share = updatedBookmark.share;
+                this.close();
+            });
+    }
     onSaveClick(saveOptions: { password?: string; expirationTimeMs?: number }): void {
         this.updateBookmarkShareData(saveOptions);
         this.pageState.set('details');

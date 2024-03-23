@@ -73,4 +73,14 @@ export class NxSystemRestAPI4 extends NxSystemRestAPI3 {
             share: { expirationTimeMs, password },
         });
     }
+
+    deleteBookmarkShare({
+        deviceId,
+        bookmarkId,
+    }: {
+        deviceId: string;
+        bookmarkId: string;
+    }): Observable<BookmarkV4> {
+        return this.patch(`/rest/v4/devices/${deviceId}/bookmarks/${bookmarkId}`, { share: null });
+    }
 }
