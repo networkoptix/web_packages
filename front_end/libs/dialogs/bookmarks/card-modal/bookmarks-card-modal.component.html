@@ -110,15 +110,18 @@
             (click)="openShareDialog()"
             class="action-button btn-default btn"
             type="button"
-            translate
         >
             <svg-icon
                 nx-add-svg-src
-                [src]="icons.dirTextButtons + 'share.svg'"
+                [src]="
+                    (bookmark | as: BookmarkV4).share
+                        ? icons.dirLayouts + 'yes.svg'
+                        : icons.dirTextButtons + 'share.svg'
+                "
                 [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                 [applyClass]="true"
             ></svg-icon>
-            Share
+            {{ ((bookmark | as: BookmarkV4).share ? 'Shared' : 'Share') | translate }}
         </button>
     </div>
 </div>

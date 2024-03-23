@@ -2125,6 +2125,8 @@
             "days": "Expires in {count, plural, =0{# days} one{a day} other{# days}}",
             "months": "Expires in {count, plural, =0{# months} one{a month} other{# months}}"
         },
-        "errorUpdatingSharedBookmark": "Failed to update shared bookmark"
+        "errorUpdatingSharedBookmark": "Failed to update shared bookmark",
+        "share": "Share",
+        "shared": "Shared"
     }
 }

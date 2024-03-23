@@ -12,7 +12,9 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { BookmarkDetails as DT } from '@dialogs/dialogs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { nxConfig } from '@services/nx-config/config';
+import { type BookmarkV4 } from '@services/system-api.types/devices.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@variables/static-variables';
 
@@ -30,10 +32,13 @@ import { icons } from '@variables/static-variables';
         NxPlayerPlaceholderComponent,
         NxAddSvgSrcDirective,
         NxPreLoaderComponent,
+        PipesModule,
     ],
 })
 export class NxBookmarksCardModalComponent {
     icons = icons;
+    BookmarkV4: BookmarkV4;
+
     exportName: string;
     bookmark: Bookmark;
     time: string;
