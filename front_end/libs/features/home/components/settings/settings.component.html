@@ -6,7 +6,7 @@
         <nx-settings-general
             [view]="settingsViews.CHANNEL_PARTNERS"
             [name]="currentName$ | async"
-            [disableNameInput]="isDirectParentCP$$() && !isOrgAdmin$$()"
+            [disableNameInput]="!permissions$$().canConfigure"
             (updateName)="handleNameUpdate($event)"
         ></nx-settings-general>
     </ng-container>
@@ -18,24 +18,19 @@
 >
     <ng-container *ngIf="state.item">
         <nx-settings-general
-            *ngIf="canUpdateOrg$$() || state.canConfigure"
+            *ngIf="permissions$$().canConfigure"
             [view]="state.view"
             [name]="currentName$ | async"
             [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
-            [disableNameInput]="isDirectParentCP$$() && !isOrgAdmin$$()"
+            [disableNameInput]="!permissions$$().canConfigure"
             (updateName)="handleNameUpdate($event)"
             (updateAccess)="handleAccessUpdate($event)"
         ></nx-settings-general>
         <nx-settings-state
-            *ngIf="
-                canChangeStateUI &&
-                ((canChangeState$$() && isDirectParentCP$$()) ||
-                    canUpdateOrg$$() ||
-                    subchannelSettings())
-            "
+            *ngIf="canChangeStateUI && permissions$$().canAlterState"
             (updateState)="handleStateUpdate($event)"
             [currState]="currentState$ | async"
-            [canChange]="state.canUpdateStatus || canChangeState$$()"
+            [canChange]="state.canUpdateStatus"
         ></nx-settings-state>
         <!-- <nx-settings-disconnect
             [organizationId]="currentOrg$$().id"

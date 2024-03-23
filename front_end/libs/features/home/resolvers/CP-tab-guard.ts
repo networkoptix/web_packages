@@ -10,12 +10,8 @@ import { Observable, map } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { selectCurrentPartner } from '@common/store/channel-partners/channel-partners.selectors';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    ChannelPartner,
-    ChannelPartnerPermissions,
-    ChannelPartnerRoles,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export const cpTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -26,27 +22,25 @@ export const cpTabGuard: CanActivateFn = (
     const cpService: NxChannelPartnersService = inject(NxChannelPartnersService);
     const path = route.routeConfig?.path;
     const currPartner$$ = store.selectSignal(selectCurrentPartner);
-    const checkPermissions = (partner: ChannelPartner): boolean => {
-        const { ownPermissions, ownRoles } = partner;
+    const permissionsStore = inject(PermissionsStore);
+    const checkPermissions = (): boolean => {
         if (path === 'subchannels') {
-            return ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR);
-        } else if (ownPermissions) {
+            return permissionsStore.canViewSubChannels$$();
+        } else {
             switch (path) {
                 case 'settings':
                 case 'information':
-                    if (
-                        ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)
-                    ) {
+                    if (permissionsStore.canViewPartnerSettings$$()) {
                         return true;
                     }
                     break;
                 case 'users':
-                    if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+                    if (permissionsStore.canViewPartnerUsers$$()) {
                         return true;
                     }
                     break;
                 case 'reports':
-                    if (ownPermissions.includes(ChannelPartnerPermissions.VIEW_SERVICE_REPORTS)) {
+                    if (permissionsStore.canViewPartnerReports$$()) {
                         return true;
                     }
                     break;
@@ -58,12 +52,11 @@ export const cpTabGuard: CanActivateFn = (
 
     const currPartner = currPartner$$();
     if (currPartner) {
-        return checkPermissions(currPartner);
+        return checkPermissions();
     } else {
         return cpService.getChannelPartners().pipe(
             map(partners => {
                 const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
-                const id = route.parent?.params.partnerId;
                 store.dispatch(
                     cpActions.setChannelPartners({
                         channelPartners: partners.filter(
@@ -73,8 +66,7 @@ export const cpTabGuard: CanActivateFn = (
                         ),
                     }),
                 );
-                const fetchedPartner = partners.find(partner => partner.id === id);
-                return checkPermissions(fetchedPartner);
+                return checkPermissions();
             }),
         );
     }

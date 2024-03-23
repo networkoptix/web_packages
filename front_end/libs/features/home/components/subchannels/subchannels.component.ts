@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, signal, inject, computed } from '@angular/core';
+import { Component, DestroyRef, signal, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -12,7 +12,6 @@ import { Subject, debounceTime, distinctUntilChanged, filter, map, switchMap } f
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectCurrentPartner,
     selectCurrentPartnerId,
     selectCurrentSubchannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
@@ -22,12 +21,9 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    ChannelPartner,
-    ChannelPartnerPermissions,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
+import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
@@ -58,17 +54,10 @@ import { NxCardComponent } from '../card/card.component';
     ],
 })
 export class NxSubchannelsComponent {
+    permissionsStore = inject(PermissionsStore);
     buttonType = ButtonType.brand;
     icons = icons;
-    canCreatePartners$$ = computed(() => {
-        const currentPartner = this.store.selectSignal(selectCurrentPartner)();
-        return (
-            nxConfig.featureFlags.channelPartnersCreatePartnerUI &&
-            currentPartner?.ownPermissions.includes(
-                ChannelPartnerPermissions.ADD_REMOVE_SUB_CHANNEL_PARTNERS,
-            )
-        );
-    });
+    canCreatePartners$$ = this.permissionsStore.canCreateSubChannels$$;
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
     currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
     subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);

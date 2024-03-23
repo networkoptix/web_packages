@@ -1,20 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { switchMap } from 'rxjs';
 
-import {
-    selectCurrentPartner,
-    selectSubchannelPartner,
-} from '@common/store/channel-partners/channel-partners.selectors';
+import { selectSubchannelPartner } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import staticLang from '@language_static';
-import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -35,8 +32,7 @@ export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
     icons = icons;
 
-    inSubChannel = this.route.params;
-    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
+    permissionStore = inject(PermissionsStore);
     currentTabIndex$$ = signal(0);
     tabs: Tab[] = [
         // We may use the 'information' tab in the future
@@ -57,14 +53,13 @@ export class NxSubchannelComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        const { ownPermissions } = this.currentPartner$$();
-        // Only the 'settings' tab will be in tabs[] for now. 'reports' tab will be added to tabs later
-        if (ownPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_SUB_CHANNEL_PARTNERS)) {
+        if (this.permissionStore.canViewPartnerSettings$$()) {
             this.tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.settings,
                 route: 'settings',
             });
         }
+        // Fix when sub channels are designed to work like normal partners. Should be 23.3.2
         // We may use the 'users' tab in the future
         // if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
         //     this.tabs.push({

@@ -26,7 +26,6 @@ import {
     selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
-    selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
@@ -35,17 +34,15 @@ import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { Account } from '@services/account.service/account';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
     Organization,
     State,
-    OrgPermissions,
-    ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
-import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
@@ -85,17 +82,36 @@ export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
     icons = icons;
     State = State;
-    tabs: Tab[] = [];
+    permissionsStore = inject(PermissionsStore);
     groupsStore = inject(GroupsStore);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     tabs$$ = computed(() => {
-        const currOrg = this.currentOrganization$$();
-        const ownPermissions = currOrg?.ownPermissions || [];
-        const isChannelPartnerUser = this.isChannelPartnerUser$$();
-        if (!currOrg) {
-            return [];
+        const tabs: Tab[] = [];
+        if (this.permissionsStore.canViewSystems$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.systems,
+                route: 'systems',
+            });
         }
-        return this.populateTabs(ownPermissions, currOrg, isChannelPartnerUser);
+        if (this.permissionsStore.canViewOrgUsers$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.users,
+                route: 'users',
+            });
+        }
+        if (this.permissionsStore.canViewOrgReports$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.reports,
+                route: 'reports',
+            });
+        }
+        if (this.permissionsStore.canViewOrgSettings$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.settings,
+                route: 'settings',
+            });
+        }
+        return tabs;
     });
     currentTabIndex$$ = computed(() => {
         const tabs = this.tabs$$();
@@ -127,7 +143,6 @@ export class NxOrganizationsComponent implements OnInit {
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     currentGroupId$$ = computed(() => this.cpService.paramStateHandler.state$$()?.params?.groupId);
     currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     rootGroups$$ = this.groupsStore.groupsEntities;
 
     constructor(
@@ -192,51 +207,6 @@ export class NxOrganizationsComponent implements OnInit {
                     complete: () => (this.isLoading = false),
                 });
             });
-    }
-
-    populateTabs(
-        ownPermissions: string[],
-        currOrg: Organization,
-        isChannelPartnerUser: boolean,
-    ): Tab[] {
-        const tabs: Tab[] = [];
-        const partnerPermissions =
-            (this.isChannelPartnerUser$$() && this.currentPartner$$()?.ownPermissions) || [];
-        if (
-            ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
-            this.isChannelPartnerUser$$()
-        ) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.systems,
-                route: 'systems',
-            });
-        }
-        if (ownPermissions.includes(OrgPermissions.MANAGE_USERS)) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.users,
-                route: 'users',
-            });
-        }
-        if (
-            ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
-            nxConfig.featureFlags.channelPartnersReportsUI
-        ) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.reports,
-                route: 'reports',
-            });
-        }
-        if (
-            partnerPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS) ||
-            ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
-        ) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.settings,
-                route: 'settings',
-            });
-        }
-
-        return tabs;
     }
 
     public handleSidebarTogglingEarClick(): void {
