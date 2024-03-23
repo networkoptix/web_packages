@@ -71,20 +71,13 @@ export interface ChannelPartner {
     partnerCount: number;
 }
 
-export enum ChannelPartnerPermissions {
-    ADD_REMOVE_SUB_CHANNEL_PARTNERS = 'add_remove_sub_channel_partners',
-    MANAGE_USERS = 'manage_users',
-    CONFIGURE_CHANNEL_PARTNER = 'configure_channel_partner',
-    CONFIGURE_ORGANIZATION = 'configure_organization',
-    VIEW_SERVICE_REPORTS = 'view_service_reports',
-    ALTER_STATE_ORGANIZATIONS = 'alter_state_organizations',
-    ADD_REMOVE_SERVICE_QUANTITIES = 'add_remove_service_quantities',
-    ADMINISTER_ORGANIZATION_SYSTEMS = 'administer_organization_systems',
-    ADD_REMOVE_ORGANIZATIONS = 'add_remove_organizations',
-    FIELD_ACCESS_CP_ADMIN = 'field_access_cp_admin',
-    ALTER_STATE_SUB_CHANNEL_PARTNERS = 'alter_state_sub_channel_partners',
-    FIELD_ACCESS_CP_MANAGER = 'field_access_cp_manager',
-    FIELD_ACCESS_CP_ACCOUNTANT = 'field_access_cp_accountant',
+export enum PartnerRoles {
+    field_access_cp_admin = 'field_access_cp_admin',
+    field_access_cp_manager = 'field_access_cp_manager',
+    field_access_cp_accountant = 'field_access_cp_accountant',
+    field_access_org_admin = 'field_access_org_admin',
+    field_access_org_power_user = 'field_access_org_power_user',
+    field_access_org_other = 'field_access_org_other',
 }
 
 export enum ChannelPartnerRoles {
@@ -167,18 +160,6 @@ export interface Organization {
     state: State;
     systemCount: number;
     users: number[];
-}
-
-export enum OrgPermissions {
-    MANAGE_USERS = 'manage_users',
-    CONFIGURE_ORGANIZATION = 'configure_organization',
-    MANAGE_SYSTEMS = 'manage_systems',
-    VIEW_SERVICE_REPORTS = 'view_service_reports',
-    VIEW_HEALTH_MONITORING = 'view_health_monitoring',
-    FIELD_ACCESS_ORG_ADMIN = 'field_access_org_admin',
-    ACCESS_SYSTEMS = 'access_systems',
-    FIELD_ACCESS_ORG_POWER_USER = 'field_access_org_power_user',
-    FIELD_ACCESS_ORG_OTHER = 'field_access_org_other',
 }
 
 export type PaginatedOrganizationList = Page<Organization>;

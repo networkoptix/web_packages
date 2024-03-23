@@ -32,12 +32,11 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     Organization,
-    ChannelPartnerPermissions,
-    ChannelPartnerRoles,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
@@ -71,14 +70,10 @@ export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
 
+    permissionStore = inject(PermissionsStore);
+
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
-    canCreateOrganizations$$ = computed(() => {
-        const currPartner = this.currentPartner$$();
-        return currPartner?.ownPermissions?.includes(
-            ChannelPartnerPermissions.ADD_REMOVE_ORGANIZATIONS,
-        );
-    });
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
@@ -86,14 +81,39 @@ export class NxChannelPartnersComponent implements OnInit {
     destroyRef = inject(DestroyRef);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
 
-    initializedTabs = false;
     tabs$$ = computed(() => {
-        const currPartner = this.currentPartner$$();
-        if (!currPartner) {
-            return [];
+        const tabs: Tab[] = [];
+        if (this.permissionStore.canViewOrgs$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.organizations,
+                route: '',
+            });
         }
-        const { ownPermissions, ownRoles } = currPartner;
-        return this.populateTabs({ ownPermissions, ownRoles });
+        if (this.permissionStore.canViewSubChannels$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.partners,
+                route: 'subchannels',
+            });
+        }
+        if (this.permissionStore.canViewPartnerSettings$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.information,
+                route: 'information',
+            });
+        }
+        if (this.permissionStore.canViewPartnerUsers$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.users,
+                route: 'users',
+            });
+        }
+        if (this.permissionStore.canViewPartnerSettings$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.settings,
+                route: 'settings',
+            });
+        }
+        return tabs;
     });
     currentTabIndex$$ = computed(() => {
         const tabs = this.tabs$$();
@@ -190,39 +210,5 @@ export class NxChannelPartnersComponent implements OnInit {
     setSearch(model: { query: string }): void {
         this.search.value = model.query;
         this.searchChanged.next();
-    }
-
-    populateTabs(partnerAccess: { ownPermissions: string[]; ownRoles: string[] }): Tab[] {
-        const tabs: Tab[] = [];
-        const { ownRoles, ownPermissions } = partnerAccess;
-        if (ownPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS)) {
-            tabs.splice(0, 0, {
-                displayName: this.LANG.channelPartners.tabNames.organizations,
-                route: '',
-            });
-        }
-        if (ownRoles.includes(ChannelPartnerRoles.ADMINISTRATOR)) {
-            tabs.splice(1, 0, {
-                displayName: this.LANG.channelPartners.tabNames.partners,
-                route: 'subchannels',
-            });
-        }
-        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.users,
-                route: 'users',
-            });
-        }
-        if (ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.information,
-                route: 'information',
-            });
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.settings,
-                route: 'settings',
-            });
-        }
-        return tabs;
     }
 }

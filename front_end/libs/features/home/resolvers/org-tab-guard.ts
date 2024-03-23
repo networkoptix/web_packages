@@ -14,15 +14,11 @@ import {
     selectCurrentOrgId,
     selectCurrentOrganization,
     selectCurrentPartnerId,
-    selectCurrentPartner,
     selectHasStoreLoaded,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    ChannelPartnerPermissions,
-    OrgPermissions,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
+import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export const orgTabGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -32,41 +28,33 @@ export const orgTabGuard: CanActivateFn = (
     const router: Router = inject(Router);
     const cpService: NxChannelPartnersService = inject(NxChannelPartnersService);
     const path = route?.routeConfig?.path;
-    const currOrg$$ = store.selectSignal(selectCurrentOrganization);
-    const currOrgId$$ = store.selectSignal(selectCurrentOrgId);
-    const currPartnerId$$ = store.selectSignal(selectCurrentPartnerId);
-    const currentPartner$$ = store.selectSignal(selectCurrentPartner);
-    const checkPermissions = (
-        orgPermissions: string[] = [],
-        currentPartnerPermissions: string[] = [],
-    ): boolean => {
-        if (orgPermissions) {
-            switch (path) {
-                case 'settings':
-                    if (
-                        (nxConfig.featureFlags.channelPartnersChangeStateUI &&
-                            currentPartnerPermissions?.includes(
-                                ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-                            )) ||
-                        orgPermissions?.includes(OrgPermissions.CONFIGURE_ORGANIZATION)
-                    ) {
-                        return true;
-                    }
-                    break;
-                case 'users':
-                case 'users/:email':
-                case 'group/:groupId/users':
-                case 'group/:groupId/users/:email':
-                    if (orgPermissions?.includes(OrgPermissions.MANAGE_USERS)) {
-                        return true;
-                    }
-                    break;
-                case 'reports':
-                    if (orgPermissions?.includes(OrgPermissions.VIEW_SERVICE_REPORTS)) {
-                        return true;
-                    }
-                    break;
-            }
+    const currOrg$$ = store.selectSignal<Organization>(selectCurrentOrganization);
+    const currOrgId$$ = store.selectSignal<string>(selectCurrentOrgId);
+    const currPartnerId$$ = store.selectSignal<string>(selectCurrentPartnerId);
+    const permissionsStore = inject(PermissionsStore);
+    const checkPermissions = (): boolean => {
+        switch (path) {
+            case 'settings':
+                if (
+                    permissionsStore.canChangeOrganizationState$$() ||
+                    permissionsStore.canViewOrgSettings$$()
+                ) {
+                    return true;
+                }
+                break;
+            case 'users':
+            case 'users/:email':
+            case 'group/:groupId/users':
+            case 'group/:groupId/users/:email':
+                if (permissionsStore.canViewOrgUsers$$()) {
+                    return true;
+                }
+                break;
+            case 'reports':
+                if (permissionsStore.canViewOrgReports$$()) {
+                    return true;
+                }
+                break;
         }
         router.navigate(['404']);
         return false;
@@ -74,7 +62,7 @@ export const orgTabGuard: CanActivateFn = (
 
     const currOrg = currOrg$$();
     if (currOrg) {
-        return checkPermissions(currOrg.ownPermissions, currentPartner$$()?.ownPermissions);
+        return checkPermissions();
     } else {
         const id = currOrgId$$();
         store.dispatch(cpActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
@@ -105,7 +93,7 @@ export const orgTabGuard: CanActivateFn = (
                 }
                 return of(null);
             }),
-            map(org => checkPermissions(org?.ownPermissions, currentPartner$$()?.ownPermissions)),
+            map(org => checkPermissions()),
         );
     }
 };

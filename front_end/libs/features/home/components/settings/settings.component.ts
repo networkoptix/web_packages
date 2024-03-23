@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, input } from '@angular/core';
+import { Component, OnInit, computed, input, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,11 +18,10 @@ import {
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { settingsViews } from '@pages/home/home.types';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
-    ChannelPartnerPermissions,
-    OrgPermissions,
     Organization,
     State,
     UpdateChannelPartner,
@@ -39,8 +38,7 @@ import { NxSettingsStateComponent } from './components/state/state.component';
 interface SettingsState {
     view?: string;
     item?: ChannelPartner | Organization;
-    canUpdateStatus?: boolean;
-    canConfigure?: boolean;
+    canUpdateStatus: boolean;
 }
 
 @Component({
@@ -61,6 +59,7 @@ interface SettingsState {
 export class NxOrganizationSettingsComponent implements OnInit {
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
+    permissionsStore = inject(PermissionsStore);
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
@@ -88,9 +87,13 @@ export class NxOrganizationSettingsComponent implements OnInit {
     );
 
     currentState$$ = computed<SettingsState>(() => {
-        const state: SettingsState = { canConfigure: false };
+        const currentPartner = this.currentPartner$$();
+        const state: SettingsState = {
+            canUpdateStatus: currentPartner?.effectiveState === 'active',
+        };
+
         if (this.cpSettings()) {
-            state.item = this.currentPartner$$();
+            state.item = currentPartner;
             state.view = settingsViews.CHANNEL_PARTNERS;
         } else if (this.orgSettings()) {
             state.item = this.currentOrg$$();
@@ -101,10 +104,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
             );
             state.item = subchannelsMap.get(this.subChannelId$$());
             state.view = settingsViews.SUBCHANNELS;
-            state.canUpdateStatus = true;
-            state.canConfigure = state.item?.ownPermissions?.includes(
-                ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER,
-            );
         }
         return state;
     });
@@ -128,46 +127,25 @@ export class NxOrganizationSettingsComponent implements OnInit {
         this.currentPartnerAccess$.next(accessLevel);
         return accessLevel;
     });
-
-    currentPartnerPermissions$$ = computed<string[]>(() => {
-        const currentPartner = this.currentPartner$$();
-        return currentPartner?.ownPermissions || [];
+    // Think about these
+    permissions$$ = computed(() => {
+        const {
+            canChangeOrganizationState$$,
+            canConfigureOrganization$$,
+            canChangePartnerState$$,
+            canViewPartnerSettings$$,
+        } = this.permissionsStore;
+        const orgSettings = this.orgSettings();
+        const cpSettings = this.cpSettings();
+        return {
+            canAlterState: orgSettings ? canChangeOrganizationState$$() : canChangePartnerState$$(),
+            canConfigure: orgSettings
+                ? canConfigureOrganization$$()
+                : cpSettings
+                  ? canViewPartnerSettings$$()
+                  : false,
+        };
     });
-
-    isDirectParentCP$$ = computed<boolean>(() => {
-        const currentOrg = this.currentOrg$$();
-        const currentPartner = this.currentPartner$$();
-        const permissions = this.currentPartnerPermissions$$();
-        const canAlterSubCP = this.canAlterSubCP$$();
-        if (!permissions.length) {
-            return false;
-        }
-        const canAlterState = permissions.includes(
-            ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-        );
-        return (currentOrg && canAlterState) || (currentPartner && canAlterSubCP) || false;
-    });
-
-    isOrgAdmin$$ = computed(() => {
-        return this.currentPartnerPermissions$$().includes(
-            ChannelPartnerPermissions.ADMINISTER_ORGANIZATION_SYSTEMS,
-        );
-    });
-    canChangeState$$ = computed(() =>
-        this.currentPartnerPermissions$$().includes(
-            ChannelPartnerPermissions.ALTER_STATE_ORGANIZATIONS,
-        ),
-    );
-    canUpdateOrg$$ = computed(() => {
-        const currentState = this.currentState$$();
-        return currentState.item?.ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION);
-    });
-    canAlterSubCP$$ = computed(() => {
-        return this.currentPartnerPermissions$$().includes(
-            ChannelPartnerPermissions.ALTER_STATE_SUB_CHANNEL_PARTNERS,
-        );
-    });
-    hasUpdate = false;
 
     State = State;
 

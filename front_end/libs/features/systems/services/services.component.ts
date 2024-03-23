@@ -8,9 +8,9 @@ import { combineLatest, switchMap, tap } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ChannelPartnerPermissions } from '@pages/home/store/permissions/permissions.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
-    ChannelPartnerPermissions,
     ServiceQuantity,
     ServiceQuantities,
     SystemService,
@@ -126,7 +126,7 @@ export class NxServicesComponent {
                 ),
                 tap(partner => {
                     this.hasChangePermission = partner.ownPermissions.includes(
-                        ChannelPartnerPermissions.ADD_REMOVE_SERVICE_QUANTITIES,
+                        ChannelPartnerPermissions.add_remove_service_quantities,
                     );
                     // @ts-expect-error A sort of partial 403. Not sure how this should be handled yet
                     if (partner.monthlyAdditionalServiceLimit !== '**REDACTED**') {

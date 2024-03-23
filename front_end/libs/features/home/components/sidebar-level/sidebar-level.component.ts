@@ -11,10 +11,8 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
-import {
-    GroupItem,
-    OrgPermissions,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
@@ -39,11 +37,11 @@ export class NxGroupsSidebarLevelComponent {
     @Input() groupId: string;
 
     groupsStore = inject(GroupsStore);
+    permissionsStore = inject(PermissionsStore);
+
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    canManageSystems$$ = computed(() =>
-        this.currentOrg$$()?.ownPermissions?.includes(OrgPermissions.MANAGE_SYSTEMS),
-    );
+    canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
     icons = icons;
     constructor(

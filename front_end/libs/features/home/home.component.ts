@@ -16,7 +16,7 @@ import {
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
-import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { PartnerRoles } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     ChannelPartner,
     Organization,
@@ -91,10 +91,7 @@ export class NxHomeComponent implements OnInit {
         }
 
         const filteredChannelPartners = channelPartners.filter(
-            partner =>
-                !partner.ownPermissions.includes(
-                    ChannelPartnerPermissions.FIELD_ACCESS_CP_ACCOUNTANT,
-                ),
+            partner => !partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant),
         );
         const filteredOrganizations = organizations
             .filter(org => !channelPartners.some(partner => org.channelPartner === partner.id))

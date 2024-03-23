@@ -35,6 +35,7 @@ import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -67,6 +68,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
 export class NxUsersTableComponent implements OnInit, OnChanges {
     UserType = UserType;
     groupsStore = inject(GroupsStore);
+    permissionStore = inject(PermissionsStore);
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -99,13 +101,12 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     icons = icons;
     hasOnlyOneAdmin$$: WritableSignal<boolean> = signal(true);
     canManageUsers$$ = computed(() => {
-        const currentPartner = this.currentPartner$$();
-        const currentOrg = this.currentOrg$$();
+        const canManagePartnerUsers = this.permissionStore.canViewPartnerUsers$$();
+        const canManageOrgUsers = this.permissionStore.canViewOrgUsers$$();
         return this.userType === UserType.CHANNEL_PARTNER
-            ? currentPartner?.ownPermissions.includes('manage_users')
-            : currentOrg?.ownPermissions.includes('manage_users');
+            ? canManagePartnerUsers
+            : canManageOrgUsers;
     });
-    originalRecords: UserRecord[] | null = null;
 
     setHeaders: Array<string>;
     rowsPerPage: Array<number>;

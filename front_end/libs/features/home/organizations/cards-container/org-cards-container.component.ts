@@ -23,12 +23,12 @@ import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
     GroupItem,
     GroupUser,
-    OrgPermissions,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxVmsClientService } from '@services/vms-client.service';
@@ -65,6 +65,7 @@ export class NxOrganizationCardContainerComponent {
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 
+    permissionsStore = inject(PermissionsStore);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     openServices$$ = computed(() => {
@@ -74,10 +75,7 @@ export class NxOrganizationCardContainerComponent {
             currentOrg?.channelPartnerAccessLevel === null
         );
     });
-    orgPermissions$$ = computed(() => this.currentOrg$$()?.ownPermissions || []);
-    canManageSystems$$ = computed<boolean>(() =>
-        this.orgPermissions$$().includes(OrgPermissions.MANAGE_SYSTEMS),
-    );
+    canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
     hasEnoughGroupsOrSystems$$ = computed(() => {
         return (
