@@ -15,16 +15,17 @@ nx-no-systems-cards {
     }
 
     .card {
-        max-width: 336px;
+        width: 336px;
+        height: 215px;
         margin: 12px;
     }
 
     .card-interior {
         height: 100%;
-        padding: 19px;
+        padding: 24px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 13px;
     }
 
     .number-row {
@@ -48,6 +49,7 @@ nx-no-systems-cards {
     .description-text {
         @include typography.regular14nocolor;
         color: var(--no-systems-description-color);
+        line-height: 1.2;
     }
 
     .red-text {

@@ -1455,8 +1455,8 @@
             "message": ""
         },
         "noSystems": {
-            "connected": "If the system is <span class=\"green-text\">connected</span> to the Cloud",
-            "notConnected": "If the system is <span class=\"red-text\">not connected</span> to the Cloud",
+            "connected": "If the system is <span class=\"text-white\">connected</span> to the Cloud",
+            "notConnected": "If the system is <span class=\"text-white\">not connected</span> to the Cloud",
             "login": "Log in to the system in %CLOUD_NAME%"
         }
     },
