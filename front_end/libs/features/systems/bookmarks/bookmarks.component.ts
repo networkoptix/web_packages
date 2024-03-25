@@ -284,16 +284,12 @@ export class NxBookmarksComponent implements OnInit {
                     return cleanId(deviceId);
                 });
                 this.tags$.next(tags);
-                this.devices$.next(this.filterDevices(devices));
-                this.devices$.pipe(
-                    map(devices =>
-                        devices
-                            .map(({ id, name }) => ({ id, name }))
-                            .sort(alphabeticalSort(this.locale, ({ name }) => name)),
-                    ),
-                    startWith<BookmarksDevice[]>([]),
+
+                const filteredDevices = this.filterDevices(devices).sort(
+                    alphabeticalSort(this.locale, ({ name }) => name),
                 );
-                this.deviceMap = new Map(devices.map(device => [device.id, device]));
+                this.devices$.next(filteredDevices);
+                this.deviceMap = new Map(filteredDevices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
             }),
