@@ -67,14 +67,11 @@
 
                 &.mat-button-toggle-checked {
                     background: var(--change-state-dialog-btn-checked-bg);
-                    button {
-                        background: var(--change-state-dialog-btn-checked-bg);
-                        color: var(--change-state-dialog-btn-checked-color);
+                    color: var(--change-state-dialog-btn-checked-color);
 
-                        svg {
-                            path, rect {
-                                fill: var(--change-state-dialog-btn-checked-color);
-                            }
+                    button svg {
+                        path, rect {
+                            fill: var(--change-state-dialog-btn-checked-color);
                         }
                     }
 
