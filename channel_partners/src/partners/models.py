@@ -1530,9 +1530,10 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, OrganizationPermissions.manage_users):
             return True
-        elif self.users.filter(organizationtouser__roles__overlap=self.allowed_role_uuid(
-                OrganizationPermissions.manage_users)
-        ).count() == 0 and self.channel_partner.can_add_or_remove_organizations(user):
+        has_admins = self.users.filter(
+            organizationtouser__roles__overlap=self.allowed_role_uuid(OrganizationPermissions.manage_users)
+        ).exists()
+        if not has_admins and self.channel_partner.can_add_or_remove_organizations(user):
             return True
         return False
 
