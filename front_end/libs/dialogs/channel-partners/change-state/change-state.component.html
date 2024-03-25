@@ -84,15 +84,7 @@
                     ><span class="error">{{ usersNoAccess | translateCut: 1 }}</span
                     ><span>{{ usersNoAccess | translateCut: 2 }}</span>
                 </li>
-                <li
-                    *ngrxLet="
-                        LANG.dialogs.channelPartners.systemsNoAccess | translate as systemsNoAccess
-                    "
-                >
-                    <span>{{ systemsNoAccess | translateCut: 0 }}</span
-                    ><span class="error">{{ systemsNoAccess | translateCut: 1 }}</span
-                    ><span>{{ systemsNoAccess | translateCut: 2 }}</span>
-                </li>
+                <li>{{ LANG.dialogs.channelPartners.systemsAccess | translate }}</li>
                 <li
                     *ngrxLet="
                         LANG.dialogs.channelPartners.recordingDisabled
