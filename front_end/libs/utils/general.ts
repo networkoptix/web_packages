@@ -254,16 +254,20 @@ export function alphabeticalSort<P>(
  * @param locale - Locale to use for comparison
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
+ * @param ignoreCase - Ignore case when sorting (default)
  */
 export function alphaNumericSort<P>(
     locale: string,
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
+    ignoreCase = true,
 ): (a: P, b: P) => number {
     return (...args): number =>
         sortOrder(
             (() => {
-                const [a, b] = args.map(fn);
+                const handleIgnoredCase = (wrappedFn: typeof fn): typeof fn =>
+                    ignoreCase ? (param: P) => wrappedFn(param).toLocaleLowerCase(locale) : fn;
+                const [a, b] = args.map(handleIgnoredCase(fn));
                 const alphaNumericalSplit = [a, b].map(cur =>
                     cur.match(/[\D]+|(?:\d+(?:\.\d*)?|\.\d+)/g),
                 );
