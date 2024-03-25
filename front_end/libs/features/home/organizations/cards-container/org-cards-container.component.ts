@@ -236,7 +236,9 @@ export class NxOrganizationCardContainerComponent {
                                 },
                                 message: this.translateService.instant(
                                     staticLang.channelPartners.orgs.groupAction.deleteMessage,
-                                    { folderName: group.name },
+                                    {
+                                        folderName: `<span class=\"text-white\">${group.name}</span>`,
+                                    },
                                 ),
                             })
                             .then(confirm => {
