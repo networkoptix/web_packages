@@ -46,16 +46,16 @@ class RegisterForm:
         return PageText(self.driver, "//nx-authorize-activate-account-component")
 
     def first_name_is_required_error(self):
-        return PageText(self.driver, f"{self.first_name_input().locator}{self.required_text}")
+        return PageText(self.driver, "//p[@id='firstNameRequiredError']")
 
     def last_name_is_required_error(self):
-        return PageText(self.driver, f"{self.last_name_input().locator}{self.required_text}")
+        return PageText(self.driver, "//p[@id='lastNameRequiredError']")
 
     def email_is_required_error(self):
-        return PageText(self.driver, f"{self.email_input().locator}{self.required_text}")
+        return PageText(self.driver, "//p[@data-testid='emailRequiredError']")
 
     def password_is_required_error(self):
-        return PageText(self.driver, f"{self.password_input().locator}{self.required_text}")
+        return PageText(self.driver, "//div[@id='passwordRequiredError']")
 
     def email_is_invalid_error(self):
         return PageText(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]")
