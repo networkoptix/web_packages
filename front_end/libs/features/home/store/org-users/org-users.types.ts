@@ -22,4 +22,5 @@ export type OrgUsersState = {
     selectedGroupId: string;
     selectedUser: string;
     groups: GroupItem[];
+    searchQuery: string;
 };
