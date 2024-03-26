@@ -7,7 +7,7 @@
     <li *ngIf="!groupId && currentOrg$$() as rootOrg; else level">
         <div
             class="group-drop-list"
-            [ngClass]="{ selected: !this.currentGroupId$$() }"
+            [ngClass]="{ selected: this.isRoot$$() }"
             cdkDropList
             (cdkDropListDropped)="moveToRoot($event)"
         >

@@ -40,6 +40,7 @@ export class NxGroupsSidebarLevelComponent {
     permissionsStore = inject(PermissionsStore);
 
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
+    isRoot$$ = computed(() => this.groupsStore.currentGroupId$$()?.isRoot);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
