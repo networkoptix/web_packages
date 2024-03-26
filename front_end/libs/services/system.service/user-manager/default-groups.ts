@@ -124,6 +124,21 @@ export const DefaultUserGroups: UserGroup[] = [
             synced: false,
         },
     },
+    {
+        attributes: 'readonly',
+        description: '',
+        id: '',
+        name: 'Custom',
+        parentGroupIds: [],
+        permissions: 'none',
+        resourceAccessRights: {},
+        type: 'local',
+        externalId: {
+            dn: '',
+            syncId: '',
+            synced: false,
+        },
+    },
 ];
 
 export const DefaultUserGroupsToId: Record<string, UserGroup> = DefaultUserGroups.reduce(
