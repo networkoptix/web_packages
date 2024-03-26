@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
-import { catchError, debounceTime, shareReplay, switchMap, take } from 'rxjs/operators';
+import { asyncScheduler, BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
+import { catchError, shareReplay, switchMap, take, throttleTime } from 'rxjs/operators';
 
 import { apiBase } from '@static-variables';
 
@@ -61,7 +61,7 @@ export class CustomAccountProperty<T> {
 
         updater$
             .pipe(
-                debounceTime(1500),
+                throttleTime(1000, asyncScheduler, { trailing: true }),
                 switchMap(val => this.http.post<T>(this.#endpoint, val)),
             )
             .subscribe();

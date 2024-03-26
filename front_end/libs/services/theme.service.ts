@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, skip } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -79,11 +79,15 @@ export class NxThemeService {
 
         this.store
             .select(accountSelectors.selectCurrentUserName)
-            .pipe(takeUntilDestroyed())
+            .pipe(skip(1), takeUntilDestroyed())
             .subscribe(async (email: string) => {
                 if (this.viewType !== 'web') {
                     this.themeSelected = this.CONFIG.themeConfig.dark;
-                } else if (email && nxConfig.featureFlags.themesEnabled) {
+                } else {
+                    if (!nxConfig.featureFlags.themesEnabled) {
+                        return;
+                    }
+
                     await this.themeCustomProperty.get(false, true).then(
                         result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
@@ -92,14 +96,9 @@ export class NxThemeService {
                             console.error('Feature not available', err);
                         },
                     );
-                } else {
-                    this.themeSelected =
-                        this.CONFIG.themeConfig.default === 'auto'
-                            ? this.CONFIG.themeConfig.default
-                            : this.getThemeRealName(this.CONFIG.themeConfig.default);
                 }
 
-                await this.setTheme(this.themeSelected, email);
+                await this.setTheme(this.themeSelected, email, false);
             });
 
         this.scope = this.document.documentElement;
@@ -176,11 +175,16 @@ export class NxThemeService {
         return this.availThemes[targetTheme];
     }
 
-    async setTheme(themeSelected: string | null, username: string | undefined): Promise<void> {
+    async setTheme(
+        themeSelected: string | null,
+        username: string | undefined,
+        updateCustomProperty = true,
+    ): Promise<void> {
         if (!this.darkThemeMq) {
             this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
         }
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
+
         let { themesEnabled } = nxConfig.featureFlags;
         if (username === 'setup' || this.viewType !== 'web') {
             themesEnabled = true;
@@ -222,7 +226,7 @@ export class NxThemeService {
             this.setHSLTheme(true);
         }
 
-        if (username && username !== 'setup' && this.viewType === 'web') {
+        if (updateCustomProperty && username && username !== 'setup' && this.viewType === 'web') {
             await this.themeCustomProperty
                 .update(curr => {
                     curr.theme = this.themeSelected as AvailableThemes;
