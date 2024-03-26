@@ -113,6 +113,13 @@ export const dialogs: configTypes.Dialogs = {
     },
 };
 
+export const excludeFooterURLs: string[] = [
+    '/systems',
+    '/doc/developers/api-tool',
+    '/health-report',
+    '/home'
+]
+
 export const healthMonitoring: configTypes.HealthMonitoring = {
     staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
     valueFormats: {
