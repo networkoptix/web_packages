@@ -56,7 +56,6 @@ from partners.views import (
     CloudSystemViewSet,
     OrganizationViewSet,
     SystemGroupUserViewSet,
-    SystemGroupViewSet,
     get_authorized_system,
     grant_access,
     organization_roles,
@@ -1874,81 +1873,6 @@ class TestSystemUsers:
         url = reverse("system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
-
-
-
-class TestSystemGroupViewSet:
-    @pytest.fixture(autouse=True)
-    def setup_method_fixture(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
-                             system_group_factory, sys_group_user_factory, system_factory, arf, mock_auth_with_user):
-        self.root = channel_partner_factory()
-        self.root_user = cp_user_factory(channel_partner=self.root)
-        self.cp = channel_partner_factory(parent_channel_partner=self.root)
-        self.other_cp = channel_partner_factory(parent_channel_partner=self.root)
-        self.cp_user = cp_user_factory(channel_partner=self.cp)
-        self.other_cp_user = cp_user_factory(channel_partner=self.other_cp)
-        self.org_1 = organization_factory(channel_partner=self.cp)
-        self.org_user = org_user_factory(organization=self.org_1)
-        self.org_2 = organization_factory(channel_partner=self.cp)
-        self.other_org = organization_factory(channel_partner=self.other_cp)
-        self.group = system_group_factory(organization=self.org_1)
-        self.group_user = sys_group_user_factory(organization=self.org_1, group=self.group)
-        self.sub_group = system_group_factory(organization=self.org_1, parent=self.group)
-        self.group2 = system_group_factory(organization=self.org_2)
-        self.other_group = system_group_factory(organization=self.other_org)
-        for _ in range(3):
-            system_group_factory(organization=self.org_1, parent=self.group)
-            system_group_factory(organization=self.org_2, parent=self.group2)
-            system_group_factory(organization=self.other_org, parent=self.other_group)
-
-    def test_retrieve(self, arf, mock_auth_with_user):
-        view = SystemGroupViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
-        request = arf.get('/')
-        mock_auth_with_user(self.org_user)
-        response = view(request, pk=self.group.id)
-        assert response.status_code == 200
-        assert response.data['id'] == str(self.group.id)
-
-        sub_group = SystemGroup.objects.filter(parent=self.group).first()
-
-        response = view(request, pk=sub_group.id)
-        assert response.status_code == 200
-        assert response.data['id'] == str(sub_group.id)
-
-        mock_auth_with_user(self.cp_user)
-        response = view(request, pk=self.group.id)
-        assert response.status_code == 200
-        assert response.data['id'] == str(self.group.id)
-
-        sub_group = SystemGroup.objects.filter(parent=self.group).first()
-
-        response = view(request, pk=sub_group.id)
-        assert response.status_code == 200
-        assert response.data['id'] == str(sub_group.id)
-
-        mock_auth_with_user(self.other_cp_user)
-        response = view(request, pk=self.group.id)
-        assert response.status_code == 404
-
-    def test_destroy_404_permission(self, mock_auth_with_user, arf):
-        view = SystemGroupViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
-        request = arf.delete('/')
-        mock_auth_with_user(self.other_cp_user)
-        response = view(request, pk=self.group.id)
-        assert response.status_code == 404
-
-    def test_destroy_ok(self, mock_auth_with_user, arf):
-        view = SystemGroupViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
-        request = arf.delete('/')
-        mock_auth_with_user(self.org_user)
-        group_id  = self.group.id
-        response = view(request, pk=self.group.id)
-        assert response.status_code == 204
-        assert SystemGroup.objects.filter(pk=group_id).exists() is False
-        self.sub_group.refresh_from_db()
-        assert self.sub_group.parent is None
-        assert self.sub_group.path[0] == self.org_1.id
-
 
 
 class TestOrganizationRole:

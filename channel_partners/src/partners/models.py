@@ -1831,7 +1831,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
             .filter(user=user)
             .filter(
                 Q(organization_id=self.organization_id, system_group__isnull=True)
-                | Q(system_group_id__in=[self.id] + self.visible_path)
+                | Q(system_group_id__in=[self.id] + self.groups_path)
             ).exists()
         ):
             return True
