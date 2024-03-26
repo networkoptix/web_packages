@@ -1127,21 +1127,6 @@ class SystemGroupViewSet(NestedViewSetMixin,
     # filter_backends = [DjangoFilterBackend]
     # filterset_class = filters.CreatedTsAndIdAndNameFilter
 
-    def get_queryset(self):
-        return super().get_queryset().filter(
-            Q(
-                organization_id__in=Subquery(
-                    OrganizationToUser.objects.filter(user=self.request.user)
-                    .exclude(roles__isnull=True).exclude(roles=[]).values('organization_id')
-                )
-            ) | Q(
-                organization__channel_partner_id__in=Subquery(
-                    ChannelPartnerToUser.objects.filter(user=self.request.user)
-                    .exclude(roles__isnull=True).exclude(roles=[]).values('channel_partner_id')
-                )
-            )
-        )
-
     def get_permissions(self):
         perms = [IsAuthenticated()]
         if self.action == 'retrieve':
