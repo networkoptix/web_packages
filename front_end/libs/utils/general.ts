@@ -263,20 +263,19 @@ export function alphabeticalSort<P>(
  *
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
- * @param ignoreCase - Ignore case when sorting (default)
+ * @param caseFirst - Handle sorting by upper first, lower first, or false for no preference (default: 'upper')
  */
 export function alphaNumericSort<P>(
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
-    ignoreCase = true,
+    caseFirst: 'upper' | 'lower' | false = 'upper',
 ): (a: P, b: P) => number {
     return (...args): number =>
         sortOrder(
             (() => {
-                const handleIgnoredCase = (wrappedFn: typeof fn): typeof fn =>
+                const handleIgnoredCase = (wrappedFn: typeof fn, ignoreCase = true): typeof fn =>
                     ignoreCase
-                        ? (param: P) =>
-                              wrappedFn(param).toLocaleLowerCase(window.navigator.language)
+                        ? (param: P) => wrappedFn(param).toLocaleLowerCase(navigator.language)
                         : fn;
                 const [a, b] = args.map(handleIgnoredCase(fn));
                 const alphaNumericalSplit = [a, b].map(cur =>
@@ -286,7 +285,10 @@ export function alphaNumericSort<P>(
                 const firstVariance = zipped.find(([a, b]) => a !== b);
 
                 if (!firstVariance) {
-                    return 0;
+                    const [a, b] = args.map(handleIgnoredCase(fn, !caseFirst));
+                    return a.localeCompare(b, navigator.language, {
+                        caseFirst: !caseFirst ? 'false' : caseFirst,
+                    });
                 }
 
                 const numericSegments = firstVariance.map(segment => parseFloat(segment));
