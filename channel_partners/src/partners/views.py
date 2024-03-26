@@ -1181,7 +1181,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
         return context
 
     def get_permissions(self):
-        return IsAuthenticated(), CanPerformChannelPartnerAction(SystemGroup.can_manage)
+        return IsAuthenticated(), CanPerformChannelPartnerAction(SystemGroup.can_manage_users)
 
     def check_permissions(self, request):
         super().check_permissions(request)

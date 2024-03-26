@@ -1476,18 +1476,23 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def has_perm(self, user: CloudUser, perm: str):
         allowed_role_uuid = self.allowed_role_uuid(perm)
-        if allowed_role_uuid and self.users.filter(pk=user.pk,
-                                                   organizationtouser__roles__overlap=allowed_role_uuid,
-                                                   organizationtouser__system_group=None).exists():
+        user_with_roles = OrganizationToUser.objects.filter(
+            organization=self,
+            user=user,
+            roles__overlap=allowed_role_uuid,
+            system_group__isnull=True
+        )
+        if allowed_role_uuid and user_with_roles.exists():
             return True
         if not self.channel_partner_access_level_id:
             return False
-        channel_partner_manager = ChannelPartnerToUser.objects.filter(
-            user=user, channel_partner=self.channel_partner,
-            roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
-        ).exists()
-        if channel_partner_manager:
-            return self.channel_partner_access_level_id in allowed_role_uuid
+        if self.channel_partner_access_level_id in allowed_role_uuid:
+            channel_partner_manager = ChannelPartnerToUser.objects.filter(
+                user=user, channel_partner=self.channel_partner,
+                roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+            ).exists()
+            if channel_partner_manager:
+                return True
         return False
 
     def is_member_in_branch(self, user: CloudUser, perm: str = None) -> bool:
@@ -1846,6 +1851,9 @@ class SystemGroup(FieldOriginalMixin, models.Model):
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
+
+    def can_manage_users(self, user: CloudUser):
+        return self.organization.has_perm(user, OrganizationPermissions.manage_users)
 
     def has_overlaps(self, user: CloudUser):
         def user_groups():
