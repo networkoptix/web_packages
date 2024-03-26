@@ -1,18 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    DestroyRef,
-    Input,
-    OnInit,
-    booleanAttribute,
-    inject,
-    signal,
-} from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, DestroyRef, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { iif, map } from 'rxjs';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
@@ -21,45 +11,11 @@ import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    GroupItem,
-    GroupUserCanAccess,
-    OrganizationUser,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
-
-const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
-    return users.map(user => ({
-        email: user.email,
-        userId: user.email,
-        fullName: user.fullName || 'N/A',
-        roles: user.roles,
-        isOrgUser: user.hasAccessTo?.membershipType === 'organization',
-        accessLevel: user.hasAccessTo,
-        userType: UserType.GROUP,
-    }));
-};
-
-const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord[] => {
-    const isOrgUser = (user: OrganizationUser): boolean => {
-        // Still needs clarification on all ways to see if user is from org
-        return user.roles?.includes('Administrator') || !user.groupRoles?.length;
-    };
-    return users.map(user => ({
-        ...user,
-        fullName: user.fullName || 'N/A',
-        groupRoles: user?.groupRoles?.map(group => ({
-            ...group,
-            name: groups?.find(groupItem => groupItem.id === group.groupId)?.name,
-        })),
-        userId: user.email,
-        isOrgUser: isOrgUser(user),
-        userType: UserType.ORGANIZATION,
-    }));
-};
 
 @Component({
     selector: 'nx-org-users',
@@ -71,20 +27,32 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
     standalone: true,
     imports: [CommonModule, NxUsersTableComponent, TranslateModule],
 })
-export class NxOrganizationUsersComponent implements OnInit {
+export class NxOrganizationUsersComponent {
     LANG = staticLang;
     UserType = UserType;
     orgUserStore = inject(OrgUsersStore);
     groupsStore = inject(GroupsStore);
+    routerState = inject(ChannelPartnersRouteState);
 
-    @Input({ transform: booleanAttribute }) inGroup: boolean;
-    headers: HEADER_ITEM[];
+    inGroup$$ = computed(() => !!this.routerState.groupId());
+    headers: HEADER_ITEM[] = [
+        {
+            name: 'email',
+            value: this.LANG.channelPartners.usersTableHeaders.login,
+            sort: 'string',
+        },
+        {
+            name: 'fullName',
+            value: this.LANG.channelPartners.usersTableHeaders.fullName,
+            sort: 'string',
+        },
+        { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
+        { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+    ];
 
-    currentItemId$$ = signal<string>('');
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     rootGroups$$ = this.groupsStore.groupsEntities;
     orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
-    groupItems$$ = this.groupsStore.currentGroups$$;
     selectedUsers: { [key: string]: UserRecord } = {};
     destroyRef = inject(DestroyRef);
 
@@ -93,43 +61,22 @@ export class NxOrganizationUsersComponent implements OnInit {
         private CPService: NxChannelPartnersService,
         private store: Store,
         private translateService: TranslateService,
-        private router: Router,
-        private route: ActivatedRoute,
     ) {
-        this.orgUserStore.setSelectedGroup(this.currentItemId$$);
-        this.orgUserStore.setGroups(this.groupItems$$);
+        this.orgUserStore.setSelectedGroup(this.routerState.groupId);
+        this.orgUserStore.setGroups(this.groupsStore.currentGroups$$);
     }
 
-    ngOnInit(): void {
-        this.CPService.paramStateHandler.state$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(({ params }) => {
-                this.currentItemId$$.set(params.groupId || params.organizationId);
-            });
-        iif(
-            () => this.inGroup,
-            this.CPService.getGroupUsersWithAccess(this.currentItemId$$()).pipe(
-                map(users => mapGroupUsers(users)),
-            ),
-            this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
-                map(users => mapOrgUsers(users, this.groupItems$$())),
-            ),
-        ).subscribe(users => this.orgUserStore.setUsers(users));
-        this.headers = [
-            {
-                name: 'email',
-                value: this.LANG.channelPartners.usersTableHeaders.login,
-                sort: 'string',
-            },
-            {
-                name: 'fullName',
-                value: this.LANG.channelPartners.usersTableHeaders.fullName,
-                sort: 'string',
-            },
-            { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
-            { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
-        ];
-    }
+    // ngOnInit(): void {
+    //     iif(
+    //         () => this.inGroup,
+    //         this.CPService.getGroupUsersWithAccess(this.currentItemId$$()).pipe(
+    //             map(users => mapGroupUsers(users)),
+    //         ),
+    //         this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
+    //             map(users => mapOrgUsers(users, this.groupItems$$())),
+    //         ),
+    //     ).subscribe(users => this.orgUserStore.setUsers(users));
+    // }
 
     newUserDialog(): void {
         const roles = this.orgRoles$$() || [];
@@ -178,8 +125,8 @@ export class NxOrganizationUsersComponent implements OnInit {
             )
             .then(confirm => {
                 if (confirm) {
-                    const orgId = this.currentOrg$$().id;
-                    const folderId = this.currentItemId$$();
+                    const orgId = this.routerState.organizationId();
+                    const folderId = this.routerState.groupId();
                     if (deleteMultiple) {
                         this.orgUserStore.removeUsers(
                             orgId,
@@ -195,8 +142,5 @@ export class NxOrganizationUsersComponent implements OnInit {
 
     updateSelectedUsers(users: { [key: string]: UserRecord }): void {
         this.selectedUsers = users;
-    }
-    expandClick(user: UserRecord): void {
-        this.router.navigate([user.email], { relativeTo: this.route });
     }
 }

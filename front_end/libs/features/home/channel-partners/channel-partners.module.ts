@@ -11,7 +11,7 @@ import { NxSubchannelsComponent } from '../components/subchannels/subchannels.co
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { cpTabGuard } from '../resolvers/CP-tab-guard';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
-import { TabResolver } from '../resolvers/tab-resolver';
+import { withTabReporterResolver } from '../resolvers/tab-id-reporter-resolver';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
 
@@ -22,12 +22,11 @@ const setPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return true;
 };
 
-const CPRoutes: Routes = [
+const CPRoutes: Routes = withTabReporterResolver([
     {
         path: ':partnerId',
         component: NxChannelPartnersComponent,
         resolve: {
-            currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
         },
         canActivate: [setPartnerId],
@@ -59,7 +58,6 @@ const CPRoutes: Routes = [
                 children: [
                     {
                         path: ':subchannelId',
-                        resolve: { currentTabRoute: TabResolver },
                         component: NxSubchannelComponent,
                         children: [
                             {
@@ -102,7 +100,7 @@ const CPRoutes: Routes = [
         path: '**',
         redirectTo: '/home',
     },
-];
+]);
 
 @NgModule({
     imports: [RouterModule.forChild(CPRoutes)],

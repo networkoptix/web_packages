@@ -1,3 +1,4 @@
+@use "typography";
 .body {
   padding: 1rem;
   padding-top: .5rem;
@@ -8,29 +9,31 @@
   padding-bottom: 0;
   padding-top: 1.25rem;
 
-  .path {
+  .back {
     color: var(--light16);
-    display: flex;
-    gap: 0.75rem;
-
-    .item {
-      display: flex;
-      gap: 0.3rem;
-      align-items: center;
-    }
 
     a {
+      display: flex;
+      align-items: center;
+      gap: 2px;
       text-decoration: none;
       color: var(--light16);
+      height: 20px;
+
+      .back-icon {
+        display: flex;
+        justify-content: center;
+      }
+
+      .back-text {
+        @include typography.regular14nocolor;
+        line-height: 20px;
+      }
     }
 
     a:hover {
       cursor: pointer;
     }
-    
-  }
-}
 
-svg-icon svg {
-  transform: rotate(180deg);
+  }
 }

@@ -28,7 +28,8 @@
             ></svg-icon>
             <div class="group">
                 <a
-                    (click)="toRoot()"
+                    [routerLink]="channelPartnersRouteStore.rootGroupLink$$()"
+                    (click)="$event.stopPropagation()"
                     class="level-name"
                     [nxTooltip]="rootOrg.name"
                     >{{ rootOrg.name }}</a
@@ -69,6 +70,7 @@
                 </ng-template>
                 <svg-icon
                     nx-add-svg-src
+                    (click)="group.children.length && groupsStore.toggleOpenState(group.id)"
                     [src]="
                         icons.dir +
                         (openGroups[group.id] ? 'ws_folder_open.svg' : 'ws_folder_close.svg')
@@ -77,7 +79,6 @@
                     svgClass="folder"
                 ></svg-icon>
                 <div
-                    (click)="groupsStore.toggleOpenState(group.id)"
                     cdkDrag
                     [cdkDragDisabled]="!canManageSystems$$()"
                     [cdkDragData]="group"
@@ -85,7 +86,10 @@
                 >
                     <span *cdkDragPlaceholder></span>
                     <a
-                        (click)="toGroup(group.id)"
+                        [routerLink]="
+                            group.id | mapWith: channelPartnersRouteStore.getGroupLink$$()
+                        "
+                        (click)="$event.stopPropagation()"
                         class="level-name"
                         [nxTooltip]="group.name"
                         >{{ group.name }}</a

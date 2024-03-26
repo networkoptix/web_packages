@@ -12,7 +12,7 @@ import {
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { iif, Observable, pipe, zip } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 import {
     AccessLevel,
@@ -24,9 +24,13 @@ import {
     GroupItem,
     GroupRole,
     GroupUser,
+    GroupUserCanAccess,
     Organization,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import { GroupsStore } from '../groups/groups.store';
+import { ChannelPartnersRouteState } from '../route-state/route-state.store';
 
 import { OrgUser, OrgUsersState } from './org-users.types';
 
@@ -80,6 +84,36 @@ const formatUser = (
         isOrgUser: userType,
         userType: userType ? UserType.ORGANIZATION : UserType.GROUP,
     } as OrgUser;
+};
+
+const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
+    return users.map(user => ({
+        email: user.email,
+        userId: user.email,
+        fullName: user.fullName || 'N/A',
+        roles: user.roles,
+        isOrgUser: user.hasAccessTo?.membershipType === 'organization',
+        accessLevel: user.hasAccessTo,
+        userType: UserType.GROUP,
+    }));
+};
+
+const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord[] => {
+    const isOrgUser = (user: OrganizationUser): boolean => {
+        // Still needs clarification on all ways to see if user is from org
+        return user.roles?.includes('Administrator') || !user.groupRoles?.length;
+    };
+    return users.map(user => ({
+        ...user,
+        fullName: user.fullName || 'N/A',
+        groupRoles: user?.groupRoles?.map(group => ({
+            ...group,
+            name: groups?.find(groupItem => groupItem.id === group.groupId)?.name,
+        })),
+        userId: user.email,
+        isOrgUser: isOrgUser(user),
+        userType: UserType.ORGANIZATION,
+    }));
 };
 
 export const OrgUsersStore = signalStore(
@@ -231,25 +265,48 @@ export const OrgUsersStore = signalStore(
             // In the future we can patch the state if it becomes necessary.
         },
     })),
-    withMethods(store => ({
-        setGroups: rxMethod<GroupItem[]>(
-            pipe(
-                filter(Boolean),
-                tapResponse({
-                    next: (groups: GroupItem[]) => patchState(store, { groups }),
-                    error: () => [],
-                }),
+    withMethods(
+        (
+            store,
+            chpService = inject(NxChannelPartnersService),
+            groupsStore = inject(GroupsStore),
+            routerStateStore = inject(ChannelPartnersRouteState),
+        ) => ({
+            setGroups: rxMethod<GroupItem[]>(
+                pipe(
+                    filter(Boolean),
+                    tapResponse({
+                        next: (groups: GroupItem[]) => patchState(store, { groups }),
+                        error: () => [],
+                    }),
+                ),
             ),
-        ),
-        setSelectedGroup: rxMethod<string>(
-            pipe(
-                filter(Boolean),
-                tapResponse({
-                    next: (groupId: string) =>
-                        patchState(store, removeAllEntities(), { selectedGroupId: groupId }),
-                    error: () => {},
-                }),
+            setSelectedGroup: rxMethod<string>(
+                pipe(
+                    tapResponse({
+                        next: (groupId: string) =>
+                            patchState(store, removeAllEntities(), { selectedGroupId: groupId }),
+                        error: () => {},
+                    }),
+                    switchMap(groupId => {
+                        return iif(
+                            () => !!groupId,
+                            chpService
+                                .getGroupUsersWithAccess(groupId)
+                                .pipe(map(users => mapGroupUsers(users))),
+                            chpService
+                                .getOrganizationUsers(routerStateStore.organizationId())
+                                .pipe(
+                                    map(users => mapOrgUsers(users, groupsStore.currentGroups$$())),
+                                ),
+                        );
+                    }),
+                    tapResponse({
+                        next: users => store.setUsers(users),
+                        error: () => {},
+                    }),
+                ),
             ),
-        ),
-    })),
+        }),
+    ),
 );

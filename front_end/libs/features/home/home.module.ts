@@ -10,8 +10,9 @@ import { SystemsDisplayMode } from '@pages/home/home.types';
 import { NxHomeComponent } from './home.component';
 import { OrgResolver } from './resolvers/org-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
+import { withTabReporterResolver } from './resolvers/tab-id-reporter-resolver';
 
-const homeRoutes: Routes = [
+const homeRoutes: Routes = withTabReporterResolver([
     {
         path: '',
         resolve: {
@@ -61,7 +62,7 @@ const homeRoutes: Routes = [
             },
         ],
     },
-];
+]);
 
 @NgModule({
     imports: [
