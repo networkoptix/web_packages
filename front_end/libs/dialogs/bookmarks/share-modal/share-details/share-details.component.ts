@@ -13,6 +13,7 @@ import { ClipboardService } from 'ngx-clipboard';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { icons } from '@static-variables';
 
 @Component({
@@ -28,6 +29,7 @@ import { icons } from '@static-variables';
         NxAddSvgSrcDirective,
         NxButtonComponent,
         AsyncPipe,
+        NxTooltipDirective,
     ],
 })
 export class NxShareDetailsComponent {

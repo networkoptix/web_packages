@@ -53,6 +53,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @Input({ transform: booleanAttribute }) toggleOnClick: boolean;
     @Input({ transform: booleanAttribute }) reversePositionOrder: boolean;
     @Input({ transform: booleanAttribute }) ignoreMaxWidth: boolean;
+    @Input({ transform: booleanAttribute }) closeAfterDelay: boolean;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
@@ -204,6 +205,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.tooltipMediumFont,
                         !!this.ignoreMaxWidth,
                     );
+                }
+
+                if (this.closeAfterDelay) {
+                    timer(1500)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe(() => this.close());
                 }
             });
     };
