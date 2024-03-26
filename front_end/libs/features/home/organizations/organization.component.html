@@ -17,14 +17,11 @@
             {{ currentOrg.effectiveState | translate | uppercase }}
         </nx-tag>
     </div>
-    <nx-tabs
-        animated
-        [currentTabIndex]="currentTabIndex$$()"
-    >
+    <nx-tabs animated>
         <nx-base-tab
             *ngFor="let tab of tabs$$()"
             [displayName]="tab.displayName"
-            (tabClick)="onTabClick($event)"
+            [route]="tab.route"
         >
             {{ tab.displayName }}
         </nx-base-tab>
@@ -81,7 +78,7 @@
                 </ng-container>
                 <ng-template #channelPartnerView>
                     <a
-                        (click)="toRoot()"
+                        [routerLink]="routerState.partnersRoot$$()"
                         translate
                     >
                         All Organizations</a

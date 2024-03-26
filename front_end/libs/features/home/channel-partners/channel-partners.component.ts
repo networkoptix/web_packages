@@ -33,6 +33,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
@@ -42,6 +43,7 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxCardComponent } from '../components/card/card.component';
+import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';
 
 @Component({
     selector: 'nx-channel-partners',
@@ -64,6 +66,7 @@ import { NxCardComponent } from '../components/card/card.component';
         NxTabsModule,
         NxAddSvgSrcDirective,
         NxTagComponent,
+        PipesModule,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -71,6 +74,7 @@ export class NxChannelPartnersComponent implements OnInit {
     LANG = staticLang;
 
     permissionStore = inject(PermissionsStore);
+    routerState = inject(ChannelPartnersRouteState);
 
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
@@ -180,15 +184,6 @@ export class NxChannelPartnersComponent implements OnInit {
                     );
                 }
             });
-    }
-
-    onTabClick(newIndex: number): void {
-        const newTab = this.tabs$$()[newIndex];
-        const route = ['home', 'channelPartners', this.currentPartner$$().id];
-        if (newTab.route) {
-            route.push(newTab.route);
-        }
-        this.router.navigate(route);
     }
 
     handleOrgClick(id: string): void {

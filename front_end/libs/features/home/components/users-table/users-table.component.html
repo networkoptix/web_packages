@@ -269,7 +269,7 @@
                 >
                     <svg-icon
                         [src]="icons.dirTextButtons + 'arrow_right.svg'"
-                        (click)="onExpandClick.emit(row)"
+                        [routerLink]="row.email | mapWith: routerState.getUserAccessLink$$()"
                     >
                     </svg-icon>
                 </div>

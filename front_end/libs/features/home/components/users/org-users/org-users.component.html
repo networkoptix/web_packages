@@ -1,6 +1,5 @@
 <div class="actions p-3">
     <button
-        *ngIf="currentItemId$$()"
         class="btn btn-default"
         translate
         (click)="newUserDialog()"
@@ -16,13 +15,12 @@
     </div>
 </div>
 <nx-users-table
-    [userType]="inGroup ? UserType.GROUP : UserType.ORGANIZATION"
-    [inGroup]="inGroup"
+    [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
+    [inGroup]="inGroup$$()"
     [headers]="headers"
     [records]="orgUserStore.tableUsers$$()"
     [roles]="orgRoles$$() || []"
     (selectedUsersEmitter)="updateSelectedUsers($event)"
     (onDeleteClick)="deleteUsers($event)"
-    (onExpandClick)="expandClick($event)"
     (onAdduser)="newUserDialog()"
 ></nx-users-table>

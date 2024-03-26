@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { patchState, signalStore, withMethods } from '@ngrx/signals';
 import {
     addEntity,
@@ -21,6 +21,8 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
@@ -51,6 +53,8 @@ const GroupStore = signalStore(
         TranslateModule,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        RouterModule,
+        PipesModule,
     ],
     providers: [GroupStore],
     standalone: true,
@@ -69,6 +73,7 @@ export class NxAccessTableComponent implements OnInit {
     selectedGroups: { [key: string]: UserRecord } = {};
 
     groupsStore = inject(GroupsStore);
+    routerState = inject(ChannelPartnersRouteState);
 
     inGroup$$ = computed(() => !this.groupsStore.currentGroupId$$().isRoot);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -88,8 +93,6 @@ export class NxAccessTableComponent implements OnInit {
     constructor(
         private cpService: NxChannelPartnersService,
         private store: Store,
-        private router: Router,
-        private route: ActivatedRoute,
         private dialogService: NxDialogsService,
         private translateService: TranslateService,
     ) {}
@@ -184,14 +187,6 @@ export class NxAccessTableComponent implements OnInit {
         });
     }
 
-    onPathItemClick(id: string): void {
-        if (id === this.currentOrg$$()!.id) {
-            this.router.navigate(['home', 'organization', id]);
-        } else {
-            this.router.navigate(['group', id], { relativeTo: this.route });
-        }
-    }
-
     addAccess(): void {
         const roles = this.orgRoles$$();
         const org = this.currentOrg$$();
@@ -276,9 +271,5 @@ export class NxAccessTableComponent implements OnInit {
 
     updateSelectedUsers(groups: { [key: string]: UserRecord }): void {
         this.selectedGroups = groups;
-    }
-
-    goBack(): void {
-        this.router.navigate(['home', 'organization', this.currentOrg$$()?.id, 'users']);
     }
 }

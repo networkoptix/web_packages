@@ -1,36 +1,19 @@
 <div class="header">
-    <button
-        class="btn btn-default svg-icon"
-        (click)="goBack()"
-        type="button"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dirTextButtons + 'arrow_right.svg'"
-            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-            [applyClass]="true"
-        ></svg-icon>
-        <span translate>Back</span>
-    </button>
-    <div
-        class="path"
-        *ngIf="currentPath$$() as currentPath"
-    >
-        @for (path of currentPath; track $index) {
-            <div class="item">
-                @if ($index > 0) {
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'folder2.svg'"
-                        [svgStyle]="{ 'width.px': '10px', 'height.px': '10px' }"
-                    ></svg-icon>
-                }
-                <a (click)="onPathItemClick(path.id)">{{ path.name }}</a>
+    <div class="back">
+        <a [routerLink]="currentGroupId$$() | mapWith: routerState.getBreadcrumbLink$$()">
+            <div class="back-icon">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                ></svg-icon>
             </div>
-            @if ($index !== currentPath.length - 1 && currentPath.length !== 1) {
-                /
-            }
-        }
+            <span
+                class="back-text"
+                translate
+            >
+                Back
+            </span></a
+        >
     </div>
     <h2>{{ fullName$$() ? fullName$$() + ', ' : '' }}{{ email }}</h2>
 </div>

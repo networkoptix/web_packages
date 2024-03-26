@@ -2,16 +2,21 @@ import { CommonModule } from '@angular/common';
 import {
     Component,
     ContentChildren,
-    EventEmitter,
     Input,
-    Output,
     QueryList,
     booleanAttribute,
     signal,
-    AfterViewInit,
+    inject,
+    computed,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
+
+import {
+    ChannelPartnersRouteState,
+    DEFAULT_TAB_ID,
+} from '@pages/home/store/route-state/route-state.store';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxBaseTabComponent } from './tab/tab.component';
 
@@ -33,49 +38,30 @@ Usage:
     templateUrl: 'tabs.component.html',
     styleUrls: ['tabs.component.scss'],
     standalone: true,
-    imports: [TranslateModule, CommonModule],
+    imports: [TranslateModule, CommonModule, RouterModule, PipesModule],
 })
-export class NxTabsComponent implements AfterViewInit {
+export class NxTabsComponent {
     @Input({ transform: booleanAttribute }) animated: boolean = false;
     @Input() animationSpeed: string;
-    @Input() set currentTabIndex(index: number) {
-        this.handleTabClick(index);
-    }
-    @Output() currentTabIndexChange = new EventEmitter<number>();
+
+    routeState = inject(ChannelPartnersRouteState);
+
+    tabItemsInitial$$ = signal<QueryList<NxBaseTabComponent>>(new QueryList<NxBaseTabComponent>());
 
     @ContentChildren(NxBaseTabComponent, { descendants: true })
-    tabItems: QueryList<NxBaseTabComponent>;
+    set tabItems(tabItems: QueryList<NxBaseTabComponent>) {
+        this.tabItemsInitial$$.set(tabItems);
+    }
 
-    currentTabIndex$$ = signal<number | null>(null);
-
-    handleTabClick = (index: number, tab?: NxBaseTabComponent, emit = true): void => {
-        const childTabs = this.tabItems.toArray();
-        const currentIndex = childTabs[this.currentTabIndex$$()] ? this.currentTabIndex$$() : 0;
-        childTabs[currentIndex].selected = false;
-        childTabs[index].selected = true;
-        this.currentTabIndex$$.set(index);
-        if (tab && emit) {
-            tab.tabClick.emit(index);
+    tabItems$$ = computed(() => {
+        let selectedTab = this.routeState.tabId();
+        if (selectedTab === DEFAULT_TAB_ID) {
+            selectedTab = '';
         }
-        this.currentTabIndexChange.emit(index);
-    };
-
-    ngAfterViewInit(): void {
-        this.tabItems.changes.pipe(startWith(this.tabItems)).subscribe(tabs => {
-            const currTabIndex = this.currentTabIndex$$();
-            const items = tabs.toArray();
-            if (currTabIndex && items[currTabIndex]) {
-                items[currTabIndex].selected = true;
-            }
-            this.initTabs();
+        const tabItems = this.tabItemsInitial$$();
+        return tabItems.map(tab => {
+            tab.selected = tab.route === selectedTab;
+            return tab;
         });
-    }
-
-    initTabs(): void {
-        const items = this.tabItems.toArray();
-        const selected = items.some(tab => tab.selected);
-        if (!selected && items.length > 0) {
-            this.handleTabClick(0, items[0], false);
-        }
-    }
+    });
 }

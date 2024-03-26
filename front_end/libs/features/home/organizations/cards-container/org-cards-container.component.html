@@ -55,7 +55,7 @@
                     class="card-content"
                     [icon]="icons.dir + 'folder2.svg'"
                     [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
-                    [routerLink]="['group', group.id]"
+                    [routerLink]="group.id | mapWith: channelPartnersRouteStore.getGroupLink$$()"
                     [relativeTo]="route.parent"
                     queryParamsHandling="merge"
                     [dropdownItems]="groupActions$$()[group.id]"

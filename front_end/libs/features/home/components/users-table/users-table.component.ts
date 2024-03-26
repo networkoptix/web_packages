@@ -13,7 +13,7 @@ import {
     inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -36,6 +36,8 @@ import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -63,12 +65,15 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxTooltipDirective,
         FormsModule,
         NxPagePlaceholderV2Component,
+        RouterModule,
+        PipesModule,
     ],
 })
 export class NxUsersTableComponent implements OnInit, OnChanges {
     UserType = UserType;
     groupsStore = inject(GroupsStore);
     permissionStore = inject(PermissionsStore);
+    routerState = inject(ChannelPartnersRouteState);
     channelPartners$$ = this.store.selectSignal(selectChannelPartners);
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -85,7 +90,6 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
 
     @Output() public onDeleteClick = new EventEmitter<UserRecord>();
     @Output() public onRowClick = new EventEmitter<UserRecord>();
-    @Output() public onExpandClick = new EventEmitter<UserRecord>();
     @Output() public onAdduser = new EventEmitter<never>();
     @Output() public selectedUsersEmitter = new EventEmitter<{ [key: string]: UserRecord }>();
 

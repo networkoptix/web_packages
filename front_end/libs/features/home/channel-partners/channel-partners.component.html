@@ -26,14 +26,11 @@
                 {{ currentPartner.effectiveState | translate | uppercase }}
             </nx-tag>
         </div>
-        <nx-tabs
-            animated
-            [currentTabIndex]="currentTabIndex$$()"
-        >
+        <nx-tabs animated>
             <nx-base-tab
                 *ngFor="let tab of tabs$$()"
                 [displayName]="tab.displayName"
-                (tabClick)="onTabClick($event)"
+                [route]="tab.route"
             >
                 {{ tab.displayName }}
             </nx-base-tab>
@@ -71,7 +68,9 @@
                         <ng-container *ngFor="let organization of filteredOrganizations$ | async">
                             <nx-card
                                 class="card-content"
-                                (click)="handleOrgClick(organization.id)"
+                                [routerLink]="
+                                    organization.id | mapWith: routerState.getOrganizationLink$$()
+                                "
                                 [icon]="icons.dir + 'organization.svg'"
                                 [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                             >

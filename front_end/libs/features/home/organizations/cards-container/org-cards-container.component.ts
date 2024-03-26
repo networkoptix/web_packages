@@ -24,6 +24,8 @@ import { NxCardComponent } from '@pages/home/components/card/card.component';
 import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystem,
@@ -55,10 +57,12 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         FormsModule,
         RouterLink,
         NxTagComponent,
+        PipesModule,
     ],
 })
 export class NxOrganizationCardContainerComponent {
     groupsStore = inject(GroupsStore);
+    channelPartnersRouteStore = inject(ChannelPartnersRouteState);
 
     LANG = staticLang;
     icons = icons;

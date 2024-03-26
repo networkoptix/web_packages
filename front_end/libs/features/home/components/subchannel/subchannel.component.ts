@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,7 +33,6 @@ export class NxSubchannelComponent implements OnInit {
     icons = icons;
 
     permissionStore = inject(PermissionsStore);
-    currentTabIndex$$ = signal(0);
     tabs: Tab[] = [
         // We may use the 'information' tab in the future
         // {
@@ -59,31 +58,9 @@ export class NxSubchannelComponent implements OnInit {
                 route: 'settings',
             });
         }
-        // Fix when sub channels are designed to work like normal partners. Should be 23.3.2
-        // We may use the 'users' tab in the future
-        // if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
-        //     this.tabs.push({
-        //         displayName: this.LANG.channelPartners.tabNames.users,
-        //         route: 'users',
-        //     });
-        // }
-        for (const [index, tab] of this.tabs.entries()) {
-            if (tab.route === this.currentTabRoute) {
-                this.currentTabIndex$$.set(index);
-                break;
-            }
-        }
     }
 
     toRoot(): void {
         this.router.navigate(['../'], { relativeTo: this.route });
-    }
-
-    onTabClick(newIndex: number): void {
-        const newTab = this.tabs[newIndex];
-        const route = newTab.route ? [newTab.route] : ['./'];
-        this.router
-            .navigate(route, { relativeTo: this.route })
-            .then(() => this.currentTabIndex$$.set(newIndex));
     }
 }

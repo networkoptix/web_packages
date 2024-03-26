@@ -2,7 +2,7 @@ import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, computed, inject, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -12,6 +12,8 @@ import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
@@ -30,6 +32,8 @@ import { selectCurrentOrganization } from '@store/channel-partners/channel-partn
         DragDropModule,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
+        RouterModule,
+        PipesModule,
     ],
 })
 export class NxGroupsSidebarLevelComponent {
@@ -39,17 +43,14 @@ export class NxGroupsSidebarLevelComponent {
     groupsStore = inject(GroupsStore);
     permissionsStore = inject(PermissionsStore);
 
+    channelPartnersRouteStore = inject(ChannelPartnersRouteState);
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     isRoot$$ = computed(() => this.groupsStore.currentGroupId$$()?.isRoot);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
     icons = icons;
-    constructor(
-        private store: Store,
-        private router: Router,
-        private route: ActivatedRoute,
-    ) {}
+    constructor(private store: Store) {}
 
     trackItem(_index: number, item: GroupItem): string {
         return item.id;
@@ -67,16 +68,5 @@ export class NxGroupsSidebarLevelComponent {
     moveToRoot(event: CdkDragDrop<undefined, DraggableItem, DraggableItem>): void {
         const dragged = event.item.data;
         this.groupsStore.moveItem(dragged).subscribe();
-    }
-
-    toGroup(groupId: string): void {
-        this.router.navigate(['group', groupId], {
-            relativeTo: this.route,
-            queryParamsHandling: 'merge',
-        });
-    }
-
-    toRoot(): void {
-        this.router.navigate(['./'], { relativeTo: this.route, queryParamsHandling: 'merge' });
     }
 }

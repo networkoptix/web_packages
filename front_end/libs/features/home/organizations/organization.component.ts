@@ -11,7 +11,7 @@ import {
     input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -49,6 +49,7 @@ import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.co
 import { NxAccessTableComponent } from '../components/users/access-table/access-table.component';
 import { Crumb } from '../home.types';
 import { GroupsStore } from '../store/groups/groups.store';
+import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
 
@@ -84,6 +85,7 @@ export class NxOrganizationsComponent implements OnInit {
     State = State;
     permissionsStore = inject(PermissionsStore);
     groupsStore = inject(GroupsStore);
+    routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
@@ -113,18 +115,6 @@ export class NxOrganizationsComponent implements OnInit {
         }
         return tabs;
     });
-    currentTabIndex$$ = computed(() => {
-        const tabs = this.tabs$$();
-        const currentTabRoute = this.currentTabRoute$$();
-        if (tabs?.length) {
-            for (const [index, tab] of tabs.entries()) {
-                if (tab.route === currentTabRoute) {
-                    return index;
-                }
-            }
-        }
-        return -1;
-    });
 
     isLoading = true;
     userEmail: string;
@@ -147,7 +137,6 @@ export class NxOrganizationsComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
         private cpService: NxChannelPartnersService,
@@ -223,22 +212,7 @@ export class NxOrganizationsComponent implements OnInit {
         }, true);
     }
 
-    onTabClick(newIndex: number): void {
-        const tabs = this.tabs$$();
-        const currentGroupId = this.currentGroupId$$();
-        const tabRoute = tabs ? tabs[newIndex].route : '';
-        const route =
-            currentGroupId && tabRoute !== 'settings'
-                ? ['group', currentGroupId, tabRoute]
-                : [tabRoute];
-        this.router.navigate(route, { relativeTo: this.route, queryParamsHandling: 'merge' });
-    }
-
     trackItem(_index: number, item: Crumb): string {
         return item.id;
-    }
-
-    toRoot(): void {
-        this.router.navigate(['home', 'channelPartners', this.currentPartnerId$$()]);
     }
 }
