@@ -16,7 +16,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { icons } from '@static-variables';
+import { excludeFooterURLs, icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({
@@ -97,12 +97,12 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     checkVisible(url: string): void {
-        this.visible$.next(
-            !(
-                url.includes('/systems') ||
-                url.includes('/health-report') ||
-                url.includes('/doc/developers/api-tool')
-            ),
-        );
+        let visible = true;
+        for (const excludedURL of excludeFooterURLs) {
+            if (url.includes(excludedURL)) {
+                visible = false;
+            }
+        }
+        this.visible$.next(visible);
     }
 }

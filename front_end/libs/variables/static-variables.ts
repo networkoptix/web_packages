@@ -108,6 +108,13 @@ export const dialogs = {
     },
 };
 
+export const excludeFooterURLs: string[] = [
+    '/systems',
+    '/doc/developers/api-tool',
+    '/health-report',
+    '/home'
+]
+
 export const healthMonitoring = {
     staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
     valueFormats: {
