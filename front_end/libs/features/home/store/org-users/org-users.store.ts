@@ -28,6 +28,7 @@ import {
     Organization,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { caseInsenstiveSearch } from '@utils/general';
 
 import { GroupsStore } from '../groups/groups.store';
 import { ChannelPartnersRouteState } from '../route-state/route-state.store';
@@ -38,6 +39,7 @@ const initialState: OrgUsersState = {
     selectedGroupId: '',
     selectedUser: '',
     groups: [],
+    searchQuery: '',
 };
 
 const ORG_USER_STATE = new InjectionToken<OrgUsersState>('OrgUserState', {
@@ -115,6 +117,13 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         userType: UserType.ORGANIZATION,
     }));
 };
+
+function getUsersByModel(records: OrgUser[] | undefined, query: string): OrgUser[] {
+    if (records) {
+        return records.filter(user => caseInsenstiveSearch(user.email, query));
+    }
+    return [];
+}
 
 export const OrgUsersStore = signalStore(
     { providedIn: 'root' },
@@ -307,6 +316,20 @@ export const OrgUsersStore = signalStore(
                     }),
                 ),
             ),
+            setSearchQuery: search => patchState(store, { searchQuery: search }),
         }),
     ),
+    withComputed(({ searchQuery: searchQuery$$, entities: entities$$ }) => ({
+        filteredRecords$$: computed(() => {
+            const records = entities$$();
+            const search = searchQuery$$();
+            if (!records) {
+                return undefined; // avoid showing "No data" msg.
+            } else if (search.length) {
+                return getUsersByModel(records, search) as UserRecord[];
+            } else {
+                return records as UserRecord[];
+            }
+        }),
+    })),
 );

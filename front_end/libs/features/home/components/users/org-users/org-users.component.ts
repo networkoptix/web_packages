@@ -1,10 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, computed, inject } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    booleanAttribute,
+    inject,
+    computed,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxSearchComponent } from '@components/search/search.component';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
@@ -25,15 +37,17 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
-    imports: [CommonModule, NxUsersTableComponent, TranslateModule],
+    imports: [CommonModule, NxUsersTableComponent, TranslateModule, NxSearchComponent, FormsModule],
 })
-export class NxOrganizationUsersComponent {
+export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
     orgUserStore = inject(OrgUsersStore);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
 
+    @Input({ transform: booleanAttribute }) inGroup: boolean;
+    searchModel: SearchFilter = { query: '' };
     inGroup$$ = computed(() => !!this.routerState.groupId());
     headers: HEADER_ITEM[] = [
         {
@@ -61,6 +75,7 @@ export class NxOrganizationUsersComponent {
         private CPService: NxChannelPartnersService,
         private store: Store,
         private translateService: TranslateService,
+        private route: ActivatedRoute,
     ) {
         this.orgUserStore.setSelectedGroup(this.routerState.groupId);
         this.orgUserStore.setGroups(this.groupsStore.currentGroups$$);
@@ -77,6 +92,18 @@ export class NxOrganizationUsersComponent {
     //         ),
     //     ).subscribe(users => this.orgUserStore.setUsers(users));
     // }
+
+    ngOnInit(): void {
+        const searchParam = this.route.snapshot.queryParamMap.get('search');
+        if (searchParam) {
+            this.searchModel.query = searchParam;
+            this.setQuery(this.searchModel);
+        }
+    }
+
+    setQuery(model: SearchFilter): void {
+        this.orgUserStore.setSearchQuery(model.query);
+    }
 
     newUserDialog(): void {
         const roles = this.orgRoles$$() || [];
