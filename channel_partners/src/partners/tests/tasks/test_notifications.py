@@ -53,11 +53,11 @@ def test_get_customization(mock_get_customization_request, request_host, httpx_m
 def test_get_general_notification_type(mock_account_status, request_host, httpx_mock):
     email = f'{uuid4()}@example.com'
     mock_account_status(email=email, active=True)
-    assert is_existing_user(host=request_host, email=email)
+    assert is_existing_user(host=request_host, email=email, request_id=str(uuid4()))
 
     httpx_mock.reset(True)
     mock_account_status(email=email, active=False)
-    assert is_existing_user(host=request_host, email=email) is False
+    assert is_existing_user(host=request_host, email=email, request_id=str(uuid4())) is False
 
 
 def test_get_user_by_email(cloud_user_factory):

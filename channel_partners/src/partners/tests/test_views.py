@@ -1859,7 +1859,7 @@ class TestCloudSystemViewSetDelete:
 class TestSystemTransferOffer:
 
     @pytest.fixture(autouse=True)
-    def setUp(self, channel_partner_factory, organization_factory, org_user_factory, arf):
+    def setUp(self, channel_partner_factory, organization_factory, org_user_factory, arf, context_vars):
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
         self.other_org = organization_factory(channel_partner=self.cp)

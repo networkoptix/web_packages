@@ -64,7 +64,7 @@ class _BaseAPI(object):
 
         """
         return f'{self.host}{self.base_path}{path}'
-    
+
     def get(self, path, **kwargs) \
             -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
         url = self.get_full_url(path)
