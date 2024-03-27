@@ -26,6 +26,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { LoadingState } from '@store/channel-partners/channel-partners.state';
+import { isUserSystem } from '@utils/nx';
 
 @Component({
     selector: 'nx-home',
@@ -115,7 +116,16 @@ export class NxHomeComponent implements OnInit {
         ];
         nodes[0].invisible = true;
 
-        if (systems.some(sys => sys.accessRole === 'owner')) {
+        const hasAccessToPartnersOrSystems = !!(
+            channelPartners.length ||
+            organizations.length ||
+            systems.length
+        );
+
+        if (
+            !hasAccessToPartnersOrSystems ||
+            systems.some(sys => sys.accessRole === 'owner' && isUserSystem(sys))
+        ) {
             redirectPath = 'personal';
             nodes.push(
                 new MenuNode(

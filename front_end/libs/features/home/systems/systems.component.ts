@@ -3,6 +3,7 @@ import { Component, computed, inject, Input, OnChanges, signal } from '@angular/
 import { Store } from '@ngrx/store';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { HomeSystemListComponent } from '@pages/home/components/systems-list/systems-list.component';
 import { Account } from '@services/account.service/account';
@@ -17,7 +18,7 @@ import { SystemsDisplayMode } from '../home.types';
     templateUrl: 'systems.component.html',
     styleUrls: ['systems.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxPreLoaderComponent, HomeSystemListComponent],
+    imports: [CommonModule, NxPreLoaderComponent, HomeSystemListComponent, NxNoSystemsComponent],
 })
 export class NxSystemsComponent implements OnChanges {
     @Input() displayMode: SystemsDisplayMode;
