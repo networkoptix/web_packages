@@ -8,16 +8,21 @@ nx-bookmarks-card {
         .bookmarks {
             &-image-wrapper {
                 background-color: var(--bookmarks-card-shadow-color-hover);
-
-                nx-ml-ellipsis .after {
-                    background: var(--bookmarks-card-title-gradient-hover);
-                }
             }
 
             &-info {
+                background-color: var(--card-hover-bg);
                 box-shadow: 0px 4px 8px var(--bookmarks-card-shadow-color-hover);
+                
+                nx-ml-ellipsis .after {
+                    background: var(--bookmarks-card-title-gradient-hover) !important;
+                }
             }
         }
+    }
+
+    nx-ml-ellipsis .after {
+        background: var(--bookmarks-card-title-gradient) !important;
     }
 
     .bookmarks {
@@ -115,10 +120,6 @@ nx-bookmarks-card {
             outline: 1px solid var(--border-color);
             background-color: var(--card-body-bg);
 
-            &:hover {
-                background-color: var(--card-hover-bg);
-            }
-
             &-timestamp {
                 font-size: 14px;
                 margin: 5px 0 10px;
@@ -148,9 +149,5 @@ nx-bookmarks-card {
                 flex-wrap: nowrap;
             }
         }
-    }
-
-    nx-ml-ellipsis .after {
-        background: var(--bookmarks-card-title-gradient);
     }
 }

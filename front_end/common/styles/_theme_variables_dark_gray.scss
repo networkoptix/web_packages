@@ -724,13 +724,13 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
-        rgba(var(--dark5--rgb), 0),
-        rgba(var(--dark5--rgb), 1)
+        rgba(var(--dark4--rgb), 0),
+        rgba(var(--dark4--rgb), 1)
     );
     --bookmarks-card-title-gradient-hover: linear-gradient(
         to right,
-        rgba(var(--dark7--rgb), 0),
-        rgba(var(--dark7--rgb), 1)
+        rgba(var(--dark_gray_8--rgb), 0),
+        rgba(var(--dark_gray_8--rgb), 1)
     );
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
