@@ -48,7 +48,7 @@ export class SandboxTableComponent {
         this.headers = [
             {
                 name: 'email',
-                value: this.LANG.channelPartners.usersTableHeaders.login,
+                value: this.LANG.channelPartners.usersTableHeaders.email,
                 sort: 'string',
             },
             {
