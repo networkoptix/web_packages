@@ -1,9 +1,10 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable, catchError, from, iif, map, switchMap } from 'rxjs';
+import { Observable, catchError, firstValueFrom, from, iif, map, switchMap } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSystemsService } from '@services/systems.service';
+import { isUserSystem } from '@utils/nx';
 
 import { generateRoute } from '../store/route-state/route-state-utils';
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';
@@ -14,9 +15,8 @@ export const FindGroupGuard: CanActivateFn = ({
     const router = inject(Router);
     const cpApi = inject(NxCloudApiService).cloudChannelPartnersApi;
     const systemInfo = inject(NxSystemsService).systems.find(({ id }) => id === systemId);
-    const isUserSystem = systemInfo && !('organization' in systemInfo);
 
-    if (isUserSystem) {
+    if (systemInfo && isUserSystem(systemInfo)) {
         return from(router.navigate(['/home', systemInfo.isMine ? 'personal' : 'shared'])).pipe(
             map(() => true),
         );
@@ -28,13 +28,19 @@ export const FindGroupGuard: CanActivateFn = ({
         () => !!lastRoute,
         Promise.resolve(lastRoute),
         cpApi.getSystem(systemId).pipe(
-            switchMap(async system =>
-                generateRoute({
+            switchMap(async system => {
+                const org = await firstValueFrom(cpApi.getOrganization(system.organization));
+                const partnerAccess = await firstValueFrom(
+                    cpApi.getSelfChannelPartnerUser(org.channelPartner),
+                ).catch(() => null);
+                const partnerId = partnerAccess ? org.channelPartner : undefined;
+                return generateRoute({
                     groupId: system.groupId || undefined,
                     organizationId: system.organization,
+                    partnerId,
                     tabId: 'systems',
-                }),
-            ),
+                });
+            }),
             catchError(async () => '/systems'),
         ),
     ).pipe(

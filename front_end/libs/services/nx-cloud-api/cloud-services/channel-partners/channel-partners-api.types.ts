@@ -156,7 +156,7 @@ export interface Organization {
     name: string;
     ownPermissions: string[];
     ownRoles: string[];
-    ownRoleIds: string[];
+    ownRolesIds: string[];
     state: State;
     systemCount: number;
     users: number[];
