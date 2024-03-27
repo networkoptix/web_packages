@@ -10,7 +10,7 @@
 } @else {
     <div class="service-changes-table-wrapper">
         <nx-service-changes-table
-            [records]="serviceChangesStore.records()"
+            [records]="formattedServiceChangeRecords$$()"
         ></nx-service-changes-table>
     </div>
 }

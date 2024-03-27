@@ -381,3 +381,15 @@ interface OrgServiceChangeEntry {
 export interface OrgServiceChangesResponse {
     results: OrgServiceChangeEntry[];
 }
+
+export interface OwnedService {
+    id: string;
+    displayName: string;
+}
+
+export interface AvailableService {
+    service: {
+        id: string;
+        displayName: string;
+    };
+}

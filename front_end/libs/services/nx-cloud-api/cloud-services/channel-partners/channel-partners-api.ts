@@ -43,6 +43,8 @@ import {
     GroupStructureItem,
     PartnerServiceChangesResponse,
     OrgServiceChangesResponse,
+    AvailableService,
+    OwnedService,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -276,6 +278,13 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email, 'remove_groups']), {
             body: groupIds,
         });
+
+    /* Service Management */
+    getChannelPartnerOwnedServices = (partnerId: string): Observable<OwnedService[]> =>
+        this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'services', 'owned']));
+
+    getOrganizationServices = (orgId: string): Observable<AvailableService[]> =>
+        this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'services']));
 
     /* Systems */
     getUserSystems = (): Observable<CloudSystem[]> => {
