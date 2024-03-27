@@ -88,6 +88,10 @@ export class NxChannelPartnersService {
     deleteBulkOrganizationUsers = this.cpApi.deleteBulkOrganizationUsers;
     deleteBulkUserGroups = this.cpApi.deleteBulkUserGroups;
 
+    /* Service Management */
+    getChannelPartnerOwnedServices = this.cpApi.getChannelPartnerOwnedServices;
+    getOrganizationServices = this.cpApi.getOrganizationServices;
+
     /* Systems */
     getUserSystems = this.cpApi.getUserSystems;
     patchSystem = this.cpApi.patchSystem;

@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import dateFormat from 'dateformat';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import {
@@ -13,7 +14,7 @@ import {
 } from '@store/channel-partners/channel-partners.selectors';
 
 import { ServiceChangesStore } from './service-changes.store';
-import { EntityType } from './service-changes.types';
+import { EntityType, FormattedServiceChangeRecord } from './service-changes.types';
 import { NxServiceChangesTableComponent } from './services-changes-table/service-changes-table.component';
 
 @Component({
@@ -42,6 +43,23 @@ export class NxServiceChangesComponent {
             organizations.find(({ id }) => id === entityId)?.name ||
             '';
         return entityName;
+    });
+
+    formattedServiceChangeRecords$$ = computed<FormattedServiceChangeRecord[]>(() => {
+        const records = this.serviceChangesStore.records();
+        const channelPartners = this.channelPartners$$();
+        const organizations = this.organizations$$();
+        const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
+
+        const cpIdToNameMap = new Map(channelPartners.map(({ id, name }) => [id, name]));
+        const orgIdToNameMap = new Map(organizations.map(({ id, name }) => [id, name]));
+
+        return records.map(({ serviceId, amount, addedToId, date: timestamp }) => ({
+            serviceName: serviceIdToNameMap.get(serviceId) || '',
+            amount,
+            addedToName: cpIdToNameMap.get(addedToId) || orgIdToNameMap.get(addedToId) || '',
+            date: dateFormat(timestamp, 'd mmm yyyy h:MMtt'),
+        }));
     });
 
     loadServiceChangesEffect = effect(() => {
