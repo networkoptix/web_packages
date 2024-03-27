@@ -1,0 +1,191 @@
+@if (
+    !preview$$() && !assertResourceOfType.camera(node$$()) && !assertResourceOfType.layout(node$$())
+) {
+    <ng-container *ngTemplateOutlet="expandStateIcon" />
+}
+
+@if (preview$$() || assertResourceOfType.camera(node$$())) {
+    <ng-container *ngTemplateOutlet="recordingIcon" />
+}
+
+@if (node$$().type === RESOURCE_TYPE.LAYOUT) {
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            opacity: unsavedLayoutString$$() || isNodeLocked$$() ? '1' : '0'
+        }"
+        [nxTooltip]="isNodeLocked$$() ? 'Layout locked' : (unsavedLayoutString$$() | translate)"
+        svgClass="recording-icon  {{ isNodeLocked$$() ? 'locked-icon' : '' }}"
+        [src]="icons.dirLayouts + (isNodeLocked$$() ? 'locked.svg' : 'unsaved.svg')"
+    >
+    </svg-icon>
+}
+<ng-container *ngTemplateOutlet="nodeTypeIcon" />
+@if (menuItems$$()) {
+    @if (node$$().type === RESOURCE_TYPE.LAYOUTS) {
+        <ng-container [ngTemplateOutlet]="simpleNodeText" />
+        @for (menuItem of planeMenuItems$$(); track menuItem.id) {
+            <button
+                class="action-button"
+                [nxTooltip]="menuItem?.tooltip"
+                (click)="menuItem.action($event, node$$())"
+                [tourAnchor]="'cloud-layouts_add_layout'"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '20'
+                    }"
+                    [src]="icons.dirLayouts + 'add.svg'"
+                >
+                </svg-icon>
+            </button>
+        }
+    } @else {
+        <div
+            class="node-editable"
+            [cdkContextMenuTriggerFor]="nodeActionMenu"
+        >
+            @if (layoutStateService.editedLayout$$()?.id === node$$().details?.id) {
+                <nx-text-editable
+                    class="node-name"
+                    [(ngModel)]="node$$().name"
+                    [allowUserFocus]="false"
+                    [overrideSelectionClass]="
+                        layoutStateService.editedLayout$$()?.isNew
+                            ? 'text-value-as-placeholder'
+                            : 'text-with-cursor'
+                    "
+                    [selectAllOnFocus]="true"
+                    [overrideSelectionClassOnce]="true"
+                    [editEnabled]="true"
+                    [required]="true"
+                    (onFocusChanged)="!$event && handleRename()"
+                    (onEditModeCancelled)="layoutStateService.editedLayout$$.set(null)"
+                    cdkOverlayOrigin
+                    #newLayoutOverlay="cdkOverlayOrigin"
+                >
+                </nx-text-editable>
+
+                <ng-template
+                    cdkConnectedOverlay
+                    [cdkConnectedOverlayOrigin]="newLayoutOverlay"
+                    [cdkConnectedOverlayOpen]="!!layoutStateService.editedLayout$$()?.isNew"
+                    [cdkConnectedOverlayPanelClass]="'new-layout-tip'"
+                    [cdkConnectedOverlayPositions]="[
+                        {
+                            originX: 'end',
+                            originY: 'center',
+                            overlayX: 'start',
+                            overlayY: 'top'
+                        }
+                    ]"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '80',
+                            'height.px': '80'
+                        }"
+                        svgClass="arrow-tip"
+                        [src]="icons.dirLayouts + 'arrow-tip.svg'"
+                    />
+                    <p>
+                        <span translate> Enter a name for the new layout and press </span
+                        ><span
+                            class="key"
+                            translate
+                            >Enter</span
+                        >
+                    </p>
+                </ng-template>
+            } @else {
+                <nx-search-highlight
+                    class="ellipsis node-name"
+                    [text]="node$$().name"
+                    [search]="query$$()"
+                ></nx-search-highlight>
+            }
+        </div>
+        <button
+            [cdkMenuTriggerFor]="nodeActionMenu"
+            (click)="$event.stopPropagation()"
+            [tourAnchor]="''"
+            class="action-button"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{
+                    'width.px': '20',
+                    'height.px': '20'
+                }"
+                [src]="icons.dirLayouts + 'menu.svg'"
+            >
+            </svg-icon>
+        </button>
+        <ng-template #nodeActionMenu>
+            <nx-context-menu
+                [context]="node$$()"
+                [menuItems]="treeMenuItems$$()"
+            />
+        </ng-template>
+    }
+} @else {
+    <ng-container [ngTemplateOutlet]="simpleNodeText" />
+}
+
+<ng-template #recordingIcon>
+    @if (
+        ['recording', 'scheduled', 'archive'].includes(cameraNodeStatus$$()) ? '1' : '0';
+        as opacity
+    ) {
+        <svg-icon
+            nx-add-svg-src
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20',
+                opacity: opacity,
+                display: opacity === '0' && preview$$() && 'none'
+            }"
+            svgClass="recording-icon"
+            [src]="icons.dirLayouts + node$$().type + '_' + cameraNodeStatus$$() + '.svg'"
+        >
+        </svg-icon>
+    }
+</ng-template>
+<ng-template #expandStateIcon>
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            'padding-bottom.px': '4',
+            fill: 'none !important',
+            opacity: expandable$$() ? '1' : '0'
+        }"
+        svgClass="dark-17-svg"
+        [src]="icons.dirLayouts + (expanded$$() ? 'arrow_close.svg' : 'arrow_open.svg')"
+    >
+    </svg-icon>
+</ng-template>
+<ng-template #nodeTypeIcon>
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20'
+        }"
+        [src]="iconSrc$$()"
+    />
+</ng-template>
+<ng-template #simpleNodeText>
+    <!-- node.name is also used for Layouts, Cameras, etc. root nodes. Needs to be translated -->
+    <span
+        class="ellipsis node-name"
+        #nodeName
+        >{{ node$$().name }}</span
+    ></ng-template
+>

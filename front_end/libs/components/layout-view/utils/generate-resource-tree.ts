@@ -3,14 +3,15 @@ import {
     ResourceType,
     SharableResourceLeafNode,
 } from '@components/layout-grid/layout-grid.types';
+import { generateCamerasForTree } from '@components/layout-view/utils/generate-cameras-for-tree';
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CurrentUser } from '@services/system-user.types';
 import { NxSystemInfo } from '@services/systems.service.types';
 import {
-    SystemResourceTypeEnums,
     SystemResourcesTypeMap,
+    SystemResourceTypeEnums,
 } from '@store/system-resources/system-resources.types';
 import { alphaNumericSort, dirtyId } from '@utils/general';
 
@@ -123,10 +124,11 @@ export const generateResourceTree = ([
                 }) as SharableResourceLeafNode<Layout>,
         )
         .sort((a, b) => {
+            // newly created layout is displayed first in the tree
             if (editedLayout?.isNew && editedLayout.id === a.details.id) {
                 return -1;
             }
-
+            // shared layouts are at the top sorted alphabetically
             return a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1;
         });
 
@@ -146,7 +148,7 @@ export const generateResourceTree = ([
 
     const serversForTree = Object.values(parsedServers).sort(byName);
 
-    const camerasForTree = Object.values(parsedCameras)
+    const camerasForTree = generateCamerasForTree(parsedCameras)
         .sort(byName)
         .filter(
             ({ type }) => nxConfig.featureFlags.layoutsIoDevices || type !== ResourceType.IO_DEVICE,

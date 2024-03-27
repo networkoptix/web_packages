@@ -1,0 +1,219 @@
+@use 'typography';
+@use 'theme_variables_common' as *;
+@use 'bootstrap_utils' as bootstrap;
+@use 'mixins';
+
+:host {
+    @include mixins.ellipsis;
+    @include typography.regular14nocolor;
+    display: flex;
+
+    &:not(:hover) > .action-button {
+        display: none !important;
+    }
+    &:hover:has(.editable-edit) > .action-button {
+        display: none !important;
+    }
+
+    .action-button {
+        margin: 0;
+    }
+
+    &:hover:not(:has(.editable-edit)) {
+        background: var(--left-menu-l1-bg-hover);
+        .node-editable {
+            max-width: calc(100% - 60px);
+        }
+    }
+
+    &.selected {
+        .node-name {
+            color: var(--brand-core);
+        }
+
+        svg:not(.recording-icon) {
+            .st0 {
+                fill: var(--brand-core);
+                stroke: var(--brand-core);
+            }
+        }
+    }
+
+    &.offline:not(.selected) {
+        div,
+        svg-icon {
+            opacity: 0.5;
+        }
+        button svg-icon {
+            opacity: 1;
+        }
+    }
+}
+
+@mixin fake-cursor {
+    @keyframes blink {
+        0%,
+        49.9%,
+        100% {
+            opacity: 0;
+        }
+        50%,
+        99.9% {
+            opacity: 1;
+        }
+    }
+
+    content: '';
+    line-height: 16px;
+    font-size: 20px;
+    border-right: 1px solid var(--body-text-color);
+    animation: blink 1s infinite;
+}
+
+.root-node {
+    height: 24px;
+    padding: 2px 0;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:not(:hover) {
+        button {
+            display: none !important;
+        }
+    }
+
+    .action-button {
+        .st0 {
+            stroke: var(--btn-text-hover-color);
+        }
+        path {
+            fill: var(--btn-text-hover-color);
+            stroke: var(--btn-text-hover-color);
+        }
+        &:hover {
+            .st0 {
+                stroke: var(--btn-text-color);
+            }
+            path {
+                fill: var(--btn-text-color);
+                stroke: var(--btn-text-color);
+            }
+        }
+    }
+}
+
+.text-value-as-placeholder {
+    --selection-text-color-override: var(--tree-editable-selection-override);
+    --selection-background-color-override: transparent;
+    &:before {
+        @include fake-cursor;
+    }
+}
+
+.text-with-cursor {
+    // there is no cursor when text is selected. let's fix it )
+    &:after {
+        @include fake-cursor;
+    }
+}
+
+.action-button {
+    background: transparent;
+    height: 20px !important;
+    width: 20px !important;
+    padding: 0 !important;
+
+    span + & {
+        margin-left: auto !important;
+    }
+
+    & .st0 {
+        stroke: var(--body-text-color);
+        fill: var(--body-text-color);
+    }
+    & path {
+        fill: var(--body-text-color);
+        stroke: var(--body-text-color);
+    }
+
+    &:active {
+        background: var(--left-menu-l3-selected-bg);
+
+        & .st0 {
+            stroke: var(--left-menu-l3-selected-color);
+            fill: var(--left-menu-l3-selected-color);
+        }
+        & path {
+            fill: var(--left-menu-l3-selected-color);
+            stroke: var(--left-menu-l3-selected-color);
+        }
+    }
+}
+
+.dark-17-svg {
+    .st0 {
+        fill: var(--svg-toggle-arrow-color);
+        stroke: var(--svg-toggle-arrow-color);
+    }
+}
+
+.node-name {
+    margin: 0 0 0 4px;
+    flex-grow: 1;
+}
+
+.node-editable {
+    flex-grow: 1;
+    max-width: calc(100% - 48px);
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    .editable-edit {
+        padding-left: 0;
+        border: 0;
+        background: transparent;
+    }
+}
+
+.st0 {
+    stroke: var(--body-text-color);
+    fill: var(--body-text-color);
+}
+
+.st1 {
+    fill: var(--svg-path-accent-color);
+}
+
+.no-children {
+    padding-left: 36px;
+    display: block;
+    color: var(--left-menu-disabled-item-color);
+    cursor: not-allowed;
+
+    &:hover {
+        background: var(--left-menu-l1-bg-hover);
+    }
+}
+
+::ng-deep .new-layout-tip {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    margin: -5px 0 0 60px;
+    p {
+        margin: 20px 0 0 80px;
+        line-height: 16px;
+        font-size: 14px;
+        color: var(--grid-new-layout-text);
+        .key {
+            color: var(--grid-new-layout-text-highlight);
+        }
+    }
+}
+
+.locked-icon {
+    path {
+        fill: var(--tree-locked-icon);
+    }
+}

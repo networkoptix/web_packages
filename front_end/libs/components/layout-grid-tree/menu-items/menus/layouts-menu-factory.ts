@@ -1,4 +1,3 @@
-import { untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 
@@ -37,7 +36,6 @@ export const layoutsMenuFactory = (
                               map(dataSource => findNode(dataSource, newLayout)),
                               filter(Boolean),
                               take(1),
-                              untilDestroyed(this),
                           )
                           .subscribe(node => {
                               const layoutsNode = getLayoutsNode();

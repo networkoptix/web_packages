@@ -49,6 +49,7 @@ import {
     ServerStats,
     ServerStatsObservable,
 } from '@components/layout-grid/layout-grid.types';
+import { NxLayoutGridTreeNode } from '@components/layout-grid-tree-node/layout-grid-tree-node.component';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -113,6 +114,7 @@ import { queryChangeSideEffects } from './utils/query-change-side-effects';
         CdkDragPreview,
         CdkConnectedOverlay,
         CdkOverlayOrigin,
+        NxLayoutGridTreeNode,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './layout-grid-tree.component.html',
@@ -378,20 +380,6 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         });
     };
 
-    handleRename = (node: ResourceNode): void => {
-        this.layoutStateService.editedLayout$$.set(null);
-        const layout = node.details as Layout;
-
-        if (node.name === layout.name) {
-            return;
-        }
-
-        this.layoutStateService.updateLayout({
-            ...layout,
-            name: node.name,
-        });
-    };
-
     nodeId = (_: number, node: ResourceNode): string => node.details?.id || node.type;
 
     hasChild = (_: number, node: ResourceNode): boolean => assertResourceParentNode(node);
@@ -424,4 +412,20 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         ),
         untilDestroyed(this),
     );
+
+    selectTooltip = ({
+        node,
+        tooltips: { camera, server },
+    }: {
+        node: ResourceNode;
+        tooltips: {
+            camera: string | TemplateRef<string>;
+            server: string | TemplateRef<string>;
+        };
+    }): string | TemplateRef<string> =>
+        node.type === ResourceType.CAMERA
+            ? camera
+            : node.type === ResourceType.SERVER && nxConfig.featureFlags.layoutsDemo
+              ? server
+              : '';
 }
