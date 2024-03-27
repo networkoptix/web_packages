@@ -62,6 +62,13 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         ),
     );
 
+    backIconLink$$ = toSignal(
+        this.headerService.activeSystem$.pipe(
+            filter(Boolean),
+            map(system => `/home/redirect-to-group/${system.systemId}`),
+        ),
+    );
+
     constructor(
         public headerService: NxHeaderService,
         private store: Store,

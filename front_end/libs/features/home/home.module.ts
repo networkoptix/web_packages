@@ -5,14 +5,22 @@ import { StoreModule } from '@ngrx/store';
 
 import { accountReducer } from '@common/store/account';
 import { AuthGuard } from '@guards/authGuard';
+import { Nx404Component } from '@pages/404/404.component';
 import { SystemsDisplayMode } from '@pages/home/home.types';
 
 import { NxHomeComponent } from './home.component';
+import { HistoryGuard } from './resolvers/cp-history-guard';
+import { FindGroupGuard } from './resolvers/find-group-guard';
 import { OrgResolver } from './resolvers/org-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
 import { withTabReporterResolver } from './resolvers/tab-id-reporter-resolver';
 
 const homeRoutes: Routes = withTabReporterResolver([
+    {
+        path: 'redirect-to-group/:systemId',
+        canActivate: [FindGroupGuard],
+        component: Nx404Component,
+    },
     {
         path: '',
         resolve: {
@@ -21,7 +29,7 @@ const homeRoutes: Routes = withTabReporterResolver([
         },
         runGuardsAndResolvers: 'always',
         component: NxHomeComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, HistoryGuard],
         children: [
             {
                 path: '',

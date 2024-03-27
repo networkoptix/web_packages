@@ -70,7 +70,8 @@ export const ChannelPartnersRouteState = signalStore(
                         patchState(
                             store,
                             stateFromParams,
-                            Object.values(stateFromParams).some(Boolean)
+                            Object.values(stateFromParams).some(Boolean) ||
+                                ['personal', 'shared'].includes(tabId)
                                 ? addEntity(
                                       {
                                           ...nextState,
@@ -166,6 +167,10 @@ export const ChannelPartnersRouteState = signalStore(
             return (organizationId: string) => generateRoute({ partnerId, organizationId });
         });
 
+        const lastRouteFromHistory$$ = computed(
+            () => store.historyEntities().map(generateRoute).reverse()[0],
+        );
+
         return {
             state$$,
             getGroupLink$$,
@@ -175,6 +180,7 @@ export const ChannelPartnersRouteState = signalStore(
             getUserAccessLink$$,
             partnersRoot$$,
             getOrganizationLink$$,
+            lastRouteFromHistory$$,
         };
     }),
 );
