@@ -30,6 +30,7 @@
                 <div style="grid-area: userId">
                     <nx-checkbox
                         componentId="checkAll"
+                        [checked]="selectedAll"
                         (onClick)="selectAll()"
                     >
                     </nx-checkbox>
@@ -59,6 +60,7 @@
                     <nx-checkbox
                         componentId="checkBox{{ row[idPropName] }}"
                         (onClick)="selectRecord(row)"
+                        [checked]="selectedUsersMap$$().has(row.userId)"
                         [disabled]="!canManageUsers$$() || (inGroup && row.isOrgUser)"
                     >
                     </nx-checkbox>
