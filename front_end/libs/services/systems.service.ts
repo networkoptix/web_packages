@@ -84,7 +84,9 @@ export class NxSystemsService {
     directAccessSystems$ = combineLatest([this.organizations$, this.systemsSubject]).pipe(
         map(([organizations, systems]) => {
             const orgIds: Set<string> = new Set(organizations.map(({ id }) => id));
-            return systems.filter(system => isUserSystem(system) || !orgIds.has(system.id));
+            return systems.filter(
+                system => isUserSystem(system) || !orgIds.has(system.organizationId),
+            );
         }),
         startWith([]),
         shareReplay({ bufferSize: 1, refCount: false }),
