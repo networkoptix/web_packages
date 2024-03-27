@@ -744,13 +744,13 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
-        rgba(var(--dark5--rgb), 0),
-        rgba(var(--dark5--rgb), 1)
+        rgba(var(--dark4--rgb), 0),
+        rgba(var(--dark4--rgb), 1)
     );
     --bookmarks-card-title-gradient-hover: linear-gradient(
         to right,
-        rgba(var(--dark7--rgb), 0),
-        rgba(var(--dark7--rgb), 1)
+        rgba(var(--dark8--rgb), 0),
+        rgba(var(--dark8--rgb), 1)
     );
     --bookmarks-card-video-bg: var(--dark6);
     --bookmarks-sidebar-input-border-color: var(--dark11);
