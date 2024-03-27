@@ -10,11 +10,13 @@ import { ServiceChangeRecord } from './service-changes.types';
 interface ServiceChangesState {
     isLoading: boolean;
     records: ServiceChangeRecord[];
+    serviceIdToNameMap: Map<string, string>;
 }
 
 const initialState: ServiceChangesState = {
     isLoading: true,
     records: [],
+    serviceIdToNameMap: new Map(),
 };
 
 export const ServiceChangesStore = signalStore(
@@ -27,20 +29,31 @@ export const ServiceChangesStore = signalStore(
                 endTs: string,
             ): Promise<void> {
                 patchState(store, { isLoading: true });
-                const serviceChangesResponse = await firstValueFrom(
+                const serviceChangeRecordsPromise = firstValueFrom(
                     CPService.getPartnerServiceChanges(entityId, startTs, endTs),
                 );
-                const serviceChangeRecords = serviceChangesResponse.results.map(
+                const servicesPromise = firstValueFrom(
+                    CPService.getChannelPartnerOwnedServices(entityId),
+                );
+                const [serviceChangeRecordsResponse, servicesResponse] = await Promise.all([
+                    serviceChangeRecordsPromise,
+                    servicesPromise,
+                ]);
+                const serviceIdToNameMap = new Map(
+                    servicesResponse.map(({ id, displayName }) => [id, displayName]),
+                );
+                const serviceChangeRecords = serviceChangeRecordsResponse.results.map(
                     ({ serviceId, changeQuantity, organizationId, channelPartnerId, date }) => ({
-                        serviceName: serviceId,
+                        serviceId,
                         amount: changeQuantity,
-                        addedTo: organizationId || channelPartnerId,
+                        addedToId: organizationId || channelPartnerId,
                         date,
                     }),
                 );
                 patchState(store, {
                     isLoading: false,
                     records: serviceChangeRecords,
+                    serviceIdToNameMap,
                 });
             },
             async loadOrgServiceChanges(
@@ -49,20 +62,29 @@ export const ServiceChangesStore = signalStore(
                 endTs: string,
             ): Promise<void> {
                 patchState(store, { isLoading: true });
-                const serviceChangesResponse = await firstValueFrom(
+                const serviceChangeRecordsPromise = firstValueFrom(
                     CPService.getOrganizationServiceChanges(entityId, startTs, endTs),
                 );
-                const serviceChangeRecords = serviceChangesResponse.results.map(
+                const servicesPromise = firstValueFrom(CPService.getOrganizationServices(entityId));
+                const [serviceChangeRecordsResponse, servicesResponse] = await Promise.all([
+                    serviceChangeRecordsPromise,
+                    servicesPromise,
+                ]);
+                const serviceIdToNameMap = new Map(
+                    servicesResponse.map(({ service }) => [service.id, service.displayName]),
+                );
+                const serviceChangeRecords = serviceChangeRecordsResponse.results.map(
                     ({ changeQuantity, service, date }) => ({
-                        serviceName: service.displayName,
+                        serviceId: service.id,
                         amount: changeQuantity,
-                        addedTo: service.id,
+                        addedToId: entityId,
                         date,
                     }),
                 );
                 patchState(store, {
                     isLoading: false,
                     records: serviceChangeRecords,
+                    serviceIdToNameMap,
                 });
             },
         }),

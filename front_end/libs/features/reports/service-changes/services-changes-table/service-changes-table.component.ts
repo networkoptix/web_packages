@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxBaseTableComponent } from '@components/table/table.component';
 
-import type { ServiceChangeRecord } from '../service-changes.types';
+import type { FormattedServiceChangeRecord } from '../service-changes.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -22,9 +22,9 @@ export class NxServiceChangesTableComponent {
     headers: HEADER_ITEM[] = [
         { value: 'Service Name', name: 'serviceName' },
         { value: 'Amount', name: 'amount' },
-        { value: 'Added To', name: 'addedTo' },
+        { value: 'Added To', name: 'addedToName' },
         { value: 'Date', name: 'date' },
     ];
     selectedRecordId = '';
-    @Input() records: ServiceChangeRecord[];
+    records = input.required<FormattedServiceChangeRecord[]>();
 }

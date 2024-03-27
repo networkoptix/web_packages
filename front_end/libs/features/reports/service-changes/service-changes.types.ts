@@ -4,8 +4,15 @@ export enum EntityType {
 }
 
 export interface ServiceChangeRecord {
+    serviceId: string;
+    amount: number;
+    addedToId: string;
+    date: string;
+}
+
+export interface FormattedServiceChangeRecord {
     serviceName: string;
     amount: number;
-    addedTo: string;
+    addedToName: string;
     date: string;
 }
