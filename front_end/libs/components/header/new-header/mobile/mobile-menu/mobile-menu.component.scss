@@ -34,8 +34,10 @@
                 text-transform: uppercase;
                 text-decoration: none;
 
-                &:hover {
-                    cursor: pointer;
+                &.clickable {
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
             }
         }
