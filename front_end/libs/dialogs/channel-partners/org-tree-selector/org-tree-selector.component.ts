@@ -133,7 +133,14 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         return null;
     }
 
+    initialHighlightSet = false;
     writeValue(value: string): void {
+        if (value !== null && !this.initialHighlightSet) {
+            if (value !== this.organization.id) {
+                this.highlightIndex = this.flatGroups.findIndex(g => g.id === value);
+            }
+            this.initialHighlightSet = true;
+        }
         this.selected = value;
         this.onChange(value);
         this.onTouched();
@@ -158,10 +165,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
             this.parseGroup(group, 0, null);
         });
         this.folderSearchResults = this.flatGroups;
-
-        if (this.selected !== this.organization.id) {
-            this.highlightIndex = this.flatGroups.findIndex(g => g.id === this.selected);
-        }
 
         // Opens all folders for easier testing
         // this.folderSearchResults.forEach(g => {

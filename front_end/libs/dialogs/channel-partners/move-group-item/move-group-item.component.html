@@ -1,0 +1,49 @@
+<form #moveGroupItemForm="ngForm">
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Move to
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <nx-org-tree-selector
+            name="targetFolder"
+            #targetFolder="ngModel"
+            [model]="targetFolder"
+            [statuses]="orgTreeStatuses"
+            [organization]="organization"
+            [groups]="groups"
+            [ngModel]="selectedFolder()"
+            (ngModelChange)="selectedFolder.set($event)"
+        ></nx-org-tree-selector>
+    </div>
+    <div class="modal-footer">
+        <nx-async-action-button
+            [action]="moveGroupItemAction"
+            [busy]="busy$$()"
+            (busyChange)="busy$$.set($event)"
+        >
+            {{ 'Confirm' | translate }}
+        </nx-async-action-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy$$()"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
+    </div>
+</form>

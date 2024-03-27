@@ -1001,7 +1001,9 @@
             "directAccess": "User has access as { role }. Permissions for the selected folder will be overwritten",
             "parentAccess": "User already has accesss to a parent folder",
             "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }",
-            "selfAdd": "You cannot add yourself"
+            "selfAdd": "You cannot add yourself",
+            "systemAlreadyInFolder": "System is already in that folder",
+            "cannotMoveIntoSelf": "You cannot move a folder into itself"
         }
     },
     "downloads": {

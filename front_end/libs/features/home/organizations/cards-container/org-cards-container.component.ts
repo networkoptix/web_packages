@@ -184,13 +184,13 @@ export class NxOrganizationCardContainerComponent {
                     id: group.id,
                     action: () => {
                         this.dialogsService
-                            .moveOrgItem({
+                            .moveGroupItem({
                                 item: group,
                                 organization: this.currentOrg$$(),
                                 groups: this.groupsStore.groupsEntities(),
                             })
                             .then(newGroup => {
-                                if (newGroup && 'parentId' in newGroup) {
+                                if (newGroup) {
                                     this.groupsStore.moveItemWithUndo(group, {
                                         id: newGroup.parentId,
                                     });
@@ -297,18 +297,17 @@ export class NxOrganizationCardContainerComponent {
                     id: system.systemId,
                     action: () => {
                         this.dialogsService
-                            .moveOrgItem({
+                            .moveSystemItem({
                                 item: system,
                                 organization: this.currentOrg$$(),
                                 groups: this.groupsStore.groupsEntities(),
                             })
                             .then(newSystem => {
-                                this.groupsStore.moveItemWithUndo(system, {
-                                    id:
-                                        'parentId' in newSystem
-                                            ? newSystem.parentId
-                                            : newSystem.groupId,
-                                });
+                                if (newSystem) {
+                                    this.groupsStore.moveItemWithUndo(system, {
+                                        id: newSystem.groupId,
+                                    });
+                                }
                             });
                     },
                 });

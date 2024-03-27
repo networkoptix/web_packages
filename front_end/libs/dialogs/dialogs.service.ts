@@ -360,9 +360,19 @@ export class NxDialogsService {
         },
     );
 
-    moveOrgItem = this.dialogV2Factory<Dt.MoveOrgItem>(
+    moveGroupItem = this.dialogV2Factory<Dt.MoveGroupItem>(
         () =>
-            import('./move-org-item/move-org-item.component').then(m => m.MoveOrgItemModalContent),
+            import('./channel-partners/move-group-item/move-group-item.component').then(
+                m => m.MoveGroupItemModalContent,
+            ),
+        { width: '360px' },
+    );
+
+    moveSystemItem = this.dialogV2Factory<Dt.MoveSystemItem>(
+        () =>
+            import('./channel-partners/move-system-item/move-system-item.component').then(
+                m => m.MoveSystemItemModalContent,
+            ),
         { width: '360px' },
     );
 
