@@ -46,6 +46,7 @@ import {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxOrgSystemInfo } from '@services/systems.service.types';
 
 import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
 import type {
@@ -656,14 +657,16 @@ export const GroupsStore = signalStore(
                     const { systemId, groupId, effectiveState } = system;
                     // API sometimes forgets the system name on CloudSystem, patch for now
                     // https://networkoptix.atlassian.net/browse/CLOUD-13056?focusedCommentId=194015
-                    const { system2faEnabled, stateOfHealth, name } = systemInfo;
+                    const { system2faEnabled, stateOfHealth, name, organizationId } =
+                        systemInfo as NxOrgSystemInfo;
                     systemItems.push({
-                        effectiveState,
-                        groupId,
                         systemId,
+                        organizationId,
+                        groupId,
                         name,
                         system2faEnabled,
                         stateOfHealth,
+                        effectiveState,
                     });
                 }
                 return systemItems

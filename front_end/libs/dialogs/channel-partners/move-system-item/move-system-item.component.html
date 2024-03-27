@@ -1,4 +1,4 @@
-<form #moveOrgItemForm="ngForm">
+<form #moveSystemItemForm="ngForm">
     <div class="modal-header">
         <h1
             class="modal-title"
@@ -21,22 +21,29 @@
             name="targetFolder"
             #targetFolder="ngModel"
             [model]="targetFolder"
+            [statuses]="orgTreeStatuses"
             [organization]="organization"
             [groups]="groups"
-            [ngModel]="selectedFolder$$()"
-            (ngModelChange)="selectedFolder$$.set($event)"
+            [ngModel]="selectedFolder()"
+            (ngModelChange)="selectedFolder.set($event)"
         ></nx-org-tree-selector>
     </div>
     <div class="modal-footer">
-        <nx-process-button
-            [process]="moveOrgItemProcess"
-            [buttonText]="'Confirm' | translate"
-            [form]="moveOrgItemForm"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="moveOrgItemProcess"
-            [cancelFn]="unlock"
-            [discardFn]="close"
-        ></nx-cancel-button>
+        <nx-async-action-button
+            [action]="moveSystemItemAction"
+            [busy]="busy$$()"
+            (busyChange)="busy$$.set($event)"
+        >
+            {{ 'Confirm' | translate }}
+        </nx-async-action-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy$$()"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
     </div>
 </form>
