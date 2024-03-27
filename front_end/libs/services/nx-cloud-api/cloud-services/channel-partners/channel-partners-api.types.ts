@@ -294,6 +294,7 @@ export interface GroupItem extends Omit<GroupStructureItem, 'roles' | 'children'
 }
 export interface SystemItem {
     systemId: string;
+    organizationId: string;
     groupId: string | null;
     name: string;
     system2faEnabled: boolean;

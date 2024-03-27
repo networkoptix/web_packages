@@ -179,13 +179,22 @@ export type CreateSystemGroup = DialogType<
 
 export type UpdateSystemGroup = DialogType<string, Group>;
 
-export type MoveOrgItem = DialogType<
+export type MoveGroupItem = DialogType<
     {
-        item: GroupItem | SystemItem;
+        item: GroupItem;
         organization: Organization;
         groups: GroupItem[];
     },
-    Group | CloudSystem
+    Group
+>;
+
+export type MoveSystemItem = DialogType<
+    {
+        item: SystemItem;
+        organization: Organization;
+        groups: GroupItem[];
+    },
+    CloudSystem
 >;
 
 export type AddOrgUserV2 = DialogType<
