@@ -52,7 +52,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     headers: HEADER_ITEM[] = [
         {
             name: 'email',
-            value: this.LANG.channelPartners.usersTableHeaders.login,
+            value: this.LANG.channelPartners.usersTableHeaders.email,
             sort: 'string',
         },
         {

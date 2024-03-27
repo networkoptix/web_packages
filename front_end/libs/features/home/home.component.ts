@@ -147,12 +147,13 @@ export class NxHomeComponent implements OnInit {
         }
         homeNode.nodes = nodes;
         if (redirect && redirectPath && this.isPageLoading) {
-            this.router.navigateByUrl(`home/${redirectPath}`);
+            this.router.navigateByUrl(`home/${redirectPath}`).then(() => {
+                this.isNoSystemsOrgOrChP = false;
+                this.isPageLoading = false;
+            });
+        } else {
+            this.isNoSystemsOrgOrChP = !redirectPath;
+            this.isPageLoading = this.router.url === '/home';
         }
-
-        if (!redirectPath) {
-            this.isNoSystemsOrgOrChP = true;
-        }
-        this.isPageLoading = false;
     }
 }

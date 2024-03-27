@@ -1186,10 +1186,10 @@
                 "displayName": "Home",
                 "nodes": {
                     "personal": {
-                        "displayName": "My System"
+                        "displayName": "My Systems"
                     },
                     "shared": {
-                        "displayName": "Shared"
+                        "displayName": "Shared with Me"
                     },
                     "organization": {
                         "displayName": "Organization"
@@ -1267,7 +1267,7 @@
             "users": "Users"
         },
         "usersTableHeaders": {
-            "login": "Login",
+            "email": "Email",
             "fullName": "Full Name",
             "accessLevel": "Has access to",
             "groups": "Permission Group"
