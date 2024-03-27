@@ -55,8 +55,6 @@
     <a
         class="node-name"
         *ngIf="!node.new_window; else externalNodeName; context: { node: node }"
-        (click)="nodeClick(node, $event)"
-        [routerLink]="node.url"
         >{{ node.display_name | translate }}</a
     >
 </ng-template>
@@ -66,7 +64,7 @@
     let-node="node"
 >
     <a
-        class="node-name"
+        class="node-name clickable"
         [href]="node.url"
         target="_blank"
         >{{ node.display_name | translate }}</a
