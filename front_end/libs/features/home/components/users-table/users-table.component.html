@@ -285,16 +285,18 @@
     <ng-template #noUsers>
         @if (searching) {
             <div class="no-users-placeholder">
-                <svg-icon
-                    nx-add-svg-src
-                    [svgStyle]="{
-                        'width.px': '64',
-                        'height.px': '64'
-                    }"
-                    [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
-                ></svg-icon>
-                <h3 translate>No Results</h3>
-                <p translate>Try changing the search string</p>
+                <div class="placeholder-container">
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '64',
+                            'height.px': '64'
+                        }"
+                        [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                    ></svg-icon>
+                    <h3 translate>No Results</h3>
+                    <p translate>Try changing the search string</p>
+                </div>
             </div>
         } @else {
             <nx-page-placeholder-v2

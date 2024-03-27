@@ -104,30 +104,34 @@
                 <ng-template #noOrgs>
                     <ng-container *ngIf="search.value; else addOrg">
                         <div class="no-orgs-placeholder">
-                            <svg-icon
-                                nx-add-svg-src
-                                [svgStyle]="{
-                                    'width.px': '64',
-                                    'height.px': '64'
-                                }"
-                                [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
-                            ></svg-icon>
-                            <h3 translate>No Results</h3>
-                            <p translate>Try changing the search string</p>
+                            <div class="placeholder-container">
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [svgStyle]="{
+                                        'width.px': '64',
+                                        'height.px': '64'
+                                    }"
+                                    [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                                ></svg-icon>
+                                <h3 translate>No Results</h3>
+                                <p translate>Try changing the search string</p>
+                            </div>
                         </div>
                     </ng-container>
                     <ng-template #addOrg>
                         <div class="no-orgs-placeholder">
-                            <svg-icon
-                                nx-add-svg-src
-                                [svgStyle]="{
-                                    'width.px': '64',
-                                    'height.px': '64'
-                                }"
-                                [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
-                            ></svg-icon>
-                            <h3 translate>No Organizations</h3>
-                            <p translate>You have not yet created any organizations</p>
+                            <div class="placeholder-container">
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [svgStyle]="{
+                                        'width.px': '64',
+                                        'height.px': '64'
+                                    }"
+                                    [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
+                                ></svg-icon>
+                                <h3 translate>No Organizations</h3>
+                                <p translate>You have not yet created any organizations</p>
+                            </div>
                             <button
                                 *ngIf="permissionStore.canCreateOrgs$$()"
                                 class="btn btn-primary new-org-btn"

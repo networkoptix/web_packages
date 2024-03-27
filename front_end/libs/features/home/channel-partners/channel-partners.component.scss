@@ -38,9 +38,14 @@
         }
 
         .no-orgs-placeholder {
-            padding-top: 50px;
-            text-align: center;
-            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            .placeholder-container {
+                text-align: center;
+            }
 
             h3 {
                 color: var(--placehoder-v2-title-color) !important;
