@@ -175,6 +175,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
             this.selectedUsersEmitter.emit(this.selectedUsers);
             this.selectedAll = true;
         } else {
+            this.selectedUsers = {};
             this.selectedUsersEmitter.emit({});
             this.selectedAll = false;
         }
@@ -192,6 +193,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
             this.selectedUsers[userId] = user;
         }
         const map = new Map(Object.keys(this.selectedUsers).map(user => [user, true]));
+        this.selectedAll = this.records.length === map.size;
         this.selectedUsersMap$$.set(map);
         this.selectedUsersEmitter.emit(this.selectedUsers);
     }
