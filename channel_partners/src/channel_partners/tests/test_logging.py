@@ -77,7 +77,6 @@ class TestBindAdditionalRequestMetadata:
     def test_bind_additional_request_metadata(self, mock_bind_contextvars):
         # Mock HttpRequest
         request = MagicMock(spec=HttpRequest)
-        request.get_host.return_value = 'testserver'
         request.path = '/test/path'
         request.method = 'GET'
 
@@ -89,7 +88,6 @@ class TestBindAdditionalRequestMetadata:
 
         # Assert that bind_contextvars was called with expected arguments
         mock_bind_contextvars.assert_called_once_with(
-            cloud_host='testserver',
             path='/test/path',
             normalized_path=expected_normalized_path,
             method='GET'

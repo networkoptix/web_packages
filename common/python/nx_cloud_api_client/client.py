@@ -194,7 +194,7 @@ class NxCloudAPIClient(ContextAPIMixin):
                 access_token=access_token, refresh_token=refresh_token, code=code, host=host,
                 refresh_token_lifetime=refresh_token_lifetime, raise_error_on_refresh=raise_error_on_refresh
             )
-        self._handle_user_agent(kwargs.get("headers", {}))
+        self._handle_headers(kwargs.get("headers", {}))
         self.system: CdbSystemAPIBase = CdbSystemAPIBase(client=self.client, host=host)
         self.system_transfer: CdbSystemTransferAPIBase = CdbSystemTransferAPIBase(client=self.client, host=host)
         self.account: CdbAccountAPIBase = CdbAccountAPIBase(client=self.client, host=host)
@@ -207,15 +207,25 @@ class NxCloudAPIClient(ContextAPIMixin):
     def is_async(self):
         return hasattr(self.client, '__aenter__')
 
-    def _handle_user_agent(self, headers: typing.Dict) -> None:
-        key = 'User-Agent'
-        # Check if key exists in Client headers and provided headers
-        if key in self.client.headers and key in headers:
-            user_agent = headers.get(key)
+    def _handle_headers(self, supplied_headers: typing.Dict) -> None:
+        headers = supplied_headers.copy()
+        # Handle 'User-Agent' specifically
+        user_agent_key = 'User-Agent'
+        if user_agent_key in headers:
+            user_agent = headers.pop(user_agent_key)
             if user_agent is None:
-                del self.client.headers[key]
+                self.client.headers.pop(user_agent_key, None)
             else:
-                self.client.headers['User-Agent'] = user_agent
+                self.client.headers[user_agent_key] = user_agent
+
+        # Update all other headers
+        for key, value in headers.copy().items():
+            if value is None:
+                # Remove the header if the value is None
+                self.client.headers.pop(key, None)
+            else:
+                # Set or update the header
+                self.client.headers[key] = value
 
     def _update_api_modules(self):
         apis = [

@@ -12,17 +12,21 @@ from nx_cloud_api_client.client import NxCloudAPIClient
 
 CDB_TEST_HOST = 'https://cloud-test.hdw.mx'
 
+
 @pytest.fixture()
 def NX_CLOUD_TEST_ACC_1():
     return os.environ.get('NX_CLOUD_TEST_ACC_1')
+
 
 @pytest.fixture()
 def NX_CLOUD_TEST_ACC_2():
     return os.environ.get('NX_CLOUD_TEST_ACC_2')
 
+
 @pytest.fixture()
 def NX_CLOUD_TEST_ACC_3():
     return os.environ.get('NX_CLOUD_TEST_ACC_3')
+
 
 @pytest.fixture()
 def NX_CLOUD_TEST_PWD():
@@ -52,7 +56,6 @@ def get_token(NX_CLOUD_TEST_ACC_1, NX_CLOUD_TEST_PWD) -> typing.Callable:
 
 
 async def get_token_async(client, username, password, host=CDB_TEST_HOST):
-
     resp = await CdbAuthAPIClient(host=host, client=client,
 
                                   username=username,
@@ -78,9 +81,9 @@ def get_code(NX_CLOUD_TEST_ACC_1, NX_CLOUD_TEST_PWD) -> typing.Callable:
 
 async def get_code_async(client, username, password):
     resp = await CdbAuthAPIClient(host=CDB_TEST_HOST, client=client,
-                            username=username,
-                            password=password,
-                            refresh_token_lifetime=3600).get_code_by_password()
+                                  username=username,
+                                  password=password,
+                                  refresh_token_lifetime=3600).get_code_by_password()
     return resp.json()
 
 
@@ -126,25 +129,29 @@ def async_run_test_with_auth(get_token, get_code):
         if "Requested" in auths:
             auth = RequestedTokenAuth(cdb_host=api.host, client=api.client, username=username, password=password)
             await handler(api, auth)
-            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username, password=password)
+            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username,
+                                                                                        password=password)
 
         if 'Bearer' in auths:
             token = get_token(username=username, password=password)
             auth = BearerTokenAuth(token=token["access_token"])
             await handler(api, auth)
-            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username, password=password)
+            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username,
+                                                                                        password=password)
 
         if 'Refresh' in auths:
             token = get_token(username=username, password=password)
             auth = RequestedTokenAuth(cdb_host=api.host, client=api.client, refresh_token=token["refresh_token"])
             await handler(api, auth)
-            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username, password=password)
+            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username,
+                                                                                        password=password)
 
         if 'Code' in auths:
             code = get_code(username=username, password=password)
             auth = RequestedTokenAuth(cdb_host=api.host, client=api.client, authorization_code=code["code"])
             await handler(api, auth)
-            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username, password=password)
+            await CdbOauth2APIBase(host=api.host, client=api.client).user_tokens_delete(username=username,
+                                                                                        password=password)
 
         if 'QueryParam' in auths:
             token = get_token(username=username, password=password)

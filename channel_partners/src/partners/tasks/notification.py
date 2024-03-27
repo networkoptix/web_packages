@@ -13,6 +13,7 @@ from celery.exceptions import Ignore
 from django.conf import settings
 from django.core.cache import caches
 from nx_cloud_api_client.apis import CdbAccountAPIBase
+from nx_cloud_api_client.client import NxCloudAPISyncClient
 
 from partners.models import (
     ActionConfirmation,
@@ -26,6 +27,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
 )
+from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 
 logger = structlog.get_logger(__name__)
@@ -74,6 +76,7 @@ def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
         raise Ignore()
     return user
 
+
 def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
     """
     Retrieves the CloudUser object associated with the specified email address.
@@ -101,8 +104,11 @@ def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
         )
         raise Ignore()
     return user
-def is_existing_user(host: str, email: str) -> bool:
-    api = CdbAccountAPIBase(host=host, client=httpx.Client())
+
+
+def is_existing_user(host: str, email: str, request_id: str) -> bool:
+    client: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=host, request_id=request_id)
+    api: CdbAccountAPIBase = client.account
     response = api.status(email)
     if response.status_code == 200:
         return True
@@ -146,20 +152,27 @@ def added_channel_partner_role_task(
         channel_partner_id: uuid.UUID | str,
         sharer_id: int,
         user_id: str,
-        cloud_host_name: str
+        cloud_host_name: str,
+        request_id: str,
 ) -> None:
-
     notification_added_channel_partner_role(
         channel_partner_id=channel_partner_id,
         sharer_id=sharer_id,
         user_id=user_id,
         cloud_host_name=cloud_host_name,
-        task=self)
+        task=self,
+        request_id=request_id,
+    )
 
 
 def notification_added_channel_partner_role(
-        channel_partner_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str, task: TaskWithLogging):
+        channel_partner_id: uuid.UUID | str,
+        sharer_id: int,
+        user_id: str,
+        cloud_host_name: str,
+        task: TaskWithLogging,
+        request_id: str,
+) -> None:
     partner = ChannelPartner.objects.filter(id=channel_partner_id).first()
     sharer = CloudUser.objects.filter(id=sharer_id).first()
     user = CloudUser.objects.filter(id=user_id).first()
@@ -185,29 +198,39 @@ def notification_added_channel_partner_role(
         'sharer_name': sharer.full_name or sharer.email,
         'userFullName': user.full_name or user.email
     }
-    user_exists = is_existing_user(host=cloud_host_name, email=user.email)
+    user_exists = is_existing_user(host=cloud_host_name, email=user.email, request_id=request_id)
     message_type = NotificationTypes.cps_partner_share if user_exists else NotificationTypes.cps_partner_invite
     post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)
 
 
-@shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,), retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+@shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
 def added_organization_role_task(
         self: TaskWithLogging,
-        organization_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str
+        organization_id: uuid.UUID | str,
+        sharer_id: int,
+        user_id: str,
+        cloud_host_name: str,
+        request_id: str
 ) -> None:
     notification_added_organization_role(
         organization_id=organization_id,
         sharer_id=sharer_id,
         user_id=user_id,
         cloud_host_name=cloud_host_name,
-        task=self)
+        task=self,
+        request_id=request_id,
+    )
 
 
 def notification_added_organization_role(
-        organization_id: uuid.UUID | str, sharer_id: int,
-        user_id: str, cloud_host_name: str, task: TaskWithLogging):
-
+        organization_id: uuid.UUID | str,
+        sharer_id: int,
+        user_id: str,
+        cloud_host_name: str,
+        task: TaskWithLogging,
+        request_id: str,
+):
     organization = Organization.objects.filter(id=organization_id).first()
     sharer = CloudUser.objects.filter(id=sharer_id).first()
     user = CloudUser.objects.filter(id=user_id).first()
@@ -234,7 +257,10 @@ def notification_added_organization_role(
         'sharer_name': sharer.full_name or sharer.email,
         'userFullName': user.full_name or user.email
     }
-    user_exists = is_existing_user(host=cloud_host_name, email=user.email)
+    user_exists = is_existing_user(
+        host=cloud_host_name,
+        email=user.email,
+        request_id=request_id)
     message_type = (
         NotificationTypes.cps_organization_share if user_exists else NotificationTypes.cps_organization_invite
     )

@@ -31,7 +31,6 @@ def bind_additional_request_metadata(request: HttpRequest, logger, **kwargs):
     """
     normalized_path: str = standardize_path(request.path)
     structlog.contextvars.bind_contextvars(
-        cloud_host=request.get_host(),
         path=request.path,
         normalized_path=normalized_path,
         method=request.method

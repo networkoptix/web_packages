@@ -12,6 +12,7 @@ from uuid import (
 import httpx
 import jwt
 import pytest
+import structlog
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.asymmetric.rsa import (
@@ -57,6 +58,13 @@ from partners.models import (
 @pytest.fixture()
 def assert_all_responses_were_requested() -> bool:
     return False
+
+
+@pytest.fixture()
+def context_vars():
+    structlog.contextvars.bind_contextvars(
+        request_id=str(uuid4())
+    )
 
 
 @pytest.fixture()

@@ -39,6 +39,7 @@ from rest_framework import (
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
+from structlog.contextvars import get_contextvars
 
 from channel_partners.utils import NonPartialCharfield
 from partners.models import (
@@ -78,6 +79,7 @@ from partners.tasks.notification import (
     added_organization_role_task,
     state_confirmation_task,
 )
+from partners.utils.context_vars import get_context_vars
 from partners.validators import validate_active_organization
 from tools.helpers import (
     forward_cdb_resp,
@@ -289,7 +291,8 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
                 user_rel.channel_partner_id,
                 self.context['request'].user.id,
                 user_rel.user_id,
-                instance.cloud_host.hostname
+                instance.cloud_host.hostname,
+                get_contextvars().get('request_id')
             ])
         return instance
 
@@ -414,7 +417,8 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
                 user_rel.organization_id,
                 self.context['request'].user.id,
                 user_rel.user_id,
-                instance.channel_partner.cloud_host.hostname
+                instance.channel_partner.cloud_host.hostname,
+                structlog.contextvars.get_contextvars().get('request_id')
             ])
         return instance
 
@@ -568,8 +572,11 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         relation.save()
         if created:
             added_channel_partner_role_task.apply_async(args=[
-                relation.channel_partner_id, created_by.id, relation.user_id,
-                channel_partner.cloud_host.hostname
+                relation.channel_partner_id,
+                created_by.id,
+                relation.user_id,
+                channel_partner.cloud_host.hostname,
+                structlog.contextvars.get_contextvars().get('request_id')
             ])
         return relation
 
@@ -724,8 +731,11 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
                          to_attr='organization_relations')).distinct().get_or_create(email=user.email)[0]
         if created:
             added_organization_role_task.apply_async(args=[
-                relation.organization_id, created_by.id, relation.user_id,
-                organization.channel_partner.cloud_host.hostname
+                relation.organization_id,
+                created_by.id,
+                relation.user_id,
+                organization.channel_partner.cloud_host.hostname,
+                structlog.contextvars.get_contextvars().get('request_id')
             ])
         return user
 
@@ -1663,8 +1673,11 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
              .delete())
         if created:
             added_organization_role_task.apply_async(args=[
-                relation.organization_id, created_by.id, relation.user_id,
-                organization.channel_partner.cloud_host.hostname
+                relation.organization_id,
+                created_by.id,
+                relation.user_id,
+                organization.channel_partner.cloud_host.hostname,
+                structlog.contextvars.get_contextvars().get('request_id')
             ])
         return relation
 
@@ -1693,10 +1706,17 @@ class SystemToOrgTransferSerializer(serializers.Serializer):
             'comment': self.validated_data['comment'],
             'systemId': str(system_id),
         }
-        offer_response = httpx.post(offer_url, json=offer, auth=auth)
+        context_vars = get_context_vars()
+        headers = {"x-request-id": context_vars.get('request_id')}
+        if context_vars.get('cloud_host'):
+            headers["x-original-host"] = context_vars.get('cloud_host')
+
+        offer_response = httpx.post(offer_url, json=offer, auth=auth, headers=headers)
+
         if offer_response.status_code != 200:
             forward_cdb_resp(offer_response, via_exception=True)
-        accept_response = httpx.post(accept_url, auth=auth)
+        accept_response = httpx.post(accept_url, auth=auth, headers=headers)
+
         if accept_response.status_code != 200:
             forward_cdb_resp(accept_response, via_exception=True)
         system = CloudSystemId.objects.update_or_create(

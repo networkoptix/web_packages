@@ -3,6 +3,7 @@ from typing import (
     Set,
     TypedDict,
 )
+from uuid import uuid4
 
 import httpx
 import structlog
@@ -20,7 +21,7 @@ class UserInfo(TypedDict):
     full_name: str
 
 
-def get_emails_from_internal_endpoint(emails: List[str]) -> List[UserInfo]:
+def get_emails_from_internal_endpoint(emails: List[str], request_id: str, original_host: str = None) -> List[UserInfo]:
     """
     Fetches user information from an internal endpoint given a list of emails.
 
@@ -32,10 +33,15 @@ def get_emails_from_internal_endpoint(emails: List[str]) -> List[UserInfo]:
     """
     path = f"https://{settings.DEFAULT_HOST_NAME}/cdb/internal/accounts/info"
     with httpx.Client() as client:
-        response: Response = client.post(path, json={
-            "emails": emails,
-            "fields": ["fullName"]
-        })
+        headers = {"x-request-id": request_id, }
+
+        if original_host:
+            headers["x-original-host"] = original_host
+
+        response: Response = client.post(
+            path,
+            json={"emails": emails, "fields": ["fullName"]},
+            headers=headers)
 
     if response.status_code != 200:
         logger.error(
@@ -117,7 +123,11 @@ def update_cloud_users_full_name(batch_size: int = 500) -> None:
         batch_size (int, optional): The number of CloudUser instances to process per batch. Defaults to 500.
     """
     from partners.models import CloudUser
-    logger.info("Starting Task")
+
+    # TODO: Create a story to improve the logging.
+    #       This should be using Traces / Transactions / Spans!
+    request_id = str(uuid4())
+    logger.info("Starting Task", request_id=request_id)
 
     total_users = CloudUser.objects.count()
     logger.info("Total number of CloudUser objects to process", total_users=total_users)
@@ -129,7 +139,7 @@ def update_cloud_users_full_name(batch_size: int = 500) -> None:
         cloud_users_batch = CloudUser.objects.order_by('id')[start:end]
         emails = {user.email for user in cloud_users_batch}
 
-        cloud_db_users = get_emails_from_internal_endpoint(list(emails))
+        cloud_db_users = get_emails_from_internal_endpoint(list(emails), request_id=request_id)
         get_missing_emails(emails, cloud_db_users)
 
         users_to_update = get_users_to_update(cloud_users_batch, cloud_db_users)
@@ -141,18 +151,20 @@ def update_cloud_users_full_name(batch_size: int = 500) -> None:
 
 
 @shared_task
-def update_cloud_user_full_name(email: str) -> None:
+def update_cloud_user_full_name(email: str, request_id: str, original_host: str = None) -> None:
     """
     A Celery task that updates the full name of a CloudUser instances
 
     Args:
         email (str): The email address to update the full name of Cloud User
+        request_id (str): The string representation of a UUID for the id of the request.
     """
     from partners.models import CloudUser
     logger.info("Starting Task", email=email)
 
     # Fetch user information from internal endpoint
-    cloud_db_user = get_emails_from_internal_endpoint([email])
+    cloud_db_user = get_emails_from_internal_endpoint(
+        [email], request_id=request_id, original_host=original_host)
 
     # Check if any user information was returned
     if not cloud_db_user:

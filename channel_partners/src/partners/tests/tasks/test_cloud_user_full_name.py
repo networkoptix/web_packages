@@ -1,5 +1,6 @@
 import json
 import logging
+from uuid import uuid4
 
 import pytest
 from django.conf import settings
@@ -26,10 +27,15 @@ def count_log_records(caplog, logger_name, level, message):
 class TestCloudUserFullName:
     host: str = settings.DEFAULT_HOST_NAME
 
+    @pytest.fixture(autouse=True)
+    def setUp(self, context_vars):
+        pass
+
     @pytest.mark.django_db
     def test_update_cloud_user_full_name_success(self, httpx_mock: HTTPXMock, caplog):
         email = "user@example.com"
         full_name = "Updated User Example"
+
 
         httpx_mock.add_response(
             method="POST",
@@ -54,7 +60,7 @@ class TestCloudUserFullName:
         )
         emails = ["user@example.com"]
 
-        result = get_emails_from_internal_endpoint(emails)
+        result = get_emails_from_internal_endpoint(emails, str(uuid4()))
 
         assert result == [{"email": "user@example.com", "full_name": "User Example"}]
 
@@ -68,7 +74,7 @@ class TestCloudUserFullName:
         )
         emails = ["user@example.com"]
 
-        result = get_emails_from_internal_endpoint(emails)
+        result = get_emails_from_internal_endpoint(emails, str(uuid4()))
 
         assert result == []
 

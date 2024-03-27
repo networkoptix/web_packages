@@ -59,6 +59,7 @@ from partners.utils.cache_keys import (
     direct_organization_children_count,
     organization_system_count,
 )
+from partners.utils.context_vars import get_context_vars
 from partners.utils.db import (
     MonthInterval,
     RemoveArrayElement,
@@ -171,7 +172,11 @@ class CloudUser(models.Model):
 
         # If this is a new user, schedule the Celery task
         if is_new:
-            update_cloud_user_full_name.delay(email=self.email)
+            context_vars = get_context_vars()
+            cloud_host = context_vars.get("cloud_host", None)
+            request_id = context_vars.get("request_id", None)
+
+            update_cloud_user_full_name.delay(email=self.email, request_id=request_id, original_host=cloud_host)
 
     @property
     def is_authenticated(self):
@@ -226,7 +231,6 @@ class CloudUser(models.Model):
             queryset = queryset.union(group_sys)
 
         return queryset
-
 
     def all_systems(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
@@ -363,7 +367,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     @property
     def security_statuses_by_type(self):
         self.refresh_security_statuses()
-        if not (statuses :=self.security_statuses.get('types', {})):
+        if not (statuses := self.security_statuses.get('types', {})):
             service_type_map = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP
             return {
                 service_type_map[ChannelPartnerService.LOCAL_RECORDING]: ServiceUsage.STATUS_OK,
@@ -409,7 +413,6 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 self.security_statuses['services'][service_id] = {
                     'status': new_status, 'issueExpirationDate': expiration_date
                 }
-
 
     def can_manage(self, user: CloudUser):
         return self.organization and self.organization.can_manage_systems(user)
@@ -624,7 +627,6 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 used_services[service_id]['used'] = used
         return used_services
 
-
     @staticmethod
     def get_systems_in_group_and_children_count(system_group_id: uuid.UUID) -> int:
         # TODO | NOTE: Talked with Kyrylo and he said to leave and it and he'll know where to place invalidations.
@@ -723,7 +725,6 @@ class ChannelPartnerRoles:
 
 
 class ChannelPartnerRole(models.Model):
-
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     permissions = models.ManyToManyField(Permission)
@@ -1007,7 +1008,6 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 transaction.on_commit(
                     lambda: run_organization_state_changed_tasks.apply_async(args=[updated_descendants]))
 
-
     @staticmethod
     def invalidate_cache(pk: str) -> None:
         cache_key: str = cp_direct_children_count(pk)
@@ -1162,6 +1162,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         updated_ids += self.update_effective_states(self.channel_partners, parent_effective_state=self.effective_state)
         return updated_ids + [self.id]
 
+
 class ChannelPartnerToUser(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
@@ -1169,7 +1170,6 @@ class ChannelPartnerToUser(models.Model):
     title = models.CharField(max_length=100, blank=True)
     attributes = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
-
 
     class Meta:
         constraints = [
@@ -1266,7 +1266,6 @@ class VmsRoles:
 
 
 class OrganizationRole(models.Model):
-
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     system_role = models.CharField(max_length=100, blank=True, default='')
@@ -1369,7 +1368,6 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                     run_organization_state_changed_tasks,
                 )
                 transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[[self.id]]))
-
 
     @property
     def system_count(self) -> int:
@@ -1497,9 +1495,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def is_member_in_branch(self, user: CloudUser, perm: str = None) -> bool:
         if perm:
-           org_level_access = self.has_perm(user, perm)
+            org_level_access = self.has_perm(user, perm)
         else:
-           org_level_access = OrganizationToUser.objects.filter(user=user, organization=self).exists()
+            org_level_access = OrganizationToUser.objects.filter(user=user, organization=self).exists()
 
         if org_level_access:
             return True
@@ -1690,7 +1688,6 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         assert not orphans
         return trees
 
-
     @property
     def user_list(self):
         return self.users.all().distinct()
@@ -1717,7 +1714,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         ]
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         with transaction.atomic():
             new = self._state.adding
@@ -1832,18 +1829,18 @@ class SystemGroup(FieldOriginalMixin, models.Model):
     def can_access(self, user: CloudUser):
         # check organization or groups
         if (
-            OrganizationToUser.objects
-            .filter(user=user)
-            .filter(
-                Q(organization_id=self.organization_id, system_group__isnull=True)
-                | Q(system_group_id__in=[self.id] + self.groups_path)
-            ).exists()
+                OrganizationToUser.objects
+                        .filter(user=user)
+                        .filter(
+                    Q(organization_id=self.organization_id, system_group__isnull=True)
+                    | Q(system_group_id__in=[self.id] + self.visible_path)
+                ).exists()
         ):
             return True
         if (
-            ChannelPartnerToUser.objects
-            .filter(user=user, channel_partner_id=self.visible_path[-1])
-            .exists()
+                ChannelPartnerToUser.objects
+                        .filter(user=user, channel_partner_id=self.visible_path[-1])
+                        .exists()
         ):
             return True
 
@@ -1862,6 +1859,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
                 .filter(Q(organizationtouser__user=user) | Q(id=self.id), organization=self.organization)
                 .distinct()
             )
+
         ids_arr = user_groups().annotate(ids=models.Func('id', function='array_agg')).values('ids')
         overlaps = user_groups().filter(path__overlap=Subquery(ids_arr))
         return overlaps.exists()
@@ -1901,7 +1899,8 @@ class OrganizationToUser(models.Model):
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['organization', 'user', 'system_group'], name='unique_organization_user')
+            models.constraints.UniqueConstraint(fields=['organization', 'user', 'system_group'],
+                                                name='unique_organization_user')
         ]
         indexes = [
             GinIndex(name="organizationtouser_roles_gin", fields=['roles'], opclasses=['array_ops'])
@@ -1911,7 +1910,7 @@ class OrganizationToUser(models.Model):
         return self.organization.can_manage_users(user)
 
     @classmethod
-    def bulk_delete(cls, queryset: QuerySet)-> List[str]:
+    def bulk_delete(cls, queryset: QuerySet) -> List[str]:
         deleted_emails = list(queryset.values_list('user__email', flat=True))
         queryset.delete()
         return deleted_emails
@@ -2003,7 +2002,8 @@ class ChannelPartnerService(models.Model):
     created_ts = models.DateTimeField(auto_now_add=True)
     sub_type = models.IntegerField(choices=SUB_TYPES, default=REGULAR)
     duration = models.PositiveIntegerField(default=0)
-    conversion_service = models.ForeignKey('ChannelPartnerService', null=True, blank=True, on_delete=models.PROTECT, related_name='converting_services')
+    conversion_service = models.ForeignKey('ChannelPartnerService', null=True, blank=True, on_delete=models.PROTECT,
+                                           related_name='converting_services')
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -2017,7 +2017,6 @@ class ChannelPartnerService(models.Model):
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SERVICE_CHANGED, service=self)
         if new:
             transaction.on_commit(lambda: new_channel_partner_service_created.apply_async(args=[self.pk]))
-
 
 
 class ServiceRecordTypes:
@@ -2569,8 +2568,8 @@ class ActionConfirmation(models.Model):
         EXPIRED = 20, 'expired'
 
     EXPIRATION = {
-        ConfirmationActionType.ORGANIZATION_STATE_CHANGE: 60*60,
-        ConfirmationActionType.PARTNER_STATE_CHANGE: 60*60,
+        ConfirmationActionType.ORGANIZATION_STATE_CHANGE: 60 * 60,
+        ConfirmationActionType.PARTNER_STATE_CHANGE: 60 * 60,
     }
 
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
@@ -2663,6 +2662,5 @@ class NotificationTypes(enum.StrEnum):
 
 
 class MigrationRecord(models.Model):
-
     license_key = models.CharField(max_length=128)
     service_record = models.ForeignKey(ChannelPartnerServiceRecord, on_delete=models.CASCADE)

@@ -3,12 +3,11 @@ from enum import Enum
 
 import httpx
 
-from .base_api import (
-    _BaseAPI, ContextAPIMixin, NotUsedInRequest, NOT_USED_IN_REQUEST
-)
-
-from .base_auth import (
-    AUTH_TYPES)
+from .base_api import ContextAPIMixin
+from .base_api import NOT_USED_IN_REQUEST
+from .base_api import NotUsedInRequest
+from .base_api import _BaseAPI
+from .base_auth import AUTH_TYPES
 
 
 class CdbAPIModuleBase(ContextAPIMixin, _BaseAPI):
@@ -1260,7 +1259,6 @@ class CdbSystemTransferAPIBase(CdbAPIModuleBase):
 
 
 class CdbAuthSupportAPIBase(CdbAPIModuleBase):
-
     base_path = '/cdb/auth'
 
     def get_nonce(
@@ -1369,14 +1367,12 @@ class CdbAuthSupportAPIBase(CdbAPIModuleBase):
             auth: AUTH_TYPES.BASIC_BEARER = None,
             **kwargs
     ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
-
         # Path is strange, but it will be appended to the base API url `self.base_path`
         return self.get(f'_provider/system/{system_id}/server/{server_id}/certificate/{fingerprint}/public-key',
                         headers=headers, auth=auth, **kwargs)
 
 
 class Cdb2faAPIBase(CdbAPIModuleBase):
-
     base_path = '/cdb/account/self/2fa'
 
     def get_totp_secret_key(
@@ -1402,7 +1398,7 @@ class Cdb2faAPIBase(CdbAPIModuleBase):
 
         """
         return self.post(f'/totp/key',
-                        headers=headers, auth=auth, **kwargs)
+                         headers=headers, auth=auth, **kwargs)
 
     def delete_totp_secret_key(
             self,
@@ -1516,7 +1512,6 @@ class Cdb2faAPIBase(CdbAPIModuleBase):
             auth: AUTH_TYPES.QUERY = None,
             **kwargs
     ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
-
         return self.get(f'/totp/key/{mfa_code}', headers=headers, auth=auth, **kwargs)
 
     def delete_backup_code(
@@ -1541,3 +1536,4 @@ class Cdb2faAPIBase(CdbAPIModuleBase):
 
 class CdbOrganizationAPIBase(CdbAPIModuleBase):
     base_path = '/cdb/organizations'
+

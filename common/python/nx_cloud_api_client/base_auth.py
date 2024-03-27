@@ -6,7 +6,7 @@ from uuid import uuid4
 
 import httpx
 
-from nx_cloud_api_client.base_api import (
+from .base_api import (
     ContextAPIMixin, _BaseAPI, NotUsedInRequest, NOT_USED_IN_REQUEST
 )
 

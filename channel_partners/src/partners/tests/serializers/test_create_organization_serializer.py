@@ -10,6 +10,7 @@ from partners.models import (
     OrganizationToUser,
 )
 from partners.serializers import CreateOrganizationSerializer
+from partners.utils.context_vars import get_context_vars
 
 
 class TestCreateOrganizationSerializer:
@@ -81,7 +82,7 @@ class TestCreateOrganizationSerializer:
         assert instance.attributes == data['attributes']
         self.notification_mock.assert_not_called()
 
-    def test_first_admin(self, random_email):
+    def test_first_admin(self, random_email, context_vars):
         email = random_email
         data = {
             **self.valid,
@@ -100,6 +101,7 @@ class TestCreateOrganizationSerializer:
                 user_rel.organization_id,
                 self.cp_user.user.id,
                 user_rel.user_id,
-                instance.channel_partner.cloud_host.hostname
+                instance.channel_partner.cloud_host.hostname,
+                get_context_vars().get("request_id")
             ]
         )

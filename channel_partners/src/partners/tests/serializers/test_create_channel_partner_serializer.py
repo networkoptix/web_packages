@@ -9,6 +9,7 @@ from partners.models import (
     ChannelPartnerToUser,
 )
 from partners.serializers import CreateChannelPartnerSerializer
+from partners.utils.context_vars import get_context_vars
 
 
 class TestCreateChannelPartnerSerializer:
@@ -127,7 +128,8 @@ class TestCreateChannelPartnerSerializer:
         assert instance.monthly_additional_service_limit == 10
         self.notification_mock.assert_not_called()
 
-    def test_first_admin(self, random_email):
+    def test_first_admin(self, random_email, context_vars):
+
         email = random_email
         data = {
             **self.valid,
@@ -146,6 +148,7 @@ class TestCreateChannelPartnerSerializer:
                 user_rel.channel_partner_id,
                 self.cp_user.user.id,
                 user_rel.user_id,
-                instance.cloud_host.hostname
+                instance.cloud_host.hostname,
+                get_context_vars().get("request_id")
             ]
         )
