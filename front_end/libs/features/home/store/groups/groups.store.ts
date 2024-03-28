@@ -47,6 +47,7 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo, NxOrgSystemInfo } from '@services/systems.service.types';
+import { alphaNumericSort } from '@utils/general';
 
 import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
 import type {
@@ -669,7 +670,7 @@ export const GroupsStore = signalStore(
                 }
                 return systemItems
                     .filter(({ groupId }) => (isRoot ? groupId === null : groupId === id))
-                    .sort((a, b) => a.name!.localeCompare(b.name!));
+                    .sort(alphaNumericSort(group => group.name));
             });
 
             const groupFlatMap$$ = computed(() => {
