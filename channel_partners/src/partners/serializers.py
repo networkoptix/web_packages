@@ -854,11 +854,11 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
                 service_id=service_id,
                 from_ts=from_ts, to_ts=to_ts
             ))
-        ServiceUsage.objects.bulk_create(usage_records)
-
-        ServiceUsage.check_excess(cloud_system)
-        cloud_system.last_usage_report = timezone.now()
-        cloud_system.save()
+        with transaction.atomic():
+            cloud_system.last_usage_report = timezone.now()
+            cloud_system.save()
+            ServiceUsage.objects.bulk_create(usage_records)
+            ServiceUsage.check_excess(cloud_system)
 
 
 class CloudStorageUsageSerializer(serializers.Serializer):
