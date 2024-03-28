@@ -22,6 +22,7 @@ import {
     RestV3User,
     CloudUserCompat,
 } from '@services/system-user.types';
+import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
 import { cleanId, cleanIdLegacy } from '@utils/general';
 
 import { coerceUserType } from '../../helpers/coerce-user-type';
@@ -156,7 +157,7 @@ export class PermissionManager {
         }
         return resourceAccessRights;
     });
-    groups$$ = signal<UserGroup[]>([]);
+    groups$$ = signal<UserGroup[]>(DefaultUserGroups);
     roles$$ = signal<Role[]>([]);
     customRole$$ = computed<Role | undefined>(() => {
         const roles = this.roles$$();
@@ -276,10 +277,9 @@ export class PermissionManager {
     permissions$$ = computed<Permissions>(() => {
         const isOwner = this.isOwner$$();
         const isAdmin = isOwner || this.isAdmin$$();
-        const groups = this.groups$$();
         const user = this.user$$();
         const customRole = this.customRole$$();
-        if (groups.length) {
+        if (this.mediaserver instanceof NxSystemRestAPI3) {
             return this.permissionsFromGroups$$();
         }
         let permissions = '';

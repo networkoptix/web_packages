@@ -1,5 +1,9 @@
 @use "bootstrap_utils" as bootstrap;
 
+.settings-container {
+    max-width: 1024px;
+}
+
 .settings{
   display: flex;
   flex-direction: column;
