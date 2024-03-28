@@ -36,11 +36,10 @@
         >
         </nx-email-input>
         <p
-            *ngIf="userEmail.touched && userEmail.errors?.pattern"
+            *ngIf="userEmail.touched && (userEmail.errors?.pattern || userEmail.errors?.required)"
             class="error-label"
-            translate
         >
-            Invalid email
+            {{ userEmail.errors?.message }}
         </p>
         <div
             class="mb-3"
@@ -88,9 +87,7 @@
         <nx-process-button
             [process]="addOrgUserProcess"
             [buttonText]="'Confirm' | translate"
-            [buttonDisabled]="
-                targetFolder.errors?.invalid || !userEmail$$() || userEmail.errors?.pattern
-            "
+            [buttonDisabled]="targetFolder.errors?.invalid || !userEmail$$() || userEmail.errors"
             [form]="addOrgUserForm"
         ></nx-process-button>
         <!-- Role and folder are defined on construct -->

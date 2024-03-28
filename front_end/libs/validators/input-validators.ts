@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import staticLang from '@language_static';
 import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
-import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Injectable({
     providedIn: 'root',
@@ -134,6 +133,10 @@ export class NxValidators {
 
     uniqueEmail(existingEmails: Map<String, UserRecord>): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
+            const error = {
+                existingEmail: true,
+                msg: this.translate.instant(this.LANG.customValidatorMsg.emailNotUnique),
+            }
             if (!control.value) {
                 return null;
             }
@@ -141,12 +144,7 @@ export class NxValidators {
             if (!user) {
                 return null;
             }
-            return user.rolesIds.includes(OrgRoleIds.OrgAdmin)
-                ? {
-                      existingEmail: true,
-                      msg: this.translate.instant(this.LANG.customValidatorMsg.emailNotUnique),
-                  }
-                : null;
+            return user ? error : null;
         };
     }
 
