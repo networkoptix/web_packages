@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { patchState, signalStore, withMethods } from '@ngrx/signals';
 import {
@@ -67,7 +66,7 @@ export class NxAccessTableComponent implements OnInit {
 
     @Input() email: string = '';
 
-    orgRoles$$ = toSignal(this.cpService.getOrganizationRoles());
+    orgRoles$$ = this.cpService.organizationRoles$$;
     headers: HEADER_ITEM[];
     fullName$$ = signal('');
     selectedGroups: { [key: string]: UserRecord } = {};
@@ -188,26 +187,21 @@ export class NxAccessTableComponent implements OnInit {
     }
 
     addAccess(): void {
-        const roles = this.orgRoles$$();
         const org = this.currentOrg$$();
-        const groups = this.currentGroups$$();
         if (org) {
-            const users = this.groupStore.entities();
-            this.dialogService
-                .addOrgUserV2({ organization: org, roles, groups, users, email: this.email })
-                .then(user => {
-                    if (user) {
-                        const accessLevel = (('accessLevel' in user && user.accessLevel) ??
-                            {}) as Record<string, string>;
-                        const groupId = accessLevel?.id || UserType.ORGANIZATION;
-                        this.groupStore.addGroup({
-                            ...user,
-                            groupId,
-                            userId: user.email,
-                            userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
-                        });
-                    }
-                });
+            this.dialogService.addOrgUserV2({ organization: org, email: this.email }).then(user => {
+                if (user) {
+                    const accessLevel = (('accessLevel' in user && user.accessLevel) ??
+                        {}) as Record<string, string>;
+                    const groupId = accessLevel?.id || UserType.ORGANIZATION;
+                    this.groupStore.addGroup({
+                        ...user,
+                        groupId,
+                        userId: user.email,
+                        userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
+                    });
+                }
+            });
         }
     }
 

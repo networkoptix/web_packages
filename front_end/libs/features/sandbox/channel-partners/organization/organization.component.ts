@@ -71,7 +71,7 @@ export class NxOrganizationComponent {
         }),
     );
 
-    orgRoles$$ = toSignal(this.cpService.getOrganizationRoles());
+    orgRoles$$ = this.cpService.organizationRoles$$;
 
     newGroupName: string;
 
@@ -130,9 +130,6 @@ export class NxOrganizationComponent {
         this.dialogs
             .addOrgUserV2({
                 organization: this.organization$$(),
-                roles: this.orgRoles$$(),
-                users: this.users$$(),
-                groups: this.groups$$(),
             })
             .then(res => {
                 if (res) {
