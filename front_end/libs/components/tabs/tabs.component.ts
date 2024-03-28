@@ -8,9 +8,14 @@ import {
     signal,
     inject,
     computed,
+    Injector,
+    runInInjectionContext,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { startWith, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import {
     ChannelPartnersRouteState,
@@ -45,12 +50,26 @@ export class NxTabsComponent {
     @Input() animationSpeed: string;
 
     routeState = inject(ChannelPartnersRouteState);
+    unsubscribeTabItems: Subject<null> = new Subject<null>();
 
-    tabItemsInitial$$ = signal<QueryList<NxBaseTabComponent>>(new QueryList<NxBaseTabComponent>());
+    tabItemsInitial$$ = signal<NxBaseTabComponent[]>([]);
+    injector = inject(Injector);
 
     @ContentChildren(NxBaseTabComponent, { descendants: true })
     set tabItems(tabItems: QueryList<NxBaseTabComponent>) {
-        this.tabItemsInitial$$.set(tabItems);
+        this.unsubscribeTabItems.next(null);
+        tabItems.changes
+            .pipe(
+                startWith(tabItems),
+                map(items => items.toArray()),
+                takeUntil(this.unsubscribeTabItems),
+                runInInjectionContext<ReturnType<typeof takeUntilDestroyed>>(this.injector, () =>
+                    takeUntilDestroyed(),
+                ),
+            )
+            .subscribe((tabs: NxBaseTabComponent[]) => {
+                this.tabItemsInitial$$.set(tabs);
+            });
     }
 
     tabItems$$ = computed(() => {
