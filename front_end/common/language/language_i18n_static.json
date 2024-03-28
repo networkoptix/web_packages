@@ -1427,7 +1427,7 @@
             "buttonText": "Add Information"
         },
           "noUsers": {
-            "title": "No User",
+            "title": "No Users",
             "message": "You have not yet added any users.",
             "buttonText": "Add User"
         }
