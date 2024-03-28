@@ -19,7 +19,7 @@ import {
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectChannelPartners,
+    selectRootChannelPartners,
     selectCurrentPartner,
     selectCurrentPartnerOrgs,
     selectArePartnerOrgsLoading,
@@ -78,7 +78,7 @@ export class NxChannelPartnersComponent implements OnInit {
 
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
-    channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
+    channelPartners$ = this.store.select<ChannelPartner[]>(selectRootChannelPartners);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     filteredOrganizations$: Observable<Organization[]>;

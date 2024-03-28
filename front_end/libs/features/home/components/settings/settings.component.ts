@@ -7,7 +7,7 @@ import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from '
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectChannelPartners,
+    selectRootChannelPartners,
     selectCurrentOrganization,
     selectCurrentPartner,
     selectCurrentPartnerId,
@@ -61,7 +61,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
     permissionsStore = inject(PermissionsStore);
-    channelPartners$$ = this.store.selectSignal(selectChannelPartners);
+    channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);

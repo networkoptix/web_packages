@@ -20,7 +20,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectChannelPartners,
+    selectRootChannelPartners,
     selectCurrentOrganization,
     selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
@@ -74,7 +74,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     groupsStore = inject(GroupsStore);
     permissionStore = inject(PermissionsStore);
     routerState = inject(ChannelPartnersRouteState);
-    channelPartners$$ = this.store.selectSignal(selectChannelPartners);
+    channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);

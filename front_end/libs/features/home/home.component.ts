@@ -9,7 +9,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectChannelPartners,
+    selectRootChannelPartners,
     selectRootOrganizations,
     selectAreChannelPartnersAndOrgsLoading,
 } from '@common/store/channel-partners/channel-partners.selectors';
@@ -45,8 +45,8 @@ export class NxHomeComponent implements OnInit {
         selectAreChannelPartnersAndOrgsLoading,
     );
 
-    organizations$$ = this.store.select<Organization[]>(selectRootOrganizations);
-    channelPartners$$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
+    organizations$ = this.store.select<Organization[]>(selectRootOrganizations);
+    channelPartners$ = this.store.select<ChannelPartner[]>(selectRootChannelPartners);
     isPageLoading: boolean = true;
     isNoSystemsOrgOrChP: boolean = false;
 
@@ -64,8 +64,8 @@ export class NxHomeComponent implements OnInit {
                 return combineLatest([
                     homeNode$,
                     systems$,
-                    this.organizations$$,
-                    this.channelPartners$$,
+                    this.organizations$,
+                    this.channelPartners$,
                 ]);
             }),
         )

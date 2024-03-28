@@ -29,8 +29,8 @@
         <div>
             {{ row.serviceName }}
         </div>
-        <div>
-            {{ row.amount }}
+        <div [ngClass]="{ 'amount-row': true, positive: row.amount > 0, negative: row.amount < 0 }">
+            {{ row.amount > 0 ? '+' : '' }}{{ row.amount }}
         </div>
         <div>
             {{ row.addedToName }}
