@@ -3,12 +3,16 @@
     let-state
 >
     <ng-container *ngIf="state.item">
-        <nx-settings-general
-            [view]="settingsViews.CHANNEL_PARTNERS"
-            [name]="currentName$ | async"
-            [disableNameInput]="!permissions$$().canConfigure"
-            (updateName)="handleNameUpdate($event)"
-        ></nx-settings-general>
+        <div class="row">
+            <div class="col-8">
+                <nx-settings-general
+                    [view]="settingsViews.CHANNEL_PARTNERS"
+                    [name]="currentName$ | async"
+                    [disableNameInput]="!permissions$$().canConfigure"
+                    (updateName)="handleNameUpdate($event)"
+                ></nx-settings-general>
+            </div>
+        </div>
     </ng-container>
 </ng-template>
 
@@ -17,21 +21,29 @@
     let-state
 >
     <ng-container *ngIf="state.item">
-        <nx-settings-general
-            *ngIf="permissions$$().canConfigure"
-            [view]="state.view"
-            [name]="currentName$ | async"
-            [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
-            [disableNameInput]="!permissions$$().canConfigure"
-            (updateName)="handleNameUpdate($event)"
-            (updateAccess)="handleAccessUpdate($event)"
-        ></nx-settings-general>
-        <nx-settings-state
-            *ngIf="canChangeStateUI && permissions$$().canAlterState"
-            (updateState)="handleStateUpdate($event)"
-            [currState]="currentState$ | async"
-            [canChange]="state.canUpdateStatus"
-        ></nx-settings-state>
+        <div class="row">
+            <div class="col-8">
+                <nx-settings-general
+                    *ngIf="permissions$$().canConfigure"
+                    [view]="state.view"
+                    [name]="currentName$ | async"
+                    [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
+                    [disableNameInput]="!permissions$$().canConfigure"
+                    (updateName)="handleNameUpdate($event)"
+                    (updateAccess)="handleAccessUpdate($event)"
+                ></nx-settings-general>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <nx-settings-state
+                    *ngIf="canChangeStateUI && permissions$$().canAlterState"
+                    (updateState)="handleStateUpdate($event)"
+                    [currState]="currentState$ | async"
+                    [canChange]="state.canUpdateStatus"
+                ></nx-settings-state>
+            </div>
+        </div>
         <!-- <nx-settings-disconnect
             [organizationId]="currentOrg$$().id"
         ></nx-settings-disconnect> -->
@@ -42,13 +54,15 @@
     class="settings"
     *ngIf="currentState$$() as state"
 >
-    <ng-container
-        *ngTemplateOutlet="
-            state.view === settingsViews.CHANNEL_PARTNERS ? channelPartnersView : extendedView;
-            context: { $implicit: state }
-        "
-    >
-    </ng-container>
+    <div class="settings-container">
+        <ng-container
+            *ngTemplateOutlet="
+                state.view === settingsViews.CHANNEL_PARTNERS ? channelPartnersView : extendedView;
+                context: { $implicit: state }
+            "
+        >
+        </ng-container>
+    </div>
     <div
         class="footer"
         *ngIf="hasChange"

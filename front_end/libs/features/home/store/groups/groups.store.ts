@@ -46,7 +46,7 @@ import {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
-import type { NxOrgSystemInfo } from '@services/systems.service.types';
+import { NxSystemInfo, NxOrgSystemInfo } from '@services/systems.service.types';
 
 import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
 import type {
@@ -647,18 +647,16 @@ export const GroupsStore = signalStore(
                 const cloudSystems = currentGroup?.cloudSystems || [];
                 const systemItems: SystemItem[] = [];
                 for (const system of cloudSystems) {
-                    const systemInfo = systemInfoMap.get(system.systemId);
-                    if (!systemInfo) {
-                        continue;
-                        // Ignore zombie systems that have been disconnected from cloud but
-                        // not removed from orgs
-                    }
-
+                    const systemInfo = systemInfoMap.get(system.systemId) || ({} as NxSystemInfo);
                     const { systemId, groupId, effectiveState } = system;
                     // API sometimes forgets the system name on CloudSystem, patch for now
                     // https://networkoptix.atlassian.net/browse/CLOUD-13056?focusedCommentId=194015
-                    const { system2faEnabled, stateOfHealth, name, organizationId } =
-                        systemInfo as NxOrgSystemInfo;
+                    const {
+                        system2faEnabled = false,
+                        stateOfHealth = '',
+                        name = system.name,
+                        organizationId = system.organization,
+                    } = systemInfo as NxOrgSystemInfo;
                     systemItems.push({
                         systemId,
                         organizationId,
