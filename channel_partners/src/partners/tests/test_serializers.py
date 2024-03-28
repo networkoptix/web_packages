@@ -1443,6 +1443,27 @@ class TestSystemUsageReportSerializer:
         assert service_usage.service == self.local_recording_service
         assert service_usage.usage == usage_quantity * 2
 
+    def test_save_service_with_overUse(self):
+        usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 50)
+        data = {
+            **self.usage_data_base,
+            "usages": [self.get_service_usages(self.local_recording_service.id,
+                                               usage_quantity=usage_quantity)]
+        }
+        ServiceUsage.check_excess(self.system)
+        self.system.refresh_from_db()
+        assert self.system.security_statuses['types']['local_recording']['status'] == 'ok'
+        serializer = SystemUsageReportSerializer(data=data)
+        serializer.is_valid()
+        serializer.save_security_metrics(self.system)
+        assert ServiceUsage.objects.all().count() == 1
+        service_usage = ServiceUsage.objects.first()
+        assert service_usage.service == self.local_recording_service
+        assert service_usage.usage == usage_quantity * 2
+        self.system.refresh_from_db()
+        assert self.system.security_statuses['types']['local_recording']['status'] == 'overUse'
+        assert self.system.security_statuses['services'][str(self.local_recording_service.id)]['status'] == 'overUse'
+
     def test_save_single_service_two_entries(self):
         usage_quantity = ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 5)
         data = {
