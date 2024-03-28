@@ -275,11 +275,23 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     showRole(row: UserRecord): boolean {
         const currentGroupId = this.currentGroupId$$();
         const orgId = this.currentOrg$$()?.id;
+        if (!currentGroupId && this.canManageUsers$$()) {
+            return this.userIsOnlyAdmin(row);
+        }
         return (
-            (currentGroupId !== orgId && row?.accessLevel?.id !== currentGroupId) ||
+            (this.userType !== UserType.CHANNEL_PARTNER &&
+                currentGroupId !== orgId &&
+                row?.accessLevel?.id !== currentGroupId) ||
             this.hasMultipleRoles(row) ||
             !this.canManageUsers$$()
         );
+    }
+
+    userIsOnlyAdmin(row: UserRecord): boolean {
+        if (!row.roles?.length || this.userType !== UserType.CHANNEL_PARTNER) {
+            return false;
+        }
+        return row.roles[0].includes('Administrator') && this.hasOnlyOneAdmin$$();
     }
 
     get tableType(): string {
