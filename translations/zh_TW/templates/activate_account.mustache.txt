@@ -1,8 +1,8 @@
-您好 {{message.userFullName}},
+{{message.userFullName}}，您好
 
-  請點擊下方按鈕以確認您的電子郵件並啟用帳號.
+  請點擊下方連結以確認您的電子郵件並啟用帳號。
 
 {{config.portal_url}}/authorize/activate/{{message.code}}
 
-若您並未在 %CLOUD_NAME% 中註冊, 請忽略這封電子郵件.
-不要與任何人分享此訊息或連結.
+若您並未註冊 %CLOUD_NAME% ， 請忽略這封電子郵件.
+不要與任何人分享此訊息或連結。
