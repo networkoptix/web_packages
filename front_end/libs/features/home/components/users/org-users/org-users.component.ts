@@ -8,7 +8,6 @@ import {
     inject,
     computed,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -66,7 +65,7 @@ export class NxOrganizationUsersComponent implements OnInit {
 
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     rootGroups$$ = this.groupsStore.groupsEntities;
-    orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
+    orgRoles$$ = this.CPService.organizationRoles$$;
     selectedUsers: { [key: string]: UserRecord } = {};
     destroyRef = inject(DestroyRef);
 
@@ -106,15 +105,10 @@ export class NxOrganizationUsersComponent implements OnInit {
     }
 
     newUserDialog(): void {
-        const roles = this.orgRoles$$() || [];
         const org = this.currentOrg$$();
-        const groups = this.rootGroups$$() || [];
         if (org) {
             this.dialogsService.addOrgUserV2({
                 organization: org,
-                users: this.orgUserStore.tableUsers$$(),
-                roles,
-                groups,
             });
         }
     }
@@ -153,7 +147,7 @@ export class NxOrganizationUsersComponent implements OnInit {
             .then(confirm => {
                 if (confirm) {
                     const orgId = this.routerState.organizationId();
-                    const folderId = this.routerState.groupId();
+                    const folderId = this.routerState.groupId() || orgId;
                     if (deleteMultiple) {
                         this.orgUserStore.removeUsers(
                             orgId,

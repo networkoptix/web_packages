@@ -179,7 +179,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         const { id, name } = item;
         const children: string[] = [];
         this.groupInfoMap.set(id, { name, parent, children });
-        this.flatGroups.push({ id, name, level });
+        this.flatGroups.push({ id, name, level, hasChildren: !!item.children.length });
         item.children.forEach(g => {
             children.push(g.id);
             this.parseGroup(g, level + 1, id);
