@@ -76,6 +76,9 @@ to the action buttons. -->
             >
                 <div
                     class="org-tree__arrow-btn"
+                    [class]="{
+                        invisible: !group.hasChildren
+                    }"
                     (click)="
                         $event.stopPropagation(); toggleFolderOpen(group.id); highlightIndex = i
                     "

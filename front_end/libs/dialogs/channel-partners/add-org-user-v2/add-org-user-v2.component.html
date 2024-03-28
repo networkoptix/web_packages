@@ -77,7 +77,7 @@
             #targetFolder="ngModel"
             [model]="targetFolder"
             [organization]="organization"
-            [groups]="groups"
+            [groups]="groupsStore.sortedGroups$$()"
             [statuses]="orgTreeStatuses$$()"
             [messagesNumLines]="2"
             [ngModel]="selectedFolder$$()"

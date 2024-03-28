@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, WritableSignal, computed, signal, inject } from '@angular/core';
+import { Component, Inject, WritableSignal, computed, signal, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,14 +15,15 @@ import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxAccountService } from '@services/account.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     OrgRoleIds,
     type GroupItem,
     type Organization,
     type OrganizationRole,
-    type OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
@@ -53,25 +54,25 @@ import { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
     ],
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
+    groupsStore = inject(GroupsStore);
     orgUserStore = inject(OrgUsersStore);
+    cpService = inject(NxChannelPartnersService);
     icons = icons;
     emailDisabled = false;
 
     userEmail$$ = signal('');
     roles: OrganizationRole[];
-    users: OrganizationUser[];
     /* Key  : User email
      * Value: Key  : Org/group id
      *        Value: Role name
      */
     /** Roles existing users have, not roles for users */
-    userRoles = new Map<string, Map<string, string>>();
+    userRoles = new Map<string, Map<string, { role: string; roleId: string }>>();
     selectedRole$$: WritableSignal<string>;
 
     addOrgUserProcess: Process;
 
     organization: Organization;
-    groups: GroupItem[];
 
     selectedFolder$$: WritableSignal<string>;
 
@@ -83,6 +84,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
 
     orgTreeStatuses$$ = computed<OrgTreeStatuses>(() => {
         const [email, role] = [this.userEmail$$(), this.selectedRole$$()];
+        const groups = this.groupsStore.sortedGroups$$();
 
         const statuses: OrgTreeStatuses = new Map();
 
@@ -100,7 +102,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                 msg: this.selfAddMsg,
             });
 
-            this.groups.forEach(group => cascadeGroupErrors(group, this.selfAddMsg));
+            groups.forEach(group => cascadeGroupErrors(group, this.selfAddMsg));
             return statuses;
         }
 
@@ -110,10 +112,10 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                 statuses.set(this.organization.id, {
                     type: 'warn',
                     msg: this.translate.instant(staticLang.dialogs.channelPartners.directAccess, {
-                        role: existingUserRoles.get(this.organization.id),
+                        role: existingUserRoles.get(this.organization.id)?.role,
                     }),
                 });
-                this.groups.forEach(group => cascadeGroupErrors(group, this.parentAccessMsg));
+                groups.forEach(group => cascadeGroupErrors(group, this.parentAccessMsg));
             } else if (role !== OrgRoleIds.OrgAdmin) {
                 const findDirectAccessGroups = (groups: GroupItem[]): void => {
                     for (const group of groups) {
@@ -123,7 +125,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                                 msg: this.translate.instant(
                                     staticLang.dialogs.channelPartners.directAccess,
                                     {
-                                        role: existingUserRoles.get(group.id),
+                                        role: existingUserRoles.get(group.id)?.role,
                                     },
                                 ),
                             });
@@ -135,46 +137,58 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                         }
                     }
                 };
-                findDirectAccessGroups(this.groups);
+                findDirectAccessGroups(groups);
             }
         }
 
         if (role === OrgRoleIds.OrgAdmin) {
-            this.groups.forEach(group => cascadeGroupErrors(group, this.restrictedRoleMsg));
+            groups.forEach(group => cascadeGroupErrors(group, this.restrictedRoleMsg));
         }
 
         return statuses;
     });
 
+    updateUsersEffect = effect(() => {
+        const users = this.orgUserStore.tableUsers$$();
+        users.forEach(user => {
+            if (user.groupRoles?.length) {
+                // Otherwise, group user
+                this.userRoles.set(
+                    user.email,
+                    new Map(
+                        user.groupRoles.map(r => [
+                            r.groupId,
+                            { role: r.roles[0], roleId: r.rolesIds[0] },
+                        ]),
+                    ),
+                );
+            } else if (user.roles?.length) {
+                // Has org role, is org user
+                this.userRoles.set(
+                    user.email,
+                    new Map([
+                        [this.organization.id, { role: user.roles[0], roleId: user.rolesIds[0] }],
+                    ]),
+                );
+            }
+        });
+    });
+
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { organization, roles, users, groups, email }: DT['data'],
+        @Inject(DIALOG_DATA) { organization, email }: DT['data'],
         processService: NxProcessService,
         private translate: TranslateService,
         private account: NxAccountService,
     ) {
         super(dialogRef);
         this.organization = organization;
-        this.roles = roles;
-        this.selectedRole$$ = signal(roles[0].id);
-        this.users = users as OrganizationUser[];
-        this.groups = groups;
+        this.roles = this.cpService.organizationRoles$$();
+        this.selectedRole$$ = signal(this.roles[0].id);
         if (email) {
             this.userEmail$$.set(email);
             this.emailDisabled = true;
         }
-        users.forEach(user => {
-            if (user.groupRoles?.length) {
-                // Otherwise, group user
-                this.userRoles.set(
-                    user.email,
-                    new Map(user.groupRoles.map(r => [r.groupId, r.roles[0]])),
-                );
-            } else if (user.roles?.length) {
-                // Has org role, is org user
-                this.userRoles.set(user.email, new Map([[organization.id, user.roles[0]]]));
-            }
-        });
 
         this.restrictedRoleMsg = translate.instant(
             staticLang.dialogs.channelPartners.restrictedRole,

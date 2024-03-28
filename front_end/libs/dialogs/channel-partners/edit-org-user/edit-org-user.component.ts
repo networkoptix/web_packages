@@ -56,13 +56,12 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
         toastService: NxToastService,
     ) {
         super(dialogRef);
-        cpService.getOrganizationRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<string>>(r => ({
-                name: r.name,
-                value: r.id,
-            }));
-            this.role = this.roles.find(r => r.name === role);
-        });
+        this.roles = cpService.organizationRoles$$().map<DropdownItem<string>>(r => ({
+            name: r.name,
+            value: r.id,
+        }));
+        this.role = this.roles.find(r => r.name === role);
+
         this.title = title;
         this.editOrgUserProcess = processService.createProcess(
             () => {

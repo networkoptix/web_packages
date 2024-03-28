@@ -17,7 +17,6 @@ import type {
     GroupItem,
     GroupUser,
     Organization,
-    OrganizationRole,
     OrganizationUser,
     ServiceQuantities,
     State,
@@ -200,9 +199,6 @@ export type MoveSystemItem = DialogType<
 export type AddOrgUserV2 = DialogType<
     {
         organization: Organization;
-        roles: OrganizationRole[];
-        users: OrganizationUser[] | UserRecord[];
-        groups: GroupItem[];
         email?: string;
     },
     OrganizationUser | GroupUser

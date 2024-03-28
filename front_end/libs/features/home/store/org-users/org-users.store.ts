@@ -46,6 +46,24 @@ const ORG_USER_STATE = new InjectionToken<OrgUsersState>('OrgUserState', {
     factory: () => initialState,
 });
 
+const findGroupRecursive = (
+    groups: GroupItem[],
+    matcher: (group: GroupItem) => boolean,
+): GroupItem | undefined => {
+    for (const group of groups) {
+        if (matcher(group)) {
+            return group;
+        }
+        if (group.children) {
+            const found = findGroupRecursive(group.children, matcher);
+            if (found) {
+                return found;
+            }
+        }
+    }
+    return undefined;
+};
+
 const formatUser = (
     org: Organization,
     user: (OrganizationUser | GroupUser) &
@@ -110,7 +128,7 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         fullName: user.fullName || 'N/A',
         groupRoles: user?.groupRoles?.map(group => ({
             ...group,
-            name: groups?.find(groupItem => groupItem.id === group.groupId)?.name,
+            name: findGroupRecursive(groups, groupItem => groupItem.id === group.groupId)?.name,
         })),
         userId: user.email,
         isOrgUser: isOrgUser(user),
@@ -131,14 +149,25 @@ export const OrgUsersStore = signalStore(
     withEntities<OrgUser>(),
     withComputed(store => ({
         tableUsers$$: computed(() => {
-            const groups = store.groups();
-            return store.entities().map(user => ({
-                ...user,
-                groupRoles: (user?.groupRoles || []).map(group => ({
-                    ...group,
-                    name: group.name || groups.find(_group => _group.id === group.groupId)?.name,
-                })),
-            })) as UserRecord[];
+            // const groups = store.groups();
+            return store.entities().map(({ roles, rolesIds, ...user }) => {
+                const groupUser = user.accessLevel?.membershipType === 'systemgroup';
+                return {
+                    ...user,
+                    rolesIds,
+                    roles: !groupUser ? roles : [],
+                    groupRoles: groupUser
+                        ? ([
+                              {
+                                  groupId: user.accessLevel.id,
+                                  name: user.accessLevel.name,
+                                  roles,
+                                  rolesIds,
+                              },
+                          ] as GroupRole[])
+                        : [],
+                };
+            }) as UserRecord[];
         }),
     })),
     withMethods((store, chpService = inject(NxChannelPartnersService)) => ({

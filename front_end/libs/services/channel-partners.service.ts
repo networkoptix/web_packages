@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -87,6 +88,8 @@ export class NxChannelPartnersService {
     deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
     deleteBulkOrganizationUsers = this.cpApi.deleteBulkOrganizationUsers;
     deleteBulkUserGroups = this.cpApi.deleteBulkUserGroups;
+
+    organizationRoles$$ = toSignal(this.cpApi.getOrganizationRoles(), { initialValue: [] });
 
     /* Service Management */
     getChannelPartnerOwnedServices = this.cpApi.getChannelPartnerOwnedServices;
