@@ -244,7 +244,8 @@
                     <svg-icon
                         *ngIf="
                             canManageUsers$$() &&
-                                (!inGroup || row.accessLevel.id === currentGroupId$$());
+                                (!inGroup || row.accessLevel.id === currentGroupId$$()) &&
+                                !userIsOnlyAdmin(row);
                             else info
                         "
                         class="delete clickable"
