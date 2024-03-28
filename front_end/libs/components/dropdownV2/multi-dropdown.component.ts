@@ -3,7 +3,6 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { Component, forwardRef, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { of } from 'rxjs';
@@ -39,10 +38,9 @@ export class NxMultiDropdownComponent<T> extends BaseDropdownComponent<T, true> 
 
     constructor(
         overlay: Overlay,
-        domSanitizer: DomSanitizer,
         private translate: TranslateService,
     ) {
-        super(overlay, domSanitizer);
+        super(overlay);
     }
 
     // A store of the dropdownItems that are selected

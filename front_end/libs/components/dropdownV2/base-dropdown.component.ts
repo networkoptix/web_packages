@@ -15,7 +15,6 @@ import {
     effect,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { take, Observable } from 'rxjs';
 
 import { icons } from '@static-variables';
@@ -39,7 +38,6 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Con
     @Input('aria-label') ariaLabel: string = '';
 
     @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLButtonElement>;
-    @ViewChild('select') select: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     @ContentChildren(BaseDropdownItem, { descendants: true }) dropdownItems = new QueryList<
         BaseDropdownItem<T>
@@ -69,10 +67,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Con
         this.setPlaceholderOrDisplayText();
     });
 
-    constructor(
-        public overlay: Overlay,
-        public domSanitizer: DomSanitizer,
-    ) {}
+    constructor(public overlay: Overlay) {}
 
     // ControlValueAccessor methods
     writeValue(updatedSelected: SelectedType<T, M>): void {
