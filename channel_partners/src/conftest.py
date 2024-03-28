@@ -401,10 +401,15 @@ def org_service_factory(cp_service_factory):
 
 @pytest.fixture()
 def service_record_factory():
-    def factory(service, cloud_system, organization=None, quantity=1):
-        return baker.make(ChannelPartnerServiceRecord, service=service,
-                          cloud_system=cloud_system, quantity=quantity,
-                          organization=organization or cloud_system.organization)
+    def factory(service, cloud_system, organization=None,
+                quantity=1, created_ts=timezone.now(), effective_ts=None):
+        service = baker.make(ChannelPartnerServiceRecord, service=service,
+                             cloud_system=cloud_system, quantity=quantity,
+                             organization=organization or cloud_system.organization,
+                             created_ts=created_ts, effective_ts=effective_ts or created_ts)
+        service.created_ts = created_ts
+        service.save()
+        return service
 
     return factory
 
@@ -667,3 +672,20 @@ def mock_jwks_request(mocker, cloud_test_host):
         return mock_urlopen
 
     return mock
+
+
+def wrapped_report_mock_func(
+        func,
+        entity_obj_name,
+        entity_id_name,
+        report_type,
+        *args,
+        **kwargs,
+):
+    return func(*args, **kwargs)
+
+
+@pytest.fixture()
+def mock_reports_decoration(mocker):
+    return mocker.patch('partners.services.usage_reports_service.wrapped_report_func',
+                        wrapped_report_mock_func)

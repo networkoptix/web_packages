@@ -9,5 +9,10 @@ CELERY_CRON_CONFIG = {
     "partners.tasks.cloud_user_full_name.update_cloud_users_full_name": {
         "task": "partners.tasks.cloud_user_full_name.update_cloud_users_full_name",
         "schedule": crontab(minute='10', hour="*/3")
+    },
+    "partners.tasks.usage_reports.report_daily_calculation_task": {
+        "task": "partners.tasks.usage_reports.report_daily_calculation_task",
+        # Todo. Change to daily when it is tested.
+        "schedule": crontab(minute='10', hour="*")
     }
 }
