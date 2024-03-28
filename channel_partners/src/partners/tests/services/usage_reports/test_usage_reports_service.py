@@ -1,3 +1,5 @@
+import datetime
+import json
 import uuid
 from typing import (
     List,
@@ -7,11 +9,18 @@ from typing import (
 
 import pytest
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from django.db.models import QuerySet
+from django.utils import timezone
 from model_bakery import baker
 from pytest_django.asserts import assertQuerysetEqual
+from rest_framework.utils.encoders import JSONEncoder
 
-from partners.models import ChannelPartnerServiceRecord
+from partners.models import (
+    ChannelPartnerServiceRecord,
+    ReportSnapshot,
+    ServiceUsage,
+)
 from partners.services.usage_reports_service import (
     CHANNEL_PARTNER,
     ORGANIZATION,
@@ -28,6 +37,8 @@ from partners.services.usage_reports_service import (
     OrganizationUsage,
     RegularUsageCalculator,
     RegularUsageDetailRecord,
+    ReportSnapshotDoesNotExists,
+    ReportSnapshotService,
     SystemServiceSummary,
     SystemUsage,
     TotalUsageDate,
@@ -293,17 +304,24 @@ class TestRegularUsageCalculator:
 
 
 class TestOrganizationReportsService:
-    def test_get_system_reports(self, mocker, system_factory):
+    def test_get_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
+                                cp_service_factory):
         system_regular_report_mock = mocker.patch(
             'partners.services.usage_reports_service.CloudSystemReportsService.get_regular_report',
             side_effect=['report_1', 'report_2', 'report_3']
         )
-        systems = [baker.prepare('partners.CloudSystemId', system_id=uuid.uuid4(), name=f'sys_{i}') for i in range(3)]
-        organization = baker.prepare('partners.Organization')
-        service = mocker.Mock()
-        system_reports = OrganizationReportsService.get_system_reports(systems=systems, organization=organization,
+        cp = channel_partner_factory()
+        organization = organization_factory(channel_partner=cp)
+        service = cp_service_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for i in range(3)]
+        for system in systems:
+            system.created_ts = parser.parse('01-01-2023')
+            system.save()
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        system_reports = OrganizationReportsService.get_system_reports(organization=organization,
                                                                        service=service,
-                                                                       period_start=parser.parse('01-01-2024'))
+                                                                       period_start=parser.parse('01-01-2024'),
+                                                                       generate=True)
         assert system_regular_report_mock.has_calls(
             [mocker.call(cloud_system=system.system_id, organization=organization,
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
@@ -312,6 +330,16 @@ class TestOrganizationReportsService:
             {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i + 1}'} for i in
             range(3)
         ]
+        assert save_snapshot_spy.call_count == 1
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
+        assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
+        save_snapshot_spy.reset_mock()
+        system_reports = OrganizationReportsService.get_system_reports(organization=organization,
+                                                                       service=service,
+                                                                       period_start=parser.parse('01-01-2024'),
+                                                                       generate=True)
+        assert save_snapshot_spy.call_count == 0
+        assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
 
     def test_build_summary_from_reports(self):
         systems = [(uuid.uuid4(), f'sys_{i}') for i in range(1, 4)]
@@ -348,9 +376,40 @@ class TestOrganizationReportsService:
             summary=OrganizationServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
         )
 
+    def test_get_organization_report(self, channel_partner_factory, organization_factory,
+                                     system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+        try:
+            report = OrganizationReportsService.get_organization_report(
+                organization=organization,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = OrganizationReportsService.get_organization_report(
+            organization=organization,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              report_type=ReportSnapshot.ReportType.organization_usage_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+
 
 class TestChannelPartnerReportsService:
-    def test_get_organization_usages(self, mocker):
+    def test_get_organization_usages(self, mocker, mock_reports_decoration):
         channel_partner = mocker.Mock()
         service = baker.prepare('partners.ChannelPartnerService')
         organizations = [baker.prepare('partners.Organization', name=f'org_{i}', id=uuid.uuid4()) for i in range(5)]
@@ -393,7 +452,8 @@ class TestChannelPartnerReportsService:
                 ]
             )
             channel_partner_usages = ChannelPartnerReportsService.get_channel_partner_usages(
-                channel_partner=channel_partner, service=service, period_start=parser.parse('01-01-2024')
+                channel_partner=channel_partner, service=service,
+                period_start=parser.parse('01-01-2024'), generate=True,
             )
 
         # One service is automatically created/inherited from parent, so total of two services for each sub channel
@@ -500,3 +560,768 @@ class TestChannelPartnerReportsService:
                 monthly_rate=50 * (idx + 1)
             ) for idx in range(len(services) - 1)
         ]
+
+
+class TestChannelPartnerReportsServiceSave:
+    def test_get_channel_partner_report(self, channel_partner_factory, organization_factory, mocker,
+                                        system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+        try:
+            report = ChannelPartnerReportsService.get_channel_partner_report(
+                channel_partner=cp,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = ChannelPartnerReportsService.get_channel_partner_report(
+            channel_partner=cp,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_usage_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_channel_partner_report(
+                channel_partner=cp,
+                period_start=timezone.now() - relativedelta(months=1),
+                generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_regular_service_report(self, channel_partner_factory, organization_factory, mocker,
+                                        system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+        try:
+            report = ChannelPartnerReportsService.get_regular_service_report(
+                channel_partner=cp,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = ChannelPartnerReportsService.get_regular_service_report(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert snapshot.service == service
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_regular_service_report(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_regular_detail_table(self, channel_partner_factory, organization_factory, mocker,
+                                      system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+        try:
+            report = ChannelPartnerReportsService.get_regular_detail_table(
+                channel_partner=cp,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = ChannelPartnerReportsService.get_regular_detail_table(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_regular_detail_table)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert snapshot.service == service
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_regular_detail_table(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_organization_usages_with_data(self, channel_partner_factory, organization_factory, mocker,
+                                               system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+        try:
+            report = ChannelPartnerReportsService.get_organization_usages(
+                channel_partner=cp,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = ChannelPartnerReportsService.get_organization_usages(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_organization_usages)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert snapshot.service == service
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_organization_usages(
+            channel_partner=cp,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_channel_partner_usages_with_data(self, channel_partner_factory, organization_factory, mocker,
+                                                  system_factory, cp_service_factory, service_record_factory,
+                                                  service_usage_factory, django_capture_on_commit_callbacks):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        with django_capture_on_commit_callbacks(execute=True) as capture_on_commit:
+            sub_cp = channel_partner_factory(parent_channel_partner=cp)
+        organization = organization_factory(channel_partner=sub_cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        period_start = timezone.now() - relativedelta(months=2)
+        for service_record in service_records:
+            service_record.created_ts = period_start
+            service_record.save()
+            service_record.cloud_system.created_ts = period_start
+            service_record.cloud_system.save()
+        try:
+            report = ChannelPartnerReportsService.get_channel_partner_usages(
+                channel_partner=cp,
+                service=service,
+                period_start=period_start,
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = ChannelPartnerReportsService.get_channel_partner_usages(
+            channel_partner=cp,
+            service=service,
+            period_start=period_start,
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_usages)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert snapshot.service == service
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+
+        for service_record in service_records:
+            service_usage_factory(
+                system=service_record.cloud_system,
+                service=service,
+                usage=1,
+                to_ts=period_start + relativedelta(minutes=30)
+            )
+            ServiceUsage.check_excess(service_record.cloud_system)
+        ReportSnapshot.objects.all().delete()
+        report = ChannelPartnerReportsService.get_channel_partner_usages(
+            channel_partner=cp,
+            service=service,
+            period_start=period_start,
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_usages)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert snapshot.service == service
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_channel_partner_usages(
+            channel_partner=cp,
+            service=service,
+            period_start=period_start,
+            generate=True
+        )
+        assert save_snapshot_spy.call_count == 0
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+
+    def test_organization_without_systems(self, channel_partner_factory, organization_factory,
+                                          cp_service_factory, django_capture_on_commit_callbacks):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        with django_capture_on_commit_callbacks(execute=True) as capture_on_commit:
+            sub_cp = channel_partner_factory(parent_channel_partner=cp)
+        organization = organization_factory(channel_partner=sub_cp)
+        report = ChannelPartnerReportsService.get_channel_partner_report(
+            channel_partner=cp,
+            period_start=datetime.date.today() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+
+    def test_channel_partner_without_children(self, channel_partner_factory, organization_factory,
+                                              cp_service_factory, django_capture_on_commit_callbacks):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        report = ChannelPartnerReportsService.get_channel_partner_report(
+            channel_partner=cp,
+            period_start=datetime.date.today() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+
+
+class TestReportSnapshotService:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory,
+              cp_service_factory, system_factory):
+        self.cp = channel_partner_factory()
+        self.org = organization_factory(channel_partner=self.cp)
+        self.cp_service = cp_service_factory(channel_partner=self.cp)
+        self.system = system_factory(organization=self.org)
+        
+    def test_init_no_existing_not_provisional(self):
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot is None
+
+    def test_init_no_existing_provisional(self):
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date.today(),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot is None
+
+    def test_init_existing_provisional(self):
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            service_id=self.cp_service.id,
+            start_date=datetime.date.today().replace(day=1),
+            report_data={'key': uuid.uuid4()}
+        )
+        assert report_snapshot.provisional is True
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date.today(),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is True
+        # report exists and updated today
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+        ReportSnapshot.objects.filter(id=report_snapshot.id).update(updated_ts=timezone.now() - relativedelta(days=1))
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date.today(),
+            service_id=self.cp_service.id,
+            generate=True
+        )
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is True
+
+    def test_init_existing_not_provisional(self):
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            service_id=self.cp_service.id,
+            start_date=datetime.date(year=2020, month=1, day=1),
+            report_data={'key': uuid.uuid4()}
+        )
+        assert report_snapshot.provisional is False
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+
+        snapshot_service.generate = True
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+
+    def test_save_existing_with_service_id(self):
+        old_value = f'{uuid.uuid4()}'
+        new_value = f'{uuid.uuid4()}'
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            service_id=self.cp_service.id,
+            start_date=datetime.date(year=2020, month=1, day=1),
+            report_data={'key': old_value}
+        )
+        assert report_snapshot.provisional is False
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        snapshot_service.save_snapshot({'key': new_value})
+        report_snapshot.refresh_from_db()
+        assert report_snapshot.report_data == {'key': new_value}
+        assert report_snapshot.service_id == self.cp_service.id
+
+    def test_save_not_existing_with_service_id(self):
+        old_value = f'{uuid.uuid4()}'
+        new_value = f'{uuid.uuid4()}'
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        snapshot_service.save_snapshot({'key': new_value})
+        assert ReportSnapshot.objects.count() == 1
+        assert ReportSnapshot.objects.first().report_data == {'key': new_value}
+
+    def test_save_existing_without_service_id(self):
+        old_value = f'{uuid.uuid4()}'
+        new_value = f'{uuid.uuid4()}'
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.org.id,
+            report_type=ReportSnapshot.ReportType.organization_usage_report,
+            start_date=datetime.date(year=2020, month=1, day=1),
+            report_data={'key': old_value}
+        )
+        assert report_snapshot.provisional is False
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.org.id,
+            report_type=ReportSnapshot.ReportType.organization_usage_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            generate=False
+        )
+        snapshot_service.save_snapshot({'key': new_value})
+        report_snapshot.refresh_from_db()
+        assert report_snapshot.report_data == {'key': new_value}
+        assert report_snapshot.service_id is None
+
+    def test_save_not_existing_without_service_id(self):
+        new_value = f'{uuid.uuid4()}'
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.org.id,
+            report_type=ReportSnapshot.ReportType.organization_usage_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            generate=False
+        )
+        snapshot_service.save_snapshot({'key': new_value})
+        assert ReportSnapshot.objects.count() == 1
+        assert ReportSnapshot.objects.first().report_data == {'key': new_value}
+        assert ReportSnapshot.objects.first().service_id is None
+
+    def test_report_period_bound_not_existing_report(self, mocker):
+        period_start = datetime.date(year=2020, month=3, day=1)
+        mocked_today = mocker.patch(
+            'partners.services.usage_reports_service.get_today',
+            return_value=datetime.date(year=2020, month=4, day=1)
+        )
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=period_start,
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot is None
+
+        mocked_today = mocker.patch(
+            'partners.services.usage_reports_service.get_today',
+            return_value=datetime.date(year=2020, month=3, day=31)
+        )
+
+        snapshot_service.generate = False
+
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot is None
+
+    def test_report_period_bound_existing_report(self, mocker):
+        period_start = datetime.date(year=2020, month=3, day=1)
+        mocked_today = mocker.patch(
+            'partners.services.usage_reports_service.get_today',
+            return_value=datetime.date(year=2020, month=3, day=31)
+        )
+        mocked_today = mocker.patch(
+            'partners.models.get_today',
+            return_value=datetime.date(year=2020, month=3, day=31)
+        )
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            service_id=self.cp_service.id,
+            start_date=period_start,
+            report_data={'key': uuid.uuid4()}
+        )
+        # Saved snapshot is provisional
+        assert report_snapshot.provisional is True
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=period_start,
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        # request period is provisional
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot == report_snapshot
+
+        mocked_today = mocker.patch(
+            'partners.services.usage_reports_service.get_today',
+            return_value=datetime.date(year=2020, month=4, day=1)
+        )
+
+        snapshot_service.generate = False
+        assert report_snapshot.provisional is True
+
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+
+        snapshot_service.generate = True
+
+        assert snapshot_service.is_provisional is False
+        # requested period is not provisional but saved snapshot is provisional (1st of a month)
+        assert snapshot_service.needs_generation is True
+        assert snapshot_service.snapshot == report_snapshot
+
+
+class TestOrganizationReportsServiceSave:
+    def test_get_organization_report(self, channel_partner_factory, organization_factory, mocker,
+                                        system_factory, cp_service_factory, service_record_factory,):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+        try:
+            report = OrganizationReportsService.get_organization_report(
+                organization=organization,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = OrganizationReportsService.get_organization_report(
+            organization=organization,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              report_type=ReportSnapshot.ReportType.organization_usage_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = OrganizationReportsService.get_organization_report(
+            organization=organization,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_regular_detail_table(self, channel_partner_factory, organization_factory, mocker,
+                                      system_factory, cp_service_factory, service_record_factory,
+                                      service_usage_factory):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+            service_usage_factory(
+                system=service_record.cloud_system,
+                service=service,
+                usage=1,
+                to_ts=timezone.now() - relativedelta(months=1) + relativedelta(minutes=30)
+            )
+            ServiceUsage.check_excess(service_record.cloud_system)
+        try:
+            report = OrganizationReportsService.get_regular_detail_table(
+                organization=organization,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = OrganizationReportsService.get_regular_detail_table(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              report_type=ReportSnapshot.ReportType.organization_regular_detail_table)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = OrganizationReportsService.get_regular_detail_table(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_regular_service_report(self, channel_partner_factory, organization_factory, mocker,
+                                        system_factory, cp_service_factory, service_record_factory,
+                                        service_usage_factory):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+            service_usage_factory(
+                system=service_record.cloud_system,
+                service=service,
+                usage=1,
+                to_ts=timezone.now() - relativedelta(months=1) + relativedelta(minutes=30)
+            )
+            ServiceUsage.check_excess(service_record.cloud_system)
+        try:
+            report = OrganizationReportsService.get_regular_service_report(
+                organization=organization,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = OrganizationReportsService.get_regular_service_report(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              service=service,
+                                              report_type=ReportSnapshot.ReportType.organization_regular_service_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = OrganizationReportsService.get_regular_service_report(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
+    def test_get_system_reports(self, channel_partner_factory, organization_factory, mocker,
+                                        system_factory, cp_service_factory, service_record_factory,
+                                        service_usage_factory):
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+            service_usage_factory(
+                system=service_record.cloud_system,
+                service=service,
+                usage=1,
+                to_ts=timezone.now() - relativedelta(months=1) + relativedelta(minutes=30)
+            )
+            ServiceUsage.check_excess(service_record.cloud_system)
+        try:
+            report = OrganizationReportsService.get_system_reports(
+                organization=organization,
+                service=service,
+                period_start=timezone.now() - relativedelta(months=1),
+            )
+        except ReportSnapshotDoesNotExists:
+            assert True
+        else:
+            assert False, 'Should have raised an exception when generate=False and no existing reports saved'
+
+        report = OrganizationReportsService.get_system_reports(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              service=service,
+                                              report_type=ReportSnapshot.ReportType.organization_systems_reports)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = OrganizationReportsService.get_system_reports(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+        # Test only missing reports generation
+        ReportSnapshot.objects.get(entity_id=organization.id,
+                                   report_type=ReportSnapshot.ReportType.organization_systems_reports).delete()
+        ReportSnapshot.objects.filter(report_type=ReportSnapshot.ReportType.system_regular_report).first().delete()
+        save_snapshot_spy.reset_mock()
+        new_report = OrganizationReportsService.get_system_reports(
+            organization=organization,
+            service=service,
+            period_start=timezone.now() - relativedelta(months=1),
+            generate=True
+        )
+        assert json.loads(json.dumps(new_report, cls=JSONEncoder)) == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 2

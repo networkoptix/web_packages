@@ -41,7 +41,7 @@ CI = os.getenv('CI', False)
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 BUILD = 'collectstatic' in sys.argv
-IS_CELERY = 'celery' in sys.argv[0]
+IS_CELERY = 'celery' in ' '.join(sys.argv)
 IS_DJANGO_SHELL = ('shell' in sys.argv and 'manage.py' in sys.argv)
 
 if CI:
