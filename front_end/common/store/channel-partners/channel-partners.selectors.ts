@@ -35,6 +35,14 @@ export const selectChannelPartners = createSelector(
     state => state.channelPartners,
 );
 
+export const selectRootChannelPartners = createSelector(selectChannelPartners, channelPartners => {
+    const channelPartnerIds = new Set<string>(channelPartners.map(partner => partner.id));
+    return channelPartners.filter(
+        partner =>
+            !partner.parentChannelPartner || !channelPartnerIds.has(partner.parentChannelPartner),
+    );
+});
+
 export const selectRootOrganizations = createSelector(selectChannelPartnersState, state =>
     sortEntityByName(state.rootOrganizations),
 );

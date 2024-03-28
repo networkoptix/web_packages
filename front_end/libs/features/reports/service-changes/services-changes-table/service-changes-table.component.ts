@@ -15,6 +15,7 @@ interface HEADER_ITEM {
 @Component({
     selector: 'nx-service-changes-table',
     templateUrl: './service-changes-table.component.html',
+    styleUrl: './service-changes-table.component.scss',
     imports: [TranslateModule, NxBaseTableComponent, CommonModule],
     standalone: true,
 })
