@@ -65,7 +65,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
      *        Value: Role name
      */
     /** Roles existing users have, not roles for users */
-    userRoles = new Map<string, Map<string, string>>();
+    userRoles = new Map<string, Map<string, { role: string; roleId: string }>>();
     selectedRole$$: WritableSignal<string>;
 
     addOrgUserProcess: Process;
@@ -110,7 +110,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                 statuses.set(this.organization.id, {
                     type: 'warn',
                     msg: this.translate.instant(staticLang.dialogs.channelPartners.directAccess, {
-                        role: existingUserRoles.get(this.organization.id),
+                        role: existingUserRoles.get(this.organization.id)?.role,
                     }),
                 });
                 this.groups.forEach(group => cascadeGroupErrors(group, this.parentAccessMsg));
@@ -123,7 +123,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                                 msg: this.translate.instant(
                                     staticLang.dialogs.channelPartners.directAccess,
                                     {
-                                        role: existingUserRoles.get(group.id),
+                                        role: existingUserRoles.get(group.id)?.role,
                                     },
                                 ),
                             });
@@ -168,11 +168,19 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
                 // Otherwise, group user
                 this.userRoles.set(
                     user.email,
-                    new Map(user.groupRoles.map(r => [r.groupId, r.roles[0]])),
+                    new Map(
+                        user.groupRoles.map(r => [
+                            r.groupId,
+                            { role: r.roles[0], roleId: r.rolesIds[0] },
+                        ]),
+                    ),
                 );
             } else if (user.roles?.length) {
                 // Has org role, is org user
-                this.userRoles.set(user.email, new Map([[organization.id, user.roles[0]]]));
+                this.userRoles.set(
+                    user.email,
+                    new Map([[organization.id, { role: user.roles[0], roleId: user.rolesIds[0] }]]),
+                );
             }
         });
 
