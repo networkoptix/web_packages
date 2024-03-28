@@ -101,17 +101,19 @@ export class NxOrganizationsComponent implements OnInit {
                 route: 'users',
             });
         }
-        if (this.permissionsStore.canViewOrgReports$$()) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.reports,
-                route: 'reports',
-            });
-        }
-        if (this.permissionsStore.canViewOrgSettings$$()) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.settings,
-                route: 'settings',
-            });
+        if (!this.currentGroupId$$()) {
+            if (this.permissionsStore.canViewOrgReports$$()) {
+                tabs.push({
+                    displayName: this.LANG.channelPartners.tabNames.reports,
+                    route: 'reports',
+                });
+            }
+            if (this.permissionsStore.canViewOrgSettings$$()) {
+                tabs.push({
+                    displayName: this.LANG.channelPartners.tabNames.settings,
+                    route: 'settings',
+                });
+            }
         }
         return tabs;
     });
