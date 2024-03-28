@@ -34,6 +34,7 @@ from django.db import (
 from django.db.models import (
     F,
     Func,
+    IntegerChoices,
     Q,
     QuerySet,
     Subquery,
@@ -44,6 +45,7 @@ from django.db.models.functions import Greatest
 from django.utils import timezone
 from django_cte import CTEManager
 from rest_framework.authtoken.models import Token
+from rest_framework.utils.encoders import JSONEncoder
 
 from channel_partners.utils import FieldOriginalMixin
 from partners.tasks.cloud_user_full_name import update_cloud_user_full_name
@@ -2664,3 +2666,42 @@ class NotificationTypes(enum.StrEnum):
 class MigrationRecord(models.Model):
     license_key = models.CharField(max_length=128)
     service_record = models.ForeignKey(ChannelPartnerServiceRecord, on_delete=models.CASCADE)
+
+
+class ReportSnapshot(models.Model):
+    class ReportType(IntegerChoices):
+        system_regular_report = 1, 'system_regular_report'
+        organization_systems_reports = 20, 'organization_system_reports'
+        organization_regular_service_report = 21, 'organization_regular_service_reports'
+        organization_regular_detail_table = 22, 'organization_regular_detail_table'
+        organization_usage_report = 23, 'organization_usage_report'
+        channel_partner_organization_usages = 40, 'channel_partner_organization_usages'
+        channel_partner_channel_partner_usages = 41, 'channel_partner_channel_partner_usages'
+        channel_partner_regular_detail_table = 42, 'channel_partner_regular_detail_table'
+        channel_partner_regular_service_report = 43, 'channel_partner_regular_service_report'
+        channel_partner_usage_report = 44, 'channel_partner_usage_report'
+
+    report_type = models.SmallIntegerField(choices=ReportType.choices)
+    entity_id = models.UUIDField()
+    service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT, null=True)
+    start_date = models.DateField(db_index=True)
+    provisional = models.BooleanField(default=False)
+    created_ts = models.DateTimeField(auto_now_add=True)
+    updated_ts = models.DateTimeField(auto_now=True)
+    report_data = models.JSONField(encoder=JSONEncoder)
+
+    class Meta:
+        unique_together = (
+            ('entity_id', 'report_type', 'service_id', 'start_date')
+        )
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if self.start_date + relativedelta(months=1) > get_today():
+            # mark as provisional if current greater than new period start date
+            self.provisional = True
+        else:
+            self.provisional = False
+        super().save(force_insert=force_insert, force_update=force_update,
+                     using=using, update_fields=update_fields)

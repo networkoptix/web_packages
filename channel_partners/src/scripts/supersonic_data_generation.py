@@ -18,6 +18,7 @@ from partners.models import (
     ServiceUsage,
     SystemGroup,
 )
+from partners.tasks.services import new_channel_partner_created
 from scripts.create_root_channel_partner import run as create_root
 from tools.helpers import get_path_from_parent
 
@@ -32,8 +33,8 @@ def run():
 
 class Generator:
     partner_depth = 3
-    group_depth = 4
-    org_dimension = 10
+    group_depth = 3
+    org_dimension = 5
     system_dimension = 5
     batch_size = 200
 
@@ -78,6 +79,7 @@ class Generator:
         self.partners = partners[1:]
         service_ext_ids = []
         for partner in self.partners:
+            new_channel_partner_created(partner.id)
             for service in partner.services.all():
                 service_ext_ids.append(ChannelPartnerServiceExternalId(
                     custom_id=uuid.uuid4(),
@@ -139,6 +141,7 @@ class Generator:
         print(f"Generated: {len(self.groups)} groups")
         CloudSystemId.objects.bulk_create(self.systems, batch_size=self.batch_size)
         print(f"Generated: {len(self.systems)} systems")
+        CloudSystemId.objects.all().update(created_ts=timezone.now() - timedelta(days=120))
         ChannelPartnerServiceRecord.objects.bulk_create(self.service_records, batch_size=self.batch_size)
         print(f"Generated: {len(self.service_records)} service records")
         ServiceUsage.objects.bulk_create(self.service_usages, batch_size=self.batch_size)
@@ -169,24 +172,30 @@ class Generator:
             self.systems.append(system)
             self.system_ext_ids.append(ext_id)
 
-            from_ts = timezone.now() - timedelta(days=20)
-            to_ts = timezone.now() - timedelta(hours=3)
+            t0 = timezone.now() - timedelta(hours=2)
+
             for service in services:
-                service_record = ChannelPartnerServiceRecord(
-                    service=service,
-                    cloud_system_id=system.id,
-                    quantity=random.randint(10, 50),
-                    created_ts=from_ts,
-                    effective_ts=from_ts,
-                    in_effect=True,
-                )
-                service_usage = ServiceUsage(
-                    service=service,
-                    cloud_system_id=system.id,
-                    service_type=service.type,
-                    usage=1,
-                    from_ts=from_ts,
-                    to_ts=to_ts
-                )
-                self.service_records.append(service_record)
-                self.service_usages.append(service_usage)
+                for ti in range(6):
+                    from_ts = t0 - timedelta(days=20*ti)
+                    to_ts = from_ts + timedelta(minutes=5)
+                    service_record = ChannelPartnerServiceRecord(
+                        service=service,
+                        cloud_system_id=system.id,
+                        organization_id=organization.id,
+                        quantity=random.randint(10, 50),
+                        created_ts=from_ts,
+                        effective_ts=from_ts,
+                        in_effect=True,
+                    )
+                    self.service_records.append(service_record)
+                    for si in range(5):
+                        from_ts = from_ts + timedelta(minutes=5)
+                        to_ts = to_ts + timedelta(minutes=5)
+                        service_usage = ServiceUsage(
+                            service=service,
+                            cloud_system_id=system.id,
+                            usage=5,
+                            from_ts=from_ts,
+                            to_ts=to_ts
+                        )
+                        self.service_usages.append(service_usage)

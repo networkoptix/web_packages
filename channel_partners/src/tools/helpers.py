@@ -88,7 +88,7 @@ def cast_uuid(uid: str | uuid.UUID | None) -> str | uuid.UUID | None:
 
 
 def get_today() -> datetime.date:
-    return datetime.date.today()
+    return datetime.datetime.utcnow().date()
 
 
 def get_license_server_client() -> httpx.Client:
