@@ -75,10 +75,7 @@ export class NxOrganizationUsersComponent implements OnInit {
         private store: Store,
         private translateService: TranslateService,
         private route: ActivatedRoute,
-    ) {
-        this.orgUserStore.setSelectedGroup(this.routerState.groupId);
-        this.orgUserStore.setGroups(this.groupsStore.currentGroups$$);
-    }
+    ) {}
 
     // ngOnInit(): void {
     //     iif(

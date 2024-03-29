@@ -1,6 +1,16 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, WritableSignal, computed, signal, inject, effect } from '@angular/core';
+import {
+    Component,
+    Inject,
+    WritableSignal,
+    computed,
+    signal,
+    inject,
+    effect,
+    EffectRef,
+    Signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,6 +25,7 @@ import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
+import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxAccountService } from '@services/account.service';
@@ -148,31 +159,35 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         return statuses;
     });
 
-    updateUsersEffect = effect(() => {
-        const users = this.orgUserStore.tableUsers$$();
-        users.forEach(user => {
-            if (user.groupRoles?.length) {
-                // Otherwise, group user
-                this.userRoles.set(
-                    user.email,
-                    new Map(
-                        user.groupRoles.map(r => [
-                            r.groupId,
-                            { role: r.roles[0], roleId: r.rolesIds[0] },
+    updateUsersEffect = (usersSignal: Signal<UserRecord[]>): EffectRef =>
+        effect(() => {
+            const users = usersSignal();
+            users.forEach(user => {
+                if (user.groupRoles?.length) {
+                    // Otherwise, group user
+                    this.userRoles.set(
+                        user.email,
+                        new Map(
+                            user.groupRoles.map(r => [
+                                r.groupId,
+                                { role: r.roles[0], roleId: r.rolesIds[0] },
+                            ]),
+                        ),
+                    );
+                } else if (user.roles?.length) {
+                    // Has org role, is org user
+                    this.userRoles.set(
+                        user.email,
+                        new Map([
+                            [
+                                this.organization.id,
+                                { role: user.roles[0], roleId: user.rolesIds[0] },
+                            ],
                         ]),
-                    ),
-                );
-            } else if (user.roles?.length) {
-                // Has org role, is org user
-                this.userRoles.set(
-                    user.email,
-                    new Map([
-                        [this.organization.id, { role: user.roles[0], roleId: user.rolesIds[0] }],
-                    ]),
-                );
-            }
+                    );
+                }
+            });
         });
-    });
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
@@ -183,6 +198,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
     ) {
         super(dialogRef);
         this.organization = organization;
+        this.updateUsersEffect(this.orgUserStore.usersByGroupSignalFactory(organization.id));
         this.roles = this.cpService.organizationRoles$$();
         this.selectedRole$$ = signal(this.roles[0].id);
         if (email) {
@@ -213,6 +229,9 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
             },
             {},
             user => {
+                if (user) {
+                    this.orgUserStore.updateGroupCache(organization.id);
+                }
                 this.close(user);
             },
             () => {},
