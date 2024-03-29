@@ -267,7 +267,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
                     }
                 });
         } else {
-            const folder = user?.groupRoles?.[0]?.groupId || '';
+            const folder = user?.groupRoles?.[0]?.groupId || user.accessLevel?.id || '';
             this.orgUsersStore.updateUser(this.currentOrg$$().id, folder, user.email, roleId);
         }
     }
@@ -275,7 +275,10 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
     showRole(row: UserRecord): boolean {
         const currentGroupId = this.currentGroupId$$();
         const orgId = this.currentOrg$$()?.id;
-        if (!currentGroupId && this.canManageUsers$$()) {
+        if (
+            (currentGroupId ? this.accessTable && !!row.groupRoles?.length : true) &&
+            this.canManageUsers$$()
+        ) {
             return this.userIsOnlyAdmin(row);
         }
         return (

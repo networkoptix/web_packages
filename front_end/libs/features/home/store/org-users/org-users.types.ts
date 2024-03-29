@@ -24,3 +24,8 @@ export type OrgUsersState = {
     groups: GroupItem[];
     searchQuery: string;
 };
+
+export interface OrgUsersByGroup {
+    id: string;
+    users: OrgUser[];
+}
