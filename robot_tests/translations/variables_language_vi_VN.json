@@ -455,7 +455,7 @@
     "MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT": "Chủ đề đồng bộ hóa kho lưu trữ tối đa cho camera ảo",
     "MAX HTTP TRANSCODERS TEXT": "Số lượng kết nối HTTP tối đa sử dụng chuyển mã cho máy chủ. Chrome mở 2 kết nối cùng một lúc, sau đó đóng kết nối đầu tiên. Vì vậy, bạn nên đặt giá trị >= 2 cho tham số này.",
     "META DATA STORAGE CHANGE TEXT": "Chính sách thay đổi lưu trữ dữ liệu meta",
-    "OS TIME CHANGE CHECK PERIOD TEXT": "Thời gian kiểm tra thay đổi thời gian của hệ điều hành",
+    "OS TIME CHANGE CHECK PERIOD TEXT": "Khoảng thời gian kiểm tra thay đổi thời gian của hệ điều hành",
     "PRIMARY TIME SYNC SERVER TEXT": "Máy chủ đồng bộ hóa thời gian chính",
     "PROXY CONNECTION TIMEOUT TEXT": "Hết thời gian kết nối proxy (giây)",
     "PUSH NOTIFICATION LANGUAGE TEXT": "Ngôn ngữ thông báo đẩy",
