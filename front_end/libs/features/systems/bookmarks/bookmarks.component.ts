@@ -34,7 +34,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { alphabeticalSort, cleanId, msToParts, offsetDate, paramSortFunc } from '@utils/general';
-import { getSysLang } from '@utils/nx';
 
 import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
@@ -119,7 +118,7 @@ export class NxBookmarksComponent implements OnInit {
     devices$ = new ReplaySubject<BookmarksDevice[]>(1);
     tags$ = new ReplaySubject<BookmarksTags>(1);
     tagNames$ = this.tags$.pipe(
-        map(tags => Object.keys(tags).sort(alphabeticalSort(this.locale, t => t))),
+        map(tags => Object.keys(tags).sort(alphabeticalSort(t => t))),
         startWith<string[]>([]),
     );
     suggestions$ = combineLatest([this.devices$, this.tagNames$]).pipe(
@@ -145,7 +144,6 @@ export class NxBookmarksComponent implements OnInit {
     deviceIdsWithArchive: string[];
 
     private queryParams: BookmarkParams;
-    private locale: string;
 
     constructor(
         configService: NxConfigService,
@@ -156,7 +154,6 @@ export class NxBookmarksComponent implements OnInit {
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.locale = getSysLang(window);
     }
 
     ngOnInit(): void {
@@ -286,7 +283,7 @@ export class NxBookmarksComponent implements OnInit {
                 this.tags$.next(tags);
 
                 const filteredDevices = this.filterDevices(devices).sort(
-                    alphabeticalSort(this.locale, ({ name }) => name),
+                    alphabeticalSort(({ name }) => name),
                 );
                 this.devices$.next(filteredDevices);
                 this.deviceMap = new Map(filteredDevices.map(device => [device.id, device]));

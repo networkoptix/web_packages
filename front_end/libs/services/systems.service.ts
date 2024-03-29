@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector, LOCALE_ID, computed } from '@angular/core';
+import { Injectable, Injector, computed } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -117,7 +117,6 @@ export class NxSystemsService {
         private cloudApi: NxCloudApiService,
         private injector: Injector,
         private store: Store,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {
             this.#systems = systems;
@@ -312,7 +311,7 @@ export class NxSystemsService {
         // Priority: name => status
         // Note: JS sort has been stable since ECMAScript 2019
         return systems
-            .sort(alphabeticalSort(this.locale, sys => sys.name))
+            .sort(alphabeticalSort(sys => sys.name))
             .sort(paramSortFunc(sys => Number(sys.stateOfHealth !== 'online')));
     }
 }

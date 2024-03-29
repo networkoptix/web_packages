@@ -7,7 +7,6 @@ import {
     Inject,
     input,
     Input,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
     signal,
@@ -116,10 +115,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             });
 
             if (customGroup.length > 0) {
-                customGroup.sort(alphabeticalSort(this.locale, group => group.name));
+                customGroup.sort(alphabeticalSort(group => group.name));
             }
             if (ldapGroup.length > 0) {
-                ldapGroup.sort(alphabeticalSort(this.locale, group => group.name));
+                ldapGroup.sort(alphabeticalSort(group => group.name));
             }
 
             const sortedGroups = builtInGroup
@@ -286,7 +285,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         private translateService: TranslateService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Inject(WINDOW) private window: Window,
-        @Inject(LOCALE_ID) private locale: string,
         private applyService: NxApplyService,
     ) {
         /* Going directly to another system does not trigger lifecyle methods or destroy the

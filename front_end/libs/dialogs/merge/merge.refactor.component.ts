@@ -7,7 +7,6 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    LOCALE_ID,
     ViewChild,
     signal,
     effect,
@@ -237,7 +236,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
         @Inject(WINDOW) public window: Window,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -406,7 +404,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.CONFIG.system.flags.newSystem,
                 ),
             )
-            .sort(alphabeticalSort(this.locale, (sys: MergeSystem) => sys.name));
+            .sort(alphabeticalSort((sys: MergeSystem) => sys.name));
 
         if (this.mergeSystems.length === 0) {
             this.otherSystem = true;

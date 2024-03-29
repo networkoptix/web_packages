@@ -96,9 +96,7 @@ export class NxServicesComponent {
             displayRows = displayRows.filter(row => row.type === typeFilter);
         }
 
-        return displayRows.sort(
-            alphabeticalSort(navigator.language, row => row.displayName, ascendingSort),
-        );
+        return displayRows.sort(alphabeticalSort(row => row.displayName, ascendingSort));
     });
 
     ascendingSort = signal(true);

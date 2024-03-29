@@ -210,10 +210,7 @@ export class UserWithGroupsManager extends UserManager {
                 });
             }
         });
-        const sortByGroupName = alphabeticalSort<UserGroupDropdown>(
-            this.locale,
-            ({ label }) => label,
-        );
+        const sortByGroupName = alphabeticalSort<UserGroupDropdown>(({ label }) => label);
 
         // Used to insert the group title and horizontal divider for the mult-select dropdown
         if (customGroup.length > 0) {

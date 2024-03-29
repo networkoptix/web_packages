@@ -4,9 +4,7 @@ import {
     effect,
     EnvironmentInjector,
     inject,
-    Inject,
     Input,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
     runInInjectionContext,
@@ -230,7 +228,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.setupDefaults();
 
@@ -714,10 +711,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                 });
 
-                const sortByEmailLabel = alphabeticalSort<Level3Item>(
-                    this.locale,
-                    ({ label }) => label,
-                );
+                const sortByEmailLabel = alphabeticalSort<Level3Item>(({ label }) => label);
 
                 const allUsers: Level3Item[] = [];
                 allUsers.push(...localUsers.sort(sortByEmailLabel));
@@ -762,9 +756,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.serverManager.servers) {
-                this.system.serverManager.servers.sort(
-                    alphabeticalSort(this.locale, server => server.name),
-                );
+                this.system.serverManager.servers.sort(alphabeticalSort(server => server.name));
 
                 serversNode.level3 = [];
                 this.system.serverManager.servers.forEach(server => {
@@ -850,9 +842,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.splice(1, 0, camerasNode);
             }
             if (this.system.cameraManager.cameras) {
-                this.system.cameraManager.cameras.sort(
-                    alphabeticalSort(this.locale, camera => camera.name),
-                );
+                this.system.cameraManager.cameras.sort(alphabeticalSort(camera => camera.name));
                 const camerasInMenu = this.system.cameraManager.cameras.filter(camera =>
                     this.system.permissionManager.canEditDevice(camera.id),
                 );

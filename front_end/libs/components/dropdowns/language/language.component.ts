@@ -7,7 +7,6 @@ import {
     Inject,
     Output,
     EventEmitter,
-    LOCALE_ID,
     booleanAttribute,
     signal,
 } from '@angular/core';
@@ -57,7 +56,6 @@ class BaseLanguageDropdown extends BaseDropdown {
         private languageService: NxLanguageProviderService,
         private localStorageService: LocalStorageService,
         @Inject(WINDOW) private window: Window,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         super();
         this.currentLang = languageService.currentLang;
@@ -122,7 +120,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                     : data.filter(language =>
                           this.CONFIG.supportedLanguages?.includes(language.language),
                       );
-            this.languages.sort(alphabeticalSort(this.locale, lang => lang.language));
+            this.languages.sort(alphabeticalSort(lang => lang.language));
 
             this.splitLanguages();
 

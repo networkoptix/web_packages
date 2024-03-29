@@ -1,15 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {
-    Component,
-    Input,
-    ViewChild,
-    ChangeDetectorRef,
-    ElementRef,
-    Inject,
-    LOCALE_ID,
-} from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef, ElementRef, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -175,7 +167,6 @@ export class MergeModalContent {
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -463,9 +454,7 @@ export class MergeModalContent {
                         }
                         return system;
                     })
-                    .sort(
-                        alphabeticalSort(this.locale, sys => `${sys.systemName ?? ''}${sys.name}`),
-                    );
+                    .sort(alphabeticalSort(sys => `${sys.systemName ?? ''}${sys.name}`));
             });
     }
 
