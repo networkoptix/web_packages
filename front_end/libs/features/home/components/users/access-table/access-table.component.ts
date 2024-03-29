@@ -1,18 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, Input, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { patchState, signalStore, withMethods } from '@ngrx/signals';
-import {
-    addEntity,
-    removeEntities,
-    removeEntity,
-    setAllEntities,
-    withEntities,
-} from '@ngrx/signals/entities';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, catchError, map, of, take } from 'rxjs';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -20,24 +11,14 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
-
-const GroupStore = signalStore(
-    withEntities<UserRecord>(),
-    withMethods(store => ({
-        addGroup: group => patchState(store, addEntity(group, { idKey: 'groupId' })),
-        removeGroup: group => patchState(store, removeEntity(group)),
-        removeGroups: groups => patchState(store, removeEntities(groups)),
-        setGroups: groups => patchState(store, setAllEntities(groups, { idKey: 'groupId' })),
-    })),
-);
 
 @Component({
     selector: 'nx-access-table',
@@ -55,20 +36,56 @@ const GroupStore = signalStore(
         RouterModule,
         PipesModule,
     ],
-    providers: [GroupStore],
     standalone: true,
 })
-export class NxAccessTableComponent implements OnInit {
+export class NxAccessTableComponent {
     LANG = staticLang;
     UserType = UserType;
     icons = icons;
-    groupStore = inject(GroupStore);
 
     @Input() email: string = '';
 
+    orgUsersStore = inject(OrgUsersStore);
+
+    orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
+
+    userRecords$$ = computed(() => {
+        const orgRecords = this.orgRecords$$();
+        return orgRecords
+            .filter(({ email }) => email === this.email)
+            .flatMap(user => {
+                if (user.userType === UserType.GROUP) {
+                    return user.groupRoles!.map(groupRole => {
+                        return {
+                            ...user,
+                            userId: this.email,
+                            email: this.email,
+                            groupRoles: [groupRole],
+                            roles: groupRole.roles,
+                            rolesIds: groupRole.rolesIds,
+                            groupId: UserType.ORGANIZATION,
+                        };
+                    });
+                }
+                return user;
+            });
+    });
+
     orgRoles$$ = this.cpService.organizationRoles$$;
-    headers: HEADER_ITEM[];
-    fullName$$ = signal('');
+    headers: HEADER_ITEM[] = [
+        { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
+        { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+    ];
+    fullName$$ = computed(() => {
+        const fullName = this.orgRecords$$().find(
+            u => u.email === this.email && u.fullName !== 'N/A',
+        )?.fullName;
+        if (fullName) {
+            return `${fullName}, ${this.email}`;
+        }
+
+        return this.email;
+    });
     selectedGroups: { [key: string]: UserRecord } = {};
 
     groupsStore = inject(GroupsStore);
@@ -96,113 +113,11 @@ export class NxAccessTableComponent implements OnInit {
         private translateService: TranslateService,
     ) {}
 
-    ngOnInit(): void {
-        this.headers = [
-            { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
-            { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
-        ];
-        let request: Observable<UserRecord[]>;
-        if (this.inGroup$$()) {
-            request = this.cpService.getGroupUsersWithAccess(this.currentGroupId$$()).pipe(
-                take(1),
-                map(res => {
-                    const user = res.find(user => user.email === this.email);
-                    const userType =
-                        user?.hasAccessTo?.membershipType === UserType.ORGANIZATION
-                            ? UserType.ORGANIZATION
-                            : UserType.GROUP;
-                    if (user) {
-                        this.fullName$$.set(user.fullName);
-                        return [
-                            {
-                                userType,
-                                userId: this.email,
-                                email: this.email,
-                                isOrgUser: userType === UserType.ORGANIZATION,
-                                roles: user.roles,
-                                groupRoles: [
-                                    {
-                                        name: user.hasAccessTo?.name,
-                                        groupId: user.hasAccessTo?.id,
-                                        roles: user.roles,
-                                        rolesIds: user.rolesIds,
-                                    },
-                                ],
-                                groupId: UserType.ORGANIZATION,
-                            },
-                        ];
-                    }
-                    return [];
-                }),
-                catchError(err => {
-                    console.error(err);
-                    return of([]);
-                }),
-            );
-        } else {
-            request = this.cpService.getOrganizationUser(this.currentOrg$$()?.id, this.email).pipe(
-                take(1),
-                map(({ groupRoles, fullName, roles }) => {
-                    this.fullName$$.set(fullName);
-
-                    // Org users do not have groupRoles
-                    if (!groupRoles.length) {
-                        return roles.map(role => ({
-                            userType: UserType.ORGANIZATION,
-                            userId: this.email,
-                            email: this.email,
-                            isOrgUser: true,
-                            roles: [role],
-                            groupId: UserType.ORGANIZATION,
-                        }));
-                    }
-                    // TODO: bug with groupItems being undefined when loading directly into access table
-                    const groupItems = this.currentGroups$$();
-                    const groupMap = new Map(groupItems?.map(group => [group.id, group]));
-                    return groupRoles.map(group => {
-                        // Todo, add path once API updated
-                        const currGroup = groupMap.get(group.groupId);
-                        const groupItem: GroupRole = {
-                            ...currGroup,
-                            groupId: group?.groupId,
-                            roles: group.roles,
-                            rolesIds: [],
-                        };
-
-                        return {
-                            userType: UserType.GROUP,
-                            roles: group.roles,
-                            groupId: group.groupId,
-                            groupRoles: [groupItem],
-                            userId: this.email,
-                            email: this.email,
-                        };
-                    });
-                }),
-            );
-        }
-        request.subscribe((groups: UserRecord[]) => {
-            this.groupStore.setGroups(groups);
-        });
-    }
-
     addAccess(): void {
-        const org = this.currentOrg$$();
-        if (org) {
-            this.dialogService.addOrgUserV2({ organization: org, email: this.email }).then(user => {
-                if (user) {
-                    const accessLevel = (('accessLevel' in user && user.accessLevel) ??
-                        {}) as Record<string, string>;
-                    const groupId = accessLevel?.id || UserType.ORGANIZATION;
-                    this.groupStore.addGroup({
-                        ...user,
-                        groupId,
-                        userId: user.email,
-                        userType: 'groupRoles' in user ? UserType.ORGANIZATION : UserType.GROUP,
-                    });
-                }
-            });
-        }
+        this.dialogService.addOrgUserV2({
+            organization: this.currentOrg$$()!,
+            email: this.email,
+        });
     }
 
     deleteUser(row: UserRecord): void {
@@ -212,14 +127,14 @@ export class NxAccessTableComponent implements OnInit {
             ? this.translateService.instant(
                   this.LANG.channelPartners.usersTable.deleteDialog.multipleAccessRole,
                   {
-                      name: row.fullName || row.email,
+                      name: this.fullName$$(),
                       count: selectedGroupsLength,
                   },
               )
             : this.translateService.instant(
                   this.LANG.channelPartners.usersTable.deleteDialog.singleAccessRole,
                   {
-                      name: row.fullName || row.email,
+                      name: this.fullName$$(),
                       folder: row?.accessLevel?.name || '',
                   },
               );
@@ -235,30 +150,21 @@ export class NxAccessTableComponent implements OnInit {
                     buttonClass: 'btn-danger',
                 },
             })
-            .then(confirm => {
+            .then(async confirm => {
                 if (confirm) {
-                    let deleteRequest: Observable<unknown>;
-                    let deletedIds: string[] = [];
-                    const orgId = this.currentOrg$$().id;
-                    if (row.isOrgUser) {
-                        deletedIds = [UserType.ORGANIZATION];
-                        deleteRequest = this.cpService.deleteOrganizationUser(orgId, this.email);
-                    } else {
-                        const groupsToDelete: string[] = deleteMultiple
-                            ? Object.keys(this.selectedGroups)
-                            : row.groupId
-                              ? [row.groupId]
-                              : [];
-                        deletedIds = groupsToDelete;
-                        deleteRequest = this.cpService.deleteBulkUserGroups(
-                            orgId,
-                            this.email,
-                            groupsToDelete,
-                        );
+                    const updates = Object.values(this.selectedGroups).map(userRecord =>
+                        this.orgUsersStore.removeUser(
+                            this.currentOrg$$()!.id,
+                            userRecord.groupRoles![0].groupId,
+                            userRecord.email,
+                        ),
+                    );
+
+                    const results = await Promise.all(updates);
+
+                    if (results.some(result => result)) {
+                        this.orgUsersStore.updateGroupCache(this.currentOrg$$()!.id);
                     }
-                    deleteRequest.subscribe(() => {
-                        this.groupStore.removeGroups(deletedIds);
-                    });
                 }
             });
     }

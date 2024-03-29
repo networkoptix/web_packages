@@ -132,11 +132,18 @@
                                 [src]="icons.dir + 'folder2.svg'"
                                 [svgStyle]="{ 'width.px': '20px' }"
                             ></svg-icon>
-                            {{
-                                row.groupRoles?.length > 1
-                                    ? row.groupRoles.length + ' folders'
-                                    : row.groupRoles[0]?.name
-                            }}
+                            @if (accessTable) {
+                                {{
+                                    groupsStore.groupPathMap$$()[row.groupRoles[0].groupId]
+                                        .pathString
+                                }}
+                            } @else {
+                                {{
+                                    row.groupRoles?.length > 1
+                                        ? row.groupRoles.length + ' folders'
+                                        : row.groupRoles[0]?.name
+                                }}
+                            }
                         </ng-template>
                     </ng-container>
                     <ng-template #group>

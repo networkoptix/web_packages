@@ -15,7 +15,7 @@
             </span></a
         >
     </div>
-    <h2>{{ fullName$$() ? fullName$$() + ', ' : '' }}{{ email }}</h2>
+    <h2>{{ fullName$$() }}</h2>
 </div>
 <div class="body">
     <div class="actions py-3">
@@ -39,7 +39,7 @@
         [userType]="UserType.ORGANIZATION"
         [accessTable]="true"
         [headers]="headers"
-        [records]="groupStore.entities()"
+        [records]="userRecords$$()"
         [roles]="orgRoles$$()"
         (onDeleteClick)="deleteUser($event)"
         (selectedUsersEmitter)="updateSelectedUsers($event)"
