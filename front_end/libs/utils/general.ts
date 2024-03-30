@@ -506,3 +506,48 @@ export function getParameterByName(name: string): string | null {
 
     return params.get(name);
 }
+
+/**
+ * A function that wraps a target object and notifies a notifier function when a method is called.
+ *
+ * Whenever a method is called the notifier function is called with the method name as the
+ * first argument, arguments passed to the method as the second argument, and result as the
+ * third argument.
+ *
+ * Example for triggering side effects when a method is called.
+ *
+ * ```
+ * const updateTargetObjectState = () => updateTargetObjectState.triggerUpdate();
+ * const proxiedObject = interceptMethodCalls(targetObject, updateTargetObjectState);
+ * ```
+ *
+ * Example for logging method calls.
+ * ```
+ * const logMethodCall = (method, args, result) => console.info({ method, args, result });
+ * const proxiedObject = interceptMethodCalls(objectToDebug, logMethodCall);
+ * ```
+ *
+ * @param obj - Target to interceptMethodCalls
+ * @param fn - Notifier function
+ * @returns Proxy of Target
+ */
+export function interceptMethodCalls<
+    Target extends object,
+    Notifier extends (prop: keyof Target, args: unknown[], result: unknown) => unknown,
+>(obj: Target, fn: Notifier): Target {
+    return new Proxy(obj, {
+        get(target, prop) {
+            if (typeof target[prop] === 'function') {
+                return new Proxy(target[prop], {
+                    apply: (target, thisArg, argumentsList) => {
+                        const result = Reflect.apply(target, thisArg, argumentsList);
+                        fn(prop as keyof Target, argumentsList, result);
+                        return result;
+                    },
+                });
+            } else {
+                return Reflect.get(target, prop);
+            }
+        },
+    });
+}

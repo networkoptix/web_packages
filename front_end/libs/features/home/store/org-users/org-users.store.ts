@@ -21,8 +21,8 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { iif, Observable, pipe, zip } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { Subject, iif, Observable, pipe, zip } from 'rxjs';
+import { debounceTime, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 
 import {
     AccessLevel,
@@ -39,7 +39,7 @@ import {
     OrganizationUser,
     OrgRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsenstiveSearch, interceptMethodCalls } from '@utils/general';
 
 import { GroupsStore } from '../groups/groups.store';
 import { ChannelPartnersRouteState } from '../route-state/route-state.store';
@@ -51,6 +51,7 @@ const initialState: OrgUsersState = {
     selectedUser: '',
     groups: [],
     searchQuery: '',
+    refreshUsersSubject: new Subject(),
 };
 
 const ORG_USER_STATE = new InjectionToken<OrgUsersState>('OrgUserState', {
@@ -196,176 +197,207 @@ export const OrgUsersStore = signalStore(
                     );
                 });
             };
-            return {
-                updateGroupCache,
-                addUser: (
-                    org: Organization,
-                    folder: string,
-                    user: { email: string; roleId: string },
-                ) => {
-                    const isAddingToOrg = org.id === folder;
-                    const groups = groupsStore.groupsEntities();
-                    return iif(
-                        () => isAddingToOrg,
-                        chpService.createOrganizationUser(org.id, user),
-                        chpService.updateGroupUser(folder, user),
-                    ).pipe(
-                        map(user => formatUser(org, user, groups, isAddingToOrg)),
-                        tapResponse({
-                            next: user => {
-                                const existingUser = store.currentGroupUsersEntityMap()[user.email];
-                                if (existingUser) {
-                                    let changes: Partial<OrgUser>;
-                                    if (isAddingToOrg) {
-                                        changes = {
-                                            accessLevel: undefined,
-                                            isOrgUser: true,
-                                            userType: UserType.ORGANIZATION,
-                                            groupRoles: [],
-                                        };
-                                    } else {
-                                        changes = {
-                                            accessLevel: user.accessLevel,
-                                            isOrgUser: false,
-                                            userType: UserType.GROUP,
-                                            groupRoles: user.groupRoles.reduce<GroupRole[]>(
-                                                (roles, role) => {
-                                                    const index = roles.findIndex(
-                                                        _role => _role.groupId === role.groupId,
-                                                    );
-                                                    if (index > -1) {
-                                                        roles[index] = role;
-                                                    } else {
-                                                        roles.push(role);
-                                                    }
-                                                    return roles;
-                                                },
-                                                existingUser.groupRoles,
-                                            ),
-                                        };
-                                    }
-                                    changes.roles = user.roles;
-                                    changes.rolesIds = user.rolesIds;
 
-                                    patchState(
-                                        store,
-                                        updateEntity(
-                                            {
-                                                id: user.email,
-                                                changes,
-                                            },
-                                            currentGroupUsersEntity,
-                                        ),
-                                    );
-                                } else {
-                                    patchState(
-                                        store,
-                                        addEntity(
-                                            { ...user },
-                                            {
-                                                idKey: 'email',
-                                                collection: currentGroupUsersEntity.collection,
-                                            },
-                                        ),
-                                    );
-                                }
-                            },
-                            error: e => {
-                                console.error(e);
-                            },
-                        }),
-                    );
-                },
-                removeUser: (orgId: string, folder: string, email: string) =>
-                    new Promise<boolean>(resolve => {
+            const refreshUsers = (methodName?: string): void => {
+                const excludedMethods = ['setUsers'];
+                if (excludedMethods.includes(methodName || '')) {
+                    return;
+                }
+
+                store.refreshUsersSubject().next();
+            };
+
+            const updateHelpers = {
+                /**
+                 * A method to manually trigger updating the cached users for a specific group.
+                 *
+                 * This is useful when you need a different group's users or the orgs users when you are viewing a different group.
+                 *
+                 * Example use case is when you need the org users within a dialog.
+                 *
+                 * Another example use case would be to add pre-fetching of users when you're hovering over a group link
+                 *
+                 * @param groupId Pass a groupId to update the cached users for a particular group. Or orgId to update the cached org users.
+                 */
+                updateGroupCache,
+                /**
+                 * A method to manually trigger updating users for the current group as well
+                 * as cached org users.
+                 */
+                refreshUsers: refreshUsers as () => void,
+            };
+
+            const updateMethods = interceptMethodCalls(
+                {
+                    addUser: (
+                        org: Organization,
+                        folder: string,
+                        user: { email: string; roleId: string },
+                    ) => {
+                        const isAddingToOrg = org.id === folder;
+                        const groups = groupsStore.groupsEntities();
+                        return iif(
+                            () => isAddingToOrg,
+                            chpService.createOrganizationUser(org.id, user),
+                            chpService.updateGroupUser(folder, user),
+                        ).pipe(
+                            map(user => formatUser(org, user, groups, isAddingToOrg)),
+                            tapResponse({
+                                next: user => {
+                                    const existingUser =
+                                        store.currentGroupUsersEntityMap()[user.email];
+                                    if (existingUser) {
+                                        let changes: Partial<OrgUser>;
+                                        if (isAddingToOrg) {
+                                            changes = {
+                                                accessLevel: undefined,
+                                                isOrgUser: true,
+                                                userType: UserType.ORGANIZATION,
+                                                groupRoles: [],
+                                            };
+                                        } else {
+                                            changes = {
+                                                accessLevel: user.accessLevel,
+                                                isOrgUser: false,
+                                                userType: UserType.GROUP,
+                                                groupRoles: user.groupRoles.reduce<GroupRole[]>(
+                                                    (roles, role) => {
+                                                        const index = roles.findIndex(
+                                                            _role => _role.groupId === role.groupId,
+                                                        );
+                                                        if (index > -1) {
+                                                            roles[index] = role;
+                                                        } else {
+                                                            roles.push(role);
+                                                        }
+                                                        return roles;
+                                                    },
+                                                    existingUser.groupRoles,
+                                                ),
+                                            };
+                                        }
+                                        changes.roles = user.roles;
+                                        changes.rolesIds = user.rolesIds;
+
+                                        patchState(
+                                            store,
+                                            updateEntity(
+                                                {
+                                                    id: user.email,
+                                                    changes,
+                                                },
+                                                currentGroupUsersEntity,
+                                            ),
+                                        );
+                                    } else {
+                                        patchState(
+                                            store,
+                                            addEntity(
+                                                { ...user },
+                                                {
+                                                    idKey: 'email',
+                                                    collection: currentGroupUsersEntity.collection,
+                                                },
+                                            ),
+                                        );
+                                    }
+                                },
+                                error: e => {
+                                    console.error(e);
+                                },
+                            }),
+                        );
+                    },
+                    removeUser: (orgId: string, folder: string, email: string) => {
                         iif(
                             () => orgId === folder,
                             chpService.deleteOrganizationUser(orgId, email),
                             chpService.deleteBulkGroupUsers(folder, [email]),
-                        ).subscribe(
-                            () => {
-                                patchState(store, removeEntity(email, currentGroupUsersEntity));
-                                resolve(true);
-                            },
-                            () => {
-                                resolve(false);
-                            },
+                        ).subscribe(() =>
+                            patchState(store, removeEntity(email, currentGroupUsersEntity)),
                         );
-                    }),
-                removeUsers: (orgId: string, folder: string, emails: string[]) => {
-                    const users: { orgUsers: OrgUser[]; groupUsers: OrgUser[] } = store
-                        .currentGroupUsersEntities()
-                        .reduce(
-                            (deletedUsers, user) => {
-                                if (emails.includes(user.email)) {
-                                    if (user?.groupRoles?.length) {
-                                        deletedUsers.groupUsers.push(user);
-                                    } else {
-                                        deletedUsers.orgUsers.push(user);
+                    },
+                    removeUsers: (orgId: string, folder: string, emails: string[]) => {
+                        const users: { orgUsers: OrgUser[]; groupUsers: OrgUser[] } = store
+                            .currentGroupUsersEntities()
+                            .reduce(
+                                (deletedUsers, user) => {
+                                    if (emails.includes(user.email)) {
+                                        if (user?.groupRoles?.length) {
+                                            deletedUsers.groupUsers.push(user);
+                                        } else {
+                                            deletedUsers.orgUsers.push(user);
+                                        }
                                     }
-                                }
-                                return deletedUsers;
-                            },
-                            { orgUsers: [], groupUsers: [] } as {
-                                orgUsers: OrgUser[];
-                                groupUsers: OrgUser[];
-                            },
-                        );
-                    const requests: Observable<unknown>[] = [];
-                    if (users.orgUsers.length) {
-                        requests.push(
-                            chpService.deleteBulkOrganizationUsers(
-                                orgId,
-                                users.orgUsers.map(({ email }) => email),
-                            ),
-                        );
-                    }
-                    if (orgId !== folder) {
-                        requests.push(
-                            chpService.deleteBulkGroupUsers(
-                                folder,
-                                users.groupUsers.map(({ email }) => email),
-                            ),
-                        );
-                    } else {
-                        const groupMap: { [key: string]: string[] } = {};
-                        for (const user of users.groupUsers) {
-                            for (const group of user?.groupRoles || []) {
-                                const { groupId } = group;
-                                if (!groupMap[groupId]) {
-                                    groupMap[groupId] = [];
-                                }
-                                groupMap[groupId].push(user.email);
-                            }
+                                    return deletedUsers;
+                                },
+                                { orgUsers: [], groupUsers: [] } as {
+                                    orgUsers: OrgUser[];
+                                    groupUsers: OrgUser[];
+                                },
+                            );
+                        const requests: Observable<unknown>[] = [];
+                        if (users.orgUsers.length) {
+                            requests.push(
+                                chpService.deleteBulkOrganizationUsers(
+                                    orgId,
+                                    users.orgUsers.map(({ email }) => email),
+                                ),
+                            );
                         }
+                        if (orgId !== folder) {
+                            requests.push(
+                                chpService.deleteBulkGroupUsers(
+                                    folder,
+                                    users.groupUsers.map(({ email }) => email),
+                                ),
+                            );
+                        } else {
+                            const groupMap: { [key: string]: string[] } = {};
+                            for (const user of users.groupUsers) {
+                                for (const group of user?.groupRoles || []) {
+                                    const { groupId } = group;
+                                    if (!groupMap[groupId]) {
+                                        groupMap[groupId] = [];
+                                    }
+                                    groupMap[groupId].push(user.email);
+                                }
+                            }
 
-                        Object.entries(groupMap).forEach(([id, users]) =>
-                            requests.push(chpService.deleteBulkGroupUsers(id, users)),
+                            Object.entries(groupMap).forEach(([id, users]) =>
+                                requests.push(chpService.deleteBulkGroupUsers(id, users)),
+                            );
+                        }
+                        zip(requests).subscribe(() =>
+                            patchState(store, removeEntities(emails, currentGroupUsersEntity)),
                         );
-                    }
-                    zip(requests).subscribe(() =>
-                        patchState(store, removeEntities(emails, currentGroupUsersEntity)),
-                    );
+                    },
+                    setUsers: (users: OrgUser[]) =>
+                        patchState(
+                            store,
+                            setEntities(users, {
+                                idKey: 'email',
+                                collection: currentGroupUsersEntity.collection,
+                            }),
+                        ),
+                    updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
+                        iif(
+                            () => !!folder && roleId !== OrgRoleIds.OrgAdmin,
+                            chpService.updateGroupUser(folder, {
+                                roleId,
+                                email,
+                            }),
+                            chpService.updateOrganizationUser(orgId, { roleId, email }),
+                        ).subscribe(); // Once the user is changed that's it because we fetch on each load.
+                        // In the future we can patch the state if it becomes necessary.
+                    },
                 },
-                setUsers: (users: OrgUser[]) =>
-                    patchState(
-                        store,
-                        setEntities(users, {
-                            idKey: 'email',
-                            collection: currentGroupUsersEntity.collection,
-                        }),
-                    ),
-                updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
-                    iif(
-                        () => !!folder && roleId !== OrgRoleIds.OrgAdmin,
-                        chpService.updateGroupUser(folder, {
-                            roleId,
-                            email,
-                        }),
-                        chpService.updateOrganizationUser(orgId, { roleId, email }),
-                    ).subscribe(() => updateGroupCache(orgId)); // Once the user is changed that's it because we fetch on each load.
-                    // In the future we can patch the state if it becomes necessary.
-                },
+                refreshUsers,
+            );
+
+            return {
+                ...updateHelpers,
+                ...updateMethods,
             };
         },
     ),
@@ -458,13 +490,23 @@ export const OrgUsersStore = signalStore(
                     email,
                 };
             });
+            const updater$$ = store.refreshUsersSubject();
+            const currentGroupEntities = toObservable(store.currentGroupUsersEntities);
             store.setSelectedGroup(
                 toObservable(updateSelectedGroup$$).pipe(
                     startWith(updateSelectedGroup$$()),
                     pairwise(),
                     filter(([prev, next]) => !next.email || next.email === prev.email),
-                    map(([{ email }, { groupId }]) => {
-                        if (email) {
+                    switchMap(state =>
+                        updater$$.pipe(
+                            switchMap(() => currentGroupEntities),
+                            debounceTime(100),
+                            map(() => [...state, true] as const),
+                            startWith([...state, false] as const),
+                        ),
+                    ),
+                    map(([{ email }, { groupId }, refreshUsers]) => {
+                        if (email || refreshUsers) {
                             store.updateGroupCache(routerStateStore.organizationId());
                         }
                         return groupId;
