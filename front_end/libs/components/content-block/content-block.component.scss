@@ -338,6 +338,16 @@
         }
     }
 
+    &.information {
+        .header-title {
+            color: white;
+        }
+
+        .section {
+            padding: 0 1rem 28px !important;
+        }
+    }
+
     &.gray {
         background-color: var(--grey-section-bg);
         border: 1px solid var(--grey-section-bg);
