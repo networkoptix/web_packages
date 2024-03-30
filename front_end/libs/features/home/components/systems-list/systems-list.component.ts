@@ -100,10 +100,12 @@ export class HomeSystemListComponent {
     actionItemsForSystems$$ = computed<Record<string, ActionItems[]>>(() => {
         const systems = this.directAccessSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
-        return systems.reduce((actionMap, { id, useRest }) => {
-            actionMap[id] = [
-                { name: openVms, id, action: () => this.protocolFactory(id, useRest) },
-            ];
+        return systems.reduce((actionMap, { id, useRest, stateOfHealth }) => {
+            const actions: ActionItems[] = [];
+            if (stateOfHealth === 'online') {
+                actions.push({ name: openVms, id, action: this.protocolFactory(id, useRest) });
+            }
+            actionMap[id] = actions;
             return actionMap;
         }, {});
     });
