@@ -586,7 +586,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 this.permissionManager.ownerEmail$$.set(this.info.ownerAccountEmail);
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
-                this.canMerge = this.permissionManager.isOwner$$() && 'cloudMerge' in capabilities;
+                this.canMerge = this.permissionManager.isOwner$$();
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
                     // Cloud storage backend is currently not ready. Removed for CB-1657

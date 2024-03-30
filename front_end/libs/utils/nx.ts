@@ -22,6 +22,7 @@ import type {
 import type { MenuNode } from '@services/menus.service.types';
 import type { OrgSystem, System, UserSystem } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig as CONFIG } from '@services/nx-config/config';
+import type { NxSystem } from '@services/system.service/system';
 import type {
     NxOrgSystemInfo,
     NxSystemInfo,
@@ -470,6 +471,11 @@ export function isUserSystem(system: System): system is UserSystem;
 export function isUserSystem(system: NxSystemInfo): system is NxUserSystemInfo;
 export function isUserSystem(system: System | NxSystemInfo): boolean {
     return 'ownerAccountId' in system;
+}
+
+export function isSystemMerging(system: NxSystem): boolean {
+    const mergeInfo = system?.mergeInfo;
+    return mergeInfo && 'primary' in mergeInfo && 'secondary' in mergeInfo;
 }
 
 enum Compass8 {

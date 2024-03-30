@@ -33,11 +33,11 @@ import { NxToastService } from '@services/toast.service';
 import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
-import { isUserSystem } from '@utils/nx';
+import { isSystemMerging, isUserSystem } from '@utils/nx';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
-import { clientMode, updateInterval } from '../variables/static-variables';
+import { updateInterval } from '../variables/static-variables';
 
 import type { Account } from './account.service/account';
 import { NxCloudApiService } from './nx-cloud-api';
@@ -261,14 +261,10 @@ export class NxSystemsService {
 
             if (isUserSystem(system)) {
                 const isMine = system.ownerAccountEmail === this.userEmail;
-                const canMerge = !!(
-                    isMine &&
-                    (system.capabilities.cloudMerge || clientMode.debug || clientMode.beta)
-                );
                 const systemInfo = {
                     ...system,
                     isMine,
-                    canMerge,
+                    canMerge: isMine,
                     version,
                     useRest,
                 };
@@ -289,7 +285,7 @@ export class NxSystemsService {
     }
 
     checkMerge(system: NxSystem | NxUserSystemInfo): boolean {
-        if ((system as NxSystem).mergeInfo !== undefined) {
+        if (isSystemMerging(system as NxSystem)) {
             this.addToMergeList(system.id);
         } else if (this.mergingSystems.has(system.id)) {
             const currentSystemId = this.storageService.systemId;
