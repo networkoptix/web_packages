@@ -2684,6 +2684,7 @@ class ReportSnapshot(models.Model):
     report_type = models.SmallIntegerField(choices=ReportType.choices)
     entity_id = models.UUIDField()
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT, null=True)
     start_date = models.DateField(db_index=True)
     provisional = models.BooleanField(default=False)
     created_ts = models.DateTimeField(auto_now_add=True)

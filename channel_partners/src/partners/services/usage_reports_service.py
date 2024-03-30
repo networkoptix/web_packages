@@ -203,7 +203,8 @@ class ReportSnapshotService:
             report_type: ReportSnapshot.ReportType,
             period_start: datetime.date,
             service_id: Optional[uuid.UUID] = None,
-            generate: bool = False
+            organization_id: Optional[uuid.UUID] = None,
+            generate: bool = False,
     ):
         """
         Params:
@@ -221,6 +222,10 @@ class ReportSnapshotService:
         self.next_period_start = period_start + relativedelta(months=1)
         if isinstance(self.next_period_start, datetime.datetime):
             self.next_period_start = self.next_period_start.date()
+        if report_type == ReportSnapshot.ReportType.system_regular_report:
+            self.organization_id = organization_id
+        else:
+            self.organization_id = None
         self.service_id = service_id
         self.generate = generate
         self.snapshot = self.get_snapshot()
@@ -247,9 +252,12 @@ class ReportSnapshotService:
             'report_type': self.report_type,
             'start_date': self.period_start,
         }
-
+        if self.report_type == ReportSnapshot.ReportType.system_regular_report:
+            lookup_kwargs['organization_id'] = self.organization_id
         if self.service_id:
             lookup_kwargs['service_id'] = self.service_id
+        else:
+            lookup_kwargs['service_id__isnull'] = True
         return lookup_kwargs
 
     @property
@@ -317,6 +325,7 @@ class ReportSnapshotService:
                 start_date=self.period_start,
                 service_id=self.service_id,
                 report_data=report,
+                organization_id=self.organization_id,
             )
 
 
@@ -358,12 +367,17 @@ def wrapped_report_func(
         raise ValueError(f'Cannot find entity "{entity_obj_name}" object in passed arguments.')
     entity_id = getattr(entity_obj, entity_id_name, None)
     service_id = getattr(func_args.arguments.get('service', None), 'id', None)
+    if report_type is ReportSnapshot.ReportType.system_regular_report:
+        organization_id = getattr(func_args.arguments.get('organization', None), 'id', None)
+    else:
+        organization_id = None
     snapshot_service = ReportSnapshotService(
         entity_id=entity_id,
         report_type=report_type,
         period_start=func_args.arguments['period_start'],
         service_id=service_id,
         generate=func_args.arguments.get('generate', False),
+        organization_id=organization_id,
     )
     if not snapshot_service.snapshot and not snapshot_service.generate:
         raise ReportSnapshotDoesNotExists(
