@@ -26,15 +26,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid var(--CP-pane-header-border);
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+
+            .header-title {
+                color: var(--card-header-text) !important;
+                margin: 0 !important;
+            }
 
             &.in-edit-mode {
-                border-bottom: 1px solid var(--CP-pane-header-border);
-                margin-bottom: 8px;
-                padding-bottom: 8px;
-
                 .header-title {
                     @extend h4;
-                    color: var(--card-header-text) !important;
                 }
             }
         }
