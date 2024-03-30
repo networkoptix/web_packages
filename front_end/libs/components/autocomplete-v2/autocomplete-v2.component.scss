@@ -1,0 +1,67 @@
+@use 'typography';
+
+:host {
+    position: relative;
+    display: flex;
+    height: 2rem;
+
+    &.ng-invalid.ng-touched .autocomplete-input:not(:focus) {
+        color: var(--input-error-color) !important;
+        border-color: var(--input-error-border-color) !important;
+    }
+
+    .clear-btn {
+        position: absolute;
+        right: 0.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+
+        padding: 0 !important;
+        width: 1.25rem;
+        height: 1.25rem !important;
+        background-color: transparent;
+
+        &:hover,
+        &:focus {
+            background-color: var(--btn-close-active-bg);
+        }
+
+        svg-icon {
+            display: flex;
+        }
+    }
+}
+
+$item-height: 1.75rem;
+@mixin base-item-style {
+    height: $item-height;
+    line-height: $item-height;
+    @include typography.medium13nocolor;
+    padding: 0 0.625rem;
+    list-style: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.items-list {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative; // For scrolling item into view
+
+    background: var(--dropdown-menu-bg);
+    box-shadow: var(--dropdown-menu-shadow);
+
+    padding: 0;
+    // font-size: 0.85rem;
+    overflow-y: auto;
+
+    max-height: 10 * $item-height;
+    // Limiting to 10 suggestions
+}
+
+.no-matches-item {
+    @include base-item-style();
+    color: var(--input-color-placeholder);
+}

@@ -1,0 +1,12 @@
+<ng-template #content>
+    <li
+        #listElem
+        class="list-item"
+        [class.list-item--highlighted]="highlighted()"
+        [class.list-item--selected]="selected()"
+        (click)="onClick()"
+        (mousedown)="$event.preventDefault()"
+    >
+        <ng-content></ng-content>
+    </li>
+</ng-template>

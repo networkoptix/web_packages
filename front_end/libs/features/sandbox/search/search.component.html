@@ -14,3 +14,147 @@
     <div class="pt-3">Search multi-selects: {{ filter.multiselects | json }}</div>
     <div class="pt-3">Search tags: {{ filter.tags | json }}</div>
 </div>
+
+<h3>NxAutocompleteV2</h3>
+<div
+    class="autocomplete"
+    [ngStyle]="{
+        border: '1px solid lightgray',
+        padding: '10px'
+    }"
+>
+    <div>
+        <nx-autocomplete-v2
+            #elementsModel="ngModel"
+            [(ngModel)]="elementsSearch"
+            (select)="selectedElement = $event"
+            placeholder="Elements"
+            [noMatchesContent]="noMatches"
+            requireSelection
+        >
+            @for (element of elements; track element.symbol) {
+                <nx-autocomplete-item
+                    [value]="element"
+                    [name]="element.name"
+                >
+                    {{ element.name }}
+                    <span class="subtext">{{ element.atomic_number }} {{ element.symbol }}</span>
+                </nx-autocomplete-item>
+            }
+        </nx-autocomplete-v2>
+        <ng-template #noMatches>No matches found for {{ elementsSearch }}</ng-template>
+        <div
+            class="message-container"
+            style="height: 50px"
+        >
+            @if (!elementsModel.touched) {
+                Untouched
+            } @else if (elementsModel.errors?.required) {
+                <span class="error-label">Selection required</span>
+            } @else {
+                Selected: {{ selectedElement | json }}
+            }
+        </div>
+    </div>
+
+    <div>
+        <nx-autocomplete-v2
+            #statesModel="ngModel"
+            [ngModel]="statesSearch()"
+            (ngModelChange)="statesSearch.set($event)"
+            (select)="selectedState = $event"
+            placeholder="States"
+            noMatchesContent="State not available"
+            requireSelection
+        >
+            @for (state of states; track state.value) {
+                <nx-autocomplete-item
+                    [value]="state.value"
+                    [name]="state.name"
+                    [searchBy]="state.name + ' ' + state.value"
+                >
+                    <nx-search-highlight
+                        [text]="state.name"
+                        [search]="highlightRegex()"
+                    ></nx-search-highlight>
+                    |
+                    <nx-search-highlight
+                        [text]="state.value"
+                        [search]="highlightRegex()"
+                    ></nx-search-highlight>
+                </nx-autocomplete-item>
+            }
+        </nx-autocomplete-v2>
+        <div class="message-container">
+            @if (!statesModel.touched) {
+                Untouched
+            } @else if (statesModel.errors?.required) {
+                <span class="error-label">Selection required</span>
+            } @else {
+                Selected: {{ selectedState }}
+            }
+        </div>
+    </div>
+
+    <div>
+        <nx-autocomplete-v2
+            #editorModel="ngModel"
+            [(ngModel)]="editorSearch"
+            placeholder="Editor"
+            required
+        >
+            <nx-autocomplete-item value="VS Code">
+                <div style="display: flex; align-items: center; gap: 0.25rem">
+                    <span>VS Code</span>
+                    <svg-icon
+                        class="d-flex"
+                        src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg"
+                        [svgStyle]="{ height: '1.25rem' }"
+                    ></svg-icon>
+                </div>
+            </nx-autocomplete-item>
+        </nx-autocomplete-v2>
+        <div class="message-container">
+            @if (!editorModel.touched) {
+                Untouched
+            } @else if (editorModel.errors?.required) {
+                <span class="error-label">Value required</span>
+            }
+        </div>
+    </div>
+
+    <div>
+        <nx-autocomplete-v2
+            [(ngModel)]="responseSearch"
+            placeholder="Message"
+        >
+            @for (response of responses; track response) {
+                <nx-autocomplete-item [value]="response">{{ response }}</nx-autocomplete-item>
+            }
+        </nx-autocomplete-v2>
+        <div class="message-container">Value optional</div>
+    </div>
+
+    <div>
+        <nx-autocomplete-v2
+            [(ngModel)]="reactiveSearch"
+            placeholder="Reactive data"
+            requireSelection
+        >
+            @for (data of reactiveData$ | async; track data) {
+                <nx-autocomplete-item [value]="data">{{ data }}</nx-autocomplete-item>
+            }
+        </nx-autocomplete-v2>
+        <div class="message-container">Options reset every 5 seconds</div>
+    </div>
+
+    <nx-autocomplete-v2
+        [ngModel]="'Readonly'"
+        readOnly
+    ></nx-autocomplete-v2>
+
+    <nx-autocomplete-v2
+        [ngModel]="'Disabled'"
+        disabled
+    ></nx-autocomplete-v2>
+</div>

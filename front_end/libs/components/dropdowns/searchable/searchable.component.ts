@@ -44,6 +44,7 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
  </nx-searchable-select>
  */
 
+/** @deprecated Use NxAutocompleteComponent */
 @Component({
     selector: 'nx-searchable-select',
     templateUrl: 'searchable.component.html',
