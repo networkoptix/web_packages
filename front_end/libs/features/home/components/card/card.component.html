@@ -1,4 +1,7 @@
-<div class="system-button card card-condensed">
+<div
+    class="system-button card card-condensed"
+    [class.toggle-active]="toggleShow | async"
+>
     <div class="card-body">
         <svg-icon
             *ngIf="icon"

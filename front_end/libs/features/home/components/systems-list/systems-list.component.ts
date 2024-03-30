@@ -99,13 +99,15 @@ export class HomeSystemListComponent {
         const systems = this.directAccessSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
         return systems.reduce((actionMap, system) => {
-            actionMap[system.id] = [
-                {
+            const actions: ActionItems[] = [];
+            if (system.stateOfHealth === 'online') {
+                actions.push({
                     name: openVms,
                     id: system.id,
                     action: () => this.clientService.openClient(system),
-                },
-            ];
+                });
+            }
+            actionMap[system.id] = actions;
             return actionMap;
         }, {});
     });
