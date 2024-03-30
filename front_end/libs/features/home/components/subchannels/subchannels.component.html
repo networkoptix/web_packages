@@ -24,8 +24,7 @@
                 *ngIf="subchannels$$().length > searchConfig.channelPartners.searchMinimumCards"
                 class="input-overlay"
                 [style.width.px]="searchConfig.channelPartners.searchWidth"
-                [ngModel]="search"
-                (ngModelChange)="setSearch($event)"
+                [ngModel]="{ value: search$$() }"
                 layout="compact"
                 [placeholder]="'Search' | translate"
                 instant
