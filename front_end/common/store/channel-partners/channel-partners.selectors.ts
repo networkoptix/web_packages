@@ -4,14 +4,8 @@ import {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { alphaNumericSort } from '@utils/general';
 
 import { ChannelPartnersState } from './channel-partners.state';
-
-const sortEntityByName = <T extends { name: string }>(toBeSorted: T[]): T[] =>
-    toBeSorted
-        ? [...toBeSorted].sort(alphaNumericSort(window.navigator.language, entity => entity.name))
-        : toBeSorted;
 
 const selectChannelPartnersState = createFeatureSelector<ChannelPartnersState>('channelPartners');
 
@@ -43,8 +37,9 @@ export const selectRootChannelPartners = createSelector(selectChannelPartners, c
     );
 });
 
-export const selectRootOrganizations = createSelector(selectChannelPartnersState, state =>
-    sortEntityByName(state.rootOrganizations),
+export const selectRootOrganizations = createSelector(
+    selectChannelPartnersState,
+    state => state.rootOrganizations,
 );
 
 export const selectOrganizations = createSelector(
@@ -57,8 +52,9 @@ export const selectCurrentPartnerId = createSelector(
     state => state.currentPartnerId,
 );
 
-export const selectCurrentPartnerOrgs = createSelector(selectChannelPartnersState, state =>
-    sortEntityByName(state.currentPartnerOrganizations),
+export const selectCurrentPartnerOrgs = createSelector(
+    selectChannelPartnersState,
+    state => state.currentPartnerOrganizations,
 );
 
 export const selectCurrentOrgId = createSelector(

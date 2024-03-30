@@ -1,7 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
 
+import { alphaNumericSort } from '@utils/general';
+
 import * as ChannelPartnerActions from './channel-partners.actions';
 import { ChannelPartnersState, LoadingState } from './channel-partners.state';
+
+const sortEntityByName = <T extends { name: string }>(toBeSorted: T[]): T[] =>
+    toBeSorted
+        ? [...toBeSorted].sort(alphaNumericSort(window.navigator.language, entity => entity.name))
+        : toBeSorted;
 
 const initialState: ChannelPartnersState = {
     arePartnerOrgsLoading: false,
@@ -36,14 +43,14 @@ export const channelPartnersReducer = createReducer(
         ChannelPartnerActions.setChannelPartners,
         (state, { channelPartners }): ChannelPartnersState => ({
             ...state,
-            channelPartners,
+            channelPartners: sortEntityByName(channelPartners),
         }),
     ),
     on(
         ChannelPartnerActions.setRootOrganizations,
         (state, { rootOrganizations }): ChannelPartnersState => ({
             ...state,
-            rootOrganizations,
+            rootOrganizations: sortEntityByName(rootOrganizations),
         }),
     ),
     on(
@@ -52,8 +59,8 @@ export const channelPartnersReducer = createReducer(
             ...state,
             hasStoreLoaded: true,
             channelPartnersAndOrgsLoadState: LoadingState.LOADED,
-            channelPartners,
-            organizations,
+            channelPartners: sortEntityByName(channelPartners),
+            organizations: sortEntityByName(organizations),
         }),
     ),
     on(
@@ -62,8 +69,8 @@ export const channelPartnersReducer = createReducer(
             ...state,
             hasStoreLoaded: true,
             channelPartnersAndOrgsLoadState: LoadingState.LOADED,
-            channelPartners,
-            rootOrganizations,
+            channelPartners: sortEntityByName(channelPartners),
+            rootOrganizations: sortEntityByName(rootOrganizations),
         }),
     ),
     on(
@@ -86,21 +93,24 @@ export const channelPartnersReducer = createReducer(
             ...state,
             arePartnerOrgsLoading: false,
             currentPartnerId,
-            currentPartnerOrganizations,
+            currentPartnerOrganizations: sortEntityByName(currentPartnerOrganizations),
         }),
     ),
     on(
         ChannelPartnerActions.addPartnerOrg,
         (state, { newPartnerOrg }): ChannelPartnersState => ({
             ...state,
-            currentPartnerOrganizations: [...state.currentPartnerOrganizations, newPartnerOrg],
+            currentPartnerOrganizations: sortEntityByName([
+                ...state.currentPartnerOrganizations,
+                newPartnerOrg,
+            ]),
         }),
     ),
     on(
         ChannelPartnerActions.setCurrentSubchannelPartners,
         (state, { currentSubchannels }): ChannelPartnersState => ({
             ...state,
-            currentSubchannels,
+            currentSubchannels: sortEntityByName(currentSubchannels),
         }),
     ),
 );

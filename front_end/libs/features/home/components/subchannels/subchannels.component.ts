@@ -1,14 +1,13 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, signal, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Subject, debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
@@ -23,7 +22,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxParamStateService } from '@services/param-state/param-state.service';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
@@ -61,11 +60,22 @@ export class NxSubchannelsComponent {
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
     currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
     subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
-    filteredSubchannels$$ = signal<ChannelPartner[]>([]);
+    filteredSubchannels$$ = computed(() => {
+        const search = this.search$$();
+        const currentSubchannels = this.subchannels$$();
+
+        if (!search) {
+            return currentSubchannels;
+        }
+        return currentSubchannels.filter(subchannels => {
+            return caseInsenstiveSearch(subchannels.name, search);
+        });
+    });
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
     destroyRef = inject(DestroyRef);
-    search = { value: '' };
-    searchChanged = new Subject<void>();
+    search$$ = inject(NxParamStateService).getStateHandler(
+        ({ queryParams }) => queryParams.search?.[0] || '',
+    ).state$$;
     subchannelsStoresLoaded = false;
     searchConfig = searchConfig;
 
@@ -91,17 +101,7 @@ export class NxSubchannelsComponent {
                     }),
                 );
                 this.subchannelsStoresLoaded = true;
-                this.displayPartners();
             });
-
-        this.searchChanged
-            .pipe(debounceTime(searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.displayPartners();
-            });
-
-        this.search.value = this.route.snapshot.queryParams.search;
-        this.displayPartners();
     }
 
     newPartnerDialog(): void {
@@ -113,30 +113,10 @@ export class NxSubchannelsComponent {
             this.store.dispatch(
                 CPActions.setCurrentSubchannelPartners({ currentSubchannels: updatedSubchannels }),
             );
-            this.displayPartners();
         });
     }
 
     handleChannelClick(id: string): void {
         this.router.navigate([id, 'settings'], { relativeTo: this.route });
-    }
-
-    displayPartners(): void {
-        const search = this.search.value;
-        const currentSubchannels = this.subchannels$$();
-
-        if (search) {
-            const subchannelsWithSearch = currentSubchannels.filter(subchannels => {
-                return caseInsenstiveSearch(subchannels.name, search);
-            });
-            this.filteredSubchannels$$.set(subchannelsWithSearch);
-        } else {
-            this.filteredSubchannels$$.set(currentSubchannels);
-        }
-    }
-
-    setSearch(model: { query: string }): void {
-        this.search.value = model.query;
-        this.searchChanged.next();
     }
 }
