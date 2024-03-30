@@ -152,19 +152,13 @@ export class NxAccessTableComponent {
             })
             .then(async confirm => {
                 if (confirm) {
-                    const updates = Object.values(this.selectedGroups).map(userRecord =>
+                    Object.values(this.selectedGroups).map(userRecord =>
                         this.orgUsersStore.removeUser(
                             this.currentOrg$$()!.id,
                             userRecord.groupRoles![0].groupId,
                             userRecord.email,
                         ),
                     );
-
-                    const results = await Promise.all(updates);
-
-                    if (results.some(result => result)) {
-                        this.orgUsersStore.updateGroupCache(this.currentOrg$$()!.id);
-                    }
                 }
             });
     }

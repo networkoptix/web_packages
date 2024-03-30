@@ -1,3 +1,5 @@
+import { Subject } from 'rxjs';
+
 import {
     AccessLevel,
     UserType,
@@ -23,6 +25,23 @@ export type OrgUsersState = {
     selectedUser: string;
     groups: GroupItem[];
     searchQuery: string;
+    /**
+     * Notifier for when users should be refreshed.
+     *
+     * Currently this triggered refetching users for the current group as well
+     * updating the cached users for the organization.
+     *
+     * Example usage for when the store wraps the value in a signal.
+     *
+     * ```
+     * store.refreshUsersSubject().next();
+     * ```
+     *
+     * The is intended to be used internally within the store only.
+     *
+     * A refreshUsers method is exposed on the store to be used externally.
+     */
+    readonly refreshUsersSubject: Subject<void>;
 };
 
 export interface OrgUsersByGroup {
