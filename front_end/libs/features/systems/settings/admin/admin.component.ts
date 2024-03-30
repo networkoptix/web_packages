@@ -47,7 +47,7 @@ import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons, menus, redirect, updateInterval } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
-import { isUserSystem } from '@utils/nx';
+import { isSystemMerging, isUserSystem } from '@utils/nx';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -253,18 +253,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         }
     }
 
-    private updateSettings(forceMergeState?: boolean): void {
+    private updateSettings(forceMergeState = false): void {
         const isMergeTimeOver24hrs = (time: string): boolean =>
             new Date().getTime() - parseInt(time) > 86400000;
-        this.merging =
-            (this.system && typeof this.system.mergeInfo !== 'undefined') || forceMergeState;
+        const { role, startTime } = this.system?.mergeInfo || {};
+        this.merging = isSystemMerging(this.system) || forceMergeState;
         this.settings = {
-            disconnectDisabled:
-                this.merging &&
-                this.system?.mergeInfo?.startTime &&
-                !isMergeTimeOver24hrs(this.system.mergeInfo.startTime),
-            renameDisabled:
-                this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
+            disconnectDisabled: !!(this.merging && startTime && !isMergeTimeOver24hrs(startTime)),
+            renameDisabled: this.merging && this.system.mergeInfo && role !== 'master',
         };
     }
 
@@ -485,9 +481,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     syncMergeAlerts(): void {
-        if (this.system?.mergeInfo) {
+        if (isSystemMerging(this.system)) {
             this.currentMergeInfo = this.system.mergeInfo;
-        } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
+        } else if (this.currentMergeInfo) {
             this.currentMergeInfo = undefined;
             if (!this.environment.isLocal) {
                 firstValueFrom(this.systemsService.forceUpdateSystems()).catch(console.error);
