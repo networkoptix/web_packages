@@ -20,7 +20,7 @@ $card-border-radius: 12px;
     user-select: none;
     cursor: pointer;
 
-    &:hover {
+    &:hover:not(.toggle-active) {
         background-color: var(--system-card-bg-grad0);
         box-shadow: 0 1px 3px 0 #1018281A;
     }

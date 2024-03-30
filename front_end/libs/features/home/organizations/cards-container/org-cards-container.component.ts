@@ -284,13 +284,14 @@ export class NxOrganizationCardContainerComponent {
             staticLang.channelPartners.orgs.groupAction.moveTo,
         );
         return systems.reduce((systemActions, system) => {
-            const actions: ActionItems[] = [
-                {
+            const actions: ActionItems[] = [];
+            if (system.stateOfHealth === 'online') {
+                actions.push({
                     name: openVms,
                     id: system.systemId,
                     action: this.protocolFactory(system.systemId, true),
-                },
-            ];
+                });
+            }
             if (canMangeSystems) {
                 actions.unshift({
                     name: moveToAction,
