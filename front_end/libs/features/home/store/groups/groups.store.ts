@@ -594,6 +594,10 @@ export const GroupsStore = signalStore(
                 return findItem(groups, currentGroup.id)?.children || [];
             });
 
+            const currentGroupName$$ = computed(
+                () => findItem(store.groupsEntities(), currentGroupId$$().id)?.name,
+            );
+
             const flatGroups$$ = computed(() => {
                 const groups = store.groupsEntities();
                 return processGroups(groups).map(({ id, parentId }) => ({ id, parentId }));
@@ -732,6 +736,7 @@ export const GroupsStore = signalStore(
                 groupFlatMap$$,
                 groupPathMap$$,
                 currentRibbonContext$$,
+                currentGroupName$$,
             };
         },
     ),
