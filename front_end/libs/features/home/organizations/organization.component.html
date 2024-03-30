@@ -4,7 +4,7 @@
         class="name pb-3"
         *ngIf="currentOrganization$$() as currentOrg"
     >
-        <h2>{{ currentOrg.name }}</h2>
+        <h2>{{ groupsStore.currentGroupName$$() || currentOrg.name }}</h2>
         <nx-tag
             *ngIf="currentOrg.effectiveState !== 'active'"
             [type]="currentOrg.effectiveState === 'suspended' ? 'warning' : 'danger'"
@@ -72,20 +72,34 @@
                 *ngIf="isLoading && !currentOrganization$$(); else cards"
             ></nx-pre-loader>
             <ng-template #cards>
-                <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
-                    <ng-template [ngTemplateOutlet]="body"></ng-template>
-                    <router-outlet></router-outlet>
-                </ng-container>
-                <ng-template #channelPartnerView>
-                    <a
-                        [routerLink]="routerState.partnersRoot$$()"
-                        translate
-                    >
-                        All Organizations</a
-                    >
-                    <ng-template [ngTemplateOutlet]="body"></ng-template>
-                    <router-outlet></router-outlet>
-                </ng-template>
+                <div class="breadcrumbs">
+                    @if (inChannelPartner) {
+                        <a
+                            [routerLink]="routerState.partnersRoot$$()"
+                            translate
+                        >
+                            All Organizations</a
+                        >
+                    }
+                    @if (groupsStore.groupsPath$$().length) {
+                        <a [routerLink]="routerState.rootGroupLink$$()">
+                            {{ currentOrganization$$()!.name }}</a
+                        >
+                    }
+                    @for (
+                        breadcrumb of groupsStore.groupsPath$$();
+                        track breadcrumb.id;
+                        let last = $last
+                    ) {
+                        @if (!last) {
+                            <a [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()">
+                                {{ breadcrumb.name }}</a
+                            >
+                        }
+                    }
+                </div>
+                <ng-template [ngTemplateOutlet]="body"></ng-template>
+                <router-outlet></router-outlet>
             </ng-template>
             <!-- TODO: Replace with actual placeholder -->
             <!-- eslint-disable-next-line nx/template/no-untranslated -->

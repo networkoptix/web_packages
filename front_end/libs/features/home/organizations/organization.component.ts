@@ -35,6 +35,7 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { PipesModule } from '@pipes/pipes.module';
 import { Account } from '@services/account.service/account';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -77,6 +78,7 @@ interface SidebarSettings {
         NxTagComponent,
         TranslateModule,
         NxRibbonStandaloneComponent,
+        PipesModule,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
