@@ -39,6 +39,7 @@ Custom behavior:
       by having the options be flush with the dropdown
 */
 
+/** @deprecated Use V2 */
 @Component({
     selector: 'nx-autocomplete',
     templateUrl: 'autocomplete.component.html',

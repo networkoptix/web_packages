@@ -1,0 +1,19 @@
+@use '../autocomplete-v2.component.scss' as autocomplete;
+
+.list-item {
+    @include autocomplete.base-item-style();
+    cursor: pointer;
+    color: var(--dropdown-item-color);
+
+    &:hover,
+    &.list-item--highlighted {
+        // Extra specificity to override selected
+        background-color: var(--dropdown-item-hover-bg);
+        color: var(--dropdown-item-hover-color);
+    }
+
+    &--selected {
+        background-color: var(--dropdown-item-selected-bg);
+        color: var(--dropdown-item-selected-color);
+    }
+}

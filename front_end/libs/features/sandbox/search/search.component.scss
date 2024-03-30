@@ -1,0 +1,15 @@
+.autocomplete {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 200px);
+    gap: 20px;
+
+    .message-container {
+        height: 20px;
+    }
+}
+
+.subtext {
+    font-family: var(--font-family-regular);
+    color: var(--light16);
+    margin-left: 0.25rem;
+}

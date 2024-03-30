@@ -1,20 +1,66 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { range } from 'lodash-es';
+import { timer, map } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
+import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
+import { highlightRegex } from '@components/search-highlight/highlight-regex';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxMenuService } from '@menu/menu.service';
+
+import { elements } from './elements';
 
 @Component({
     selector: 'search',
     templateUrl: 'search.component.html',
     styleUrls: ['search.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, NxSearchComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        AngularSvgIconModule,
+        NxSearchComponent,
+        NxAutocompleteV2Component,
+        NxAutoCompleteItemComponent,
+        NxSearchHighlightComponent,
+    ],
 })
 export class SearchComponent {
+    destroyRef = inject(DestroyRef);
+
     filter: SearchFilter;
+
+    elementsSearch = '';
+    elements = elements;
+    selectedElement: (typeof elements)[number];
+
+    statesSearch = signal<string>('');
+    highlightRegex = computed<RegExp | null>(() => highlightRegex(this.statesSearch()));
+    states = [
+        { value: 'WA', name: 'Washington' },
+        { value: 'OR', name: 'Oregon' },
+        { value: 'CA', name: 'California' },
+        { value: 'HI', name: 'Hawaii' },
+    ];
+    selectedState: string | undefined;
+
+    responseSearch = '';
+    responses = ['I will accept.', 'I appreciate this.', 'Oh, I adore this.'];
+
+    editorSearch = '';
+
+    reactiveSearch = '';
+    reactiveData$ = timer(0, 5000).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(_ => range(0, 5).map(_ => uuid().slice(0, 6))),
+    );
 
     constructor(private menuService: NxMenuService) {}
 
