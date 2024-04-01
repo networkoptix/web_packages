@@ -33,9 +33,11 @@ import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 
+import { NxChannelPartnersUsersTableComponent } from '../../users-table/refactor/channel-partner-users-table/channel-partner-users-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
 import type { UserRecord } from './channel-partner-users.types';
@@ -99,6 +101,7 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
         FormsModule,
         AsyncPipe,
         NxUsersTableComponent,
+        NxChannelPartnersUsersTableComponent,
         TranslateModule,
         AngularSvgIconModule,
         NxResizeObserver,
@@ -108,6 +111,7 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
+    CONFIG = nxConfig;
     UserType = UserType;
     icons = icons;
     recordStore = inject(RecordStore);

@@ -97,6 +97,8 @@ class FLAGS(metaclass=_FlagType):
     channel_partners_create_partner_ui = ('Channel Partners Create Partner UI', 'channelPartnersCreatePartnerUI')
     channel_partners_change_services_ui = ('Channel Partners Change Services UI', 'channelPartnersChangeServicesUI')
     channel_partners_reports_ui = ('Channel Partners Reports UI', 'channelPartnersReportsUI')
+    channel_parters_updated_user_table = ('Channel Partners Updated User Table', 'channelPartnersUpdatedUserTable')
+
     rest_cookie_login = ('Rest Cookie Login', 'restCookieLogin')
 
     request_caching = ('Request Caching', 'requestCaching', '%REQUEST_CACHING_ENABLED%')

@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import {
-    Component,
     EventEmitter,
     Input,
     OnChanges,
@@ -11,11 +9,10 @@ import {
     computed,
     signal,
     inject,
+    Directive,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
@@ -23,20 +20,13 @@ import {
     selectCurrentOrganization,
     selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
-import { NxBaseTableComponent } from '@components/table/table.component';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
-import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -46,32 +36,20 @@ import {
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
-import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
+import {
+    UserRecord,
+    UserType,
+} from '../../../users/channel-partner-users/channel-partner-users.types';
 
-@Component({
-    selector: 'nx-users-table',
-    templateUrl: 'users-table.component.html',
-    styleUrls: ['users-table.component.scss'],
-    standalone: true,
-    imports: [
-        AngularSvgIconModule,
-        CommonModule,
-        TranslateModule,
-        NxCheckboxComponent,
-        NxBaseTableComponent,
-        NxAddSvgSrcDirective,
-        NxDropdownModule,
-        NxTooltipDirective,
-        NxPagePlaceholderV2Component,
-        RouterModule,
-        PipesModule,
-    ],
-})
-export class NxUsersTableComponent implements OnInit, OnChanges {
-    private store = inject(Store);
-    private cpService = inject(NxChannelPartnersService);
-    private accountService = inject(NxAccountService);
-    private router = inject(Router);
+/**
+ * This is the code copied from the original user table.
+ */
+@Directive()
+export abstract class InitialUserTable implements OnInit, OnChanges {
+    protected store = inject(Store);
+    protected cpService = inject(NxChannelPartnersService);
+    protected accountService = inject(NxAccountService);
+    protected router = inject(Router);
 
     UserType = UserType;
     groupsStore = inject(GroupsStore);
@@ -141,7 +119,7 @@ export class NxUsersTableComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxUsersTableComponent>): void {
+    ngOnChanges(changes: NgChanges<InitialUserTable>): void {
         if (changes.records?.currentValue) {
             this.findAdmins(changes.records.currentValue);
         }

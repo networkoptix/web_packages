@@ -15,8 +15,10 @@ import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 
+import { NxUsersAccessTableComponent } from '../../users-table/refactor/access-table/access-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
 
@@ -29,6 +31,7 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
     ],
     imports: [
         NxUsersTableComponent,
+        NxUsersAccessTableComponent,
         CommonModule,
         TranslateModule,
         AngularSvgIconModule,
@@ -40,6 +43,7 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
 })
 export class NxAccessTableComponent {
     LANG = staticLang;
+    CONFIG = nxConfig;
     UserType = UserType;
     icons = icons;
 
