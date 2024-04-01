@@ -24,7 +24,9 @@ import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { nxConfig } from '@services/nx-config/config';
 
+import { NxOrgUsersTableComponent } from '../../users-table/refactor/org-users-table/org-users-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
 
@@ -36,10 +38,18 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
-    imports: [CommonModule, NxUsersTableComponent, TranslateModule, NxSearchComponent, FormsModule],
+    imports: [
+        CommonModule,
+        NxUsersTableComponent,
+        NxOrgUsersTableComponent,
+        TranslateModule,
+        NxSearchComponent,
+        FormsModule,
+    ],
 })
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
+    CONFIG = nxConfig;
     UserType = UserType;
     orgUserStore = inject(OrgUsersStore);
     groupsStore = inject(GroupsStore);

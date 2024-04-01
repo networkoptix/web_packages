@@ -18,13 +18,26 @@
         <!--            </button>-->
     </div>
 </div>
-<nx-users-table
-    [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
-    [inGroup]="inGroup$$()"
-    [headers]="headers"
-    [records]="orgUserStore.filteredRecords$$()"
-    [roles]="orgRoles$$() || []"
-    (selectedUsersEmitter)="updateSelectedUsers($event)"
-    (onDeleteClick)="deleteUsers($event)"
-    (onAdduser)="newUserDialog()"
-></nx-users-table>
+@if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
+    <nx-org-users-table
+        [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
+        [inGroup]="inGroup$$()"
+        [headers]="headers"
+        [records]="orgUserStore.filteredRecords$$()"
+        [roles]="orgRoles$$() || []"
+        (selectedUsersEmitter)="updateSelectedUsers($event)"
+        (onDeleteClick)="deleteUsers($event)"
+        (onAdduser)="newUserDialog()"
+    ></nx-org-users-table>
+} @else {
+    <nx-users-table
+        [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
+        [inGroup]="inGroup$$()"
+        [headers]="headers"
+        [records]="orgUserStore.filteredRecords$$()"
+        [roles]="orgRoles$$() || []"
+        (selectedUsersEmitter)="updateSelectedUsers($event)"
+        (onDeleteClick)="deleteUsers($event)"
+        (onAdduser)="newUserDialog()"
+    ></nx-users-table>
+}

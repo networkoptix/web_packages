@@ -204,5 +204,17 @@
   "64976": {
     "name": "Django",
     "note": "CVE-2024-24680: Affected versions of Django are vulnerable to potential denial-of-service in intcomma template filter when used with very long strings."
+  },
+  "65212": {
+    "name": "cryptography",
+    "note": "CVE-2023-6129: Versions of Cryptograph starting from 35.0.0 are susceptible to a security flaw in the POLY1305 MAC algorithm on PowerPC CPUs, which allows an attacker to disrupt the application's state. This disruption might result in false calculations or cause a denial of service. The vulnerability's exploitation hinges on the attacker's ability to alter the algorithm's application and the dependency of the software on non-volatile XMM registers."
+  },
+  "65278": {
+    "name": "cryptography",
+    "note": "CVE-2023-50782: A flaw was found in the python-cryptography package. This issue may allow a remote attacker to decrypt captured messages in TLS servers that use RSA key exchanges, which may lead to exposure of confidential or sensitive data."
+  },
+  "65647": {
+    "name": "cryptography",
+    "note": "PVE-2024-65647: Cryptography version 42.0.5 introduces a limit on the number of name constraint checks during X.509 path validation to prevent denial of service attacks"
   }
 }

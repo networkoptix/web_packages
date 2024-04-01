@@ -34,14 +34,25 @@
             />
         </div>
     </div>
-
-    <nx-users-table
-        [userType]="UserType.ORGANIZATION"
-        [accessTable]="true"
-        [headers]="headers"
-        [records]="userRecords$$()"
-        [roles]="orgRoles$$()"
-        (onDeleteClick)="deleteUser($event)"
-        (selectedUsersEmitter)="updateSelectedUsers($event)"
-    ></nx-users-table>
+    @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
+        <nx-users-access-table
+            [userType]="UserType.ORGANIZATION"
+            [accessTable]="true"
+            [headers]="headers"
+            [records]="userRecords$$()"
+            [roles]="orgRoles$$()"
+            (onDeleteClick)="deleteUser($event)"
+            (selectedUsersEmitter)="updateSelectedUsers($event)"
+        ></nx-users-access-table>
+    } @else {
+        <nx-users-table
+            [userType]="UserType.ORGANIZATION"
+            [accessTable]="true"
+            [headers]="headers"
+            [records]="userRecords$$()"
+            [roles]="orgRoles$$()"
+            (onDeleteClick)="deleteUser($event)"
+            (selectedUsersEmitter)="updateSelectedUsers($event)"
+        ></nx-users-table>
+    }
 </div>

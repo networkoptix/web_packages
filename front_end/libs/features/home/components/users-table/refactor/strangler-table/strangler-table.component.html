@@ -1,0 +1,316 @@
+<div
+    style="display: none !important"
+    class="d-flex pl-2 pb-3"
+>
+    <nx-checkbox
+        componentId="showSubLevels"
+        [labelText]="'Include sub-levels'"
+        (onClick)="showSubLevels($event)"
+    >
+    </nx-checkbox>
+</div>
+
+<div class="nx-new-table-container">
+    <ng-container *ngIf="records?.length > 0; else noUsers">
+        <nx-table
+            [ngClass]="tableType"
+            [style.height]="'calc(100% - 12px)'"
+            set-pagination
+            set-sorting
+            set-rows-auto
+            [set-arrange]="setHeaders"
+            [set-row-expand]="subLevels"
+            [set-selected-item-id]="selectedRecordId"
+            [set-multiple-selected-item-ids]="selectedUsersMap$$()"
+            [set-id-prop-name]="accessTable ? groupPropName : idPropName"
+            [data]="records"
+            (onRowClick)="onRowClickAction($event)"
+        >
+            <ng-template #header>
+                <div style="grid-area: userId">
+                    <nx-checkbox
+                        componentId="checkAll"
+                        [checked]="selectedAll"
+                        (onClick)="selectAll()"
+                    >
+                    </nx-checkbox>
+                </div>
+                <div
+                    *ngFor="let head of headers"
+                    #sortItem
+                    [attr.id]="head.name"
+                    [attr.data-sort]="head.sort"
+                    [style.justify-content]="head.align || 'flex-start'"
+                >
+                    <span
+                        class="head-title ellipsis caption"
+                        title="{{ head.value }}"
+                        >{{ head.value }}</span
+                    >
+                </div>
+            </ng-template>
+            <ng-template
+                #rows
+                let-row
+            >
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: userId"
+                >
+                    <nx-checkbox
+                        componentId="checkBox{{ row[idPropName] }}"
+                        (onClick)="selectRecord(row)"
+                        [checked]="selectedUsersMap$$().has(row.userId)"
+                        [disabled]="!canManageUsers$$() || (inGroup && row.isOrgUser)"
+                    >
+                    </nx-checkbox>
+                    <svg-icon
+                        *ngIf="subLevels && (row.roles.length > 1 || row.accessLevel.length > 1)"
+                        nx-add-svg-src
+                        class="icon-expand"
+                        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                        [applyClass]="true"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    ></svg-icon>
+                </div>
+
+                <div
+                    class="div-container-wrapper"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: email"
+                    [ngClass]="row.userId === expandRowId ? 'expanded' : ''"
+                    *ngIf="!accessTable"
+                >
+                    {{ row.email }}
+                </div>
+
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: fullName"
+                    *ngIf="!accessTable"
+                >
+                    {{ row.fullName }}
+                </div>
+
+                <div
+                    class="div-container-wrapper"
+                    #roleWrapper
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: accessLevel"
+                    *ngIf="userType !== UserType.CHANNEL_PARTNER"
+                    toggleOnClick
+                    reversePositionOrder
+                    ignoreMaxWidth
+                    [nxTooltip]="row.groupRoles?.length > 1 && foldersTooltip"
+                >
+                    <ng-template #foldersTooltip>
+                        <div
+                            [style.width.px]="roleWrapper.clientWidth - 16"
+                            class="folders-tooltip"
+                        >
+                            @for (role of row.groupRoles; track role.groupId) {
+                                <div>
+                                    <svg-icon
+                                        [src]="icons.dir + 'folder2.svg'"
+                                        [svgStyle]="{ 'width.px': '20px' }"
+                                    ></svg-icon>
+                                    {{ groupsStore.groupPathMap$$()[role.groupId].pathString }}
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
+                    <ng-container *ngIf="userType === UserType.ORGANIZATION; else group">
+                        <ng-container *ngIf="row.isOrgUser; else showFolder">
+                            <svg-icon
+                                [src]="icons.dir + 'organization_2.svg'"
+                                [svgStyle]="{ 'width.px': '20px' }"
+                            ></svg-icon>
+                            {{ currentOrg$$().name }}
+                        </ng-container>
+                        <ng-template #showFolder>
+                            <svg-icon
+                                [src]="icons.dir + 'folder2.svg'"
+                                [svgStyle]="{ 'width.px': '20px' }"
+                            ></svg-icon>
+                            @if (accessTable) {
+                                {{
+                                    groupsStore.groupPathMap$$()[row.groupRoles[0].groupId]
+                                        .pathString
+                                }}
+                            } @else {
+                                {{
+                                    row.groupRoles?.length > 1
+                                        ? row.groupRoles.length + ' folders'
+                                        : row.groupRoles[0]?.name
+                                }}
+                            }
+                        </ng-template>
+                    </ng-container>
+                    <ng-template #group>
+                        <svg-icon
+                            [src]="
+                                icons.dir + (row.isOrgUser ? 'organization_2.svg' : 'folder2.svg')
+                            "
+                        ></svg-icon>
+                        {{ row.accessLevel.name }}
+                    </ng-template>
+                </div>
+
+                <div
+                    class="div-container-wrapper"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: accessLevel"
+                    *ngIf="row.accessLevel?.length > 1"
+                >
+                    <div
+                        class="div-container"
+                        *ngIf="!subLevels"
+                    >
+                        {{ row.accessLevel[0] }}
+                    </div>
+                    <div
+                        class="div-container"
+                        *ngIf="subLevels"
+                    >
+                        <i>{{
+                            LANG.systemsCount | translate: { count: row.accessLevel.length }
+                        }}</i>
+                    </div>
+
+                    <div
+                        class="div-container-wrapper"
+                        *ngIf="subLevels && row[idPropName] === expandRowId"
+                    >
+                        <div *ngFor="let level of row.accessLevel">
+                            {{ level }}
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="div-container-wrapper roles-container"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: roles"
+                    [ngClass]="{ dropdown: !showRole(row) }"
+                    *ngIf="row.roles?.length || row.groupRoles?.length"
+                >
+                    <div class="div-container roles">
+                        <div *ngIf="showRole(row); else dropdown">
+                            {{ getDisplayRole(row) | translate }}
+                        </div>
+                        <ng-template #dropdown>
+                            <nx-dropdown
+                                [ngModel]="getRowRoleId(row)"
+                                (ngModelChange)="updateRole(row, $event)"
+                            >
+                                <ng-container *ngFor="let role of roles">
+                                    <nx-simple-dropdown-item [value]="role.id">
+                                        {{ role.name }}
+                                    </nx-simple-dropdown-item>
+                                </ng-container>
+                            </nx-dropdown>
+                        </ng-template>
+                    </div>
+                </div>
+                <div
+                    class="div-container-wrapper"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: roles"
+                    *ngIf="row.roles?.length > 1"
+                >
+                    <div
+                        class="div-container"
+                        *ngIf="!subLevels"
+                    >
+                        {{ row.roles[0] }}
+                    </div>
+                    <div
+                        class="div-container"
+                        *ngIf="subLevels"
+                    >
+                        <i translate>multiple groups</i>
+                    </div>
+
+                    <div
+                        class="div-container-wrapper"
+                        *ngIf="subLevels && row[idPropName] === expandRowId"
+                    >
+                        <div
+                            class="div-container"
+                            *ngFor="let group of row.roles"
+                        >
+                            {{ group }}
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="div-container-wrapper icon"
+                    style="grid-area: delete"
+                >
+                    <svg-icon
+                        *ngIf="
+                            canManageUsers$$() &&
+                                (!inGroup || row.accessLevel.id === currentGroupId$$()) &&
+                                !userIsOnlyAdmin(row);
+                            else info
+                        "
+                        class="delete clickable"
+                        nx-add-svg-src
+                        (click)="onDeleteClick.emit(row)"
+                        [src]="icons.dirTextButtons + 'delete.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
+                    <ng-template #info>
+                        <svg-icon
+                            class="info"
+                            [nxTooltip]="
+                                (row.roles[0] === 'Administrator' && hasOnlyOneAdmin$$()
+                                    ? LANG.channelPartners.usersTable.adminTooltip
+                                    : LANG.channelPartners.usersTable.infoToolTip
+                                ) | translate
+                            "
+                            [src]="icons.dirTextButtons + 'info.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    </ng-template>
+                </div>
+
+                <div
+                    class="div-container-wrapper icon"
+                    style="grid-area: expand"
+                    *ngIf="userType !== UserType.CHANNEL_PARTNER && !accessTable"
+                >
+                    <svg-icon
+                        [src]="icons.dirTextButtons + 'arrow_right.svg'"
+                        [routerLink]="row.email | mapWith: routerState.getUserAccessLink$$()"
+                    >
+                    </svg-icon>
+                </div>
+            </ng-template>
+        </nx-table>
+    </ng-container>
+    <ng-template #noUsers>
+        @if (searching) {
+            <div class="no-users-placeholder">
+                <div class="placeholder-container">
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '64',
+                            'height.px': '64'
+                        }"
+                        [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                    ></svg-icon>
+                    <h3 translate>No Results</h3>
+                    <p translate>Try changing the search string</p>
+                </div>
+            </div>
+        } @else {
+            <nx-page-placeholder-v2
+                [type]="PAGE_PLACEHOLDER.NO_USERS"
+                [clickFn]="newUserDialog"
+            ></nx-page-placeholder-v2>
+        }
+    </ng-template>
+</div>
