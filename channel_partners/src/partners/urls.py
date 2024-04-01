@@ -34,6 +34,10 @@ from partners.views import (
     system_users,
     user_systems,
 )
+from partners.viewsets.usage_reports_views import (
+    ChannelPartnerServiceReportsViewSet,
+    OrganizationServiceReportsViewSet,
+)
 
 
 channel_partner_urls = [
@@ -65,11 +69,14 @@ channel_partners_routes.register('services/owned', ChannelPartnerOwnedServiceVie
 channel_partners_routes.register('services/available', ChannelPartnerAvailableServiceViewset, basename='channelpartners-available-service', parents_query_lookups=['channel_partner'])
 channel_partners_routes.register('sub_channel_partners', ChannelPartnerNestedViewSet, basename='channelpartners-subchannelpartner', parents_query_lookups=['parent_channel_partner'])
 channel_partners_routes.register('organizations', OrganizationNesetedViewSet, basename='channelpartners-organization', parents_query_lookups=['channel_partner'])
+channel_partners_routes.register('reports', ChannelPartnerServiceReportsViewSet, basename='channelpartners-reports',  parents_query_lookups=['channel_partner'])
 
 organization_routes = channel_partners_router.register('organizations', OrganizationViewSet, basename='organization')
 organization_users_routes = organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organizations'])
 organization_routes.register('cloud_systems', CloudSystemNestedViewSet, basename='organizations-cloudsystem', parents_query_lookups=['organization'])
 organization_routes.register('services', OrganizationServiceViewset, basename='channelpartners-owned-service', parents_query_lookups=['organization'])
+organization_routes.register('reports', OrganizationServiceReportsViewSet, basename='organizations-reports', parents_query_lookups=['organization'])
+
 
 group_routes = channel_partners_router.register('groups', SystemGroupViewSet, basename='group')
 group_routes.register('users', SystemGroupUserViewSet, basename='group-user', parents_query_lookups=['system_group'])
