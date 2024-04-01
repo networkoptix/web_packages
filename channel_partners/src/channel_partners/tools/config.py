@@ -1,3 +1,6 @@
+import os
+
+import httpx
 import structlog
 from nx_ireg.registry import IReg
 
@@ -22,3 +25,15 @@ def get_default_host(instance_name: str, instance_domain_name: str) -> str | Non
                        instance_registry=ireg.customizations)
         return instance_domain_name
     return hostname
+
+
+def get_container_name():
+    metadata_uri = os.environ.get('ECS_CONTAINER_METADATA_URI')
+    if not metadata_uri:
+        return ''
+    try:
+        response = httpx.get(metadata_uri)
+        metadata = response.json()
+    except Exception as ex:
+        return ''
+    return metadata.get('Name')
