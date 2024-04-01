@@ -4,10 +4,16 @@ from concurrent.futures import (
     as_completed,
 )
 from typing import List
+from uuid import uuid4
 
+import structlog
 from celery import shared_task
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.core.cache import (
+    cache,
+    caches,
+)
 
 from partners.models import (
     ChannelPartner,
@@ -23,7 +29,10 @@ from partners.services.usage_reports_service import (
 from tools.helpers import get_today
 
 
+logger = structlog.getLogger(__name__)
+
 WORKERS_NUMBER = 4
+TASK_LOCK_KEY = "report-calculation-daily"
 
 
 def calculate_system_reports(system, services, period_start):
@@ -135,6 +144,12 @@ def calculate_all_reports():
         calculate_partner_reports(channel_partner, period_start)
 
 
-@shared_task()
+@shared_task(max_retries=3)
 def report_daily_calculation_task():
-    calculate_all_reports()
+    if not caches['default'].add(TASK_LOCK_KEY, f'{uuid4()}', timeout=3600):
+        logger.warning(f'Daily calculation task if already running.')
+        return
+    try:
+        calculate_all_reports()
+    finally:
+        cache.delete(TASK_LOCK_KEY)
