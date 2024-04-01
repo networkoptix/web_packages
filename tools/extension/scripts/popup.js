@@ -30,6 +30,11 @@ function documentEvents() {
     document.getElementById('reload').addEventListener('click', reload);
     document.getElementById('update').addEventListener('click', update);
 
+    let searchBox = document.getElementById('searchBox');
+    if(searchBox) {
+        searchBox.addEventListener('keyup', filterCheckboxes);
+    }
+
     setTimeout(() => {
         setTabs();
         showVersionInfo();
@@ -69,45 +74,19 @@ function setTabs() {
 
 function showVersionInfo() {
     fetch(`https://${url}/static/version.txt`).then((res) => {
-            if (res.ok) {
-                return res.text();
-            }
-            throw new Error('Something went wrong');
-        }).then((data) => {
-            if (data) {
-                const wordsToSplit = ['Author:', 'Date:', 'Branch:'];
-                const regex = new RegExp(wordsToSplit.join('|'), 'gi');
-                const separated = data.split(regex);
-                const datePattern = /\+\d{4}/;
-
-                const lineOne = separated[0];
-                const lineTwo = separated[1];
-                const dateAndMsg = separated[2].split(datePattern);
-                const lineThree = dateAndMsg[0];
-                const lineFive = dateAndMsg[1];
-                const lineFour = separated[3];
-
-                let commit = document.getElementById('commit-hash');
-                commit.innerHTML = lineOne;
-
-                let author = document.getElementById('author');
-                author.innerHTML = `Author: ${lineTwo}`;
-
-                let dateInfo = document.getElementById('date');
-                dateInfo.innerHTML = `Date: ${lineThree}`;
-
-                let branch = document.getElementById('branch');
-                branch.innerHTML = `Branch: ${lineFour}`;
-
-                let msg = document.getElementById('msg');
-                msg.innerHTML = `${lineFive}`;
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            let noInfo = document.getElementById(('no-info'));
-            noInfo.innerHTML = 'No version info available.'
-        })
+        if (res.ok) {
+            return res.text();
+        }
+        throw new Error('Something went wrong');
+    }).then((data) => {
+        if (data) {
+            const formattedData = data.replace(/(commit|Date|Branch)/g, '\n$&');
+            document.getElementById('commit-hash').innerText = formattedData;
+        }
+    }).catch((error) => {
+        console.log(error);
+        document.getElementById('no-info').innerText = 'No version info available.';
+    });
 }
 
 function showInfo() {
@@ -194,4 +173,18 @@ function update() {
     });
 
     document.getElementById('reload').disabled = false;
+}
+
+function filterCheckboxes() {
+    let searchQuery = document.getElementById('searchBox').value.toLowerCase();
+    let checkboxes = document.querySelectorAll('.checkbox-container');
+
+    checkboxes.forEach(div => {
+        let label = div.querySelector('label').textContent.toLowerCase();
+        if (label.includes(searchQuery)) {
+            div.style.display = '';
+        } else {
+            div.style.display = 'none';
+        }
+    });
 }
