@@ -165,6 +165,20 @@ class DeletedEmailsSerializer(serializers.Serializer):
     emails = serializers.ListField(child=serializers.EmailField())
 
 
+class OrganizationDataSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    name = serializers.CharField()
+    effectiveState = serializers.CharField(source='effective_state')
+
+
+class ChannelPartnerDataSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    name = serializers.CharField()
+    effectiveState = serializers.CharField(source='effective_state')
+    subChannels = serializers.ListField(child=serializers.DictField(), required=False)
+    organizations = OrganizationDataSerializer(many=True)
+
+
 class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'channelpartner'
 

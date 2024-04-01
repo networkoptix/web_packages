@@ -6,7 +6,10 @@ import httpx
 import structlog
 from django.conf import settings
 from django.core.cache import caches
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import (
+    ImproperlyConfigured,
+    PermissionDenied,
+)
 from django.db.models import (
     Prefetch,
     Q,
@@ -140,6 +143,9 @@ from partners.serializers import (
     SystemUsageReportSerializer,
     SystemUserSerializer,
     UserListSerializer,
+)
+from partners.services.channel_partner_group_structure_service import (
+    ChannelPartnerGroupStructureService,
 )
 from partners.services.cloud_system_service import CloudSystemService
 from partners.services.internal_grant_access_service import (
@@ -390,7 +396,6 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
         channel_partner = get_object_or_404(ChannelPartner, pk=val)
         self.check_object_permissions(request, channel_partner)
 
-
 class ExternalIdBase:
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -611,6 +616,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_access))
         if self.action == 'aggregate':
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.is_member_in_branch))
+        if self.action == 'channel_structure':
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.is_member))
         if self.action in ('partial_update', 'update'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_configure))
         if self.action in ('service_changes_history', 'service_changes_summary'):
@@ -636,6 +643,22 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
                 ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
         return self.queryset.filter(query)
+
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
+    def channel_structure(self, request, pk=None):
+        try:
+            channel_partner = ChannelPartner.objects.get(id=pk)
+        except ChannelPartner.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        service = ChannelPartnerGroupStructureService()
+        try:
+            structured_data = service.process(channel_partner, request.user)
+        except PermissionDenied:
+            return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+
+        return Response(structured_data)
+
 
     @extend_schema(request=CreateChannelPartnerSerializer,
                    responses=ChannelPartnerSerializer,

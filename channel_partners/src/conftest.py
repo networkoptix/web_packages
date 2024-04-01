@@ -202,6 +202,31 @@ def cp_user_factory(cloud_user_factory, default_channel_partner):
 
 
 @pytest.fixture()
+def multi_cp_user_factory(cloud_user_factory):
+    def factory(email=None, role: UUID | str = 'Administrator', channel_partners=None) -> (CloudUser, list[ChannelPartnerToUser]):
+        if not email:
+            email = f'u-{uuid4()}@networkoptix.com'
+        user = cloud_user_factory(email=email)
+        if not isinstance(role, UUID):
+            role = ChannelPartnerRole.objects.get(name=role).id
+        # Ensure channel_partners is a list to iterate over
+        if channel_partners is None:
+            channel_partners = []
+        elif not isinstance(channel_partners, (list, tuple)):
+            channel_partners = [channel_partners]
+
+        cp_to_user_links = []
+        for channel_partner in channel_partners:
+            cp_to_user, _ = ChannelPartnerToUser.objects.get_or_create(
+                user=user, channel_partner=channel_partner, roles=[role])
+            cp_to_user_links.append(cp_to_user)
+
+        return user, cp_to_user_links
+
+    return factory
+
+
+@pytest.fixture()
 def default_cp_admin(cloud_user_factory, default_channel_partner):
     user = cloud_user_factory(email='default_cp_admin@networkoptix.com')
     return ChannelPartnerToUser.objects.get_or_create(
