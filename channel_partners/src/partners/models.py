@@ -972,6 +972,12 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def save(self, *args, **kwargs):
         new = self._state.adding
+        effective_state_changed = False
+
+        if not new:
+            if self._original_effective_state != self.effective_state:
+                effective_state_changed = True
+
         with transaction.atomic():
             # creation of channel partner with a different host is available through django admin site
             # and for second level of channel partners (direct children of Nx Channel Partner) only
@@ -1009,6 +1015,17 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                     lambda: run_partner_state_changed_tasks.apply_async(args=[updated_descendants]))
                 transaction.on_commit(
                     lambda: run_organization_state_changed_tasks.apply_async(args=[updated_descendants]))
+
+        # If the effective_state has changed, purge cache
+        if effective_state_changed:
+            self._invalidate_channel_partner_structure()
+
+    def _invalidate_channel_partner_structure(self) -> None:
+        from tasks.purge_caches import purge_cache_for_channel_partners
+        ancestor_ids = self.path or []
+        descendant_ids = list(ChannelPartner.objects.filter(path__contains=[self.id]).values_list('id', flat=True))
+        channel_partner_ids = set(ancestor_ids + descendant_ids + [self.id])
+        purge_cache_for_channel_partners.delay(list(channel_partner_ids))
 
     @staticmethod
     def invalidate_cache(pk: str) -> None:
@@ -1352,6 +1369,12 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         new = self._state.adding
         name_changed = not new and self.name != self._original_name
         old_name = self._original_name
+        effective_state_changed = False
+
+        if not new:
+            if self._original_effective_state != self.effective_state:
+                effective_state_changed = True
+
         with transaction.atomic():
             if new:
                 self.id = self.id or uuid.uuid4()
@@ -1370,6 +1393,16 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                     run_organization_state_changed_tasks,
                 )
                 transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[[self.id]]))
+
+
+        if effective_state_changed:
+            self._invalidate_channel_partner_structure()
+
+
+    def _invalidate_channel_partner_structure(self):
+        from tasks.purge_caches import purge_cache_for_channel_partners
+        channel_partner_ids = [self.channel_partner_id] + (self.channel_partner.path or [])
+        purge_cache_for_channel_partners.delay(channel_partner_ids)
 
     @property
     def system_count(self) -> int:

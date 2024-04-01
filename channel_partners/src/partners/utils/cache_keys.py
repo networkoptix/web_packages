@@ -20,3 +20,6 @@ def cp_monthly_charges(id: str | UUID, start_date: str) -> str:
 def organization_system_count(id: str | UUID) -> str:
     return f'organization-system-count-{id}'
 
+
+def cache_key_channel_partner_structure(channel_partner_id: str | UUID, user_id: str | UUID) -> str:
+    return f'channel_partner-structure-{channel_partner_id}-{user_id}'
