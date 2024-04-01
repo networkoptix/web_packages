@@ -13,6 +13,6 @@ CELERY_CRON_CONFIG = {
     "partners.tasks.usage_reports.report_daily_calculation_task": {
         "task": "partners.tasks.usage_reports.report_daily_calculation_task",
         # Todo. Change to daily when it is tested.
-        "schedule": crontab(minute='10', hour="*")
+        "schedule": crontab(minute='*/10', hour="*")
     }
 }

@@ -1,7 +1,9 @@
 import random
+import sys
 import time
 import uuid
 from datetime import timedelta
+from time import sleep
 
 from django.db import transaction
 from django.utils import timezone
@@ -10,7 +12,6 @@ from partners.models import (
     ChannelPartner,
     ChannelPartnerServiceExternalId,
     ChannelPartnerServiceRecord,
-    CloudHost,
     CloudSystemExternalId,
     CloudSystemId,
     Organization,
@@ -19,14 +20,17 @@ from partners.models import (
     SystemGroup,
 )
 from partners.tasks.services import new_channel_partner_created
-from scripts.create_root_channel_partner import run as create_root
 from tools.helpers import get_path_from_parent
 
 
-def run():
+def run(customization_name: str = 'default'):
     ts = time.time()
     with transaction.atomic():
-        generator = Generator()
+        try:
+            generator = Generator(customization_name=customization_name)
+        except ValueError as ex:
+            print(f'{ex}')
+            sys.exit(0)
         generator.generate()
     print(f"Generated: in {time.time() - ts:.06f}s")
 
@@ -34,18 +38,21 @@ def run():
 class Generator:
     partner_depth = 3
     group_depth = 3
-    org_dimension = 5
+    org_dimension = 4
     system_dimension = 5
     batch_size = 200
 
-    def __init__(self):
-        if not (cloud_test_host := CloudHost.objects.filter(hostname='cloud-test.hdw.mx').first()):
-            create_root('test')
-            self.cloud_test_host = CloudHost.objects.filter(hostname='cloud-test.hdw.mx').first()
-        else:
-            self.cloud_test_host = cloud_test_host
-        self.nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(
-            name='Network Optix', cloud_host=self.cloud_test_host)[0]
+    def __init__(self, customization_name: str = 'default'):
+        top_partner_name = 'Network Optix' if customization_name == 'default' else customization_name
+        if not (top_partner := ChannelPartner.objects.filter(name=top_partner_name).first()):
+            raise ValueError(f"Cannot find partner '{top_partner_name}'. Run create_root_channel_partner command first.")
+        self.top_partner = top_partner
+        if self.top_partner.channel_partners.filter(name__contains='cp lvl').exists():
+            raise ValueError(f"Tree was already generated for this customization.")
+        while not self.top_partner.services.first():
+            print("Waiting for services to be created.")
+            sleep(1)
+        self.cloud_host = top_partner.cloud_host
         self.partners = []
         self.organizations = []
         self.groups = []
@@ -59,10 +66,11 @@ class Generator:
         self.make_sub_channel_partners()
         self.make_organizations()
         self.make_groups()
+        self.make_services()
 
     def make_sub_channel_partners(self):
         print("Generating sub channel partners...")
-        partners = [self.nx_channel_partner_cloud_test]
+        partners = [self.top_partner]
         j = 0
         for i in range(self.partner_depth):
             j += 1
@@ -72,7 +80,7 @@ class Generator:
                 partner = ChannelPartner.objects.get_or_create(
                     name=f'Partner {j} - cp lvl {len(path)}',
                     parent_channel_partner=parent,
-                    cloud_host=self.cloud_test_host,
+                    cloud_host=self.cloud_host,
                 )[0]
                 new.append(partner)
             partners += new
@@ -142,12 +150,6 @@ class Generator:
         CloudSystemId.objects.bulk_create(self.systems, batch_size=self.batch_size)
         print(f"Generated: {len(self.systems)} systems")
         CloudSystemId.objects.all().update(created_ts=timezone.now() - timedelta(days=120))
-        ChannelPartnerServiceRecord.objects.bulk_create(self.service_records, batch_size=self.batch_size)
-        print(f"Generated: {len(self.service_records)} service records")
-        ServiceUsage.objects.bulk_create(self.service_usages, batch_size=self.batch_size)
-        print(f"Generated: {len(self.service_usages)} service usage records")
-        CloudSystemExternalId.objects.bulk_create(self.system_ext_ids, batch_size=self.batch_size)
-        print(f"Generated: {len(self.system_ext_ids)} system external ids")
 
     def make_systems(self, organization, group, services):
         for i in range(self.system_dimension):
@@ -155,21 +157,26 @@ class Generator:
                 path = get_path_from_parent(group)
             else:
                 path = get_path_from_parent(organization)
-            self.sys_id_seq += 1
             system = CloudSystemId(
-                id=self.sys_id_seq,
                 system_id=uuid.uuid4(),
                 organization_id=organization.id,
                 system_group_id=group.id if group else None,
                 path=path,
-                cloud_host=self.cloud_test_host,
-            )
-            ext_id = CloudSystemExternalId(
-                custom_id=uuid.uuid4(),
-                cloud_system_id=self.sys_id_seq,
-                created_by_id=organization.channel_partner_id
+                cloud_host=self.cloud_host,
             )
             self.systems.append(system)
+
+    def make_partner_services(self, channel_partner):
+        services = channel_partner.services.all()
+        systems = (CloudSystemId.objects
+                   .filter(organization__channel_partner=channel_partner)
+                   .select_related('organization'))
+        for system in systems:
+            ext_id = CloudSystemExternalId(
+                custom_id=uuid.uuid4(),
+                cloud_system_id=system.id,
+                created_by_id=system.organization.channel_partner_id
+            )
             self.system_ext_ids.append(ext_id)
 
             t0 = timezone.now() - timedelta(hours=2)
@@ -181,14 +188,14 @@ class Generator:
                     service_record = ChannelPartnerServiceRecord(
                         service=service,
                         cloud_system_id=system.id,
-                        organization_id=organization.id,
+                        organization_id=system.organization.id,
                         quantity=random.randint(10, 50),
                         created_ts=from_ts,
                         effective_ts=from_ts,
                         in_effect=True,
                     )
                     self.service_records.append(service_record)
-                    for si in range(5):
+                    for si in range(3):
                         from_ts = from_ts + timedelta(minutes=5)
                         to_ts = to_ts + timedelta(minutes=5)
                         service_usage = ServiceUsage(
@@ -199,3 +206,13 @@ class Generator:
                             to_ts=to_ts
                         )
                         self.service_usages.append(service_usage)
+
+    def make_services(self):
+        for channel_partner in self.partners:
+            self.make_partner_services(channel_partner)
+        ChannelPartnerServiceRecord.objects.bulk_create(self.service_records, batch_size=self.batch_size)
+        print(f"Generated: {len(self.service_records)} service records")
+        ServiceUsage.objects.bulk_create(self.service_usages, batch_size=self.batch_size)
+        print(f"Generated: {len(self.service_usages)} service usage records")
+        CloudSystemExternalId.objects.bulk_create(self.system_ext_ids, batch_size=self.batch_size)
+        print(f"Generated: {len(self.system_ext_ids)} system external ids")

@@ -21,7 +21,10 @@ from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.configuration.throttling_config import (
     configure_throttling,
 )
-from channel_partners.tools.config import get_default_host
+from channel_partners.tools.config import (
+    get_container_name,
+    get_default_host,
+)
 from tools.jwt.jwt_auth import get_jwk_client
 
 
@@ -41,8 +44,9 @@ CI = os.getenv('CI', False)
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 BUILD = 'collectstatic' in sys.argv
-IS_CELERY = 'celery' in ' '.join(sys.argv)
+IS_CELERY = 'celery' in ' '.join(sys.argv) or 'celery' in get_container_name()
 IS_DJANGO_SHELL = ('shell' in sys.argv and 'manage.py' in sys.argv)
+
 
 if CI:
     ENV_NAME = EnvironmentEnum.ci
@@ -101,7 +105,8 @@ USER_RATE_LIMIT = env.str("USER_RATE_LIMIT", None)
 #  - celery service
 #  - celery beat service
 #  - django shell, it is needed for debugging sometimes even in containers where RSA key is missed
-if IS_CELERY or IS_DJANGO_SHELL:
+#  - migratw and collectstatic management commands
+if IS_CELERY or IS_DJANGO_SHELL or BUILD or MIGRATING:
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True, default='')
 else:
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
