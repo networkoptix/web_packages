@@ -246,7 +246,8 @@ export class NxChannelPartnerInformationComponent {
         }
 
         if (type === CPInfoType.CUSTOM) {
-            newRecord.description.validation = this.validationType[type];
+            newRecord.data.validation = this.validationType.label;
+            newRecord.description.validation = this.validationType.value;
         }
 
         data.push(newRecord);
