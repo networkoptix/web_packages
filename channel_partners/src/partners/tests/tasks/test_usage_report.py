@@ -128,7 +128,11 @@ class TestCalculateAllReport:
         self.top_org = default_organization
         self.sub_org = organization_factory(channel_partner=self.sub_cp)
         self.top_system = system_factory(organization=self.top_org)
+        self.top_system.created_ts = timezone.now() - relativedelta(months=1)
+        self.top_system.save()
         self.sub_system = system_factory(organization=self.sub_org)
+        self.sub_system.created_ts = timezone.now() - relativedelta(months=1)
+        self.sub_system.save()
         self.test_reports_count = 2 * 2 + 2 * (3 * 2 + 1) + 3 * (4 * 2 + 1)
         CloudSystemId.objects.all().update(created_ts=timezone.now() - relativedelta(months=1))
         for system in (self.top_system, self.sub_system):
@@ -138,7 +142,7 @@ class TestCalculateAllReport:
                     cloud_system=system,
                     organization=system.organization,
                     quantity=1,
-                    created_ts=timezone.now() - relativedelta(day=1)
+                    created_ts=timezone.now() - relativedelta(months=1)
                 )
 
 

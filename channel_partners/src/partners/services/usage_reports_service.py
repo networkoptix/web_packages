@@ -442,14 +442,14 @@ def build_aggregate_from_usages(
             current_object['monthly_rate'] += usage_row['monthly_rate']
             current_object['daily_rate'] += usage_row['daily_rate']
             if transactions is not None:
-                current_object['transactions'] += usage_row['transactions']
+                current_object['transactions'] = current_object.get('transactions', 0) + usage_row['transactions']
         else:
             usage_list.append(RegularUsageDetailRecord(
                 date=usage_row['date'], channels=usage_row['channels'], monthly_rate=usage_row['monthly_rate'],
                 daily_rate=usage_row['daily_rate']
             ))
             if transactions is not None:
-                usage_list[-1]['transactions'] = usage_row['transactions']
+                usage_list[-1]['transactions'] = transactions
             last_date = usage_row['date']
 
     if not usage_list:
