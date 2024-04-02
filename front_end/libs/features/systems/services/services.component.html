@@ -105,13 +105,13 @@
                             class="header-row__usage"
                             translate
                         >
-                            Available / Total
+                            Used / Total
                         </th>
                         <th
                             class="header-row__used"
                             translate
                         >
-                            In use
+                            Remaining
                         </th>
                     </tr>
                 </thead>
@@ -135,11 +135,11 @@
                                     }"
                                 ></div>
                                 <span class="body-row__usage-text"
-                                    >{{ row.remaining }} / {{ row.quantity }}</span
+                                    >{{ row.used }} / {{ row.quantity }}</span
                                 >
                             </td>
                             <td class="body-row__used">
-                                {{ row.used }}
+                                {{ row.remaining }}
                             </td>
                         </tr>
                     }
