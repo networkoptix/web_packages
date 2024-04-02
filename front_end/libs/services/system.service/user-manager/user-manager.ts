@@ -81,7 +81,7 @@ export class UserManager {
         5.0, 5.1 - Check owner with isOwner
         6.0 - Check with groupId's `{00000000-0000-0000-0000-100000000000}`
     */
-    private isCloudOwner(user: SystemUser): boolean {
+    protected isCloudOwner(user: SystemUser): boolean {
         return (
             'isCloud' in user &&
             !!user.isCloud &&
