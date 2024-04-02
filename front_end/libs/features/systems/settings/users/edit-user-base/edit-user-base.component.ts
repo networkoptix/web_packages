@@ -58,7 +58,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     readonly UserType = UserType;
 
     @Input() system: NxSystem;
-    @Input() selectedUser: NxUser;
+    @Input() selectedUser: NxUser; // Post 23.3.x releases convert this into a signal input
+    selectedUser$$ = signal<NxUser | undefined>(undefined);
     @Output() userForm = new EventEmitter<NxFormGroup<UserFormControls>>();
     @Output() formActions = new EventEmitter<FormActions>();
     protected removeOldForm$ = new Subject<boolean>();
@@ -70,7 +71,10 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     protected isLocal$$ = signal(false);
     protected isTemporary$$ = signal(false);
     protected isMe$$ = signal(false);
-    protected canBeEdited$$ = signal(false);
+    protected canBeEdited$$ = computed(() => {
+        this.system.permissionManager.currentUser$$();
+        return this.selectedUser$$()?.canBeEdited || false;
+    });
     protected hasCustomPermissions$$ = signal(false);
 
     protected editPermissions$$ = computed<EditActions>(() => {
@@ -120,6 +124,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     ngOnChanges(changes: NgChanges<NxSystemUsersBaseComponent>): void {
         const user = changes.selectedUser?.currentValue;
         if (user) {
+            this.selectedUser$$.set(user);
             this.menuService.selectedDetailsSection$$.set(user.id);
             this.locked.clear();
             this.setUserHelper(user);
@@ -212,7 +217,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         this.isLocal$$.set(user.type === UserType.local);
         this.isTemporary$$.set(user.type === UserType.temporaryLocal);
         this.isMe$$.set(currentUser.id === user.id);
-        this.canBeEdited$$.set(user.canBeEdited);
         this.hasCustomPermissions$$.set(user.hasCustomPermissions);
 
         this.deleteMessage = this.isCloud$$()

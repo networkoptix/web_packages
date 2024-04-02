@@ -9,6 +9,7 @@ import {
     AddUser,
     NxUser,
     RestV3User,
+    SystemUser,
     UserGroup,
     UserGroupDropdown,
     UserType,
@@ -76,6 +77,14 @@ export class UserWithGroupsManager extends UserManager {
         return this.users.find(user => {
             return user.isOwner && user.type === 'cloud';
         });
+    }
+
+    protected override isCloudOwner(user: SystemUser): boolean {
+        return (
+            'type' in user &&
+            user.type === 'cloud' &&
+            (('isOwner' in user && !!user.isOwner) || ('isAdmin' in user && !!user.isAdmin))
+        );
     }
 
     override async deleteUser(removedUser: NxUser): Promise<void> {
