@@ -22,7 +22,8 @@
         padding: 0 !important;
         background-color: var(--control-color);
         opacity: 0.8;
-        z-index: 3;
+        // z-index for content on libs/components/table/table.component.scss is set to 9 and was displayed on top of the sidebar ear
+        z-index: 10;
         cursor: pointer;
 
         .sidebar-toggling-ear {
