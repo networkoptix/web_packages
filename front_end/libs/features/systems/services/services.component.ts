@@ -33,7 +33,7 @@ function barBackground({ quantity, used }: ServiceQuantity): string {
         return 'var(--brand-core)';
     } else {
         const floatRounded = percent.toFixed(1);
-        return `linear-gradient(to right, var(--brand-core) ${floatRounded}%, var(--dark8) ${floatRounded}%)`;
+        return `linear-gradient(to left, var(--brand-core), var(--dark8)${floatRounded}%)`;
     }
 }
 
