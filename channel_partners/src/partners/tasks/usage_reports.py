@@ -3,6 +3,7 @@ from concurrent.futures import (
     ThreadPoolExecutor,
     as_completed,
 )
+from functools import wraps
 from typing import List
 from uuid import uuid4
 
@@ -14,6 +15,7 @@ from django.core.cache import (
     cache,
     caches,
 )
+from django.db import connection
 
 from partners.models import (
     ChannelPartner,
@@ -35,6 +37,25 @@ WORKERS_NUMBER = 4
 TASK_LOCK_KEY = "report-calculation-daily"
 
 
+def close_thread_db_connections(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        finally:
+
+            connection.close()
+
+    return wrapper
+
+
+class DjangoDBPoolExecutor(ThreadPoolExecutor):
+
+    def submit(self, fn, /, *args, **kwargs):
+        fn = close_thread_db_connections(fn)
+        return super().submit(fn, *args, **kwargs)
+
+
 def calculate_system_reports(system, services, period_start):
     for service in services:
         CloudSystemReportsService.get_regular_report(
@@ -46,7 +67,11 @@ def calculate_system_reports(system, services, period_start):
         )
 
 
-def calculate_organization_reports(organization: Organization, services: List[ChannelPartnerService], period_start: datetime.date):
+def calculate_organization_reports(
+        organization: Organization,
+        services: List[ChannelPartnerService],
+        period_start: datetime.date
+):
     for service in services:
         OrganizationReportsService.get_system_reports(
             organization=organization,
@@ -87,7 +112,7 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
         for organization in channel_partner.organizations.all():
             calculate_organization_reports(organization, services, period_start)
     else:
-        with ThreadPoolExecutor(max_workers=WORKERS_NUMBER) as executor:
+        with DjangoDBPoolExecutor(max_workers=WORKERS_NUMBER) as executor:
             futures = []
             for system in systems:
                 futures.append(
@@ -96,7 +121,7 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
                 # ensure there has been no exception
                 future.result()
 
-        with ThreadPoolExecutor(max_workers=WORKERS_NUMBER) as executor:
+        with DjangoDBPoolExecutor(max_workers=WORKERS_NUMBER) as executor:
             futures = []
             for organization in channel_partner.organizations.all():
                 futures.append(
