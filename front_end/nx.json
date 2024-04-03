@@ -10,9 +10,7 @@
                     "build",
                     "lint",
                     "test"
-                ],
-                "accessToken": "MjA3Y2M4ZDgtZmY0Yi00NWExLWI1ODYtOGZkNWI2MDRmMzAzfHJlYWQtb25seQ==",
-                "encryptionKey": "6B51BDCDE73E5C1AB5DFE2DF8BFC4"
+                ]
             }
         }
     },

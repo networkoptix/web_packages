@@ -12,8 +12,10 @@ import sys
 class WebadminConan(ConanFile):
     name = "webadmin"
     description = "Web-based settings for the Nx Witness Mediaserver"
+    license = None
     settings = None
     no_copy_source = True
+    url = None
 
     def set_version(self):
         git = Git(self, folder="..")
