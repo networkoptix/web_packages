@@ -10,6 +10,7 @@ import { NxSubchannelComponent } from '../components/subchannel/subchannel.compo
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { cpTabGuard } from '../resolvers/CP-tab-guard';
+import { ChannelPartnerGuard } from '../resolvers/channel-partner-guard';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
 import { withTabReporterResolver } from '../resolvers/tab-id-reporter-resolver';
 
@@ -35,6 +36,7 @@ const CPRoutes: Routes = withTabReporterResolver([
             {
                 path: '',
                 component: NxChannelPartnersComponent,
+                canActivate: [ChannelPartnerGuard],
             },
             {
                 path: 'organization',
