@@ -50,14 +50,22 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                 ],
             }
         },
+        "filters": {
+          "exclude_request_started": {
+              "()": "channel_partners.logging.logging_filters.ExcludeEventsFilter",
+              'excluded_event_type': ['request_started']  # Example excluding request_started event
+          }
+        },
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "formatter": "plain_console",
+                'filters': ['exclude_request_started']
             },
             "console_json": {
                 "class": "logging.StreamHandler",
                 "formatter": "json_formatter",
+                'filters': ['exclude_request_started']
             }
         },
         "loggers": {
