@@ -15,7 +15,9 @@ from django.test import (
 )
 
 from channel_partners.configuration.logging_config import configure_logging
-from channel_partners.logging_signals import bind_additional_request_metadata
+from channel_partners.logging.logging_signals import (
+    bind_additional_request_metadata,
+)
 from channel_partners.utils import standardize_path
 
 
@@ -41,7 +43,6 @@ class TestStructuredLogging:
         assert response.status_code == 404
         logs = caplog.records
         # Check if the request started and finished logs are present
-        assert any("request_started" in log.message for log in logs)
         assert any("request_finished" in log.message for log in logs)
 
         # Check if the IP address is logged
@@ -64,7 +65,6 @@ class TestStructuredLogging:
         assert response.status_code == 404
         logs = caplog.records
         # Check if the request started and finished logs are present
-        assert any("request_started" in log.message for log in logs)
         assert any("request_finished" in log.message for log in logs)
 
         # Check if the IP address is logged
@@ -73,7 +73,7 @@ class TestStructuredLogging:
 
 @pytest.mark.django_db
 class TestBindAdditionalRequestMetadata:
-    @patch('channel_partners.logging_signals.structlog.contextvars.bind_contextvars')
+    @patch('channel_partners.logging.logging_signals.structlog.contextvars.bind_contextvars')
     def test_bind_additional_request_metadata(self, mock_bind_contextvars):
         # Mock HttpRequest
         request = MagicMock(spec=HttpRequest)

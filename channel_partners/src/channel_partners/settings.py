@@ -190,7 +190,7 @@ structlog.configure(
 
 MIDDLEWARE = [
     "django_structlog.middlewares.RequestMiddleware",
-    "channel_partners.middleware.RequestTimerMiddleware",
+    "channel_partners.logging.middleware.RequestTimerMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'partners.middleware.cloud_host_middleware',
     'django.middleware.security.SecurityMiddleware',
@@ -392,4 +392,6 @@ JWK_CLIENT = get_jwk_client(DEFAULT_HOST_NAME, lifespan=JWK_LIFESPAN, init_keys=
     - TestSystemUsers::test_system_failure
 """
 # ruff: noqa: F401, TID252
-from .logging_signals import bind_additional_request_metadata
+from channel_partners.logging.logging_signals import (
+    bind_additional_request_metadata,
+)
