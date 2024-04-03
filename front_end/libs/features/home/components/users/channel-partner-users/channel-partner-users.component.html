@@ -1,7 +1,4 @@
-@if (
-    (recordStore.filteredRecords$$().length > 0 && searchModel.query === '') ||
-    (searchModel.query !== '' && searchModel.search !== '')
-) {
+@defer (when recordStore.filteredRecords$$()) {
     <div class="actions p-3">
         @if (hasSelectedUsers) {
             <div class="selected-users">
@@ -81,6 +78,6 @@
             }
         </div>
     </div>
-} @else {
+} @loading {
     <nx-pre-loader></nx-pre-loader>
 }
