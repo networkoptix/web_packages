@@ -25,6 +25,7 @@ function stage()
     mkdir -p stage/cloud/static/common/static
     cp $NX_PORTAL_DIR/package-license.json $NX_PORTAL_DIR/cloud/
     rsync -a $NX_PORTAL_DIR/cloud stage
+    rsync -a $NX_PORTAL_DIR/common/python/* stage/common_python
     rm -rf stage/cloud/.idea
 }
 
