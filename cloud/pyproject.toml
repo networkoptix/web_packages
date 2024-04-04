@@ -108,15 +108,11 @@ pip-licenses = "4.2.0"
 [[tool.poetry.source]]
 name = "pypi-python3.8-alpine3.12"
 url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple"
-default = false
-secondary = true
 
 
 [[tool.poetry.source]]
 name = "pypi-remote"
 url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
-default = false
-secondary = true
 
 [build-system]
 requires = ["poetry-core"]
