@@ -1591,7 +1591,7 @@
     "To access it from anywhere and enable additional features": "どこでもアクセス & 追加機能",
     "To continue log in to %CLOUD_NAME% in the tab that popped up.": "続行するには、ポップアップしたタブで %CLOUD_NAME% にログインしてください。",
     "To continue using cloud services, please read and accept the updated terms and conditions": "クラウドサービスの利用を継続するには、更新された利用規約をご確認のうえ同意してください",
-    "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>.": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに確認コードを要求する」を無効にします。",
+    "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>.": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに確認コードを要求する」を無効にしてください。",
     "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.": "{count, plural, =0{これらのシステム} other{これらのシステム}}へのアクセスを可能にするには、{count, plural, =0{システム} other{システム}}をバージョン5.0に更新するか、チェックボックスを外してください。",
     "Too Small": "小さすぎる",
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
