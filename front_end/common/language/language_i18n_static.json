@@ -1003,7 +1003,15 @@
             "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }",
             "selfAdd": "You cannot add yourself",
             "systemAlreadyInFolder": "System is already in that folder",
-            "cannotMoveIntoSelf": "You cannot move a folder into itself"
+            "cannotMoveIntoSelf": "You cannot move a folder into itself",
+            "confirmAccessLevelChange": {
+                "title": "Warning",
+                "message": "This change will lower your permissions",
+                "footer": {
+                    "actionLabel": "Confirm",
+                    "cancelLabel": "Cancel"
+                }
+            }
         }
     },
     "downloads": {
@@ -1302,7 +1310,7 @@
             "groupAction": {
                 "cancel": "Cancel",
                 "deleteMessage": "Are you sure you want to delete the folder {folderName}?",
-                "delete":  "Delete",
+                "delete": "Delete",
                 "deleteWarning": {
                     "title": "WARNING",
                     "message": "{userCount, plural, one{# user} other{# users}} will lose access to {systemCount, plural, one{# system} other{# systems}}"
@@ -1426,7 +1434,7 @@
             "message": "You have not yet added any information.",
             "buttonText": "Add Information"
         },
-          "noUsers": {
+        "noUsers": {
             "title": "No Users",
             "message": "You have not yet added any users.",
             "buttonText": "Add User"
