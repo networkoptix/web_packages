@@ -102,6 +102,7 @@ export enum RecordingStatus {
 
 export enum DeviceType {
     Camera = 'Camera',
+    Encoder = 'Encoder',
     Nvr = 'NVR',
     MultisensorCamera = 'MultisensorCamera',
     // io device
