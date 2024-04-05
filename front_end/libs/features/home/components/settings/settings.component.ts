@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, input, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
@@ -17,6 +17,8 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { settingsViews } from '@pages/home/home.types';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -58,6 +60,7 @@ interface SettingsState {
     ],
 })
 export class NxOrganizationSettingsComponent implements OnInit {
+    LANG = staticLang;
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
     permissionsStore = inject(PermissionsStore);
@@ -154,6 +157,8 @@ export class NxOrganizationSettingsComponent implements OnInit {
         private store: Store,
         private processService: NxProcessService,
         private cpService: NxChannelPartnersService,
+        private dialogsService: NxDialogsService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -199,7 +204,29 @@ export class NxOrganizationSettingsComponent implements OnInit {
     };
 
     handleAccessUpdate = (id: string): void => {
-        this.currentPartnerAccess$.next(id);
+        const currLevel = this.accessLevel$$();
+        if (id !== currLevel) {
+            this.currentPartnerAccess$.next(null);
+            const { title, message, footer } =
+                this.LANG.dialogs.channelPartners.confirmAccessLevelChange;
+            this.dialogsService
+                .confirm({
+                    title: this.translateService.instant(title),
+                    message: {
+                        value: this.translateService.instant(message),
+                    },
+                    footer,
+                })
+                .then(confirm => {
+                    if (confirm) {
+                        this.currentPartnerAccess$.next(id);
+                    } else {
+                        this.currentPartnerAccess$.next(currLevel);
+                    }
+                });
+        } else {
+            this.currentPartnerAccess$.next(id);
+        }
     };
 
     handleStateUpdate = (state: State): void => {
