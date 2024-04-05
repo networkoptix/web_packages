@@ -4,7 +4,7 @@
    that is currently Firefox-only */
 * {
 	scrollbar-width: thin;
-	scrollbar-color: var(--scrollbar-color);
+	scrollbar-color: var(--scrollbar-color) transparent;
 }
 
 /* Works on Chrome/Edge/Safari */
