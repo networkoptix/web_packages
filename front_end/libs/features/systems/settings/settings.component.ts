@@ -133,7 +133,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     // TODO: We really need a standard way to get the system name
     get systemName(): string {
-        return this.system.info.systemName || this.system.info.name;
+        return this.system?.info.systemName || this.system?.info.name;
     }
 
     private cancelPrevious$ = new Subject();
