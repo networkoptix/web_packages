@@ -1,0 +1,27 @@
+:host {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+
+    &.show-hidable-template {
+        ::ng-deep {
+            .hidable-item.is-hidden {
+                display: none !important;
+            }
+        }
+    }
+
+    &:not(.show-hidable-template) {
+        ::ng-deep {
+            .hidable-template::ng-deep {
+                display: none !important;
+            }
+        }
+    }
+}
+
+.endcap {
+    width: 100%;
+    display: inline-block;
+    visibility: hidden;
+}

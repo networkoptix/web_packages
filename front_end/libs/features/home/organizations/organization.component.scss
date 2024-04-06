@@ -66,20 +66,6 @@
             padding-top: 8px;
         }
 
-        &.back-button {
-            a {
-                visibility: unset !important;
-            }
-        }
-
-        a {
-            width: fit-content;
-            visibility: hidden;
-            color: inherit;
-            text-decoration: none;
-            font-size: .75rem;
-        }
-
         a:hover{
             cursor: pointer;
         }
@@ -94,14 +80,15 @@
     }
 }
 
-.breadcrumbs {
-    @include typography.light14light16;
-    color: var(--body-text-color);
+nx-hidable {
     a {
+        @include typography.light14light16;
+        color: var(--body-text-color);
         position: relative;
         margin-right: 1em;
-        display: inline-block;
-        white-space: nowrap;
+        align-items: center;
+        display: inline-flex;
+        text-decoration: none;
 
         &:not(:first-of-type) {
             &::after {
@@ -113,4 +100,8 @@
             margin-left: 1em;
         }
     }
+}
+
+.hidable-template {
+    pointer-events: none;
 }
