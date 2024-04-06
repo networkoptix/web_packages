@@ -72,32 +72,53 @@
                 *ngIf="isLoading && !currentOrganization$$(); else cards"
             ></nx-pre-loader>
             <ng-template #cards>
-                <div class="breadcrumbs">
+                <nx-hidable>
                     @if (inChannelPartner) {
-                        <a
-                            [routerLink]="routerState.partnersRoot$$()"
-                            translate
-                        >
-                            All Organizations</a
+                        <a [routerLink]="routerState.partnersRoot$$()">
+                            @if (!groupsStore.groupsPath$$().length) {
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                ></svg-icon>
+                            }
+                            <span translate> All Organizations </span></a
                         >
                     }
-                    @if (groupsStore.groupsPath$$().length) {
-                        <a [routerLink]="routerState.rootGroupLink$$()">
+                    @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
+                        <a
+                            [nxHidableItem]="inChannelPartner"
+                            [routerLink]="routerState.rootGroupLink$$()"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="breadcrumbIconStyle"
+                                [src]="icons.dir + 'organization.svg'"
+                            ></svg-icon>
                             {{ currentOrganization$$()!.name }}</a
                         >
                     }
+
+                    <a nxHidableTemplate>...</a>
+
                     @for (
-                        breadcrumb of groupsStore.groupsPath$$();
+                        breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
                         track breadcrumb.id;
                         let last = $last
                     ) {
-                        @if (!last) {
-                            <a [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()">
-                                {{ breadcrumb.name }}</a
-                            >
-                        }
+                        <a
+                            [nxHidableItem]="!last"
+                            [ngStyle]="{ display: 'inline' }"
+                            [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="breadcrumbIconStyle"
+                                [src]="icons.dir + 'folder2.svg'"
+                            ></svg-icon>
+                            {{ breadcrumb.name }}</a
+                        >
                     }
-                </div>
+                </nx-hidable>
                 <ng-template [ngTemplateOutlet]="body"></ng-template>
                 <router-outlet></router-outlet>
             </ng-template>

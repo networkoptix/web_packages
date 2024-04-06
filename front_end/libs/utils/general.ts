@@ -662,3 +662,15 @@ export function interceptMethodCalls<
         },
     });
 }
+
+export const getActualWidth = (el: Element): number =>
+    ['margin-left', 'margin-right', 'padding-left', 'padding-right'].reduce(
+        (totalSize, prop) => totalSize + parseFloat(getComputedStyle(el).getPropertyValue(prop)),
+        el.clientWidth,
+    );
+
+export const getActualHeight = (el: Element): number =>
+    ['margin-top', 'margin-bottom', 'padding-top', 'padding-bottom'].reduce(
+        (totalSize, prop) => totalSize + parseFloat(getComputedStyle(el).getPropertyValue(prop)),
+        el.clientHeight,
+    );

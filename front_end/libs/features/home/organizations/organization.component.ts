@@ -27,6 +27,7 @@ import {
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -79,6 +80,7 @@ interface SidebarSettings {
         TranslateModule,
         NxRibbonStandaloneComponent,
         PipesModule,
+        NxHidableModule,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -89,6 +91,7 @@ export class NxOrganizationsComponent implements OnInit {
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+    breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
         if (this.permissionsStore.canViewSystems$$()) {
@@ -219,4 +222,6 @@ export class NxOrganizationsComponent implements OnInit {
     trackItem(_index: number, item: Crumb): string {
         return item.id;
     }
+
+    excludeLast = <T>(items: T[]): T[] => items.slice(0, -1);
 }
