@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Bonjour, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization "{{message.organization_name}}" with you.
-To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.
+{{message.sharer_name}} a partagé avec vous l'accès à l'organisation "{{message.organization_name}}".
+Pour le voir et le gérer, veuillez créer un compte sur %CLOUD_NAME% en utilisant votre adresse e-mail actuelle et suivez les instructions.
 
-Create Account using this link: {{ config.portal_url }}/authorize/register/
+Créer un compte en utilisant ce lien : {{ config.portal_url }}/authorize/register/

@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Bonjour, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
+{{message.sharer_name}} a partagé avec vous l'accès à l'organisation "{{message.organization_name}}".
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Voir dans le portail %CLOUD_NAME% en utilisant ce lien : {{ config.portal_url }}
