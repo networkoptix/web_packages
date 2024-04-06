@@ -4,6 +4,7 @@
 nx-no-systems-cards {
     .no-systems-header {
         text-align: center;
+        margin-bottom: 42px;
         @include typography.regular20nocolor
     }
 
