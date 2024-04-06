@@ -64,7 +64,7 @@ export const ChannelPartnersRouteState = signalStore(
                             params,
                         );
                         const nextState = {
-                            tabId,
+                            tabId: tabId !== 'organizations' || state.organizationId ? tabId : '',
                             ...stateFromParams,
                         };
                         patchState(

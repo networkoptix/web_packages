@@ -21,8 +21,18 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Subject, iif, Observable, pipe, zip } from 'rxjs';
-import { debounceTime, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { Subject, iif, Observable, pipe, zip, NEVER, timer } from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    filter,
+    map,
+    pairwise,
+    retry,
+    startWith,
+    switchMap,
+} from 'rxjs/operators';
 
 import {
     AccessLevel,
@@ -419,6 +429,8 @@ export const OrgUsersStore = signalStore(
             ),
             setSelectedGroup: rxMethod<string>(
                 pipe(
+                    switchMap(groupId => (groupId ? Promise.resolve(groupId) : NEVER)),
+                    distinctUntilChanged(),
                     tapResponse({
                         next: (groupId: string) => {
                             const id = store.selectedGroupId() || routerStateStore.organizationId();
@@ -439,23 +451,30 @@ export const OrgUsersStore = signalStore(
                         error: () => {},
                     }),
                     switchMap(groupId => {
-                        const orgId = routerStateStore.organizationId();
-                        const cached = store.usersCacheEntityMap()[groupId || orgId];
+                        const cached = store.usersCacheEntityMap()[groupId];
 
                         if (cached) {
                             store.setUsers(cached.users);
                         }
 
                         return iif(
-                            () => !!groupId,
+                            () => groupId !== routerStateStore.organizationId(),
                             chpService
                                 .getGroupUsersWithAccess(groupId)
                                 .pipe(map(users => mapGroupUsers(users))),
                             chpService
-                                .getOrganizationUsers(orgId)
+                                .getOrganizationUsers(groupId)
                                 .pipe(
                                     map(users => mapOrgUsers(users, groupsStore.currentGroups$$())),
                                 ),
+                        ).pipe(
+                            retry({
+                                count: 3,
+                                delay: (_, retryCount: number) =>
+                                    timer(retryCount ** retryCount * 500),
+                                resetOnSuccess: true,
+                            }),
+                            catchError(() => NEVER),
                         );
                     }),
                     tapResponse({
@@ -471,7 +490,8 @@ export const OrgUsersStore = signalStore(
                 }
                 store.updateGroupCache(groupId);
                 return computed(() => {
-                    return (store.usersCacheEntityMap()[groupId!].users || []) as UserRecord[];
+                    return ((groupId && store.usersCacheEntityMap()[groupId]?.users) ||
+                        []) as UserRecord[];
                 });
             },
         }),
@@ -483,7 +503,7 @@ export const OrgUsersStore = signalStore(
             routerStateStore = inject(ChannelPartnersRouteState),
         ) => {
             const updateSelectedGroup$$ = computed(() => {
-                const groupId = routerStateStore.groupId();
+                const groupId = routerStateStore.groupId() || routerStateStore.organizationId();
                 const email = routerStateStore.email();
                 return {
                     groupId,
@@ -501,7 +521,7 @@ export const OrgUsersStore = signalStore(
                         updater$$.pipe(
                             switchMap(() => currentGroupEntities),
                             debounceTime(100),
-                            map(() => [...state, true] as const),
+                            map((_, index) => [...state, !index] as const),
                             startWith([...state, false] as const),
                         ),
                     ),
