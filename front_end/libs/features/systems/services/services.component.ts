@@ -68,20 +68,17 @@ export class NxServicesComponent {
 
     private rows = computed<Row[]>(() => {
         const { services, quantities } = this.data();
-        return services
-            .map(({ id, type, displayName }) => {
-                const quantity = quantities[id] ?? { quantity: 0, used: 0 };
-                return {
-                    id,
-                    type,
-                    displayName,
-                    ...quantity,
-                    remaining: quantity.quantity - quantity.used,
-                    barBackground: barBackground(quantity),
-                };
-            })
-            .filter(row => row.type === 'local_recording');
-        // Only local recording in alpha
+        return services.map(({ id, type, displayName }) => {
+            const quantity = quantities[id] ?? { quantity: 0, used: 0 };
+            return {
+                id,
+                type,
+                displayName,
+                ...quantity,
+                remaining: quantity.quantity - quantity.used,
+                barBackground: barBackground(quantity),
+            };
+        });
     });
 
     displayRows = computed(() => {
