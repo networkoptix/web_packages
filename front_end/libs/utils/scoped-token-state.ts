@@ -16,7 +16,7 @@ export class ScopedTokenState {
 
     private cacheLock: Promise<ScopedTokenState>;
 
-    public ensureFresh = async (minimumSession?: number): Promise<ScopedTokenState> => {
+    public ensureFresh = async (): Promise<ScopedTokenState> => {
         let resolveLock: (value: ScopedTokenState) => void;
         let currentLock: Promise<ScopedTokenState>;
 
@@ -42,7 +42,7 @@ export class ScopedTokenState {
             }
         };
 
-        if (!this.accessToken || !minimumSession) {
+        if (!this.accessToken) {
             this.accessToken = this.refreshAccessToken();
         }
 
@@ -56,9 +56,9 @@ export class ScopedTokenState {
         const expiresAt = await this.expiresAt;
         const now = Date.now();
 
-        const expiresSoon = expiresAt < now + minimumSession * 1000;
+        const expired = expiresAt < now;
 
-        if (expiresSoon) {
+        if (expired) {
             this.accessToken = this.refreshAccessToken();
             this.expiresAt ||= this.getExpiresAt(token);
             this.emitState();
@@ -140,7 +140,13 @@ export class ScopedTokenState {
                 'x-csrftoken': csrf,
             },
             credentials: 'include',
-        }).then(res => res.json());
+        })
+            .then(res => res.json())
+            .catch();
+
+        if (!res) {
+            return this.accessToken || '';
+        }
 
         if (res.expires_at) {
             this.expiresAt = Promise.resolve(parseInt(res.expires_at));
