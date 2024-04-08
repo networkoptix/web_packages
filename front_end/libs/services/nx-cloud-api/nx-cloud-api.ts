@@ -1090,17 +1090,14 @@ export class NxCloudApiService {
      * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
      */
     #withFreshSession: t.WithFreshSession = minSessionSeconds => {
-        return TokenSessionManager.getInstance('/api/account/refreshAccessToken')(
-            minSessionSeconds,
-            () => {
-                if (!this.refreshError && !environment.isLocal) {
-                    this.refreshError = true;
-                    runInInjectionContext(this.injector, () => {
-                        inject(NxAccountService).showExpired();
-                    });
-                }
-            },
-        );
+        return TokenSessionManager.getInstance('/api/account/refreshAccessToken')(() => {
+            if (!this.refreshError && !environment.isLocal) {
+                this.refreshError = true;
+                runInInjectionContext(this.injector, () => {
+                    inject(NxAccountService).showExpired();
+                });
+            }
+        });
     };
 
     @memoizeAsyncShort

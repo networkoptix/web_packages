@@ -1,4 +1,4 @@
-import { from, Observable, ObservableInput, switchMap } from 'rxjs';
+import { EMPTY, from, Observable, ObservableInput, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { ScopedTokenState } from '@utils/scoped-token-state';
@@ -11,9 +11,9 @@ export class TokenSessionManager {
     tokenState: ScopedTokenState;
 
     handlerFactory =
-        (minSessionSeconds: number, logoutMethod?: () => unknown): ReturnType<WithFreshSession> =>
+        (logoutMethod?: () => unknown): ReturnType<WithFreshSession> =>
         <T>(observableInputFactory: (config: FreshSeshConfig) => ObservableInput<T>) =>
-            from(this.tokenState.ensureFresh(minSessionSeconds)).pipe(
+            from(this.tokenState.ensureFresh()).pipe(
                 switchMap(cloudTokenState => cloudTokenState.accessToken),
                 switchMap(accessToken =>
                     observableInputFactory({
@@ -25,17 +25,18 @@ export class TokenSessionManager {
                     }),
                 ),
                 catchError(e => {
-                    if (logoutMethod && e.url.includes('/api/account/refreshAccessToken')) {
+                    if (e instanceof SyntaxError) {
+                        return EMPTY;
+                    }
+                    if (logoutMethod && e?.url.includes('/api/account/refreshAccessToken')) {
                         logoutMethod();
                     }
                     throw e;
                 }),
             );
 
-    getHandler = (
-        minSessionSeconds: number = 300,
-        logoutMethod?: () => unknown,
-    ): ReturnType<WithFreshSession> => this.handlerFactory(minSessionSeconds, logoutMethod);
+    getHandler = (logoutMethod?: () => unknown): ReturnType<WithFreshSession> =>
+        this.handlerFactory(logoutMethod);
 
     static getInstance(refreshTokenEndpoint: string): TokenSessionManager['getHandler'] {
         if (!TokenSessionManager.INSTANCES[refreshTokenEndpoint]) {

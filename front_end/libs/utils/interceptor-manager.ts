@@ -50,7 +50,7 @@ export class InterceptorManager {
     private async checkAndUpdateSession(
         target: ScopedTokenState = this.scopedTokens.cloud,
     ): Promise<ScopedTokenState> {
-        return target.ensureFresh(this.minimumSession);
+        return target.ensureFresh();
     }
 
     private async ensureFreshSession(canAuthenticate: boolean): Promise<boolean> {
