@@ -42,16 +42,16 @@
     "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{{message.organization_name}}} was shared with you"
+    "emailSubject": "Kuruluş {{{message.organization_name}}} sizinle paylaşıldı"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "{{{message.organization_name}}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi"
   },
   "cps_organization_state_confirmation": {
     "emailSubject": "Confirm the transfer of organization {{{message.organization_name}}} to the status {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "{{{message.organization_name}}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi"
   },
   "cps_partner_invite": {
     "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
@@ -66,6 +66,6 @@
     "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi "
   }
 }
