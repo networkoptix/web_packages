@@ -16,13 +16,14 @@ export const BuildGuard = async (
     } else {
         if (segment) {
             const data = await inject(NxCloudApiService).getDownloadsHistory(undefined);
-            delete data.updatesPrefix;
 
-            const type = Object.keys(data).find(k =>
-                data[k].some(releaseType =>
-                    [releaseType.version, releaseType.buildNumber].includes(segment),
-                ),
-            );
+            const type = Object.keys(data)
+                .filter(key => key !== 'updatesPrefix')
+                .find(k =>
+                    data[k].some(releaseType =>
+                        [releaseType.version, releaseType.buildNumber].includes(segment),
+                    ),
+                );
 
             if (type) {
                 return router.navigate([`download/other/${type}`], { fragment: segment });
