@@ -129,10 +129,11 @@
                     (cdkDragReleased)="layoutGridService.addItem.next(node)"
                     [alternativeTargetRef]="tooltipOffsetTarget"
                     [nxTooltip]="
-                        showTooltip && {
+                        showTooltip &&
+                        ({
                             node,
                             tooltips: { camera: cameraTooltip, server: serverTooltip }
-                        } | mapWith: selectTooltip
+                        } | mapWith: selectTooltip)
                     "
                     (mouseenter)="updateTooltipTarget(node.details.id)"
                     (mouseleave)="unsubTooltips()"
