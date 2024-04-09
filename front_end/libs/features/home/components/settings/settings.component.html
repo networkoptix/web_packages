@@ -4,7 +4,7 @@
 >
     <ng-container *ngIf="state.item">
         <div class="row">
-            <div class="col-8">
+            <div class="col-10">
                 <nx-settings-general
                     [view]="settingsViews.CHANNEL_PARTNERS"
                     [name]="currentName$ | async"
@@ -22,7 +22,7 @@
 >
     <ng-container *ngIf="state.item">
         <div class="row">
-            <div class="col-8">
+            <div class="col-10">
                 <nx-settings-general
                     *ngIf="permissions$$().canConfigure"
                     [view]="state.view"
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
+            <div class="col-10">
                 <nx-settings-state
                     *ngIf="canChangeStateUI && permissions$$().canAlterState"
                     (updateState)="handleStateUpdate($event)"
