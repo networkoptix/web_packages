@@ -56,7 +56,6 @@ export class NxChannelPartnersService {
     getChannelPartner = this.cpApi.getChannelPartner;
     updateChannelPartner = this.cpApi.updateChannelPartner;
     removeChannelPartner = this.cpApi.removeChannelPartner;
-    getPartnerServiceChanges = this.cpApi.getPartnerServiceChanges;
 
     /* Channel Partner Users */
     getChannelPartnerRoles = this.cpApi.getChannelPartnerRoles;
@@ -66,6 +65,10 @@ export class NxChannelPartnersService {
     getChannelPartnerUser = this.cpApi.getChannelPartnerUser;
     deleteChannelPartnerUser = this.cpApi.deleteChannelPartnerUser;
     getSelfChannelPartnerUser = this.cpApi.getSelfChannelPartnerUser;
+
+    /* Channel Partner Reports */
+    getPartnerServiceUsage = this.cpApi.getPartnerServiceUsage;
+    getPartnerServiceChanges = this.cpApi.getPartnerServiceChanges;
 
     /* Organizations */
     getPartnerOrganizations = this.cpApi.getPartnerOrganizations;
@@ -77,7 +80,6 @@ export class NxChannelPartnersService {
     getOrganization = this.cpApi.getOrganization;
     updateOrganization = this.cpApi.updateOrganization;
     removeOrganization = this.cpApi.removeOrganization;
-    getOrganizationServiceChanges = this.cpApi.getOrganizationServiceChanges;
 
     /* Organization Users */
     getOrganizationRoles = this.cpApi.getOrganizationRoles;
@@ -90,6 +92,10 @@ export class NxChannelPartnersService {
     deleteBulkUserGroups = this.cpApi.deleteBulkUserGroups;
 
     organizationRoles$$ = toSignal(this.cpApi.getOrganizationRoles(), { initialValue: [] });
+
+    /* Organization Reports */
+    getOrganizationServiceUsage = this.cpApi.getOrganizationServiceUsage;
+    getOrganizationServiceChanges = this.cpApi.getOrganizationServiceChanges;
 
     /* Service Management */
     getChannelPartnerOwnedServices = this.cpApi.getChannelPartnerOwnedServices;

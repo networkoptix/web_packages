@@ -45,6 +45,8 @@ import {
     OrgServiceChangesResponse,
     AvailableService,
     OwnedService,
+    PartnerUsageReportEntry,
+    OrgUsageReportEntry,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -140,22 +142,6 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
     };
 
-    getPartnerServiceChanges = (
-        partnerId: string,
-        startTs: string,
-        endTs: string,
-    ): Observable<PartnerServiceChangesResponse> => {
-        return this.get(
-            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'service_changes_history']),
-            {
-                params: {
-                    startTs,
-                    endTs,
-                },
-            },
-        );
-    };
-
     /* Channel Partner Users */
     getChannelPartnerRoles = (): Observable<ChannelPartnerRole[]> => {
         return this.get('/channel_partner_roles');
@@ -192,6 +178,29 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', email]));
     };
 
+    /* Channel Partner Reports */
+    getPartnerServiceUsage = (partnerId: string): Observable<PartnerUsageReportEntry[]> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'reports', 'usage_report']),
+        );
+    };
+
+    getPartnerServiceChanges = (
+        partnerId: string,
+        startTs: string,
+        endTs: string,
+    ): Observable<PartnerServiceChangesResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'service_changes_history']),
+            {
+                params: {
+                    startTs,
+                    endTs,
+                },
+            },
+        );
+    };
+
     /* Organizations */
     public getPartnerOrganizations = (partnerId: string): Observable<Organization[]> => {
         return this.get<PaginatedOrganizationList>(
@@ -219,19 +228,6 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     removeOrganization = (orgId: string): Observable<void> => {
         return this.delete(this.makeUrl(urlBases.ORGANIZATIONS, [orgId]));
-    };
-
-    getOrganizationServiceChanges = (
-        orgId: string,
-        startTs: string,
-        endTs: string,
-    ): Observable<OrgServiceChangesResponse> => {
-        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'service_changes_history']), {
-            params: {
-                startTs,
-                endTs,
-            },
-        });
     };
 
     /* Organization Users */
@@ -278,6 +274,24 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email, 'remove_groups']), {
             body: groupIds,
         });
+
+    /* Organization Reports */
+    getOrganizationServiceUsage = (orgId: string): Observable<OrgUsageReportEntry[]> => {
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report']));
+    };
+
+    getOrganizationServiceChanges = (
+        orgId: string,
+        startTs: string,
+        endTs: string,
+    ): Observable<OrgServiceChangesResponse> => {
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'service_changes_history']), {
+            params: {
+                startTs,
+                endTs,
+            },
+        });
+    };
 
     /* Service Management */
     getChannelPartnerOwnedServices = (partnerId: string): Observable<OwnedService[]> =>
