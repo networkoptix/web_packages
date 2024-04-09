@@ -325,7 +325,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     # 'SERVE_PERMISSIONS': ['licensing.views.ui.api_management.APIManagementPermission'],
-    'TITLE': 'Nx Channel Partners API',
+    'TITLE': 'Channel Partners API',
     'DESCRIPTION': '',
     'VERSION': '2.0.0',
     'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
