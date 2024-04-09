@@ -358,6 +358,24 @@ export interface SassReport {
     state: string;
 }
 
+interface BaseUsageReportEntry {
+    service_id: string;
+    service_name: string;
+    channels: number;
+    expirations: string[];
+    monthly_rate: number;
+    daily_rate: number;
+}
+
+export interface PartnerUsageReportEntry extends BaseUsageReportEntry {
+    used_by_organizations: number;
+    used_by_channel_partners: number;
+}
+
+export interface OrgUsageReportEntry extends BaseUsageReportEntry {
+    used_by: number;
+}
+
 interface PartnerServiceChangeEntry {
     serviceId: string;
     organizationId: string;

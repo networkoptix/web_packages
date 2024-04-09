@@ -33,18 +33,8 @@ export class NxServiceChangesComponent {
     private entityId$$ = input.required<string>({ alias: 'entityId' });
     private channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     private organizations$$ = this.store.selectSignal<Organization[]>(selectOrganizations);
-    selectedEntityName$$ = computed(() => {
-        const entityId = this.entityId$$();
-        const channelPartners = this.channelPartners$$();
-        const organizations = this.organizations$$();
 
-        const entityName =
-            channelPartners.find(({ id }) => id === entityId)?.name ||
-            organizations.find(({ id }) => id === entityId)?.name ||
-            '';
-        return entityName;
-    });
-
+    selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
     formattedServiceChangeRecords$$ = computed<FormattedServiceChangeRecord[]>(() => {
         const records = this.serviceChangesStore.records();
         const channelPartners = this.channelPartners$$();
