@@ -81,7 +81,7 @@ class TestOrganizationServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_regular_service_report(self, mock_auth_with_user, mocker):
         report_value = [{f'{uuid4()}': f'{uuid4()}'} for _ in range(3)]
@@ -105,7 +105,7 @@ class TestOrganizationServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_system_report(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(
@@ -128,7 +128,7 @@ class TestOrganizationServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_system_regular_report(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(CloudSystemReportsService, "get_regular_report",)
@@ -152,7 +152,7 @@ class TestOrganizationServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
         report_spy.assert_called_once_with(
             cloud_system=self.system,
             organization=self.org,
@@ -175,7 +175,7 @@ class TestOrganizationServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
         report_spy.assert_called_once_with(
             organization=self.org, period_start=datetime.date(2020, 6, 26))
 
@@ -240,7 +240,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_regular_service_report(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(
@@ -263,7 +263,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_channel_partner_usages_no_subcp(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(
@@ -286,7 +286,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_channel_partner_usages(self, mock_auth_with_user, mocker, channel_partner_factory,
                                     django_capture_on_commit_callbacks):
@@ -314,7 +314,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_organization_usages_no_orgs(self, mock_auth_with_user, mocker, channel_partner_factory,):
         sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
@@ -341,7 +341,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_organization_usages(self, mock_auth_with_user, mocker, channel_partner_factory):
         ReportSnapshot.objects.all().delete()
@@ -366,7 +366,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_usage_report(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(ChannelPartnerReportsService, "get_channel_partner_report",)
@@ -384,6 +384,6 @@ class TestChannelPartnerServiceReportsViewSet:
         path += '?periodStartDate=2020-06-26'
         report_spy.reset_mock()
         response = self.client.get(path)
-        assert response.status_code == 404
+        assert response.status_code == 403
         report_spy.assert_called_once_with(
             channel_partner=self.cp, period_start=datetime.date(2020, 6, 26))
