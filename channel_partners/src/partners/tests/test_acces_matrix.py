@@ -564,7 +564,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         org = self.organizations[1]
         group = self.groups[1]
         group_admin = sys_group_user_factory(organization=org, group=group,
-                                             role_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
+                                             role_id=OrganizationRoles.ADMINISTRATOR)
         group_power_user = sys_group_user_factory(organization=org, group=group,
                                                   role_id=OrganizationRoles.POWER_USER)
         group_viewer = sys_group_user_factory(organization=org, group=group,
@@ -591,7 +591,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         assert ser.get_write_perm_method(ser.fields["name"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["state"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["state"])(instance=instance) is False
-        assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is True
+        assert ser.get_read_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_write_perm_method(ser.fields["channelPartnerAccessLevel"])(instance=instance) is False
         assert ser.get_read_perm_method(ser.fields["attributes"])(instance=instance) is True
         assert ser.get_write_perm_method(ser.fields["attributes"])(instance=instance) is False
@@ -790,7 +790,7 @@ class TestCloudSystemSerializerFieldAccessLevels:
         org = self.organizations[1]
         group = self.groups[1]
         group_admin = sys_group_user_factory(organization=org, group=group,
-                                             role_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
+                                             role_id=OrganizationRoles.ADMINISTRATOR)
         group_power_user = sys_group_user_factory(organization=org, group=group,
                                                   role_id=OrganizationRoles.POWER_USER)
         group_admin_viewer = sys_group_user_factory(organization=org, group=group,
