@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -26,6 +27,7 @@ import { ModalBase } from '../modal-base';
         TranslateModule,
 
         NxAlertBlockComponent,
+        NxCheckboxComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
     ],
