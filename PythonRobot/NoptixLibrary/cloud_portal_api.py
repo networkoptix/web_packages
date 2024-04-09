@@ -476,7 +476,7 @@ class CloudPortalAPI(object):
             refresh_response.raise_for_status()
             logger.debug(f"/api/account json: {refresh_response.json()}")
             s.headers.update({"Authorization": f"Bearer {refresh_response.json()['access_token']}"})
-            return s.get(f'{self.env}/partners/api/v2/cloud_systems/{uuid}/services')
+            return s.get(f'{self.env}/partners/api/v2/cloud_systems/{uuid}/services/')
 
     def change_sub(self, email, password, uuid, id, amount):
         body = {
