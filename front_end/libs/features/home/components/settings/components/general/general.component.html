@@ -22,7 +22,7 @@
                         >
                     </div>
 
-                    <div class="col-9">
+                    <div class="col-6">
                         <input
                             type="text"
                             class="fs-mask form-control"
@@ -36,7 +36,7 @@
                         />
                     </div>
                     <div
-                        class="col-9 offset-3"
+                        class="col-6 offset-2"
                         *ngIf="orgName.invalid && orgName.touched"
                     >
                         <span
@@ -59,7 +59,7 @@
                     *ngIf="view() === settingsViews.ORGANIZATIONS"
                 >
                     <div
-                        class="label d-flex align-items-center justify-content-end text-nowrap text-right col-3"
+                        class="label d-flex align-items-center justify-content-end text-wrap text-right col-3"
                     >
                         <label
                             for="channelPartnerAccessSelect"
@@ -69,7 +69,7 @@
                         >
                     </div>
 
-                    <div class="col-9">
+                    <div class="col-6">
                         <nx-select
                             [componentId]="'channelPartnerAccessSelect'"
                             [items]="partnerAccess"
