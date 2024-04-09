@@ -1,0 +1,20 @@
+<div>
+    <div class="header">
+        <span>{{ header() }}</span>
+        @if (filterComponent().selectedValueExists()) {
+            <button
+                class="clear-button"
+                (click)="onClearClick()"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'close.svg'"
+                    [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+                ></svg-icon>
+            </button>
+        }
+    </div>
+    <div class="body">
+        <ng-content></ng-content>
+    </div>
+</div>

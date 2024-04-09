@@ -1,0 +1,41 @@
+@use 'typography';
+
+:host {
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 2.5rem;
+    padding: 0.75rem 1rem;
+
+    background-color: var(--bookmarks-filter-header-bg);
+
+    span {
+        font-size: 1rem;
+        font-family: typography.$font-family-medium;
+        color: var(--card-header-text);
+    }
+
+    button {
+        padding: 0 !important;
+        width: 1.25rem;
+        height: 1.25rem !important;
+        background-color: var(--bookmarks-filter-button-bg);
+
+        svg-icon {
+            display: flex;
+
+            svg line {
+                stroke: var(--bookmarks-filter-clear-btn-stroke);
+            }
+        }
+    }
+}
+
+.body {
+    padding: 1rem;
+    background-color: var(--bookmarks-filter-body-bg);
+}

@@ -1,0 +1,11 @@
+<div class="container">
+    <!-- TODO: This radio isn't great and isn't made for this. replace with new one -->
+    <nx-radio
+        [value]="1"
+        [ngModel]="isSelected() ? 1 : 0"
+        [disabled]="disabled"
+    ></nx-radio>
+    <div>
+        <ng-content></ng-content>
+    </div>
+</div>

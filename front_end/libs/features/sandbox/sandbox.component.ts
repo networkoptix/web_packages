@@ -122,6 +122,11 @@ export class NxSandboxComponent {
                             path: '/masonry-grid',
                         },
                         {
+                            id: 'filters',
+                            label: 'Filters',
+                            path: '/filters',
+                        },
+                        {
                             id: 'formElements',
                             label: 'Form elements',
                             path: '/form-elements',

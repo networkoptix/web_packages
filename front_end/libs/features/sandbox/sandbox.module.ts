@@ -14,6 +14,7 @@ import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
+import { SandboxFiltersComponent } from './filters/sandbox-filters.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
@@ -130,6 +131,10 @@ const appRoutes: Routes = [
                     import('./channel-partners/channel-partners.module').then(
                         m => m.NxChannelPartnersModule,
                     ),
+            },
+            {
+                path: 'filters',
+                component: SandboxFiltersComponent,
             },
         ],
     },

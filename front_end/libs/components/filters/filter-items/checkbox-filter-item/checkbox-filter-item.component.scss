@@ -1,0 +1,29 @@
+@use "theme_variables_common" as *;
+@use "typography";
+
+:host {
+    display: block;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    color: var(--bookmarks-filter-button-text);
+    @include typography.regular13nocolor;
+    height: 28px;
+    line-height: 28px;
+
+    &.selected,
+    &:hover:not(.disabled) {
+        background-color: var(--bookmarks-text-highlight-bg);
+    }
+
+    &.disabled {
+        cursor: auto;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+}
