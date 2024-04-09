@@ -112,12 +112,14 @@
 	@include generateVarAndRgb(--error-label, $red_main);
 	@include generateVarAndRgb(--red-l1-brighter, $red_l1_brighter);
 
+	@include generateVarAndRgb(--yellow-l3, native.$yellow_l3);
 	@include generateVarAndRgb(--yellow-l2, native.$yellow_l2);
 	@include generateVarAndRgb(--yellow-l1, native.$yellow_l1);
 	@include generateVarAndRgb(--yellow-main, native.$yellow_main);
 	@include generateVarAndRgb(--yellow-d1, native.$yellow_d1);
 	@include generateVarAndRgb(--yellow-d2-lighter, native.$yellow_d2_lighter);
 	@include generateVarAndRgb(--yellow-d2, native.$yellow_d2);
+	@include generateVarAndRgb(--yellow-d3, native.$yellow_d3);
 
 	@include generateVarAndRgb(--attention-yellow, native.$attention-yellow);
 	@include generateVarAndRgb(--attention-yellow_light, native.$attention-yellow_light);

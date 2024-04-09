@@ -85,6 +85,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --svg-table-button: #989898; //$light_gray_14
 
     --text-placeholder-color : #888888; //$dark_gray_18;
+    --text-contrast: var(--light1);
 
     --scrollbar-color                   : #505050; //$light_gray_16;
     --scrollbar-thumb-bg                : #B8B8B8; //$light_gray_10;
@@ -650,6 +651,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --subchannel-partner-card-id-color: var(--dark_gray_11);
     --subchannel-partner-card-org-fill: var(--dark_gray_16);
     --subchannel-partner-card-color: var(--dark_gray_16);
+
+    --org-delete-folder-warning-header: #{$yellow_main};
+    --org-delete-folder-warning-bg: #{$yellow_d3};
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
