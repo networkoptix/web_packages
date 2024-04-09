@@ -483,3 +483,11 @@ b,
 strong {
     font-family: $font-family-bold  !important;
 }
+
+.text-contrast {
+    color: var(--text-contrast);
+
+    &-bold {
+        font-family: $font-family-bold !important;
+    }
+}

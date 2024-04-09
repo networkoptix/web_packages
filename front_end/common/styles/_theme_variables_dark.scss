@@ -95,6 +95,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --svg-table-button: #698796; //$light14
 
     --text-placeholder-color : #587785; //$dark18;
+    --text-contrast: var(--light1);
 
     --scrollbar-color                   : #35464F; //$light16;
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
@@ -679,6 +680,9 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --subchannel-partner-card-id-color: var(--dark4);
     --subchannel-partner-card-org-fill: var(--dark16);
     --subchannel-partner-card-color: var(--dark16);
+
+    --org-delete-folder-warning-header: #{$yellow_main};
+    --org-delete-folder-warning-bg: #{$yellow_d3};
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark5);

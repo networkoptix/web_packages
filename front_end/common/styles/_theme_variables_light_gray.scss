@@ -85,6 +85,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --svg-table-button: #989898; //$light_gray_14
 
     --text-placeholder-color: #{$light_gray_16};
+    --text-contrast: var(--dark1);
 
     --scrollbar-color: var(--light16);
     --scrollbar-thumb-bg: var(--light10);
@@ -641,6 +642,9 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --subchannel-partner-card-id-color: var(--light_gray_2);
     --subchannel-partner-card-org-fill: var(--light_gray_4);
     --subchannel-partner-card-color: var(--light_gray_4);
+
+    --org-delete-folder-warning-header: #{$yellow_main};
+    --org-delete-folder-warning-bg: #{$yellow_l3};
 
     @include generateVarAndRgb(--system-card-bg-grad0, $light_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light_gray_3);

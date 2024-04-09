@@ -18,6 +18,7 @@ import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
@@ -230,21 +231,25 @@ export class NxOrganizationCardContainerComponent {
                                   } as const)
                                 : undefined;
                         this.dialogsService
-                            .confirm({
-                                title: deleteAction,
-                                warning,
-                                footer: {
-                                    actionLabel: deleteAction,
-                                    cancelLabel: staticLang.channelPartners.orgs.groupAction.cancel,
-                                    buttonClass: 'btn-danger',
-                                },
-                                message: this.translateService.instant(
-                                    staticLang.channelPartners.orgs.groupAction.deleteMessage,
-                                    {
-                                        folderName: `<span class=\"text-white\">${group.name}</span>`,
+                            .confirm(
+                                {
+                                    title: deleteAction,
+                                    warning,
+                                    footer: {
+                                        actionLabel: deleteAction,
+                                        cancelLabel:
+                                            staticLang.channelPartners.orgs.groupAction.cancel,
+                                        buttonClass: 'btn-danger',
                                     },
-                                ),
-                            })
+                                    message: this.translateService.instant(
+                                        staticLang.channelPartners.orgs.groupAction.deleteMessage,
+                                        {
+                                            folderName: `<span class=\"text-contrast-bold\">${group.name}</span>`,
+                                        },
+                                    ),
+                                },
+                                { width: DIALOG_SIZE.MICRO_SMALL },
+                            )
                             .then(confirm => {
                                 if (confirm) {
                                     const currentOrgId =
