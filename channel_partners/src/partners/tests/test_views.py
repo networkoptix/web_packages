@@ -840,6 +840,8 @@ class TestChannelPartnerStructureNestedViewSet:
         # Multi Channel Partner User
         self.multi_cp_user, self.multi_cp_user_links = multi_cp_user_factory(
             channel_partners=[self.cp_parent, self.cp_other_child])
+        # looks like there could be cache issue in some cases
+        caches['default'].clear()
 
     def __make_request_get_response(self, user: CloudUser, channel_partner: ChannelPartner):
         self.mock_auth(user)
