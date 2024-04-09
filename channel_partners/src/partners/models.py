@@ -1941,6 +1941,11 @@ class OrganizationToUser(models.Model):
             GinIndex(name="organizationtouser_roles_gin", fields=['roles'], opclasses=['array_ops'])
         ]
 
+    def save(self, *args, **kwargs):
+        if self.system_group and OrganizationRoles.ORGANIZATION_ADMINISTRATOR in self.roles:
+            raise ValidationError('Group user cannot be added with "Organization Administrator" role')
+        super(OrganizationToUser, self).save(*args, **kwargs)
+
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)
 

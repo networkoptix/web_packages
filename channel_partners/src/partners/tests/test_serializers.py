@@ -636,6 +636,7 @@ class TestOrganizationUserSerializer:
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
         self.org_adm_name = 'Organization Administrator'
+        self.adm_name = 'Administrator'
         self.org_power_user_name = 'Power User'
 
     @pytest.mark.no_tasks_autofix
@@ -703,8 +704,8 @@ class TestOrganizationUserSerializer:
         serializer = OrganizationUserSerializer(instance=user)
         assert serializer.data['email'] == group_user.user.email
         assert serializer.data['groupRoles'][0] == {
-            'groupId': str(group_user.system_group_id), 'roles': [self.org_adm_name],
-            'rolesIds': [str(OrganizationRoles.ORGANIZATION_ADMINISTRATOR)]
+            'groupId': str(group_user.system_group_id), 'roles': [self.adm_name],
+            'rolesIds': [str(OrganizationRoles.ADMINISTRATOR)]
         }
         assert serializer.data['roles'] == []
         httpx_mock.reset(False)
