@@ -1,8 +1,3 @@
-export enum EntityType {
-    channelPartner = 'channel-partner',
-    organization = 'organization',
-}
-
 export interface ServiceChangeRecord {
     serviceId: string;
     amount: number;

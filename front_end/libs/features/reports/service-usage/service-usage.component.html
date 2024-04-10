@@ -1,13 +1,13 @@
-<h4>{{ selectedEntityName$$() }}</h4>
-<h2
-    translate
-    class="mb-4"
->
-    Service Usage
-</h2>
 @if (serviceUsageStore.isLoading()) {
     <nx-pre-loader></nx-pre-loader>
 } @else {
+    <h4>{{ selectedEntityName$$() }}</h4>
+    <h2
+        translate
+        class="mb-4"
+    >
+        Service Usage
+    </h2>
     <div class="service-usage-table-wrapper">
         <nx-service-usage-table
             [records]="formattedServiceUsageRecords$$()"

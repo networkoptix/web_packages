@@ -1,5 +1,5 @@
 <nx-table
-    ngClass="service-usage-table"
+    ngClass="service-usage-details-table"
     [style.height]="'calc(100% - 12px)'"
     set-pagination
     set-sorting
@@ -7,7 +7,6 @@
     [set-row-expand]="false"
     [set-selected-item-id]="selectedRecordId"
     [data]="records()"
-    (onRowClick)="selectService($event.serviceId)"
 >
     <ng-template #header>
         @for (head of headers; track head.name) {
@@ -28,13 +27,13 @@
         let-row
     >
         <div>
-            {{ row.serviceName }}
-        </div>
-        <div>
             {{ row.usedBy }}
         </div>
         <div>
-            {{ row.channels }}
+            {{ row.changed }}
+        </div>
+        <div>
+            {{ row.activeChannels }}
         </div>
         <div>
             {{ row.monthlyRate }}

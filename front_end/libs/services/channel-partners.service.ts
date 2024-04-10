@@ -68,6 +68,7 @@ export class NxChannelPartnersService {
 
     /* Channel Partner Reports */
     getPartnerServiceUsage = this.cpApi.getPartnerServiceUsage;
+    getPartnerServiceReport = this.cpApi.getPartnerServiceReport;
     getPartnerServiceChanges = this.cpApi.getPartnerServiceChanges;
 
     /* Organizations */
@@ -95,6 +96,7 @@ export class NxChannelPartnersService {
 
     /* Organization Reports */
     getOrganizationServiceUsage = this.cpApi.getOrganizationServiceUsage;
+    getOrganizationServiceReport = this.cpApi.getOrganizationServiceReport;
     getOrganizationServiceChanges = this.cpApi.getOrganizationServiceChanges;
 
     /* Service Management */

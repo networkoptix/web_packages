@@ -1,0 +1,11 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.service-details-table-wrapper {
+    width: 90%;
+    align-self: center;
+    flex-grow: 1;
+}

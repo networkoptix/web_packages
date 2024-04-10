@@ -13,8 +13,10 @@ import {
     selectOrganizations,
 } from '@store/channel-partners/channel-partners.selectors';
 
+import { EntityType } from '../reports.types';
+
 import { ServiceChangesStore } from './service-changes.store';
-import { EntityType, FormattedServiceChangeRecord } from './service-changes.types';
+import { FormattedServiceChangeRecord } from './service-changes.types';
 import { NxServiceChangesTableComponent } from './services-changes-table/service-changes-table.component';
 
 @Component({

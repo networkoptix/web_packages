@@ -6,6 +6,7 @@ import { entityNameResolver } from './entity-name-resolver';
 import { NxReportsComponent } from './reports.component';
 import { NxServiceChangesComponent } from './service-changes/service-changes.component';
 import { NxServiceUsageComponent } from './service-usage/service-usage.component';
+import { NxServiceUsageDetailsComponent } from './service-usage-details/service-usage-details.component';
 
 const routes: Routes = [
     {
@@ -21,8 +22,18 @@ const routes: Routes = [
                         children: [
                             {
                                 path: 'service-usage',
-                                component: NxServiceUsageComponent,
-                                resolve: { entityName: entityNameResolver },
+                                children: [
+                                    {
+                                        path: '',
+                                        component: NxServiceUsageComponent,
+                                        resolve: { entityName: entityNameResolver },
+                                    },
+                                    {
+                                        path: ':serviceId',
+                                        component: NxServiceUsageDetailsComponent,
+                                        resolve: { entityName: entityNameResolver },
+                                    },
+                                ],
                             },
                             {
                                 path: 'service-changes',

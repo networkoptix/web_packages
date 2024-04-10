@@ -1,0 +1,20 @@
+@if (serviceUsageDetailsStore.isLoading()) {
+    <nx-pre-loader></nx-pre-loader>
+} @else {
+    <div
+        translate
+        (click)="goBack()"
+    >
+        All Services
+    </div>
+    <h2 class="mb-4">
+        {{ serviceUsageDetailsStore.selectedService()?.displayName }}
+    </h2>
+    <p>{{ 'Customer: {customerName}' | translate: { customerName: selectedEntityName$$() } }}</p>
+    <p translate>Date Range: [placeholder]</p>
+    <div class="service-details-table-wrapper">
+        <nx-service-details-table
+            [records]="formattedServiceDetailRecords$$()"
+        ></nx-service-details-table>
+    </div>
+}
