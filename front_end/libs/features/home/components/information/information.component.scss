@@ -40,6 +40,10 @@
                     @extend h4;
                 }
             }
+
+            &+span {
+                color: var(--CP-state-color);
+            }
         }
     }
 }

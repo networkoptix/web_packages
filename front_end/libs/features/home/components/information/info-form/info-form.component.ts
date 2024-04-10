@@ -5,6 +5,7 @@ import {
     effect,
     EventEmitter,
     inject,
+    input,
     Input,
     Output,
     signal,
@@ -25,7 +26,6 @@ import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { CPInfoDataEvent } from '@pages/home/components/information/information.types';
@@ -49,30 +49,40 @@ import { icons } from '@static-variables';
         NxContentBlockSectionComponent,
         NxAddSvgSrcDirective,
         NxButtonComponent,
-        NxPagePlaceholderV2Component,
     ],
 })
 export class NxInfoGroupComponent {
     @Input() formId: string;
     @Input() linkCaption: string;
     @Input() descrCaption: string = 'Description';
-    @Input() editMode: boolean;
     @Input() linkPredicate: string;
     @Input() set data(data: InfoRow[]) {
         this.data$$.set(data);
     }
 
     @Output() dataChanges = new EventEmitter<CPInfoDataEvent>();
+    @Output() formState = new EventEmitter<boolean>();
+
+    mode$$ = input(false, { alias: 'editMode' });
 
     LANG = staticLang;
     icons = icons;
     destroyRef = inject(DestroyRef);
     unsub$: Subject<boolean> = new Subject();
 
+    setModeEffect = effect(() => {
+        if (!this.mode$$() && this.rows) {
+            this.resetForm();
+        }
+        this.formState.emit(this.formGroup.pristine);
+    });
+
     data$$ = signal<InfoRow[]>([], { equal: isEqual });
     setFormEffect = effect(() => {
         this.setForm(this.data$$());
     });
+
+    private rows: FormGroup[];
 
     private formBuilder = inject(FormBuilder);
     formGroup: FormGroup = this.formBuilder.group({
@@ -96,6 +106,7 @@ export class NxInfoGroupComponent {
         }
         return true;
     }
+
     setForm(data: InfoRow[]): void {
         const recs = this.records.controls;
         // Avoid re-initialization if change was initiated by the form
@@ -112,6 +123,7 @@ export class NxInfoGroupComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(changed => {
+                this.formState.emit(this.formGroup.pristine);
                 this.dataChanges.emit({
                     formId: this.formId,
                     formData: changed.records,
@@ -120,8 +132,17 @@ export class NxInfoGroupComponent {
             });
     }
 
+    resetForm(): void {
+        for (let idx = 0; idx < this.rows.length; idx++) {
+            this.rows[idx].controls.data.markAsPristine();
+            this.rows[idx].controls.data.markAsUntouched();
+            this.rows[idx].controls.description?.markAsPristine();
+            this.rows[idx].controls.description?.markAsUntouched();
+        }
+    }
+
     setInfoRows(data: InfoRow[]): void {
-        const rows = data.map((row: InfoRow) => {
+        this.rows = data.map((row: InfoRow) => {
             const group = {
                 data: [row.data.value, row.data.validation],
                 description: [row.description?.value, row.description?.validation],
@@ -134,16 +155,10 @@ export class NxInfoGroupComponent {
             return this.formBuilder.group(group);
         });
 
-        const rowsFormArray = this.formBuilder.array(rows);
+        const rowsFormArray = this.formBuilder.array(this.rows);
         this.formGroup.setControl('records', rowsFormArray);
-
-        // force controls validators
-        for (let idx = 0; idx < rows.length; idx++) {
-            rows[idx].controls.data.markAsDirty();
-            rows[idx].controls.data.markAsTouched();
-            rows[idx].controls.description?.markAsDirty();
-            rows[idx].controls.description?.markAsTouched();
-        }
+        this.formGroup.markAsDirty();
+        this.formState.emit(this.formGroup.pristine);
     }
 
     get records(): FormArray {
@@ -173,6 +188,9 @@ export class NxInfoGroupComponent {
 
             newData.push(data);
         }
+
+        this.formGroup.markAsDirty();
+        this.formState.emit(this.formGroup.pristine);
 
         this.dataChanges.emit({
             formId: this.formId,

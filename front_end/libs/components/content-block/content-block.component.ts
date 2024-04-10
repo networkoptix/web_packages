@@ -7,6 +7,8 @@ import {
     ViewChild,
     ViewEncapsulation,
     booleanAttribute,
+    signal,
+    effect,
 } from '@angular/core';
 
 /* Usage
@@ -52,23 +54,40 @@ export class NxContentBlockComponent implements OnInit {
     @Input({ alias: 'hoverable', transform: booleanAttribute }) hoverable: boolean;
     @Input('header-style') headerStyle: string;
     @Input('header-class') headerClass: string;
+    @Input() set update(mode: boolean) {
+        this.update$$.set(mode);
+    }
+
+    update$$ = signal<boolean>(false);
+    setModeEffect = effect(() => {
+        this.update$$();
+        this.updateLayout();
+    });
 
     haveHeader: boolean;
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef<HTMLDivElement>;
-    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('headerWrapper', { static: true, read: ElementRef })
+    headerWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('footerWrapper', { static: true, read: ElementRef })
+    footerWrapper: ElementRef<HTMLDivElement>;
+
+    private updateLayout(): void {
+        this.haveHeader =
+            this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0 &&
+            this.headerWrapper.nativeElement.childNodes[0]?.childNodes[0]?.nodeName !== '#comment';
+        this.haveFooter =
+            this.footerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0 &&
+            this.footerWrapper.nativeElement.childNodes[0]?.childNodes[0]?.nodeName !== '#comment';
+    }
 
     constructor() {
-        this.haveHeader = true;
-        this.haveFooter = true;
+        this.haveHeader = false;
+        this.haveFooter = false;
     }
 
     ngOnInit(): void {
-        this.haveHeader = this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0;
-        this.haveFooter = this.footerWrapper.nativeElement.childNodes?.length > 0;
-
         this.fixedHeight = this.fixedHeight !== undefined;
         this.hoverable = this.hoverable !== undefined;
 

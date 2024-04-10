@@ -10,12 +10,12 @@ import {
     selectCurrentPartnerId,
     selectCurrentPartnerInfo,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxApplyBackComponent } from '@components/applyV2/apply-back/apply.component';
 import { NxApplyComponent } from '@components/applyV2/apply.component';
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
-import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
+import { NxPagePlaceholderNoInfoComponent } from '@components/placeholdersV2/page/no-info/page-placeholder.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxValidators } from '@libs/validators/input-validators';
@@ -49,23 +49,24 @@ import { icons } from '@static-variables';
         NxContentBlockSectionComponent,
         NxAddSvgSrcDirective,
         NxButtonComponent,
-        NxPagePlaceholderV2Component,
         NxInfoGroupComponent,
         NxApplyComponent,
         TranslateModule,
+        NxPagePlaceholderNoInfoComponent,
+        NxApplyBackComponent,
     ],
 })
 export class NxChannelPartnerInformationComponent {
     protected readonly CPInfoType = CPInfoType;
-    protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
     icons = icons;
 
+    hasDirty: boolean = false;
+    hasNoItems: boolean = false;
     hasChanges: boolean = false;
     allValid: boolean = true;
 
     informationData: SupportInformation;
-    hasInformation = false;
     information: SupportInformation = {
         phones: [],
         emails: [],
@@ -155,7 +156,7 @@ export class NxChannelPartnerInformationComponent {
             [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(
                 type => {
                     this.mapInfoFor(type, psi[type]);
-                    this.hasInformation ||= psi[type].length > 0;
+                    this.hasNoItems ||= psi[type].length > 0;
                 },
             );
         }
@@ -200,6 +201,13 @@ export class NxChannelPartnerInformationComponent {
             .subscribe({
                 next: () => {
                     this.hasChanges = false;
+                    this.hasDirty = false;
+                    this.hasNoItems = this.noItems();
+
+                    if (!this.hasNoItems) {
+                        this.editMode = false;
+                    }
+
                     this.informationData = cloneDeep(this.information);
                 },
                 error: err => {
@@ -214,6 +222,7 @@ export class NxChannelPartnerInformationComponent {
     currSupportInfoEffect = effect(() => {
         this.mapPartnerSupportInfo(this.currPartnerSupportInfo$$());
         this.informationData = cloneDeep(this.information);
+        this.hasNoItems = this.noItems();
     });
 
     editMode: boolean = false;
@@ -228,6 +237,15 @@ export class NxChannelPartnerInformationComponent {
     editModeToggle = (): void => {
         this.editMode = !this.editMode;
     };
+
+    noItems(): boolean {
+        return !(
+            this.information.custom.length ||
+            this.information.emails.length ||
+            this.information.phones.length ||
+            this.information.sites.length
+        );
+    }
 
     addRecordTo(type: string): void {
         const data = [...this.information[type]];
@@ -253,8 +271,14 @@ export class NxChannelPartnerInformationComponent {
         data.push(newRecord);
         this.information[type] = [...data];
         this.hasChanges = true;
+        this.hasNoItems = false;
         this.allValid = false;
+        this.hasNoItems = false;
         this.validForms[type] = false;
+    }
+
+    updateFormState(pristine: boolean): void {
+        this.hasDirty = !pristine;
     }
 
     updateData(e: CPInfoDataEvent): void {
@@ -275,5 +299,16 @@ export class NxChannelPartnerInformationComponent {
         [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(type => {
             this.validForms[type] = true;
         });
+
+        // if change was canceled prior and no items in form - exit edit mode
+        // button is having different caption per action
+        // "Cancel" if form is dirty
+        // "Back" if form is not dirty and no items
+        if (this.hasNoItems) {
+            this.editMode = false;
+            return;
+        }
+
+        this.hasNoItems = this.noItems();
     };
 }

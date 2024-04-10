@@ -1,5 +1,5 @@
 <div>
-    <div *ngIf="!editMode; else itemForm">
+    @if (!mode$$()) {
         <div
             *ngFor="let item of data$$()"
             class="mb-1 d-flex flex-row"
@@ -21,9 +21,7 @@
                 <span class="section-link">{{ item.data.value }}</span>
             </ng-template>
         </div>
-    </div>
-
-    <ng-template #itemForm>
+    } @else {
         <form
             [formGroup]="formGroup"
             [id]="formId"
@@ -118,5 +116,5 @@
                 </div>
             </div>
         </form>
-    </ng-template>
+    }
 </div>

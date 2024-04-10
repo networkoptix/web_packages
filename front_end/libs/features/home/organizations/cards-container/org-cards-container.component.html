@@ -6,6 +6,19 @@
 </ng-container>
 
 <ng-template #showContent>
+    <div
+        *ngIf="noGroupsOrSystems$$(); else showGroups"
+        class="no-systems"
+    >
+        @if (inRoot) {
+            <nx-no-systems-cards />
+        } @else {
+            <nx-page-placeholder-no-items />
+        }
+    </div>
+</ng-template>
+
+<ng-template #showGroups>
     <div class="actions p-3">
         <button
             *ngIf="canManageSystems$$()"
@@ -24,18 +37,6 @@
             instant
         ></nx-search>
     </div>
-    <div
-        *ngIf="
-            !groupsStore.currentGroups$$().length && !groupsStore.currentSystems$$()?.length;
-            else showGroups
-        "
-        class="no-systems"
-    >
-        <nx-no-systems-cards></nx-no-systems-cards>
-    </div>
-</ng-template>
-
-<ng-template #showGroups>
     <div class="px-3 cards-container">
         <div
             *ngFor="let group of filteredGroups$$(); trackBy: trackGroup"
