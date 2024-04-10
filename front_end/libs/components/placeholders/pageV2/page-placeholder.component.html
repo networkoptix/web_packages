@@ -7,11 +7,13 @@
     </div>
     <div title>{{ title }}</div>
     <div message>{{ message }}</div>
-    <div button>
-        <nx-button
-            [type]="ButtonType.secondary"
-            (click)="clickHandler($event)"
-            >{{ buttonText | translate }}</nx-button
-        >
-    </div>
+    @if (buttonText) {
+        <div button>
+            <nx-button
+                [type]="ButtonType.brand"
+                (click)="clickHandler($event)"
+                >{{ buttonText | translate }}</nx-button
+            >
+        </div>
+    }
 </nx-page-generic-placeholder-v2>

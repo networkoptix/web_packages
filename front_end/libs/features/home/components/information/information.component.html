@@ -1,9 +1,5 @@
-@if (!editMode && !hasInformation) {
-    <nx-page-placeholder-v2
-        [type]="PAGE_PLACEHOLDER.NO_INFO"
-        [clickFn]="editModeToggle"
-    >
-    </nx-page-placeholder-v2>
+@if (!editMode && hasNoItems) {
+    <nx-page-placeholder-no-info [clickFn]="editModeToggle" />
 } @else {
     <div
         class="info-note"
@@ -15,31 +11,38 @@
             [svgStyle]="{ 'width.px': '21', 'height.px': '21' }"
             [applyClass]="true"
         ></svg-icon>
-        <span translate
-            >Remember that this information will be seen not only by your employees, but also by
-            your partners and organizations.</span
-        >
+        <span
+            [innerHTML]="
+                'Remember that this information will be seen not only by your employees, <br />but also by your partners and organizations.'
+                    | translate
+            "
+        ></span>
     </div>
     <div class="information">
-        <nx-block type="tile dense information">
+        <nx-block
+            type="tile dense information"
+            [update]="editMode"
+        >
             <header>
-                <h4
-                    class="float-left"
-                    translate
-                >
-                    Support
-                </h4>
-                <div
-                    class="float-right clickable"
-                    (click)="editModeToggle()"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'edit.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                        [applyClass]="true"
-                    ></svg-icon>
-                </div>
+                @if (!(hasNoItems || editMode)) {
+                    <h4
+                        class="float-left"
+                        translate
+                    >
+                        Support
+                    </h4>
+                    <div
+                        class="float-right clickable"
+                        (click)="editModeToggle()"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'edit.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
+                }
             </header>
             <nx-section>
                 <div
@@ -72,6 +75,7 @@
                         [editMode]="editMode"
                         [linkPredicate]="'https://'"
                         [data]="information.sites"
+                        (formState)="updateFormState($event)"
                         (dataChanges)="updateData($event)"
                     ></nx-info-form>
                 </ng-container>
@@ -123,6 +127,7 @@
                         [editMode]="editMode"
                         [linkPredicate]="'tel:'"
                         [data]="information.phones"
+                        (formState)="updateFormState($event)"
                         (dataChanges)="updateData($event)"
                     ></nx-info-form>
                 </ng-container>
@@ -158,6 +163,7 @@
                         [editMode]="editMode"
                         [linkPredicate]="'mailto:'"
                         [data]="information.emails"
+                        (formState)="updateFormState($event)"
                         (dataChanges)="updateData($event)"
                     ></nx-info-form>
                 </ng-container>
@@ -214,16 +220,25 @@
                         [editMode]="editMode"
                         [linkPredicate]="''"
                         [data]="information.custom"
+                        (formState)="updateFormState($event)"
                         (dataChanges)="updateData($event)"
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            <nx-apply
-                [visible]="hasChanges"
-                [saveDisabled]="!allValid"
-                [discard]="discardDataChanges"
-                [save]="saveDataChanges"
-            ></nx-apply>
+            @if (hasNoItems || (editMode && !hasDirty)) {
+                <nx-apply-back
+                    [visible]="true"
+                    [saveDisabled]="true"
+                    [discard]="discardDataChanges"
+                ></nx-apply-back>
+            } @else {
+                <nx-apply
+                    [visible]="true"
+                    [saveDisabled]="!allValid || hasNoItems || !hasDirty"
+                    [discard]="discardDataChanges"
+                    [save]="saveDataChanges"
+                ></nx-apply>
+            }
         </nx-block>
     </div>
 }

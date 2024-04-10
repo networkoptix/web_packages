@@ -1,0 +1,26 @@
+<nx-page-generic-placeholder-v2>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dirPageV2Placeholder + 'no_info.svg'"
+        [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+        [applyClass]="true"
+    ></svg-icon>
+    <div
+        class="title"
+        translate
+    >
+        No Information
+    </div>
+    <div
+        class="message"
+        translate
+    >
+        You have not yet added any information.
+    </div>
+    <nx-button
+        class="button"
+        [type]="ButtonType.secondary"
+        (click)="clickHandler($event)"
+        ><span translate>Add Information</span></nx-button
+    >
+</nx-page-generic-placeholder-v2>

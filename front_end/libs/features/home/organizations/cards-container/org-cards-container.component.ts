@@ -16,6 +16,7 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoItemsComponent } from '@components/placeholdersV2/page/no-items/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
@@ -39,6 +40,7 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
+
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -59,6 +61,7 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         RouterLink,
         NxTagComponent,
         PipesModule,
+        NxPagePlaceholderNoItemsComponent,
     ],
 })
 export class NxOrganizationCardContainerComponent {
@@ -88,6 +91,14 @@ export class NxOrganizationCardContainerComponent {
             searchConfig.channelPartners.searchMinimumCards
         );
     });
+
+    noGroupsOrSystems$$ = computed(() => {
+        return (
+            !this.groupsStore.currentGroups$$().length &&
+            !this.groupsStore.currentSystems$$()?.length
+        );
+    });
+
     groupName: string = '';
 
     constructor(
