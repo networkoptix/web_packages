@@ -665,7 +665,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
-    --system-card-bg: var(--dark_gray_11);
+    --system-card-bg: var(--dark_gray_6);
     --system-card-offline-color: var(--dark_gray_18);
     --system-card-border-color: var(--dark_gray_10);
     --system-card-owner-color: var(--dark_gray_16);
