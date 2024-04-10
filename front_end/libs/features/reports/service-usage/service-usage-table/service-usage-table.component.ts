@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxBaseTableComponent } from '@components/table/table.component';
@@ -19,6 +20,8 @@ interface HEADER_ITEM {
     standalone: true,
 })
 export class NxServiceUsageTableComponent {
+    constructor(private router: Router) {}
+
     headers: HEADER_ITEM[] = [
         { value: 'Service Name', name: 'serviceName' },
         { value: 'Used By', name: 'usedBy' },
@@ -28,4 +31,10 @@ export class NxServiceUsageTableComponent {
     ];
     selectedRecordId = '';
     records = input.required<FormattedUsageReportRecord[]>();
+
+    selectService(serviceId: string): void {
+        const urlSegments = this.router.url.split('/');
+        urlSegments.push(serviceId);
+        this.router.navigate(urlSegments);
+    }
 }

@@ -7,15 +7,23 @@ import {
     PartnerUsageReportEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+import { EntityType } from '../reports.types';
+import { NxServiceUsageDetailsComponent } from '../service-usage-details/service-usage-details.component';
+
 import { NxServiceUsageTableComponent } from './service-usage-table/service-usage-table.component';
 import { ServiceUsageStore } from './service-usage.store';
-import { EntityType, FormattedUsageReportRecord } from './service-usage.types';
+import { FormattedUsageReportRecord } from './service-usage.types';
 
 @Component({
     selector: 'nx-service-usage',
     templateUrl: './service-usage.component.html',
     styleUrl: './service-usage.component.scss',
-    imports: [TranslateModule, NxServiceUsageTableComponent, NxPreLoaderComponent],
+    imports: [
+        TranslateModule,
+        NxServiceUsageTableComponent,
+        NxPreLoaderComponent,
+        NxServiceUsageDetailsComponent,
+    ],
     providers: [ServiceUsageStore],
     standalone: true,
 })
@@ -32,6 +40,7 @@ export class NxServiceUsageComponent {
         if (entityType === EntityType.channelPartner) {
             return (records as PartnerUsageReportEntry[]).map(
                 ({
+                    service_id,
                     service_name,
                     used_by_organizations,
                     used_by_channel_partners,
@@ -39,6 +48,7 @@ export class NxServiceUsageComponent {
                     monthly_rate,
                     daily_rate,
                 }) => ({
+                    serviceId: service_id,
                     serviceName: service_name,
                     usedBy: `Partners: ${used_by_channel_partners}, Orgs: ${used_by_organizations}`,
                     channels,
@@ -48,7 +58,8 @@ export class NxServiceUsageComponent {
             );
         } else {
             return (records as OrgUsageReportEntry[]).map(
-                ({ service_name, used_by, channels, monthly_rate, daily_rate }) => ({
+                ({ service_id, service_name, used_by, channels, monthly_rate, daily_rate }) => ({
+                    serviceId: service_id,
                     serviceName: service_name,
                     usedBy: used_by,
                     channels,

@@ -400,6 +400,22 @@
     }
 }
 
+.service-usage-details-table {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+        }
+        
+        .big-row {
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+        }
+
+        .header, .body {
+            width: 100% !important;
+        }
+    }
+}
+
 .service-changes-table {
     .nx-new-table {
         .header {

@@ -69,8 +69,12 @@ export class NxReportsComponent implements OnInit {
         if (selectedItem.value) {
             const urlSegments = this.router.url.split('/');
             const [entityType, entityId] = selectedItem.value.split('/');
-            urlSegments.splice(2, 2, entityType, entityId);
-            this.router.navigate(urlSegments);
+            this.router.navigate([
+                ...urlSegments.slice(0, 2),
+                entityType,
+                entityId,
+                'service-usage',
+            ]);
         }
     }
 }

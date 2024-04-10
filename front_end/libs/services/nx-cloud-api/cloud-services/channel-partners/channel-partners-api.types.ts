@@ -358,6 +358,7 @@ export interface SassReport {
     state: string;
 }
 
+/* Reports */
 interface BaseUsageReportEntry {
     service_id: string;
     service_name: string;
@@ -374,6 +375,35 @@ export interface PartnerUsageReportEntry extends BaseUsageReportEntry {
 
 export interface OrgUsageReportEntry extends BaseUsageReportEntry {
     used_by: number;
+}
+
+export interface EntityServiceChangeEntry {
+    id: string;
+    type: string;
+    name: string;
+    channels: number;
+    monthly_rate: number;
+    daily_rate: number;
+    changes_count: number;
+    last_changed: string;
+}
+
+export interface PartnerServiceReportResponse {
+    sub_entities: EntityServiceChangeEntry[];
+}
+
+export interface SystemServiceChangeEntry {
+    system_id: string;
+    system_name: string;
+    channels: number;
+    monthly_rate: number;
+    daily_rate: number;
+    changes_count: number;
+    last_changed: string;
+}
+
+export interface OrgServiceReportResponse {
+    systems: SystemServiceChangeEntry[];
 }
 
 interface PartnerServiceChangeEntry {
@@ -401,14 +431,13 @@ export interface OrgServiceChangesResponse {
     results: OrgServiceChangeEntry[];
 }
 
-export interface OwnedService {
+export interface Service {
     id: string;
     displayName: string;
 }
 
+export type OwnedService = Service;
+
 export interface AvailableService {
-    service: {
-        id: string;
-        displayName: string;
-    };
+    service: Service;
 }

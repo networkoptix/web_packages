@@ -1,9 +1,5 @@
-export enum EntityType {
-    channelPartner = 'channel-partner',
-    organization = 'organization',
-}
-
 export interface FormattedUsageReportRecord {
+    serviceId: string;
     serviceName: string;
     usedBy: string | number;
     channels: number;
