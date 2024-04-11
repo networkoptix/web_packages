@@ -14,6 +14,8 @@ RUN set -ex \
     # TODO: !! REMOVE AFTER llutil published
     && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
     && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
+    && poetry config virtualenvs.create false --local \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 FROM builder as requirements
@@ -25,29 +27,14 @@ WORKDIR /app
 COPY stage/llutil-0.6.tar.gz /app/llutil-0.6.tar.gz
 
 RUN set -ex \
-    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
-    && poetry config virtualenvs.create false --local \
-    && poetry lock --check \
-    && poetry export --without-hashes --without-urls -o /app/requirements.txt \
-    && pip freeze | xargs pip uninstall -y \
-    && rm -rf /root/.cache/pip
-
-FROM builder AS runtime
-COPY --from=requirements /app/requirements.txt /app/requirements.txt
-
-# TODO: REMOVE AFTER llutil is published to pypi
-COPY stage/llutil-0.6.tar.gz /app/llutil-0.6.tar.gz
-
-
-RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y gettext-base \
-    # TODO: !! REMOVE AFTER llutil published
-    && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
-    && pip install --no-cache-dir -r /app/requirements.txt \
+    && poetry lock --check \
+    && poetry install --no-root --without test \
     && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
 
-
+FROM requirements AS runtime
+ENV VERSION=$VERSION
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh
 
@@ -64,3 +51,15 @@ COPY stage/version.txt /app/app/static/version.txt
 
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]
+
+ARG VERSION
+ARG REVISION
+ARG BUILD_DATE
+ARG BUILD_HOST
+ARG BUILD_USER
+LABEL maintainer="Roman Barsegian <rbarsegian@networkoptix.com>" \
+      version="$VERSION" \
+      revision="$REVISION" \
+      build-date="$BUILD_DATE" \
+      build-host="$BUILD_HOST" \
+      build-user="$BUILD_USER"
