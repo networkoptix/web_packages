@@ -9,6 +9,7 @@ import { PermissionsStore } from '../store/permissions/permissions.store';
 export const ChannelPartnerGuard: CanActivateFn = async () => {
     const permissionsStore = inject(PermissionsStore);
     const canViewChannelPartner = [
+        permissionsStore.canViewOrgs$$(),
         permissionsStore.canViewSubChannels$$(),
         permissionsStore.canViewPartnerSettings$$(),
         permissionsStore.canViewPartnerSettings$$(),
