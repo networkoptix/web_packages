@@ -9,6 +9,7 @@ from browsers.chrome import get_chrome
 from pages.login import LoginDialog
 from pages.merge_dialog import MergeDialog
 from pages.system_admin import SystemAdmin
+from pages.systems_page import SystemsPage
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_left_menu import UsersDropdown
 from variables import ENV
@@ -21,6 +22,9 @@ def merge_from_primary_system(driver, first_server: Mediaserver, second_server: 
     driver.get(url)
     first_server_owner = first_server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
+    sys_page = SystemsPage(driver)
+    sys_page.wait_until_visible()
+    sys_page.get_tile_by_name(first_server.name).click()
     sys_admin = SystemAdmin(driver)
     sys_admin.merge_with_another_system_button().click()
     merge_dialog = MergeDialog(driver)

@@ -11,6 +11,7 @@ from pages.login import LoginDialog
 from browsers.chrome import get_chrome
 from pages.security_form import SecurityForm
 from pages.system_admin import SystemAdmin
+from pages.systems_page import SystemsPage
 from variables import ENV
 
 if len(sys.argv) >= 2:
@@ -209,6 +210,9 @@ def twofa_not_required_when_more_than_one_system(driver, server: Mediaserver):
         second_server = suite.create_cloud_server(owner)
         driver.get(f"{ENV}/systems/{second_server.id}")
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        sys_page = SystemsPage(driver)
+        sys_page.wait_until_visible()
+        sys_page.get_tile_by_name(server.name).click()
         SystemAdmin(driver)
         CLOUD_API.toggle_2fa_off_api(
             owner,
