@@ -8,12 +8,12 @@
         [id]="componentId"
         [attr.checked]="value ? '' : null"
         aria-describedby="description"
-        (click)="changeState($event)"
+        (click)="changeState($event); notifyChange()"
     />
 
     <span
         class="tick"
-        [ngClass]="state"
+        [ngClass]="value ? 'checked' : 'unchecked'"
     >
         <svg
             viewBox="0 0 24 24"
