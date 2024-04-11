@@ -262,11 +262,15 @@ export class WebRTCStreamManager {
     static STATS = WebRTCStreamManager.PLAYBACK_DETAILS$.pipe(
         tap(connectionStats => {
             Object.entries(connectionStats).forEach(([indentifier, stats]) => {
-                if (typeof stats === 'object' && 'bytesReceived' in stats && !stats.bytesReceived) {
-                    const connection = WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier];
-                    if(connection?.peerConnection?.connectionState === 'connected') {
-                        console.info(`No bytes received for ${indentifier}. Reconnecting`);
-                        WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier].close(1);
+                if (typeof stats === 'object') {
+                    const noBytes = 'bytesReceived' in stats && !stats.bytesReceived;
+                    const noFps = 'fps' in stats && stats.fps === 0;
+                    if (noBytes && noFps) {
+                        const connection = WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier];
+                        if(connection?.peerConnection?.connectionState === 'connected') {
+                            console.info(`No bytes received for ${indentifier}. Reconnecting`);
+                            WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier].close(1);
+                        }
                     }
                 }
             })
@@ -440,6 +444,8 @@ export class WebRTCStreamManager {
     private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
     public apiVersion: ApiVersions;
     private initialPositionSent = false;
+
+    private getStatic = () => WebRTCStreamManager;
 
     /**
      * Updates the position for stream for WebRtcStreamManager instance.
@@ -909,7 +915,7 @@ export class WebRTCStreamManager {
                 return this.close(3);
             }
 
-            const position = WebRTCStreamManager.position;
+            const position = this.getStatic().position;
             const stream = this.currentStream();
             let webRtcUrl = this.webRtcUrlFactory({ position });
 
@@ -965,12 +971,12 @@ export class WebRTCStreamManager {
             if (resolvedHost) {
                 if (this.accessToken) {
                     if (this.apiVersion === ApiVersions.v1) {
-                        WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost] = !(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost]) ? cacheSuccess(() => fetch(
+                        this.getStatic().AUTHENTICATED_HOSTS[resolvedHost] = !(await this.getStatic().AUTHENTICATED_HOSTS[resolvedHost]) ? cacheSuccess(() => fetch(
                             `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true`,
                             { credentials: 'include' }
-                        ), resolvedHost).then(res => res.ok) : WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost];
+                        ), resolvedHost).then(res => res.ok) : this.getStatic().AUTHENTICATED_HOSTS[resolvedHost];
 
-                        if (!(await WebRTCStreamManager.AUTHENTICATED_HOSTS[resolvedHost])) {
+                        if (!(await this.getStatic().AUTHENTICATED_HOSTS[resolvedHost])) {
                             return requeue();
                         }
                     } else {
