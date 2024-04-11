@@ -9,7 +9,9 @@ import {
     ViewEncapsulation,
     OnChanges,
     booleanAttribute,
+    input,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
@@ -19,6 +21,7 @@ import {
     ValidationErrors,
     FormsModule,
 } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 import { NgChanges } from '@utils/ng-changes';
 
@@ -53,7 +56,9 @@ import { NgChanges } from '@utils/ng-changes';
     ],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+export class NxCheckboxComponent<T = unknown>
+    implements OnInit, OnChanges, ControlValueAccessor, Validator
+{
     @Input() componentId: string;
     @Input({ transform: booleanAttribute }) required: boolean;
     @Input() checked: boolean;
@@ -63,14 +68,14 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() color: string;
     @Output() onClick = new EventEmitter<boolean>();
 
-    public value: boolean;
-    public state: 'unchecked' | 'checked';
+    public data$$ = input<undefined | T>(undefined, { alias: 'data' });
 
-    private cbxStates = {
-        false: 'unchecked',
-        true: 'checked',
-        // undefined: 'tristate'
-    };
+    public data$ = toObservable(this.data$$);
+
+    public lastChange$ = new BehaviorSubject(Date.now());
+
+    public value: boolean = false;
+    public isCheckAll$ = new BehaviorSubject(false);
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -97,15 +102,14 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
             // set state after model was updated
             if (this.checked !== undefined) {
                 this.value = this.checked;
+                this.lastChange$.next(Date.now());
             }
-            this.setState();
         });
     }
 
     ngOnChanges(changes: NgChanges<NxCheckboxComponent>): void {
         if (changes.checked) {
             this.value = changes.checked.currentValue;
-            this.state = this.cbxStates[String(this.value)];
         }
     }
 
@@ -115,7 +119,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     writeValue(value: boolean): void {
         if (value !== null) {
             this.value = value;
-            this.state = this.cbxStates[String(this.value)];
         }
     }
 
@@ -135,22 +138,19 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.onTouchedCallback = fn;
     }
 
-    private setState(): void {
-        this.state = this.cbxStates[String(this.value)];
-
-        // update the form
-        this.onChangeCallback(this.value);
-    }
-
-    changeState(_event: MouseEvent): void {
+    changeState(_event?: MouseEvent): void {
         if (this.disabled) {
             return;
         }
 
         this.onTouchedCallback();
         this.value = !this.value;
-        this.setState();
+        this.onChangeCallback(this.value);
         this.onClick.emit(this.value);
+    }
+
+    notifyChange(): void {
+        this.lastChange$.next(Date.now());
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
