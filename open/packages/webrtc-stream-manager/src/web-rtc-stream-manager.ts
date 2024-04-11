@@ -981,7 +981,7 @@ export class WebRTCStreamManager {
                         }).catch(() => '');
 
                         if (oneTimeToken) {
-                            webRtcUrl += `_ticket=${oneTimeToken}`
+                            webRtcUrl += `_ticket=${oneTimeToken}&`
                         } else {
                             return requeue();
                         }
