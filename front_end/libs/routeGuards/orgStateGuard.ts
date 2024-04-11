@@ -10,6 +10,7 @@ import { filter, firstValueFrom, map } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { selectCurrentUser } from '@store/account/account.selectors';
@@ -23,14 +24,14 @@ export const OrgStateGuard: CanActivateFn = async (
     const cloudApiService = inject(NxCloudApiService);
     const systemService = inject(NxSystemsService);
     const systemId = route.params.systemId;
-    if (environment.isLocal || !systemId) {
+    if (environment.isLocal || !nxConfig.featureFlags.channelPartners || !systemId) {
         return true;
     }
 
     const account = await firstValueFrom(
         inject(Store)
             .select(selectCurrentUser)
-            .pipe(filter(account => account.is_authenticated)),
+            .pipe(filter(account => account?.is_authenticated)),
     );
     if (!account) {
         return false;
