@@ -3,18 +3,20 @@
 </ng-template>
 
 <ng-template #roleBaseUsers>
-    <nx-system-user-with-roles-component
-        [selectedUser]="user"
-        [system]="system"
-        (formActions)="setFormActions($event)"
-        (userForm)="userFormSignal$$.set($event)"
-    ></nx-system-user-with-roles-component>
+    @if (user$ | async; as _user) {
+        <nx-system-user-with-roles-component
+            [selectedUser]="_user"
+            [system]="system"
+            (formActions)="setFormActions($event)"
+            (userForm)="userFormSignal$$.set($event)"
+        ></nx-system-user-with-roles-component>
+    }
 </ng-template>
 
-<ng-container *ngIf="system?.version; else loading">
+<ng-container *ngIf="system?.version && (user$ | async) as _user; else loading">
     <nx-system-user-with-groups-component
         *ngIf="system.version > 5.1; else roleBaseUsers"
-        [selectedUser]="user"
+        [selectedUser]="_user"
         [system]="system"
         (formActions)="setFormActions($event)"
         (userForm)="userFormSignal$$.set($event)"

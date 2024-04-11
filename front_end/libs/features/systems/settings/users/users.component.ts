@@ -1,4 +1,16 @@
-import { Component, inject, Input, signal } from '@angular/core';
+import {
+    Component,
+    EnvironmentInjector,
+    inject,
+    input,
+    Input,
+    OnInit,
+    runInInjectionContext,
+    signal,
+} from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { combineLatest, Observable, startWith } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { FormActions, NxCanNavigate } from '@services/apply.service/apply.service.type';
@@ -13,9 +25,11 @@ import { UserFormControls } from './user-form.types';
     templateUrl: 'users.component.html',
     styleUrls: ['users.component.scss'],
 })
-export class NxSystemUsersComponent implements NxCanNavigate {
+export class NxSystemUsersComponent implements NxCanNavigate, OnInit {
     @Input() system: NxSystem;
     @Input() user: NxUser;
+    userId$$ = input.required<string>({ alias: 'userId' });
+    user$: Observable<NxUser>;
 
     private dialogService = inject(NxDialogsService);
     userFormSignal$$ = signal<NxFormGroup<UserFormControls> | undefined>(undefined);
@@ -36,5 +50,22 @@ export class NxSystemUsersComponent implements NxCanNavigate {
 
     setFormActions(actions: FormActions): void {
         this.onNavigate = actions;
+    }
+    injector = inject(EnvironmentInjector);
+
+    ngOnInit(): void {
+        runInInjectionContext(this.injector, () => {
+            this.user$ = combineLatest([
+                this.system?.infoSubject,
+                toObservable(this.userId$$),
+            ]).pipe(
+                takeUntilDestroyed(),
+                map(([_, userId]) =>
+                    this.system.userManager.users.find(({ id }) => id.includes(userId)),
+                ),
+                filter(Boolean),
+                startWith(this.user),
+            );
+        });
     }
 }
