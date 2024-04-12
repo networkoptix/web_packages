@@ -25,6 +25,29 @@
                 [selection]="tagFilter"
                 (selectionChange)="updateParam('tags')"
             ></nx-tag-filter>
+            @if (bookmarkSharingEnabled) {
+                <div class="sharing-filter-container">
+                    <nx-filter-container [header]="LANG.bookmarkSharing.filterHeader">
+                        <nx-single-filter
+                            [(ngModel)]="sharingFilter"
+                            (ngModelChange)="updateParam('sharing')"
+                        >
+                            <nx-radio-filter-item
+                                value="shared"
+                                translate
+                            >
+                                Shared
+                            </nx-radio-filter-item>
+                            <nx-radio-filter-item
+                                value="notShared"
+                                translate
+                            >
+                                Not Shared
+                            </nx-radio-filter-item>
+                        </nx-single-filter>
+                    </nx-filter-container>
+                </div>
+            }
         </div>
         <div class="body">
             <nx-alert-block

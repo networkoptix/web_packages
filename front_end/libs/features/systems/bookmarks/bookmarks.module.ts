@@ -6,6 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxFilterContainerComponent } from '@components/filters/filter-container/filter-container.component';
+import { NxRadioFilterItemComponent } from '@components/filters/filter-items/radio-filter-item/radio-filter-item.component';
+import { NxSingleFilterComponent } from '@components/filters/single-filter.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
@@ -46,6 +49,9 @@ const appRoutes: Routes = [
         NxAddSvgSrcDirective,
         NxIntersectionObserver,
         DummyBookmarkComponent,
+        NxFilterContainerComponent,
+        NxSingleFilterComponent,
+        NxRadioFilterItemComponent,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

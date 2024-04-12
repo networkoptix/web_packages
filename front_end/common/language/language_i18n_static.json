@@ -2140,6 +2140,7 @@
         },
         "errorUpdatingSharedBookmark": "Failed to update shared bookmark",
         "share": "Share",
-        "shared": "Shared"
+        "shared": "Shared",
+        "filterHeader": "Sharing"
     }
 }

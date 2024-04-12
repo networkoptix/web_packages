@@ -45,6 +45,7 @@ interface BookmarkParams {
     endTime?: string;
     deviceId?: string[];
     tags?: string;
+    sharing?: string;
 }
 
 // Cssa = Comma separated string array
@@ -139,10 +140,13 @@ export class NxBookmarksComponent implements OnInit {
     timeFilter: TimeRange = { start: null, end: null };
     deviceFilter = new SelectionModel<string>(true, []);
     tagFilter = new SelectionModel<string>(true, []);
+    sharingFilter: 'shared' | 'notShared' | undefined;
     filteredFetchedBookmarkIds: Set<string> = new Set<string>();
     deviceIdsWithArchive: string[];
 
     private queryParams: BookmarkParams;
+
+    bookmarkSharingEnabled = false;
 
     constructor(
         configService: NxConfigService,
@@ -152,6 +156,9 @@ export class NxBookmarksComponent implements OnInit {
         private pageService: NxPageService,
     ) {
         this.CONFIG = configService.getConfig();
+        this.bookmarkSharingEnabled =
+            !!this.CONFIG.featureFlags.bookmarkSharing &&
+            systemService.getCurrentSystem().version >= 6.1;
     }
 
     ngOnInit(): void {
@@ -189,6 +196,12 @@ export class NxBookmarksComponent implements OnInit {
                 if (queryParams.tags) {
                     this.tagFilter.select(...cssaToStrArray(queryParams.tags));
                 }
+                if (queryParams.sharing) {
+                    this.sharingFilter =
+                        queryParams.sharing === 'shared' || queryParams.sharing === 'notShared'
+                            ? queryParams.sharing
+                            : undefined;
+                }
             }
             this.system = this.systemService.getCurrentSystem();
 
@@ -204,7 +217,7 @@ export class NxBookmarksComponent implements OnInit {
         });
     }
 
-    buildSearch(): Pick<BookmarksParams, 'text' | 'startTimeMs' | 'endTimeMs'> {
+    buildSearch(): Pick<BookmarksParams, 'text' | 'startTimeMs' | 'endTimeMs' | 'shareFilter'> {
         const search = this.queryParams.search || '';
         const tags = this.queryParams.tags || '';
         let startDatetime = 0;
@@ -236,6 +249,10 @@ export class NxBookmarksComponent implements OnInit {
         }
         if (endDatetime) {
             searchParams.endTimeMs = endDatetime;
+        }
+        if (this.sharingFilter) {
+            searchParams.shareFilter =
+                this.sharingFilter === 'shared' ? 'shareable' : 'nonShareable';
         }
         return searchParams;
     }
@@ -477,7 +494,7 @@ export class NxBookmarksComponent implements OnInit {
         });
     }
 
-    updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
+    updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags' | 'sharing'): void {
         this.filteredFetchedBookmarkIds.clear();
         if (!this.queryParams) {
             return;
@@ -499,6 +516,8 @@ export class NxBookmarksComponent implements OnInit {
             this.queryParams.tags = this.tagFilter.hasValue()
                 ? strArrayToCssa(this.tagFilter.selected)
                 : undefined;
+        } else if (key === 'sharing') {
+            this.queryParams.sharing = this.sharingFilter;
         }
         this.updateUri();
     }
@@ -508,6 +527,7 @@ export class NxBookmarksComponent implements OnInit {
         this.deviceFilter.clear();
         this.tagFilter.clear();
         this.queryParams = {};
+        this.sharingFilter = undefined;
         this.search = '';
         this.updateUri();
     }
