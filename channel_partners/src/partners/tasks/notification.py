@@ -63,21 +63,6 @@ class TaskWithLogging(Task):
 
 
 def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
-    user = CloudUser.objects.filter(email=email).first()
-    if not user:
-        logger.error(
-            "Unable to find cloud user with email",
-            email=email)
-
-        task.update_state(
-            state=states.FAILURE,
-            meta='Cannot resolve initial data. Email not found.'
-        )
-        raise Ignore()
-    return user
-
-
-def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
     """
     Retrieves the CloudUser object associated with the specified email address.
     

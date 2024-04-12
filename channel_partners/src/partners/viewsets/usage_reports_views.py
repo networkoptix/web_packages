@@ -172,9 +172,9 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @action(
         detail=True,
         methods=['get'],
-        url_path=rf'cloud_system/(?P<cloud_system_id>{converters.UUIDConverter.regex})/regular_report',
+        url_path=rf'cloud_system/(?P<cloud_system_id>{converters.UUIDConverter.regex})/regular_detail_table',
     )
-    def system_regular_report(self, request, *args, **kwargs):
+    def system_regular_detail_table(self, request, *args, **kwargs):
         entity = self.get_entity()
         service = self.get_service()
         cloud_system = get_object_or_404(CloudSystemId, system_id=kwargs.get('cloud_system_id'))

@@ -137,7 +137,7 @@ class TestOrganizationServiceReportsViewSet:
             "service_id": self.service.pk,
             "cloud_system_id": self.system.system_id,
         }
-        path = reverse('organizations-reports-system-regular-report', kwargs=path_kwargs)
+        path = reverse('organizations-reports-system-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
