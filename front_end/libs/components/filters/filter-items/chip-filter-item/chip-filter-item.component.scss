@@ -1,0 +1,40 @@
+@use "theme_variables_common" as *;
+@use "typography";
+
+:host {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    color: var(--btn-default-color);
+    background-color: var(--bookmarks-filter-tag-color);
+    @include typography.regular13nocolor;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    margin: 0.25rem 0.25rem;
+
+    user-select: none;
+
+    &:hover:not(.disabled):not(.selected) {
+        background-color: var(--bookmarks-text-highlight-bg);
+    }
+    &:hover.selected {
+        background-color: var(--brand-d1);
+    }
+
+    &.selected {
+        background-color: var(--brand-core);
+        color: var(--bookmarks-filter-filled-text);
+    }
+
+    &.disabled {
+        cursor: auto;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+}

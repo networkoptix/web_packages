@@ -50,5 +50,5 @@ export class NxMultiFilterComponent<T> extends BaseFilterComponent<T, true> {
 
     override selectedValueExists = computed(() => this.selectedValue()?.length > 0);
 
-    override isFilterItemSelected = (item: T): boolean => this.selectedValue().includes(item);
+    override isFilterItemSelected = (item: T): boolean => this.selectedValue()?.includes(item);
 }
