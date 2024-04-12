@@ -32,6 +32,7 @@ import { NxRotateDirective } from '@directives/nx-rotate.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { ServiceModule } from '@services/services.module';
 import { isDewarpingCapable } from '@utils/general';
+import { NxVideoPlayingDirective } from '@directives/video-playing.directive';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -60,7 +61,7 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
     templateUrl: 'video-player.component.html',
     styleUrls: ['video-player.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent],
+    imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent, NxVideoPlayingDirective],
 })
 export class NxVideoPlayerComponent {
     camera$$ = input.required<NxSystemCamera>({ alias: 'camera'})

@@ -16,6 +16,7 @@
 
 <video
     #originalStream
+    #nxVideoPlaying="nxVideoPlaying"
     autoplay
     class="original-stream"
     muted
@@ -39,14 +40,14 @@
     ></nx-fisheye-viewer>
 }
 
-@if (!error && (loading || lostConnection || !webRtcStream.currentTime)) {
-    <nx-pre-loader></nx-pre-loader>
-}
-
-@if (webRtcStream.paused && error) {
-    <div class="connection-error">
-        {{ error }}
-    </div>
+@if (error || !nxVideoPlaying.isPlaying$$()) {
+    @if (error) {
+        <div class="connection-error">
+            {{ error }}
+        </div>
+    } @else {
+        <nx-pre-loader></nx-pre-loader>
+    }
 }
 
 @if (
