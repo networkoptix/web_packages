@@ -101,9 +101,7 @@ export class LocalAccount extends BaseAccount {
     ): Promise<UserSession> {
         return firstValueFrom(
             this.mediaServerApi.loginToken(login, password, remember).pipe(
-                catchError((err: HttpErrorResponse) =>
-                    Promise.reject({ resultCode: err.error.errorId }),
-                ),
+                catchError((err: HttpErrorResponse) => Promise.reject(err)),
                 tap(_ => {
                     this.sessionService.loginState = this.sessionService.LOGIN_STATE.AUTHORIZED;
                 }),

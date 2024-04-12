@@ -35,7 +35,8 @@ export class NxLanguageProviderService {
         public cacheService: NxUriCacheService,
         public swCacheService: NxSwCacheService,
     ) {
-        this.defaultLanguage = this.CONFIG.defaultLanguage;
+        this.defaultLanguage =
+            this.localStorageService.retrieve('language') || this.CONFIG.defaultLanguage;
 
         if (environment.isWizard) {
             const lang = new URLSearchParams(this.window.location.search).get('lang');
@@ -64,7 +65,9 @@ export class NxLanguageProviderService {
          */
     }
 
-    private languageFromStorage$$ = toSignal<string>(this.localStorageService.observe('language'));
+    private languageFromStorage$$ = toSignal<string>(this.localStorageService.observe('language'), {
+        initialValue: this.localStorageService.retrieve('language'),
+    });
 
     private set language(lang: string) {
         this.localStorageService.store('language', lang);

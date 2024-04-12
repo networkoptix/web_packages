@@ -234,21 +234,11 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             this.renderer.selectRootElement('#login_password').focus();
         };
 
-        const showUserDisabled = (): void => {
-            this.toastService.show(this.LANG.toastMessage.userDisabled, ToastType.Danger);
-        };
-
-        const cloudLogin =
-            this.LANG.errorCodes[
-                'This authorization method is forbidden. Please contact your system administrator.'
-            ];
         const errorCodes = {
             notFound: showWrongCredentialsError,
             invalidParameter: showWrongCredentialsError,
             serviceUnavailable: showAccountBlockedError,
-            forbidden: showUserDisabled,
         };
-        errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
         this.login = this.processService.createProcess(
             () => {
                 this.setEmail(this.loginForm.controls.login_email.value);
@@ -261,7 +251,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             },
             {
                 ignoreUnauthorized: true,
-                errorCodes,
+                ignoreError: true,
             },
             _ => {
                 this.close();
@@ -294,8 +284,15 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 }
             },
             error => {
-                if (!Object.keys(errorCodes).includes(error?.resultCode)) {
-                    console.error(error);
+                if (error.errorId in errorCodes) {
+                    errorCodes[error.errorId]();
+                } else if (this.auth.email.includes('@')) {
+                    this.toastService.show(
+                        this.LANG.toastMessage.webAdminCloudCredentialError,
+                        ToastType.Danger,
+                    );
+                } else {
+                    this.toastService.show(error.errorString, ToastType.Danger);
                 }
             },
         );
