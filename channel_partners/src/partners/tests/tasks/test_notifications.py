@@ -1,9 +1,13 @@
 import json
+import random
 from uuid import uuid4
 
 import httpx
 import pytest
-from celery.exceptions import Ignore
+from celery.exceptions import (
+    Ignore,
+    Retry,
+)
 from django.conf import settings
 from django.core.cache import caches
 from mock.mock import (
@@ -22,6 +26,8 @@ from partners.tasks.notification import (
     get_customization,
     get_user_by_email,
     is_existing_user,
+    notification_added_channel_partner_role,
+    notification_added_organization_role,
     notification_organization_state_changed_task,
     notification_partner_state_changed_task,
     organization_name_change_task,
@@ -570,3 +576,43 @@ class TestRunChannelPartnerStateChangedTask:
         assert len(calls) == 2 * len(self.partners)
         assert len(calls) == self.notification_mock.call_count
         self.notification_mock.assert_has_calls(calls, any_order=True)
+
+
+class TestNotificationAddedChannelPartnerRole:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory):
+        self.cp = channel_partner_factory()
+        self.sharer = cp_user_factory(channel_partner=self.cp)
+
+    def test_missing_user(self, cloud_test_host):
+        task = MagicMock()
+        with pytest.raises(Retry):
+            notification_added_channel_partner_role(
+                self.cp.id,
+                self.sharer.id,
+                random.randint(10000000, 999999999),
+                cloud_test_host.hostname,
+                task,
+                uuid4()
+            )
+
+
+class TestNotificationAddedOrganizationRole:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, organization_factory, org_user_factory):
+        self.org = organization_factory()
+        self.sharer = org_user_factory(organization=self.org)
+
+    def test_missing_user(self, cloud_test_host):
+        task = MagicMock()
+        with pytest.raises(Retry):
+            notification_added_organization_role(
+                self.org.id,
+                self.sharer.id,
+                random.randint(10000000, 999999999),
+                cloud_test_host.hostname,
+                task,
+                uuid4()
+            )

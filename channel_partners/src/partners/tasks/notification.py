@@ -9,7 +9,10 @@ from celery import (
     shared_task,
     states,
 )
-from celery.exceptions import Ignore
+from celery.exceptions import (
+    Ignore,
+    Retry,
+)
 from django.conf import settings
 from django.core.cache import caches
 from nx_cloud_api_client.apis import CdbAccountAPIBase
@@ -136,7 +139,7 @@ def added_channel_partner_role_task(
         self: TaskWithLogging,
         channel_partner_id: uuid.UUID | str,
         sharer_id: int,
-        user_id: str,
+        user_id: int,
         cloud_host_name: str,
         request_id: str,
 ) -> None:
@@ -153,15 +156,17 @@ def added_channel_partner_role_task(
 def notification_added_channel_partner_role(
         channel_partner_id: uuid.UUID | str,
         sharer_id: int,
-        user_id: str,
+        user_id: int,
         cloud_host_name: str,
         task: TaskWithLogging,
         request_id: str,
 ) -> None:
+    user = CloudUser.objects.filter(id=user_id).first()
+    if not user:
+        raise Retry(f"Cannot find user '{user_id}'. Retrying.")
     partner = ChannelPartner.objects.filter(id=channel_partner_id).first()
     sharer = CloudUser.objects.filter(id=sharer_id).first()
-    user = CloudUser.objects.filter(id=user_id).first()
-    if not all([partner, sharer, user]):
+    if not all([partner, sharer]):
         logger.error(
             "Unable to resolve",
             task_id=task.request.id,
@@ -194,7 +199,7 @@ def added_organization_role_task(
         self: TaskWithLogging,
         organization_id: uuid.UUID | str,
         sharer_id: int,
-        user_id: str,
+        user_id: int,
         cloud_host_name: str,
         request_id: str
 ) -> None:
@@ -211,14 +216,16 @@ def added_organization_role_task(
 def notification_added_organization_role(
         organization_id: uuid.UUID | str,
         sharer_id: int,
-        user_id: str,
+        user_id: int,
         cloud_host_name: str,
         task: TaskWithLogging,
         request_id: str,
 ):
+    user = CloudUser.objects.filter(id=user_id).first()
+    if not user:
+        raise Retry(f"Cannot find user '{user_id}'. Retrying.")
     organization = Organization.objects.filter(id=organization_id).first()
     sharer = CloudUser.objects.filter(id=sharer_id).first()
-    user = CloudUser.objects.filter(id=user_id).first()
 
     if not all([organization, sharer, user]):
         logger.error(
