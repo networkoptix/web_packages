@@ -1,7 +1,10 @@
 import uuid
+from typing import List
 
 import structlog
 from celery import shared_task
+from celery.exceptions import Retry
+from django.core.cache import caches
 from django.db import transaction
 from django.db.models.query import QuerySet
 
@@ -107,3 +110,53 @@ def new_channel_partner_created(channel_partner_pk: uuid.UUID) -> None:
                     channel_partner_pk=channel_partner.pk,
                     channel_partner_name=channel_partner.name
                 )
+
+
+NEGATION_MAX_RETRIES = 5
+NEGATION_RETRY_DELAY = 120
+NEGATION_LOCK_KEY = "service_negation_lock_{organization_id}"
+
+
+@shared_task(retry_kwargs={'max_retries': NEGATION_MAX_RETRIES,
+                           'countdown': NEGATION_RETRY_DELAY})
+def organization_systems_negation_task(
+        organization_id: str | uuid.UUID,
+        systems_ids: List[int]
+):
+    """
+    Negates service for given systems id in organization.
+    :param organization_id: Organization id which services need to be negated for
+    :param systems_ids: list of systems ids. NOTE. this is the list of CloudSystemId.id.
+    """
+    from partners.models import (
+        ChannelPartnerServiceRecord,
+        Organization,
+        ServiceRecordTypes,
+    )
+    lock_key = NEGATION_LOCK_KEY.format(organization_id=organization_id)
+    try:
+        organization = Organization.objects.get(id=organization_id)
+    except Organization.DoesNotExist:
+        logger.warning("Cannot find organization. Task cancelled",
+                       organization_id=organization_id)
+        return None
+    if not caches['default'].add(lock_key, f"{uuid.uuid4()}", timeout=300):
+        raise Retry(message=f"There is running negation for organization {organization_id}")
+    service_records = ChannelPartnerServiceRecord.objects.filter(
+        organization=organization,
+        cloud_system_id__in=systems_ids,
+        negation_record__isnull=True,
+    ).exclude(
+        record_type=ServiceRecordTypes.NEGATION
+    )
+    try:
+        with transaction.atomic():
+            return ChannelPartnerServiceRecord.negate_services(service_records)
+    except Exception as ex:
+        logger.critical("Exception occurred while negating service records",
+                        organization_id=organization_id,
+                        exception=f'{ex}')
+        raise Retry(message=f"Exception occurred while negating service "
+                            f"records for organization {organization_id}")
+    finally:
+        caches['default'].delete(lock_key)

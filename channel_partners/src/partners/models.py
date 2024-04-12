@@ -52,6 +52,7 @@ from partners.tasks.cloud_user_full_name import update_cloud_user_full_name
 from partners.tasks.services import (
     new_channel_partner_created,
     new_channel_partner_service_created,
+    organization_systems_negation_task,
 )
 from partners.tasks.states import expire_confirmation
 from partners.utils.cache_keys import (
@@ -1625,11 +1626,17 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return updated_ids
 
     def update_systems_effective_states(self, organization_effective_state):
+        queryset = self.cloud_systems.exclude(effective_state=organization_effective_state)
         if organization_effective_state == ChannelPartnerStates.SHUTDOWN:
-            ChannelPartnerServiceRecord.negate_services_on_shutdown(
-                systems=self.cloud_systems.exclude(effective_state=organization_effective_state))
-        self.cloud_systems.update(
-            effective_state=Greatest("state", models.Value(organization_effective_state)))
+            queryset.update(
+                effective_state=Greatest("state", models.Value(organization_effective_state)),
+                current_services={}
+            )
+            systems_ids = self.cloud_systems.values_list("id", flat=True)
+            organization_systems_negation_task.apply_async(args=[self.id, list(systems_ids)])
+        else:
+            self.cloud_systems.update(
+                effective_state=Greatest("state", models.Value(organization_effective_state)))
 
     def update_state(self) -> bool:
         """
@@ -2098,10 +2105,10 @@ class ChannelPartnerServiceRecord(models.Model):
 
     @classmethod
     def negate_services_on_shutdown(cls, systems: QuerySet[CloudSystemId]) -> List['ChannelPartnerServiceRecord']:
-        #  We probably need to zeroing of CloudSystemId.current_services
-        systems.update(current_services={})
         records = cls.objects.filter(cloud_system__in=systems)
-        return cls.negate_services(records)
+        negation_records = cls.negate_services(records)
+        systems.update(current_services={})
+        return negation_records
 
     @classmethod
     def negate_services(
