@@ -34,6 +34,18 @@
                 autofocus
                 required
             />
+            <span
+                *ngIf="groupName.touched && groupName.errors?.required"
+                class="error-label"
+                translate
+                >Name is required</span
+            >
+            <span
+                *ngIf="groupName.value?.length > 150"
+                class="error-label"
+                translate
+                >Folder name shouldn't be more than 150 symbols</span
+            >
         </div>
         <!-- <div class="form-group">
             <label for="groupParent" translate>Group Parent</label>
@@ -51,6 +63,7 @@
             [form]="createSystemGroupForm"
             [process]="createSystemGroupProcess"
             [buttonText]="'Create' | translate"
+            [buttonDisabled]="groupName.value?.length > 150"
         ></nx-process-button>
         <nx-cancel-button
             [process]="createSystemGroupProcess"
