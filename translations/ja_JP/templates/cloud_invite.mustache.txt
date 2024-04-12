@@ -1,6 +1,6 @@
 こんにちは、
 
-%CLOUD_NAME% に登録されました。
+%CLOUD_NAME%に招待されました。
 {{#message.message}}
 
 {{ message.message }}
