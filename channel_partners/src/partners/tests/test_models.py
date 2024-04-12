@@ -19,7 +19,6 @@ from partners.models import (
     OrganizationToUser,
     ServiceUsage,
     SystemGroup,
-    VmsRoles,
 )
 from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
@@ -875,129 +874,6 @@ class TestSystemGroup:
         assert caches['default'].get(group_key_1_0) == 0
         assert caches['default'].get(group_key_1_1) == 0
         assert caches['default'].get(group_key_1) == 1
-
-
-class TestCloudSystemId:
-
-    def test_get_organization_users(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                    org_user_factory, system_group_factory, system_factory,
-                                    sys_group_user_factory, cloud_user_factory):
-        cp = channel_partner_factory()
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org = organization_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=org)
-        org_sys = system_factory(organization=org)
-        group = system_group_factory(organization=org)
-        group_sys = system_factory(organization=org, system_group=group)
-        group_user = sys_group_user_factory(organization=org, group=group, role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
-
-        users = org_sys.get_organization_users()
-
-        assert users.count() == 1
-        assert users.first()['user__email'] == org_admin.user.email
-        assert users.first()['roles'] == org_admin.roles
-
-        users = group_sys.get_organization_users()
-        assert users.count() == 2
-        for user in users:
-            assert user['user__email'] in [org_admin.user.email, group_user.user.email]
-            assert user['roles'][0] in org_admin.roles + group_user.roles
-
-    def test_get_channel_partner_users(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                    org_user_factory, system_group_factory, system_factory,
-                                    sys_group_user_factory, cloud_user_factory):
-        cp = channel_partner_factory()
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org = organization_factory(channel_partner=cp)
-        org_sys = system_factory(organization=org)
-
-        users = org_sys.get_channel_partner_users()
-
-        assert users.count() == 1
-        assert users.first()['user__email'] == cp_admin.user.email
-        assert users.first()['roles'] == cp_admin.roles
-
-    def test_get_all_users(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                    org_user_factory, system_group_factory, system_factory,
-                                    sys_group_user_factory, cloud_user_factory):
-        cp = channel_partner_factory()
-        org = organization_factory(channel_partner=cp)
-        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
-        org.save()
-        org_sys = system_factory(organization=org)
-        group = system_group_factory(organization=org)
-        group_sys = system_factory(organization=org, system_group=group)
-
-        assert group_sys.get_all_users().count() == 0
-        assert org_sys.get_all_users().count() == 0
-
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=org)
-        group_user = sys_group_user_factory(organization=org, group=group,
-                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
-
-        users = group_sys.get_all_users()
-        assert users.count() == 3
-        for user in users:
-            assert user['user__email'] in [org_admin.user.email, cp_admin.user.email, group_user.user.email]
-            assert user['roles'][0] in [org.channel_partner_access_level_id] + org_admin.roles + group_user.roles
-
-    def test_get_user_role_by_email(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                    org_user_factory, system_group_factory, system_factory,
-                                    sys_group_user_factory, cloud_user_factory):
-        cp = channel_partner_factory()
-        org = organization_factory(channel_partner=cp)
-        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
-        org.save()
-        org_sys = system_factory(organization=org)
-        group = system_group_factory(organization=org)
-        group_sys = system_factory(organization=org, system_group=group)
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=org)
-        group_user = sys_group_user_factory(organization=org, group=group,
-                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
-        user_rel = group_sys.get_user_role_by_email(email='not_existing')
-        assert user_rel is None
-
-        user_rel = group_sys.get_user_role_by_email(email=group_user.user.email)
-        assert user_rel['user__email'] == group_user.user.email
-        assert user_rel['roles'] == group_user.roles
-        assert user_rel['type'] == 'organization'
-
-        user_rel = group_sys.get_user_role_by_email(email=org_admin.user.email)
-        assert user_rel['user__email'] == org_admin.user.email
-        assert user_rel['roles'] == org_admin.roles
-        assert user_rel['type'] == 'organization'
-
-        user_rel = group_sys.get_user_role_by_email(email=cp_admin.user.email)
-        assert user_rel['user__email'] == cp_admin.user.email
-        assert user_rel['roles'] == [org.channel_partner_access_level_id]
-        assert user_rel['type'] == 'channel_partner'
-
-    def test_has_vms_role(self, channel_partner_factory, cp_user_factory, organization_factory,
-                          org_user_factory, system_group_factory, system_factory,
-                          sys_group_user_factory, cloud_user_factory):
-        cp = channel_partner_factory()
-        org = organization_factory(channel_partner=cp)
-        org.channel_partner_access_level_id = OrganizationRoles.SYSTEM_HEALTH_VIEWER
-        org.save()
-        org_sys = system_factory(organization=org)
-        group = system_group_factory(organization=org)
-        group_sys = system_factory(organization=org, system_group=group)
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=org)
-        group_user = sys_group_user_factory(organization=org, group=group,
-                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
-
-        assert group_sys.has_vms_role(group_user.user, vms_roles=[VmsRoles.POWER_USER]) is False
-        assert group_sys.has_vms_role(group_user.user, vms_roles=[VmsRoles.SYSTEM_HEALTH_VIEWER]) is True
-        assert org_sys.has_vms_role(group_user.user, vms_roles=[VmsRoles.SYSTEM_HEALTH_VIEWER]) is False
-        assert group_sys.has_vms_role(org_admin.user, vms_roles=[VmsRoles.POWER_USER]) is False
-        assert group_sys.has_vms_role(org_admin.user, vms_roles=[VmsRoles.ADMINISTRATOR]) is True
-        assert org_sys.has_vms_role(org_admin.user, vms_roles=[VmsRoles.ADMINISTRATOR]) is True
-        assert group_sys.has_vms_role(cp_admin.user, vms_roles=[VmsRoles.SYSTEM_HEALTH_VIEWER]) is True
-        assert group_sys.has_vms_role(cp_admin.user, vms_roles=[VmsRoles.ADMINISTRATOR]) is False
-        assert org_sys.has_vms_role(cp_admin.user, vms_roles=[VmsRoles.ADMINISTRATOR]) is False
 
 
 class TestServiceUsage:

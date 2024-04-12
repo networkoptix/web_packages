@@ -482,50 +482,56 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return False
 
     def save(self, *args, **kwargs):
-        new = self._state.adding
+        with transaction.atomic():
+            new = self._state.adding
 
-        # Check if the organization associated with the instance has changed
-        orgs_are_different: bool = self.organization_id != self._original_organization_id
+            # Check if the organization associated with the instance has changed
+            orgs_are_different: bool = self.organization_id != self._original_organization_id
 
-        # Check if the system group associated with the instance has changed
-        system_groups_are_different: bool = self.system_group_id != self._original_system_group_id
-        if system_groups_are_different:
-            old_path = [self._original_system_group_id] + (self.path or [])
+            # Check if the system group associated with the instance has changed
+            system_groups_are_different: bool = self.system_group_id != self._original_system_group_id
+            if system_groups_are_different:
+                old_path = [self._original_system_group_id] + (self.path or [])
 
-        # Convert system_id to a UUIDField type
-        self.system_id = models.UUIDField().to_python(self.system_id)
+            # Convert system_id to a UUIDField type
+            self.system_id = models.UUIDField().to_python(self.system_id)
 
-        # If this is a new record or the organization or system group has changed, update the path
-        if new or orgs_are_different or system_groups_are_different:
-            if self.organization_id and self.system_group_id:
-                self.path = get_path_from_parent(self.system_group)
-            elif self.organization_id:
-                self.path = get_path_from_parent(self.organization)
-            else:
-                self.path = None
+            # If this is a new record or the organization or system group has changed, update the path
+            if new or orgs_are_different or system_groups_are_different:
+                if self.organization_id and self.system_group_id:
+                    self.path = get_path_from_parent(self.system_group)
+                elif self.organization_id:
+                    self.path = get_path_from_parent(self.organization)
+                else:
+                    self.path = None
 
-        # If this is a new record, invalidate the cache for the organization of the new record
-        if new:
-            CloudSystemId.invalidate_cache(str(self.organization_id))
-            CloudSystemId.invalidate_groups_system_counters(self.groups_path)
+            # If this is a new record, invalidate the cache for the organization of the new record
+            if new:
+                CloudSystemId.invalidate_cache(str(self.organization_id))
+                CloudSystemId.invalidate_groups_system_counters(self.groups_path)
 
-        # If this is not a new record and the organization has changed,
-        # invalidate the cache for both the original and new organizations
-        if orgs_are_different:
-            CloudSystemId.invalidate_cache(str(self._original_organization_id))
-            CloudSystemId.invalidate_cache(str(self.organization_id))
+            # If this is not a new record and the organization has changed,
+            # invalidate the cache for both the original and new organizations
+            if orgs_are_different:
+                CloudSystemId.invalidate_cache(str(self._original_organization_id))
+                CloudSystemId.invalidate_cache(str(self.organization_id))
 
-        # System group is changed
-        if system_groups_are_different:
-            # Invalidate counters for a new group
-            CloudSystemId.invalidate_groups_system_counters(self.groups_path)
-            # Invalidate counters for an old group
-            CloudSystemId.invalidate_groups_system_counters(old_path)
+            # System group is changed
+            if system_groups_are_different:
+                # Invalidate counters for a new group
+                CloudSystemId.invalidate_groups_system_counters(self.groups_path)
+                # Invalidate counters for an old group
+                CloudSystemId.invalidate_groups_system_counters(old_path)
 
-        self.update_state()
-        super().save(*args, **kwargs)
+            self.update_state()
+            super().save(*args, **kwargs)
 
-        ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
+            # If system transferred to another organization or disconnected from cloud
+            # add system history record
+            if orgs_are_different or new:
+                CloudSystemHistory.add_history_record(cloud_system=self, ts=timezone.now())
+
+            ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
 
     def disconnect_system(self):
         self.state = ChannelPartnerStates.SHUTDOWN
@@ -566,7 +572,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
          changed then negates services when needed.
          Note. This method does not save states, super().save() must be called after.
         """
-        self.effective_state = max(self.state, getattr(self.organization, 'effective_state', ChannelPartnerStates.ACTIVE))
+        self.effective_state = max(
+            self.state,
+            getattr(self.organization, 'effective_state', ChannelPartnerStates.ACTIVE)
+        )
+
         if self._state.adding:
             return
         if (
@@ -580,7 +590,6 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 or self.state == ChannelPartnerStates.SHUTDOWN
                 or self.system_state == CloudSystemStates.DELETED
         ):
-            # TODO. Move to background.
             self.negate_all_service(self._original_organization_id)
 
     class CurrentServices(TypedDict):
@@ -2751,3 +2760,28 @@ class ReportSnapshot(models.Model):
             self.provisional = False
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
+
+
+class CloudSystemHistory(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.PROTECT)
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT, null=True, blank=True)
+    from_ts = models.DateTimeField()
+    to_ts = models.DateTimeField(null=True, blank=True)
+
+    @classmethod
+    def add_history_record(
+            cls,
+            cloud_system: CloudSystemId,
+            ts: datetime,
+    ):
+        prev_record = cls.objects.filter(cloud_system=cloud_system).order_by('-from_ts').first()
+        if prev_record:
+            prev_record.to_ts = ts
+            prev_record.save()
+        cls.objects.create(
+            cloud_system=cloud_system, organization=cloud_system.organization, from_ts=ts
+        )
+
+
