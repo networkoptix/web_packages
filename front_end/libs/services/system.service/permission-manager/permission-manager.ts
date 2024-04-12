@@ -279,6 +279,7 @@ export class PermissionManager {
         const isAdmin = isOwner || this.isAdmin$$();
         const user = this.user$$();
         const customRole = this.customRole$$();
+        const resourceAccessRights = this.resourceAccessRights$$();
         if (this.mediaserver instanceof NxSystemRestAPI3) {
             return this.permissionsFromGroups$$();
         }
@@ -286,7 +287,15 @@ export class PermissionManager {
         // For support when a user has a custom user role.
         const roleId = (customRole && 'id' in customRole && customRole.id) || '';
         if (roleId && roleId !== LegacyDefaultRoleId) {
-            permissions = customRole?.permissions || '';
+            if (Object.keys(resourceAccessRights)?.length) {
+                permissions = PermissionStrings.allMediaPermissionFlag;
+            }
+
+            if (customRole?.permissions) {
+                permissions = permissions
+                    ? `${permissions}|${customRole.permissions}`
+                    : customRole.permissions;
+            }
         } else {
             permissions = user?.permissions || '';
         }
