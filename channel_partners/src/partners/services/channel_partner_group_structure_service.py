@@ -30,14 +30,10 @@ class ChannelPartnerGroupStructureService:
         # Check if the user has permission to view service reports for the root channel partner
         if not channel_partner.is_member(user):
             raise PermissionDenied("Permission denied.")
-
-        cached_data = self._get_cached_data(channel_partner.id, user_id=user.pk)
-        if cached_data:
-            return cached_data
-        else:
-            computed = self._compute(channel_partner, user)
-            self._set_cached_data(channel_partner.id, user.pk, computed)
-            return computed
+        # Removed caching due to this discussion
+        # https://networkoptix.slack.com/archives/C06CM3R02CU/p1712694051369009
+        computed = self._compute(channel_partner, user)
+        return computed
 
     @staticmethod
     def _compute(channel_partner: ChannelPartner, user: CloudUser, single_root: bool = True) -> List[Dict[str, Any]]:
