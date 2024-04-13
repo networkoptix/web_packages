@@ -1,12 +1,13 @@
 import { Location } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { firstValueFrom } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { firstValueFrom, Subject } from 'rxjs';
+import { tap, catchError, debounceTime, filter, switchMap, shareReplay } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { UserSession } from '@services/system-api.types/users.types';
@@ -69,6 +70,24 @@ export class LocalAccount extends BaseAccount {
         }) as NxSystemRestAPI3;
     }
 
+    private openDialog$ = new Subject<void>();
+    private dialogResult$ = this.openDialog$.pipe(
+        takeUntilDestroyed(),
+        debounceTime(100),
+        filter(() => !this.loginDialogActive),
+        switchMap(() => {
+            this.loginDialogActive = true;
+            return this.showLoginDialog()
+                .then(account => {
+                    this.loginDialogActive = false;
+                    return account;
+                })
+                .catch(() => undefined);
+        }),
+        filter(Boolean),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
     async get(forceUpdate = false): Promise<Account | undefined> {
         if (this.sessionService.isAuthorized$$() || this.storageService.cloudAccessToken) {
             const user = await this.mediaServerApi.getCurrentUser(forceUpdate).catch(error => {
@@ -86,7 +105,8 @@ export class LocalAccount extends BaseAccount {
         }
 
         if (!this.loginDialogActive) {
-            return this.showLoginDialog().then(() => undefined);
+            this.openDialog$.next();
+            return firstValueFrom(this.dialogResult$);
         }
     }
 
@@ -142,7 +162,6 @@ export class LocalAccount extends BaseAccount {
             });
         } else {
             return this.loginService.login(true).then(result => {
-                this.loginDialogActive = !result;
                 if (result === 'newSystem') {
                     return;
                 }
@@ -156,20 +175,16 @@ export class LocalAccount extends BaseAccount {
         this.get().catch(err => console.error(err));
     }
 
-    requireLogin(): Promise<Account | undefined> {
-        return this.get()
-            .then(account => {
-                if (!account && !this.loginDialogActive) {
-                    this.showLoginDialog();
-                }
-                return account;
-            })
-            .catch(() => {
-                if (!this.loginDialogActive) {
-                    return this.showLoginDialog();
-                } else {
-                    return undefined;
-                }
-            });
+    async requireLogin(): Promise<Account | undefined> {
+        let account: Account | undefined;
+        try {
+            account = await this.get();
+        } catch {
+            if (!this.loginDialogActive) {
+                this.openDialog$.next();
+                return firstValueFrom(this.dialogResult$);
+            }
+        }
+        return account;
     }
 }
