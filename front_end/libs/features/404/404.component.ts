@@ -109,5 +109,6 @@ export class Nx404Component {
                     );
                 });
         }
+        this.redirecting = false;
     }
 }
