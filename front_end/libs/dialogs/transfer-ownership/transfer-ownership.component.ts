@@ -1,42 +1,51 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, Inject, computed, signal, forwardRef } from '@angular/core';
-import type { NgForm } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+    Component,
+    Inject,
+    signal,
+    forwardRef,
+    WritableSignal,
+    ViewChild,
+    computed,
+} from '@angular/core';
+import { FormsModule, NgModel } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
-import { firstValueFrom } from 'rxjs';
 
-import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
-import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { CloudSystem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import type {
+    Organization,
+    CloudSystem,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
-import { NxProcessService } from '@services/process.service';
-import { Process } from '@services/process.service/process';
-import { UserType } from '@services/system-user.types';
+import { NxUser, UserType } from '@services/system-user.types';
+import { NxSystemsService } from '@services/systems.service';
+import type { NxUserSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons, servers } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
 
 import type { TransferOwnership as DT } from '../dialogs.types';
 
 import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.component';
-type OrgItem = SearchableDropdownItem;
 
 @Component({
     selector: 'nx-modal-transfer-ownership-content',
@@ -52,186 +61,108 @@ type OrgItem = SearchableDropdownItem;
         TranslateModule,
         NgxTranslateCutModule,
         LetDirective,
-        NxSearchableDropdown,
-        NxAutocompleteComponent,
         NxRadioComponent,
         NxPreLoaderComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
         NxAddSvgSrcDirective,
+        NxAutocompleteV2Component,
+        NxAutoCompleteItemComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
-export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {
-    @ViewChild('transferOwnershipForm') private form: NgForm;
+export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
+    @ViewChild('orgAutocomplete') orgAutocomplete?: NgModel;
+    @ViewChild('emailAutocomplete') emailAutocomplete?: NgModel;
 
     selectedIndex: number = 0;
 
     LANG = staticLang;
     icons = icons;
 
-    channelPartnersEnabled: boolean | null = null;
+    channelPartnersEnabled = this.system.version > 5.1 && !!nxConfig.featureFlags.channelPartners;
 
     currentOwnerType: 'user' | 'org' = 'user'; // Transferring from orgs not supported in V1
-    transferInfo: SystemTransferInfo | CloudSystem;
-    hideErrors: boolean = false;
-    transferToUser: Process;
-    transferToOrg: Process;
+    transferInfo?: SystemTransferInfo | CloudSystem;
 
     userSearch: string = '';
-    userEmails = new Set<string>();
-    userEmails$$ = signal<string[] | null>(null);
-    usersInSystem$$ = computed<boolean>(() => !!this.userEmails$$()?.length);
+    users$$: WritableSignal<NxUser[]>;
 
-    orgItems$$ = signal<OrgItem[] | null>(null);
-    selectedOrg: OrgItem;
-    isOrgMember$$ = computed<boolean>(() => !!this.orgItems$$()?.length);
+    orgSearch: string = '';
+    orgs$$: WritableSignal<Organization[]>;
+    selectedOrg: Organization;
 
     newOwner: string = '';
 
     transferTargetType$$ = signal<'user' | 'org'>('user');
-
-    advanceProcess = this.processService.createProcess(() => {
-        this.newOwner =
-            this.transferTargetType$$() === 'user' ? this.userSearch : this.selectedOrg.name;
-        this.selectedIndex += 1;
-        return Promise.resolve();
-    });
+    toUser$$ = computed<boolean>(() => this.transferTargetType$$() === 'user');
+    toOrg$$ = computed<boolean>(() => this.transferTargetType$$() === 'org');
 
     constructor(
-        private processService: NxProcessService,
         private cloudService: NxCloudApiService,
         private toastService: NxToastService,
         private dialogService: NxDialogsService,
         private partnersService: NxChannelPartnersService,
+        systemsService: NxSystemsService,
         public dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) public system: DT['data'],
+        @Inject(DIALOG_DATA) private system: DT['data'],
     ) {
         super(dialogRef);
-    }
 
-    ngOnInit(): void {
-        const items: string[] = [];
+        /* user.isOwner is supposed to be used for this, but it's inconsistent at the moment
+        and fixing it is too far beyond the scope of the issue for the dialog
+
+        This trick won't work for org systems so the issue needs to be identified and fixed
+        before transferring org systems becomes supported */
+        const systemInfo = systemsService.systemInfoMap$$().get(system.id)!;
+        function userIsOwner(user: NxUser): boolean {
+            return user.email === (systemInfo as NxUserSystemInfo).ownerAccountEmail;
+        }
+        const users: NxUser[] = [];
         this.system.userManager.users.forEach(user => {
-            if (user.type === UserType.cloud && !user.isOwner && user.isEnabled) {
-                this.userEmails.add(user.email);
-                items.push(user.email);
+            if (user.type === UserType.cloud && !userIsOwner(user)) {
+                users.push(user);
             }
         });
-        this.userEmails$$.set(items);
+        this.users$$ = signal(users);
 
-        this.channelPartnersEnabled = !!(
-            this.system.version > 5.1 && nxConfig.featureFlags.channelPartners
-        );
         if (this.channelPartnersEnabled) {
-            this.partnersService.getOrganizations(true).subscribe(orgs => {
-                const items = orgs.reduce((orgs, org) => {
-                    if (org.ownPermissions.includes('manage_systems')) {
-                        orgs.push({
-                            name: org.name,
-                            value: org.id,
-                        });
-                    }
-                    return orgs;
-                }, [] as OrgItem[]);
-                if (items.length) {
+            this.partnersService.getOrganizations(true).subscribe(res => {
+                const orgs = res.filter(org => org.ownPermissions.includes('manage_systems'));
+                if (orgs.length) {
                     this.transferTargetType$$.set('org');
                 }
-                this.orgItems$$.set(items);
+                this.orgs$$ = signal(orgs.sort(alphabeticalSort(org => org.name)));
             });
+        } else {
+            this.orgs$$ = signal([]);
         }
+    }
 
-        const errorCodes = {
-            userDisabled: () => {
-                this.form.control.setErrors({
-                    userDisabled: true,
-                });
-            },
-            userNotFound: () => {
-                this.form.control.setErrors({
-                    userNotFound: true,
-                });
-            },
-        };
+    advanceToConfirm(): void {
+        this.newOwner = this.toUser$$() ? this.userSearch : this.selectedOrg.name;
+        this.selectedIndex += 1;
+    }
 
-        this.transferToUser = this.processService.createProcess(
-            async () => {
-                this.lock();
-                return firstValueFrom(
-                    this.cloudService.startTransfer(this.system.id, this.userSearch),
+    transferSystemAction = createAsyncAction<SystemTransferInfo | CloudSystem>({
+        action: () =>
+            this.toUser$$()
+                ? this.cloudService.startTransfer(this.system.id, this.userSearch)
+                : this.partnersService.transferSystemToOrg(this.selectedOrg.id, this.system.id),
+        success: res => {
+            this.transferInfo = res;
+            this.selectedIndex += 1;
+        },
+        error: (error?: HttpErrorResponse) => {
+            if (
+                error?.error?.resultCode === servers.errors.userPasswordRequired ||
+                error?.error?.errorId === servers.errors.oldSessionErrorId
+            ) {
+                this.toastService.notify(
+                    this.LANG.dialogs.updateSession.transferOnwership,
+                    ToastType.Warning,
                 );
-            },
-            { errorCodes, ignoreError: true },
-            async (res: SystemTransferInfo) => {
-                this.transferInfo = res;
-                this.selectedIndex += 1;
-                this.unlock();
-            },
-            err => {
-                if (
-                    err?.resultCode === servers.errors.userPasswordRequired ||
-                    err.errorId === servers.errors.oldSessionErrorId
-                ) {
-                    this.toastService.notify(
-                        this.LANG.dialogs.updateSession.transferOnwership,
-                        ToastType.Warning,
-                    );
-                }
-                this.unlock();
-            },
-        );
-
-        this.transferToOrg = this.processService.createProcess(
-            async () => {
-                this.lock();
-                const orgId = this.selectedOrg.value;
-                return firstValueFrom(
-                    this.partnersService.transferSystemToOrg(orgId, this.system.id),
-                );
-            },
-            { errorCodes, ignoreError: true },
-            async (res: CloudSystem) => {
-                this.transferInfo = res;
-                this.selectedIndex += 1;
-                this.unlock();
-            },
-            err => {
-                if (
-                    err?.resultCode === servers.errors.userPasswordRequired ||
-                    err.errorId === servers.errors.oldSessionErrorId
-                ) {
-                    this.toastService.notify(
-                        this.LANG.dialogs.updateSession.transferOnwership,
-                        ToastType.Warning,
-                    );
-                }
-                this.unlock();
-            },
-        );
-    }
-
-    selectUser(value: string): void {
-        if (value === this.userSearch) {
-            return;
-        }
-        this.userSearch = value;
-        this.form.control.setErrors(null);
-        if (value !== '' && !this.userEmails.has(value)) {
-            this.form.control.setErrors({ userNotFound: true });
-        }
-    }
-
-    selectOrg(org: OrgItem): void {
-        if (org.value !== this.selectedOrg?.value) {
-            this.form.control.setErrors(null);
-        }
-        this.selectedOrg = { ...org };
-    }
-
-    checkOrg(input: string): void {
-        if (input !== '' && !this.orgItems$$()?.some(el => el.name === input)) {
-            this.form.control.setErrors({ orgNotFound: true });
-        }
-    }
+            }
+        },
+    });
 
     openAddUserDialog(): void {
         this.dialogRef.close();

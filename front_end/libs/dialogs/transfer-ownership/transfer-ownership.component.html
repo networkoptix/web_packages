@@ -1,8 +1,6 @@
 <form
     #transferOwnershipForm="ngForm"
     name="transferOwnershipForm"
-    novalidate
-    [ngClass]="{ 'hide-errors': hideErrors }"
 >
     <div class="modal-header">
         <h1
@@ -23,49 +21,44 @@
         </button>
     </div>
 
-    <nx-pre-loader
-        *ngIf="
-            !(
-                userEmails$$() &&
-                (channelPartnersEnabled === false || (channelPartnersEnabled && orgItems$$()))
-            );
-            else content
-        "
-    ></nx-pre-loader>
-
-    <ng-template #content>
+    @if (channelPartnersEnabled ? !orgs$$ : !users$$) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else {
         <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
-            <cdk-step><ng-container [ngTemplateOutlet]="newOwnerSelect"></ng-container></cdk-step>
+            <cdk-step>
+                <ng-container
+                    [ngTemplateOutlet]="orgs$$().length ? selectOrgOrUser : selectUser"
+                ></ng-container>
+            </cdk-step>
             <cdk-step><ng-container [ngTemplateOutlet]="confirmation"></ng-container></cdk-step>
             <cdk-step><ng-container [ngTemplateOutlet]="success"></ng-container></cdk-step>
         </nx-transfer-stepper>
-    </ng-template>
+    }
 
-    <ng-template #userSelect>
-        <nx-autocomplete
+    <ng-template #emailSelect>
+        <nx-autocomplete-v2
             class="fs-mask"
-            [ngModel]="userSearch"
-            (ngModelChange)="selectUser($event)"
+            #emailAutocomplete="ngModel"
             name="emailAutocomplete"
-            [suggestions]="userEmails$$()"
+            [(ngModel)]="userSearch"
+            requireSelection
             [placeholder]="'Email' | translate"
-            [noMatchMsg]="LANG.search.userNotFound | translate"
-        ></nx-autocomplete>
-        <div
-            class="col-12 ml-n2 d-flex"
-            *ngIf="transferOwnershipForm.errors"
+            [noMatchesContent]="'User not found' | translate"
         >
+            @for (user of users$$(); track user.email) {
+                <nx-autocomplete-item
+                    [value]="user.email"
+                    [disabled]="!user.isEnabled"
+                    >{{ user.email }}</nx-autocomplete-item
+                >
+            }
+        </nx-autocomplete-v2>
+        <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
             <span
-                *ngIf="transferOwnershipForm.errors.userDisabled"
+                *ngIf="emailAutocomplete.errors.required"
                 class="input-info subtext error-label"
                 translate
-                >User disabled</span
-            >
-            <span
-                *ngIf="transferOwnershipForm.errors.userNotFound"
-                class="input-info subtext error-label"
-                translate
-                >User not found</span
+                >Select a user</span
             >
         </div>
     </ng-template>
@@ -90,104 +83,142 @@
         </button>
     </ng-template>
 
-    <ng-template #newOwnerSelect>
-        <ng-container *ngIf="isOrgMember$$()">
-            <div class="modal-body">
-                <div class="radio-container">
-                    <nx-radio
-                        name="transfertarget"
-                        [ngModel]="transferTargetType$$()"
-                        (ngModelChange)="transferTargetType$$.set($event)"
-                        componentId="org"
-                        value="org"
-                        [label]="'To Organization' | translate"
-                    ></nx-radio>
-                    <nx-radio
-                        name="transfertarget"
-                        [ngModel]="transferTargetType$$()"
-                        (ngModelChange)="transferTargetType$$.set($event)"
-                        componentId="user"
-                        value="user"
-                        [label]="'To User' | translate"
-                    ></nx-radio>
-                </div>
-                <ng-container *ngIf="transferTargetType$$() === 'user'">
-                    <ng-container
-                        *ngIf="usersInSystem$$()"
-                        [ngTemplateOutlet]="userSelect"
-                    ></ng-container>
-                    <ng-container *ngIf="!usersInSystem$$()">
-                        <div class="no-users no-users__with-orgs">
-                            <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
-                        </div>
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="transferTargetType$$() === 'org'">
-                    <nx-searchable-select
-                        class="fs-mask"
-                        [items]="orgItems$$()"
-                        [ngModel]="selectedOrg"
-                        (ngModelChange)="selectOrg($event)"
-                        (onClickElsewhere)="checkOrg($event)"
-                        [selected]="selectedOrg"
-                        [noMatchMsg]="'Organization not found' | translate"
-                        [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="'Organization' | translate"
-                    ></nx-searchable-select>
-                    <div
-                        class="col-12 ml-n2 d-flex"
-                        *ngIf="transferOwnershipForm.errors"
-                    >
-                        <span
-                            *ngIf="transferOwnershipForm.errors.orgNotFound"
-                            class="input-info subtext error-label"
-                            translate
-                            >Organization not found</span
-                        >
-                    </div>
-                </ng-container>
+    <ng-template #selectOrgOrUser>
+        <div class="modal-body">
+            <div class="radio-container">
+                <nx-radio
+                    name="transfertarget"
+                    [ngModel]="transferTargetType$$()"
+                    (ngModelChange)="transferTargetType$$.set($event)"
+                    componentId="org"
+                    value="org"
+                    [label]="'To Organization' | translate"
+                ></nx-radio>
+                <nx-radio
+                    name="transfertarget"
+                    [ngModel]="transferTargetType$$()"
+                    (ngModelChange)="transferTargetType$$.set($event)"
+                    componentId="user"
+                    value="user"
+                    [label]="'To User' | translate"
+                ></nx-radio>
             </div>
-        </ng-container>
-        <ng-container *ngIf="!isOrgMember$$()">
-            <ng-container *ngIf="usersInSystem$$()">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label
-                            for="newSystemOwner"
-                            translate
-                            >To User</label
+            <!-- Hide instead of not creating to preserve autocomplete internal error state -->
+            <div [ngStyle]="{ display: !toOrg$$() ? 'none' : undefined }">
+                <nx-autocomplete-v2
+                    class="fs-mask"
+                    #orgAutocomplete="ngModel"
+                    name="orgAutocomplete"
+                    [(ngModel)]="orgSearch"
+                    (select)="selectedOrg = $event"
+                    requireSelection
+                    [placeholder]="'Organization' | translate"
+                    [noMatchesContent]="'Organization not found' | translate"
+                >
+                    @for (org of orgs$$(); track org.id) {
+                        <nx-autocomplete-item
+                            [value]="org"
+                            [name]="org.name"
+                            [disabled]="org.effectiveState !== 'active'"
                         >
-                        <ng-container [ngTemplateOutlet]="userSelect"></ng-container>
+                            <div class="org-item">
+                                <span class="org-item__name">{{ org.name }}</span>
+                                @if (org.effectiveState !== 'active') {
+                                    <div
+                                        class="org-item__state"
+                                        [ngClass]="'org-item__state--' + org.effectiveState"
+                                    >
+                                        {{ org.effectiveState | translate | uppercase }}
+                                    </div>
+                                }
+                            </div>
+                        </nx-autocomplete-item>
+                    }
+                </nx-autocomplete-v2>
+                <div *ngIf="orgAutocomplete.touched && orgAutocomplete.errors">
+                    <span
+                        *ngIf="orgAutocomplete.errors.required"
+                        class="input-info subtext error-label"
+                        translate
+                        >Select an organization</span
+                    >
+                </div>
+            </div>
+            <div
+                class="modal-body__user-select-container"
+                [ngStyle]="{ display: !toUser$$() ? 'none' : undefined }"
+            >
+                @if (users$$().length) {
+                    <ng-container [ngTemplateOutlet]="emailSelect"></ng-container>
+                } @else {
+                    <div class="no-users no-users__with-orgs">
+                        <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
                     </div>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="!usersInSystem$$()">
-                <div class="modal-body no-users no-users__without-orgs">
-                    <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
-                </div>
-            </ng-container>
-        </ng-container>
+                }
+            </div>
+        </div>
         <div
             class="modal-footer modal-footer__justify-right"
-            *ngIf="usersInSystem$$() || transferTargetType$$() === 'org'"
+            *ngIf="users$$().length || toOrg$$()"
         >
-            <nx-process-button
-                [process]="advanceProcess"
-                [form]="transferOwnershipForm"
-                [buttonText]="'Next' | translate"
-                [buttonDisabled]="
-                    (transferTargetType$$() === 'user' && !userSearch) ||
-                    (transferTargetType$$() === 'org' && !selectedOrg) ||
-                    !!transferOwnershipForm.errors
+            <button
+                class="btn btn-primary"
+                type="submit"
+                (click)="advanceToConfirm()"
+                [disabled]="
+                    (toOrg$$() && !!orgAutocomplete?.invalid) ||
+                    (toUser$$() && !!emailAutocomplete?.invalid)
                 "
-                [svg]="{ src: 'arrow_right' }"
-            ></nx-process-button>
+            >
+                <div class="next-with-arrow">
+                    {{ 'Next' | translate }}
+                    <svg-icon
+                        [src]="icons.dir + 'arrow_right.svg'"
+                        [svgStyle]="{ 'height.px': 24 }"
+                    ></svg-icon>
+                </div>
+            </button>
         </div>
+    </ng-template>
+    <ng-template #selectUser>
+        @if (users$$().length) {
+            <div class="modal-body">
+                <div class="form-group">
+                    <label
+                        for="newSystemOwner"
+                        translate
+                        >To User</label
+                    >
+                    <ng-container [ngTemplateOutlet]="emailSelect"></ng-container>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer__justify-right">
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                    (click)="advanceToConfirm()"
+                    [disabled]="!!emailAutocomplete?.invalid"
+                >
+                    <div class="next-with-arrow">
+                        {{ 'Next' | translate }}
+                        <svg-icon
+                            [src]="icons.dir + 'arrow_right.svg'"
+                            [svgStyle]="{ 'height.px': 24 }"
+                        ></svg-icon>
+                    </div>
+                </button>
+            </div>
+        } @else {
+            <div class="modal-body no-users no-users__without-orgs">
+                <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
+            </div>
+        }
     </ng-template>
 
     <ng-template #confirmation>
         <div class="modal-body">
             <p
+                class="about-to-transfer"
                 *ngrxLet="
                     LANG.dialogs.transferOwnership.aboutToTransfer
                         | translate: { newOwner } as aboutToTransfer
@@ -199,7 +230,7 @@
                 ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
             </p>
             <div
-                *ngIf="transferTargetType$$() === 'user'"
+                *ngIf="toUser$$()"
                 class="warning-block"
             >
                 <div class="warning-block__header mb-1">
@@ -221,7 +252,8 @@
             <button
                 class="btn btn-default"
                 (click)="selectedIndex = selectedIndex - 1"
-                [disabled]="transferToUser.processing || transferToOrg.processing"
+                [disabled]="busy$$()"
+                type="button"
             >
                 <svg-icon
                     class="arrow-left"
@@ -229,11 +261,15 @@
                     [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
             </button>
-            <nx-process-button
-                [process]="transferTargetType$$() === 'user' ? transferToUser : transferToOrg"
-                [form]="transferOwnershipForm"
-                [buttonText]="'Transfer' | translate"
-            ></nx-process-button>
+            <!-- Invalid inputs from selection step are still detected in confirm step -->
+            <nx-async-action-button
+                [action]="transferSystemAction"
+                [busy]="busy$$()"
+                (busyChange)="busy$$.set($event)"
+                disableFormValidation
+            >
+                {{ 'Transfer' | translate }}
+            </nx-async-action-button>
         </div>
     </ng-template>
 
@@ -246,7 +282,7 @@
                 [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
             ></svg-icon>
             <p
-                *ngIf="transferTargetType$$() === 'org'; else normalResult"
+                *ngIf="toOrg$$(); else normalResult"
                 id="request-sent"
                 class="mt-1"
                 translate

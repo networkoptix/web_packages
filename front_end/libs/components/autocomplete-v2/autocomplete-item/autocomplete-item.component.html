@@ -4,6 +4,8 @@
         class="list-item"
         [class.list-item--highlighted]="highlighted()"
         [class.list-item--selected]="selected()"
+        [class.list-item--enabled]="!disabled()"
+        [class.list-item--disabled]="disabled()"
         (click)="onClick()"
         (mousedown)="$event.preventDefault()"
     >

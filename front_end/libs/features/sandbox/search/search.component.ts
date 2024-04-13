@@ -48,6 +48,7 @@ export class SearchComponent {
         { value: 'OR', name: 'Oregon' },
         { value: 'CA', name: 'California' },
         { value: 'HI', name: 'Hawaii' },
+        { value: 'TX', name: 'Texas' },
     ];
     selectedState: string | undefined;
 

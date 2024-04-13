@@ -63,7 +63,6 @@ export interface ChannelPartner {
     ownRoles: string[];
     ownRolesIds: string[];
     name: string;
-    effective_state: number;
     created_ts: string;
     path: string[];
     users: number[];
@@ -151,7 +150,6 @@ export interface Organization {
     created: string;
     currentServices: Record<string, unknown>;
     effectiveState: string;
-    effective_state: number;
     id: string;
     name: string;
     ownPermissions: string[];
@@ -177,7 +175,6 @@ export type UpdateOrganization = Partial<{
     attributes?: Record<string, unknown>;
     currentServices?: Record<string, unknown>;
     name: string;
-    effective_state: number;
     path: string[];
 }>;
 

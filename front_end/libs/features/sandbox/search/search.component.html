@@ -72,6 +72,7 @@
                     [value]="state.value"
                     [name]="state.name"
                     [searchBy]="state.name + ' ' + state.value"
+                    [disabled]="state.value === 'TX'"
                 >
                     <nx-search-highlight
                         [text]="state.name"

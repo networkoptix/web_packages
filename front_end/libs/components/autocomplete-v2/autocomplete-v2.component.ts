@@ -140,6 +140,7 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
             ];
             if (requireSelection && selected && !items.find(i => i === selected)) {
                 this.writeValue('');
+                this.onChange('');
             }
             if (highlighted && !matches.find(i => i === highlighted)) {
                 this.unsetHighlight();
@@ -224,12 +225,15 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
     }
 
     writeValue(value: string, resetSelect = true): void {
+        // https://github.com/angular/angular/issues/14988
+        if (value === null) {
+            return;
+        }
         this.value.set(value);
         if (resetSelect) {
             this.selected.set(undefined);
             this.select.emit(undefined);
         }
-        this.onChange(value);
     }
     private onChange = (_: string): void => {};
     private onTouched = (): void => {};
@@ -248,12 +252,14 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
 
     onInputModelChange(event: string): void {
         this.writeValue(event);
+        this.onChange(event);
         this.unsetHighlight();
         this.openDropdown();
     }
 
     clear(): void {
         this.writeValue('');
+        this.onChange('');
         this.unsetHighlight();
         this.focusInput();
     }
@@ -291,12 +297,15 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
         event.preventDefault(); // Stop form submit
 
         if (this.matches().length === 1) {
-            this.selectItem(this.matches()[0]);
+            const onlyMatch = this.matches()[0];
+            if (!onlyMatch.disabled()) {
+                this.selectItem(onlyMatch);
+            }
             return;
         }
 
         const highlighted = this.highlighted();
-        if (highlighted) {
+        if (highlighted && !highlighted.disabled()) {
             this.selectItem(highlighted);
         }
     }
@@ -314,6 +323,7 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
 
         if (this.requireSelection() && !this.selected()) {
             this.writeValue('');
+            this.onChange('');
         }
 
         this.onTouched();
@@ -395,6 +405,7 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
         this.selected.set(item);
         this.select.emit(item.value());
         this.writeValue(item.displayText(), false);
+        this.onChange(item.displayText());
         this.closeDropdown();
         this.focusInput();
     }
