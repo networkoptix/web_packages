@@ -1,0 +1,12 @@
+<h1>Сайн байна уу, </h1>
+
+<p>Таныг %CLOUD_NAME%-д урьж байна</p>
+
+{{#message.message}}
+<p>{{ message.message }}</p>
+{{/message.message}}
+
+<p>Та өөрийн имэйл хаягаараа     <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>-н бүртгэл үүсгээрэй.
+</p>
+
+<a class="btn" href="{{ config.portal_url }}/зөвшөөрөх/бүртгүүлэх/{{ message.code }}">Бүртгүүлэх</a>

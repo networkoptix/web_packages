@@ -1,6 +1,6 @@
 {{ message.asset }} （{{message.asset_type}}） の新しいバージョンをレビューできます。
 
-{{ message.asset }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください
+{{ message.asset }} のドラフト {{ message.id }} を確認するには、リンクをクリックしてください。
 
 レビューへのリンク：{{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 

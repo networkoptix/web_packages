@@ -1,0 +1,13 @@
+%CLOUD_NAME%-д тавтай морилно уу
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) таныг %CLOUD_NAME%-д урьж байгаа ба {{message.system_name}} системийг тантай хуваалцаж байна.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Таныг %CLOUD_NAME%-д урьж байна.
+Танд {{message.system_name}}-д хандах эрх олголоо.
+{{/message.sharer_name}}
+
+Үргэлжлүүлэх: {{config.portal_url}}/зөвшөөрөх/бүртгүүлэх/{{message.code}}
+

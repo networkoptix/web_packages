@@ -1,0 +1,11 @@
+<h1>Сайн байна уу, {{message.userFullName}}</h1>
+
+{{#message.sharer_name}}
+<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> танд "{{message.system_name}}" видео удирдлагын системд хандах эрхийг хуваалцсан байна.</p>
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+<p>Танд "{{message.system_name}}" видео удирдлагын системд хандах эрх олгосон байна.</p>
+{{/message.sharer_name}}
+
+<a class="btn" href="{{config.portal_url}}/systems/{{message.system_id}}">%CLOUD_NAME%-тай танилцах</a>

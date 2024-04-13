@@ -1,0 +1,41 @@
+{
+  "activate_account": {
+    "emailSubject": "Бүртгэлээ идэвхжүүлнэ үү"
+  },
+  "cloud_invite": {
+    "emailSubject": "Таныг %CLOUD_NAME%-д урьж байна"
+  },
+  "cloud_notification": {
+    "emailSubject": "{{{message.subject}}}"
+  },
+  "sales_inquiry": {
+    "emailSubject": "Үнийн санал авах бол {{{message.asset}}"
+  },
+  "technical_inquiry": {
+    "emailSubject": "Техникийн талаар лавлах бол {{{message.asset}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Санал хүсэлт өгөх бол {{{message.asset}}"
+  },
+  "ipvd_feedback": {
+    "emailSubject": "{{{message.asset}}{{/message.asset}}Камераас {{#message.asset}} хариу ирсэн байна"
+  },
+  "ownership_transfer_invite": {
+    "emailSubject": "{{message.system_name}} эрх шилжүүлсэн байна"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "{{message.system_name}} - {{message.status}} эрх шилжүүлсэн байна"
+  },
+  "review_version": {
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}} шинэ хувилбарыг шалгаж үзээрэй"
+  },
+  "restore_password": {
+    "emailSubject": "Нууц үгээ сэргээх"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} таныг %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}-д урьж байна {{{message.system_name}} видео системийг {{/message.sharer_name}} хуваалцсан байна"
+  },
+  "system_shared": {
+    "emailSubject": "{{{message.system_name}} видео системийг хуваалцсан байна"
+  }
+}

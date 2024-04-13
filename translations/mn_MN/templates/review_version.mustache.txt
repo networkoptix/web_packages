@@ -1,0 +1,10 @@
+Танд {{ message.asset }} ({{message.asset_type}}) шинэ хувилбарыг санал болгож байна.
+
+Доорх холбоосоор орж {{ message.id }} {{ message.asset }}-тай танилцана уу
+
+Холбоос: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+
+Та доорх үйлдлүүдийг хийх боломжтой
+1) Шинэчлэл, өөрчлөлтийн талаарх мэдээлэлүүд.
+2) Publish this version which will update all content.
+3) Edit contexts by clicking on the edit record button. Шинэ хувилбарыг ашигласнаар та эдгээр үйлдлүүдийг хийх боломжтой болно.

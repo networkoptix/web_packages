@@ -1,0 +1,7 @@
+Сайн байна уу, {{message.user_full_name}}
+
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) нь таныг {{message.system_name}} системын эзэмшигч болохыг урьж байна.
+
+Та өөрийн бүртгэлээр нэвтэрч ороод Системын тохиргоо цэсрүү орон үргэлжлүүлнэ үү
+
+{{config.portal_url}}/систем/{{message.system_id}}

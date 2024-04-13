@@ -1,5 +1,5 @@
 {{#systemName}}
-System: {{systemName}} {{systemSignature}}
+Sistem: {{systemName}} {{systemSignature}}
 {{/systemName}}
 
 {{>body}}

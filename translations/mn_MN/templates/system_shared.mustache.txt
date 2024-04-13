@@ -1,0 +1,12 @@
+Сайн байна уу, {{message.userFullName}}
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) танд "{{message.system_name}}" видео удирдлагын системд хандах эрхийг хуваалцаж байна.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Танд "{{message.system_name}}" видео удирдлагын системд хандах эрх олгосон байна.
+{{/message.sharer_name}}
+
+%CLOUD_NAME%-тай танилцах:
+{{config.portal_url}}/систем/{{message.system_id}}

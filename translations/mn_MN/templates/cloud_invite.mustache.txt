@@ -1,0 +1,12 @@
+Сайн байна уу,
+
+Таныг %CLOUD_NAME%-д урьж байна.
+{{#message.message}}
+
+{{ message.message }}
+
+{{/message.message}}
+Та өөрийн имэйл хаягаараа %CLOUD_NAME%-д
+бүртгэл үүсгээрэй.
+
+Энэ холбоосыг ашиглан бүртгэл хийлгээрэй: {{ config.portal_url }}/зөвшөөрөх/бүртгүүлэх/{{ message.code }}

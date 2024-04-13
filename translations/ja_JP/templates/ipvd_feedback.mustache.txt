@@ -1,3 +1,3 @@
 {{ message.userFullName }} さん、こんにちは。
-{{ message.sender_name}} （{{ message.sender_email }}）から {{ message.asset }}{{/message.asset}} についてのフィードバック{{#message.asset}}がありました
+{{ message.sender_name}} ({{ message.sender_email }}) から {{ message.asset }}{{/message.asset}} についてのフィードバック{{#message.asset}} がありました:
 <pre>{{ message.message }}</pre>

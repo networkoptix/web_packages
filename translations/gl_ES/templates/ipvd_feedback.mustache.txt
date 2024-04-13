@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) gave the following feedback{{#message.asset}} for {{ message.asset }}{{/message.asset}}:
+Ola, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) deu os seguintes comentarios{{#message.asset}} para {{ message.asset }}{{/message.asset}}:
 <pre>{{ message.message }}</pre>

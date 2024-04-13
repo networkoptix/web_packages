@@ -1,0 +1,3 @@
+Сайн байна уу, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }})-с {{ message.asset }}-н талаар борлуулалттай холбоотой асуулт ирсэн байна:
+<pre>{{ message.message }}</pre>
