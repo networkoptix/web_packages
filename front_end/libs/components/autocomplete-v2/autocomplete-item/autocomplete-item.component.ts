@@ -33,6 +33,8 @@ export class NxAutoCompleteItemComponent<T> {
      */
     searchBy = input<string>();
 
+    disabled = input<boolean>(false);
+
     @ViewChild('content') content: TemplateRef<unknown>;
     @ViewChild('listElem') listElem: ElementRef<HTMLLIElement>;
 
@@ -56,7 +58,9 @@ export class NxAutoCompleteItemComponent<T> {
     );
 
     onClick(): void {
-        this.autocomplete.selectItem(this);
+        if (!this.disabled()) {
+            this.autocomplete.selectItem(this);
+        }
     }
 
     constructor(
