@@ -409,10 +409,10 @@ def clean_platforms(release, available_platforms):
     return platforms
 
 
-def get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url):
+def get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url, available_version=None):
     PRODUCT_DESCRIPTION = "Video Management System"
     # Gets the first build for the release type that's a vms. Sometimes mobile builds are there in releases.
-    if release := next(filter(lambda build: build.get('productDescription') == PRODUCT_DESCRIPTION, downloads_data.get(release_type, [])), None):
+    if release := next(filter(lambda build: build.get('productDescription') == PRODUCT_DESCRIPTION and (release_type != 'releases' or build.get('version') == available_version), downloads_data.get(release_type, [])), None):
         del release['releaseNotes'] # Don't need on the releases page since its only show on the Other page.
         updates_prefix = downloads_data.get('updatesPrefix')
         release['releaseNotes'] = release_notes_url
@@ -445,8 +445,11 @@ async def downloads_releases(request):
     downloads_releases_json = await global_cache.aget(cache_key, False)
 
     if not downloads_releases_json:
-        release_notes_url = await get_updates_json()
-        release_notes_url = release_notes_url.get(customization, {}).get('release_notes', '')
+        updates_json = await get_updates_json()
+        customized_updates_json = updates_json.get(customization, {})
+        latest_version = customized_updates_json.get('download_version')
+        release_notes_url = customized_updates_json.get('release_notes', '')
+
         if release_notes_url == 'https://updates.hdwitness.com/release_notes.html':
             release_notes_url = ''
 
@@ -461,7 +464,7 @@ async def downloads_releases(request):
             return Response(None)
 
         release_types = ['betas', 'releases']
-        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url)
+        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url, available_version=latest_version)
                  for release_type in release_types }
         await global_cache.aset(cache_key, json.dumps(data))
     else:
