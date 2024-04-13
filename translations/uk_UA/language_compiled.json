@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "Цей акаунт ще не активовано. <a href=\"/activate\">Надіслати посилання для активації ще раз</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "Цей обліковий запис тимчасово заблоковано. Будь ласка, спробуйте ще раз через декілька хвилин.",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Цей веб-переглядач не підтримує відео з серверів на базі ARM. Замість цього скористайтеся браузером Chromium.",
     "This browser does not support video playback from this camera.": "Цей веб-переглядач не підтримує відтворення відео з цієї камери.",
     "This browser or device does not support video playback from ARM-based servers.": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",

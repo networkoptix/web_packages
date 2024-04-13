@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "このアカウントはまだ有効化されていません。 <a href=\"/activate\"> 有効化リンクを再送信</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
     "This account will get owner access level": "このアカウントはオーナー権限を取得します。",
-    "This authorization method is forbidden. Please contact your system administrator.": "この認証方法は禁止されています。システム管理者に問い合わせてください。",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "このブラウザは、ARMベースのサーバーの映像をサポートしていません。代わりにChromiumブラウザを使用してください。",
     "This browser does not support video playback from this camera.": "このブラウザは、このカメラの映像再生をサポートしていません。",
     "This browser or device does not support video playback from ARM-based servers.": "このブラウザまたはデバイスは、ARMベースのサーバーからの映像再生をサポートしていません。",

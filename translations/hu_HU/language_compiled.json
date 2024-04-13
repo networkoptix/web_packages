@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "A fiók zárolva van. Próbálja újra pár perc múlva.",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Ez a böngésző nem támogatja a videók ARM-alapú szerverről való lejátszását. Használjon helyette Chromium böngészőt.",
     "This browser does not support video playback from this camera.": "Ez a böngésző nem támogatja erről a kameráról történő videofájl lejátszást.",
     "This browser or device does not support video playback from ARM-based servers.": "Ez a böngésző vagy eszköz nem támogatja az ARM-alapú szerverről történő videofájl lejátszást.",

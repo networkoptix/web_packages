@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "חשבון זה אינו פעיל עדיין. <a href=\"/activate\"> שלח שוב קישור להפעלה </a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "חשבון זה נחסם באופן זמני. נסה שוב בעוד מספר דקות.",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "דפדפן זה אינו תומך בווידאו משרתים מבוססי ARM. בבקשה, השתמש בדפדפן Chromium במקום זאת.",
     "This browser does not support video playback from this camera.": "דפדפן זה אינו תומך בשחזור וידאו ממצלמה זו.",
     "This browser or device does not support video playback from ARM-based servers.": "דפדפן או התקן זה אינו תומך בהפעלת וידאו משרתים מבוססי ARM.",

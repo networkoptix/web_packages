@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "To konto nie jest jeszcze aktywne. <a href=\"/activate\">Wyślij ponownie link aktywacyjny</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "Konto jest tymczasowo zablokowane. Prosimy spróbować ponownie za kilka minut.",
     "This account will get owner access level": "To konto otrzyma poziom dostępu właściciela",
-    "This authorization method is forbidden. Please contact your system administrator.": "Ta metoda autoryzacji jest zabroniona. Skontaktuj się z administratorem systemu.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Ta przeglądarka nie obsługuje wideo z serwerów opartych na architekturze ARM. Proszę użyć przeglądarki Chromium.",
     "This browser does not support video playback from this camera.": "Ta przeglądarka nie obsługuje odtwarzania wideo z tej kamery.",
     "This browser or device does not support video playback from ARM-based servers.": "Ta przeglądarka lub system nie obsługują odtwarzania wideo na serwerze bazującym na architekturze ARM.",

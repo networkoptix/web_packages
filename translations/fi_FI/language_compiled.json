@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "Tätä tiliä ei ole vielä aktivoitu. <a href=\"/activate\">Lähetä aktivointilinkki uudelleen</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "Tämä tili on estetty tilapäisesti. Yritä uudelleen muutaman minuutin.",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Tämä selain ei tue ARM-pohjaisia palvelimia. Käytä sen sijaan Chromium-selainta.",
     "This browser does not support video playback from this camera.": "Tämä selain ei tue videon toistoa tästä kamerasta.",
     "This browser or device does not support video playback from ARM-based servers.": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",

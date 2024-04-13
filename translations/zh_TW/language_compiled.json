@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "此帳號尚未啟動. <a href=\"/activate\"> 再發送一次啟動連結</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "此帳號已暫時被封鎖。請在幾分鐘後重試。",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "此授權方式不被允許。請聯繫系統管理員。",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "此瀏覽器不支援從 ARM 伺服器播放影像。請改用 Chromium 瀏覽器。",
     "This browser does not support video playback from this camera.": "此瀏覽器不支援從此攝影機回放影像.",
     "This browser or device does not support video playback from ARM-based servers.": "此瀏覽器或設備不支援從 ARM 伺服器上回放影像。",

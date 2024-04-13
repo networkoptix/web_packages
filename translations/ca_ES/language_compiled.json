@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "Aquest compte encara no s'ha activat. <a href=\"/activate\">Enviar enllaç d'activació de nou</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "Aquest compte està bloquejat temporalment. Torneu a intentar-ho d'aquí a uns quants minuts.",
     "This account will get owner access level": "This account will get owner access level",
-    "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Aquest navegador no és compatible amb la reproducció de vídeo des de servidors basats en ARM. Utilitzeu el navegador Chromium.",
     "This browser does not support video playback from this camera.": "Aquest navegador no és compatible amb la reproducció de vídeo des d'aquesta càmera.",
     "This browser or device does not support video playback from ARM-based servers.": "Aquest navegador o dispositiu no és compatible amb la reproducció de vídeo des de servidors basats en ARM.",

@@ -1472,7 +1472,6 @@
     "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>": "Denne kontoen er ikke aktivert enda. <a href=\"/activate\">Send aktiveringslenke igjen</a>",
     "This account is temporarily blocked. Please try again in a few minutes.": "Denne kontoen er midlertidig blokkert. Vennligst prøv igjen om noen minutter.",
     "This account will get owner access level": "Denne kontoen får eiertilgangsnivå",
-    "This authorization method is forbidden. Please contact your system administrator.": "Denne autorisasjonsmetoden er forbudt. Ta kontakt med systemadministratoren din.",
     "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chromium-nettleseren i stedet.",
     "This browser does not support video playback from this camera.": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
     "This browser or device does not support video playback from ARM-based servers.": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
