@@ -6,9 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NgChanges } from '@utils/ng-changes';
 
-import { BaseDropdownComponent } from './base-dropdown.component';
-import { BaseDropdownInjectionToken, DropdownState } from './dropdown.types';
-import { BaseDropdownItem } from './dropdownItems//baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Component } from './base-select-v2.component';
+import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
+import { BaseSelectV2InjectionToken, DropdownState } from './select-v2.types';
 
 /* https://material.angular.io/components/select/overview
 Going to mostly borrow behavior from Material Select for now
@@ -35,22 +35,22 @@ Going to mostly borrow behavior from Material Select for now
 */
 @Component({
     imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule],
-    selector: 'nx-dropdown',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
+    selector: 'nx-select-v2',
+    templateUrl: 'select-v2.component.html',
+    styleUrls: ['select-v2.component.scss'],
     standalone: true,
     providers: [
         {
-            provide: BaseDropdownInjectionToken,
-            useExisting: forwardRef(() => NxDropdownComponent),
+            provide: BaseSelectV2InjectionToken,
+            useExisting: forwardRef(() => NxSelectV2Component),
         },
     ],
 })
-export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> implements OnChanges {
+export class NxSelectV2Component<T> extends BaseSelectV2Component<T, false> implements OnChanges {
     // The selected DropdownItem
-    private selectedOptionComponent: BaseDropdownItem<T | undefined> | undefined;
+    private selectedOptionComponent: BaseSelectV2Item<T | undefined> | undefined;
 
-    ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
+    ngOnChanges(changes: NgChanges<NxSelectV2Component<unknown>>): void {
         if (changes.selected) {
             this.manuallySetSelectedOption();
             this.setPlaceholderOrDisplayText();
@@ -63,7 +63,7 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
         this.onChange.emit(updatedSelect);
     }
 
-    override handleOptionSelected(option: BaseDropdownItem<T>): void {
+    override handleOptionSelected(option: BaseSelectV2Item<T>): void {
         this.hideDropdown();
         super.handleOptionSelected(option);
     }
@@ -86,7 +86,7 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> impl
         });
     }
 
-    protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
+    protected updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void {
         if (this.selectedOptionComponent !== option) {
             // If the option value is undefined, then we assume the user wants to clear the selection
             // This functionality is only needed for single select dropdowns

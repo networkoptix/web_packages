@@ -125,22 +125,22 @@
                         >
                     </div>
                     <div class="grid-item">
-                        <nx-dropdown [(selected)]="selectedQualityWatcher.value">
-                            <nx-simple-dropdown-item
+                        <nx-select-v2 [(selected)]="selectedQualityWatcher.value">
+                            <nx-select-item
                                 *ngIf="selectedQualityIsVarious()"
                                 [value]="STREAM_QUALITY.VARIOUS"
                                 [selected]="selectedQualityWatcher.value === STREAM_QUALITY.VARIOUS"
                             >
                                 {{ LANG.common.resolution.various }}
-                            </nx-simple-dropdown-item>
-                            <nx-simple-dropdown-item
+                            </nx-select-item>
+                            <nx-select-item
                                 *ngFor="let quality of streamQualities"
                                 [value]="quality.value"
                                 [selected]="selectedQualityWatcher.value === quality.value"
                             >
                                 {{ quality.name }}
-                            </nx-simple-dropdown-item>
-                        </nx-dropdown>
+                            </nx-select-item>
+                        </nx-select-v2>
                     </div>
                     <div class="grid-item">
                         <span

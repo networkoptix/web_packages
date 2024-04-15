@@ -9,26 +9,26 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import staticLang from '@language_static';
 import { NgChanges } from '@utils/ng-changes';
 
-import { BaseDropdownComponent } from './base-dropdown.component';
-import { NxDropdownComponent } from './dropdown.component';
-import { BaseDropdownInjectionToken } from './dropdown.types';
-import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Component } from './base-select-v2.component';
+import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
+import { NxSelectV2Component } from './select-v2.component';
+import { BaseSelectV2InjectionToken } from './select-v2.types';
 
 @Component({
     imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule],
-    selector: 'nx-multi-dropdown',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
+    selector: 'nx-multi-select-v2',
+    templateUrl: 'select-v2.component.html',
+    styleUrls: ['select-v2.component.scss'],
     standalone: true,
     providers: [
         {
-            provide: BaseDropdownInjectionToken,
-            useExisting: forwardRef(() => NxMultiDropdownComponent),
+            provide: BaseSelectV2InjectionToken,
+            useExisting: forwardRef(() => NxMultiSelectV2Component),
         },
     ],
 })
-export class NxMultiDropdownComponent<T>
-    extends BaseDropdownComponent<T, true>
+export class NxMultiSelectV2Component<T>
+    extends BaseSelectV2Component<T, true>
     implements OnChanges
 {
     override ariaMultiselectable = true;
@@ -43,9 +43,9 @@ export class NxMultiDropdownComponent<T>
 
     // A store of the dropdownItems that are selected
     // This could be a computed signal when signal inputs are ready (performance test needed)
-    private selectedOptionComponents: BaseDropdownItem<T>[] = [];
+    private selectedOptionComponents: BaseSelectV2Item<T>[] = [];
 
-    ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
+    ngOnChanges(changes: NgChanges<NxSelectV2Component<unknown>>): void {
         if (changes.selected) {
             this.manuallySetSelectedOption();
             this.setPlaceholderOrDisplayText();
@@ -60,7 +60,7 @@ export class NxMultiDropdownComponent<T>
         this.onChange.emit(updatedSelect);
     }
 
-    protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
+    protected updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void {
         const index = this.selectedOptionComponents.findIndex(
             selectedOption => selectedOption === option,
         );

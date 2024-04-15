@@ -8,11 +8,11 @@ import {
     computed,
 } from '@angular/core';
 
-import { BaseDropdownComponent } from '../../base-dropdown.component';
-import { BaseDropdownInjectionToken } from '../../dropdown.types';
+import { BaseSelectV2Component } from '../../base-select-v2.component';
+import { BaseSelectV2InjectionToken } from '../../select-v2.types';
 
 @Component({ template: '' })
-export abstract class BaseDropdownItem<T> {
+export abstract class BaseSelectV2Item<T> {
     @Input() value: T;
 
     @HostBinding('class.disabled') @Input() disabled: boolean = false;
@@ -39,7 +39,7 @@ export abstract class BaseDropdownItem<T> {
     }
 
     constructor(
-        @Inject(BaseDropdownInjectionToken) private select: BaseDropdownComponent<T, boolean>,
+        @Inject(BaseSelectV2InjectionToken) private select: BaseSelectV2Component<T, boolean>,
         public self: ElementRef<HTMLElement>,
     ) {}
 

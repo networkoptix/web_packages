@@ -57,22 +57,18 @@
                 class=""
                 >{{ 'Service Name' }}</label
             >
-            <nx-dropdown
+            <nx-select-v2
                 id="service"
                 [selected]="serviceForm.controls.service.value"
                 (selectedChange)="serviceForm.controls.service.setValue($event)"
                 [placeholder]="'Select a service'"
             >
                 @for (service of availableServices$$(); track service.id) {
-                    <nx-simple-dropdown-item [value]="service.id"
-                        >{{ service.displayName }}
-                    </nx-simple-dropdown-item>
+                    <nx-select-item [value]="service.id">{{ service.displayName }}</nx-select-item>
                 } @empty {
-                    <nx-simple-dropdown-item [disabled]="true"
-                        >No Services Available
-                    </nx-simple-dropdown-item>
+                    <nx-select-item [disabled]="true">No Services Available</nx-select-item>
                 }
-            </nx-dropdown>
+            </nx-select-v2>
         </div>
         <div class="form-group">
             <label for="servicesCount">{{ 'Total' }}</label>

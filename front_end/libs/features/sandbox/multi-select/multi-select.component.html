@@ -3,57 +3,55 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Placeholder text"
             [(selected)]="selectedState"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 *ngFor="let state of states; index as i"
                 [value]="state"
                 [selected]="state === selectedState"
                 [disabled]="i % 3 === 0"
             >
                 {{ state }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Placeholder text"
             [(selected)]="selectedState"
             [disabled]="true"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 *ngFor="let state of states; index as i"
                 [value]="state"
                 [selected]="state === selectedState"
                 [disabled]="i % 3 === 0"
             >
                 {{ state }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
         <div>Selected: {{ selectedState }}</div>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Select a user"
             [(selected)]="selectedComplicatedObject"
             (onChange)="logOnChange($event)"
         >
-            <nx-simple-dropdown-item *ngIf="selectedComplicatedObject !== undefined">
-                None
-            </nx-simple-dropdown-item>
-            <nx-simple-dropdown-item
+            <nx-select-item *ngIf="selectedComplicatedObject !== undefined">None</nx-select-item>
+            <nx-select-item
                 *ngFor="let complicatedObject of complicatedObjectArray"
                 [value]="complicatedObject"
                 [selected]="complicatedObject === selectedComplicatedObject"
                 [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
             >
                 {{ complicatedObject.fullName }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
 
     <div class="col-4 dropdownPadding">

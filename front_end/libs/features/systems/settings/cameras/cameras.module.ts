@@ -9,7 +9,6 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
 import { EditableModule } from '@components/editable/editable.module';
@@ -19,6 +18,7 @@ import { OpenClientSectionPlaceholderModule } from '@components/placeholders/ope
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -58,7 +58,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxCheckboxComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
-        NxDropdownModule,
+        NxSelectV2Module,
     ],
     providers: [],
     declarations: [

@@ -4,8 +4,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
@@ -13,6 +11,8 @@ import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-lik
 import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
 import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 // import { NxSliderComponent } from '@components/slider/slider.component';
 import * as staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
@@ -40,8 +40,8 @@ import {
         NxMatLikePasswordComponent,
         NxMatLikeTypeAheadDropdown,
         // NxSliderComponent,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
         NxRadioComponent,
         PipesModule,
     ],

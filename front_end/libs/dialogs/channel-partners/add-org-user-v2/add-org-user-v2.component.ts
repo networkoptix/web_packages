@@ -17,10 +17,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
@@ -58,7 +58,7 @@ import { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
 
         NxFocusMeDirective,
         NxEmailComponent,
-        NxDropdownModule,
+        NxSelectV2Module,
         NxOrgTreeSelectorComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,

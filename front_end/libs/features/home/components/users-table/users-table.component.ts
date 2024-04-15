@@ -24,9 +24,9 @@ import {
     selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
@@ -60,7 +60,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
         NxCheckboxComponent,
         NxBaseTableComponent,
         NxAddSvgSrcDirective,
-        NxDropdownModule,
+        NxSelectV2Module,
         NxTooltipDirective,
         NxPagePlaceholderV2Component,
         RouterModule,

@@ -20,14 +20,14 @@ import { take } from 'rxjs';
 import { icons } from '@static-variables';
 import { scrollItemIntoView } from '@utils/general';
 
-import { DropdownState } from './dropdown.types';
-import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
+import { DropdownState } from './select-v2.types';
 
 type SelectedType<Value, Multiple extends boolean> = Multiple extends true
     ? Value[]
     : Value | undefined;
 @Component({ template: '' })
-export abstract class BaseDropdownComponent<T, M extends boolean> implements AfterViewInit {
+export abstract class BaseSelectV2Component<T, M extends boolean> implements AfterViewInit {
     @Input() selected: SelectedType<T, M>;
     @Output() selectedChange = new EventEmitter<SelectedType<T, M>>();
     @Output() onChange = new EventEmitter<SelectedType<T, M>>();
@@ -42,8 +42,8 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLButtonElement>;
     @ViewChild('select') select: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
-    @ContentChildren(BaseDropdownItem, { descendants: true }) dropdownItems = new QueryList<
-        BaseDropdownItem<T>
+    @ContentChildren(BaseSelectV2Item, { descendants: true }) dropdownItems = new QueryList<
+        BaseSelectV2Item<T>
     >();
     @ViewChild(CdkPortal) contentTemplate: CdkPortal;
 
@@ -128,12 +128,12 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
         }
     }
 
-    getFirstEnabled(): BaseDropdownItem<T> | undefined {
+    getFirstEnabled(): BaseSelectV2Item<T> | undefined {
         return this.dropdownItems.find(item => !item.disabled);
     }
 
-    getPrevEnabled(currentValue: T): BaseDropdownItem<T> | undefined {
-        let prevEnabled: BaseDropdownItem<T> | undefined;
+    getPrevEnabled(currentValue: T): BaseSelectV2Item<T> | undefined {
+        let prevEnabled: BaseSelectV2Item<T> | undefined;
         for (const item of this.dropdownItems) {
             if (item.value === currentValue) {
                 return prevEnabled;
@@ -143,7 +143,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
         }
     }
 
-    getNextEnabled(currentValue: T): BaseDropdownItem<T> | undefined {
+    getNextEnabled(currentValue: T): BaseSelectV2Item<T> | undefined {
         let pastCurrent = false;
         for (const item of this.dropdownItems) {
             if (!pastCurrent) {
@@ -156,14 +156,14 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
         }
     }
 
-    scrollOptionIntoView(item: BaseDropdownItem<T>): void {
+    scrollOptionIntoView(item: BaseSelectV2Item<T>): void {
         scrollItemIntoView(item.self.nativeElement, this.dropdown.nativeElement);
     }
 
     abstract onKeyDown(event: KeyboardEvent): void;
     abstract onBlur(event: FocusEvent): void;
 
-    handleOptionSelected(option: BaseDropdownItem<T>): void {
+    handleOptionSelected(option: BaseSelectV2Item<T>): void {
         // Set the selected option(s) stored in the component
         this.updateSelectedOptionComponent(option);
         // Update the placeholder/displayText based on the new selected option(s)
@@ -172,7 +172,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
         this.handleSelectionChange();
     }
 
-    protected abstract updateSelectedOptionComponent(option: BaseDropdownItem<T>): void;
+    protected abstract updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void;
 
     // Called when the selected value is set or changed outside of this component
     protected abstract manuallySetSelectedOption(): void;

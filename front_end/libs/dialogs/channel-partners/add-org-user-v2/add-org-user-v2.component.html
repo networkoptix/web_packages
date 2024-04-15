@@ -51,20 +51,20 @@
             for="permission-group"
             >Permission Group</label
         >
-        <nx-dropdown
+        <nx-select-v2
             [selected]="selectedRole$$()"
             (selectedChange)="selectedRole$$.set($event!)"
             name="permission-group"
             class="d-block mb-3"
         >
             <ng-container *ngFor="let role of roles">
-                <nx-simple-dropdown-item
+                <nx-select-item
                     [value]="role.id"
                     [selected]="selectedRole$$() === role.id"
-                    >{{ role.name }}</nx-simple-dropdown-item
+                    >{{ role.name }}</nx-select-item
                 >
             </ng-container>
-        </nx-dropdown>
+        </nx-select-v2>
 
         <label
             for="orgTreeSearch"

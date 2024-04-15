@@ -30,7 +30,7 @@ module.exports = [
     "libs/components/content-block/section/section.component.html",
     "libs/components/cookie-banner/cookie-banner.component.html",
     "libs/components/developers-menu/developers-menu.component.html",
-    "libs/components/dropdownV2/dropdown.component.html",
+    "libs/components/select-v2/select-v2.component.html",
     "libs/components/dropdowns/account-settings/account-settings.component.html",
     "libs/components/dropdowns/active-system/active-system.component.html",
     "libs/components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component.html",

@@ -6,8 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { SearchInputComponent } from '@authorization/src/app/components/basic-search-input/basic-search-input.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
@@ -17,6 +15,8 @@ import {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
@@ -30,8 +30,8 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
         CommonModule,
         FormsModule,
         TranslateModule,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
         NxMultiSelectDropdown,
         NxMatLikeGenericDropdownModule,
         NxGenericDropdownModule,
