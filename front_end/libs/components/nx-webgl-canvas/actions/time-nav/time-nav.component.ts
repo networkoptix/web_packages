@@ -7,8 +7,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonAction, ButtonType } from '@components/button/button.component.types';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { icons } from '@static-variables';
 
 @UntilDestroy()
@@ -21,8 +21,8 @@ import { icons } from '@static-variables';
         CommonModule,
         NxButtonComponent,
         AngularSvgIconModule,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
         TranslateModule,
         KeyValuePipe,
         FormsModule,

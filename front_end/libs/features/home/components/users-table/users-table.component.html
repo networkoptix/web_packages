@@ -199,16 +199,16 @@
                             {{ getDisplayRole(row) | translate }}
                         </div>
                         <ng-template #dropdown>
-                            <nx-dropdown
+                            <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"
                                 (ngModelChange)="updateRole(row, $event)"
                             >
                                 <ng-container *ngFor="let role of roles">
-                                    <nx-simple-dropdown-item [value]="role.id">
+                                    <nx-select-item [value]="role.id">
                                         {{ role.name }}
-                                    </nx-simple-dropdown-item>
+                                    </nx-select-item>
                                 </ng-container>
-                            </nx-dropdown>
+                            </nx-select-v2>
                         </ng-template>
                     </div>
                 </div>

@@ -147,16 +147,16 @@
                                 >
                             </div>
                             <div class="grid-item mb-2 mb-md-0">
-                                <nx-dropdown [(ngModel)]="selectedAspectWatcher.value">
-                                    <nx-simple-dropdown-item
+                                <nx-select-v2 [(ngModel)]="selectedAspectWatcher.value">
+                                    <nx-select-item
                                         [value]="defaultAspectRatio"
                                         [selected]="
                                             selectedAspectWatcher.value === defaultAspectRatio
                                         "
                                     >
                                         {{ LANG.common.resolution.auto }}
-                                    </nx-simple-dropdown-item>
-                                    <nx-simple-dropdown-item
+                                    </nx-select-item>
+                                    <nx-select-item
                                         *ngFor="let aspectRatio of aspectRatioOptions | keyvalue"
                                         [value]="aspectRatio.value"
                                         [selected]="
@@ -164,8 +164,8 @@
                                         "
                                     >
                                         {{ aspectRatio.key }}
-                                    </nx-simple-dropdown-item>
-                                </nx-dropdown>
+                                    </nx-select-item>
+                                </nx-select-v2>
                             </div>
                             <div class="grid-item">
                                 <span
@@ -175,15 +175,15 @@
                                 >
                             </div>
                             <div class="grid-item">
-                                <nx-dropdown [(ngModel)]="selectedRotationWatcher.value">
-                                    <nx-simple-dropdown-item
+                                <nx-select-v2 [(ngModel)]="selectedRotationWatcher.value">
+                                    <nx-select-item
                                         *ngFor="let rotation of rotationOptions"
                                         [value]="rotation"
                                         [selected]="rotation === selectedRotationWatcher.value"
                                     >
                                         {{ rotation }}˚
-                                    </nx-simple-dropdown-item>
-                                </nx-dropdown>
+                                    </nx-select-item>
+                                </nx-select-v2>
                             </div>
                         </div>
                     </nx-section>

@@ -18,19 +18,19 @@
         </nx-button>
     </div>
     <div id="jump-to-nav">
-        <nx-dropdown
+        <nx-select-v2
             [placeholder]="'Jump to...' | translate"
             [ngModel]="selectedJumpTarget"
             (ngModelChange)="handleJumpTargetChange($event)"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 class="text-action"
                 *ngFor="let jump of jumpLabels | keyvalue"
                 [value]="jump.value"
                 [selected]="jump.value === selectedJumpTarget"
             >
                 {{ jump.key }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
 </div>

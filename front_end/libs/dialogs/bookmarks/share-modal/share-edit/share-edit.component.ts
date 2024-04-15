@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxButtonComponent } from '@components/button/button.component';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { MS } from '@utils/general';
@@ -20,7 +20,7 @@ import { getExpirationText } from '../bookmark-sharing.util';
         CommonModule,
         TranslateModule,
         NxButtonComponent,
-        NxDropdownModule,
+        NxSelectV2Module,
         FormsModule,
         ReactiveFormsModule,
         PipesModule,

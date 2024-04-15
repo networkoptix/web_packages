@@ -6,8 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
 import { NxApplyComponent } from '@components/apply/apply.component';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -31,8 +31,8 @@ interface ServiceTableData {
     standalone: true,
     imports: [
         CommonModule,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
         ReactiveFormsModule,
         NxApplyComponent,
         NxBaseTableComponent,

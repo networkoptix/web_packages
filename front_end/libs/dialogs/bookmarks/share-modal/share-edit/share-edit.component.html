@@ -8,33 +8,33 @@
                 Lifetime
             </div>
             <nx-dropdown formControlName="expiresTime">
-                <nx-simple-dropdown-item [value]="initialExpirationTime()">
+                <nx-select-item [value]="initialExpirationTime()">
                     {{ (initialExpirationTimeString() | async) || '' | nxTranslate }}
-                </nx-simple-dropdown-item>
-                <nx-simple-dropdown-item
+                </nx-select-item>
+                <nx-select-item
                     [value]="nowTime + TIMES.hr"
                     translate
                 >
                     Expires in an hour
-                </nx-simple-dropdown-item>
-                <nx-simple-dropdown-item
+                </nx-select-item>
+                <nx-select-item
                     [value]="nowTime + TIMES.day"
                     translate
                 >
                     Expires in a day
-                </nx-simple-dropdown-item>
-                <nx-simple-dropdown-item
+                </nx-select-item>
+                <nx-select-item
                     [value]="oneMonthFromNow"
                     translate
                 >
                     Expires in a month
-                </nx-simple-dropdown-item>
-                <nx-simple-dropdown-item
+                </nx-select-item>
+                <nx-select-item
                     [value]="0"
                     translate
                 >
                     Never expires
-                </nx-simple-dropdown-item>
+                </nx-select-item>
             </nx-dropdown>
         </div>
         <div class="input-section input-section-password">

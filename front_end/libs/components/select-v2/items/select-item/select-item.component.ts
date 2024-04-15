@@ -1,18 +1,18 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { BaseDropdownItem } from '../baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Item } from '../base-select-item/base-select-item.component';
 
 @Component({
-    selector: 'nx-simple-dropdown-item',
-    templateUrl: 'simple-dropdown-item.component.html',
-    styleUrls: ['simple-dropdown-item.component.scss'],
+    selector: 'nx-select-item',
+    templateUrl: 'select-item.component.html',
+    styleUrls: ['select-item.component.scss'],
     providers: [
-        { provide: BaseDropdownItem, useExisting: forwardRef(() => NxSimpleDropdownItemComponent) },
+        { provide: BaseSelectV2Item, useExisting: forwardRef(() => NxSelectV2ItemComponent) },
     ],
     standalone: true,
 })
-export class NxSimpleDropdownItemComponent<T> extends BaseDropdownItem<T> implements AfterViewInit {
+export class NxSelectV2ItemComponent<T> extends BaseSelectV2Item<T> implements AfterViewInit {
     @ViewChild('option') private option: ElementRef<HTMLDivElement>;
 
     innerHtml = new BehaviorSubject('');

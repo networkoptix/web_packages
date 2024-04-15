@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
@@ -18,7 +18,7 @@ export const imports = [
     NxCheckboxComponent,
     NxBaseTableComponent,
     NxAddSvgSrcDirective,
-    NxDropdownModule,
+    NxSelectV2Module,
     NxTooltipDirective,
     NxPagePlaceholderV2Component,
     RouterModule,

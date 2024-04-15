@@ -3,50 +3,35 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-4 dropdownPadding">
-        <nx-multi-dropdown
-            placeholder="Placeholder text"
-            [(ngModel)]="selectedStates"
-        >
-            <nx-multi-select-dropdown-item
-                *ngFor="let state of states; index as i"
-                [value]="state"
-                [selected]="selectedStates.includes(state)"
-                [disabled]="i % 3 === 0"
-            >
-                {{ state }}
-            </nx-multi-select-dropdown-item>
-        </nx-multi-dropdown>
-    </div>
-    <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Placeholder text"
             [(ngModel)]="selectedState"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 *ngFor="let state of states; index as i"
                 [value]="state"
                 [selected]="state === selectedState"
                 [disabled]="i % 3 === 0"
             >
                 {{ state }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Placeholder text"
             [(ngModel)]="selectedState"
             [disabled]="true"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 *ngFor="let state of states; index as i"
                 [value]="state"
                 [selected]="state === selectedState"
                 [disabled]="i % 3 === 0"
             >
                 {{ state }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
         <div>Selected: {{ selectedState }}</div>
@@ -55,57 +40,57 @@
         <div>Selected: {{ selectedStates }}</div>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Select a user"
             [(ngModel)]="selectedComplicatedObjectV2"
             (onChange)="logOnChange($event)"
         >
-            <nx-simple-dropdown-item *ngIf="selectedComplicatedObjectV2 !== undefined">
+            <nx-select-item *ngIf="selectedComplicatedObjectV2 !== undefined">
                 None
-            </nx-simple-dropdown-item>
-            <nx-simple-dropdown-item
+            </nx-select-item>
+            <nx-select-item
                 *ngFor="let complicatedObject of complicatedObjectArray"
                 [value]="complicatedObject"
                 [selected]="complicatedObject?.userId === selectedComplicatedObjectV2?.userId"
                 [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
             >
                 {{ complicatedObject.fullName }}
-            </nx-simple-dropdown-item>
-        </nx-dropdown>
+            </nx-select-item>
+        </nx-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-multi-dropdown
+        <nx-multi-select-v2
             placeholder="Select a user"
             [(ngModel)]="selectedComplicatedObjects"
             (onChange)="logOnChange($event)"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 *ngFor="let complicatedObject of complicatedObjectArray"
                 [value]="complicatedObject"
                 [selected]="isSelected(complicatedObject)"
                 [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
             >
                 {{ complicatedObject.fullName }}
-            </nx-simple-dropdown-item>
-        </nx-multi-dropdown>
+            </nx-select-item>
+        </nx-multi-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Changing Dropdown Options"
             [(ngModel)]="selectedTimer"
         >
-            <nx-simple-dropdown-item
+            <nx-select-item
                 [value]="0"
                 [selected]="selectedTimer === 0"
             >
                 {{ timer1 | async }}
-            </nx-simple-dropdown-item>
-            <nx-simple-dropdown-item
+            </nx-select-item>
+            <nx-select-item
                 [value]="1"
                 [selected]="selectedTimer === 1"
             >
                 {{ timer2 | async }}
-            </nx-simple-dropdown-item>
+            </nx-select-item>
         </nx-dropdown>
     </div>
 </div>
@@ -122,26 +107,26 @@
         >
             <nx-dropdown formControlName="singleStateDropdown">
                 @for (state of states; track state) {
-                    <nx-simple-dropdown-item
+                    <nx-select-item
                         [value]="state"
                         [selected]="dropdownForm.controls.singleStateDropdown.value === state"
                     >
                         {{ state }}
-                    </nx-simple-dropdown-item>
+                    </nx-select-item>
                 }
             </nx-dropdown>
-            <nx-multi-dropdown formControlName="multiStateDropdown">
+            <nx-multi-select-v2 formControlName="multiStateDropdown">
                 @for (state of states; track state) {
-                    <nx-multi-select-dropdown-item
+                    <nx-multi-select-item
                         [value]="state"
                         [selected]="
                             !!dropdownForm.controls.multiStateDropdown.value?.includes(state)
                         "
                     >
                         {{ state }}
-                    </nx-multi-select-dropdown-item>
+                    </nx-multi-select-item>
                 }
-            </nx-multi-dropdown>
+            </nx-multi-select-v2>
             <div style="display: flex">
                 <button type="submit">Submit</button>
                 <button

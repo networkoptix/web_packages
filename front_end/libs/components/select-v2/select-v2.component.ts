@@ -8,9 +8,9 @@ import { of } from 'rxjs';
 
 import { PipesModule } from '@pipes/pipes.module';
 
-import { BaseDropdownComponent } from './base-dropdown.component';
-import { BaseDropdownInjectionToken, DropdownState } from './dropdown.types';
-import { BaseDropdownItem } from './dropdownItems//baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Component } from './base-select-v2.component';
+import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
+import { BaseSelectV2InjectionToken, DropdownState } from './select-v2.types';
 
 /* https://material.angular.io/components/select/overview
 Going to mostly borrow behavior from Material Select for now
@@ -37,25 +37,25 @@ Going to mostly borrow behavior from Material Select for now
 */
 @Component({
     imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule, PipesModule],
-    selector: 'nx-dropdown',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
+    selector: 'nx-select-v2',
+    templateUrl: 'select-v2.component.html',
+    styleUrls: ['select-v2.component.scss'],
     standalone: true,
     providers: [
         {
-            provide: BaseDropdownInjectionToken,
-            useExisting: forwardRef(() => NxDropdownComponent),
+            provide: BaseSelectV2InjectionToken,
+            useExisting: forwardRef(() => NxSelectV2Component),
         },
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxDropdownComponent),
+            useExisting: forwardRef(() => NxSelectV2Component),
             multi: true,
         },
     ],
 })
-export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> {
+export class NxSelectV2Component<T> extends BaseSelectV2Component<T, false> {
     // The selected DropdownItem
-    private selectedOptionComponent: BaseDropdownItem<T | undefined> | undefined;
+    private selectedOptionComponent: BaseSelectV2Item<T | undefined> | undefined;
 
     selected$$ = signal<T | undefined>(undefined);
 
@@ -64,7 +64,7 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> {
         this.updateSelected(updatedSelect);
     }
 
-    override handleOptionSelected(option: BaseDropdownItem<T>): void {
+    override handleOptionSelected(option: BaseSelectV2Item<T>): void {
         this.hideDropdown();
         super.handleOptionSelected(option);
     }
@@ -88,7 +88,7 @@ export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> {
         });
     }
 
-    protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
+    protected updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void {
         if (this.selectedOptionComponent !== option) {
             // If the option value is undefined, then we assume the user wants to clear the selection
             // This functionality is only needed for single select dropdowns

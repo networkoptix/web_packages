@@ -10,29 +10,29 @@ import { of } from 'rxjs';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { BaseDropdownComponent } from './base-dropdown.component';
-import { BaseDropdownInjectionToken } from './dropdown.types';
-import { BaseDropdownItem } from './dropdownItems/baseDropdownItem/dropdown-item.component';
+import { BaseSelectV2Component } from './base-select-v2.component';
+import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
+import { BaseSelectV2InjectionToken } from './select-v2.types';
 
 @Component({
     imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule, PipesModule],
-    selector: 'nx-multi-dropdown',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
+    selector: 'nx-multi-select-v2',
+    templateUrl: 'select-v2.component.html',
+    styleUrls: ['select-v2.component.scss'],
     standalone: true,
     providers: [
         {
-            provide: BaseDropdownInjectionToken,
-            useExisting: forwardRef(() => NxMultiDropdownComponent),
+            provide: BaseSelectV2InjectionToken,
+            useExisting: forwardRef(() => NxMultiSelectV2Component),
         },
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxMultiDropdownComponent),
+            useExisting: forwardRef(() => NxMultiSelectV2Component),
             multi: true,
         },
     ],
 })
-export class NxMultiDropdownComponent<T> extends BaseDropdownComponent<T, true> {
+export class NxMultiSelectV2Component<T> extends BaseSelectV2Component<T, true> {
     override ariaMultiselectable = true;
     selected$$ = signal<T[]>([]);
 
@@ -45,7 +45,7 @@ export class NxMultiDropdownComponent<T> extends BaseDropdownComponent<T, true> 
 
     // A store of the dropdownItems that are selected
     // This could be a computed signal when signal inputs are ready (performance test needed)
-    private selectedOptionComponents: BaseDropdownItem<T>[] = [];
+    private selectedOptionComponents: BaseSelectV2Item<T>[] = [];
 
     override handleSelectionChange(): void {
         const updatedSelect = this.selectedOptionComponents.map(
@@ -54,7 +54,7 @@ export class NxMultiDropdownComponent<T> extends BaseDropdownComponent<T, true> 
         this.updateSelected(updatedSelect);
     }
 
-    protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
+    protected updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void {
         const index = this.selectedOptionComponents.findIndex(
             selectedOption => selectedOption === option,
         );

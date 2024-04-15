@@ -7,10 +7,6 @@ import { map, timer } from 'rxjs';
 
 import { SearchInputComponent } from '@authorization/src/app/components/basic-search-input/basic-search-input.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxDropdownComponent } from '@components/dropdownV2/dropdown.component';
-import { NxMultiSelectDropdownItemComponent } from '@components/dropdownV2/dropdownItems/multiSelectDropdownItem/multi-select-dropdown-item.component';
-import { NxSimpleDropdownItemComponent } from '@components/dropdownV2/dropdownItems/simpleDropdownItem/simple-dropdown-item.component';
-import { NxMultiDropdownComponent } from '@components/dropdownV2/multi-dropdown.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
@@ -20,6 +16,10 @@ import {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
+import { NxMultiSelectV2ItemComponent } from '@components/select-v2/items/multi-select-item/multi-select-item.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxMultiSelectV2Component } from '@components/select-v2/multi-select-v2.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
@@ -33,10 +33,10 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
         CommonModule,
         FormsModule,
         TranslateModule,
-        NxDropdownComponent,
-        NxSimpleDropdownItemComponent,
-        NxMultiDropdownComponent,
-        NxMultiSelectDropdownItemComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
+        NxMultiSelectV2Component,
+        NxMultiSelectV2ItemComponent,
         NxMultiSelectDropdown,
         NxMatLikeGenericDropdownModule,
         NxGenericDropdownModule,
