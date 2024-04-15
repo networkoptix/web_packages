@@ -1,13 +1,18 @@
 <div class="nx-reports-sidebar">
-    <nx-searchable-select
-        class="fs-mask org-dropdown"
-        [items]="dropdownItems$$()"
-        [ngModel]="selectedItem$$()"
-        (ngModelChange)="selectItem($event)"
-        [selected]="selectedItem$$()"
-        [noMatchMsg]="'No options' | translate"
-        [ngModelOptions]="{ standalone: true }"
-        [placeholder]="'Select a partner or org' | translate"
-    ></nx-searchable-select>
+    <nx-autocomplete-v2
+        class="fs-mask w-100 mx-2"
+        [(ngModel)]="search"
+        (select)="selectItem($event)"
+        [noMatchesContent]="'No options'"
+        [placeholder]="'Select a partner or org'"
+    >
+        @for (item of dropdownItems$$(); track $index) {
+            <nx-autocomplete-item
+                [name]="item.name"
+                [value]="item"
+                >{{ item.name }}</nx-autocomplete-item
+            >
+        }
+    </nx-autocomplete-v2>
 </div>
 <router-outlet></router-outlet>

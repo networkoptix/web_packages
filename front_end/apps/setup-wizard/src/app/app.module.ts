@@ -2,6 +2,7 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import {
@@ -34,6 +35,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 !('animate' in document.documentElement) ||
                 (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
+        StoreModule.forRoot({}),
         AppRoutingModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({

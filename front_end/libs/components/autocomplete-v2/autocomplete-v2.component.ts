@@ -125,7 +125,7 @@ export class NxAutocompleteV2Component<T> implements ControlValueAccessor, Valid
     @ViewChild('clearBtn') private clearBtn?: ElementRef<HTMLButtonElement>;
     @ViewChild('itemsList') private itemsList?: ElementRef<HTMLUListElement>;
     @ViewChild(CdkPortal) private portal: CdkPortal;
-    @ContentChildren(Item) protected set _items(items: QueryList<Item<T>>) {
+    @ContentChildren(forwardRef(() => Item)) protected set _items(items: QueryList<Item<T>>) {
         this.items.set(items.toArray());
     }
     private items = signal<Item<T>[]>([]);

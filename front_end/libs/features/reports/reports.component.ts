@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, input } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,8 @@ import {
     selectChannelPartners,
     selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
 import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -25,14 +26,16 @@ import type {
     imports: [
         CommonModule,
         NxPreLoaderComponent,
-        NxSearchableDropdown,
         FormsModule,
         TranslateModule,
         RouterModule,
+        NxAutocompleteV2Component,
+        NxAutoCompleteItemComponent,
     ],
     standalone: true,
 })
 export class NxReportsComponent implements OnInit {
+    search = '';
     channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     organizations$$ = this.store.selectSignal<Organization[]>(selectOrganizations);
 
@@ -48,12 +51,6 @@ export class NxReportsComponent implements OnInit {
         ];
         return items;
     });
-    selectedEntityId$$ = input.required({ alias: 'entityId' });
-    selectedItem$$ = computed<SearchableDropdownItem | false>(() => {
-        const items = this.dropdownItems$$();
-        const selectedEntityId = this.selectedEntityId$$();
-        return items.find(({ value }) => value === selectedEntityId) || false;
-    });
 
     constructor(
         private router: Router,
@@ -66,7 +63,7 @@ export class NxReportsComponent implements OnInit {
     }
 
     selectItem(selectedItem: SearchableDropdownItem): void {
-        if (selectedItem.value) {
+        if (selectedItem?.value) {
             const urlSegments = this.router.url.split('/');
             const [entityType, entityId] = selectedItem.value.split('/');
             this.router.navigate([
