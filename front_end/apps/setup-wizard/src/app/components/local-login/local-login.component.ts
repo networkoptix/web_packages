@@ -53,8 +53,8 @@ export class LocalLoginComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.setAdminPasswordForm.statusChanges.pipe(untilDestroyed(this)).subscribe(() => {
             this.wizardService.setupConfig.localLoginDataState =
-                this.setAdminPasswordForm.form.controls.localPassword.value ===
-                this.setAdminPasswordForm.form.controls.confirmPassword.value
+                this.setAdminPasswordForm.form.controls.localPassword?.value ===
+                this.setAdminPasswordForm.form.controls.confirmPassword?.value
                     ? FORM_STATE.VALID
                     : FORM_STATE.INVALID;
         });

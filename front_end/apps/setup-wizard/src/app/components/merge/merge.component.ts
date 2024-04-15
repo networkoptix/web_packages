@@ -4,7 +4,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
@@ -13,13 +14,20 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-merge-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, NxSearchableDropdown],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NxAutocompleteV2Component,
+        NxAutoCompleteItemComponent,
+    ],
     templateUrl: 'merge.component.html',
     styleUrls: ['merge.component.scss'],
 })
 export class MergeComponent implements OnInit, AfterViewInit {
     item: Item;
     items: Item[];
+    remoteSystem: string;
     urlRegex: string;
 
     @ViewChild('mergeForm', { static: false }) mergeForm: NgForm;
@@ -32,11 +40,7 @@ export class MergeComponent implements OnInit, AfterViewInit {
         this.wizardService.setupConfig.remotePassword = password;
     }
 
-    get remoteSystem(): Item {
-        return this.wizardService?.setupConfig?.remoteSystem;
-    }
-
-    set remoteSystem(item: Item) {
+    setRemoteSystem(item: Item): void {
         this.wizardService.setupConfig.remoteSystem = item;
     }
 
@@ -52,6 +56,7 @@ export class MergeComponent implements OnInit, AfterViewInit {
     constructor(private wizardService: WizardStateService) {}
 
     ngOnInit(): void {
+        this.remoteSystem = this.wizardService?.setupConfig?.remoteSystem.value;
         this.urlRegex = this.wizardService.getURLRegex();
 
         this.items = this.wizardService.peers.map(peer => ({

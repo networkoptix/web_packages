@@ -7,20 +7,24 @@
             novalidate
         >
             <div class="form-group">
-                <nx-searchable-select
+                <nx-autocomplete-v2
                     name="mergeDropdown"
-                    componentId="mergeDropdown"
                     style="text-align: left"
-                    [form]="mergeForm"
-                    [items]="items"
-                    [(ngModel)]="remoteSystem"
-                    [placeholder]="'Existing System URL (https://host:port)' | translate"
-                    [noMatchMsg]="'No peers found' | translate"
-                    [freeText]="true"
-                    [validation]="urlRegex"
                     #mergeDropdown="ngModel"
-                    required
-                ></nx-searchable-select>
+                    [(ngModel)]="remoteSystem"
+                    (select)="setRemoteSystem($event)"
+                    [placeholder]="'Existing System URL (https://host:port)'"
+                    [noMatchesContent]="'No peers found'"
+                    requireSelection
+                >
+                    @for (item of items; track $index) {
+                        <nx-autocomplete-item
+                            [name]="item.value"
+                            [value]="item"
+                            >{{ item.name }}</nx-autocomplete-item
+                        >
+                    }
+                </nx-autocomplete-v2>
             </div>
             <div class="form-group">
                 <input
