@@ -736,6 +736,8 @@ class TestSystemGroup:
         groups = []
         self.group_0 = system_group_factory(organization=self.organization)
         groups.append(self.group_0)
+        self.rel_0 = sys_group_user_factory(organization=self.organization,
+                                              group=self.group_0, cloud_user=cloud_user_factory())
         self.group_1 = system_group_factory(organization=self.organization)
         groups.append(self.group_1)
         self.group_0_0 = system_group_factory(organization=self.organization, parent=self.group_0)
@@ -776,19 +778,23 @@ class TestSystemGroup:
         has_overlap = self.group_1.has_cp_overlaps(self.org_user.user)
         assert has_overlap is False
 
-    def test_has_org_overlap(self):
-        has_overlap = self.group_0_1.has_org_overlaps(self.user)
+    def test_has_org_or_group_overlap(self):
+        has_overlap = self.group_0_1.has_org_or_group_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = self.group_1_1.has_org_overlaps(self.user)
+        has_overlap = self.group_1_1.has_org_or_group_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = self.group_0.has_org_overlaps(self.user)
+        has_overlap = self.group_0.has_org_or_group_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = self.group_1.has_org_overlaps(self.user)
+        has_overlap = self.group_1.has_org_or_group_overlaps(self.user)
         assert has_overlap is False
-        has_overlap = self.group_0.has_org_overlaps(self.cp_user.user)
+        has_overlap = self.group_0.has_org_or_group_overlaps(self.cp_user.user)
         assert has_overlap is False
-        has_overlap = self.group_1.has_org_overlaps(self.org_user.user)
+        has_overlap = self.group_1.has_org_or_group_overlaps(self.org_user.user)
         assert has_overlap is True
+        has_overlap = self.group_0_1.has_org_or_group_overlaps(self.rel_0.user)
+        assert has_overlap is True
+        has_overlap = self.group_0.has_org_or_group_overlaps(self.rel_0_0.user)
+        assert has_overlap is False
 
     def test_system_count(self):
         assert self.group_0_0.system_count == 1

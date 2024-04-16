@@ -1643,10 +1643,10 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
                 'email': [f'User {user.email} cannot be added to group {group} '
                           f'because user has access to parent channel partner.']
             })
-        if group.has_org_overlaps(user):
+        if group.has_org_or_group_overlaps(user):
             raise exceptions.ValidationError({
                 'email': [f'User {user.email} cannot be added to group {group} '
-                          f'because user has access to organization.']
+                          f'because user has access to organization or a group above.']
             })
         attrs['user'] = user
         return attrs
