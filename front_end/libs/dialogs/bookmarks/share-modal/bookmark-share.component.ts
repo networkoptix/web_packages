@@ -12,6 +12,7 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxSystemRestAPI4 } from '@services/system-rest-api-v4.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
+import { MS } from '@utils/general';
 
 import { BookmarkShare as DT } from '../../dialogs.types';
 
@@ -20,7 +21,7 @@ import { NxShareDetailsComponent } from './share-details/share-details.component
 import { NxShareEditComponent } from './share-edit/share-edit.component';
 
 const DEFAULT_SHARE_PARAMS = {
-    expirationTimeMs: 0,
+    expirationTimeMs: Date.now() + MS.day,
     password: '',
 };
 

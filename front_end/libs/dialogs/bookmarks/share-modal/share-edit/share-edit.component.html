@@ -8,9 +8,11 @@
                 Lifetime
             </div>
             <nx-dropdown formControlName="expiresTime">
-                <nx-select-item [value]="initialExpirationTime()">
-                    {{ (initialExpirationTimeString() | async) || '' | nxTranslate }}
-                </nx-select-item>
+                @if (initialExpirationTime() !== 0) {
+                    <nx-select-item [value]="initialExpirationTime()">
+                        {{ (initialExpirationTimeString() | async) || '' | nxTranslate }}
+                    </nx-select-item>
+                }
                 <nx-select-item
                     [value]="nowTime + TIMES.hr"
                     translate
