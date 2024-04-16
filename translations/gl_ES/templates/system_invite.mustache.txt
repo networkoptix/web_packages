@@ -1,13 +1,13 @@
-Welcome to %CLOUD_NAME%
+Benvido/a a %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.
+{{message.sharer_name}} ({{message.sharer_email}}) convídate a unirte a %CLOUD_NAME% e compartiu o sistema {{message.system_name}} contigo.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
-You have been granted access to {{message.system_name}}.
+Estás convidado/a a unirte a %CLOUD_NAME%.
+Concedéuseche acceso a {{message.system_name}}.
 {{/message.sharer_name}}
 
-Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
+Rexistrarse e ver o sistema: {{config.portal_url}}/register/{{message.code}}
 

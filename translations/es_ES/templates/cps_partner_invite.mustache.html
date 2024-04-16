@@ -1,6 +1,7 @@
 <h1>Hola {{message.userFullName}}</h1>
 
-<p>{{message.sharer_name}} ha compartido acceso a la organización "{{message.partner_name}}" contigo.</p>
-<p>Para ver y administrar, crear cuenta en %CLOUD_NAME% utilizando su dirección de correo electrónico actual y siga las instrucciones.</p>
+<p>
+    {{message.sharer_name}} ha compartido acceso a la organización "{{message.partner_name}}" contigo. Para ver y administrar, crear cuenta en %CLOUD_NAME% utilizando su dirección de correo electrónico actual y siga las instrucciones.
+</p>
 
 <a class="btn" href="{{ config.portal_url }}/authorize/register/">Crear Cuenta</a>

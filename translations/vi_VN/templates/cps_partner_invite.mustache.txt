@@ -1,7 +1,5 @@
-Hello, {{message.userFullName}}
+Xin chào, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} đã chia sẻ quyền truy cập kênh Đối tác đại lý "{{message.partner_name}}" với bạn. Để xem và quản lý, vui lòng tạo tài khoản trên %CLOUD_NAME% bằng địa chỉ email hiện tại của bạn và làm theo hướng dẫn.
 
-To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.
-
-Create Account using this link: {{ config.portal_url }}/authorize/register/
+Create Account: {{ config.portal_url }}/authorize/register/

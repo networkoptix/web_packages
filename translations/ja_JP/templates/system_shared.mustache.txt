@@ -1,11 +1,11 @@
 {{message.userFullName}} さん、こんにちは。
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) があなたとビデオマネージメントシステム "{{message.system_name}}"へのアクセスを共有しています
+{{message.sharer_name}} ({{message.sharer_email}}) が、映像管理システム "{{message.system_name}}" へのアクセスを共有しました。
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
 ビデオマネジメントシステム "{{message.system_name}}" へのアクセスが許可されました。
 {{/message.sharer_name}}
 
-%CLOUD_NAME%&ポータル表示：{{config.portal_url}}/systems/{{message.system_id}}
+%CLOUD_NAME% ポータルで表示: {{config.portal_url}}/systems/{{message.system_id}}

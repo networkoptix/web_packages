@@ -1,0 +1,5 @@
+{{message.userFullName}} さん、こんにちは。
+
+組織 {{message.old_organization_name}} の名前が {{message.new_organization_name}} に変更されました。
+
+このリンクを使用して %CLOUD_NAME% ポータルで表示: {{ config.portal_url }}

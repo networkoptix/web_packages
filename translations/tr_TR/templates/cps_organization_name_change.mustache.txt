@@ -1,0 +1,5 @@
+Merhaba {{message.userFullName}},
+
+{{message.old_organization_name}} Organizasyonunun adı {{message.new_organization_name}} olarak değiştirildi.
+
+%CLOUD_NAME% Portalinde görüntülemek için bağlantıyı kullanın: {{ config.portal_url }}

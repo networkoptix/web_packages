@@ -1,0 +1,5 @@
+Halo, {{message.userFullName}}
+
+Nama organisasi {{message.old_organization_name}} telah diubah menjadi {{message.new_organization_name}}.
+
+Lihat di %CLOUD_NAME% Portal menggunakan link ini: {{ config.portal_url }}

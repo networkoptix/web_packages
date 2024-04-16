@@ -2,4 +2,4 @@ Hello, {{message.userFullName}}
 
 {{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+ดูใน %CLOUD_NAME% พอร์ทัลโดยใช้ลิงก์นี้: {{ config.portal_url }}

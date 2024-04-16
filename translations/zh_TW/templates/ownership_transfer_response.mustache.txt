@@ -1,1 +1,1 @@
-{{ message.user_full_name }} ({{ message.user_email }}) has {{ message.status }} your request to transfer ownership of {{ message.system_name }}
+{{ message.user_full_name }} ({{ message.user_email }}) 針對您所提出的 {{ message.system_name }} 系統所有權轉移需求已經 {{ message.status }} 。

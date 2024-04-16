@@ -1,5 +1,5 @@
 Merhaba, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
+{{message.partner_name}} Partnerin durumu {{message.status_name}} olarak değiştirildi.
 
-Please contact your partner for more details.
+Daha fazla ayrıntı için lütfen partnerinizle iletişime geçin.

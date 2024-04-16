@@ -1,6 +1,7 @@
 <h1>Merhaba, {{message.userFullName}}</h1>
 
-<p>{{message.sharer_name}} has shared access to organization "{{message.organization_name}}" with you.</p>
-<p>Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %CLOUD_NAME% üzerinde hesap oluşturun ve diğer talimatları izleyin.</p>
+<p>
+    {{message.sharer_name}} "{{message.organization_name}}" kuruluşuna erişimi sizinle paylaştı. Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %CLOUD_NAME% üzerinde hesap oluşturun ve diğer talimatları izleyin.
+</p>
 
 <a class="btn" href="{{ config.portal_url }}/authorize/register/">Hesap Oluştur</a>

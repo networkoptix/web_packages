@@ -39,33 +39,39 @@
     "emailSubject": "Video sistemi {{{message.system_name}} sizinle paylaşılan yapıldı"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} sizi %CLOUD_NAME% için davet ediyor"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{{message.organization_name}}} was shared with you"
+    "emailSubject": "Kuruluş {{{message.organization_name}}} sizinle paylaşıldı"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "{{{message.organization_name}}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{{message.organization_name}}} to the status {{message.status_name}}"
+    "emailSubject": "{{{message.organization_name}}} kuruluşunun {{message.status_name}}durumuna aktarılmasını onaylayın"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "{{{message.organization_name}}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi"
+  },
+  "cps_organization_name_change": {
+    "emailSubject": "Organizasyon adı değiştirildi"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} sizi %CLOUD_NAME% için davet ediyor"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{{message.partner_name}}} was shared with you"
+    "emailSubject": "{{{message.partner_name}}} Partner sizinle paylaşıldı"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin durumu {{message.status_name}} olarak değiştirildi"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin {{message.status_name}} durumuna transferini onaylayın"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin durumu {{message.status_name}} olarak değiştirildi"
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "Partnerin adı değişti"
   }
 }

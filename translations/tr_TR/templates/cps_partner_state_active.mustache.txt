@@ -1,6 +1,6 @@
 Merhaba, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
-Functionality is now fully available.
+{{message.partner_name}} Partnerin durumu {{message.status_name}} olarak değiştirildi.
+İşlevsellik artık tamamen mevcuttur.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+%CLOUD_NAME% Portalda görüntüle: {{ config.portal_url }}

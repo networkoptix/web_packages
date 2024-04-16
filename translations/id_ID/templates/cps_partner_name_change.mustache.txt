@@ -1,0 +1,5 @@
+Halo, {{message.userFullName}}
+
+Nama partner {{message.old_partner_name}} telah diubah menjadi {{message.new_partner_name}}.
+
+Lihat di %CLOUD_NAME% Portal menggunakan link ini: {{ config.portal_url }}

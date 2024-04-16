@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Xin chào, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
-Functionality is now fully available.
+{{message.sharer_name}} has shared access to organization  {{message.organization_name}} with you.
+Bây giờ đã có đủ Chức năng.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal: {{ config.portal_url }}

@@ -39,33 +39,39 @@
     "emailSubject": "Le système vidéo {{{message.system_name}}} a été partagé avec vous"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} vous invite à rejoindre %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{{message.organization_name}}} was shared with you"
+    "emailSubject": "L'organisation {{{message.organization_name}}} a été partagée avec vous"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Le statut de l'organisation {{{message.organization_name}}} est passé à {{message.status_name}}"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{{message.organization_name}}} to the status {{message.status_name}}"
+    "emailSubject": "Confirmer le transfert de l'organisation {{{message.organization_name}}} au statut {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Le statut de l'organisation {{{message.organization_name}}} est passé à {{message.status_name}}"
+  },
+  "cps_organization_name_change": {
+    "emailSubject": "Le nom de l'organisation a été modifié"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} vous invite à rejoindre %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{{message.partner_name}}} was shared with you"
+    "emailSubject": "Le partenaire {{{message.partner_name}}} a été partagé avec vous"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "Le statut du partenaire {{{message.partner_name}}} est passé à {{message.status_name}}"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "Confirmer le transfert du partenaire {{{message.partner_name}}} au statut {{message.status_name}}"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "Le statut du partenaire {{{message.partner_name}}} est passé à {{message.status_name}}"
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "Le nom du partenaire a été modifié"
   }
 }

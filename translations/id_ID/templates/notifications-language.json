@@ -39,33 +39,39 @@
     "emailSubject": "Sistem video {{{message.system_name}}} dibagikan kepada Anda"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} mengundang Anda ke %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{{message.organization_name}}} was shared with you"
+    "emailSubject": "Organisasi {{{message.organization_name}}} telah dibagikan kepada Anda"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Status organisasi {{{message.organization_name}}} diubah menjadi {{message.status_name}}"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{{message.organization_name}}} to the status {{message.status_name}}"
+    "emailSubject": "Konfirmasikan transfer organisasi {{{message.organization_name}}} ke status {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{{message.organization_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Status organisasi {{{message.organization_name}}} diubah menjadi {{message.status_name}}"
+  },
+  "cps_organization_name_change": {
+    "emailSubject": "Nama organisasi telah berubah"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{{message.sharer_name}}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}} mengundang Anda ke %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{{message.partner_name}}} was shared with you"
+    "emailSubject": "Partner {{{message.partner_name}}} telah dibagikan kepada Anda"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "Status partner {{{message.partner_name}}} diubah menjadi {{message.status_name}}"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "Konfirmasikan transfer partner {{{message.partner_name}}} ke status {{message.status_name}}"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "Status partner {{{message.partner_name}}} diubah menjadi {{message.status_name}}"
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "Nama partner telah berubah"
   }
 }

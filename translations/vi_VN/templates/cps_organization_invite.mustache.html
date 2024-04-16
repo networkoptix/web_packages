@@ -1,6 +1,7 @@
-<h1>Hello, {{message.userFullName}}</h1>
+<h1>Xin chào, {{message.userFullName}}</h1>
 
-<p>{{message.sharer_name}} has shared access to organization "{{message.organization_name}}" with you.</p>
-<p>To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.</p>
+<p>
+    {{message.sharer_name}} đã chia sẻ quyền truy cập vào tổ chức "{{message.organization_name}}" với bạn. Để xem và quản lý nó, vui lòng tạo tài khoản trên %CLOUD_NAME% bằng địa chỉ email hiện tại của bạn và làm theo hướng dẫn.
+</p>
 
-<a class="btn" href="{{ config.portal_url }}/authorize/register/">Create Account</a>
+<a class="btn" href="{{ config.portal_url }}/authorize/register/">Tạo tài khoản</a>

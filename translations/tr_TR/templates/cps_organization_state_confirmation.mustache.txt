@@ -1,6 +1,6 @@
 Merhaba, {{message.userFullName}}
 
-Use the verification code below to complete status change of {{message.organization_name}} to {{message.status_name}}.
+{{message.organization_name}} organizasyonunun durumunu {{message.status_name}} ile değişimini tamamlamak için aşağıdaki doğrulama kodunu kullanın.
 
 Doğrulama kodu:
 {{message.code}}

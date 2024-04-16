@@ -1,6 +1,6 @@
 Witaj {{message.userFullName}}
 
-{{message.sharer_name}} udostępnił Ci dostęp do organizacji „{{message.organization_name}}”.
+{{message.sharer_name}} has shared access to organization  {{message.organization_name}} with you.
 Funkcjonalność jest obecnie w pełni dostępna.
 
-Zobacz w portalu %CLOUD_NAME% używając tego linku: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal: {{ config.portal_url }}

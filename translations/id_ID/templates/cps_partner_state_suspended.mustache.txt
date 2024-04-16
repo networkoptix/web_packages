@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Halo, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
+Status partner {{message.partner_name}} diubah menjadi {{message.status_name}}.
 
-Please contact your partner for more details.
+Silakan hubungi partner Anda untuk lebih detailnya.

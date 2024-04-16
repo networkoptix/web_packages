@@ -53,6 +53,9 @@
   "cps_organization_state_suspended": {
     "emailSubject": "Statusen til organisasjonen {{{message.organization_name}}} endres til {{message.status_name}}"
   },
+  "cps_organization_name_change": {
+    "emailSubject": "The name of organization has been changed"
+  },
   "cps_partner_invite": {
     "emailSubject": "{{{message.sharer_name}}} inviterer deg til %CLOUD_NAME%"
   },
@@ -60,12 +63,15 @@
     "emailSubject": "Partner {{{message.partner_name}}} ble delt med deg"
   },
   "cps_partner_state_active": {
-    "emailSubject": "Statusen til partner {{{message.partner_name}}} endres til {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Bekreft overføringen av partner {{{message.partner_name}}} til status {{message.status_name}} "
+    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}}"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "Statusen til partner {{{message.partner_name}}} endres til {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "The name of partner has been changed"
   }
 }

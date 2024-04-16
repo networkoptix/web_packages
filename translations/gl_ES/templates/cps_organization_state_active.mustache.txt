@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Ola, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
-Functionality is now fully available.
+{{message.sharer_name}} has shared access to organization  {{message.organization_name}} with you.
+A funcionalidade está agora totalmente dispoñible.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal: {{ config.portal_url }}
