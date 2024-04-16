@@ -7,10 +7,7 @@ from dataclasses import (
     dataclass,
     field,
 )
-from typing import (
-    List,
-    Tuple,
-)
+from typing import List
 
 import httpx
 import llutil
@@ -530,30 +527,6 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
                                              f" and cannot be added to channel partner {channel_partner.name}.")
         return user
 
-    def update(self, instance: ChannelPartnerToUser, validated_data):
-
-        updated_attributes: dict = validated_data.get('attributes', {})
-        instance.set_attributes(updated_attributes, partial=self.partial)
-
-        validated_data_copied: dict = validated_data.copy()
-        validated_data_copied.pop('attributes', None)
-
-        return super().update(instance, validated_data_copied)
-
-    def get_or_create_relation(
-            self,
-            user: CloudUser,
-            channel_partner: ChannelPartner
-    ) -> Tuple[ChannelPartnerToUser, bool]:
-        try:
-            return ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
-        except ChannelPartnerToUser.MultipleObjectsReturned:
-            relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by(
-                'created_ts')
-            relation = relations.first()
-            relations.exclude(id=relation.id).delete()
-            return relation, False
-
     def validate(self, attrs):
         user = attrs.get('user').get('email')
         role = attrs.get('roleId') or attrs.get('role')
@@ -570,20 +543,38 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
+
+        # Obtain the role information from the request; prioritize 'roleId' over 'role'.
         role = validated_data.get('roleId') or validated_data.get('role')
+
+        # Extract the title from the validated data.
         title = validated_data.get('title')
+
+        # Get the channel partner from the serializer's context; set in the view.
         channel_partner = self.context.get('channel_partner')
+
+        # Retrieve the user making the request from the context.
         created_by = getattr(self.context.get('request'), 'user', None)
-        relation, created = self.get_or_create_relation(user, channel_partner)
-        # Set attributes
+
+        # Attempt to retrieve or create the ChannelPartnerToUser relation based on the user and channel partner.
+        relation, created = ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
+
+        # If there are attributes provided in the request, set them using the set_attributes method.
         if 'attributes' in validated_data:
-            # Todo. Looks like it works not like it is supposed to do.
             attributes = validated_data.get('attributes', {})
+            # Note: The partial update flag is set to True; only specified attributes will be updated.
             relation.set_attributes(attributes, partial=True)
 
+        # Set the title of the relation.
         relation.title = title
+
+        # Set the roles of the user within the relation; currently assumes a single role ID.
         relation.roles = [role.id]
+
+        # Save the relation instance after all updates.
         relation.save()
+
+        # If this relation was newly created (not just updated), trigger an asynchronous task.
         if created:
             added_channel_partner_role_task.apply_async(args=[
                 relation.channel_partner_id,
@@ -592,6 +583,8 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
                 channel_partner.cloud_host.hostname,
                 structlog.contextvars.get_contextvars().get('request_id')
             ])
+
+        # Return the updated or newly created relation instance.
         return relation
 
 
