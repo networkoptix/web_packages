@@ -1918,20 +1918,21 @@ class SystemGroup(FieldOriginalMixin, models.Model):
     def has_cp_overlaps(self, user: CloudUser) -> bool:
         """
         Checks if user has access to parent channel partner.
-        Any membership in an organization does not matter as soon it will be rewritten.
         """
         return ChannelPartnerToUser.objects.filter(
             user=user, channel_partner_id=self.visible_path[-1]
         ).exists()
 
-    def has_org_overlaps(self, user: CloudUser) -> bool:
+    def has_org_or_group_overlaps(self, user: CloudUser) -> bool:
         """
-        Checks if user has access to organization.
-        Any membership in an organization does not matter as soon it will be rewritten.
+        Checks if user has access to an organization or a group above.
         """
         return OrganizationToUser.objects.filter(
-            user=user, organization_id=self.organization_id, system_group_id__isnull=True,
+            user=user, organization_id=self.organization_id
+        ).filter(
+            Q(system_group_id__isnull=True) | Q(system_group_id__in=self.groups_path)
         ).exists()
+
 
     @property
     def system_count(self) -> int:

@@ -79,7 +79,7 @@ def cloud_user_factory(db, random_email):
 
     def user(email=None):
         if not email:
-            email = random_email
+            email = f'{uuid.uuid4()}@networkoptix.com'
         cloud_user = CloudUser.objects.get_or_create(email=email)[0]
         return cloud_user
 
