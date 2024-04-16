@@ -6,6 +6,10 @@ SQL='./etc/*.sql'
 WEBADMIN_HOST="https://localhost"
 LOCAL_PASSWORD="qweasd1234"
 
+# PATHS
+DOCKER_DEBS_PATH="tools/docker_resources/mediaserver_debs"
+DOCKER_VIDEOS_PATH="tools/docker_resources/videos"
+
 function pyenv_checker() {
     if ! which pyenv &> /dev/null ; then
         echo "There is no pyenv accessible."
@@ -65,8 +69,8 @@ function init_backend(){
 
 function init_frontend(){
     pushd front_end
-    npm install
-    npm run setSkin blue
+        npm install
+        npm run setSkin blue
     popd
 }
 
@@ -86,15 +90,15 @@ function setup_cms(){
     printf "Moving into cloud directory\n\n"
     pushd cloud
 
-    printf "Running db migrations\n\n"
-    python manage.py migrate
+        printf "Running db migrations\n\n"
+        python manage.py migrate
 
-    printf "Setting up cms structure\n\n"
-    python manage.py readstructure
+        printf "Setting up cms structure\n\n"
+        python manage.py readstructure
 
-    printf "Filling in local hostname\n\n"
-    python manage.py local_hosts --customization default
-    python manage.py local_hosts --customization hanwha
+        printf "Filling in local hostname\n\n"
+        python manage.py local_hosts --customization default
+        python manage.py local_hosts --customization hanwha
 
     popd
 }
@@ -191,8 +195,9 @@ function setup_or_activate_virtualenv() {
 
 function start_celery() {
     pushd cloud
-    printf "Starting celery worker\n"
-    celery worker -A notifications -l debug --concurrency=1
+        printf "Starting celery worker\n"
+        celery worker -A notifications -l debug --concurrency=1
+    popd
 }
 
 function start_docker_containers() {
@@ -219,13 +224,22 @@ function stop_docker_containers() {
 function build_mediaserver_image() {
     VERSION=$1
     COPY=$2
-    BUILD_PATH="tools/$VERSION.deb"
+    BUILD_DEB="$DOCKER_DEBS_PATH/$VERSION.deb"
+    DOCKER_BUILD_DIR="tools/docker/mediaserver"
     echo "Building the mediaserver image for $VERSION (Local $COPY)"
-    if [[ ! -f $BUILD_PATH ]]; then
-        echo "Can't find $BUILD_PATH. Please verify the download command"
+    if [[ ! -f $BUILD_DEB ]]; then
+        echo "Can't find $BUILD_DEB. Please verify the download command"
         exit 1
     fi
-    docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$VERSION.deb --build-arg copy=$COPY
+    # If the deb is missing clean out the other debs and copy the correct one.
+    if [[ ! -f "$DOCKER_BUILD_DIR/$VERSION.deb" ]]; then
+        rm -f $DOCKER_BUILD_DIR/*.deb
+        cp "$BUILD_DEB" "$DOCKER_BUILD_DIR"
+    fi
+
+    pushd "$DOCKER_BUILD_DIR" || exit 1
+        docker image build . --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$VERSION.deb --build-arg copy=$COPY
+    popd
 }
 
 function list_mediaserver() {
@@ -310,7 +324,7 @@ function move_local_build() {
 
     pushd $BUILD_DIR
         echo "Copying external.dat to tools"
-        cp external.dat $REPO/tools/docker
+        cp external.dat $REPO/tools/docker/mediaserver
     popd
 }
 
@@ -334,13 +348,13 @@ function extract_logs_from_container() {
 }
 
 function run_virtual_cameras() {
-    VIDEO_DIR="./tools/videos"
+    local PORTS=$1
     #Replace networkoptix with other customization. You can get it by using ssh to access the docker container and running ls
     RUN_TIME="/opt/networkoptix/mediaserver/bin"
-    if [[ -z "$VIDEO_DIR" ]]; then
-        mkdir -p $VIDEO_DIR
-        echo "Created $VIDEO_DIR"
-        echo "Please add video files to $VIDEO_DIR"
+    if [[ -z "$DOCKER_VIDEOS_PATH" ]]; then
+        mkdir -p $DOCKER_VIDEOS_PATH
+        echo "Created $DOCKER_VIDEOS_PATH"
+        echo "Please add video files to $DOCKER_VIDEOS_PATH"
         exit 1
     fi
 
@@ -348,14 +362,17 @@ function run_virtual_cameras() {
     containers=`docker ps --format '{{.Names}}' | grep auto-nx-server-`
 
     echo "Building cameras list"
-    files=$(ls $VIDEO_DIR | xargs -I {} echo "videos/{}")
+    files=$(ls $DOCKER_VIDEOS_PATH | xargs -I {} echo "videos/{}")
     cameras=$(echo $files | sed s/\ /,/)
 
     echo "Using video as $cameras"
     for container in $containers
     do
-        echo "Copying video file(s) to $container container"
-        docker cp $VIDEO_DIR $container:$RUN_TIME
+        for PORT in $PORTS
+        do
+            if [[ $container == *"$PORT" ]] ; then
+                echo "Copying video file(s) to $container container"
+                docker cp $DOCKER_VIDEOS_PATH $container:$RUN_TIME
 
         echo "Running test cameras for for $container"
         docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I=127.0.0.1 \"files=${cameras}\""
@@ -376,11 +393,11 @@ function start_https_tunnel() {
 function install_cli() {
     export CLOUD_PORTAL_DIR=$(pwd)
     pushd cloud_helper
-    npm run node-modules
-    npm run build
-    npm link
-    echo 'cloud-helper CLI installed'
-    cloud-helper
+        npm run node-modules
+        npm run build
+        npm link
+        echo 'cloud-helper CLI installed'
+        cloud-helper
     popd
 }
 
@@ -453,6 +470,14 @@ function setup_webadmin_conan_update_scripts() {
 
     echo "Please run 'python build_webadmin_commit_message.py old_sha new_sha'"
     echo "This will generate your env file and provide instructions for env configuration"
+}
+
+function migrate() {
+    mkdir -p tools/docker_resources/{dbs,mediaserver_debs}
+    pushd tools
+        mv *.deb docker_resources/mediaserver_debs/
+        mv videos docker_resources/videos
+    popd
 }
 
 # Default values
@@ -630,7 +655,7 @@ do
                 echo "fetching $VERSION"
                 python tools/scripts/download_deb.py $VERSION
 
-                echo "$VERSION has been saved to tools/$VERSION.deb"
+                echo "$VERSION has been saved to $DOCKER_DEBS_PATH/$VERSION.deb"
                 SKIP_BUILD="false"
             fi
 
@@ -667,7 +692,8 @@ do
             ;;
         run_virtual_cameras)
             echo "Adding cameras to running servers"
-            run_virtual_cameras
+            run_virtual_cameras "$PORTS"
+            break
             ;;
         get_mediaserver_logs)
             PORTS=$2
@@ -696,8 +722,14 @@ do
         update_py_package)
             update_package $2
             ;;
+        reinstall_virtualenv)
+            reinstall_virtualenv
+            ;;
         setup_webadmin_conan)
             setup_webadmin_conan_update_scripts
+            ;;
+        migrate)
+            migrate
             ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
