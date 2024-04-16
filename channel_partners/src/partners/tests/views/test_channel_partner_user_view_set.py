@@ -104,6 +104,83 @@ class TestChannelPartnerUserViewSet:
         # Checking against Email since, by default full_name is None
         assert notification_data['message']['sharer_name'] == self.cp_user.user.email
 
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_with_partner_admin_with_attributes(self,cp_user_factory, mock_auth_with_user, arf, random_email,
+                                       mock_account_status, mock_get_customization_request,
+                                       mock_post_notification, httpx_mock):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': 'test'
+            }
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert response.data.get("attributes").get("test") == "test"
+        assert notification_data['type'] == 'cps_partner_invite'
+        assert notification_data['user_email'] == email
+        assert notification_data['message']['partner_name'] == self.cp.name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == self.cp_user.user.email
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_and_update_with_partner_admin_with_attributes(
+            self,
+            cp_user_factory,
+            mock_auth_with_user,
+            arf,
+            random_email,
+            mock_account_status,
+            mock_get_customization_request,
+            mock_post_notification,
+            httpx_mock
+    ):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': 'test'
+            }
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        mock_post_notification()
+        mock_auth_with_user(self.cp_user)
+
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert response.data.get("attributes").get("test") == "test"
+
+        # Request #2
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': '*unset*'
+            }
+        }
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert "test" not in response.data.get("attributes")
+
     @pytest.mark.no_tasks_autofix
     def test_create_with_parent_admin(self,cp_user_factory, mock_auth_with_user, arf, random_email,
                                       mock_account_status, mock_get_customization_request,
