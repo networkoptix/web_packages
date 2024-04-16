@@ -1,10 +1,3 @@
-@use "typography";
-@use "mixins";
-@use "theme_variables_common" as *;
-@use "css-variables/native-theme/theme_palette" as *;
-@use "css-variables/theme_palette" as *;
-@use "css-variables/theme_variables" as *;
-
 nx-pre-loader {
     position: absolute;
     top: 50%;
