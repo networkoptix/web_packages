@@ -12,6 +12,7 @@
         [system]="system"
         [servers]="system?.servers"
         [licenses]="licenses"
+        (showNewLicense)="licenseSummary?.getLicenses()"
     >
     </nx-license-new-component>
 
@@ -20,6 +21,7 @@
     <nx-license-summary-component
         [licensesLegacyInfo]="licenseSummaries"
         [selectedSystem]="system"
+        #licenseSummary
     >
     </nx-license-summary-component>
 

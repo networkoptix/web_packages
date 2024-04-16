@@ -3,7 +3,7 @@ import {
     OnDestroy,
     Input,
     OnChanges,
-    ViewChild,
+    ViewChild, Output, EventEmitter,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -35,6 +35,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     @Input() selectedServer: any = [];
     @Input() system: NxSystem;
     @Input() licenses: any = [];
+    @Output() trialActivated = new EventEmitter<boolean>();
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
@@ -76,6 +77,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                             this.LANG.license.messages.trialActivated,
                             'success'
                         );
+                        this.trialActivated.emit(true);
                     }
 
                     if (response.error) {

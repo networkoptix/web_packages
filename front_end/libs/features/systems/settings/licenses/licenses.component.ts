@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { forkJoin, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -22,6 +23,7 @@ import { getDynamicLicense } from './dynamic-license';
     styleUrls: ['licenses.component.scss']
 })
 export class NxSystemLicensesComponent implements OnInit {
+    @ViewChild('licenseSummary', { static: false }) licenseSummary: NxLicenseSummaryComponent;
     CONFIG: IConfig;
     LANG = staticLang;
 

@@ -3,10 +3,9 @@ import {
     OnDestroy,
     Input,
     OnChanges,
-    ViewChild,
+    ViewChild, EventEmitter, Output, OnInit,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { SubscriptionLike } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type {
@@ -30,7 +29,7 @@ interface ServerOption extends DropdownItem<string> {
     templateUrl: 'new.component.html',
     styleUrls: ['new.component.scss']
 })
-export class NxLicenseNewComponent implements OnChanges, OnDestroy {
+export class NxLicenseNewComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
 
@@ -45,8 +44,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @Input() servers: NxSystemServer[] = [];
     @Input() system: NxSystem;
     @Input() licenses: any = [];
+    @Output() showNewLicense = new EventEmitter<boolean>();
 
-    windowSizeSubscription: SubscriptionLike;
     hideErrors = true;
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
@@ -83,6 +82,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             this.dialogsService
                                 .notify(this.LANG.license.messages.activated, 'success');
+
+                            this.showNewLicense.emit(true);
 
                             return;
                         }
