@@ -792,9 +792,25 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --sidebar-tab-closed: var(--light8);
 
     --tree-locked-icon: var(--dark4);
-    --tree-editable-selection-override: var(--light3);
-    --tree-renaming-layout-background: var(--light6);
-    --tree-new-layout-background: var(--light4);
+    --tree-node-editable-color-override: var(--light3);
+
+    --tree-node-main-color: var(--dark10);
+    --tree-node-secondary-color: var(--dark17);
+    --tree-node-activated-main-color: var(--brand-core);
+    --tree-node-activated-secondary-color: var(--light1);
+    --tree-node-selected-main-color: var(--dark17);
+    --tree-node-selected-secondary-color: var(--dark17);
+    --tree-node-checked-main-color: var(--dark17);
+    --tree-node-checked-secondary-color: var(--light1);
+    --tree-node-hover-background: var(--light4);
+    --tree-node-pressed-background: var(--additional-light3);
+    --tree-node-selected-background: var(--light6);
+    --tree-node-hover-selected-background: var(--light5);
+    --tree-node-pressed-selected-background: var(--light7);
+
+    --tree-node-action-color: var(--dark10);
+    --tree-node-action-hover-color: var(--dark13);
+    --tree-node-menu-color: var(--dark10);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
     --context-menu-shadow: rgba(var(--dark15-rgb), 0.2);

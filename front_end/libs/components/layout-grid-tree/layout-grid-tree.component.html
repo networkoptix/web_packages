@@ -104,9 +104,7 @@
                 scrollBehavior="instant"
                 class="tree-node"
                 [ngClass]="{
-                    'hidden-node': node.hidden,
-                    'renaming-layout': layoutStateService.editedLayout$$()?.id === node.details.id,
-                    'new-layout': layoutStateService.editedLayout$$()?.isNew
+                    'hidden-node': node.hidden
                 }"
             >
                 <div
@@ -133,7 +131,7 @@
                         ({
                             node,
                             tooltips: { camera: cameraTooltip, server: serverTooltip }
-                        } | mapWith: selectTooltip)
+                        } | mapWith: pickTooltip)
                     "
                     (mouseenter)="updateTooltipTarget(node.details.id)"
                     (mouseleave)="unsubTooltips()"

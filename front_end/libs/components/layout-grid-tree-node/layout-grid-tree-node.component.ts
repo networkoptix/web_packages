@@ -75,7 +75,9 @@ import { icons } from '@static-variables';
 export class NxLayoutGridTreeNode {
     expanded$$ = input<boolean>(false, { alias: 'expanded' });
     preview$$ = input<boolean>(false, { alias: 'preview' });
+    active$$ = input<boolean>(false, { alias: 'active' });
     selected$$ = input<boolean>(false, { alias: 'selected' });
+    checked$$ = input<boolean>(false, { alias: 'checked' });
     isRoot$$ = input<boolean>(false, { alias: 'isRoot' });
     menuItems$$ = input.required<
         MenuItemsOrMenuItemsFactory<Partial<MergedResourceNode<{ id: string }>> & BaseResourceNode>
@@ -92,18 +94,19 @@ export class NxLayoutGridTreeNode {
     protected readonly RESOURCE_TYPE = ResourceType;
     value: string;
 
-    @HostBinding('class.offline') get offline(): boolean {
-        return this.offline$$();
+    @HostBinding('class') get class(): Record<string, boolean> {
+        return {
+            offline: this.offline$$(),
+            active: this.active$$(),
+            selected: this.selected$$(),
+            checked: this.checked$$(),
+            'leaf-node': !this.isRoot$$(),
+            'root-node': this.isRoot$$(),
+            'renaming-node': this.isRenaming$$(),
+            'new-node': this.isNew$$(),
+        };
     }
-    @HostBinding('class.selected') get selected(): boolean {
-        return this.selected$$();
-    }
-    @HostBinding('class.leaf-node') get leaf(): boolean {
-        return !this.isRoot$$();
-    }
-    @HostBinding('class.root-node') get root(): boolean {
-        return this.isRoot$$();
-    }
+
     constructor(
         public layoutItemsStore: LayoutItemsErrorsStore,
         public layoutStateService: LayoutStateService,
@@ -193,6 +196,12 @@ export class NxLayoutGridTreeNode {
         );
     });
 
+    isRenaming$$ = computed(
+        () => this.layoutStateService.editedLayout$$()?.id === this.node$$().details?.id,
+    );
+
+    isNew$$ = computed(() => !!this.layoutStateService.editedLayout$$()?.isNew);
+
     handleRename = (): void => {
         this.layoutStateService.editedLayout$$.set(null);
         const layout = this.node$$().details as Layout;
@@ -207,5 +216,4 @@ export class NxLayoutGridTreeNode {
         });
     };
     protected readonly assertResourceOfType = assertResourceOfType;
-    protected readonly Array = Array;
 }

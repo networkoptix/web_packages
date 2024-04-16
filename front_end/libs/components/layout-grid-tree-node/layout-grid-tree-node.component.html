@@ -1,36 +1,23 @@
-@if (
-    !preview$$() && !assertResourceOfType.camera(node$$()) && !assertResourceOfType.layout(node$$())
-) {
-    <ng-container *ngTemplateOutlet="expandStateIcon" />
+@if (assertResourceOfType.camera(node$$()) || preview$$()) {
+    <ng-container *ngTemplateOutlet="cameraStatusIcon" />
+} @else if (assertResourceOfType.layout(node$$())) {
+    <ng-container *ngTemplateOutlet="layoutStatusIcon" />
+} @else if (expandable$$()) {
+    <ng-container *ngTemplateOutlet="expandableStateIcon" />
+} @else {
+    <ng-container *ngTemplateOutlet="emptyStatusIcon" />
 }
 
-@if (preview$$() || assertResourceOfType.camera(node$$())) {
-    <ng-container *ngTemplateOutlet="recordingIcon" />
-}
-
-@if (node$$().type === RESOURCE_TYPE.LAYOUT) {
-    <svg-icon
-        nx-add-svg-src
-        [svgStyle]="{
-            'width.px': '20',
-            'height.px': '20',
-            opacity: unsavedLayoutString$$() || isNodeLocked$$() ? '1' : '0'
-        }"
-        [nxTooltip]="isNodeLocked$$() ? 'Layout locked' : (unsavedLayoutString$$() | translate)"
-        svgClass="recording-icon  {{ isNodeLocked$$() ? 'locked-icon' : '' }}"
-        [src]="icons.dirLayouts + (isNodeLocked$$() ? 'locked.svg' : 'unsaved.svg')"
-    >
-    </svg-icon>
-}
 <ng-container *ngTemplateOutlet="nodeTypeIcon" />
+
 @if (menuItems$$()) {
-    @if (node$$().type === RESOURCE_TYPE.LAYOUTS) {
+    @if (assertResourceOfType.layouts(node$$())) {
         <ng-container [ngTemplateOutlet]="simpleNodeText" />
         @for (menuItem of planeMenuItems$$(); track menuItem.id) {
             <button
                 class="action-button"
-                [nxTooltip]="menuItem?.tooltip"
-                (click)="menuItem.action($event, node$$())"
+                [nxTooltip]="menuItem?.tooltip || false"
+                (click)="menuItem?.action($event, node$$())"
                 [tourAnchor]="'cloud-layouts_add_layout'"
             >
                 <svg-icon
@@ -137,7 +124,21 @@
     <ng-container [ngTemplateOutlet]="simpleNodeText" />
 }
 
-<ng-template #recordingIcon>
+<ng-template #expandableStateIcon>
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            opacity: expandable$$() ? '1' : '0'
+        }"
+        class="secondary-icon"
+        [src]="icons.dirLayouts + (expanded$$() ? 'arrow_close.svg' : 'arrow_open.svg')"
+    >
+    </svg-icon>
+</ng-template>
+
+<ng-template #cameraStatusIcon>
     @if (
         ['recording', 'scheduled', 'archive'].includes(cameraNodeStatus$$()) ? '1' : '0';
         as opacity
@@ -150,27 +151,41 @@
                 opacity: opacity,
                 display: opacity === '0' && preview$$() && 'none'
             }"
+            class="status-icon"
             svgClass="recording-icon"
             [src]="icons.dirLayouts + node$$().type + '_' + cameraNodeStatus$$() + '.svg'"
         >
         </svg-icon>
     }
 </ng-template>
-<ng-template #expandStateIcon>
+<ng-template #emptyStatusIcon>
+    <svg-icon
+        nx-add-svg-src
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20'
+        }"
+        class="status-icon"
+        [src]="''"
+    >
+    </svg-icon>
+</ng-template>
+<ng-template #layoutStatusIcon>
     <svg-icon
         nx-add-svg-src
         [svgStyle]="{
             'width.px': '20',
             'height.px': '20',
-            'padding-bottom.px': '4',
-            fill: 'none !important',
-            opacity: expandable$$() ? '1' : '0'
+            opacity: unsavedLayoutString$$() || isNodeLocked$$() ? '1' : '0'
         }"
-        svgClass="dark-17-svg"
-        [src]="icons.dirLayouts + (expanded$$() ? 'arrow_close.svg' : 'arrow_open.svg')"
+        [nxTooltip]="isNodeLocked$$() ? 'Layout locked' : (unsavedLayoutString$$() | translate)"
+        class="status-icon"
+        svgClass="{{ isNodeLocked$$() ? 'locked-icon' : '' }}"
+        [src]="icons.dirLayouts + (isNodeLocked$$() ? 'locked.svg' : 'unsaved.svg')"
     >
     </svg-icon>
 </ng-template>
+
 <ng-template #nodeTypeIcon>
     <svg-icon
         nx-add-svg-src
@@ -178,9 +193,11 @@
             'width.px': '20',
             'height.px': '20'
         }"
+        class="primary-icon"
         [src]="iconSrc$$()"
     />
 </ng-template>
+
 <ng-template #simpleNodeText>
     <!-- node.name is also used for Layouts, Cameras, etc. root nodes. Needs to be translated -->
     <span

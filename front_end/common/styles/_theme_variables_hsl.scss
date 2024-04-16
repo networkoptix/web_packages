@@ -940,9 +940,25 @@ html[data-theme="hsl"] {
     --placeholder-info-color: var(--new-dark11);
 
     --tree-locked-icon: var(--new-light4);
-    --tree-editable-selection-override: var(--new-dark9);
-    --tree-renaming-layout-background: var(--new-dark6);
-    --tree-new-layout-background: var(--new-dark4);
+    --tree-node-editable-color-override: var(--new-dark9);
+
+    --tree-node-main-color: var(--new-light10);
+    --tree-node-secondary-color: var(--new-dark17);
+    --tree-node-activated-main-color: var(--new-brand-core);
+    --tree-node-activated-secondary-color: var(--new-dark17);
+    --tree-node-selected-main-color: var(--new-light1);
+    --tree-node-selected-secondary-color: var(--new-light1);
+    --tree-node-checked-main-color: var(--new-light1);
+    --tree-node-checked-secondary-color: var(--new-dark17);
+    --tree-node-hover-background: var(--new-dark6);
+    --tree-node-pressed-background: var(--new-dark4);
+    --tree-node-selected-background: var(--new-dark7);
+    --tree-node-hover-selected-background: var(--new-dark8);
+    --tree-node-pressed-selected-background: var(--new-dark6);
+
+    --tree-node-action-color: var(--new-light10);
+    --tree-node-action-hover-color: var(--new-light3);
+    --tree-node-menu-color: var(--new-light10);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
     --context-menu-shadow: var(--new-dark1-t20);
@@ -966,7 +982,6 @@ html[data-theme="hsl"] {
     --other-sites-title: var(--new-light10);
     --other-sites-heading-background: var(--new-dark6);
     --other-sites-expand-stroke: var(--new-light16);
-    --tree-editable-selection-override: var(--new-light10);
 
     --no-camera-placeholder-color: var(--new-light10);
     --no-layouts-body-color: var(--new-light17);

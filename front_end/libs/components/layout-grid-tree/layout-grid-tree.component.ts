@@ -413,19 +413,24 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         untilDestroyed(this),
     );
 
-    selectTooltip = ({
-        node,
-        tooltips: { camera, server },
-    }: {
+    pickTooltip = (selectFrom: {
         node: ResourceNode;
         tooltips: {
             camera: string | TemplateRef<string>;
             server: string | TemplateRef<string>;
         };
-    }): string | TemplateRef<string> =>
-        node.type === ResourceType.CAMERA
-            ? camera
-            : node.type === ResourceType.SERVER && nxConfig.featureFlags.layoutsDemo
-              ? server
-              : '';
+    }): string | TemplateRef<string> => {
+        if (!selectFrom || !selectFrom.node) {
+            return '';
+        }
+        const type = selectFrom.node.type;
+        if (type === ResourceType.CAMERA) {
+            return selectFrom.tooltips.camera;
+        }
+        if (type === ResourceType.SERVER && nxConfig.featureFlags.layoutsDemo) {
+            return selectFrom.tooltips.server;
+        }
+
+        return '';
+    };
 }

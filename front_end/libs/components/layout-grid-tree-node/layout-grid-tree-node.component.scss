@@ -6,7 +6,77 @@
 :host {
     @include mixins.ellipsis;
     @include typography.regular14nocolor;
+    height: 24px;
     display: flex;
+
+    --main-color: var(--tree-node-main-color);
+    --secondary-color: var(--tree-node-secondary-color);
+    --background-color: transparent;
+    --action-color: var(--tree-node-action-color);
+    --node-opacity: 1;
+
+    color: var(--main-color);
+    background: var(--background-color);
+    opacity: var(--node-opacity);
+
+    .primary-icon svg path:last-child {
+        // multi colored icons have the last path to be the primary element
+        // which color is to be changed
+        fill: var(--main-color);
+        stroke: var(--main-color);
+    }
+    .secondary-icon svg path {
+        fill: var(--secondary-color);
+        stroke: var(--secondary-color);
+    }
+    .primary-icon,
+    .secondary-icon,
+    .status-icon {
+        width: 20px;
+        height: 24px;
+    }
+    .action-button {
+        background-color: transparent;
+        svg path {
+            fill: var(--action-color);
+            stroke: var(--action-color);
+        }
+    }
+
+    &:hover {
+        --background-color: var(--tree-node-hover-background);
+    }
+    &:active,
+    &.renaming-node,
+    &.selected.renaming-node {
+        --background-color: var(--tree-node-pressed-background);
+    }
+
+    &.checked {
+        --main-color: var(--tree-node-checked-main-color);
+        --secondary-color: var(--tree-node-checked-secondary-color);
+    }
+
+    &.activated {
+        --main-color: var(--tree-node-activated-main-color);
+        --secondary-color: var(--tree-node-activated-secondary-color);
+    }
+
+    &.selected {
+        --main-color: var(--tree-node-selected-main-color);
+        --secondary-color: var(--tree-node-selected-secondary-color);
+        --background-color: var(--tree-node-selected-background);
+        &:hover {
+            --background-color: var(--tree-node-hover-selected-background);
+        }
+        &:active {
+            --background-color: var(--tree-node-pressed-selected-background);
+        }
+    }
+
+    &.offline {
+        --node-opacity: 0.3;
+    }
 
     &:not(:hover) > .action-button {
         display: none !important;
@@ -14,38 +84,13 @@
     &:hover:has(.editable-edit) > .action-button {
         display: none !important;
     }
-
-    .action-button {
-        margin: 0;
+    .action-button:hover {
+        --action-color: var(--tree-node-action-hover-color);
     }
 
     &:hover:not(:has(.editable-edit)) {
-        background: var(--left-menu-l1-bg-hover);
         .node-editable {
             max-width: calc(100% - 60px);
-        }
-    }
-
-    &.selected {
-        .node-name {
-            color: var(--brand-core);
-        }
-
-        svg:not(.recording-icon) {
-            .st0 {
-                fill: var(--brand-core);
-                stroke: var(--brand-core);
-            }
-        }
-    }
-
-    &.offline:not(.selected) {
-        div,
-        svg-icon {
-            opacity: 0.5;
-        }
-        button svg-icon {
-            opacity: 1;
         }
     }
 }
@@ -64,47 +109,16 @@
     }
 
     content: '';
-    line-height: 16px;
-    font-size: 20px;
+    line-height: 14px;
+    height: 14px;
+    font-size: 14px;
     border-right: 1px solid var(--body-text-color);
     animation: blink 1s infinite;
-}
-
-.root-node {
-    height: 24px;
-    padding: 2px 0;
-    line-height: 20px;
-    font-size: 14px;
-    font-weight: 500;
-
-    &:not(:hover) {
-        button {
-            display: none !important;
-        }
-    }
-
-    .action-button {
-        .st0 {
-            stroke: var(--btn-text-hover-color);
-        }
-        path {
-            fill: var(--btn-text-hover-color);
-            stroke: var(--btn-text-hover-color);
-        }
-        &:hover {
-            .st0 {
-                stroke: var(--btn-text-color);
-            }
-            path {
-                fill: var(--btn-text-color);
-                stroke: var(--btn-text-color);
-            }
-        }
-    }
+    margin-right: 1px;
 }
 
 .text-value-as-placeholder {
-    --selection-text-color-override: var(--tree-editable-selection-override);
+    --selection-text-color-override: var(--tree-node-editable-color-override);
     --selection-background-color-override: transparent;
     &:before {
         @include fake-cursor;
@@ -112,55 +126,21 @@
 }
 
 .text-with-cursor {
-    // there is no cursor when text is selected. let's fix it )
+    // there is no cursor when text is selected. let's fix it :)
     &:after {
         @include fake-cursor;
     }
 }
 
-.action-button {
-    background: transparent;
-    height: 20px !important;
-    width: 20px !important;
-    padding: 0 !important;
-
-    span + & {
-        margin-left: auto !important;
-    }
-
-    & .st0 {
-        stroke: var(--body-text-color);
-        fill: var(--body-text-color);
-    }
-    & path {
-        fill: var(--body-text-color);
-        stroke: var(--body-text-color);
-    }
-
-    &:active {
-        background: var(--left-menu-l3-selected-bg);
-
-        & .st0 {
-            stroke: var(--left-menu-l3-selected-color);
-            fill: var(--left-menu-l3-selected-color);
-        }
-        & path {
-            fill: var(--left-menu-l3-selected-color);
-            stroke: var(--left-menu-l3-selected-color);
-        }
-    }
-}
-
-.dark-17-svg {
-    .st0 {
-        fill: var(--svg-toggle-arrow-color);
-        stroke: var(--svg-toggle-arrow-color);
-    }
-}
-
 .node-name {
+    // icon name offset
     margin: 0 0 0 4px;
+    // push action icons to the right
     flex-grow: 1;
+    line-height: 16px;
+}
+span.node-name {
+    line-height: 24px;
 }
 
 .node-editable {
@@ -168,7 +148,8 @@
     max-width: calc(100% - 48px);
     display: flex;
     flex-direction: row;
-    height: 20px;
+    align-items: center;
+
     .editable-edit {
         padding-left: 0;
         border: 0;
@@ -176,23 +157,23 @@
     }
 }
 
-.st0 {
-    stroke: var(--body-text-color);
-    fill: var(--body-text-color);
+svg-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-.st1 {
-    fill: var(--svg-path-accent-color);
+.action-button {
+    background: transparent;
+    height: 24px !important;
+    width: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-.no-children {
-    padding-left: 36px;
-    display: block;
-    color: var(--left-menu-disabled-item-color);
-    cursor: not-allowed;
-
-    &:hover {
-        background: var(--left-menu-l1-bg-hover);
+.locked-icon {
+    path {
+        fill: var(--tree-locked-icon);
     }
 }
 
@@ -209,11 +190,5 @@
         .key {
             color: var(--grid-new-layout-text-highlight);
         }
-    }
-}
-
-.locked-icon {
-    path {
-        fill: var(--tree-locked-icon);
     }
 }

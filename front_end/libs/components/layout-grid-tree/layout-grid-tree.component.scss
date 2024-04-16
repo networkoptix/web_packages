@@ -65,17 +65,6 @@ cdk-tree {
     display: none !important;
 }
 
-// this is to be gone when bg is correct and is moved to the tree node component
-.renaming-layout {
-    &:not(.new-layout) {
-        background: var(--tree-renaming-layout-background);
-    }
-
-    &.new-layout {
-        background: var(--tree-new-layout-background);
-    }
-}
-
 .camera-tooltip-wrapper {
     display: flex;
     justify-content: center;
