@@ -19,7 +19,12 @@ For development set `CLOUD_PORTAL_CONF_DIR` environment variable (for example, t
     ```
 
 ### Installing python requirements
-1. Install poetry, https://python-poetry.org/docs/#installation. Preferred method is using system `pip`.  
+1. Install poetry, https://python-poetry.org/docs/#installation. IMPORTANT. Currently, version 1.5.1 is supported only. 
+Preferred method is using system `pip`.
+
+   ```shell
+   pip install poetry==1.5.1
+   ```
 
 2. Installing python.
    3.8.10 for version <=23.3
