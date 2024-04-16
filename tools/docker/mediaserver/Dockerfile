@@ -21,7 +21,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy key files into the container
-COPY docker/* /
+COPY . .
 
 # Let the entrypoint know if it needs to copy external.dat
 ENV COPY=${copy}
