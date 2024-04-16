@@ -7,10 +7,12 @@ import sys
 
 
 class WebadminConan(ConanFile):
+    license = None
     name = "webadmin"
     description = "Web-based settings for the Nx Witness Mediaserver"
     settings = None
     no_copy_source = True
+    url = None
 
     def set_version(self):
         git = tools.Git()
@@ -21,7 +23,7 @@ class WebadminConan(ConanFile):
         gitlab_url = os.getenv("DEFAULT_GIT_URL") or 'git@gitlab.ru.nxteam.dev'
         # Cannot use the `scm` attribute because the version is set dynamically.
         git = tools.Git()
-        git.clone(f"{gitlab_url}:dev/cloud_portal.git", self.version, shallow=True)
+        git.clone(f"{gitlab_url}/dev/cloud_portal.git", self.version, shallow=True)
 
     def build(self):
         self.run(" ".join([
