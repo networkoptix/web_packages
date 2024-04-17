@@ -54,7 +54,7 @@
     "emailSubject": "O estado da organización {{{message.organization_name}}} cambia a {{message.status_name}}"
   },
   "cps_organization_name_change": {
-    "emailSubject": "The name of organization has been changed"
+    "emailSubject": "O nome da organización foi cambiado"
   },
   "cps_partner_invite": {
     "emailSubject": "{{{message.sharer_name}}} convídate a %CLOUD_NAME%"
@@ -63,15 +63,15 @@
     "emailSubject": "O partner {{{message.partner_name}}} compartiuse contigo"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "O estado do partner {{{message.partner_name}}} cambia a {{message.status_name}}"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}}"
+    "emailSubject": "Confirma a transferencia do partner {{{message.partner_name}}} ao estado {{message.status_name}}"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "O estado do partner {{{message.partner_name}}} cambia a {{message.status_name}}"
   },
   "cps_partner_name_change": {
-    "emailSubject": "The name of partner has been changed"
+    "emailSubject": "Cambiouse o nome do partner"
   }
 }
