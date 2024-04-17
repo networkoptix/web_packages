@@ -190,10 +190,8 @@ async def get_template(request, filename: str, language_code: str = None):
                                               asset_type__type=AssetType.ASSET_TYPES.cloud_portal).afirst()
     if not cloud_portal:
         raise APINotFoundException(f"Customization {request.CUSTOMIZATION} not found.")
-    version_id, skin = await asyncio.gather(
-        sync_to_async(cloud_portal.version_id)(),
-        sync_to_async(cloud_portal.read_global_value)('%SKIN%')
-    )
+    version_id = await sync_to_async(cloud_portal.version_id)()
+    skin = await sync_to_async(cloud_portal.read_global_value)('%SKIN%')
     content = await sync_to_async(read_cached_file)(cloud_portal, request.CUSTOMIZATION, filename,
                                                     language_code, skin, version_id)
     return content
