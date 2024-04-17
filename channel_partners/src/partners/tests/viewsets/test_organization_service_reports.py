@@ -109,7 +109,7 @@ class TestOrganizationServiceReportsViewSet:
 
     def test_system_report(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(
-            OrganizationReportsService, "get_system_reports",
+            OrganizationReportsService, "get_regular_system_reports",
         )
         path_kwargs = {
             "parent_lookup_organization": self.org.pk,
@@ -189,14 +189,16 @@ class TestChannelPartnerServiceReportsViewSet:
         self.requested_date = get_today() - relativedelta(days=1)
         self.requested_date.replace(day=10)
         self.period_query_param = f'?periodStartDate={self.requested_date}'
-        self.cp = channel_partner_factory()
+        self.parent_cp = channel_partner_factory()
+        self.cp = channel_partner_factory(parent_channel_partner=self.parent_cp)
         self.org = organization_factory(channel_partner=self.cp)
         self.cp_admin = cp_user_factory(channel_partner=self.cp)
         self.org_viewer = org_user_factory(organization=self.org, role=OrganizationRoles.VIEWER)
         self.system = system_factory(organization=self.org)
         self.system.created_ts = timezone.now()
         self.system.save()
-        self.service = cp_service_factory(channel_partner=self.cp)
+        self.parent_service = cp_service_factory(channel_partner=self.parent_cp)
+        self.service = cp_service_factory(channel_partner=self.cp, parent_service=self.parent_service)
         self.service_record = service_record_factory(
             service=self.service,
             cloud_system=self.system,
@@ -225,7 +227,7 @@ class TestChannelPartnerServiceReportsViewSet:
         )
         path_kwargs = {
             "parent_lookup_channel_partner": self.cp.pk,
-            "service_id": self.service.pk,
+            "service_id": self.parent_service.pk,
         }
         path = reverse('channelpartners-reports-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
@@ -234,7 +236,7 @@ class TestChannelPartnerServiceReportsViewSet:
         assert response.status_code == 200
         assert response.data
         report_spy.assert_called_once_with(
-            channel_partner=self.cp, service=self.service, period_start=self.requested_date)
+            channel_partner=self.cp, service=self.parent_service, period_start=self.requested_date)
 
         # not existing for period
         path += '?periodStartDate=2020-06-26'
@@ -267,7 +269,7 @@ class TestChannelPartnerServiceReportsViewSet:
 
     def test_channel_partner_usages_no_subcp(self, mock_auth_with_user, mocker):
         report_spy = mocker.spy(
-            ChannelPartnerReportsService, "get_channel_partner_usages",
+            ChannelPartnerReportsService, "get_regular_channel_partner_usages",
         )
         path_kwargs = {
             "parent_lookup_channel_partner": self.cp.pk,
@@ -295,7 +297,7 @@ class TestChannelPartnerServiceReportsViewSet:
         ReportSnapshot.objects.all().delete()
         calculate_all_reports()
         report_spy = mocker.spy(
-            ChannelPartnerReportsService, "get_channel_partner_usages",
+            ChannelPartnerReportsService, "get_regular_channel_partner_usages",
         )
         path_kwargs = {
             "parent_lookup_channel_partner": self.cp.pk,
@@ -322,7 +324,7 @@ class TestChannelPartnerServiceReportsViewSet:
         sub_cp_service = sub_cp.services.first()
         calculate_all_reports()
         report_spy = mocker.spy(
-            ChannelPartnerReportsService, "get_organization_usages",
+            ChannelPartnerReportsService, "get_regular_organization_usages",
         )
         path_kwargs = {
             "parent_lookup_channel_partner": sub_cp.pk,
@@ -347,7 +349,7 @@ class TestChannelPartnerServiceReportsViewSet:
         ReportSnapshot.objects.all().delete()
         calculate_all_reports()
         report_spy = mocker.spy(
-            ChannelPartnerReportsService, "get_organization_usages",
+            ChannelPartnerReportsService, "get_regular_organization_usages",
         )
         path_kwargs = {
             "parent_lookup_channel_partner": self.cp.pk,

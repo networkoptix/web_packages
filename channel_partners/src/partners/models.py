@@ -2061,6 +2061,7 @@ class ChannelPartnerService(models.Model):
         ('demo', DEMO),
         ('trial', TRIAL)
     )
+    SUB_TYPE_TO_CODE_MAP = {val: code for code, val in SUB_TYPES_CODES}
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.IntegerField(choices=SERVICE_TYPES)
@@ -2081,6 +2082,10 @@ class ChannelPartnerService(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.created_by_channel_partner.name}'
+
+    @property
+    def is_expiring(self) -> bool:
+        return self.sub_type in (self.DEMO, self.TRIAL)
 
     def save(self, *args, **kwargs):
         new = self._state.adding
@@ -2740,14 +2745,22 @@ class MigrationRecord(models.Model):
 class ReportSnapshot(models.Model):
     class ReportType(IntegerChoices):
         system_regular_report = 1, 'system_regular_report'
-        organization_systems_reports = 20, 'organization_system_reports'
-        organization_regular_service_report = 21, 'organization_regular_service_reports'
+        system_expiring_report = 2, 'system_expiring_report'
+        organization_regular_systems_reports = 20, 'organization_regular_system_reports'
+        organization_regular_service_report = 21, 'organization_regular_service_report'
         organization_regular_detail_table = 22, 'organization_regular_detail_table'
         organization_usage_report = 23, 'organization_usage_report'
-        channel_partner_organization_usages = 40, 'channel_partner_organization_usages'
-        channel_partner_channel_partner_usages = 41, 'channel_partner_channel_partner_usages'
+        organization_expiring_systems_reports = 24, 'organization_expiring_system_reports'
+        organization_expiring_service_report = 25, 'organization_expiring_service_report'
+        organization_expiring_detail_table = 26, 'organization_expiring_detail_table'
+        channel_partner_organization_regular_usages = 40, 'channel_partner_organization_regular_usages'
+        channel_partner_organization_expiring_usages = 45, 'channel_partner_organization_expiring_usages'
+        channel_partner_channel_partner_regular_usages = 41, 'channel_partner_channel_partner_regular_usages'
+        channel_partner_channel_partner_expiring_usages = 46, 'channel_partner_channel_partner_expiring_usages'
         channel_partner_regular_detail_table = 42, 'channel_partner_regular_detail_table'
+        channel_partner_expiring_detail_table = 47, 'channel_partner_expiring_detail_table'
         channel_partner_regular_service_report = 43, 'channel_partner_regular_service_report'
+        channel_partner_expiring_service_report = 48, 'channel_partner_expiring_service_report'
         channel_partner_usage_report = 44, 'channel_partner_usage_report'
 
     report_type = models.SmallIntegerField(choices=ReportType.choices)

@@ -59,7 +59,8 @@ class OrganizationUsageReportRecordSerializer(serializers.Serializer):
     service_name = serializers.CharField()
     used_by = serializers.IntegerField()
     channels = serializers.IntegerField()
-    expirations = serializers.ListSerializer(child=serializers.UUIDField(), allow_empty=True)
+    # Will probably remove this
+    # expirations = serializers.ListSerializer(child=serializers.UUIDField(), allow_empty=True)
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
 
@@ -106,6 +107,7 @@ class ChannelPartnerUsageReportRecordSerializer(serializers.Serializer):
     used_by_organizations = serializers.IntegerField()
     used_by_channel_partners = serializers.IntegerField()
     channels = serializers.IntegerField()
-    expirations = serializers.ListField(child=serializers.UUIDField(), allow_empty=True)
+    # Will probably remove this
+    # expirations = serializers.ListField(child=serializers.UUIDField(), allow_empty=True)
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
