@@ -2,4 +2,4 @@ Halo, {{message.userFullName}}
 
 {{message.sharer_name}} telah berbagi akses ke channel partner "{{message.partner_name}}" dengan Anda.
 
-Lihat di %CLOUD_NAME% Portal menggunakan link ini: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

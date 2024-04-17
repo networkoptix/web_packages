@@ -4,4 +4,4 @@ Hej, {{message.userFullName}}
 
 För att se och hantera det, skapa ett konto på %CLOUD_NAME% med din nuvarande e-postadress och följ ytterligare instruktioner.
 
-Registrera ditt konto med den här länken: {{ config.portal_url }}/ register /{}
+Create Account using this link: {{ config.portal_url }}/authorize/register/

@@ -3,4 +3,4 @@ Merhaba, {{message.userFullName}}
 {{message.sharer_name}} "{{message.organization_name}}" kuruluşuna erişimi sizinle paylaştı.
 Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %CLOUD_NAME% üzerinde hesap oluşturun ve diğer talimatları izleyin.
 
-Bu bağlantı ile Hesap oluşturun: {{ config.portal_url }}/authorize/register/
+Create Account using this link: {{ config.portal_url }}/authorize/register/

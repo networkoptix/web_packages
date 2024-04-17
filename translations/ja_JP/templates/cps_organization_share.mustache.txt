@@ -2,4 +2,4 @@
 
 {{message.sharer_name}} が、組織 "{{message.organization_name}}" へのアクセスを共有しました。
 
-このリンクを使用して %CLOUD_NAME% ポータルで表示: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

@@ -60,12 +60,12 @@
     "emailSubject": "Le partenaire {{{message.partner_name}}} a été partagé avec vous"
   },
   "cps_partner_state_active": {
-    "emailSubject": "Le statut du partenaire {{{message.partner_name}}} est passé à {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirmer le transfert du partenaire {{{message.partner_name}}} au statut {{message.status_name}} "
+    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "Le statut du partenaire {{{message.partner_name}}} est passé à {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   }
 }

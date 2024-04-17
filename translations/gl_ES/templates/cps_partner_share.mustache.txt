@@ -2,4 +2,4 @@ Ola, {{message.userFullName}}
 
 {{message.sharer_name}} compartiu o acceso á canle asociada "{{message.partner_name}}" contigo.
 
-Ver no portal %CLOUD_NAME% usando esta ligazón: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

@@ -3,4 +3,4 @@ Bonjour, {{message.userFullName}}
 Le statut du partenaire {{message.partner_name}} est changé en {{message.status_name}}.
 La fonctionnalité est désormais entièrement disponible.
 
-Afficher dans le portail %CLOUD_NAME% en utilisant ce lien : {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

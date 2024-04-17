@@ -1,6 +1,6 @@
 Hei, {{message.userFullName}}
 
-{{message.sharer_name}} har delt tilgang til organisasjonen "{{message.organization_name}}" med deg.
+{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
 Funksjonalitet er nå fullt tilgjengelig.
 
-Se i %CLOUD_NAME% portalen ved å bruke denne lenken: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

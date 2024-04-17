@@ -183,7 +183,7 @@
     "Are you sure that you want to remove \"{name}\" from \"{layoutName}\" layout?": "Are you sure that you want to remove \"{name}\" from \"{layoutName}\" layout?",
     "Are you sure you want to continue?": "Are you sure you want to continue?",
     "Are you sure you want to delete {count} users?": "Are you sure you want to delete {count} users?",
-    "Are you sure you want to delete {name} ?": "Та {name}-г устгахдаа итгэлтэй байна уу ?",
+    "Are you sure you want to delete {name} ?": "Are you sure you want to delete {name} ?",
     "Area": "Area",
     "Arecont RTSP Enabled": "Arecont RTSP Enabled",
     "As": "As",

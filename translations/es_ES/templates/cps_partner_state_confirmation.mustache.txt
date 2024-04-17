@@ -1,6 +1,6 @@
 Hola {{message.userFullName}}
 
-Utilice el código de verificación a continuación para completar el cambio de estado de {message.partner_name}} a {{message.status_name}}.
+Use the verification code below to complete status change of {message.partner_name}} to {{message.status_name}}.
 
 Código de verificación
 {{message.code}}

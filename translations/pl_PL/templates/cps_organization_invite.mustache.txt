@@ -3,4 +3,4 @@ Witaj {{message.userFullName}}
 {{message.sharer_name}} udostępnił Ci dostęp do organizacji „{{message.organization_name}}”.
 Aby móc wyświetlać i zarządzać, utwórz konto w %CLOUD_NAME% używając aktualnego adresu e-mail i postępuj zgodnie z dalszymi instrukcjami.
 
-Utwórz konto korzystając z tego linku: {{ config.portal_url }}/authorize/register/
+Create Account using this link: {{ config.portal_url }}/authorize/register/

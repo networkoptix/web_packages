@@ -60,12 +60,12 @@
     "emailSubject": "Partner {{{message.partner_name}}} delades med dig"
   },
   "cps_partner_state_active": {
-    "emailSubject": "Statusen för partner {{{message.partner_name}}} ändras till {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Bekräfta överföringen av partnern {{{message.partner_name}}} till status {{message.status_name}} "
+    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "Statusen för partnern {{{message.partner_name}}} ändras till {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   }
 }

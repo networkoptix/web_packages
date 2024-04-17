@@ -3,4 +3,4 @@ Xin chào, {{message.userFullName}}
 Trạng thái của đối tác {{message.partner_name}} được thay đổi thành {{message.status_name}}.
 Bây giờ đã có đủ Chức năng.
 
-Xem trong %CLOUD_NAME% Cổng thông tin bằng liên kết này: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

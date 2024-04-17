@@ -60,12 +60,12 @@
     "emailSubject": "Đối tác {{{message.partner_name}}} đã được chia sẻ với bạn"
   },
   "cps_partner_state_active": {
-    "emailSubject": "Trạng thái của đối tác {{{message.partner_name}}} được thay đổi thành {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Xác nhận việc chuyển đối tác {{{message.partner_name}}} sang trạng thái {{message.status_name}} "
+    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "Trạng thái của đối tác {{{message.partner_name}}} được thay đổi thành {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   }
 }

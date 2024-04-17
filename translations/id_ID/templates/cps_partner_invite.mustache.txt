@@ -4,4 +4,4 @@ Halo, {{message.userFullName}}
 
 Untuk melihat dan mengelolanya, silakan buat akun di %CLOUD_NAME% menggunakan alamat email Anda saat ini dan ikuti instruksi selanjutnya.
 
-Buat Akun menggunakan link ini: {{ config.portal_url }}/otorisasi/daftar/
+Create Account using this link: {{ config.portal_url }}/authorize/register/

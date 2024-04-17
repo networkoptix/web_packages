@@ -1,6 +1,6 @@
 Xin chào, {{message.userFullName}}
 
-Sử dụng mã xác minh bên dưới để hoàn tất việc thay đổi trạng thái từ {message.partner_name}} thành {{message.status_name}}.
+Use the verification code below to complete status change of {message.partner_name}} to {{message.status_name}}.
 
 Mã xác thực:
 {{message.code}}

@@ -3,4 +3,4 @@ Bonjour, {{message.userFullName}}
 {{message.sharer_name}} a partagé avec vous l'accès à l'organisation "{{message.organization_name}}".
 Pour le voir et le gérer, veuillez créer un compte sur %CLOUD_NAME% en utilisant votre adresse e-mail actuelle et suivez les instructions.
 
-Créer un compte en utilisant ce lien : {{ config.portal_url }}/authorize/register/
+Create Account using this link: {{ config.portal_url }}/authorize/register/

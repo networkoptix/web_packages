@@ -2,4 +2,4 @@ Hej, {{message.userFullName}}
 
 {{message.sharer_name}} har delad åtkomst till organisationen "{{message.organization_name}}" med dig.
 
-Visa i %CLOUD_NAME% Portal med denna länk: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

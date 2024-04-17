@@ -2,4 +2,4 @@ Merhaba, {{message.userFullName}}
 
 {{message.sharer_name}} "{{message.organization_name}}" kuruluşuna erişimi sizinle paylaştı.
 
-%CLOUD_NAME% Portalinde görüntülemek için bağlantıyı kullanın: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

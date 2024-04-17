@@ -3,4 +3,4 @@ Halo, {{message.userFullName}}
 Status partner {{message.partner_name}} diubah menjadi {{message.status_name}}.
 Fungsionalitas sekarang tersedia sepenuhnya.
 
-Lihat di %CLOUD_NAME% Portal menggunakan link ini: {{ config.portal_url }}
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

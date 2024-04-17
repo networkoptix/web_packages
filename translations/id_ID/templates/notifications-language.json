@@ -60,12 +60,12 @@
     "emailSubject": "Partner {{{message.partner_name}}} telah dibagikan kepada Anda"
   },
   "cps_partner_state_active": {
-    "emailSubject": "Status partner {{{message.partner_name}}} diubah menjadi {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Konfirmasikan transfer partner {{{message.partner_name}}} ke status {{message.status_name}} "
+    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "Status partner {{{message.partner_name}}} diubah menjadi {{message.status_name}} "
+    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
   }
 }

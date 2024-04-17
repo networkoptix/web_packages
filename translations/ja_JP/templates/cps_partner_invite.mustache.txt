@@ -4,4 +4,4 @@
 
 表示および管理を行うには、このメールアドレスを使用して %CLOUD_NAME% にアカウントを作成し、続く指示に従ってください。
 
-このリンクを使用してアカウントを作成してください: {{ config.portal_url }}/authorize/register/
+Create Account using this link: {{ config.portal_url }}/authorize/register/
