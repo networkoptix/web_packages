@@ -146,7 +146,6 @@ def get_lang_meta(request, lang=None):
             lang = detect_language_by_request(request)
         lang_path = 'static/lang_{{language}}/language_compiled.json'
         static_lang_path = 'static/language_i18n_static.json'
-
         content = async_to_sync(get_template)(request, filename=static_lang_path)
         meta_defaults = json.loads(content)['metaDefaults']
 
