@@ -13,6 +13,7 @@ from pathlib import Path
 import environ
 import structlog
 from corsheaders.defaults import default_headers
+from nx_jwt.jwt_auth import get_jwk_client
 
 from channel_partners.configuration.celery_cron_config import (
     CELERY_CRON_CONFIG,
@@ -25,7 +26,6 @@ from channel_partners.tools.config import (
     get_container_name,
     get_default_host,
 )
-from tools.jwt.jwt_auth import get_jwk_client
 
 
 env = environ.Env()

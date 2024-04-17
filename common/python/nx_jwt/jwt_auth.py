@@ -3,7 +3,7 @@ import re
 import urllib.request
 from collections import deque
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from ssl import SSLContext
 from typing import (
     Any,
@@ -54,11 +54,11 @@ class JTWPayload:
 
     @property
     def is_expired(self) -> bool:
-        return self.exp < datetime.utcnow().timestamp()
+        return self.exp < datetime.now(tz=timezone.utc).timestamp()
 
     @property
     def expires_in(self) -> int:
-        return int(self.exp - datetime.utcnow().timestamp())
+        return int(self.exp - datetime.now(tz=timezone.utc).timestamp())
 
 
 class JWKClient(PyJWKClient):

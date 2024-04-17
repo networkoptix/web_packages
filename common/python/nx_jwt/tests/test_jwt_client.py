@@ -1,12 +1,12 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from time import sleep
 from uuid import uuid4
 
 import jwt
 import pytest
 
-from tools.jwt.jwt_auth import (
+from nx_jwt.jwt_auth import (
     JWKMissingKeyError,
     get_jwk_client,
 )
@@ -15,9 +15,9 @@ from tools.jwt.jwt_auth import (
 class TestJWKClient:
     @pytest.fixture(autouse=True)
     def setup(self, private_key_factory, jwk_key_factory, jwt_token_factory,
-              faking_jwt_token, cloud_test_host):
+              faking_jwt_token):
         self.valid_keys = []
-        self.valid_ts = datetime.utcnow()
+        self.valid_ts = datetime.now(tz=timezone.utc)
         for _ in range(3):
             kid = f'{uuid4()}'
             private_key = private_key_factory()
@@ -50,7 +50,7 @@ class TestJWKClient:
                 'jwk': jwk,
                 'jwt_tokens': jwt_tokens
             })
-        self.hostname = cloud_test_host.hostname
+        self.hostname = 'cloud-test.hdw.mx'
 
     def test_valid_jwt_tokens(self):
         for key in self.valid_keys:
