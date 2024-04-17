@@ -135,7 +135,7 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
         methods=['get'],
     )
     def system_reports(self, request, *args, **kwargs):
-        report = self.get_service_report(OrganizationReportsService.get_system_reports)
+        report = self.get_service_report(OrganizationReportsService.get_regular_system_reports)
         serializer = SystemUsageSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -231,7 +231,7 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
         methods=['get'],
     )
     def channel_partner_usages(self, request, *args, **kwargs):
-        report = self.get_service_report(ChannelPartnerReportsService.get_channel_partner_usages)
+        report = self.get_service_report(ChannelPartnerReportsService.get_regular_channel_partner_usages)
         serializer = ChannelPartnerUsageSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -244,7 +244,7 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
         methods=['get'],
     )
     def organization_usages(self, request, *args, **kwargs):
-        report = self.get_service_report(ChannelPartnerReportsService.get_organization_usages)
+        report = self.get_service_report(ChannelPartnerReportsService.get_regular_organization_usages)
         serializer = OrganizationUsageSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

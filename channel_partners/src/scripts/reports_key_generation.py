@@ -16,8 +16,8 @@ service_count = 20
 zero_data = datetime.date(2023, 12, 15)
 report_types = (
     ReportSnapshot.ReportType.system_regular_report,
-    ReportSnapshot.ReportType.organization_systems_reports,
-    ReportSnapshot.ReportType.channel_partner_organization_usages,
+    ReportSnapshot.ReportType.organization_regular_systems_reports,
+    ReportSnapshot.ReportType.channel_partner_organization_regular_usages,
 )
 
 def values_key_generation():

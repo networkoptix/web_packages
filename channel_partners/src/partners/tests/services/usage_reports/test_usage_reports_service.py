@@ -17,6 +17,7 @@ from pytest_django.asserts import assertQuerysetEqual
 from rest_framework.utils.encoders import JSONEncoder
 
 from partners.models import (
+    ChannelPartnerService,
     ChannelPartnerServiceRecord,
     ReportSnapshot,
     ServiceUsage,
@@ -25,30 +26,59 @@ from partners.services.usage_reports_service import (
     CHANNEL_PARTNER,
     ORGANIZATION,
     BeginningOfPeriodDate,
+    ChannelPartnerExpiringServiceEntity,
+    ChannelPartnerExpiringServiceReport,
+    ChannelPartnerExpiringServiceSummary,
+    ChannelPartnerExpiringUsage,
+    ChannelPartnerRegularServiceEntity,
+    ChannelPartnerRegularServiceReport,
+    ChannelPartnerRegularServiceSummary,
+    ChannelPartnerRegularUsage,
     ChannelPartnerReportsService,
-    ChannelPartnerServiceReport,
-    ChannelPartnerServiceSummary,
-    ChannelPartnerSubEntityServices,
-    ChannelPartnerUsage,
     ChannelPartnerUsageReportRecord,
+    ExpiringUsageCalculatorService,
+    ExpiringUsageDetailRecord,
+    OrganizationExpiringUsage,
+    OrganizationRegularServiceReport,
+    OrganizationRegularServiceSummary,
+    OrganizationRegularUsage,
     OrganizationReportsService,
-    OrganizationServiceReport,
-    OrganizationServiceSummary,
-    OrganizationUsage,
     RegularUsageCalculator,
     RegularUsageDetailRecord,
     ReportSnapshotDoesNotExists,
     ReportSnapshotService,
-    SystemServiceSummary,
-    SystemUsage,
+    SystemExpiringServiceSummary,
+    SystemExpiringUsage,
+    SystemRegularServiceSummary,
+    SystemRegularUsage,
     TotalUsageDate,
-    build_aggregate_from_usages,
+    build_aggregate_from_regular_usages,
+    validate_service_sub_type,
 )
 
 
 class RecordDict(TypedDict):
     date_time: str
     quantity: int
+
+
+def test_validate_service_sub_type(mocker):
+    regular_service = baker.prepare(ChannelPartnerService, sub_type=ChannelPartnerService.REGULAR)
+    expiring_service = baker.prepare(ChannelPartnerService, sub_type=ChannelPartnerService.DEMO)
+
+    def report_func(service: ChannelPartnerService): pass
+
+    mock_function = mocker.create_autospec(spec=report_func, return_value=True)
+
+    regular_wrapped = validate_service_sub_type(expiring=False)(mock_function)
+    assert regular_wrapped(service=regular_service) is True
+    with pytest.raises(ValueError):
+        regular_wrapped(service=expiring_service)
+
+    expiring_wrapped = validate_service_sub_type(expiring=True)(mock_function)
+    assert expiring_wrapped(service=expiring_service) is True
+    with pytest.raises(ValueError):
+        expiring_wrapped(service=regular_service)
 
 
 @pytest.fixture
@@ -79,17 +109,17 @@ def report_records_factory(default_org_system_generator, cp_service_factory):
 
 def test_build_aggregate_from_reports():
     reports = [
-        SystemUsage(system_id='1', report=[
+        SystemRegularUsage(system_id='1', report=[
             RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=100, monthly_rate=100, daily_rate=0)
         ]),
-        SystemUsage(system_id='2', report=[
+        SystemRegularUsage(system_id='2', report=[
             RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
             RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                      transactions=1),
             RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
         ]),
-        SystemUsage(system_id='3', report=[
+        SystemRegularUsage(system_id='3', report=[
             RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
             RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                      transactions=1),
@@ -99,7 +129,7 @@ def test_build_aggregate_from_reports():
         ]),
     ]
 
-    assert build_aggregate_from_usages(reports) == [
+    assert build_aggregate_from_regular_usages(reports) == [
         RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=300, monthly_rate=300, daily_rate=0),
         RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=40, monthly_rate=0, daily_rate=400,
                                  transactions=2),
@@ -303,8 +333,52 @@ class TestRegularUsageCalculator:
         ]
 
 
+class TestExpiringUsageCalculator:
+    def test_generate_usage_record(self, cp_service_factory, report_records_factory):
+        records = [
+            RecordDict(date_time='01-01-2024', quantity=50),
+            RecordDict(date_time='01-15-2024', quantity=50),
+            RecordDict(date_time='01-31-2024', quantity=50),
+            RecordDict(date_time='01-31-2024 23:59:59', quantity=50),
+        ]
+        record_qs = report_records_factory(records, save=True, as_queryset=True)
+        service = cp_service_factory(sub_type=ChannelPartnerService.DEMO, duration=2)
+
+        usage_record = ExpiringUsageCalculatorService.generate_usage_record(records=record_qs, service=service, end_date=parser.parse('02-01-2024'))
+        assert usage_record == ExpiringUsageDetailRecord(
+            channels=200, expiration_date=parser.parse('03-01-2024').date()
+        )
+
+        usage_record = ExpiringUsageCalculatorService.generate_usage_record(records=record_qs, service=service,
+                                                                            end_date=parser.parse('03-01-2024'))
+        assert usage_record == ExpiringUsageDetailRecord(
+            channels=200, expiration_date=parser.parse('03-01-2024').date()
+        )
+
+    def test_generate_usage_record_multiple_months(self, cp_service_factory, report_records_factory):
+        records = [
+            RecordDict(date_time='01-01-2024', quantity=50),
+            RecordDict(date_time='01-15-2024', quantity=50),
+            RecordDict(date_time='02-10-2024', quantity=50),
+        ]
+        record_qs = report_records_factory(records, save=True, as_queryset=True)
+        service = cp_service_factory(sub_type=ChannelPartnerService.DEMO, duration=2)
+
+        usage_record = ExpiringUsageCalculatorService.generate_usage_record(records=record_qs, service=service,
+                                                                            end_date=parser.parse('02-01-2024'))
+        assert usage_record == ExpiringUsageDetailRecord(
+            channels=100, expiration_date=parser.parse('03-01-2024').date()
+        )
+
+        usage_record = ExpiringUsageCalculatorService.generate_usage_record(records=record_qs, service=service,
+                                                                            end_date=parser.parse('03-01-2024'))
+        assert usage_record == ExpiringUsageDetailRecord(
+            channels=150, expiration_date=parser.parse('03-01-2024').date()
+        )
+
+
 class TestOrganizationReportsService:
-    def test_get_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
+    def test_get_regular_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
                                 cp_service_factory):
         system_regular_report_mock = mocker.patch(
             'partners.services.usage_reports_service.CloudSystemReportsService.get_regular_report',
@@ -318,10 +392,10 @@ class TestOrganizationReportsService:
             system.created_ts = parser.parse('01-01-2023')
             system.save()
         save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
-        system_reports = OrganizationReportsService.get_system_reports(organization=organization,
-                                                                       service=service,
-                                                                       period_start=parser.parse('01-01-2024'),
-                                                                       generate=True)
+        system_reports = OrganizationReportsService.get_regular_system_reports(organization=organization,
+                                                                               service=service,
+                                                                               period_start=parser.parse('01-01-2024'),
+                                                                               generate=True)
         assert system_regular_report_mock.has_calls(
             [mocker.call(cloud_system=system.system_id, organization=organization,
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
@@ -334,27 +408,64 @@ class TestOrganizationReportsService:
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
         assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
         save_snapshot_spy.reset_mock()
-        system_reports = OrganizationReportsService.get_system_reports(organization=organization,
-                                                                       service=service,
-                                                                       period_start=parser.parse('01-01-2024'),
-                                                                       generate=True)
+        system_reports = OrganizationReportsService.get_regular_system_reports(organization=organization,
+                                                                               service=service,
+                                                                               period_start=parser.parse('01-01-2024'),
+                                                                               generate=True)
         assert save_snapshot_spy.call_count == 0
         assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
 
-    def test_build_summary_from_reports(self):
+    def test_get_expiring_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
+                                cp_service_factory):
+        system_expiring_report_mock = mocker.patch(
+            'partners.services.usage_reports_service.CloudSystemReportsService.get_expiring_report',
+            side_effect=['report_1', 'report_2', 'report_3']
+        )
+        cp = channel_partner_factory()
+        organization = organization_factory(channel_partner=cp)
+        service = cp_service_factory(channel_partner=cp, sub_type=ChannelPartnerService.DEMO)
+        systems = [system_factory(organization=organization) for i in range(3)]
+        for system in systems:
+            system.created_ts = parser.parse('01-01-2023')
+            system.save()
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        system_reports = OrganizationReportsService.get_expiring_system_reports(organization=organization,
+                                                                               service=service,
+                                                                               period_start=parser.parse('01-01-2024'),
+                                                                               generate=True)
+        assert system_expiring_report_mock.has_calls(
+            [mocker.call(cloud_system=system.system_id, organization=organization,
+                         period_start=parser.parse('01-01-2024'), service=service) for system in systems]
+        )
+        assert system_reports == [
+            {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i + 1}'} for i in
+            range(3)
+        ]
+        assert save_snapshot_spy.call_count == 1
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
+        assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
+        save_snapshot_spy.reset_mock()
+        system_reports = OrganizationReportsService.get_expiring_system_reports(organization=organization,
+                                                                               service=service,
+                                                                               period_start=parser.parse('01-01-2024'),
+                                                                               generate=True)
+        assert save_snapshot_spy.call_count == 0
+        assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
+
+    def test_build_regular_summary_from_reports(self):
         systems = [(uuid.uuid4(), f'sys_{i}') for i in range(1, 4)]
         reports = [
-            SystemUsage(system_id=systems[0][0], system_name=systems[0][1], report=[
+            SystemRegularUsage(system_id=systems[0][0], system_name=systems[0][1], report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=TotalUsageDate, channels=100, monthly_rate=100, daily_rate=0)
             ]),
-            SystemUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
+            SystemRegularUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                          transactions=1),
                 RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
             ]),
-            SystemUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
+            SystemRegularUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                          transactions=1),
@@ -364,17 +475,50 @@ class TestOrganizationReportsService:
             ]),
         ]
 
-        assert OrganizationReportsService.build_service_summary_from_system_reports(
-            reports) == OrganizationServiceReport(systems=[
-            SystemServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=100, monthly_rate=100,
-                                 daily_rate=0, changes_count=0, last_changed=None),
-            SystemServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120, monthly_rate=100,
-                                 daily_rate=200, changes_count=1, last_changed=parser.parse('01-21-2024')),
-            SystemServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140, monthly_rate=100,
-                                 daily_rate=300, changes_count=2, last_changed=parser.parse('01-26-2024'))
+        assert OrganizationReportsService.build_regular_service_summary_from_system_reports(
+            reports) == OrganizationRegularServiceReport(systems=[
+            SystemRegularServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=100, monthly_rate=100,
+                                        daily_rate=0, changes_count=0, last_changed=None),
+            SystemRegularServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120, monthly_rate=100,
+                                        daily_rate=200, changes_count=1, last_changed=parser.parse('01-21-2024')),
+            SystemRegularServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140, monthly_rate=100,
+                                        daily_rate=300, changes_count=2, last_changed=parser.parse('01-26-2024'))
         ],
-            summary=OrganizationServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
+            summary=OrganizationRegularServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
         )
+
+    def test_build_expiring_summary_from_reports(self):
+        systems = [(uuid.uuid4(), f'sys_{i}') for i in range(1, 4)]
+        reports = [
+            SystemExpiringUsage(system_id=systems[0][0], system_name=systems[0][1], report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-10-2024'), channels=20),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20)
+            ]),
+            SystemExpiringUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('02-21-2024'), channels=120),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=120)
+            ]),
+            SystemExpiringUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=140),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=140)
+            ]),
+        ]
+
+        expiring_service_report = OrganizationReportsService.build_expiring_service_summary_from_system_reports(reports)
+
+        assert expiring_service_report['systems'] == [
+            SystemExpiringServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=20,
+                                         expiration_date=parser.parse('01-10-2024')),
+            SystemExpiringServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120,
+                                         expiration_date=parser.parse('02-21-2024')),
+            SystemExpiringServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140,
+                                         expiration_date=parser.parse('01-15-2024')),
+        ]
+        assert expiring_service_report['summary']['channels'] == 280
+        assert expiring_service_report['summary']['systems'] == 3
+        assert set(expiring_service_report['summary']['expirations']) == {parser.parse('01-10-2024'),
+                                                                          parser.parse('02-21-2024'),
+                                                                          parser.parse('01-15-2024')}
 
     def test_get_organization_report(self, channel_partner_factory, organization_factory,
                                      system_factory, cp_service_factory, service_record_factory,):
@@ -405,11 +549,11 @@ class TestOrganizationReportsService:
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
                                               report_type=ReportSnapshot.ReportType.organization_usage_report)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
-        assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
+        assert ReportSnapshot.objects.count() > 1  # nested reports must be saved too
 
 
 class TestChannelPartnerReportsService:
-    def test_get_organization_usages(self, mocker, mock_reports_decoration):
+    def test_get_regular_organization_usages(self, mocker, mock_reports_decoration):
         channel_partner = mocker.Mock()
         service = baker.prepare('partners.ChannelPartnerService')
         organizations = [baker.prepare('partners.Organization', name=f'org_{i}', id=uuid.uuid4()) for i in range(5)]
@@ -419,13 +563,29 @@ class TestChannelPartnerReportsService:
             side_effect=[f'detail_{i}' for i in range(5)]
         )
 
-        assert ChannelPartnerReportsService.get_organization_usages(
+        assert ChannelPartnerReportsService.get_regular_organization_usages(
             channel_partner, service=service, period_start=parser.parse('01-01-2024')
-        ) == [OrganizationUsage(
+        ) == [OrganizationRegularUsage(
             organization_id=organizations[i].id, organization_name=organizations[i].name, report=f'detail_{i}'
         ) for i in range(len(organizations))]
 
-    def test_get_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
+    def test_get_expiring_organization_usages(self, mocker, mock_reports_decoration):
+        channel_partner = mocker.Mock()
+        service = baker.prepare('partners.ChannelPartnerService', sub_type=ChannelPartnerService.DEMO)
+        organizations = [baker.prepare('partners.Organization', name=f'org_{i}', id=uuid.uuid4()) for i in range(5)]
+        channel_partner.organizations.all.return_value = organizations
+        detail_table_mock = mocker.patch(
+            'partners.services.usage_reports_service.OrganizationReportsService.get_expiring_detail_table',
+            side_effect=[f'detail_{i}' for i in range(5)]
+        )
+
+        assert ChannelPartnerReportsService.get_expiring_organization_usages(
+            channel_partner, service=service, period_start=parser.parse('01-01-2024')
+        ) == [OrganizationExpiringUsage(
+            organization_id=organizations[i].id, organization_name=organizations[i].name, report=f'detail_{i}'
+        ) for i in range(len(organizations))]
+
+    def test_get_regular_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
                                         channel_partner_factory, django_capture_on_commit_callbacks):
         with django_capture_on_commit_callbacks(execute=True) as callbacks:
             channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -451,33 +611,73 @@ class TestChannelPartnerReportsService:
                                              transactions=1)
                 ]
             )
-            channel_partner_usages = ChannelPartnerReportsService.get_channel_partner_usages(
+            channel_partner_usages = ChannelPartnerReportsService.get_regular_channel_partner_usages(
                 channel_partner=channel_partner, service=service,
                 period_start=parser.parse('01-01-2024'), generate=True,
             )
 
-        # One service is automatically created/inherited from parent, so total of two services for each sub channel
-        assert detail_table_mock.call_count == 10
+        # One parent_service is automatically created/inherited from parent, so total of two services for each sub channel
+        assert detail_table_mock.call_count == 5
 
-        assert channel_partner_usages == [ChannelPartnerUsage(
+        assert channel_partner_usages == [ChannelPartnerRegularUsage(
             channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=10, monthly_rate=10, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=20, daily_rate=20,
-                                         monthly_rate=0,
-                                         transactions=2),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=30, monthly_rate=10, daily_rate=20,
-                                         transactions=2)
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
+                    RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10,
+                                             monthly_rate=0, transactions=1),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10,
+                                             transactions=1)
+                ]) for channel_partner in sub_channel_partners]
+
+    def test_get_expiring_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
+                                        channel_partner_factory, django_capture_on_commit_callbacks):
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
+            service = cp_service_factory(parent_service=None, channel_partner=channel_partner, sub_type=ChannelPartnerService.DEMO)
+
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_channel_partners = [
+                channel_partner_factory(parent_channel_partner=channel_partner)
+                for _ in range(5)
+            ]
+        with django_capture_on_commit_callbacks(execute=True) as callbacks:
+            sub_services = []
+            for sub_channel in sub_channel_partners:
+                sub_services.append(cp_service_factory(parent_service=service, channel_partner=sub_channel))
+
+            detail_table_mock = mocker.patch(
+                'partners.services.usage_reports_service.ChannelPartnerReportsService.get_expiring_detail_table',
+                return_value=[
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=10),
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-25-2024'), channels=50),
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('02-25-2024'), channels=50),
+                    ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=110)
+                ]
+            )
+            channel_partner_usages = ChannelPartnerReportsService.get_expiring_channel_partner_usages(
+                channel_partner=channel_partner, service=service,
+                period_start=parser.parse('01-01-2024'), generate=True,
+            )
+
+        # One parent_service is automatically created/inherited from parent, so total of two services for each sub channel
+        assert detail_table_mock.call_count == 5
+
+        assert channel_partner_usages == [ChannelPartnerExpiringUsage(
+            channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=10),
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-25-2024'), channels=50),
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('02-25-2024'), channels=50),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=110)
             ]) for channel_partner in sub_channel_partners]
 
-    def test_build_service_summary_from_sub_entity_reports(self):
+    def test_build_regular_service_summary_from_sub_entity_reports(self):
         org_usages = [
-            OrganizationUsage(organization_id=uuid.uuid4(), organization_name='org_1', report=[
+            OrganizationRegularUsage(organization_id=uuid.uuid4(), organization_name='org_1', report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                          transactions=1),
                 RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
             ]),
-            OrganizationUsage(organization_id=uuid.uuid4(), organization_name='org_2', report=[
+            OrganizationRegularUsage(organization_id=uuid.uuid4(), organization_name='org_2', report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=150, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-26-2024'), channels=20, monthly_rate=0, daily_rate=100,
                                          transactions=1),
@@ -485,13 +685,13 @@ class TestChannelPartnerReportsService:
             ]),
         ]
         cp_usages = [
-            ChannelPartnerUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_1', report=[
+            ChannelPartnerRegularUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_1', report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                          transactions=1),
                 RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
             ]),
-            ChannelPartnerUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_2', report=[
+            ChannelPartnerRegularUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_2', report=[
                 RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=200, monthly_rate=100, daily_rate=0),
                 RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
                                          transactions=1),
@@ -499,66 +699,148 @@ class TestChannelPartnerReportsService:
             ])
         ]
 
-        service_summary = ChannelPartnerReportsService.build_service_summary_from_sub_entity_reports(
+        service_summary = ChannelPartnerReportsService.build_regular_service_summary_from_sub_entity_reports(
             organization_usages=org_usages, channel_partner_usages=cp_usages)
-        assert service_summary == ChannelPartnerServiceReport(
+        assert service_summary == ChannelPartnerRegularServiceReport(
             sub_entities=[
-                ChannelPartnerSubEntityServices(
+                ChannelPartnerRegularServiceEntity(
                     channels=120, monthly_rate=100, daily_rate=200, id=org_usages[0]['organization_id'],
                     name=org_usages[0]['organization_name'], changes_count=1, last_changed=parser.parse('01-21-2024'),
                     type=ORGANIZATION
                 ),
-                ChannelPartnerSubEntityServices(
+                ChannelPartnerRegularServiceEntity(
                     channels=170, monthly_rate=100, daily_rate=100, id=org_usages[1]['organization_id'],
                     name=org_usages[1]['organization_name'], changes_count=1, last_changed=parser.parse('01-26-2024'),
                     type=ORGANIZATION
                 ),
-                ChannelPartnerSubEntityServices(
+                ChannelPartnerRegularServiceEntity(
                     channels=120, monthly_rate=100, daily_rate=200, id=cp_usages[0]['channel_partner_id'],
                     name=cp_usages[0]['channel_partner_name'], changes_count=1, last_changed=parser.parse('01-21-2024'),
                     type=CHANNEL_PARTNER
                 ),
-                ChannelPartnerSubEntityServices(
+                ChannelPartnerRegularServiceEntity(
                     channels=220, monthly_rate=100, daily_rate=200, id=cp_usages[1]['channel_partner_id'],
                     name=cp_usages[1]['channel_partner_name'], changes_count=1, last_changed=parser.parse('01-21-2024'),
                     type=CHANNEL_PARTNER
                 ),
             ],
-            summary=ChannelPartnerServiceSummary(channel_partners=2, organizations=2, channels=630, monthly_rate=400,
-                                                 daily_rate=700)
+            summary=ChannelPartnerRegularServiceSummary(channel_partners=2, organizations=2, channels=630, monthly_rate=400,
+                                                        daily_rate=700)
         )
 
-    def test_get_reports_for_services(self, cp_service_factory, mocker):
+    def test_build_expiring_service_summary_from_sub_entity_reports(self):
+        org_usages = [
+            OrganizationExpiringUsage(organization_id=uuid.uuid4(), organization_name='org_1', report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-21-2024'), channels=20),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20)
+            ]),
+            OrganizationExpiringUsage(organization_id=uuid.uuid4(), organization_name='org_2', report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-26-2024'), channels=20),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20)
+            ]),
+        ]
+        cp_usages = [
+            ChannelPartnerExpiringUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_1', report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-21-2024'), channels=20),
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-28-2024'), channels=40),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=60)
+            ]),
+            ChannelPartnerExpiringUsage(channel_partner_id=uuid.uuid4(), channel_partner_name='cp_2', report=[
+                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-21-2024'), channels=20),
+                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20)
+            ])
+        ]
+
+        service_summary = ChannelPartnerReportsService.build_expiring_service_summary_from_sub_entity_reports(
+            organization_usages=org_usages, channel_partner_usages=cp_usages)
+        for entity in service_summary['sub_entities']:
+            entity['expirations'] = set(entity['expirations'])
+        assert service_summary == ChannelPartnerExpiringServiceReport(
+            sub_entities=[
+                ChannelPartnerExpiringServiceEntity(
+                    channels=20, id=org_usages[0]['organization_id'],
+                    name=org_usages[0]['organization_name'],
+                    type=ORGANIZATION, expirations={parser.parse('01-21-2024')}
+                ),
+                ChannelPartnerExpiringServiceEntity(
+                    channels=20, id=org_usages[1]['organization_id'],
+                    name=org_usages[1]['organization_name'], type=ORGANIZATION, expirations={parser.parse('01-26-2024')}
+                ),
+                ChannelPartnerExpiringServiceEntity(
+                    channels=60, id=cp_usages[0]['channel_partner_id'],
+                    name=cp_usages[0]['channel_partner_name'], type=CHANNEL_PARTNER, expirations={parser.parse('01-21-2024'), parser.parse('01-28-2024')}
+                ),
+                ChannelPartnerExpiringServiceEntity(
+                    channels=20,  id=cp_usages[1]['channel_partner_id'],
+                    name=cp_usages[1]['channel_partner_name'], type=CHANNEL_PARTNER, expirations={parser.parse('01-21-2024')}
+                ),
+            ],
+            summary=ChannelPartnerExpiringServiceSummary(channel_partners=2, organizations=2, channels=120)
+        )
+
+    def test_get_regular_reports_for_services(self, cp_service_factory, mocker):
         services = [cp_service_factory() for _ in range(5)]
         channel_partner = baker.prepare('partners.ChannelPartner')
         mock_reports = [f'report_{service.id}' for service in services]
         mocker.patch('partners.services.usage_reports_service.ChannelPartnerReportsService.get_regular_service_report',
                      side_effect=mock_reports)
-        report = ChannelPartnerReportsService.get_reports_for_services(channel_partner=channel_partner,
-                                                                       period_start=parser.parse('01-01-2024'),
-                                                                       services=services)
+        report = ChannelPartnerReportsService.get_regular_service_reports(channel_partner=channel_partner,
+                                                                          period_start=parser.parse('01-01-2024'),
+                                                                          services=services,
+                                                                          generate=True)
 
         assert report == {service.id: f'report_{service.id}' for service in services}
 
-    def test_build_channel_partner_report_from_service_report(self, cp_service_factory):
+    def test_get_expiring_reports_for_services(self, cp_service_factory, mocker):
         services = [cp_service_factory() for _ in range(5)]
-        reports = {
-            services[idx].id: ChannelPartnerServiceReport(
+        channel_partner = baker.prepare('partners.ChannelPartner')
+        mock_reports = [f'report_{service.id}' for service in services]
+        mocker.patch('partners.services.usage_reports_service.ChannelPartnerReportsService.get_expiring_service_report',
+                     side_effect=mock_reports)
+        report = ChannelPartnerReportsService.get_expiring_service_reports(channel_partner=channel_partner,
+                                                                           period_start=parser.parse('01-01-2024'),
+                                                                           services=services,
+                                                                           generate=True)
+
+        assert report == {service.id: f'report_{service.id}' for service in services}
+
+    def test_build_channel_partner_report_from_service_reports(self, cp_service_factory):
+        regular_parent_service = cp_service_factory()
+        expiring_parent_service = cp_service_factory()
+        regular_services = [cp_service_factory(parent_service=regular_parent_service) for _ in range(5)]
+        expiring_services = [cp_service_factory(parent_service=expiring_parent_service, sub_type=ChannelPartnerService.DEMO) for _ in range(5)]
+        services = regular_services + expiring_services
+        regular_reports = {
+            regular_services[idx].id: ChannelPartnerRegularServiceReport(
                 sub_entities=[],  # Aren't used when generating this report
-                summary=ChannelPartnerServiceSummary(channel_partners=idx + 1, organizations=2 * (idx + 1),
-                                                     channels=100 * (idx + 1),
-                                                     monthly_rate=50 * (idx + 1), daily_rate=200 * (idx + 1))
-            ) for idx in range(len(services) - 1)
+                summary=ChannelPartnerRegularServiceSummary(channel_partners=idx + 1, organizations=2 * (idx + 1),
+                                                            channels=100 * (idx + 1),
+                                                            monthly_rate=50 * (idx + 1), daily_rate=200 * (idx + 1))
+            ) for idx in range(len(regular_services))
+        }
+
+        expiring_reports = {
+            expiring_services[idx].id: ChannelPartnerExpiringServiceReport(
+                sub_entities=[],  # Aren't used when generating this report
+                summary=ChannelPartnerExpiringServiceSummary(channel_partners=idx + 1, organizations=2 * (idx + 1),
+                                                            channels=100 * (idx + 1))
+            ) for idx in range(len(expiring_services))
         }
 
         cp_report = ChannelPartnerReportsService.build_channel_partner_report_from_service_reports(
-            service_reports=reports, services=services)
+            regular_service_reports=regular_reports, expiring_service_reports=expiring_reports, services=services)
         assert cp_report == [
             ChannelPartnerUsageReportRecord(
-                service_id=services[idx].id, service_name=services[idx].name, used_by_organizations=2 * (idx + 1),
-                used_by_channel_partners=idx + 1, channels=100 * (idx + 1), daily_rate=200 * (idx + 1), expirations=[],
-                monthly_rate=50 * (idx + 1)
-            ) for idx in range(len(services) - 1)
+                service_id=regular_services[idx].id, service_name=regular_services[idx].name, used_by_organizations=2 * (idx + 1),
+                used_by_channel_partners=idx + 1, channels=100 * (idx + 1), daily_rate=200 * (idx + 1),
+                monthly_rate=50 * (idx + 1), sub_type=ChannelPartnerService.REGULAR, parent_service_id=regular_services[idx].parent_service.id, parent_service_name=regular_services[idx].parent_service.name
+            ) for idx in range(len(regular_services))
+        ] + [
+            ChannelPartnerUsageReportRecord(
+                service_id=expiring_services[idx].id, service_name=expiring_services[idx].name, used_by_organizations=2 * (idx + 1),
+                used_by_channel_partners=idx + 1, channels=100 * (idx + 1), sub_type=ChannelPartnerService.DEMO, daily_rate=0,
+                monthly_rate=0, parent_service_id=expiring_services[idx].parent_service.id, parent_service_name=expiring_services[idx].parent_service.name
+            ) for idx in range(len(expiring_reports))
         ]
 
 
@@ -651,8 +933,10 @@ class TestChannelPartnerReportsServiceSave:
 
     def test_get_regular_detail_table(self, channel_partner_factory, organization_factory, mocker,
                                       system_factory, cp_service_factory, service_record_factory,):
-        cp = channel_partner_factory()
-        service = cp_service_factory(channel_partner=cp)
+        parent_cp = channel_partner_factory()
+        parent_service = cp_service_factory(channel_partner=parent_cp)
+        cp = channel_partner_factory(parent_channel_partner=parent_cp)
+        service = cp_service_factory(parent_service=parent_service, channel_partner=cp)
         organization = organization_factory(channel_partner=cp)
         systems = [system_factory(organization=organization) for _ in range(3)]
         service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
@@ -664,7 +948,7 @@ class TestChannelPartnerReportsServiceSave:
         try:
             report = ChannelPartnerReportsService.get_regular_detail_table(
                 channel_partner=cp,
-                service=service,
+                service=parent_service,
                 period_start=timezone.now() - relativedelta(months=1),
             )
         except ReportSnapshotDoesNotExists:
@@ -674,7 +958,7 @@ class TestChannelPartnerReportsServiceSave:
 
         report = ChannelPartnerReportsService.get_regular_detail_table(
             channel_partner=cp,
-            service=service,
+            service=parent_service,
             period_start=timezone.now() - relativedelta(months=1),
             generate=True
         )
@@ -682,12 +966,12 @@ class TestChannelPartnerReportsServiceSave:
         snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
                                               report_type=ReportSnapshot.ReportType.channel_partner_regular_detail_table)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
-        assert snapshot.service == service
+        assert snapshot.service == parent_service
         assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
         save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
         new_report = ChannelPartnerReportsService.get_regular_detail_table(
             channel_partner=cp,
-            service=service,
+            service=parent_service,
             period_start=timezone.now() - relativedelta(months=1),
             generate=True
         )
@@ -707,7 +991,7 @@ class TestChannelPartnerReportsServiceSave:
             service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
             service_record.cloud_system.save()
         try:
-            report = ChannelPartnerReportsService.get_organization_usages(
+            report = ChannelPartnerReportsService.get_regular_organization_usages(
                 channel_partner=cp,
                 service=service,
                 period_start=timezone.now() - relativedelta(months=1),
@@ -717,7 +1001,7 @@ class TestChannelPartnerReportsServiceSave:
         else:
             assert False, 'Should have raised an exception when generate=False and no existing reports saved'
 
-        report = ChannelPartnerReportsService.get_organization_usages(
+        report = ChannelPartnerReportsService.get_regular_organization_usages(
             channel_partner=cp,
             service=service,
             period_start=timezone.now() - relativedelta(months=1),
@@ -725,13 +1009,13 @@ class TestChannelPartnerReportsServiceSave:
         )
         assert report
         snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
-                                              report_type=ReportSnapshot.ReportType.channel_partner_organization_usages)
+                                              report_type=ReportSnapshot.ReportType.channel_partner_organization_regular_usages)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
         assert snapshot.service == service
         assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
 
         save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
-        new_report = ChannelPartnerReportsService.get_organization_usages(
+        new_report = ChannelPartnerReportsService.get_regular_organization_usages(
             channel_partner=cp,
             service=service,
             period_start=timezone.now() - relativedelta(months=1),
@@ -757,7 +1041,7 @@ class TestChannelPartnerReportsServiceSave:
             service_record.cloud_system.created_ts = period_start
             service_record.cloud_system.save()
         try:
-            report = ChannelPartnerReportsService.get_channel_partner_usages(
+            report = ChannelPartnerReportsService.get_regular_channel_partner_usages(
                 channel_partner=cp,
                 service=service,
                 period_start=period_start,
@@ -767,7 +1051,7 @@ class TestChannelPartnerReportsServiceSave:
         else:
             assert False, 'Should have raised an exception when generate=False and no existing reports saved'
 
-        report = ChannelPartnerReportsService.get_channel_partner_usages(
+        report = ChannelPartnerReportsService.get_regular_channel_partner_usages(
             channel_partner=cp,
             service=service,
             period_start=period_start,
@@ -775,7 +1059,7 @@ class TestChannelPartnerReportsServiceSave:
         )
         assert report
         snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
-                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_usages)
+                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_regular_usages)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
         assert snapshot.service == service
         assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
@@ -789,7 +1073,7 @@ class TestChannelPartnerReportsServiceSave:
             )
             ServiceUsage.check_excess(service_record.cloud_system)
         ReportSnapshot.objects.all().delete()
-        report = ChannelPartnerReportsService.get_channel_partner_usages(
+        report = ChannelPartnerReportsService.get_regular_channel_partner_usages(
             channel_partner=cp,
             service=service,
             period_start=period_start,
@@ -797,13 +1081,13 @@ class TestChannelPartnerReportsServiceSave:
         )
         assert report
         snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
-                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_usages)
+                                              report_type=ReportSnapshot.ReportType.channel_partner_channel_partner_regular_usages)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
         assert snapshot.service == service
         assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
 
         save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
-        new_report = ChannelPartnerReportsService.get_channel_partner_usages(
+        new_report = ChannelPartnerReportsService.get_regular_channel_partner_usages(
             channel_partner=cp,
             service=service,
             period_start=period_start,
@@ -846,7 +1130,7 @@ class TestReportSnapshotService:
         self.org = organization_factory(channel_partner=self.cp)
         self.cp_service = cp_service_factory(channel_partner=self.cp)
         self.system = system_factory(organization=self.org)
-        
+
     def test_init_no_existing_not_provisional(self):
         snapshot_service = ReportSnapshotService(
             entity_id=self.cp.id,
@@ -1281,7 +1565,7 @@ class TestOrganizationReportsServiceSave:
             )
             ServiceUsage.check_excess(service_record.cloud_system)
         try:
-            report = OrganizationReportsService.get_system_reports(
+            report = OrganizationReportsService.get_regular_system_reports(
                 organization=organization,
                 service=service,
                 period_start=timezone.now() - relativedelta(months=1),
@@ -1291,7 +1575,7 @@ class TestOrganizationReportsServiceSave:
         else:
             assert False, 'Should have raised an exception when generate=False and no existing reports saved'
 
-        report = OrganizationReportsService.get_system_reports(
+        report = OrganizationReportsService.get_regular_system_reports(
             organization=organization,
             service=service,
             period_start=timezone.now() - relativedelta(months=1),
@@ -1300,11 +1584,11 @@ class TestOrganizationReportsServiceSave:
         assert report
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
                                               service=service,
-                                              report_type=ReportSnapshot.ReportType.organization_systems_reports)
+                                              report_type=ReportSnapshot.ReportType.organization_regular_systems_reports)
         assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
         assert ReportSnapshot.objects.count() > 1 # nested reports must be saved too
         save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
-        new_report = OrganizationReportsService.get_system_reports(
+        new_report = OrganizationReportsService.get_regular_system_reports(
             organization=organization,
             service=service,
             period_start=timezone.now() - relativedelta(months=1),
@@ -1314,10 +1598,10 @@ class TestOrganizationReportsServiceSave:
         assert save_snapshot_spy.call_count == 0
         # Test only missing reports generation
         ReportSnapshot.objects.get(entity_id=organization.id,
-                                   report_type=ReportSnapshot.ReportType.organization_systems_reports).delete()
+                                   report_type=ReportSnapshot.ReportType.organization_regular_systems_reports).delete()
         ReportSnapshot.objects.filter(report_type=ReportSnapshot.ReportType.system_regular_report).first().delete()
         save_snapshot_spy.reset_mock()
-        new_report = OrganizationReportsService.get_system_reports(
+        new_report = OrganizationReportsService.get_regular_system_reports(
             organization=organization,
             service=service,
             period_start=timezone.now() - relativedelta(months=1),

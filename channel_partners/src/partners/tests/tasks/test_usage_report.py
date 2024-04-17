@@ -133,7 +133,7 @@ class TestCalculateAllReport:
         self.sub_system = system_factory(organization=self.sub_org)
         self.sub_system.created_ts = timezone.now() - relativedelta(months=1)
         self.sub_system.save()
-        self.test_reports_count = 2 * 2 + 2 * (3 * 2 + 1) + 3 * (4 * 2 + 1)
+        self.test_reports_count = (2 * 2) + (2 * ((3 * 2) + 1)) + ((3 * (4 * 2)) + 1)  # System reports + organization reports + channel partner reports
         CloudSystemId.objects.all().update(created_ts=timezone.now() - relativedelta(months=1))
         for system in (self.top_system, self.sub_system):
             for service in system.organization.channel_partner.services.all():

@@ -73,24 +73,38 @@ def calculate_organization_reports(
         period_start: datetime.date
 ):
     for service in services:
-        OrganizationReportsService.get_system_reports(
-            organization=organization,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
-        OrganizationReportsService.get_regular_service_report(
-            organization=organization,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
-        OrganizationReportsService.get_regular_detail_table(
-            organization=organization,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
+        if service.is_expiring:
+            OrganizationReportsService.get_expiring_system_reports(
+                organization=organization,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            OrganizationReportsService.get_expiring_service_report(
+                organization=organization,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+        else:
+            OrganizationReportsService.get_regular_system_reports(
+                organization=organization,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            OrganizationReportsService.get_regular_service_report(
+                organization=organization,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+        # OrganizationReportsService.get_regular_detail_table(
+        #     organization=organization,
+        #     service=service,
+        #     period_start=period_start,
+        #     generate=True
+        # )
     OrganizationReportsService.get_organization_report(
         organization=organization,
         period_start=period_start,
@@ -129,30 +143,50 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
             for future in as_completed(futures):
                 future.result()
     for service in services:
-        ChannelPartnerReportsService.get_organization_usages(
-            channel_partner=channel_partner,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
-        ChannelPartnerReportsService.get_channel_partner_usages(
-            channel_partner=channel_partner,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
-        ChannelPartnerReportsService.get_regular_service_report(
-            channel_partner=channel_partner,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
-        ChannelPartnerReportsService.get_regular_detail_table(
-            channel_partner=channel_partner,
-            service=service,
-            period_start=period_start,
-            generate=True
-        )
+        if service.is_expiring:
+            ChannelPartnerReportsService.get_expiring_organization_usages(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            ChannelPartnerReportsService.get_expiring_channel_partner_usages(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            ChannelPartnerReportsService.get_expiring_service_report(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+        else:
+            ChannelPartnerReportsService.get_regular_organization_usages(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            ChannelPartnerReportsService.get_regular_channel_partner_usages(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+            ChannelPartnerReportsService.get_regular_service_report(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True
+            )
+        # ChannelPartnerReportsService.get_regular_detail_table(
+        #     channel_partner=channel_partner,
+        #     service=service,
+        #     period_start=period_start,
+        #     generate=True
+        # )
     ChannelPartnerReportsService.get_channel_partner_report(
         channel_partner=channel_partner,
         period_start=period_start,

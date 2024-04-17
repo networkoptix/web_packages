@@ -409,7 +409,7 @@ def system_factory(cloud_test_host, default_organization):
 def cp_service_factory(default_channel_partner):
     def factory(channel_partner=default_channel_partner, parent_service=None,
                 service_type=ChannelPartnerService.LOCAL_RECORDING, duration=0,
-                conversion_service=None):
+                conversion_service=None, sub_type=ChannelPartnerService.REGULAR):
         return baker.make(ChannelPartnerService, name=f'{uuid4()}',
                           created_by_channel_partner=channel_partner,
                           parent_service=parent_service,
@@ -417,6 +417,7 @@ def cp_service_factory(default_channel_partner):
                           type=service_type,
                           duration=duration,
                           conversion_service=conversion_service,
+                          sub_type=sub_type
                           )
 
     return factory

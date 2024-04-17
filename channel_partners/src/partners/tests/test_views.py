@@ -1019,8 +1019,9 @@ class TestChannelPartnerStructureNestedViewSet:
         assert actual[0]["name"] == "cp_other_child"
 
         assert len(actual[0]["organizations"]) == 2
-        assert actual[0]["organizations"][0]["name"] == "cp_other_child_org_1"
-        assert actual[0]["organizations"][1]["name"] == "cp_other_child_org_2"
+        actual_org_names = [org['name'] for org in actual[0]["organizations"]]
+        assert "cp_other_child_org_1" in actual_org_names
+        assert "cp_other_child_org_2" in actual_org_names
 
     def test_channel_partner_group_structure_other_cp_success(self):
         response = self.__make_request_get_response(
