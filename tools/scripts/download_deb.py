@@ -22,7 +22,7 @@ DOWNLOADS_BASE = 'https://beta.networkoptix.com/beta-builds'
 
 def download_deb(build_number, download_url):
     res = requests.get(download_url, stream=True)
-    with open(f"tools/mediaserver_debs/{build_number}.deb", "wb") as f:
+    with open(f"tools/docker_resources/mediaserver_debs/{build_number}.deb", "wb") as f:
         shutil.copyfileobj(res.raw, f)
 
 
