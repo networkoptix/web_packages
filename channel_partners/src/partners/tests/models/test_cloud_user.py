@@ -192,7 +192,8 @@ class TestCloudUserSystemsMembership:
         assert len(systems) == 3
         assert systems_ids == self.org_sys_ids
 
+    def test_systems_memberships_queries(self, django_assert_num_queries):
+        expected_queries = 2
 
-
-
-
+        with django_assert_num_queries(expected_queries):
+            self.org_admin.user.systems_memberships()
