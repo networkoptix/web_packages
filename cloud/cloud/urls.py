@@ -122,7 +122,7 @@ urlpatterns = [
             static_serve.customizable_files, name="customizable_static"),
     re_path(r'^static/lang_(?P<language_code>[a-z]{2,3}_[A-Z]{2,3})/(?P<filename>.*)',
             static_serve.language_template),
-    re_path(r'^(?!static|preview|admin).*', app_view)
+    re_path(r'^(?!static|preview|admin|api).*', app_view)
 ]
 
 if settings.LOCAL_ENVIRONMENT:
