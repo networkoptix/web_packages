@@ -811,7 +811,7 @@
     "No active Cloud Storage": "アクティブなクラウドストレージがありません",
     "No bookmarks": "ブックマークはありません",
     "No camera can be accessed by this link.": "このリンクからカメラにアクセスすることはできません。",
-    "No connection": "接続できません",
+    "No connection": "接続していません",
     "No data": "データがありません",
     "No license active for this camera": "このカメラに使用されたライセンスはありません",
     "No main storage drive was selected for writing - video will not be recorded on this server.": "書き込み用のメインストレージが選択されていません。このサーバーでは録画は行われません。",
