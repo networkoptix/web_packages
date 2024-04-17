@@ -18,6 +18,11 @@ from httpx import Response
 from jwt import InvalidTokenError
 from nx_cloud_api_client.base_auth import CdbAuthAPIClient
 from nx_cloud_api_client.client import NxCloudAPISyncClient
+from nx_jwt.jwt_auth import (
+    JWT_REGEX,
+    FallbackToRegToken,
+    JWKMissingKeyError,
+)
 from rest_framework import (
     exceptions,
     status,
@@ -36,11 +41,6 @@ from partners.models import (
 )
 from tools.exception import APIErrorWithoutRollback
 from tools.helpers import cast_uuid
-from tools.jwt.jwt_auth import (
-    JWT_REGEX,
-    FallbackToRegToken,
-    JWKMissingKeyError,
-)
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 

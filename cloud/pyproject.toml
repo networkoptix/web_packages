@@ -61,6 +61,7 @@ pandas="==1.5.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/pan
 Pillow = "9.0.1" #HPND License|https://github.com/python-pillow/Pillow|https://github.com/python-pillow/Pillow/blob/main/LICENSE
 py = "1.10.0" #Unknown License|https://github.com/codebasics/py| ################################################################
 pycurl = "~7.44.1" #GNU Lesser General Public License v2.1|https://github.com/pycurl/pycurl|https://github.com/pycurl/pycurl/blob/master/COPYING-LGPL
+pyjwt = { version="^2.8.0", extras=["crypto"] } #MIT License|https://github.com/jpadilla/pyjwt|https://github.com/jpadilla/pyjwt/blob/master/LICENSE
 pystache = "0.6.0" #MIT License|https://github.com/defunkt/pystache|https://github.com/defunkt/pystache/blob/master/LICENSE
 pytz = "*" #MIT License|https://github.com/stub42/pytz|https://github.com/stub42/pytz/blob/master/LICENSE.txt
 PyYAML = "6.0.1" #MIT License|https://github.com/yaml/pyyaml|https://github.com/yaml/pyyaml/blob/main/LICENSE

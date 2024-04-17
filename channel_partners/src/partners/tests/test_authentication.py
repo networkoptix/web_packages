@@ -10,6 +10,10 @@ import httpx
 import pytest
 from django.conf import settings
 from django.core.cache import caches
+from nx_jwt.jwt_auth import (
+    FallbackToRegToken,
+    get_jwk_client,
+)
 from rest_framework import exceptions
 
 from partners.authentication import (
@@ -23,10 +27,6 @@ from partners.authentication import (
 from partners.models import (
     CloudSystemStates,
     VmsRoles,
-)
-from tools.jwt.jwt_auth import (
-    FallbackToRegToken,
-    get_jwk_client,
 )
 
 
