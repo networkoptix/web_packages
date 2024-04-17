@@ -60,3 +60,7 @@ class ReplaceAncestors(Func):
         params += repl_params
         return sql, params
 
+
+class ToArray(Func):
+    function = "ARRAY"
+    template = "%(function)s[%(expressions)s]"

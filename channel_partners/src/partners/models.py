@@ -22,7 +22,6 @@ import structlog
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.auth.models import Permission
-from django.contrib.postgres.aggregates import ArrayAgg
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
@@ -67,6 +66,7 @@ from partners.utils.db import (
     MonthInterval,
     RemoveArrayElement,
     ReplaceAncestors,
+    ToArray,
 )
 from tools.helpers import (
     get_path_from_parent,
@@ -188,51 +188,46 @@ class CloudUser(models.Model):
     def systems_memberships(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
         cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
-        organization_sys = (
-            OrganizationToUser.objects
-            .filter(
-                user=self,
-                roles__overlap=roles_with_sys_perm,
-                system_group__isnull=True,
-                organization__cloud_systems__system_id__isnull=False)
-            .annotate(
-                org_id=F('organization_id'),
-                sys_id=F('organization__cloud_systems__system_id'),
-                membership_type=Value('organization'),
-                org_roles=F('roles')
-            )
-            .values('org_id', 'sys_id', 'membership_type', 'org_roles')
-        )
-        channel_partner_sys = (
-            CloudSystemId.objects.filter(
-                organization__channel_partner_access_level__in=roles_with_sys_perm,
-                organization__channel_partner__channelpartnertouser__user=self,
-                organization__channel_partner__channelpartnertouser__roles__overlap=cp_roles,
-            ).annotate(
-                org_id=F('organization_id'),
-                sys_id=F('system_id'),
-                membership_type=Value('channel_partner')
-            )
-            .annotate(org_roles=ArrayAgg('organization__channel_partner_access_level_id'))
-            .values('org_id', 'sys_id', 'membership_type', 'org_roles')
-        )
-        group_roles = OrganizationToUser.objects.filter(
-            user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=False)
-        queryset = organization_sys.union(channel_partner_sys)
-        for group_role in group_roles:
-            group_sys = (
-                CloudSystemId.objects.filter(
-                    organization_id=group_role.organization_id,
-                    path__contains=[group_role.system_group_id])
-                .annotate(
-                    org_id=F('organization_id'),
-                    sys_id=F('system_id'),
-                    membership_type=Value('organization'),
-                    org_roles=Value(group_role.roles, output_field=ArrayField(base_field=models.UUIDField())))
-                .values('org_id', 'sys_id', 'membership_type', 'org_roles')
-            )
-            queryset = queryset.union(group_sys)
 
+        organization_sys_q = Q(
+            organization__organizationtouser__system_group__isnull=True,
+            organization__organizationtouser__user=self,
+            organization__organizationtouser__roles__overlap=roles_with_sys_perm,
+            system_id__isnull=False
+        )
+
+        group_sys_q = Q(
+            organization__organizationtouser__user=self,
+            organization__organizationtouser__system_group_id__isnull=False,
+            path__overlap=ToArray('organization__organizationtouser__system_group_id')
+        )
+
+        organization_queryset = CloudSystemId.objects.filter(organization_sys_q).annotate(
+            org_id=F('organization_id'),
+            sys_id=F('system_id'),
+            membership_type=Value('organization'),
+            org_roles=F('organization__organizationtouser__roles'),
+        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+
+        group_queryset = CloudSystemId.objects.filter(group_sys_q).annotate(
+            org_id=F('organization_id'),
+            sys_id=F('system_id'),
+            membership_type=Value('group'),
+            org_roles=F('organization__organizationtouser__roles'),
+        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+
+        channel_partner_queryset = CloudSystemId.objects.filter(
+            organization__channel_partner_access_level__in=roles_with_sys_perm,
+            organization__channel_partner__channelpartnertouser__user=self,
+            organization__channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+        ).annotate(
+            org_id=F('organization_id'),
+            sys_id=F('system_id'),
+            membership_type=Value('channel_partner'),
+            org_roles=ToArray('organization__channel_partner_access_level_id')
+        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+
+        queryset = organization_queryset.union(group_queryset, channel_partner_queryset)
         return queryset
 
     def all_systems(self):
@@ -308,7 +303,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     organization = models.ForeignKey('Organization', null=True, blank=True, on_delete=models.CASCADE,
                                      related_name='cloud_systems')
-    system_group = models.ForeignKey('SystemGroup', null=True, blank=True, on_delete=models.PROTECT, related_name='cloud_systems')
+    system_group = models.ForeignKey(
+        'SystemGroup',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name='cloud_systems')
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
@@ -999,7 +999,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             if new:
                 if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
                     if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
-                        raise ValidationError({'parent_channel_partner_id': 'Only one root channel partner is allowed.'})
+                        raise ValidationError({
+                                'parent_channel_partner_id': 'Only one root channel partner is allowed.'
+                        })
                 if self.parent_channel_partner:
                     self.invalidate_cache(str(self.parent_channel_partner.id))
 
@@ -1042,7 +1044,13 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         cache_key: str = cp_direct_children_count(pk)
         cache = caches['default'].delete(cache_key)
 
-    def parent_channel_partner_args(self, base_arg='service', secondary_arg='parent_service', suffix_arg='', value=None) -> models.Q:
+    def parent_channel_partner_args(
+            self,
+            base_arg='service',
+            secondary_arg='parent_service',
+            suffix_arg='',
+            value=None
+        ) -> models.Q:
         """Returns Q object of parent channel partner condtions"""
         if value is None:
             value = self
@@ -1187,7 +1195,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             return
         if self.effective_state == self._original_effective_state:
             return
-        updated_ids = Organization.update_effective_states(self.organizations, parent_effective_state=self.effective_state)
+        updated_ids = Organization.update_effective_states(
+            self.organizations,
+            parent_effective_state=self.effective_state)
         updated_ids += self.update_effective_states(self.channel_partners, parent_effective_state=self.effective_state)
         return updated_ids + [self.id]
 
@@ -1485,7 +1495,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date, end_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
+    def service_changes(
+            self,
+            start_ts: datetime.date,
+            end_ts: datetime.date
+        ) -> 'QuerySet[ChannelPartnerServiceRecord]':
         if start_ts is None or end_ts is None:
             raise ValueError("Filter timestamps must be passed.")
         return ChannelPartnerServiceRecord.objects.filter(
