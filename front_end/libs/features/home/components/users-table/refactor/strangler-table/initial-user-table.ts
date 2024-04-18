@@ -62,7 +62,7 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
 
     @Input({ transform: booleanAttribute }) inGroup: boolean;
     @Input({ transform: booleanAttribute }) accessTable: boolean;
-    @Input({ required: true }) userType: UserType;
+    @Input() userType: UserType;
     @Input() headers: HEADER_ITEM[];
     @Input() records: UserRecord[];
     @Input() selectedRecordId: string = '';

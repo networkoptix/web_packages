@@ -17,6 +17,7 @@ export interface UserRecord {
     groupRoles?: GroupRole[];
     isOrgUser?: boolean;
     accessLevel?: AccessLevel;
+    accessId?: string;
 }
 
 export enum UserType {

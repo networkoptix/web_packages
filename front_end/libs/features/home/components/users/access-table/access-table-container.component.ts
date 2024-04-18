@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, computed, inject } from '@angular/core';
+import { Component, Input, ViewChild, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -23,10 +23,10 @@ import { NxUsersTableComponent } from '../../users-table/users-table.component';
 import { UserRecord, UserType } from '../channel-partner-users/channel-partner-users.types';
 
 @Component({
-    selector: 'nx-access-table',
-    templateUrl: 'access-table.component.html',
+    selector: 'nx-access-table-container',
+    templateUrl: 'access-table-container.component.html',
     styleUrls: [
-        'access-table.component.scss',
+        'access-table-container.component.scss',
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     imports: [
@@ -41,13 +41,14 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
     ],
     standalone: true,
 })
-export class NxAccessTableComponent {
+export class NxAccessTableContainerComponent {
     LANG = staticLang;
     CONFIG = nxConfig;
     UserType = UserType;
     icons = icons;
 
     @Input() email: string = '';
+    @ViewChild(NxUsersAccessTableComponent) accessTable!: NxUsersAccessTableComponent;
 
     orgUsersStore = inject(OrgUsersStore);
 
@@ -67,19 +68,23 @@ export class NxAccessTableComponent {
                             groupRoles: [groupRole],
                             roles: groupRole.roles,
                             rolesIds: groupRole.rolesIds,
-                            groupId: UserType.ORGANIZATION,
+                            accessId: groupRole.groupId,
                         };
                     });
                 }
+                user.accessId = this.currentOrg$$()?.id;
                 return user;
             });
     });
 
     orgRoles$$ = this.cpService.organizationRoles$$;
+    // Remove once v2 ready
     headers: HEADER_ITEM[] = [
         { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
+
+    // Remove once v2 ready
     fullName$$ = computed(() => {
         const fullName = this.orgRecords$$().find(
             u => u.email === this.email && u.fullName !== 'N/A',
@@ -90,7 +95,9 @@ export class NxAccessTableComponent {
 
         return this.email;
     });
+    // Remove once v2 ready
     selectedGroups: { [key: string]: UserRecord } = {};
+    selectedCount = 0;
 
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
@@ -124,6 +131,7 @@ export class NxAccessTableComponent {
         });
     }
 
+    // Remove once v2 is ready
     deleteUser(row: UserRecord): void {
         const selectedGroupsLength = Object.keys(this.selectedGroups).length;
         const deleteMultiple = selectedGroupsLength > 1;
@@ -167,7 +175,13 @@ export class NxAccessTableComponent {
             });
     }
 
-    updateSelectedUsers(groups: { [key: string]: UserRecord }): void {
+    // temporary any typing until we rid other users table
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updateSelectedUsers(groups: any): void {
         this.selectedGroups = groups;
+    }
+
+    updateSelectedCount(count: number): void {
+        this.selectedCount = count;
     }
 }
