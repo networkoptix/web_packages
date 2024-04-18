@@ -129,6 +129,7 @@ django-checks:
     PYTHONPATH: "/builds/dev/cloud_portal/common/python"
   script:
     - cd cloud
+    - poetry lock --check
     - python -m pip install safety==2.3.5
     - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
@@ -236,6 +237,7 @@ open-source:open-source-checker:
 check-python-licenses:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: check
+  extends: .backend-changes
   needs:
     - job: docker:build-django-python
 # Docker must be rebuilt before licenses check

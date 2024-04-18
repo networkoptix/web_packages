@@ -468,7 +468,7 @@ function export_poetry_requirements() {
 
 function check_licenses() {
     check_poetry_lock
-    ALLOWED="$(cat cloud/allowed_licenses.txt)"
+    ALLOWED="$(cat cloud/allowed_licenses.txt | tr -d '\n')"
     pip-licenses --format=json --with-urls --allow-only="$ALLOWED"
 }
 
