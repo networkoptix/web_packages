@@ -608,7 +608,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
 
     /* Tabs component */
     --tabs-border-color: var(--light_gray_3);
-    --tabs-active-color: var(--blue1);
+    --tabs-active-color: var(--brand-core);
     --tabs-color: var(--dark_gray_4);
 
     // System groups
@@ -625,26 +625,26 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
 
     --group-card-folder-icon-body-fill: var(--light_gray_10);
     --group-card-folder-icon-tab-fill: var(--light_gray_13);
-    --group-card-bg: var(--light_gray_6);
-    --group-card-bg-hover: var(--light_gray_7);
-    --group-card-border-color: var(--light_gray_10);
+    --group-card-bg: var(--light_gray_4);
+    --group-card-bg-hover: var(--light_gray_6);
+    --group-card-border-color: var(--light_gray_5);
 
     --channel-partner-card-status-background: var(--light_gray_10);
     --channel-partner-card-status-dark: var(--dark1);
 
     --subchannel-partner-card-id-background: var(--light_gray_16);
     --subchannel-partner-card-id-color: var(--light_gray_2);
-    --subchannel-partner-card-org-fill: var(--light_gray_4);
-    --subchannel-partner-card-color: var(--light_gray_4);
+    --subchannel-partner-card-org-fill: var(--light_gray_16);
+    --subchannel-partner-card-color: var(--light_gray_16);
 
     --org-delete-folder-warning-header: #{$yellow_main};
     --org-delete-folder-warning-bg: #{$yellow_l3};
 
     @include generateVarAndRgb(--system-card-bg-grad0, $light_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light_gray_3);
-    --system-card-bg: var(--light_gray_3);
-    --system-card-offline-color: var(--light_gray_4);
-    --system-card-border-color: var(--light_gray_5);
+    --system-card-bg: var(--light_gray_2);
+    --system-card-offline-color: var(--light_gray_16);
+    --system-card-border-color: var(--light_gray_7);
     --system-card-owner-color: var(--light_gray_16);
 
     --group-system-card-color: var(--dark_gray_15);
@@ -653,17 +653,17 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --card-menu-dots-fill: var(--light_gray_16);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark_gray_15--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--dark_gray_15--rgb), 0.2);
-    --card-border-color: var(--light_gray_7);
+    --card-border-color: var(--light_gray_6);
     --card-context-bg: var(--light_gray_4);//
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_15--rgb), 0.4);
 
-    --CP-pane-background: var(--light_gray_1);
+    --CP-pane-background: var(--light_gray_2);
     --CP-pane-border: var(--light_gray_3);
     --CP-pane-header-background: var(--light_gray_1);
-    --CP-pane-header-border: var(--light_gray_7);
+    --CP-pane-header-border: var(--light_gray_4);
     --CP-pane-input: var(--light10);
     --CP-state-button: var(--light_gray_3);
-    --CP-state-button-selected: var(--light_gray_5);
+    --CP-state-button-selected: var(--light_gray_7);
     --CP-state-color: var(--dark9);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
