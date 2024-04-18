@@ -34,10 +34,12 @@ RUN set -ex \
 
 FROM builder AS pypackages
 COPY --from=requirements /app/requirements.txt /app/requirements.txt
+
+COPY stage/cloud/allowed_licenses.txt /app/allowed_licenses.txt
 RUN set -ex \
     && apt update && apt install --no-install-suggests --no-install-recommends -y gcc \
     && pip install --no-cache-dir -r /app/requirements.txt \
-    && pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache 2.0;Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0);LGPLv3+" > /app/requirements-license.json \
+    && pip-licenses --format=json --with-urls --allow-only="$(cloud/allowed_licenses.txt | tr -d '\n')" > /app/requirements-license.json \
     && apt remove gcc -y && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
 
 
