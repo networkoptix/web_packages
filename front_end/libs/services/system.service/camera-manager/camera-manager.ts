@@ -166,6 +166,7 @@ export class CameraManager {
             vendor,
             model,
             url,
+            typeId,
 
             parentId,
             audioEnabled,
@@ -191,6 +192,7 @@ export class CameraManager {
             vendor,
             model,
             url,
+            typeId,
             systemId: this.system.id,
             get accessToken(): string {
                 return getAccessToken();

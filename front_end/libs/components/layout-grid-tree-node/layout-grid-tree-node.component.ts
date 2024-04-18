@@ -39,7 +39,9 @@ import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-erro
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
+import { CameraTypeId } from '@services/system.service/camera-manager/camera-manager-types';
 import { icons } from '@static-variables';
+import { cleanId } from '@utils/general';
 
 @UntilDestroy()
 @Component({
@@ -75,9 +77,7 @@ import { icons } from '@static-variables';
 export class NxLayoutGridTreeNode {
     expanded$$ = input<boolean>(false, { alias: 'expanded' });
     preview$$ = input<boolean>(false, { alias: 'preview' });
-    active$$ = input<boolean>(false, { alias: 'active' });
     selected$$ = input<boolean>(false, { alias: 'selected' });
-    checked$$ = input<boolean>(false, { alias: 'checked' });
     isRoot$$ = input<boolean>(false, { alias: 'isRoot' });
     menuItems$$ = input.required<
         MenuItemsOrMenuItemsFactory<Partial<MergedResourceNode<{ id: string }>> & BaseResourceNode>
@@ -94,18 +94,18 @@ export class NxLayoutGridTreeNode {
     protected readonly RESOURCE_TYPE = ResourceType;
     value: string;
 
-    @HostBinding('class') get class(): Record<string, boolean> {
-        return {
-            offline: this.offline$$(),
-            active: this.active$$(),
-            selected: this.selected$$(),
-            checked: this.checked$$(),
-            'leaf-node': !this.isRoot$$(),
-            'root-node': this.isRoot$$(),
-            'renaming-node': this.isRenaming$$(),
-            'new-node': this.isNew$$(),
-        };
-    }
+    @HostBinding('class') class: Record<string, boolean> = {};
+
+    class$$ = computed(() => ({
+        offline: this.offline$$(),
+        activated: this.activated$$(),
+        selected: this.selected$$(),
+        checked: this.checked$$(),
+        'leaf-node': !this.isRoot$$(),
+        'root-node': this.isRoot$$(),
+        'renaming-node': this.isRenaming$$(),
+        'new-node': this.isNew$$(),
+    }));
 
     constructor(
         public layoutItemsStore: LayoutItemsErrorsStore,
@@ -113,6 +113,7 @@ export class NxLayoutGridTreeNode {
     ) {
         effect(() => {
             this.value = this.node$$().name;
+            this.class = this.class$$();
         });
     }
 
@@ -159,6 +160,21 @@ export class NxLayoutGridTreeNode {
         }
     });
 
+    activated$$ = computed(() => {
+        const node = this.node$$();
+        const selectedCameraId = this.layoutStateService.selectedCameraId$$();
+
+        return !!selectedCameraId && node.details?.id === selectedCameraId;
+    });
+
+    checked$$ = computed(() => {
+        const id = this.node$$().details?.id;
+        if (!id) {
+            return false;
+        }
+        return this.layoutStateService.activeLayoutItemsIds$$().includes(cleanId(id));
+    });
+
     unsavedLayoutString$$ = computed(() => {
         const id = this.node$$().details?.id;
         const unsavedLayoutsIds = this.layoutStateService.unsavedLayoutsIds$$();
@@ -182,13 +198,15 @@ export class NxLayoutGridTreeNode {
                   (node.type !== 'camera' || ['warning', 'unauthorized'].includes(status)
                       ? status.replace('mismatchedCertificate', 'incompatible')
                       : assertResourceOfType.camera(node) &&
-                        (node.details?.unauthorized
-                            ? 'unauthorized'
-                            : node.details?.online && node.details?.requiresTranscoding
-                              ? 'warning'
-                              : node.details?.online
-                                ? 'online'
-                                : 'offline'))
+                        (node.details?.typeId === CameraTypeId.Virtual
+                            ? 'virtual'
+                            : node.details?.unauthorized
+                              ? 'unauthorized'
+                              : node.details?.online && node.details?.requiresTranscoding
+                                ? 'warning'
+                                : node.details?.online
+                                  ? 'online'
+                                  : 'offline'))
                 : '') +
             (assertResourceOfType.layout(node) && node.shared ? '_shared' : '') +
             (assertResourceOfType.layout(node) && node.crossSystem ? '_cloud' : '') +

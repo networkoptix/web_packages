@@ -9,7 +9,7 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
     Observable,
@@ -40,6 +40,7 @@ import {
     CamerasResolution,
     Resolution,
 } from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { selectLayouts } from '@services/layout-state/store/shared/selectors';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CrossSystemLayoutSerializer } from '@services/nx-cloud-api/cloud-services/doc-db/doc-db-serializers';
 import { DocHandler } from '@services/nx-cloud-api/cloud-services/doc-db/doc-handler';
@@ -84,6 +85,17 @@ export class LayoutStateService {
 
     // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
     editedLayout$$ = signal<{ id: string; isNew?: boolean } | null>(null);
+
+    activeLayoutItemsIds$$ = this.store.selectSignal(
+        createSelector(
+            selectLayouts,
+            selectActiveLayoutState,
+            (layouts, activeLayoutId): string[] =>
+                layouts
+                    .find(({ id }) => cleanId(id) === activeLayoutId)
+                    ?.items.map(({ resourceId }) => cleanId(resourceId)) || [],
+        ),
+    );
 
     focusViewToken = uuid();
 

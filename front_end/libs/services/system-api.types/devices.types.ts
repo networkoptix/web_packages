@@ -174,6 +174,7 @@ const sharedTopLevelKeyMap = {
     url: true,
     serverId: true,
     status: true,
+    typeId: true,
 } satisfies NxRecursiveKeyMap<DeviceV1Full>;
 
 export const cameraKeyMapV1 = {

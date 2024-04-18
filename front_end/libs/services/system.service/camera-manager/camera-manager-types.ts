@@ -32,6 +32,7 @@ export type RestV1CameraCompat = Pick<
     | 'backupPolicy'
     | 'backupQuality'
     | 'dewarpingParams'
+    | 'typeId'
 > & { deviceType: DeviceType; scheduleTasks: ScheduleTask[]; parameters: CamParameters };
 
 export type ScheduleTask = NxRecursivePick<
@@ -138,6 +139,7 @@ export interface NxSystemCamera {
     url: string;
     systemId: string;
     accessToken: string;
+    typeId: string;
 
     // Compatibility patches
     parentId: string; // serverId
@@ -175,6 +177,11 @@ export enum CameraStatus {
     Online = 'Online',
     Offline = 'Offline',
     Unauthorized = 'Unauthorized',
+}
+
+export enum CameraTypeId {
+    Virtual = '{f7f5ab66-7075-4d0b-a0b2-75e2fdd079a4}',
+    // no other types are added for now. I do not know them
 }
 
 export enum RecordingStatus {
