@@ -60,12 +60,12 @@
     "emailSubject": "{{{message.partner_name}}} Partner sizinle paylaşıldı"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin durumu {{message.status_name}} olarak değiştirildi "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin {{message.status_name}} durumuna transferini onaylayın "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "{{{message.partner_name}}} Partnerin durumu {{message.status_name}} olarak değiştirildi "
   }
 }

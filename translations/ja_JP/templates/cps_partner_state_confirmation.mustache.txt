@@ -1,6 +1,6 @@
 {{message.userFullName}} さん、こんにちは。
 
-Use the verification code below to complete status change of {message.partner_name}} to {{message.status_name}}.
+以下の確認コードを使用して、 {message.partner_name} の {{message.status_name}} へのステータス変更を完了させてください。
 
 確認コード:
 {{message.code}}

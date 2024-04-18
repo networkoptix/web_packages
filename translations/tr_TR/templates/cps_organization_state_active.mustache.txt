@@ -1,6 +1,6 @@
 Merhaba, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
+{{message.sharer_name}} sizinle "{{message.organization_name}}" kuruluşuna erişimi paylaştı.
 İşlevsellik artık tamamen mevcuttur.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+%CLOUD_NAME% Portalinde görüntülemek için bağlantıyı kullanın: {{ config.portal_url }}

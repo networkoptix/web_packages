@@ -2,4 +2,4 @@
 
 {{message.sharer_name}} が、チャネルパートナー "{{message.partner_name}}" へのアクセスを共有しました。
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+このリンクを使用して %CLOUD_NAME% ポータルで表示: {{ config.portal_url }}

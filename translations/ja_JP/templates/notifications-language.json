@@ -60,12 +60,12 @@
     "emailSubject": "パートナー {{{message.partner_name}}} が共有されました"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータスが {{message.status_name}} に変更されました "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}} "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータス {{message.status_name}} への遷移について確認してください "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}} "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータスが {{message.status_name}} に変更されました "
   }
 }
