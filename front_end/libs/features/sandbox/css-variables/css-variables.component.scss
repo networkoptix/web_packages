@@ -1,0 +1,60 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.color-chip {
+    position: relative;
+    margin: 4px;
+    border-radius: 8px;
+    border: 1px solid white;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 100px
+}
+
+.color-key, .color-value {
+    background-color: var(--body-bg);
+    color: var(--body-text-color);
+    display: inline-block;
+    position: absolute;
+    padding: 2px;
+}
+
+.color-key {
+    top: 0px;
+    left: 0px;
+    border-top-left-radius: 7px;
+}
+
+.color-value {
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: right;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+.root-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 8px;
+    & > button {
+        margin-top: 8px;
+        margin-bottom: 8px;
+        &:not(:last-of-type) {
+            white-space: nowrap;
+            margin-right: 8px;
+        }
+    }
+}

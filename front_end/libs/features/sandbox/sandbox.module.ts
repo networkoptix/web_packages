@@ -13,6 +13,7 @@ import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
+import { NxCssVariablesComponent } from './css-variables/css-variables.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import { SandboxFiltersComponent } from './filters/sandbox-filters.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
@@ -23,6 +24,7 @@ import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
 import { NxSandboxComponent } from './sandbox.component';
 import { SearchComponent } from './search/search.component';
 import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
+import { NxSignalsComponent } from './signals/signals.component';
 import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { ToasterComponent } from './toaster/toaster.component';
@@ -135,6 +137,14 @@ const appRoutes: Routes = [
             {
                 path: 'filters',
                 component: SandboxFiltersComponent,
+            },
+            {
+                path: 'css-variables',
+                component: NxCssVariablesComponent,
+            },
+            {
+                path: 'signals',
+                component: NxSignalsComponent,
             },
         ],
     },

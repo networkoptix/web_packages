@@ -1,0 +1,129 @@
+<label>
+    Bind signals with transformers source1$$
+    <input
+        type="number"
+        [ngModel]="source1$$()"
+        (ngModelChange)="source1$$.set($event)"
+    />
+</label>
+<label>
+    Bind signals with transformers source2$$
+    <input
+        type="number"
+        [ngModel]="source2$$()"
+        (ngModelChange)="source2$$.set($event)"
+    />
+</label>
+<label>
+    Create bound signal with transformer createBoundSource$$
+    <input
+        type="number"
+        [ngModel]="createBoundSource$$()"
+        (ngModelChange)="createBoundSource$$.set($event)"
+    />
+</label>
+<label>
+    Angular model binding modelBinding$$
+    <input
+        type="text"
+        [ngModel]="modelBinding$$()?.value"
+        (ngModelChange)="modelBinding$$.set({ value: $event })"
+    />
+</label>
+<label>
+    Create signal bound to model with transformer modelAlias$$
+    <input
+        type="text"
+        [ngModel]="modelAlias$$()"
+        (ngModelChange)="modelAlias$$.set($event)"
+    />
+</label>
+<label>
+    Bound Param Simple paramModel$$
+    <input
+        type="text"
+        [ngModel]="paramModel$$()"
+        (ngModelChange)="paramModel$$.set($event)"
+    />
+</label>
+<label>
+    Bound Param with transform paramModel2$$
+    <input
+        type="text"
+        [ngModel]="paramModel2$$().value"
+        (ngModelChange)="paramModel2$$.set({ value: $event })"
+    />
+</label>
+
+<label>
+    Bound param readonly signal paramSignal$$
+    <span>{{ paramSignal$$() }}</span>
+</label>
+
+<label>
+    Number of checkboxes numberOfCheckboxes$$
+    <input
+        type="number"
+        min="0"
+        [ngModel]="numberOfCheckboxes$$()"
+        (ngModelChange)="numberOfCheckboxes$$.set($event)"
+    />
+</label>
+
+<label>
+    Check all checkAll$$
+    <input
+        type="checkbox"
+        [ngModel]="checkAll$$()"
+        (ngModelChange)="toggleCheckAll()"
+    />
+</label>
+<h2>Multiple bindings checkBoxes$$</h2>
+@for (checkbox of checkBoxes$$(); track $index) {
+    <label>
+        Checkbox {{ $index }}
+        <input
+            type="checkbox"
+            [ngModel]="checkbox"
+            (ngModelChange)="toggleCheckbox($index)"
+        />
+    </label>
+}
+<label>
+    Pipe signal isTyping$$
+    <input
+        type="text"
+        [ngModel]="paramModel$$()"
+        (ngModelChange)="paramModel$$.set($event)"
+    />
+</label>
+@if (isTyping$$()) {
+    <h3>Typing...</h3>
+} @else {
+    <h3>Not typing</h3>
+}
+
+<h2>Recursive mapped model signal binding example</h2>
+<recursive-component
+    [children]="5"
+    [(modelBinding)]="source1$$"
+></recursive-component>
+<h2>Model Signal ngModel: {{ ngModelBinding }}</h2>
+
+<input
+    type="text"
+    name="ngModelBinding"
+    [(ngModel)]="ngModelBinding"
+/>
+
+<nx-ng-model
+    name="ngModelBinding"
+    [(ngModel)]="ngModelBinding"
+    [disabled]="disabled$$()"
+></nx-ng-model>
+<input
+    type="checkbox"
+    name="isDisabled"
+    [ngModel]="disabled$$()"
+    (ngModelChange)="disabled$$.set($event)"
+/>

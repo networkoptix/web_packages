@@ -1,0 +1,10 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+}
