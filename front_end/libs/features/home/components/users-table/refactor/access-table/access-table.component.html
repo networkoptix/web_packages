@@ -109,8 +109,8 @@
                     >
                         <div class="div-container roles">
                             <nx-select-v2
-                                [selected]="getRowRoleId(row)"
-                                (selectedChange)="updateRole(row, $event)"
+                                [ngModel]="getRowRoleId(row)"
+                                (ngModelChange)="updateRole(row, $event)"
                             >
                                 @for (role of orgRoles$$(); track role.id) {
                                     <nx-select-item [value]="role.id">

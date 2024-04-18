@@ -125,7 +125,7 @@
                         >
                     </div>
                     <div class="grid-item">
-                        <nx-select-v2 [(selected)]="selectedQualityWatcher.value">
+                        <nx-select-v2 [(ngModel)]="selectedQualityWatcher.value">
                             <nx-select-item
                                 *ngIf="selectedQualityIsVarious()"
                                 [value]="STREAM_QUALITY.VARIOUS"

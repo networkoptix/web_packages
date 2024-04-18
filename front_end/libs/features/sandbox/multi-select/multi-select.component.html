@@ -5,7 +5,7 @@
     <div class="col-4 dropdownPadding">
         <nx-select-v2
             placeholder="Placeholder text"
-            [(selected)]="selectedState"
+            [(ngModel)]="selectedState"
         >
             <nx-select-item
                 *ngFor="let state of states; index as i"
@@ -20,7 +20,7 @@
     <div class="col-4 dropdownPadding">
         <nx-select-v2
             placeholder="Placeholder text"
-            [(selected)]="selectedState"
+            [(ngModel)]="selectedState"
             [disabled]="true"
         >
             <nx-select-item
@@ -39,7 +39,7 @@
     <div class="col-4 dropdownPadding">
         <nx-select-v2
             placeholder="Select a user"
-            [(selected)]="selectedComplicatedObject"
+            [(ngModel)]="selectedComplicatedObject"
             (onChange)="logOnChange($event)"
         >
             <nx-select-item *ngIf="selectedComplicatedObject !== undefined">None</nx-select-item>

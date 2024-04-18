@@ -1,4 +1,5 @@
-import { Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { NxCheckboxComponent } from '../../../checkbox/checkbox.component';
 import { BaseSelectV2Item } from '../base-select-item/base-select-item.component';
@@ -16,10 +17,25 @@ import { BaseSelectV2Item } from '../base-select-item/base-select-item.component
     standalone: true,
     imports: [NxCheckboxComponent],
 })
-export class NxMultiSelectV2ItemComponent<T> extends BaseSelectV2Item<T> {
+export class NxMultiSelectV2ItemComponent<T> extends BaseSelectV2Item<T> implements AfterViewInit {
     @ViewChild('ngContentWrapper') private option: ElementRef<HTMLDivElement>;
 
-    getOptionHtml(): string {
-        return this.option.nativeElement.innerHTML;
+    innerHtml = new BehaviorSubject('');
+
+    ngAfterViewInit(): void {
+        this.innerHtml.next(this.option.nativeElement.innerHTML);
+
+        // Subscribe to changes in the innerHTML of the option element
+        const observer = new MutationObserver(() => {
+            this.innerHtml.next(this.option.nativeElement.innerHTML);
+        });
+        observer.observe(this.option.nativeElement, {
+            characterData: true,
+            subtree: true,
+        });
+    }
+
+    getOptionHtml(): Observable<string> {
+        return this.innerHtml;
     }
 }

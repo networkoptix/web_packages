@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
@@ -31,6 +31,7 @@ interface ServiceTableData {
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
         ReactiveFormsModule,

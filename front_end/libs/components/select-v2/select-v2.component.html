@@ -1,8 +1,8 @@
 <div
     #selectWrapper
     class="select-wrapper"
-    [ngClass]="{ disabled: disabled }"
-    tabIndex="{{ disabled ? -1 : 0 }}"
+    [ngClass]="{ disabled: disabled() }"
+    tabIndex="{{ disabled() ? -1 : 0 }}"
     (click)="toggleDropdown()"
     (keydown)="onKeyDown($event)"
     (blur)="onBlur($event)"
@@ -13,11 +13,11 @@
         #select
         [attr.id]="inputId"
         [attr.aria-label]="ariaLabel || null"
-        [innerHTML]="displayText"
+        [innerHTML]="(displayText | async) || '' | safe: 'html'"
         class="select-box"
         [ngClass]="{
             error: error,
-            disabled: disabled,
+            disabled: disabled(),
             placeholder: showPlaceholder
         }"
     ></div>

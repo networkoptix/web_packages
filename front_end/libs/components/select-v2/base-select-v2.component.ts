@@ -1,7 +1,6 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
-    AfterViewInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -9,13 +8,15 @@ import {
     Input,
     QueryList,
     ViewChild,
-    EventEmitter,
-    Output,
     signal,
     computed,
+    WritableSignal,
+    effect,
+    Output,
+    EventEmitter,
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { take } from 'rxjs';
+import { ControlValueAccessor } from '@angular/forms';
+import { take, Observable } from 'rxjs';
 
 import { icons } from '@static-variables';
 import { scrollItemIntoView } from '@utils/general';
@@ -27,20 +28,28 @@ type SelectedType<Value, Multiple extends boolean> = Multiple extends true
     ? Value[]
     : Value | undefined;
 @Component({ template: '' })
-export abstract class BaseSelectV2Component<T, M extends boolean> implements AfterViewInit {
-    @Input() selected: SelectedType<T, M>;
-    @Output() selectedChange = new EventEmitter<SelectedType<T, M>>();
-    @Output() onChange = new EventEmitter<SelectedType<T, M>>();
+export abstract class BaseSelectV2Component<T, M extends boolean> implements ControlValueAccessor {
+    protected abstract selected$$: WritableSignal<SelectedType<T, M>>;
     @Input('id') inputId: string = '';
     @Input() placeholder: string = '';
-    @Input() disabled: boolean = false;
+    @Input({ alias: 'disabled' }) set _disabled(state: boolean) {
+        this.disabled.set(state);
+    }
+    @Output() disabledChange = new EventEmitter<boolean>();
+    disabled = signal(false);
+    disabledOutputEffect = effect(
+        () => {
+            const disabled = this.disabled();
+            this.disabledChange.emit(disabled);
+        },
+        { allowSignalWrites: true },
+    );
     @Input() error: boolean = false;
     // TODO: Search is not implemented yet
     @Input() search: boolean = false;
     @Input('aria-label') ariaLabel: string = '';
 
     @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLButtonElement>;
-    @ViewChild('select') select: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     @ContentChildren(BaseSelectV2Item, { descendants: true }) dropdownItems = new QueryList<
         BaseSelectV2Item<T>
@@ -48,7 +57,7 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Aft
     @ViewChild(CdkPortal) contentTemplate: CdkPortal;
 
     overlayRef: OverlayRef;
-    displayText: SafeHtml;
+    displayText: Observable<string>;
     // TODO: refactor to signals/computed when signal inputs are ready https://github.com/angular/angular/discussions/49682
     showPlaceholder: boolean = true;
     // Using a Symbol here to avoid undefined/null value clash
@@ -64,14 +73,33 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Aft
     dropdownClosing$$ = computed(() => this.openState$$() === DropdownState.Closing);
     dropdownAbortingOpen$$ = computed(() => this.openState$$() === DropdownState.AbortingOpen);
 
-    constructor(
-        public overlay: Overlay,
-        public domSanitizer: DomSanitizer,
-    ) {}
-
-    ngAfterViewInit(): void {
+    onChangeOfSelected = effect(() => {
+        this.selected$$();
         this.manuallySetSelectedOption();
         this.setPlaceholderOrDisplayText();
+    });
+
+    constructor(public overlay: Overlay) {}
+
+    // ControlValueAccessor methods
+    writeValue(updatedSelected: SelectedType<T, M>): void {
+        this.selected$$.set(updatedSelected);
+    }
+    _onChangeCallback: ((newSelectedValue: SelectedType<T, M>) => void) | undefined;
+    registerOnChange(onChange: (newSelectedValue: SelectedType<T, M>) => void): void {
+        this._onChangeCallback = onChange;
+    }
+    _onTouchedCallback: (() => void) | undefined;
+    registerOnTouched(onTouched: () => void): void {
+        this._onTouchedCallback = onTouched;
+    }
+    setDisabledState?(isDisabled: boolean): void {
+        this.disabled.set(isDisabled);
+    }
+
+    updateSelected(selected: SelectedType<T, M>): void {
+        this.selected$$.set(selected);
+        this._onChangeCallback?.(selected);
     }
 
     abstract handleSelectionChange(): void;
@@ -118,10 +146,10 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Aft
         this.overlayRef.detach();
     }
     toggleDropdown(): void {
-        if (this.disabled) {
-            // eslint-disable-next-line no-useless-return
+        if (this.disabled()) {
             return;
-        } else if (this.dropdownClosed$$()) {
+        }
+        if (this.dropdownClosed$$()) {
             this.showDropdown();
         } else if (this.dropdownOpen$$()) {
             this.hideDropdown();
@@ -161,13 +189,14 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Aft
     }
 
     abstract onKeyDown(event: KeyboardEvent): void;
-    abstract onBlur(event: FocusEvent): void;
+
+    onBlur(event: FocusEvent): void {
+        this._onTouchedCallback?.();
+    }
 
     handleOptionSelected(option: BaseSelectV2Item<T>): void {
         // Set the selected option(s) stored in the component
         this.updateSelectedOptionComponent(option);
-        // Update the placeholder/displayText based on the new selected option(s)
-        this.setPlaceholderOrDisplayText();
         // Emit the new values
         this.handleSelectionChange();
     }

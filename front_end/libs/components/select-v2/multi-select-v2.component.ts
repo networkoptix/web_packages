@@ -1,21 +1,21 @@
 import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, forwardRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, forwardRef, signal } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { of } from 'rxjs';
 
 import staticLang from '@language_static';
-import { NgChanges } from '@utils/ng-changes';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { BaseSelectV2Component } from './base-select-v2.component';
 import { BaseSelectV2Item } from './items/base-select-item/base-select-item.component';
-import { NxSelectV2Component } from './select-v2.component';
 import { BaseSelectV2InjectionToken } from './select-v2.types';
 
 @Component({
-    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule],
+    imports: [CommonModule, AngularSvgIconModule, OverlayModule, PortalModule, PipesModule],
     selector: 'nx-multi-select-v2',
     templateUrl: 'select-v2.component.html',
     styleUrls: ['select-v2.component.scss'],
@@ -25,39 +25,33 @@ import { BaseSelectV2InjectionToken } from './select-v2.types';
             provide: BaseSelectV2InjectionToken,
             useExisting: forwardRef(() => NxMultiSelectV2Component),
         },
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxMultiSelectV2Component),
+            multi: true,
+        },
     ],
 })
-export class NxMultiSelectV2Component<T>
-    extends BaseSelectV2Component<T, true>
-    implements OnChanges
-{
+export class NxMultiSelectV2Component<T> extends BaseSelectV2Component<T, true> {
     override ariaMultiselectable = true;
+    selected$$ = signal<T[]>([]);
 
     constructor(
         overlay: Overlay,
-        domSanitizer: DomSanitizer,
         private translate: TranslateService,
     ) {
-        super(overlay, domSanitizer);
+        super(overlay);
     }
 
     // A store of the dropdownItems that are selected
     // This could be a computed signal when signal inputs are ready (performance test needed)
     private selectedOptionComponents: BaseSelectV2Item<T>[] = [];
 
-    ngOnChanges(changes: NgChanges<NxSelectV2Component<unknown>>): void {
-        if (changes.selected) {
-            this.manuallySetSelectedOption();
-            this.setPlaceholderOrDisplayText();
-        }
-    }
-
     override handleSelectionChange(): void {
         const updatedSelect = this.selectedOptionComponents.map(
             selectedOptionComponent => selectedOptionComponent.value,
         );
-        this.selectedChange.emit(updatedSelect);
-        this.onChange.emit(updatedSelect);
+        this.updateSelected(updatedSelect);
     }
 
     protected updateSelectedOptionComponent(option: BaseSelectV2Item<T>): void {
@@ -77,30 +71,31 @@ export class NxMultiSelectV2Component<T>
     protected manuallySetSelectedOption(): void {
         // Compare the 2 arrays (selected and dropdownItems) and set the selectedOptionsComponent array
         this.selectedOptionComponents = this.dropdownItems.filter(item =>
-            this.selected.includes(item.value),
+            // Because of an Angular issue selected will be `null` for short period after the construction phase https://github.com/angular/angular/issues/14988
+            this.selected$$()?.includes(item.value),
         );
     }
 
     protected setPlaceholderOrDisplayText(): void {
         // If no option is selected, show the placeholder
         if (this.selectedOptionComponents.length === 0) {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(this.placeholder);
+            this.displayText = of(this.placeholder);
             this.showPlaceholder = true;
             return;
         }
         // Option has been selected, show the appropriate text
         if (this.selectedOptionComponents.length === 1) {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(
-                this.selectedOptionComponents[0].getOptionHtml(),
-            );
+            this.displayText = this.selectedOptionComponents[0].getOptionHtml();
         } else {
             /* This is currently how legacy dropdowns handle multiple selected options
                     There is probably a better way to do this involving getOptionHtml() but it's complicated
                     We can come back to this if a use case shows up where customizable placeholder is needed
                 */
-            this.displayText = this.translate.instant(this.LANG.search.selected, {
-                count: this.selectedOptionComponents.length,
-            });
+            this.displayText = of(
+                this.translate.instant(this.LANG.search.selected, {
+                    count: this.selectedOptionComponents.length,
+                }),
+            );
         }
         this.showPlaceholder = false;
     }
@@ -109,5 +104,7 @@ export class NxMultiSelectV2Component<T>
 
     // TODO: Add keyboard navigation
     override onKeyDown(event: KeyboardEvent): void {}
-    override onBlur(event: FocusEvent): void {}
+    override onBlur(event: FocusEvent): void {
+        super.onBlur(event);
+    }
 }

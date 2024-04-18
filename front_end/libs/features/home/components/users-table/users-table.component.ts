@@ -12,6 +12,7 @@ import {
     signal,
     inject,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -56,6 +57,7 @@ import { UserRecord, UserType } from '../users/channel-partner-users/channel-par
     imports: [
         AngularSvgIconModule,
         CommonModule,
+        FormsModule,
         TranslateModule,
         NxCheckboxComponent,
         NxBaseTableComponent,

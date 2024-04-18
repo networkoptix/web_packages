@@ -52,8 +52,8 @@
             >Permission Group</label
         >
         <nx-select-v2
-            [selected]="selectedRole$$()"
-            (selectedChange)="selectedRole$$.set($event!)"
+            [ngModel]="selectedRole$$()"
+            (ngModelChange)="selectedRole$$.set($event!)"
             name="permission-group"
             class="d-block mb-3"
         >
