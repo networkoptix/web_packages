@@ -83,6 +83,11 @@ export class NxSandboxComponent {
                             label: 'Simple WebGL',
                             path: '/simple-webgl',
                         },
+                        {
+                            id: 'cssVariables',
+                            label: 'CSS Variables',
+                            path: '/css-variables',
+                        },
                     ],
                 },
                 {
@@ -155,6 +160,11 @@ export class NxSandboxComponent {
                             id: 'archsvg',
                             label: 'Architecture (SVG)',
                             path: '/arch',
+                        },
+                        {
+                            id: 'signals',
+                            label: 'Signals Utilities',
+                            path: '/signals',
                         },
                     ],
                 },

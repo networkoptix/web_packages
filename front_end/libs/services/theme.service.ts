@@ -427,7 +427,7 @@ export class NxThemeService {
     }
 
     initHslTheme(): void {
-        const themeSelected = this.localStorageService.retrieve('theme-hsl');
+        const themeSelected = this.localStorageService.retrieve('theme-hsl') || {};
 
         if (Object.keys(themeSelected).length === 21) {
             // on initial load some properties may not be initialized

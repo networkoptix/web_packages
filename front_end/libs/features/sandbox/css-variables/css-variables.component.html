@@ -1,0 +1,35 @@
+<h2>Theme CSS Color variables</h2>
+
+<div class="root-buttons">
+    @for (root of propMap$$() | keyvalue; track root.key) {
+        @if ((root.value | keyvalue).length && root.value.showColorBlock) {
+            <button
+                class="btn"
+                (click)="tab$$.set(root.key)"
+                [ngClass]="selectedTab$$() === root.key ? 'btn-primary' : 'btn-default'"
+            >
+                {{ tabNames[root.key] || root.key }}
+            </button>
+        }
+    }
+</div>
+
+@for (root of propMap$$() | keyvalue; track root.key) {
+    @if (
+        (root.value | keyvalue).length && root.value.showColorBlock && selectedTab$$() === root.key
+    ) {
+        <div class="color-grid">
+            @for (prop of root.value | keyvalue; track prop.key) {
+                @if (prop.value.showColorBlock) {
+                    <div
+                        class="color-chip"
+                        [ngClass]="prop.value.className"
+                    >
+                        <div class="color-key">{{ prop.key }}</div>
+                        <div class="color-value">{{ prop.value.value }}</div>
+                    </div>
+                }
+            }
+        </div>
+    }
+}

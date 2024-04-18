@@ -3,7 +3,21 @@
  */
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { effect, EventEmitter, Signal } from '@angular/core';
+
+import {
+    effect,
+    EventEmitter,
+    inject,
+    signal,
+    Signal,
+    untracked,
+    WritableSignal,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { identity } from 'lodash-es';
+import { Observable, debounceTime } from 'rxjs';
+
+import { NxParamStateService } from '@services/param-state/param-state.service';
 
 /**
  * A class that binds signals to component outputs.
@@ -84,4 +98,182 @@ export function makeProxy<T>(value: T): Mutable<T> {
 
     // Return primitives directly
     return value as Mutable<T>;
+}
+
+export const pipeSignal = <Source, Piped>(
+    source: Signal<Source>,
+    sourceMapper: (sourceAsObservable: Observable<Source>) => Observable<Piped>,
+    initialValue: Piped,
+): Signal<Piped> => toSignal(sourceMapper(toObservable(source)), { initialValue });
+
+export const debounceSignal = <Source>(
+    source: Signal<Source>,
+    debounceDuration = 500,
+): Signal<Source> =>
+    pipeSignal(source, source$ => source$.pipe(debounceTime(debounceDuration)), source());
+
+export class Transformer<T, U> {
+    constructor(
+        public serialize: (value: T) => U,
+        public deserialize: (value: U) => T,
+    ) {}
+}
+
+export function bindSignals<T, U>(
+    unserialized$$: WritableSignal<T>,
+    serialized$$: WritableSignal<U>,
+    transformer: Transformer<T, U>,
+): {
+    cleanup: () => void;
+    unserialized$$: WritableSignal<T>;
+    serialized$$: WritableSignal<U>;
+} {
+    const updating$$ = signal<typeof unserialized$$ | typeof serialized$$ | false>(false);
+    const updatedUnserialized = effect(
+        () => {
+            const beingUpdated = untracked(updating$$);
+
+            if (beingUpdated === unserialized$$) {
+                return;
+            }
+
+            const serializedValue = serialized$$();
+
+            updating$$.set(unserialized$$);
+            const updated = untracked(() => transformer.deserialize(serializedValue));
+            unserialized$$.set(updated);
+            updating$$.set(false);
+        },
+        { allowSignalWrites: true },
+    );
+
+    const updateSerialized = effect(
+        () => {
+            const beingUpdated = untracked(updating$$);
+
+            if (beingUpdated === serialized$$) {
+                return;
+            }
+
+            updating$$.set(serialized$$);
+            const unserializedValue = unserialized$$();
+            const updated = untracked(() => transformer.serialize(unserializedValue));
+            serialized$$.set(updated);
+            updating$$.set(false);
+        },
+        { allowSignalWrites: true },
+    );
+    return {
+        cleanup: () => {
+            updateSerialized.destroy();
+            updatedUnserialized.destroy();
+        },
+        unserialized$$,
+        serialized$$,
+    };
+}
+
+export function createBoundSignal<T, U>(
+    source$$: WritableSignal<T>,
+    transformer: Transformer<T, U>,
+): WritableSignal<U> {
+    return bindSignals(source$$, signal(transformer.serialize(source$$())), transformer)
+        .serialized$$;
+}
+
+export const multiParamTransformer = new Transformer<string[], string[]>(identity, identity);
+
+export const defaultParamTransformer = new Transformer<string, string[]>(
+    val => [val],
+    val => val[0] || '',
+);
+
+const noop = (): [] => [];
+
+export class ParamDeserializer<T> extends Transformer<T, string[]> {
+    constructor(deserialize: (value: string[]) => T) {
+        super(noop, deserialize);
+    }
+}
+
+const normalizeParams = (params: string | string[]): string[] =>
+    Array.isArray(params) ? params : [params];
+
+function paramSignalParser<Deserialized>(
+    param: string,
+    initialValue: Deserialized,
+    transformer: Transformer<Deserialized, string[]>,
+): WritableSignal<Deserialized> {
+    return bindSignals(
+        signal(initialValue),
+        inject(NxParamStateService).getStateHandler().state$$,
+        {
+            serialize: paramValue => ({
+                queryParams: { [param]: transformer.serialize(paramValue) },
+            }),
+            deserialize: ({ queryParams }) =>
+                transformer.deserialize(normalizeParams(queryParams?.[param] || [])),
+        },
+    ).unserialized$$;
+}
+
+export function paramModel(param: string): WritableSignal<string>;
+export function paramModel<Deserialized>(
+    param: string,
+    initialValue: Deserialized,
+    transformer: Transformer<Deserialized, string[]>,
+): WritableSignal<Deserialized>;
+export function paramModel<Deserialized>(
+    param: string,
+    initialValue?: Deserialized,
+    transformer?: Transformer<Deserialized, string[]>,
+): unknown {
+    if (!transformer) {
+        return paramSignalParser(param, '', defaultParamTransformer);
+    }
+
+    return paramSignalParser(param, initialValue!, transformer);
+}
+
+export function paramSignal(param: string): Signal<string>;
+export function paramSignal<Deserialized>(
+    param: string,
+    initialValue: Deserialized,
+    deserializer: (paramValue: string[]) => Deserialized,
+): Signal<Deserialized>;
+export function paramSignal<Deserialized>(
+    param: string,
+    initialValue?: Deserialized,
+    deserializer?: (paramValue: string[]) => Deserialized,
+): unknown {
+    if (!deserializer) {
+        return paramModel(param).asReadonly();
+    }
+    const transformer = new ParamDeserializer(deserializer);
+    return paramModel(param, initialValue!, transformer).asReadonly();
+}
+
+/**
+ * A decorator that converts a property into a signal.
+ *
+ * Example:
+ *
+ * ```
+ * .@AsSignal
+ * .@ViewChild('checkAllContainer', { static: false })
+ * .checkAll$$: Signal<NxCheckAllContainerDirective>;
+ * ```
+ */
+export function AsSignal(target: unknown, propertyKey: string): void {
+    const value$$ = signal<unknown>(undefined);
+    Object.defineProperty(target, propertyKey, {
+        get: function () {
+            return value$$.asReadonly();
+        },
+        set: function (value: unknown) {
+            value$$.set(value);
+        },
+        enumerable: true,
+        configurable: true,
+    });
 }
