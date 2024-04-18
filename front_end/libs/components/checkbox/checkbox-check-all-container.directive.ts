@@ -58,7 +58,8 @@ export class NxCheckAllContainerDirective {
             ),
         ),
     );
-    protected otherCheckBoxInstances$$ = toSignal(this.otherCheckBoxInstances$, {
+    public otherCheckBoxesData$$ = toSignal(this.otherCheckBoxesData$);
+    public otherCheckBoxInstances$$ = toSignal(this.otherCheckBoxInstances$, {
         initialValue: [],
     });
 

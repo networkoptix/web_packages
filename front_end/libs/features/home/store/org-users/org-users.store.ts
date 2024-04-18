@@ -521,7 +521,7 @@ export const OrgUsersStore = signalStore(
                         updater$$.pipe(
                             switchMap(() => currentGroupEntities),
                             debounceTime(100),
-                            map((_, index) => [...state, !index] as const),
+                            map((_, index) => [...state, true] as const),
                             startWith([...state, false] as const),
                         ),
                     ),

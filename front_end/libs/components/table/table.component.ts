@@ -92,7 +92,8 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @Input('set-sorting-default') defaultSort: Record<string, string>;
     @Input('set-additional-classes') additionalClasses: string[];
     @Input('set-selected-item-id') selectedItemId: string;
-    @Input('set-multiple-selected-item-ids') selectItemIds: Map<string, boolean> = new Map();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Input('set-multiple-selected-item-ids') selectItemIds: Map<string, any> = new Map();
     @Input('set-id-prop-name') idPropName: string = 'id';
 
     @Output() onRowExpand = new EventEmitter<string>();

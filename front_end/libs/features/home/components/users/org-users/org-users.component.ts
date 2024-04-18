@@ -168,7 +168,9 @@ export class NxOrganizationUsersComponent implements OnInit {
             });
     }
 
-    updateSelectedUsers(users: { [key: string]: UserRecord }): void {
+    // Temporary any typing for table refactor
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updateSelectedUsers(users: any): void {
         this.selectedUsers = users;
     }
 }

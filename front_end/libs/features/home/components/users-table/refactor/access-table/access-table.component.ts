@@ -1,13 +1,221 @@
-import { Component } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Output,
+    ViewChild,
+    computed,
+    forwardRef,
+    inject,
+    input,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
+
+import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
+import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
+import { HEADER_ITEM } from '@pages/home/home.types';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
 import { StranglerImports } from '../strangler-table/strangler-imports';
 
 @Component({
     selector: 'nx-users-access-table',
-    templateUrl: '../strangler-table/strangler-table.component.html',
-    styleUrls: ['../strangler-table/strangler-table.component.scss'],
+    templateUrl: './access-table.component.html',
+    styleUrls: [
+        './access-table.component.scss',
+        '../strangler-table/strangler-table.component.scss',
+    ],
     standalone: true,
-    imports: [StranglerImports],
+    imports: [
+        StranglerImports,
+        NxPagePlaceholderV2Component,
+        NxCheckAllContainerDirective,
+        NxCheckAllDirective,
+        NxSelectV2Module,
+    ],
 })
-export class NxUsersAccessTableComponent extends AbstractUserTableDirective {}
+export class NxUsersAccessTableComponent extends AbstractUserTableDirective implements OnInit {
+    override permissionStore = inject(PermissionsStore);
+    translateService = inject(TranslateService);
+    dialogService = inject(NxDialogsService);
+    orgUserStore = inject(OrgUsersStore);
+    override store = inject(Store);
+    routeState = inject(ChannelPartnersRouteState);
+    channelPartnerService = inject(NxChannelPartnersService);
+
+    override currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    email$$ = this.routeState.email;
+    orgRoles$$ = this.channelPartnerService.organizationRoles$$;
+    accessTableRecords = input.required<UserRecord[]>({ alias: 'records' });
+
+    override headers: HEADER_ITEM[] = [
+        { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
+        { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+    ];
+    checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
+    checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
+    @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
+        checkAllContainerRef: NxCheckAllContainerDirective,
+    ) {
+        this.checkAllContainer.next(checkAllContainerRef);
+    }
+    selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
+    selectedGroups$$ = computed(() =>
+        this.checkAllContainer$$()
+            ?.otherCheckBoxInstances$$()
+            .filter(row => row.value)
+            .map(row => row.data$$()),
+    );
+    selectedGroupsMap$$ = computed(() => {
+        const selectedRows = new Map(
+            this.checkAllContainer$$()
+                ?.otherCheckBoxesData$$()
+                ?.filter(row => row.selected)
+                .map(row => row.data)
+                .map((row: UserRecord) => [this.getGroupId(row), row]),
+        );
+        return selectedRows;
+    });
+
+    @Output() public selectedCountEmitter = toObservable<number | undefined>(this.selectedCount$$);
+
+    fullName$$ = computed(() => {
+        const records = this.accessTableRecords();
+        const email = this.email$$();
+        const fullName = records.find(u => u.email === email && u.fullName !== 'N/A')?.fullName;
+        if (fullName) {
+            return `${fullName}, ${email}`;
+        }
+
+        return email;
+    });
+    override canManageUsers$$ = computed(() => {
+        if (!this.permissionStore.canViewOrgUsers$$()) {
+            return false;
+        }
+        const users = this.orgUserStore.tableUsers$$();
+        const currentUser = users.find(user => user.email === this.email$$());
+        if (!currentUser?.isOrgUser) {
+            return true;
+        }
+        const checkForOneAdmin = (): boolean => {
+            let admins = 0;
+            for (const user of users) {
+                if (['Organization Administrator', 'Administrator'].includes(user.roles[0])) {
+                    admins += 1;
+                    if (admins > 1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        const hasOnlyOneAdmin = checkForOneAdmin();
+        if (
+            currentUser?.isOrgUser &&
+            hasOnlyOneAdmin &&
+            ['Organization Administrator', 'Administrator'].includes(currentUser.roles[0])
+        ) {
+            return false;
+        }
+        return true;
+    });
+
+    override ngOnInit(): void {
+        this.setHeaders = ['groupId', 'accessLevel', 'roles', 'delete'];
+    }
+
+    getGroupId(row: UserRecord): string {
+        return row.isOrgUser ? this.currentOrg$$().id : row.groupRoles[0].groupId;
+    }
+
+    override updateRole(row: UserRecord, roleId: string): void {
+        const folder = this.getGroupId(row);
+        this.orgUsersStore.updateUser(
+            this.currentOrg$$().id,
+            row.isOrgUser ? '' : folder,
+            row.email,
+            roleId,
+        );
+    }
+
+    override getRowRoleId(user: UserRecord): string {
+        const displayRole = user.roles[0];
+        return this.orgRoles$$().find(role => role.name === displayRole)?.id;
+    }
+
+    deleteUser(row: UserRecord): void {
+        const groupId = row.groupRoles[0]?.groupId || this.currentOrg$$().id;
+        const message = this.translateService.instant(
+            this.LANG.channelPartners.usersTable.deleteDialog.singleAccessRole,
+            {
+                name: this.fullName$$(),
+                folder: row?.groupRoles[0]?.name || this.currentOrg$$().name,
+            },
+        );
+        this.dialogService
+            .confirm({
+                message,
+                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                footer: {
+                    actionLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                    cancelLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                    buttonClass: 'btn-danger',
+                },
+            })
+            .then(async confirm => {
+                if (confirm) {
+                    return this.orgUsersStore.removeUser(
+                        this.currentOrg$$()!.id,
+                        groupId,
+                        row.email,
+                    );
+                }
+            });
+    }
+
+    bulkDeleteUsers(): void {
+        this.dialogService
+            .confirm({
+                message: this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.multipleAccessRole,
+                    {
+                        name: this.fullName$$(),
+                        count: this.selectedCount$$(),
+                    },
+                ),
+                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                footer: {
+                    actionLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
+                    cancelLabel:
+                        this.LANG.channelPartners.usersTable.deleteDialog.footer.cancelLabel,
+                    buttonClass: 'btn-danger',
+                },
+            })
+            .then(confirm => {
+                if (confirm) {
+                    this.selectedGroups$$()?.forEach((group: UserRecord): void => {
+                        this.orgUsersStore.removeUser(
+                            this.currentOrg$$()!.id,
+                            this.getGroupId(group),
+                            group.email,
+                        );
+                    });
+                }
+            });
+    }
+}
