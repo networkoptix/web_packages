@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
-The name of organization {{message.old_organization_name}} has been changed to {{message.new_organization_name}}.
+Organisationens namn {{message.old_organization_name}} har ändrats till {{message.new_organization_name}}.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Visa i %CLOUD_NAME% Portal med denna länk: {{ config.portal_url }}
