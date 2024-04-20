@@ -226,16 +226,19 @@ class TestDownloadHistory:
 
 class DownloadsBase:
     @pytest.fixture(autouse=True)
-    def setup(self, download_user, mocker, arf, downloads_json, updates_json, settings_from_cache):
+    def setup(self, download_user, mocker, arf, build_downloads_json, customization_downloads_json, updates_json, settings_from_cache):
         def mock_requests(*args, **kwargs):
             url = kwargs.get('method', '') or (
                 args[0] if len(args) >= 1 else None)
+            if 'default/downloads.json' in url:
+                return MockResponse(json=customization_downloads_json)
             if 'downloads.json' in url:
-                return MockResponse(json=downloads_json)
+                return MockResponse(json=build_downloads_json)
             elif 'updates.json' in url:
                 return MockResponse(json=updates_json)
 
-        self.downloads_json = downloads_json
+        self.build_downloads_json = build_downloads_json
+        self.customization_downloads_json = customization_downloads_json
         self.updates_json = updates_json
         self.arf = arf
         self.user = download_user
@@ -279,7 +282,7 @@ class TestDownloadBuild(DownloadsBase):
         assert response.data['resultCode'] == ErrorCodes.not_found.value
 
     def test_no_release_notes(self):
-        del self.downloads_json['releaseNotes']
+        del self.build_downloads_json['releaseNotes']
         response = self.make_request(build_number='4.2.0.32840')
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -293,7 +296,7 @@ class TestDownloadBuild(DownloadsBase):
     def test_success(self):
         response = self.make_request(build_number='4.2.0.32840')
         assert response.status_code == status.HTTP_200_OK
-        expected_downloads_json = copy.deepcopy(self.downloads_json)
+        expected_downloads_json = copy.deepcopy(self.build_downloads_json)
         expected_downloads_json['updatesPrefix'] = self.updates_json['default']['updates_prefix']
         assert response.data == expected_downloads_json
 

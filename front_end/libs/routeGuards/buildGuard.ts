@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { Route, UrlSegment, UrlTree, Router } from '@angular/router';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { Build } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 
 export const BuildGuard = async (
@@ -15,19 +16,29 @@ export const BuildGuard = async (
         return true;
     } else {
         if (segment) {
-            const data = await inject(NxCloudApiService).getDownloadsHistory(undefined);
-            delete data.updatesPrefix;
+            const cloudApiService = inject(NxCloudApiService);
+            try {
+                const data = await cloudApiService.getDownloadsHistory(undefined);
+                delete data.updatesPrefix;
 
-            const type = Object.keys(data).find(k =>
-                data[k].some(releaseType =>
-                    [releaseType.version, releaseType.buildNumber].includes(segment),
-                ),
-            );
+                let type = Object.keys(data).find(k =>
+                    data[k].some(releaseType =>
+                        [releaseType.version, releaseType.buildNumber].includes(segment),
+                    ),
+                );
 
-            if (type) {
-                return router.navigate([`download/other/${type}`], { fragment: segment });
+                if (!type) {
+                    const build = (await cloudApiService.getDownloadsHistory(segment)) as Build;
+                    type = build.type;
+                }
+
+                if (type) {
+                    return router.navigate([`download/other/${type}`], { fragment: segment });
+                }
+            } catch {
+                console.error('Builds are private and require login!!!');
             }
-            return false;
+            return router.navigate(['404']);
         } else {
             return router.navigate([`download/other`]);
         }
