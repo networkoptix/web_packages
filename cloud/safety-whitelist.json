@@ -224,5 +224,10 @@
   "66704": {
     "name": "cryptography",
     "note": "Starting in version 38.0.0 and before version 42.0.4, if `pkcs12.serialize_key_and_certificates` is called with both a certificate whose public key did not match the provided private key and an `encryption_algorithm` with `hmac_hash` set (via `PrivateFormat.PKCS12.encryption_builder().hmac_hash(...)`, then a NULL pointer dereference would occur, crashing the Python process. This has been resolved in version 42.0.4, the first version in which a `ValueError` is properly raised."
+  },
+  "66777": {
+    "name": "cryptography",
+    "note": "CVE-2023-6237 addresses a vulnerability in RSA public key verification where checking a large, incorrect RSA key with EVP_PKEY_public_check() could take an excessive amount of time. This is due to no size limit on the RSA public key and an unnecessarily high number of Miller-Rabin rounds for modulus non-primality checks. The fix sets a maximum key size of 16384 bits and reduces Miller-Rabin rounds to 5, enhancing security and performance by preventing the RSA_R_MODULUS_TOO_LARGE error."
+
   }
 }

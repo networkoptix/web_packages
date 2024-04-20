@@ -57,6 +57,10 @@ const appRoutes: Routes = [
                 },
             },
             {
+                path: 'betas',
+                redirectTo: 'betas/',
+            },
+            {
                 path: '**',
                 redirectTo: 'releases/',
             },

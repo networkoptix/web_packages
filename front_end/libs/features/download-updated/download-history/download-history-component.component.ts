@@ -52,7 +52,9 @@ export class DownloadHistoryComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.activeBuilds = this.downloadsData[this.activeType];
         this.currentTab = this.activeType;
-        this.linkbase = this.downloadsData.updatesPrefix;
+        this.linkbase =
+            this.downloadsData.updatesPrefix ||
+            this.downloadsData[this.activeType][0].updatesPrefix;
 
         this.noteTypes = Object.keys(this.downloadsData || {})
             .filter(noteType => {

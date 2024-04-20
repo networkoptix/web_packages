@@ -8,6 +8,16 @@ export const DownloadHistoryResolver: ResolveFn<Promise<BuildHistory | Build>> =
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
-    const { build } = route.params;
-    return inject(NxCloudApiService).getDownloadsHistory(build);
+    const cloudApiService = inject(NxCloudApiService);
+    const {
+        fragment,
+        params: { type },
+    } = route;
+
+    let data = await cloudApiService.getDownloadsHistory((type === 'rc' && fragment) || undefined);
+    if (type !== 'rc') {
+        return data;
+    }
+    data = data as Build;
+    return { [data.type]: [data] };
 };

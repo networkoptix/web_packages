@@ -58,7 +58,10 @@
                                     <a
                                         [href]="
                                             downloadData.releaseNotes ||
-                                            '/downloads/' + downloadData.version
+                                            '/download/other/' +
+                                                releaseType +
+                                                '#' +
+                                                downloadData.version
                                         "
                                         target="_blank"
                                         translate
