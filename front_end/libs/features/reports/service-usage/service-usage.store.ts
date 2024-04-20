@@ -1,7 +1,8 @@
-import { inject } from '@angular/core';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
+import { FormattedUsageReportRecord } from '@pages/reports/service-usage/service-usage.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     OrgUsageReportEntry,
@@ -10,16 +11,63 @@ import {
 
 interface ServiceUsageState {
     isLoading: boolean;
-    reportRecords: PartnerUsageReportEntry[] | OrgUsageReportEntry[];
+    orgUsageReports: OrgUsageReportEntry[];
+    partnerUsageReports: PartnerUsageReportEntry[];
 }
 
 const initialState: ServiceUsageState = {
     isLoading: true,
-    reportRecords: [],
+    orgUsageReports: [],
+    partnerUsageReports: [],
 };
 
 export const ServiceUsageStore = signalStore(
     withState(initialState),
+    withComputed(store => ({
+        orgUsageReportsForTable$$: computed<FormattedUsageReportRecord[]>(() =>
+            store
+                .orgUsageReports()
+                .map(
+                    ({
+                        service_id,
+                        service_name,
+                        used_by,
+                        channels,
+                        monthly_rate,
+                        daily_rate,
+                    }) => ({
+                        serviceId: service_id,
+                        serviceName: service_name,
+                        usedBy: used_by,
+                        channels,
+                        monthlyRate: monthly_rate,
+                        fractionalUsage: daily_rate,
+                    }),
+                ),
+        ),
+        partnerUsageReportsForTable$$: computed<FormattedUsageReportRecord[]>(() =>
+            store
+                .partnerUsageReports()
+                .map(
+                    ({
+                        service_id,
+                        service_name,
+                        used_by_organizations,
+                        used_by_channel_partners,
+                        channels,
+                        monthly_rate,
+                        daily_rate,
+                    }) => ({
+                        serviceId: service_id,
+                        serviceName: service_name,
+                        usedBy: `Partners: ${used_by_channel_partners}, Orgs: ${used_by_organizations}`,
+                        channels,
+                        monthlyRate: monthly_rate,
+                        fractionalUsage: daily_rate,
+                    }),
+                ),
+        ),
+    })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
         async loadPartnerServiceUsage(
             entityId: string,
@@ -32,7 +80,8 @@ export const ServiceUsageStore = signalStore(
             );
             patchState(store, {
                 isLoading: false,
-                reportRecords: serviceUsageRecords,
+                orgUsageReports: [],
+                partnerUsageReports: serviceUsageRecords,
             });
         },
         async loadOrgServiceUsage(entityId: string, startTs: string, endTs: string): Promise<void> {
@@ -42,7 +91,8 @@ export const ServiceUsageStore = signalStore(
             );
             patchState(store, {
                 isLoading: false,
-                reportRecords: serviceUsageRecords,
+                orgUsageReports: serviceUsageRecords,
+                partnerUsageReports: [],
             });
         },
     })),

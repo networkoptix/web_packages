@@ -1,7 +1,9 @@
-import { inject } from '@angular/core';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import dateFormat from 'dateformat';
 import { firstValueFrom } from 'rxjs';
 
+import { FormattedServiceDetailRecord } from '@pages/reports/service-usage-details/service-usage-details.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     EntityServiceChangeEntry,
@@ -11,18 +13,72 @@ import {
 
 interface ServiceUsageDetailsState {
     isLoading: boolean;
-    records: EntityServiceChangeEntry[] | SystemServiceChangeEntry[];
+    entityServiceChanges: EntityServiceChangeEntry[];
+    systemServiceChanges: SystemServiceChangeEntry[];
     selectedService: Service | undefined;
 }
 
 const initialState: ServiceUsageDetailsState = {
     isLoading: true,
-    records: [],
+    entityServiceChanges: [],
+    systemServiceChanges: [],
     selectedService: undefined,
+};
+
+const getChangedColumnText = (changesCount: number, lastChanged: string): string => {
+    if (changesCount === 0) {
+        return 'Previous periods';
+    } else if (changesCount === 1) {
+        return dateFormat(lastChanged, 'd mmm yyyy');
+    } else {
+        return 'Multiple dates';
+    }
 };
 
 export const ServiceUsageDetailsStore = signalStore(
     withState(initialState),
+    withComputed(store => ({
+        entityServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
+            store
+                .entityServiceChanges()
+                .map(
+                    ({
+                        name,
+                        changes_count,
+                        last_changed,
+                        channels,
+                        monthly_rate,
+                        daily_rate,
+                    }) => ({
+                        usedBy: name,
+                        changed: getChangedColumnText(changes_count, last_changed),
+                        activeChannels: channels,
+                        monthlyRate: monthly_rate,
+                        fractionalUsage: daily_rate,
+                    }),
+                ),
+        ),
+        systemServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
+            store
+                .systemServiceChanges()
+                .map(
+                    ({
+                        system_name,
+                        changes_count,
+                        last_changed,
+                        channels,
+                        monthly_rate,
+                        daily_rate,
+                    }) => ({
+                        usedBy: system_name,
+                        changed: getChangedColumnText(changes_count, last_changed),
+                        activeChannels: channels,
+                        monthlyRate: monthly_rate,
+                        fractionalUsage: daily_rate,
+                    }),
+                ),
+        ),
+    })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
         async loadPartnerServiceReport(partnerId: string, serviceId: string): Promise<void> {
             patchState(store, { isLoading: true });
@@ -39,7 +95,8 @@ export const ServiceUsageDetailsStore = signalStore(
             const selectedService = services.find(service => service.id === serviceId);
             patchState(store, {
                 isLoading: false,
-                records: serviceReportResponse.sub_entities,
+                entityServiceChanges: serviceReportResponse.sub_entities,
+                systemServiceChanges: [],
                 selectedService,
             });
         },
@@ -58,7 +115,8 @@ export const ServiceUsageDetailsStore = signalStore(
             )?.service;
             patchState(store, {
                 isLoading: false,
-                records: serviceReportResponse.systems,
+                entityServiceChanges: [],
+                systemServiceChanges: serviceReportResponse.systems,
                 selectedService,
             });
         },

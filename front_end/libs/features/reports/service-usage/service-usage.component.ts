@@ -2,10 +2,6 @@ import { Component, computed, effect, inject, input, untracked } from '@angular/
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import {
-    OrgUsageReportEntry,
-    PartnerUsageReportEntry,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { EntityType } from '../reports.types';
 import { NxServiceUsageDetailsComponent } from '../service-usage-details/service-usage-details.component';
@@ -35,38 +31,11 @@ export class NxServiceUsageComponent {
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
 
     formattedServiceUsageRecords$$ = computed<FormattedUsageReportRecord[]>(() => {
-        const records = this.serviceUsageStore.reportRecords();
         const entityType = this.entityType$$();
         if (entityType === EntityType.channelPartner) {
-            return (records as PartnerUsageReportEntry[]).map(
-                ({
-                    service_id,
-                    service_name,
-                    used_by_organizations,
-                    used_by_channel_partners,
-                    channels,
-                    monthly_rate,
-                    daily_rate,
-                }) => ({
-                    serviceId: service_id,
-                    serviceName: service_name,
-                    usedBy: `Partners: ${used_by_channel_partners}, Orgs: ${used_by_organizations}`,
-                    channels,
-                    monthlyRate: monthly_rate,
-                    fractionalUsage: daily_rate,
-                }),
-            );
+            return this.serviceUsageStore.partnerUsageReportsForTable$$();
         } else {
-            return (records as OrgUsageReportEntry[]).map(
-                ({ service_id, service_name, used_by, channels, monthly_rate, daily_rate }) => ({
-                    serviceId: service_id,
-                    serviceName: service_name,
-                    usedBy: used_by,
-                    channels,
-                    monthlyRate: monthly_rate,
-                    fractionalUsage: daily_rate,
-                }),
-            );
+            return this.serviceUsageStore.orgUsageReportsForTable$$();
         }
     });
 
