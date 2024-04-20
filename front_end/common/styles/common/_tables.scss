@@ -275,10 +275,11 @@
 .cameras {
     .nx-new-table {
         .header {
-            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(6, 80px) 88px;
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 94px);
 
             &.analytics {
                 grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 98px;
+
 
                 &.service {
                     grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 80px 88px;
@@ -286,7 +287,7 @@
             }
         }
         .big-row {
-            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px);
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 94px);
             grid-template-rows: 40px;
 
             &.analytics {
@@ -294,6 +295,10 @@
 
                 &.service {
                     grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 0 80px 80px;
+                }
+
+                &.auto-height {
+                    grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 98px;
                 }
             }
 

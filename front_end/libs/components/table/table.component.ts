@@ -208,6 +208,9 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         }
 
         if (additionalClasses?.currentValue) {
+            if (this.setAutoRows) {
+                this.additionalClasses.push('auto-height');
+            }
             this.tableClasses = this.additionalClasses.join(' ');
         }
     }

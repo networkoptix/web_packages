@@ -51,6 +51,7 @@
                           ? 'isAudioSupported'
                           : prop.key
                 }}"
+                [style.border-right]="lastInTemplate === prop.key ? 'none' : undefined"
             >
                 <div *ngIf="!isBoolIcon(prop.value); else icon">
                     {{ prop.value }}
