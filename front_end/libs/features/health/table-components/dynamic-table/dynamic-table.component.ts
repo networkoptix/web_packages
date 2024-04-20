@@ -367,7 +367,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         // preserve window offset
-        this.uri.pageOffset = window.pageYOffset;
         setTimeout(() => this.setPagedItems(this.startIndex));
     }
 

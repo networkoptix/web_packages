@@ -14,8 +14,6 @@ import { ChildRoutes, RouteResolverParams } from './uri.service.types';
     providedIn: 'root',
 })
 export class NxUriService {
-    private _pageOffset: number;
-
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
     constructor(
@@ -31,14 +29,6 @@ export class NxUriService {
         if (!isEqual(params, this.queryParams)) {
             this.queryParamsSubject.next(params);
         }
-    }
-
-    set pageOffset(val: number) {
-        this._pageOffset = val;
-    }
-
-    get pageOffset(): number {
-        return this._pageOffset;
     }
 
     getURL(): string {

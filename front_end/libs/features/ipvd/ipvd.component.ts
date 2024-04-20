@@ -1,20 +1,18 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { isPlatformBrowser, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import {
     Component,
     DestroyRef,
     effect,
     ElementRef,
     inject,
-    Inject,
     OnDestroy,
     OnInit,
-    PLATFORM_ID,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { Subject, SubscriptionLike } from 'rxjs';
@@ -149,19 +147,10 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private location: Location,
         private breakpointObserver: BreakpointObserver,
-        private router: Router,
-        @Inject(PLATFORM_ID) private platformId: object,
     ) {
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
-
-        if (isPlatformBrowser(this.platformId)) {
-            this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-                window.scroll(0, this.uri.pageOffset);
-            });
-        }
-
         this.locationSubscription = this.location.subscribe(() => {
             // force view component update without URI update
             setTimeout(() => {
@@ -386,7 +375,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
 
     setActiveCamera(): void {
         if (this.params.camera) {
-            this.uri.pageOffset = window.pageYOffset;
             const selectedCamera = this.cameras.find(camera => camera.model === this.params.camera);
             this.activateCamera(selectedCamera);
         }
