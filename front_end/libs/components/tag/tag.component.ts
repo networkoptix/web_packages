@@ -5,11 +5,9 @@ import {
     EventEmitter,
     forwardRef,
     Input,
-    OnInit,
     Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { Params } from '@angular/router';
 
 /* Usage
  <nx-tag
@@ -39,7 +37,7 @@ import type { Params } from '@angular/router';
     standalone: true,
     imports: [CommonModule],
 })
-export class NxTagComponent implements OnInit, ControlValueAccessor {
+export class NxTagComponent implements ControlValueAccessor {
     @Input() type: string;
     @Input() element: string = 'badge';
     @Input('name') _name: string = '';
@@ -48,27 +46,15 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() customClass: string = '';
     @Input({ transform: booleanAttribute }) clickable: boolean = true;
     @Input({ transform: booleanAttribute }) locked: boolean;
-    @Input() link: string;
-    @Input() linkParam: Params = {};
     @Input('value') selected: boolean;
 
     @Output() onClick = new EventEmitter<boolean>();
-
-    public tagHref: string;
 
     get badgeType(): string {
         if (this.type) {
             return this.selected ? `badge-${this.type}-selected` : `badge-${this.type}`;
         } else {
             return this.selected ? 'badge-selected' : 'badge';
-        }
-    }
-
-    ngOnInit(): void {
-        const params = Object.entries<string>(this.linkParam);
-        if (this.link && params.length) {
-            const queryParams = params.map(([key, value]) => `${key}=${value}`).join('&');
-            this.tagHref = `${this.link}?${queryParams}`;
         }
     }
 

@@ -25,10 +25,10 @@
             <nx-tag
                 element="btn"
                 size="large"
-                link="/ipvd"
                 locked
-                [linkParam]="{ vendors: vendor.name }"
-                [value]="null"
+                [routerLink]="'./'"
+                [queryParams]="{ vendors: vendor.name }"
+                queryParamsHandling="merge"
             >
                 {{ vendor.name }} <span *ngIf="debug">({{ vendor.count }})</span>
             </nx-tag>

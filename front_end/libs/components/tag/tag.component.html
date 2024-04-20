@@ -4,7 +4,6 @@
     [ngClass]="[element, size, badgeType, locked ? 'static' : '']"
     class="{{ type && type !== 'default' ? 'theme-override' : '' }} {{ customClass }}"
     data-theme="light"
-    [attr.href]="tagHref"
     (click)="clickChange(true)"
 >
     <ng-content></ng-content>

@@ -10,7 +10,6 @@ import {
     ViewChild,
     ElementRef,
     AfterViewInit,
-    Inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -24,7 +23,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, search } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { paramSortFunc } from '@utils/general';
@@ -116,7 +114,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         private deviceDetectorService: DeviceDetectorService,
         private healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.elements = this.elements || [];
@@ -370,7 +367,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         // preserve window offset
-        this.uri.pageOffset = this.window.pageYOffset;
         setTimeout(() => this.setPagedItems(this.startIndex));
     }
 
