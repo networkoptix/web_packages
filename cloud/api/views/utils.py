@@ -279,41 +279,51 @@ async def download_build(request, build):
         raise APINotFoundException(
             "Invalid build number", ErrorCodes.bad_request)
 
-    downloads_url = settings.DOWNLOADS_VERSION_JSON.replace('{{customization}}', customization).\
-        replace('{{build}}', build)
-    downloads_json = await HttpxAsyncRequest.get(downloads_url)
+    build_downloads_json = await get_downloads_build_json(request, customization, build)
 
-    if downloads_json.status_code != 200:
-        raise APINotFoundException(
-            "Build number does not exist", ErrorCodes.not_found, error_data=request.query_params)
-
-    downloads_json = downloads_json.json()
-
-    if 'releaseNotes' not in downloads_json:
+    if 'releaseNotes' not in build_downloads_json:
         raise APINotFoundException("No downloads.json for this build",
                                    ErrorCodes.not_found,
                                    error_data=request.query_params)
 
-    updates_json = await HttpxAsyncRequest.get(settings.UPDATE_JSON)
-    updates_json.raise_for_status()
-    updates_json = updates_json.json()
+    try:
+        customization_downloads_json = await get_downloads_json(customization)
+    except httpx.HTTPError:
+        customization_downloads_json = await get_downloads_json('default')
 
-    # find settings for customizations
-    if customization not in updates_json:
-        logger.warning(
-            f'Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}')
-        customization = 'default'
+    build_downloads_json['updatesPrefix'] = customization_downloads_json['updatesPrefix']
 
-    updates_record = updates_json[customization]
-    downloads_json['updatesPrefix'] = updates_record['updates_prefix']
-
-    return Response(downloads_json)
+    return Response(build_downloads_json)
 
 
 async def get_updates_json():
     updates_json = await HttpxAsyncRequest.get(settings.UPDATE_JSON)
     updates_json.raise_for_status()
     return updates_json.json()
+
+async def get_downloads_json(customization):
+    try:
+        downloads_json = await HttpxAsyncRequest.get(settings.DOWNLOADS_JSON.replace('{{customization}}', customization))
+        downloads_json.raise_for_status()
+        return downloads_json.json()
+    except (httpx.HTTPStatusError, requests.exceptions.HTTPError) as e:
+        if e.response.status_code == 404:
+            logger.warning(
+                f"downloads.json doesn't exist for customization: {customization}, {settings.CONFIG_ERROR} "
+                f"(publish and accept a release)"
+            )
+        raise e
+
+
+async def get_downloads_build_json(request, customization, build):
+    try:
+        downloads_url = settings.DOWNLOADS_VERSION_JSON.replace('{{customization}}', customization).replace('{{build}}', build)
+        downloads_build_json_res = await HttpxAsyncRequest.get(downloads_url)
+        downloads_build_json_res.raise_for_status()
+        return downloads_build_json_res.json()
+    except (httpx.HTTPStatusError, requests.exceptions.HTTPError):
+        raise APINotFoundException(
+            "Build number does not exist", ErrorCodes.not_found, error_data=request.query_params)
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
@@ -338,12 +348,6 @@ async def downloads(request):
     if not downloads_json:
         # get updates.json
         updates_json = await get_updates_json()
-
-        # find settings for customizations
-        if customization not in updates_json:
-            logger.warning(
-                f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
-            return Response(None)
         updates_record = updates_json[customization]
         latest_version = updates_record.get('download_version')
 
@@ -375,13 +379,12 @@ async def downloads(request):
         build_number = latest_version.split('.')[-1]
         if ' ' in build_number:
             build_number = build_number.split(' ')[0]
-        updates_path = updates_record['updates_prefix']
+
+        customization_downloads_json = await get_downloads_json(customization)
+        updates_path = customization_downloads_json.get('updatesPrefix', updates_record['updates_prefix'])
 
         # get downloads.json for specific version. If get there - version is at least 3.0, so downloads.json is present
-        downloads_path = updates_path + '/' + build_number + '/downloads.json'
-        downloads_result = await HttpxAsyncRequest.get(downloads_path)
-        downloads_result.raise_for_status()
-        downloads_json = downloads_result.json()
+        downloads_json = await get_downloads_build_json(request, customization, build_number)
         downloads_json['releaseNotes'] = ''
         if (release_notes := updates_record.get('release_notes')) and release_notes != 'https://updates.hdwitness.com/release_notes.html':
             downloads_json['releaseNotes'] = release_notes
@@ -452,19 +455,12 @@ async def downloads_releases(request):
         if release_notes_url == 'https://updates.hdwitness.com/release_notes.html':
             release_notes_url = ''
 
-        try:
-            customization_downloads_url = settings.DOWNLOADS_JSON.replace('{{customization}}', customization)
-            res = await HttpxAsyncRequest.get(customization_downloads_url)
-            res.raise_for_status()
-            downloads_data = res.json()
-        except httpx.HTTPError:
-            logger.warning(
-                f"Customization does not have a downloads.json: {customization}. {settings.CONFIG_ERROR}")
-            return Response(None)
+        downloads_data = await get_downloads_json(customization)
 
         release_types = ['betas', 'releases']
         data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url, available_version=latest_version)
                  for release_type in release_types }
+        data['updatesPrefix'] = downloads_data['updatesPrefix']
         await global_cache.aset(cache_key, json.dumps(data))
     else:
         data = json.loads(downloads_releases_json)

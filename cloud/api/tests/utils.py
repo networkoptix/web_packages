@@ -14,6 +14,7 @@ class MockResponse:
         self.status_code = kwargs.get('status_code', status.HTTP_200_OK)
         self.json_data = kwargs.get('json', {})
         self.reason = kwargs.get('reason', '')
+        self.url = kwargs.get('url', '')
 
     def json(self):
         return self.json_data

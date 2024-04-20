@@ -122,7 +122,7 @@ def settings_from_cache():
 
 
 @pytest.fixture()
-def downloads_json():
+def build_downloads_json():
     return {
         'version': '4.2.0.32840',
         'releaseNotes': '<ul><li>++++++ HOTFIX RELEASE IMPROVEMNTS / BUG FIXES ++++++</li><li>ANALYTIC BUG FIXES:</li><ul><li>Fixed an issue where analytic events did not show up in the Notification Panel for Hikvision DS-2CD3T56G2-4IS on firmware V5.5.150 build 200927.</li><li>Instant analytic events stopped showing up in the Notification Panel after the first time they were triggered. Fixed.</li></ul><li>BUG FIXES:</li><ul><li>Certain sections of the desktop client had incorrectly rendered UI text on Macs with the M1 SoC. Fixed.</li><li>An issue caused the Server to not start on Raspberry Pi 3. Fixed.</li><li>The lens position and zoom level of fisheye cameras were not saved in the layout. Fixed.</li></ul><li>NEW DEVICE SUPPORT/IMPROVEMENTS/FIXES:</li><ul><li>Added advanced PTZ support for Hikvision IPC6412LR-X5P, IPC6854SR-X38UP-VC, IPC6222E-X33UP, IPC6222EI-X22UP-C.</li><li>Fixed an RTP error that occurred with H.265-encoded primary streams on DW cameras.</li><li>Server did not use ONVIF to configure stream settings for Arecont Vision cameras from the Contera Panoramic series (AV08CPD-118, AV20CPD-118, AV8476DN, and AV20476DN) and DUO series (AV4856DN, AV10856DN, and AV16856DN). Fixed.</li></ul><li>++++++ 4.2 RELEASE NOTES ++++++</li><li>OPERATING SYSTEMS/PLATFORMS</li><ul><li>Windows 7 compatibility support ended.</li><li>Windows 2008 R2 compatibility support ended.</li><li>Added support for MacOS 11 in the desktop client.</li></ul><li>NEW FEATURES:</li><ul><li>Redesigned PTZ controls - PTZ controls have been redesigned for improved UX.</li><ul><li>Advanced PTZ activates only when the Shift key is pressed.</li></ul><li>Intel® Quick Sync Video - Intel® Quick Sync Video uses the dedicated media processing capabilities of Intel® Graphics Technology to decode and encode fast, enabling the processor to complete other tasks and improving system responsiveness. Vastly improves the ability of low power hardware (e.g. Intel Atom, Celeron) and the ability of the Desktop Client to decode very high resolution (e.g. 16 MP, 32MP) cameras and streams.</li><ul><li>Go to Local Settings in the Desktop Client and check the “Use Hardware Video Decoding” checkbox to enable Intel Quick Sync Video.</li><li>“Use Hardware Video Decoding” is unchecked by default.</li></ul><li>Fisheye lens projection options - Improve fisheye dewarping precision by selecting the most suitable lens projection type:</li><ul><li>Equisolid</li><li>Equidistant</li><li>Stereographic.</li></ul></ul><li>IMPROVEMENTS:</li><ul><li>Added Catalan language.</li><li>Update packages are now validated before installing to prevent malware injection.</li><li>Camera name and export time can now be overlayed onto the footage in the Export Dialog.</li><li>Camera name can now be overlayed when capturing a screenshot.</li><li>Archived video encoded with H.264 codec and exported to MP4 or AVI format can be played back in Windows Media Player.</li><li>Server will re-initialize cameras when packets are not received from the secondary stream for more than 10 seconds.</li><li>The maximum value for pre-recording and post-recording actions in camera recording events can now be set up to 600 seconds.</li><li>The limitations for pre- and post-recording are changed in Camera Settings: 90s for pre-recording and 300s for post-recording.</li><li>Only administrators can see servers in the Desktop Client “About" dialog.</li><li>Added the ability to playback audio from all devices on the scene in the Desktop Client.</li><ul><li>To enable this feature, open Main Menu &gt; Local Settings &gt; General and select the checkbox next to "Play audio from all cameras on layout".</li></ul><li>The Server could not store analytics data on some Ubuntu servers due to selecting partitions which it didn\'t have write access to. If the Server does not have write access to a particular partition, it can no longer be selected to store analytics data.</li><li>”Allow only secure connections” (HTTPS traffic only) is turned on by default.\ufeff</li><li>The in-client web browser now saves user credentials between browser sessions.</li><li>Added TLS support for LDAP on Linux-based systems.</li><li>Removed the limitation on Video Wall licenses that prevented more than one active direct control session at a time.</li><li>Hotkeys changes:</li><ul><li>[+] [−] keys are no longer used to zoom in or out on the Layout.</li><li>Shift + arrow keys are now used to select a camera on the Layout.</li></ul></ul><li>ANALYTICS IMPROVEMENTS:</li><ul><li>The following models and analytics features should be supported but have not been exhaustively tested. Please test with your device(s) before implementing this patch:</li><li>Dahua analytics plugin:</li><ul><li>Models:</li><ul><li>All models with supported analytics.</li></ul><li>Analytics Features:</li><ul><li>Added short object tracking for objects in events. The track duration is about 500ms.</li><li>Fast-moving</li><li>Parking detection</li><li>Loitering,</li><li>People gathering</li><li>Abandoned object detection(Left object detection)</li><li>Intrusion detection</li><li>Missing object detection</li><li>Tripwire detection (Cross line detection)</li><li>Queue size detection</li><li>In-area people counting</li><li>People flow counting</li></ul></ul><li>Bosch analytics plugin:</li><ul><li>Models:</li><ul><li>All models with supported analytics.</li></ul><li>Analytics Features:</li><ul><li>Excessive brightness</li><li>IVA: Intrusion (one field). Object in field</li><li>IVA: Intrusion (two fields). Left to right</li><li>IVA: Intrusion (two fields). Right to left</li><li>IVA: TrafficIncidents. Dropped object</li><li>IVA: TrafficIncidents. Pedestrian</li><li>IVA: TrafficIncidents. Slow vehicle</li><li>IVA: TrafficIncidents. Stopped vehicle</li><li>IVA: TrafficIncidents. Wrong way</li><li>Insufficient brightness</li><li>Motion detection</li><li>Object detection</li><li>Scene change.</li></ul></ul><li>Added analytics for Provision ISR cameras.</li><ul><li>Models:</li><ul><li>BX-341IPE</li><li>I4-340IPE-36, I4-340IPE-:VF, I6-340IPE-MVF</li><li>DAI-340IPE-28, DAI-340IPE-MVF</li><li>DI-340IPE-28, DI-340IPE-MVF</li><li>DMA-340IPE-28.</li></ul><li>Analytics Features:</li><ul><li>Motion Detection</li><li>Perimeter Intrusion</li><li>Line Crossing</li><li>Scene Change</li><li>Video Blur Detection</li><li>Abnormal color detection</li><li>Entering Object Detection</li><li>Leaving Object Detection</li><li>Line Crossing Object Counting.</li></ul></ul><li>Vivotek analytics plugin:</li><ul><li>Models: See https://www.vivotek.com/learning/feature-article/24/smart-vca; as of this patch release, the available models consists of the following:</li><ul><li>Fixed Dome Cameras: FD9165-HTx, FD9365-xHTVx, FD9391-EHTV, FD9187-Hx, FD9387-xHx,FD9189-Hx, FD9389-xHx, IT9389-Hx</li><li>Bullet Cameras: IB9365-xHTx, IB9391-EHT, IB9387-xHx, IB9389-xHx</li><li>360° Cameras: FE9191, FE9391-EV, FE9382-EHV-v2</li><li>180° Cameras: MS9321-EHV, MS9390-HV</li><li>Mobile Dome Cameras: MD9561-H, MD9581-H</li></ul><li>Analytics Features:</li><ul><li>Added ROI support and object tracking</li><li>Crowd detection</li><li>Intrusion detection</li><li>Line crossing</li><li>Loitering detection</li><li>Missing object</li><li>Running detection</li><li>Unattended object</li><li>Face detection (for some cameras, such as FD9165-HT)</li></ul><li>Tested devices: FE9191, FD9165-HT</li></ul><li>Hikvision Thermal Analytics plugin:</li><ul><li>Models:</li><ul><li>Hikvision Thermal cameras</li></ul><li>Analytics Features:</li><ul><li>Object tracking</li><li>Thermal alarm</li><li>Thermal pre-alarm</li><li>Thermal regions group</li><li>Thermal alarm for region 1/2/3/4</li><li>Thermal pre-alarm for region 1/2/3/4</li></ul><li>Tested devices: DS-2TD1217B-6/PA (FW V5.5.24 build 200212), DS-2TD2117-3/V1 (FW V5.5.16 build 190429), DS-2TD1217-6/V1 (FW V5.5.18 build 191202).</li></ul><li>Notifications generated by Start/Stop events are now labeled with either “Started“ or “Stopped” to differentiate them from one another.</li><li>The way that ROI data is overlaid on cameras was divided into two groups: "Show Region of Interest" and "Objects". “Show Region of Interest” makes ROI objects visible on cameras without object tracking support if the "Display on Video" option is enabled in Camera Settings &gt; Plugins. “Show objects” makes ROI objects and camera analytics objects visible only on cameras that support object tracking.</li></ul><li>NEW DEVICE SUPPORT/IMPROVEMENTS/FIXES:</li><ul><li>New Hikvision cameras supported: DS-2DE4425, DS-2DE4A320</li><li>New Axis Cameras supported: AXISP3715, AXISD201-S, AXISD101-S</li><li>New Arecont Vision Cameras supported: AV2756, AV12CPD</li><li>Encoders added to the analog list:</li><ul><li>Abus HDCC90011</li><li>Advidia VP-16-V3</li><li>Alibi ALI-HVR5016H</li><li>Alumia QSS301-08-P8</li><li>Amcrest NV4108E-HS, AMDV8M16-H5, AMDV10818-H5</li><li>Axis q7414x</li><li>Bolid RGI-1622P16</li><li>Bosch Videojet Multi4000</li><li>Bosch VIP X1 XF E, VIP X1 XF IVA</li><li>CBC Ganz ZN-AIBOX16</li><li>Cantek AR315-8</li><li>Dahua XVR5104x , DHI-NVR4208-8p-4ks2, DH-HCVR5216an-s3, x51a3e, dhi-nvr5208x, dhi-nvr2116x, dhi-nvr5224x, dh-nvr5432x, n41b1p2, DH-XVR5116HE-X, DH-NVR6064, X72A3A4, X51B1E, X51A3E2, C52A2N</li><li>Dcode DEN408-64R-B</li><li>Digital Watchdog DW-ENHD16, DW-EN4K16</li><li>Etrovision Technology EV3151A</li><li>EZ-IP EZIP-NVR2A08HS-8P</li><li>EPCOM EV-5008TURBOUS, EV-1016-TURBOX</li><li>Eneo XPM16</li><li>FLIR DNR716,  DNR832</li><li>Grundig GRN-R2108P</li><li>Geovision GV-VS2800, GV-VS2420, GV-VS21600</li><li>Haitai X Mtum Co IPXM4</li><li>Hunt CCTV HAR526-32, HNR32P6-16, HAR326-4, HNR32P6-16, CCTV HWS-04AD</li><li>Hikvision DS-7104x, DS-7616NI-I2/16P, DS-7308HQHI-SH</li><li>Hikvision DS-7216HUHI-F2/N, DS-7216HWIx, DS-7216HGHIx</li><li>Hikvision DS-7216x</li><li>Honeywell HEN161x4, HEN161x</li><li>InVid UN1B-16X16</li><li>Lorex LNR608, LNR616, N881A3</li><li>LTS LTD8304K-ET, LTN8716K-P16, LTN8716T-HT, LTN8932H-P16</li><li>LunaIP L-IPR-5216-EP-4K, L-IPR-5216-EP-4K</li><li>Luxon HYB163TB</li><li>Nelly\'s Security NSDV-208UK</li><li>Optio OPDVR04</li><li>Osiris OS-NVR8M8P-4H1-4K</li><li>Optio OPDVR04, OPDVR08, OPDVR16</li><li>Panasonic K-NL416K,  k-nl404k</li><li>RVi 1HDR08K, RVi-R08MA</li><li>Risco RVNVR080020A</li><li>Provision ISR DVS-IP5-4</li><li>SecurityTronix TVR-AR314-8</li><li>SpecoTVI-16CH-720P-4TB-NSP, OS103T</li><li>Siqura S-64 E</li><li>Smartec STR-HD1625</li><li>ToughDog Security TDHDX161-4K-2T</li><li>Tyco TYCE4C</li><li>Tecsar Lead 4ch1h4poe-5-sm</li><li>Truen co., ltd. TCS-3000</li><li>UniView NVR516-128, NVR304-32EP-B</li><li>Visiotech XS-XVR6116-VS2</li><li>Vicon VLR-ENC-16-A</li><li>Winic AR326-4</li><li>X2-CCTV-NVR-x</li><li>Z3 Technology FSDI-DCK-10</li><li>C2P cameras now require one analog encoder license per channel.</li></ul><li>Multi-sensor cameras:</li><ul><li>Axis P3715PLVE</li><li>Avigilon 15C-H4A-3MH-270, 12W-H3-4MH-DP1-B</li><li>Digital Watchdog DWC-PVX16W*, DWC-PV2M4T, DWC-PB6M4T, DWC-PZ21M69T, DWC-PB2M4TIR</li><li>Dahua  ipc-pdbw82041-b360, IPC-PDBW8802-A180</li><li>Hikvision DS-2CD6D52G0-IHS</li><li>I-View FE-6MIPS06-F01</li><li>Pelco IMM12018, IMM12027, IMM12036 (or Optera IMM12036?)</li><li>Secubest NVM2-A21</li><li>Uniview IPC8542ER5-DUP</li><li>Vivotek VC8201*</li><li>Hikvision DS-2PT5326IZ-DE, DS-2TD2617*</li><li>Digital Watchdog DWC-PVX16w2.</li><li>Hikvision DS-2CD6944G0-IHS, DS-2PT5326x, DS-2PT3122x</li><li>Mobotix S16A</li><li>Secubest NVM5-520</li><li>Safire SF-IPPAN362HA-2Y</li><li>Sony SNC-WL862</li></ul><li>Advanced PTZ Support:</li><ul><li>Axis Q740x</li><li>Milesight MS-C2971x, MS-C5361x</li><li>Avigilon 2.0C-H4IRPTZ-DP30x</li><li>Advanced ptz mapping for DS-2DE5425IW-AE</li><li>Hikvision DS-2DF8425IXx, DS-2DE5174, DS-2DE4A225x, DS-2DP1636ZIX-D/250</li><li>Hikvision DS-2DP3236ZIXS, DS-2DF9C435IH</li><li>Milesight MS-C2942-RB</li><li>Dahua SD59430U-HNI</li><li>Digital Watchdog DWC-MPTZ336x, DWC-MPTZ830x</li><li>Panasonic WV-S6130</li><li>Uniview IPC6252SL-X33UP</li></ul><li>Hikvision fixes/improvements:</li><ul><li>Hikvision DS-2CD7A26G0x now supports the signal input event.</li><li>Fixed an input signal problem on Hikvision DS-2TD2617B-6/PA.</li><li>Hikvision DS-2TD1217x incorrectly reported PTZ support. Fixed.</li><li>Distorted audio on Hikvision DS-2CD4A26FWD-IZHS8/P when MPEG sampling rate was set to 44.1 kHz. Fixed.</li><li>Only the first channel worked properly on Hikvision DS-7216HWI-SH/A after the discovery. Fixed.</li><li>The last two channels (15 & 16) of a Hikvision 16CH DVR (DS-7216HWI-SH/A) were showing an error. Fixed.</li></ul><li>Server failed to fetch the stream from Hikvision DVR DS-7216HUHI-K2. Fixed.</li><li>Hanwha XND-6080RV had the wrong stream settings while configuring via Onvif. Fixed.</li><li>The initialization time for some cameras has been improved.</li><li>Axis T8311 joystick would stop working after using 2Way audio on a PTZ camera. Fixed.</li><li>The incorrect stream resolution was displayed for the MIT Professional 2MP camera. Fixed.</li><li>Some camera models from Sony, Huawei, SMAX, Edimax, and A-MTK had configuration issues that caused the live stream to intermittently stop. Fixed.</li><li>Signal output did not work on Hikvision DS-7732NI-I4. Fixed.</li><li>Fixed an issue with 2-way audio for Uniview cameras.</li><li>Fixed a streaming issue for HIKVISION DVR DS-9632NI-I8.</li><li>Fixed an issue detecting the input signal for AMTK AH5583T.</li><li>MP2L2 codec is now supported on Hikvision cameras.</li><li>SNP-3120 failed to connect to the Server due to a resource initialization error. Fixed.</li><li>Signal I/O support added for HIKVISION DS-2TD4237*.</li><li>The Server could not play the RTSP streams from the following Hanwha cameras: LND-6011R, LNV-6011R, and LNO-6011R. Fixed.</li><li>New BCS Line cameras supported: BCS-TIP5201, BCS-V-TI236x</li><li>INFRACHEN ZH-FS160 now supports signal input events.</li><li>Edge recording for Lilin Z2R8022EX25 did not work correctly. Fixed.</li><li>Honeywell HEW2PR(W)1 experienced stream signal loss issues. Fixed.</li><li>D-Link DCS-8526LH had problems with its video stream in the VMS. Fixed.</li><li>When listening to the archived footage on Axis speakers, the audio was played for 10-20 seconds and then switched to Live. Fixed.</li><li>Arecont Vision AV08CPD-118 panoramic camera displayed the wrong sensor order in the desktop client. Fixed.</li><li>Added I/O license support for AXIS A9188.</li><li>Enabled zoom controls for ACTi A416, A418, A811, and A818 via ONVIF.</li><li>Hanhwa LND-6010R, LNV-6010R, LNO-6010R, and XNO-6010R failed to initialize correctly via ONVIF. Fixed.</li><li>VIVOTEK FD9189<b>, FD9380*, FD9388*, IT9389-HT, IB9391*, SD9362*, SD9366*, IB9387*, FD8369*, CC8370*, CC9381</b> failed to initialize correctly via ONVIF. Fixed.</li><li>Added support for Axis C1410 Network Mini Speaker.</li><li>Hikvision DS-2CD4A26FWD-IZHS8/P incorrectly showed support for Pan and Tilt, even though only Zoom is supported. Fixed.</li><li>FPS limitation for Axis Q1645 was increased to 120 fps.</li></ul><li>ANALYTIC BUG FIXES:</li><ul><li>Camera profile names did not show up correctly when configuring event rules for the AXIS Fence Guard plugin. Fixed.</li><li>AXIS LPR analytics plugin events were not triggered. Fixed.</li><li>When an analytics plugin is enabled on a camera and its settings are saved, the changes/updated values are not reflected in the GUI after the plugin settings dialog is re-opened. Fixed.</li><li>Detected objects had the wrong timestamps stored in the analytics DB.</li><li>Under certain conditions some analytics settings would disappear from the GUI after saving changes. Fixed.</li><li>Cropped thumbnails of analytics objects were shown in the Notification Panel if "Disable secondary stream" was enabled. Fixed.</li><li>(24323, 24568, 24737, 24756) VMS-21540: Analytics events were not available for VIVOTEK cameras with firmware 2.2002.23.01. Fixed.</li></ul><li>BUG FIXES:</li><ul><li>VMS-21900, VMS-21905: In some cases, Cloud system tiles on the Welcome Screen would intermittently switch between an offline and online status. Fixed.</li><li>VMS-21736: Live view in Web Admin did not work in Safari. Fixed.</li><li>(24545) VMS-21683: CPU usage significantly increased on AWS EC2 instances with ELB enabled and TCP/UDP port 7001 configured as a listener. Fixed.</li><li>Unable to view live camera streams or archived video on the Cloud client due to an "Internal Server Error 500". Fixed.</li><li>The "On Camera disconnected" Event Rule did not work if autodiscovery was turned off. Fixed.</li><li>The start time of local files longer than 1 hour added to the layout would shift based on the UTC time zone. Fixed.</li><li>PTZ tours would stop when activated on more than one camera at a time. Fixed.</li><li>Fixed an issue where the Server’s storage became inaccessible after updating the Server to 4.1.</li><li>Watermark validation failed when checking exported videos that contain a text overlay. Fixed.</li><li>The Server had an issue initializing some Vivotek cameras due to their implementation of ONVIF media and media2 profiles. Fixed.</li><li>The warning banner that alerts users of the potential audio/video desynchronization when exporting to AVI also showed up on AVI exports even if the camera does not support audio. Fixed.</li><li>The Server failed to retransmit video from certain UDP streams as RTSP streams. Fixed.</li><li>On some Linux-based Systems, the Server would automatically select a storage drive without the necessary permissions to store analytics data. Fixed.</li><li>The Server did not close HTTP and RTSP streams if crucial user properties were modified. Fixed.</li><li>Transcoding failed to occur when exporting footage that used more than one codec. Fixed.</li><li>Events configured to send an email to multiple users would send the wrong number of emails when triggered. Fixed.</li><li>The "Camera/Device Disconnected” email notification was mistakenly sent when LDAP users exited the Desktop client. Fixed.</li><li>Stream jumped to the first frame when creating a zoom window on the exported video (nov and exe). Fixed.</li><li>The Server could not discover Axis cameras with HTTPS enabled and HTTP. Fixed.</li><li>Video export failed if the recorded archive was written on multiple servers in the System. Fixed.</li><li>On Ubuntu systems, USB storage could be used to store the Analytics DB even if the Server did not have write permissions. Fixed.</li><li>In some network environments, WebAdmin reported “No Networking” even if it was accessed from a different computer. Fixed.</li><li>Failover did not work with cameras that were manually added to the System. Fixed.</li><li>Under certain rare circumstances the client could not connect to the server after upgrading from 3.2 to 4.1. Fixed.</li><li>Fixed a file handle leak on Windows servers.</li><li>Failed to export a local file to MP4 format. Fixed.</li><li>The Motion tab for ArecontVision 12186DN panoramic camera did not display a video stream on ARM servers. Fixed.</li><li>Virtual cameras created using video recordings from Android devices have an inaccurate timeline due to differences in timestamp and file creation on Android. Fixed.</li><li>The number of licenses in use would not display properly with French regional settings enabled in the Desktop Client. Fixed.</li><li>Fixed an issue where some versions of the Desktop Client were unable to perform an in-client update to another 4.1 build.</li><li>Fixed an issue where the URL format did not work properly when the timestamp parameter was used to access virtual cameras. The Desktop Client would open and play the archive from the beginning instead of the specified timestamp.</li><li>The Desktop Client stability improved.</li><li>Sometimes exported video would stutter during playback. Fixed.</li><li>Sometimes the navigation menu on the WebAdmin page would appear twice. Fixed.</li><li>The FPS of a live stream would drop if a third-party software used the RTSP API to pull the stream from the Server. Fixed.</li><li>A fix for the error “Storage Issue: Analytics storage DB error. Insufficient permissions on the mount point” was made available. Enable the “forceAnalyticsDbStoragePermissons” advanced option from the WebAdmin interface to apply the fix.</li><li>The Desktop Client would crash if a microphone was disconnected during a 2-way audio session. Fixed.</li><li>There was no option to disable audio on a camera when "Allow System to optimize camera settings" was unchecked in System Administration. Fixed.</li><li>Fixed the GUI glitch that occurred when creating a new role in the User Roles dialog.</li><li>Adding a Virtual Camera and searching for a camera manually were not recorded in the Audit Trail. Fixed.</li><li>On Ubuntu, the scheduled backup didn’t start as expected if the VMS time was configured manually. Fixed.</li><li>Fixed an issue with WebAdmin and Cloud Portal availability for a system with 1000 cameras when accessed outside the network.</li><li>The overlay settings for Axis cameras in the "Advanced" tab didn\'t work without reopening the camera. Fixed.</li><li>The Server returned an invalid thumbnail for the streams with B-frames. Fixed.</li><li>In some rare instances the Server would freeze. Fixed.</li><li>No motion was detected on multi-sensor panoramic cameras when “Force motion detection for stream” was enabled and set to Primary and "Disable secondary stream" was checked. Fixed.</li><li>“Restore from backup” was redesigned to be more straight-forward for Cloud-merged Systems.</li><li>The notification "Storage is not configured" disappeared when the Desktop Client was restarted. Fixed.</li><li>Server did not destroy the DeviceAgent on camera disconnect</li><li>Server improperly returned 500 for the correct ec2/analyticsLookupObjectTracks request. Fixed.</li><li>I/O module license failover did not work. Fixed.</li><li>Fixed an issue with the Chinese translation on the “Storage Management” and “Storage analysis” dialogs.</li><li>Sometimes the desktop client would crash when opening local files. Fixed.</li><li>The Server tried to get storage space information about a DVD drive. Fixed.</li><li>Users without the appropriate permissions were able to access the Server Monitor. Fixed.</li><li>Systems with "Allow only secure connections" enabled could not be merged. Fixed.</li><li>Fixed several server and desktop client crashes.</li></ul><li>API/SDK CHANGES/FIXES</li><ul><li>Added an option for users to change bounding box colors for some analytics objects in compatible Plugins.</li><li>The “cameraId” parameter is added to the documentation for /ec2/analyticsTrackBestShot.</li><li>RTSP stream from Server taken via API could not be played back in VLC player. Fixed.</li><li>A new web browser session identifier will be generated every time before the session is established.</li><li>Metadata SDK:</li><ul><li>Added a method for plugins to get the Server’s built-in SDK version.</li><li>Performing a text search for object type in the Desktop Client led to analytics metadata not working properly during playback. Fixed.</li><li>Metadata was received from Stub Analytics Plugin only after Server restart. Fixed.</li><li>Stub Analytics Plugin: throwPluginDiagnosticEventsFromDeviceAgent setting was renamed to throwPluginDiagnosticEventsFromEngine.</li></ul><li>API:</li><ul><li>Fixed the API documentation for the getCamerasEx method. Removed the “cameraName” and “cameraId” fields.</li><li>/api/getEvents return codes updated.</li><li>Added new URL parameters to the /media method: stream, duration, and mkv.</li></ul><li>Stub Analytics Plugin: Added the method serverSdkVersion() to IUtilityProvider. serverSdkVersion() passes information about the Server’s built-in SDK version to the plugin.</li><li>Stub Analytics Plugin: Analytics Events would sometimes not show a thumbnail in the Notifications Panel. Fixed.</li><li>The wrong parameter type was used for the logLevel field on the WebAdmin’s API testing tool page. Fixed.</li><li>Added preciseBounds parameter to /ec2/recordedTimePeriods. The time range bounds will match the start and end times of the requests.</li><li>RTSP Streaming parameters were missing from the Server API documentation. Fixed.</li><li>Fixed errors that occurred when running the public node.js examples.</li><li>The licenseUsed value from ec2/getCamerasEx was innacurate for a recording camera on an active schedule. Fixed.</li><li>Fixed a naming inconsistency in the Server API documentation regarding the duration parameter in /ec2/bookmarks and /ec2/bookmarks/add.</li></ul><li>HANWHA DEVICES SUPPORT/IMPROVEMENTS/FIXES:</li><ul><li>Added a possibility to choose a face bounding box color for Mask tracking.</li><li>Hanwha analytics plugin improvements:</li><ul><li>Mask detection event added.</li><li>Added separate events for Object tracking type events (Face tracking, License Plate tracking, Person tracking, Vehicle tracking).</li><li>Added support for Box Temperature Detection for Hanwha thermal cameras.</li><li>Description of the events is filled with the attributes\' names and their values.</li><li>Added a possibility to filter events by the attribute:value pair.</li><li>The IVA Area region number will now be shown in notifications for analytic events that include IVA Areas (Intrusion, Enter, Exit, Appear, Loitering).</li><li>Best shot images in the right panel are now identical to the ones in the camera’s web interface.</li><li>Motion detection event was removed from the list.</li><li>Made it easier to read the descriptions of Analytics Events in the Notification Panel.</li></ul><li>Hanwha analytics plugin fixes:</li><ul><li>Fixed a memory leak caused by malformed object tracking metadata from a Hanwha camera, which consumed all available RAM and froze the Server.</li><li>Analytics events for PND-A9081RV displayed a thumbnail of the entire camera view instead of best shot. Fixed.</li><li>Sometimes updated ROI settings did not apply when saved. Fixed.</li><li>Analytics Events from Hanwha PND-A9081RV were missing object attributes. Fixed.</li><li>Fixed an issue in the Hanwha analytics description field.</li><li>Deleting an ROI line in the camera web interface did not reflect correctly on the Desktop Client even after refreshing the plugin. Fixed.</li></ul><li>Sometimes the PTZ functionality on some Hanwha cameras did not work correctly if the video was flipped and mirrored. Fixed.</li><li>The Web Page tab in Camera Settings for XRN-1610S did not display the correct web page. Fixed.</li><li>Hanwha XND-6010 did not have audio in archived footage when the audio codec was set to G.726. Fixed.</li><li>Hanwha cameras were inaccessible from the Desktop Client if a password containing “%” was used. Fixed.</li><li>Level ‘Middle’ for BLC, WDR mode for Hanwha cameras couldn\'t be applied via the Desktop Client. Fixed.</li><li>Fixed a discrepancy between the Desktop Client and the camera’s web interface when the image mode is set to HLC on Hanwha cameras. The HLC level has been renamed from ‘Medium’ to ‘Middle’ in the Desktop Client.</li></ul><li>TESTED OPERATING SYSTEMS:</li><ul><li>Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607, 2019</li><li>Ubuntu LTS: 16.04, 18.04, 20.04</li><li>MacOS 10.14: “Mojave”, 10.15 “Catalina”, 11.0</li><li>Raspberry PI 3 Model B V1.2 Kernel version 4.14 (Linux 9.4 (Stretch)).</li></ul><li>KNOWN LIMITATIONS:</li><ul><li>Due to a firmware issue affecting Bosch cameras, sometimes events are triggered but not shown in the desktop client.</li><li>Hardware decoding doesn\'t work on PC-based Ubuntu systems.</li><li>Hardware decoding is disabled, if there are 2 graphic adapters and the primary is not Intel®. In this case users should set up a “primary display” to Intel® adapter to make hardware acceleration work.</li><li>"Error 404. Cannot find the page. Check the URL and try again" shows up on the Web Page tab in Camera Settings for Hanwha NVRs. The web page will be correctly displayed after users click "OK".</li></ul></ul>',
@@ -274,6 +274,1468 @@ def downloads_json():
         'backwardsCompatible': True, 'cloudGroup': 'prod', 'beta': False, 'dismissed': False
     }
 
+
+@pytest.fixture()
+def customization_downloads_json():
+    return {
+        "updatesPrefix": "https://updates.networkoptix.com/default",
+        "releases": [
+            {
+                "version": "24.1.38477",
+                "meta_version": None,
+                "releaseNotes": "<ul><li>IMPORTANT:</li><ul><li>The iOS app has been submitted to your AppStore Connect account and available to test through TestFlight. You can release it within your AppStore Connect portal.</li></ul><li>BREAKING CHANGES:</li><ul><li>Android 8 is no longer supported.</li><li>iOS 15 and earlier are no longer supported.</li><li>iPadOS 15 and earlier are no longer supported.</li></ul><li>NEW SUPPORTED OS:</li><ul><li>Android 14</li><li>iOS 17</li><li>iPadOS 17</li></ul><li>NEW FEATURES:</li><ul><li>Added the ability to view and search for analytics objects.</li></ul><li>IMPROVEMENTS:</li><ul><li>The new \"Speedup connection\" option is added to the settings, which enables UDP Hole Punching (disabled by default).</li><li>Improved sorting of systems on the welcome screen. Cloud systems have priority over local ones, then systems are sorted by name.</li></ul><li>BUG FIXES:</li><ul><li>If the \"ownerApiForAdmins\" option was enabled in the Server settings, mobile app users were unable to connect to Cloud systems. Fixed.</li><li>Switching between networks slowed down video playback. Fixed.</li></ul><li>TESTED OS:</li><ul><li>Android 9, 10, 11, 12, 13, 14</li><li>iOS 16, 17</li><li>iPadOS 16, 17</li></ul></ul>",
+                "product": "nxwitness",
+                "productDescription": "Mobile Client",
+                "date": "30 Mar 2024",
+                "buildNumber": "38477",
+                "password": "h5208q",
+                "type": "release",
+                "backwardCompatible": True,
+                "cloudGroup": "prod",
+                "beta": False,
+                "dismissed": False,
+                "installers": [
+                    {
+                        "platform": "android",
+                        "appType": "client",
+                        "beta": False,
+                        "cloudGroup": "prod",
+                        "fileName": "nxwitness-client-24.1.38477-android-firebase.aab",
+                        "path": "android/nxwitness-client-24.1.38477-android-firebase.aab",
+                        "niceName": "Android - Client installer"
+                    },
+                    {
+                        "platform": "android_arm32",
+                        "appType": "client",
+                        "beta": False,
+                        "cloudGroup": "prod",
+                        "fileName": "nxwitness-client-24.1.38477-android_arm32-firebase.apk",
+                        "path": "android/nxwitness-client-24.1.38477-android_arm32-firebase.apk",
+                        "niceName": "Android / ARM32 - Client installer"
+                    },
+                    {
+                        "platform": "android_arm64",
+                        "appType": "client",
+                        "beta": False,
+                        "cloudGroup": "prod",
+                        "fileName": "nxwitness-client-24.1.38477-android_arm64-firebase.apk",
+                        "path": "android/nxwitness-client-24.1.38477-android_arm64-firebase.apk",
+                        "niceName": "Android / ARM64 - Client installer"
+                    },
+                    {
+                        "platform": "ios",
+                        "appType": "client",
+                        "beta": False,
+                        "cloudGroup": "prod",
+                        "fileName": "nxwitness-client-24.1.38477-ios.ipa",
+                        "path": "ios/nxwitness-client-24.1.38477-ios.ipa",
+                        "niceName": "iOS - Client installer"
+                    }
+                ],
+                "platforms": [
+                    {
+                        "name": "android",
+                        "files": [
+                            {
+                                "platform": "android",
+                                "appType": "client",
+                                "beta": False,
+                                "cloudGroup": "prod",
+                                "fileName": "nxwitness-client-24.1.38477-android-firebase.aab",
+                                "path": "android/nxwitness-client-24.1.38477-android-firebase.aab",
+                                "niceName": "Android - Client installer"
+                            },
+                            {
+                                "platform": "android_arm32",
+                                "appType": "client",
+                                "beta": False,
+                                "cloudGroup": "prod",
+                                "fileName": "nxwitness-client-24.1.38477-android_arm32-firebase.apk",
+                                "path": "android/nxwitness-client-24.1.38477-android_arm32-firebase.apk",
+                                "niceName": "Android / ARM32 - Client installer"
+                            },
+                            {
+                                "platform": "android_arm64",
+                                "appType": "client",
+                                "beta": False,
+                                "cloudGroup": "prod",
+                                "fileName": "nxwitness-client-24.1.38477-android_arm64-firebase.apk",
+                                "path": "android/nxwitness-client-24.1.38477-android_arm64-firebase.apk",
+                                "niceName": "Android / ARM64 - Client installer"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ios",
+                        "files": [
+                            {
+                                "platform": "ios",
+                                "appType": "client",
+                                "beta": False,
+                                "cloudGroup": "prod",
+                                "fileName": "nxwitness-client-24.1.38477-ios.ipa",
+                                "path": "ios/nxwitness-client-24.1.38477-ios.ipa",
+                                "niceName": "iOS - Client installer"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "patches": [{
+            "version": "5.0.0.36528",
+            "meta_version": None,
+            "releaseNotes": "<ul><li>This is a cumulative patch which incorporates all previously released 5.0 patches.</li><li>NEW DEVICE SUPPORT/IMPROVEMENTS/FIXES</li><ul><li>Hikvision DS-2TD4035x, DS-2TD6266x, DS-2TD4137x are switched to ONVIF PTZ.</li><li>ONVIF Media2 is forced on PELCO IMV529-x.</li><li>AXIS M2036-LE device was discovered twice. Fixed.</li><li>Encoders added to the analog list:</li><ul><li>Dahua dh-hcvr5104he-s2, dh-nvr2108hs-8p-i2, dhi-nvr2104hsx, dhi-nvr5464-4ks2, dhi-nvr6a08-64-4ks2, hcvr4108hs3, hcvr8208a-s3, n41c1p2, n42c1p2, n52b2p, x72a2a2, x82a3a, xvr7416l-4kl-x, xvr7816s-4kl-x, dh-nvr5432-4k\", dhi-ivss7008-2i, dh-xvr5104hs-i3, dh-xvr5116hs-i3, dhi-nvr5216-16p-4ks2e</li><li>Hikvision ds-7216hqi-k2, ds-7304hqhi-sh, ds-7316huhi-f4/n, ds-7916n-k4, ds-7932n-k4, dvr-116g-f1, dvr-204u-k1, dvr-208u-m1, ds-7308hfi-sh, ds-7604ni-i1/4p, ds-7b08hqhi-k1, ds-96128ni-i16, dvr-216u-f2, dvr-216u-m2, ids-7716nxi-i4/16p/x, ids-8104ahqxli-e4, ids-9632nxi-i8/16s(b), ids-9632nxi-i8/8f(b), ids-7204hqhi-k1, ids-7208huhi-m2/s/a, ids-7216hqhi-m2/s, ids-9632nxi-i8/x</li><li>IVSEC NVR NR308XC</li><li>Dorani DORIP-13 Network Video Recorder</li><li>Eneo vuhdip-16-3, vxh8ahd-4</li><li>Ganz Security ZN-AIBOX8</li><li>Amcrest amdv108116-h5, amdv5108-ai, amdv5108-i3, amdv8m8-h5, amdvtenl8-h5</li><li>Honeywell hve1, hve8, hve8x, hrhq1080l.</li><li>Multi-sensor cameras:</li><li>Hikvision DS-2TD2628x</li><li>UNIVIEW IPC9312LFW-AF28-2X4</li><li>UNIVIEW IPC94144SFW-X25-F40C</li><li>Avigilon 12C-H4A-4MH-360.</li></ul></ul><li>BUG FIXES / IMPROVEMENTS</li><ul><li>Server could hang after some time because of token authorization. Fixed.</li><li>Server could lose connection to Cloud after some time. Fixed.</li><li>The “View cameras” page displayed incorrectly on Cloud Portal when 2FA was enabled. Fixed.</li><li>Fixed incorrect shortcut hints for the buttons on scene items.</li><li>The Showreel mode caused excess memory usage on the Desktop Client. Fixed.</li><li>Joysticks stopped working in the Desktop Client if unplugged and plugged back in. Fixed.</li><li>The distributor name in the Support Signature field was not shown on the license dialog in the Desktop Client. Fixed.</li></ul><li>HANWHA DEVICES SUPPORT/IMPROVEMENTS/FIXES</li><ul><li>The \"tracking\" caption was removed from object names in the Hanwha analytic plugin. This makes the object types' naming consistent.</li></ul></ul>",
+            "product": "nxwitness",
+            "productDescription": "Video Management System",
+            "date": "16 Mar 2023",
+            "buildNumber": "36528",
+            "password": "t70bgt",
+            "type": "patch",
+            "backwardCompatible": True,
+            "cloudGroup": "prod",
+            "beta": False,
+            "dismissed": False,
+            "installers": [
+                {
+                    "platform": "edge1",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-edge1-patch.txt",
+                    "path": "arm/nxwitness-conan_refs-5.0.0.36528-edge1-patch.txt",
+                    "niceName": "Edge - conan_refs"
+                },
+                {
+                    "platform": "edge1",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.0.0.36528-edge1-patch.zip",
+                    "path": "arm/nxwitness-server-5.0.0.36528-edge1-patch.zip",
+                    "niceName": "Edge - Server installer"
+                },
+                {
+                    "platform": "edge1",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-edge1-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-edge1-patch.zip",
+                    "niceName": "Edge - Update package - server"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.0.0.36528-linux_x64-patch.deb",
+                    "path": "linux/nxwitness-client-5.0.0.36528-linux_x64-patch.deb",
+                    "niceName": "Ubuntu x64 - Client installer"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-linux_x64-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-linux_x64-patch.zip",
+                    "niceName": "Ubuntu x64 - Update package - client"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-linux_x64-patch.txt",
+                    "path": "linux/nxwitness-conan_refs-5.0.0.36528-linux_x64-patch.txt",
+                    "niceName": "Ubuntu x64 - conan_refs"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.0.0.36528-linux_x64-patch.deb",
+                    "path": "linux/nxwitness-server-5.0.0.36528-linux_x64-patch.deb",
+                    "niceName": "Ubuntu x64 - Server installer"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-linux_x64-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-linux_x64-patch.zip",
+                    "niceName": "Ubuntu x64 - Update package - server"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "vms_benchmark",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-vms_benchmark-5.0.0.36528-linux_x64-patch.zip",
+                    "path": "linux/nxwitness-vms_benchmark-5.0.0.36528-linux_x64-patch.zip",
+                    "niceName": "Ubuntu x64 - VMS Benchmark Tool"
+                },
+                {
+                    "platform": "linux_arm32",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-linux_arm32-patch.txt",
+                    "path": "arm/nxwitness-conan_refs-5.0.0.36528-linux_arm32-patch.txt",
+                    "niceName": "Raspberry Pi / ARM32 - conan_refs"
+                },
+                {
+                    "platform": "linux_arm32",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.0.0.36528-linux_arm32-patch.deb",
+                    "path": "arm/nxwitness-server-5.0.0.36528-linux_arm32-patch.deb",
+                    "niceName": "Raspberry Pi / ARM32 - Server installer"
+                },
+                {
+                    "platform": "bananapi",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-bananapi-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-bananapi-patch.zip",
+                    "niceName": "Banana Pi - Update package - server"
+                },
+                {
+                    "platform": "linux_arm32",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-linux_arm32-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-linux_arm32-patch.zip",
+                    "niceName": "Raspberry Pi / ARM32 - Update package - server"
+                },
+                {
+                    "platform": "rpi",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-rpi-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-rpi-patch.zip",
+                    "niceName": "Raspberry Pi - Update package - server"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.0.0.36528-linux_arm64-patch.deb",
+                    "path": "arm/nxwitness-client-5.0.0.36528-linux_arm64-patch.deb",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Client installer"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-linux_arm64-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-linux_arm64-patch.zip",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Update package - client"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-linux_arm64-patch.txt",
+                    "path": "arm/nxwitness-conan_refs-5.0.0.36528-linux_arm64-patch.txt",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - conan_refs"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.0.0.36528-linux_arm64-patch.deb",
+                    "path": "arm/nxwitness-server-5.0.0.36528-linux_arm64-patch.deb",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Server installer"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-linux_arm64-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-linux_arm64-patch.zip",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Update package - server"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "path": "macos/nxwitness-client_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "path": "macos/nxwitness-libs_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "path": "macos/nxwitness-misc_debug-5.0.0.36528-macos_x64-patch.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.0.0.36528-macos_x64-patch.dmg",
+                    "path": "macos/nxwitness-client-5.0.0.36528-macos_x64-patch.dmg",
+                    "niceName": "Mac OS Intel x64 - Client installer"
+                },
+                {
+                    "platform": "macos",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-macos-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-macos-patch.zip",
+                    "niceName": "Mac OS - Update package - client"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-macos_x64-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-macos_x64-patch.zip",
+                    "niceName": "Mac OS Intel x64 - Update package - client"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-macos_x64-patch.txt",
+                    "path": "macos/nxwitness-conan_refs-5.0.0.36528-macos_x64-patch.txt",
+                    "niceName": "Mac OS Intel x64 - conan_refs"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "path": "macos/nxwitness-client_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "path": "macos/nxwitness-libs_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "path": "macos/nxwitness-misc_debug-5.0.0.36528-macos_arm64-patch.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.0.0.36528-macos_arm64-patch.dmg",
+                    "path": "macos/nxwitness-client-5.0.0.36528-macos_arm64-patch.dmg",
+                    "niceName": "Mac OS Apple Silicon - Client installer"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-macos_arm64-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-macos_arm64-patch.zip",
+                    "niceName": "Mac OS Apple Silicon - Update package - client"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-macos_arm64-patch.txt",
+                    "path": "macos/nxwitness-conan_refs-5.0.0.36528-macos_arm64-patch.txt",
+                    "niceName": "Mac OS Apple Silicon - conan_refs"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "metadata_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-metadata_sdk-5.0.0.36528-universal-patch.zip",
+                    "path": "sdk/nxwitness-metadata_sdk-5.0.0.36528-universal-patch.zip",
+                    "niceName": "Cross-platform - SDK: Metadata"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "storage_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-storage_sdk-5.0.0.36528-universal-patch.zip",
+                    "path": "sdk/nxwitness-storage_sdk-5.0.0.36528-universal-patch.zip",
+                    "niceName": "Cross-platform - SDK: Storage"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "video_source_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-video_source_sdk-5.0.0.36528-universal-patch.zip",
+                    "path": "sdk/nxwitness-video_source_sdk-5.0.0.36528-universal-patch.zip",
+                    "niceName": "Cross-platform - SDK: Camera"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-client_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-libs_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-misc_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-server_debug-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - ~ PDB - server debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "bundle",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-bundle-5.0.0.36528-windows_x64-patch.exe",
+                    "path": "windows/nxwitness-bundle-5.0.0.36528-windows_x64-patch.exe",
+                    "niceName": "Windows x64 - Client & Server"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.0.0.36528-windows_x64-patch.exe",
+                    "path": "windows/nxwitness-client-5.0.0.36528-windows_x64-patch.exe",
+                    "niceName": "Windows x64 - Client installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "nxwitness-client_update-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - Update package - client"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "conan_refs",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-conan_refs-5.0.0.36528-windows_x64-patch.txt",
+                    "path": "windows/nxwitness-conan_refs-5.0.0.36528-windows_x64-patch.txt",
+                    "niceName": "Windows x64 - conan_refs"
+                },
+                {
+                    "platform": "Net2v5",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v5.exe",
+                    "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v5.exe",
+                    "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                },
+                {
+                    "platform": "Net2v5",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v5.msi",
+                    "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v5.msi",
+                    "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                },
+                {
+                    "platform": "Net2v6",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v6.exe",
+                    "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v6.exe",
+                    "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                },
+                {
+                    "platform": "Net2v6",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v6.msi",
+                    "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v6.msi",
+                    "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.0.0.36528-windows_x64-patch.exe",
+                    "path": "windows/nxwitness-server-5.0.0.36528-windows_x64-patch.exe",
+                    "niceName": "Windows x64 - Server installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "nxwitness-server_update-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - Update package - server"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "testcamera",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-testcamera-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-testcamera-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - Test camera"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "vms_benchmark",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-vms_benchmark-5.0.0.36528-windows_x64-patch.zip",
+                    "path": "windows/nxwitness-vms_benchmark-5.0.0.36528-windows_x64-patch.zip",
+                    "niceName": "Windows x64 - VMS Benchmark Tool"
+                }
+            ],
+            "platforms": [
+                {
+                    "name": "sdk",
+                    "files": [
+                        {
+                            "platform": "universal",
+                            "appType": "video_source_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-video_source_sdk-5.0.0.36528-universal-patch.zip",
+                            "path": "sdk/nxwitness-video_source_sdk-5.0.0.36528-universal-patch.zip",
+                            "niceName": "Cross-platform - SDK: Camera"
+                        },
+                        {
+                            "platform": "universal",
+                            "appType": "metadata_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-metadata_sdk-5.0.0.36528-universal-patch.zip",
+                            "path": "sdk/nxwitness-metadata_sdk-5.0.0.36528-universal-patch.zip",
+                            "niceName": "Cross-platform - SDK: Metadata"
+                        },
+                        {
+                            "platform": "universal",
+                            "appType": "storage_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-storage_sdk-5.0.0.36528-universal-patch.zip",
+                            "path": "sdk/nxwitness-storage_sdk-5.0.0.36528-universal-patch.zip",
+                            "niceName": "Cross-platform - SDK: Storage"
+                        }
+                    ]
+                },
+                {
+                    "name": "arm",
+                    "files": [
+                        {
+                            "platform": "linux_arm64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.0.0.36528-linux_arm64-patch.deb",
+                            "path": "arm/nxwitness-client-5.0.0.36528-linux_arm64-patch.deb",
+                            "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Client installer"
+                        },
+                        {
+                            "platform": "linux_arm64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.0.0.36528-linux_arm64-patch.deb",
+                            "path": "arm/nxwitness-server-5.0.0.36528-linux_arm64-patch.deb",
+                            "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Server installer"
+                        },
+                        {
+                            "platform": "edge1",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.0.0.36528-edge1-patch.zip",
+                            "path": "arm/nxwitness-server-5.0.0.36528-edge1-patch.zip",
+                            "niceName": "Edge - Server installer"
+                        },
+                        {
+                            "platform": "linux_arm32",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.0.0.36528-linux_arm32-patch.deb",
+                            "path": "arm/nxwitness-server-5.0.0.36528-linux_arm32-patch.deb",
+                            "niceName": "Raspberry Pi / ARM32 - Server installer"
+                        }
+                    ]
+                },
+                {
+                    "name": "linux",
+                    "files": [
+                        {
+                            "platform": "linux_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.0.0.36528-linux_x64-patch.deb",
+                            "path": "linux/nxwitness-client-5.0.0.36528-linux_x64-patch.deb",
+                            "niceName": "Ubuntu x64 - Client installer"
+                        },
+                        {
+                            "platform": "linux_x64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.0.0.36528-linux_x64-patch.deb",
+                            "path": "linux/nxwitness-server-5.0.0.36528-linux_x64-patch.deb",
+                            "niceName": "Ubuntu x64 - Server installer"
+                        },
+                        {
+                            "platform": "linux_x64",
+                            "appType": "vms_benchmark",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-vms_benchmark-5.0.0.36528-linux_x64-patch.zip",
+                            "path": "linux/nxwitness-vms_benchmark-5.0.0.36528-linux_x64-patch.zip",
+                            "niceName": "Ubuntu x64 - VMS Benchmark Tool"
+                        }
+                    ]
+                },
+                {
+                    "name": "macos",
+                    "files": [
+                        {
+                            "platform": "macos_arm64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.0.0.36528-macos_arm64-patch.dmg",
+                            "path": "macos/nxwitness-client-5.0.0.36528-macos_arm64-patch.dmg",
+                            "niceName": "Mac OS Apple Silicon - Client installer"
+                        },
+                        {
+                            "platform": "macos_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.0.0.36528-macos_x64-patch.dmg",
+                            "path": "macos/nxwitness-client-5.0.0.36528-macos_x64-patch.dmg",
+                            "niceName": "Mac OS Intel x64 - Client installer"
+                        }
+                    ]
+                },
+                {
+                    "name": "windows",
+                    "files": [
+                        {
+                            "platform": "Net2v5",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v5.exe",
+                            "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v5.exe",
+                            "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v5",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v5.msi",
+                            "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v5.msi",
+                            "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v6",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v6.exe",
+                            "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v6.exe",
+                            "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v6",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.0.0.36528-Net2v6.msi",
+                            "path": "windows/nxwitness-paxton_plugin-5.0.0.36528-Net2v6.msi",
+                            "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "bundle",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-bundle-5.0.0.36528-windows_x64-patch.exe",
+                            "path": "windows/nxwitness-bundle-5.0.0.36528-windows_x64-patch.exe",
+                            "niceName": "Windows x64 - Client & Server"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.0.0.36528-windows_x64-patch.exe",
+                            "path": "windows/nxwitness-client-5.0.0.36528-windows_x64-patch.exe",
+                            "niceName": "Windows x64 - Client installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.0.0.36528-windows_x64-patch.exe",
+                            "path": "windows/nxwitness-server-5.0.0.36528-windows_x64-patch.exe",
+                            "niceName": "Windows x64 - Server installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "testcamera",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-testcamera-5.0.0.36528-windows_x64-patch.zip",
+                            "path": "windows/nxwitness-testcamera-5.0.0.36528-windows_x64-patch.zip",
+                            "niceName": "Windows x64 - Test camera"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "vms_benchmark",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-vms_benchmark-5.0.0.36528-windows_x64-patch.zip",
+                            "path": "windows/nxwitness-vms_benchmark-5.0.0.36528-windows_x64-patch.zip",
+                            "niceName": "Windows x64 - VMS Benchmark Tool"
+                        }
+                    ]
+                }
+            ]
+        }],
+        "betas": [{
+            "version": "5.1.4.38570",
+            "meta_version": None,
+            "releaseNotes": "<ul><li>These release notes cover improvements, bug fixes, and expanded device support deployed compared to the latest minor release (5.1.3).</li><li>SUMMARY</li><ul><li>THIS BETA RELEASE CANDIDATE IS NOT FOR USE IN A PRODUCTION ENVIRONMENT. It is intended to introduce new use cases and collect feedback from partners and developers.</li></ul><li>BREAKING CHANGES:</li><ul><li>Support for Microsoft Windows 8.1 and Microsoft Windows Server 2012 will be discontinued in the next major release (6.0/Gen6).</li></ul><li>GENERAL IMPROVEMENTS:</li><ul><li>Improved support for Nvidia T1000 graphics cards in multiple monitor, multiple tile configurations.</li></ul><li>ANALYTICS IMPROVEMENTS and FIXES:</li><ul><li>Event Post-Recording time did not correspond to the value specified in the Event rule. Fixed.</li><li>VCA analytics is enabled on Videosec cameras.</li><li>If the recording schedule was not set on a device, object search was unable to find some objects. Fixed.</li><li>The Objects Tab was not shown when the Sample Plugin was enabled. Fixed.</li><li>The Rules engine would reset the chosen Object Type for the \"Analytic Object Detected\" event. Fixed.</li><li>Event Rules Engine did not allow setting a pre- and post-recording time for one-time, fixed duration Events. Fixed.</li><li>If “Declare additional event types” was enabled on the “Stub: Events” plugin then the event types were not displayed in the Event Rules Engine. Fixed.</li></ul><li>DEVICE SUPPORT AND DEVICE SPECIFIC FIXES:</li><ul><li>Newly Supported Devices:</li><ul><li>Provision ISR DMA-340IPENx</li><li>Karel NBE-454Zu-25</li><li>Hikvision DS-2TD4237</li></ul><li>Encoders added to the analog list:</li><ul><li>Winic AR324x DVR</li><li>Dahua N84B5N, N82B3P</li><li>Clinton Electronics CE-E04HDA, CE-E16HDA</li></ul><li>Multisensor Cameras:</li><ul><li>Axis P3737PLE</li><li>Hikvision DS-2SE7C432MW-AEBx</li><li>Avigilon 32c-h5a-4mh</li><li>Raysharp RS-CT252N6TNB, TB2XTH36IP5</li></ul><li>Advanced PTZ:</li><ul><li>Hikvision DS-2TD4228-10/W</li><li>EUKLIS KLIS_D40X-IP-3M-IRD</li><li>Dahua 5A445XANR</li><li>i-PRO WV-S66300-Z3L,WV-S66300-Z4,WV-S66300-Z4L, WV-S66600-Z3L, WV-X86530-Z2_PTZ, WV-X86531-Z2_PTZ, WV-S66600-Z3, WV-S66700-Z3, WV-S65302-Z2, WV-S65340-Z2, WV-S65301-Z1, WV-B-S-U65300-ZY, WV-U61300-ZY, WV-S65340-Z, WV-S61501-Z1, WV-S65501-Z1, WV-S61302-Z4</li></ul><li>Device Specific Fixes:</li><ul><li>If the \"Allow System to optimize camera settings\" option was disabled, stream profiles were still created on Axis cameras. Fixed.</li><li>Camera profile (stream resolution) was not properly handled on Axis analog cameras. Fixed.</li><li>Bosch FLEXIDOME 5100i IR object \"Vehicle\" received as \"unknown\". Fixed.</li><li>Provision ISR DMA-340IPEN-28 duplicated primary stream. Fixed.</li><li>On Milesight cameras, the Desktop Client notifications triggered by camera events could have incorrect timestamp. Fixed.</li><li>On Sharp YK-P02AG, Server configured the low-resolution stream as the primary one, and did not configure the secondary stream. Fixed.</li><li>DAHUA DHI-VTO2202F-P could not be discovered manually. Fixed.</li><li>Some Hanwha cameras were discovered and configured through Onvif with the primary resolution lower than expected. Fixed.</li><li>Pelco VS1NN60 could not be discovered properly. Fixed.</li><li>2N SIP horn speaker entered an online/offline loop. Fixed.</li><li>The Axis I8116 intercom was duplicated in the Resource Tree. Fixed.</li><li>Alarm input and thermal sensor were not enabled for TVTH-S01-0001-BUL-G. Fixed.</li><li>The input signal on KO1 ITXAI CSB2-2M4P-1IMARH was not detected. Fixed.</li><li>CSG cameras were discovered with an incorrect vendor name. Fixed.</li></ul></ul><li>BUG FIXES:</li><ul><li>In some cases, RTSP streams could enter a continuous online-offline loop after the RTSP stream goes offline. Fixed.</li><li>Sometimes, the Desktop Clients could experience connection drops with Servers when connected over a slow network. Fixed.</li><li>Audio could not work properly on some Edge devices when onvif_replay=True and audio were enabled. Fixed.</li><li>On certain cameras, the recorded footage could have playback issues when camera recording was triggered by the \"Analytic Object Detected\" trigger. Fixed.</li><li>Cloud systems can disconnect from the Cloud in some network environments. Fixed.</li><li>A locked Video Wall can be closed from the Desktop Client. Fixed.</li><li>Cross-System Layout that contained items from different Systems could close in case of the cloud connection interruption. Fixed.</li><li>The Desktop Client allowed replacing camera streams on a Video Wall tab even if the the layout was locked.  Fixed.</li><li>After closing a Camera on a  Video Wall, or after significant time passes, the layout settings can be changed.  Fixed.</li><li>The Desktop Client could crash if using a joystick. Fixed.</li><li>The Desktop Client did crash when using Intel UHD 630 graphics on Windows 10 and Windows 11. Fixed.</li><li>Some streams from TestCamera could not be recorded and stored properly. Fixed.</li><li>Multisensor video exported in the NOV format triggered unnecessary transcoding instead of using the source codec. Fixed.</li></ul><li>HANWHA SPECIFIC IMPROVEMENTS/FIXES</li><ul><li>If the \"Allow System to optimize camera settings\" option was disabled, stream profiles were still created on Hanwha cameras. Fixed.</li><li>Loitering and intrusion events on Hanwha PNM-C12083RVD were generated at the same time, but only intrusion events could be set as a trigger. Fixed.</li><li>TID-600R \"Unknown track\" was shown as the object title. Fixed.</li></ul></ul>",
+            "product": "nxwitness",
+            "productDescription": "Video Management System",
+            "date": "16 Apr 2024",
+            "buildNumber": "38570",
+            "password": "x8uf8p",
+            "type": "rc",
+            "backwardCompatible": True,
+            "cloudGroup": "prod",
+            "beta": False,
+            "dismissed": False,
+            "installers": [
+                {
+                    "platform": "edge1",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-edge1-rc.zip",
+                    "path": "arm/nxwitness-server-5.1.4.38570-edge1-rc.zip",
+                    "niceName": "Edge - Server installer"
+                },
+                {
+                    "platform": "edge1",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-edge1-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-edge1-rc.zip",
+                    "niceName": "Edge - Update package - server"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.1.4.38570-linux_x64-rc.deb",
+                    "path": "linux/nxwitness-client-5.1.4.38570-linux_x64-rc.deb",
+                    "niceName": "Ubuntu x64 - Client installer"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-linux_x64-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-linux_x64-rc.zip",
+                    "niceName": "Ubuntu x64 - Update package - client"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-linux_x64-rc.deb",
+                    "path": "linux/nxwitness-server-5.1.4.38570-linux_x64-rc.deb",
+                    "niceName": "Ubuntu x64 - Server installer"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-linux_x64-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-linux_x64-rc.zip",
+                    "niceName": "Ubuntu x64 - Update package - server"
+                },
+                {
+                    "platform": "linux_x64",
+                    "appType": "vms_benchmark",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-vms_benchmark-5.1.4.38570-linux_x64-rc.zip",
+                    "path": "linux/nxwitness-vms_benchmark-5.1.4.38570-linux_x64-rc.zip",
+                    "niceName": "Ubuntu x64 - VMS Benchmark Tool"
+                },
+                {
+                    "platform": "linux_arm32",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-linux_arm32-rc.deb",
+                    "path": "arm/nxwitness-server-5.1.4.38570-linux_arm32-rc.deb",
+                    "niceName": "Raspberry Pi / ARM32 - Server installer"
+                },
+                {
+                    "platform": "linux_arm32",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-linux_arm32-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-linux_arm32-rc.zip",
+                    "niceName": "Raspberry Pi / ARM32 - Update package - server"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.1.4.38570-linux_arm64-rc.deb",
+                    "path": "arm/nxwitness-client-5.1.4.38570-linux_arm64-rc.deb",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Client installer"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-linux_arm64-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-linux_arm64-rc.zip",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Update package - client"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-linux_arm64-rc.deb",
+                    "path": "arm/nxwitness-server-5.1.4.38570-linux_arm64-rc.deb",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Server installer"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-linux_arm64.vca_edge1-rc.enc",
+                    "path": "arm/nxwitness-server-5.1.4.38570-linux_arm64.vca_edge1-rc.enc",
+                    "niceName": "VCA Edge - Server installer"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-linux_arm64-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-linux_arm64-rc.zip",
+                    "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Update package - server"
+                },
+                {
+                    "platform": "linux_arm64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-linux_arm64.vca_edge1-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-linux_arm64.vca_edge1-rc.zip",
+                    "niceName": "VCA Edge - Update package - server"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "path": "macos/nxwitness-client_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "path": "macos/nxwitness-libs_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "path": "macos/nxwitness-misc_debug-5.1.4.38570-macos_x64-rc.zip",
+                    "niceName": "Mac OS Intel x64 - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.1.4.38570-macos_x64-rc.dmg",
+                    "path": "macos/nxwitness-client-5.1.4.38570-macos_x64-rc.dmg",
+                    "niceName": "Mac OS Intel x64 - Client installer"
+                },
+                {
+                    "platform": "macos",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-macos-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-macos-rc.zip",
+                    "niceName": "Mac OS - Update package - client"
+                },
+                {
+                    "platform": "macos_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-macos_x64-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-macos_x64-rc.zip",
+                    "niceName": "Mac OS Intel x64 - Update package - client"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "path": "macos/nxwitness-client_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "path": "macos/nxwitness-libs_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "path": "macos/nxwitness-misc_debug-5.1.4.38570-macos_arm64-rc.zip",
+                    "niceName": "Mac OS Apple Silicon - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.1.4.38570-macos_arm64-rc.dmg",
+                    "path": "macos/nxwitness-client-5.1.4.38570-macos_arm64-rc.dmg",
+                    "niceName": "Mac OS Apple Silicon - Client installer"
+                },
+                {
+                    "platform": "macos_arm64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-macos_arm64-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-macos_arm64-rc.zip",
+                    "niceName": "Mac OS Apple Silicon - Update package - client"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "metadata_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-metadata_sdk-5.1.4.38570-universal-rc.zip",
+                    "path": "sdk/nxwitness-metadata_sdk-5.1.4.38570-universal-rc.zip",
+                    "niceName": "Cross-platform - SDK: Metadata"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "storage_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-storage_sdk-5.1.4.38570-universal-rc.zip",
+                    "path": "sdk/nxwitness-storage_sdk-5.1.4.38570-universal-rc.zip",
+                    "niceName": "Cross-platform - SDK: Storage"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "video_source_sdk",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-video_source_sdk-5.1.4.38570-universal-rc.zip",
+                    "path": "sdk/nxwitness-video_source_sdk-5.1.4.38570-universal-rc.zip",
+                    "niceName": "Cross-platform - SDK: Camera"
+                },
+                {
+                    "platform": "universal",
+                    "appType": "webadmin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-webadmin-5.1.4.38570-universal-rc.zip",
+                    "path": "universal/nxwitness-webadmin-5.1.4.38570-universal-rc.zip",
+                    "niceName": "Cross-platform - Web Admin"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-client_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - ~ PDB - client debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "libs_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-libs_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-libs_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - ~ PDB - libraries debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "misc_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-misc_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-misc_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - ~ PDB - Applauncher, traytool & other debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server_debug",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-server_debug-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - ~ PDB - server debug files"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "bundle",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-bundle-5.1.4.38570-windows_x64-rc.exe",
+                    "path": "windows/nxwitness-bundle-5.1.4.38570-windows_x64-rc.exe",
+                    "niceName": "Windows x64 - Client & Server"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client-5.1.4.38570-windows_x64-rc.exe",
+                    "path": "windows/nxwitness-client-5.1.4.38570-windows_x64-rc.exe",
+                    "niceName": "Windows x64 - Client installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "client_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-client_update-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "nxwitness-client_update-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - Update package - client"
+                },
+                {
+                    "platform": "Net2v5",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v5.exe",
+                    "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v5.exe",
+                    "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                },
+                {
+                    "platform": "Net2v5",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v5.msi",
+                    "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v5.msi",
+                    "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                },
+                {
+                    "platform": "Net2v6",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v6.exe",
+                    "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v6.exe",
+                    "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                },
+                {
+                    "platform": "Net2v6",
+                    "appType": "paxton_plugin",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v6.msi",
+                    "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v6.msi",
+                    "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server-5.1.4.38570-windows_x64-rc.exe",
+                    "path": "windows/nxwitness-server-5.1.4.38570-windows_x64-rc.exe",
+                    "niceName": "Windows x64 - Server installer"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "server_update",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-server_update-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "nxwitness-server_update-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - Update package - server"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "testcamera",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-testcamera-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-testcamera-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - Test camera"
+                },
+                {
+                    "platform": "windows_x64",
+                    "appType": "vms_benchmark",
+                    "beta": False,
+                    "cloudGroup": "prod",
+                    "fileName": "nxwitness-vms_benchmark-5.1.4.38570-windows_x64-rc.zip",
+                    "path": "windows/nxwitness-vms_benchmark-5.1.4.38570-windows_x64-rc.zip",
+                    "niceName": "Windows x64 - VMS Benchmark Tool"
+                }
+            ],
+            "platforms": [
+                {
+                    "name": "sdk",
+                    "files": [
+                        {
+                            "platform": "universal",
+                            "appType": "video_source_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-video_source_sdk-5.1.4.38570-universal-rc.zip",
+                            "path": "sdk/nxwitness-video_source_sdk-5.1.4.38570-universal-rc.zip",
+                            "niceName": "Cross-platform - SDK: Camera"
+                        },
+                        {
+                            "platform": "universal",
+                            "appType": "metadata_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-metadata_sdk-5.1.4.38570-universal-rc.zip",
+                            "path": "sdk/nxwitness-metadata_sdk-5.1.4.38570-universal-rc.zip",
+                            "niceName": "Cross-platform - SDK: Metadata"
+                        },
+                        {
+                            "platform": "universal",
+                            "appType": "storage_sdk",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-storage_sdk-5.1.4.38570-universal-rc.zip",
+                            "path": "sdk/nxwitness-storage_sdk-5.1.4.38570-universal-rc.zip",
+                            "niceName": "Cross-platform - SDK: Storage"
+                        }
+                    ]
+                },
+                {
+                    "name": "universal",
+                    "files": [
+                        {
+                            "platform": "universal",
+                            "appType": "webadmin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-webadmin-5.1.4.38570-universal-rc.zip",
+                            "path": "universal/nxwitness-webadmin-5.1.4.38570-universal-rc.zip",
+                            "niceName": "Cross-platform - Web Admin"
+                        }
+                    ]
+                },
+                {
+                    "name": "arm",
+                    "files": [
+                        {
+                            "platform": "linux_arm64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.1.4.38570-linux_arm64-rc.deb",
+                            "path": "arm/nxwitness-client-5.1.4.38570-linux_arm64-rc.deb",
+                            "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Client installer"
+                        },
+                        {
+                            "platform": "linux_arm64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-linux_arm64-rc.deb",
+                            "path": "arm/nxwitness-server-5.1.4.38570-linux_arm64-rc.deb",
+                            "niceName": "ARM64 (Nvidia Jetson, Qualcomm) - Server installer"
+                        },
+                        {
+                            "platform": "edge1",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-edge1-rc.zip",
+                            "path": "arm/nxwitness-server-5.1.4.38570-edge1-rc.zip",
+                            "niceName": "Edge - Server installer"
+                        },
+                        {
+                            "platform": "linux_arm32",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-linux_arm32-rc.deb",
+                            "path": "arm/nxwitness-server-5.1.4.38570-linux_arm32-rc.deb",
+                            "niceName": "Raspberry Pi / ARM32 - Server installer"
+                        },
+                        {
+                            "platform": "linux_arm64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-linux_arm64.vca_edge1-rc.enc",
+                            "path": "arm/nxwitness-server-5.1.4.38570-linux_arm64.vca_edge1-rc.enc",
+                            "niceName": "VCA Edge - Server installer"
+                        }
+                    ]
+                },
+                {
+                    "name": "linux",
+                    "files": [
+                        {
+                            "platform": "linux_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.1.4.38570-linux_x64-rc.deb",
+                            "path": "linux/nxwitness-client-5.1.4.38570-linux_x64-rc.deb",
+                            "niceName": "Ubuntu x64 - Client installer"
+                        },
+                        {
+                            "platform": "linux_x64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-linux_x64-rc.deb",
+                            "path": "linux/nxwitness-server-5.1.4.38570-linux_x64-rc.deb",
+                            "niceName": "Ubuntu x64 - Server installer"
+                        },
+                        {
+                            "platform": "linux_x64",
+                            "appType": "vms_benchmark",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-vms_benchmark-5.1.4.38570-linux_x64-rc.zip",
+                            "path": "linux/nxwitness-vms_benchmark-5.1.4.38570-linux_x64-rc.zip",
+                            "niceName": "Ubuntu x64 - VMS Benchmark Tool"
+                        }
+                    ]
+                },
+                {
+                    "name": "macos",
+                    "files": [
+                        {
+                            "platform": "macos_arm64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.1.4.38570-macos_arm64-rc.dmg",
+                            "path": "macos/nxwitness-client-5.1.4.38570-macos_arm64-rc.dmg",
+                            "niceName": "Mac OS Apple Silicon - Client installer"
+                        },
+                        {
+                            "platform": "macos_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.1.4.38570-macos_x64-rc.dmg",
+                            "path": "macos/nxwitness-client-5.1.4.38570-macos_x64-rc.dmg",
+                            "niceName": "Mac OS Intel x64 - Client installer"
+                        }
+                    ]
+                },
+                {
+                    "name": "windows",
+                    "files": [
+                        {
+                            "platform": "Net2v5",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v5.exe",
+                            "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v5.exe",
+                            "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v5",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v5.msi",
+                            "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v5.msi",
+                            "niceName": "Paxton Net2 Pro v5 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v6",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v6.exe",
+                            "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v6.exe",
+                            "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                        },
+                        {
+                            "platform": "Net2v6",
+                            "appType": "paxton_plugin",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-paxton_plugin-5.1.4.38570-Net2v6.msi",
+                            "path": "windows/nxwitness-paxton_plugin-5.1.4.38570-Net2v6.msi",
+                            "niceName": "Paxton Net2 Pro v6 - plugin installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "bundle",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-bundle-5.1.4.38570-windows_x64-rc.exe",
+                            "path": "windows/nxwitness-bundle-5.1.4.38570-windows_x64-rc.exe",
+                            "niceName": "Windows x64 - Client & Server"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "client",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-client-5.1.4.38570-windows_x64-rc.exe",
+                            "path": "windows/nxwitness-client-5.1.4.38570-windows_x64-rc.exe",
+                            "niceName": "Windows x64 - Client installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "server",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-server-5.1.4.38570-windows_x64-rc.exe",
+                            "path": "windows/nxwitness-server-5.1.4.38570-windows_x64-rc.exe",
+                            "niceName": "Windows x64 - Server installer"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "testcamera",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-testcamera-5.1.4.38570-windows_x64-rc.zip",
+                            "path": "windows/nxwitness-testcamera-5.1.4.38570-windows_x64-rc.zip",
+                            "niceName": "Windows x64 - Test camera"
+                        },
+                        {
+                            "platform": "windows_x64",
+                            "appType": "vms_benchmark",
+                            "beta": False,
+                            "cloudGroup": "prod",
+                            "fileName": "nxwitness-vms_benchmark-5.1.4.38570-windows_x64-rc.zip",
+                            "path": "windows/nxwitness-vms_benchmark-5.1.4.38570-windows_x64-rc.zip",
+                            "niceName": "Windows x64 - VMS Benchmark Tool"
+                        }
+                    ]
+                }
+            ]
+        }]
+    }
 
 @pytest.fixture()
 def updates_json():
