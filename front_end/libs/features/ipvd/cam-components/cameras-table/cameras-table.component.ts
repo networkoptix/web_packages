@@ -44,6 +44,8 @@ export class NxCamerasTableComponent implements OnChanges {
     headerFlowBase: string[];
     headerFlowCSM: string[];
     headerFlowService: string[];
+    lastInTemplate: string;
+
     pages: number;
     debug: boolean;
 
@@ -200,6 +202,8 @@ export class NxCamerasTableComponent implements OnChanges {
             }
             this.showHeaders = showHeaders;
             this.headerFlow = headerFlow;
+
+            this.lastInTemplate = `${headerFlow.at(-1)}`;
 
             this.csvFilename = Date.now();
             this.csvCameraData = this.getCsvData(showAnalytics);
