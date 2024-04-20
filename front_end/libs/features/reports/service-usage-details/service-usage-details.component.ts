@@ -1,13 +1,8 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import dateFormat from 'dateformat';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import {
-    EntityServiceChangeEntry,
-    SystemServiceChangeEntry,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { EntityType } from '../reports.types';
 import { NxServiceUsageTableComponent } from '../service-usage/service-usage-table/service-usage-table.component';
@@ -38,47 +33,12 @@ export class NxServiceUsageDetailsComponent {
     serviceId$$ = input.required<string>({ alias: 'serviceId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
 
-    private getChangedColumnText(changesCount: number, lastChanged: string): string {
-        if (changesCount === 0) {
-            return 'Previous periods';
-        } else if (changesCount === 1) {
-            return dateFormat(lastChanged, 'd mmm yyyy');
-        } else {
-            return 'Multiple dates';
-        }
-    }
-
     formattedServiceDetailRecords$$ = computed<FormattedServiceDetailRecord[]>(() => {
         const entityType = this.entityType$$();
-        const records = this.serviceUsageDetailsStore.records();
-
         if (entityType === EntityType.channelPartner) {
-            return (records as EntityServiceChangeEntry[]).map(
-                ({ name, changes_count, last_changed, channels, monthly_rate, daily_rate }) => ({
-                    usedBy: name,
-                    changed: this.getChangedColumnText(changes_count, last_changed),
-                    activeChannels: channels,
-                    monthlyRate: monthly_rate,
-                    fractionalUsage: daily_rate,
-                }),
-            );
+            return this.serviceUsageDetailsStore.entityServiceChangesForTable$$();
         } else {
-            return (records as SystemServiceChangeEntry[]).map(
-                ({
-                    system_name,
-                    changes_count,
-                    last_changed,
-                    channels,
-                    monthly_rate,
-                    daily_rate,
-                }) => ({
-                    usedBy: system_name,
-                    changed: this.getChangedColumnText(changes_count, last_changed),
-                    activeChannels: channels,
-                    monthlyRate: monthly_rate,
-                    fractionalUsage: daily_rate,
-                }),
-            );
+            return this.serviceUsageDetailsStore.systemServiceChangesForTable$$();
         }
     });
 
