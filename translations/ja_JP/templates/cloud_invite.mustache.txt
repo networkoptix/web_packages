@@ -6,7 +6,7 @@
 {{ message.message }}
 
 {{/message.message}}
-このメールアドレスを使用して%CLOUD_NAME%にアカウントを作成し、
+このメールアドレスを使用して %CLOUD_NAME% にアカウントを作成し、
 続く指示に従ってください。
 
 このリンクを使用してアカウント登録してください: {{ config.portal_url }}/authorize/register/{{ message.code }}
