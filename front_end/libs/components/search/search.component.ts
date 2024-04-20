@@ -8,11 +8,10 @@ import {
     ViewEncapsulation,
     EventEmitter,
     Output,
-    Inject,
     booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -30,8 +29,6 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
-import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, search } from '@static-variables';
 
 import type { SearchFilter } from './search.component.types';
@@ -128,10 +125,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     constructor(
         private translateSerice: TranslateService,
         public route: ActivatedRoute,
-        private uri: NxUriService,
+        private router: Router,
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {
@@ -199,7 +195,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             });
             if (this.params.tags) {
                 this.params.tags.split(',').forEach(tagName => {
-                    this.localFilter.tags.forEach(tag => {
+                    this.localFilter.tags?.forEach(tag => {
                         if (tag.id === tagName) {
                             tag.value = true;
                         }
@@ -381,7 +377,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
     setRouteParams(): Promise<void | boolean | null> {
         const hasExistingParams = Object.values(this.params).some(Boolean);
-        const queryParams: Record<string, string> = {};
+        const queryParams: Record<string, string | string[] | undefined> = {};
 
         queryParams.tags = undefined;
         if (this.localFilter.tags?.length) {
@@ -406,10 +402,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.localFilter.multiselects?.forEach(select => {
             queryParams[select.id] = undefined;
             if (select.selected?.length) {
-                queryParams[select.id] = select.selected.join(',');
+                queryParams[select.id] = select.selected;
             }
         });
-        this.uri.pageOffset = this.window.pageYOffset;
 
         if (!isEqual(queryParams, this.params)) {
             // make sure we reset page on new model
@@ -417,7 +412,11 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             const hasUpdatedParams = Object.values(queryParams).some(Boolean);
             const replaceUrl = hasExistingParams && hasUpdatedParams;
 
-            return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
+            return this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams,
+                queryParamsHandling: replaceUrl ? '' : 'merge',
+            });
         } else {
             return Promise.resolve(null);
         }
