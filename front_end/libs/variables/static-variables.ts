@@ -26,7 +26,7 @@ export const staticBase: string =
     buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
 export const responseOk: string = 'ok';
 export const updateInterval: number = 30 * 1000;
-export const MAX_ORG_NAME_LENGTH = 150; // chars
+export const MAX_NAME_LENGTH = 150; // chars
 
 export const apiTool = {
     manualSystemChangeCooldown: 5000,

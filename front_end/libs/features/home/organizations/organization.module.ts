@@ -6,7 +6,7 @@ import * as CPActions from '@common/store/channel-partners/channel-partners.acti
 import { nxConfig } from '@services/nx-config/config';
 
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
-import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
+import { NxOrganizationSettingsComponent } from '../components/settings-v2/organization-settings/organization-settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { CPResovler } from '../resolvers/CP-resolver';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
@@ -57,9 +57,6 @@ const orgRoutes: Routes = withTabReporterResolver([
             {
                 path: 'settings',
                 canActivate: [orgTabGuard],
-                data: {
-                    orgSettings: true,
-                },
                 component: NxOrganizationSettingsComponent,
             },
             {

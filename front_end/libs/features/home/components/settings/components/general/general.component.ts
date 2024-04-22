@@ -13,7 +13,7 @@ import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { settingsViews } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { MAX_ORG_NAME_LENGTH } from '@static-variables';
+import { MAX_NAME_LENGTH } from '@static-variables';
 
 const partnerAccess: DropdownItem<string | null>[] = [
     {
@@ -78,7 +78,7 @@ export class NxSettingsGeneralComponent {
             orgName.setErrors({ required: true });
             orgName.markAsTouched();
             orgName.markAsDirty();
-        } else if (value.length > MAX_ORG_NAME_LENGTH) {
+        } else if (value.length > MAX_NAME_LENGTH) {
             orgName.setErrors({ tooLong: true });
             orgName.markAsTouched();
             orgName.markAsDirty();
