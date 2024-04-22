@@ -1151,6 +1151,7 @@
         "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
+        "unexpectedError": "An unexpected error occured, please refresh the page and try again",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists \u2013 please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "wrongAuthCode": "Code is expired or incorrect",
         "wrongCode": "Account is already activated or confirmation code is incorrect",

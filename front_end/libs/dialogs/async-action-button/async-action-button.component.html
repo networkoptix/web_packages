@@ -1,9 +1,13 @@
 <button
     type="submit"
     (click)="execute()"
-    class="btn"
-    [ngClass]="'btn-' + buttonType"
-    [disabled]="busy$$() || disabled || (form && form.invalid)"
+    class="btn async-action-button"
+    [class]="buttonClass()"
+    [ngClass]="{
+        invalid: buttonInvalid$$(),
+        busy: busy$$()
+    }"
+    [disabled]="disabled()"
 >
     <div
         [ngStyle]="{
@@ -16,7 +20,7 @@
         <div
             class="loading-dots"
             [ngClass]="{
-                'loading-dots--light-default': !CONFIG.isDarkTheme && buttonType === 'default'
+                'loading-dots--light-default': !CONFIG.isDarkTheme && buttonColor() === 'default'
             }"
         >
             @for (_ of [].constructor(3); track $index) {

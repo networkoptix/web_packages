@@ -2,16 +2,8 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-    Component,
-    Inject,
-    signal,
-    forwardRef,
-    WritableSignal,
-    ViewChild,
-    computed,
-} from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { Component, Inject, signal, forwardRef, WritableSignal, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -70,9 +62,6 @@ import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.
     ],
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
-    @ViewChild('orgAutocomplete') orgAutocomplete?: NgModel;
-    @ViewChild('emailAutocomplete') emailAutocomplete?: NgModel;
-
     selectedIndex: number = 0;
 
     LANG = staticLang;
@@ -137,10 +126,14 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
         }
     }
 
-    advanceToConfirm(): void {
-        this.newOwner = this.toUser$$() ? this.userSearch : this.selectedOrg.name;
-        this.selectedIndex += 1;
-    }
+    advanceToConfirmAction = createAsyncAction<void>({
+        action: () => {
+            this.newOwner = this.toUser$$() ? this.userSearch : this.selectedOrg.name;
+            this.selectedIndex += 1;
+            return Promise.resolve();
+        },
+        success: () => {},
+    });
 
     transferSystemAction = createAsyncAction<SystemTransferInfo | CloudSystem>({
         action: () =>
