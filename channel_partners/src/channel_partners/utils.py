@@ -1,6 +1,7 @@
 import inspect
 import re
 from typing import (
+    Dict,
     List,
     Optional,
 )
@@ -9,6 +10,7 @@ from drf_spectacular.drainage import (
     get_view_method_names,
     isolate_view_method,
 )
+from drf_spectacular.generators import SchemaGenerator
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import (
     OpenApiExample,
@@ -26,8 +28,37 @@ def standardize_path(path: str) -> str:
     # RegEx for UUID
     regex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     regex_mail = "[^\/]+@[^\/?]+"
-    return re.sub(regex_mail,'{email}', re.sub(regex, '{uuid}', path))
-    
+    return re.sub(regex_mail, '{email}', re.sub(regex, '{uuid}', path))
+
+
+def generate_path_to_tags_mapping() -> Dict[str, str]:
+    regex = "\{(?!email\})(.*?)\}"
+    generator = SchemaGenerator()
+    schema = generator.get_schema(request=None, public=True)
+
+    path_to_tags = {}
+
+    for path, path_data in schema['paths'].items():
+        for method, method_data in path_data.items():
+            if method in ['get', 'post', 'put', 'patch', 'delete']:  # Consider relevant HTTP methods
+                tags = method_data.get('tags', [])
+                if tags:
+                    for tag in tags:
+                        # Initialize the list if the tag doesn't exist
+                        if tag not in path_to_tags:
+                            path_to_tags[tag] = []
+                        # Append the path to the tag's list if not already included
+                        if path not in path_to_tags[tag]:
+                            path_to_tags[tag].append(path)
+
+    # Flip the mapping to be path -> tags for easier lookup by path
+    tags_mapping = {}
+    for tag, paths in path_to_tags.items():
+        for path in paths:
+            if path not in tags_mapping:
+                normalized_path = re.sub(regex, '{uuid}', path)
+                tags_mapping[normalized_path] = tag
+    return tags_mapping
 
 
 class NxAutoSchema(AutoSchema):
@@ -99,6 +130,7 @@ def nx_extend_schema(
     :param examples: attach request/response examples to the operation
     :return:
     """
+
     def decorator(f):
         BaseSchema = (
             # explicit manually set schema or previous view annotation

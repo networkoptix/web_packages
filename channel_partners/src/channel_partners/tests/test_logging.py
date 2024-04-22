@@ -8,6 +8,7 @@ from unittest.mock import (
 
 import pytest
 from django.conf import settings
+from django.core.cache import caches
 from django.http import HttpRequest
 from django.test import (
     Client,
@@ -75,6 +76,9 @@ class TestStructuredLogging:
 class TestBindAdditionalRequestMetadata:
     @patch('channel_partners.logging.logging_signals.structlog.contextvars.bind_contextvars')
     def test_bind_additional_request_metadata(self, mock_bind_contextvars):
+        # Set cache
+        caches['local'].set_many({"/test/path": "test-path"})
+
         # Mock HttpRequest
         request = MagicMock(spec=HttpRequest)
         request.path = '/test/path'
@@ -90,5 +94,6 @@ class TestBindAdditionalRequestMetadata:
         mock_bind_contextvars.assert_called_once_with(
             path='/test/path',
             normalized_path=expected_normalized_path,
-            method='GET'
+            method='GET',
+            group_tag='test-path'
         )
