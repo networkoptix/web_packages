@@ -154,7 +154,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'partners',
     'django_celery_beat',
-    'django_celery_results',
+    'django_celery_results'
 ]
 
 AUTH_USER_MODEL = 'accounts.account'

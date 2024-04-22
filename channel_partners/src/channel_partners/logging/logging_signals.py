@@ -1,4 +1,5 @@
 import structlog
+from django.core.cache import caches
 from django.dispatch import receiver
 from django.http import HttpRequest
 from django_structlog import signals
@@ -18,6 +19,7 @@ The resolution was to move this receiver to a separate file and now all works as
 # @receiver(signals.bind_extra_request_finished_metadata)
 # ------------------------------------------------------ #
 
+
 @receiver(signals.bind_extra_request_metadata)
 def bind_additional_request_metadata(request: HttpRequest, logger, **kwargs):
     """
@@ -30,8 +32,11 @@ def bind_additional_request_metadata(request: HttpRequest, logger, **kwargs):
     :param kwargs: Additional keyword arguments (unused).
     """
     normalized_path: str = standardize_path(request.path)
+    group_tag = caches['local'].get(normalized_path, None)
+
     structlog.contextvars.bind_contextvars(
         path=request.path,
         normalized_path=normalized_path,
-        method=request.method
+        method=request.method,
+        group_tag=group_tag
     )
