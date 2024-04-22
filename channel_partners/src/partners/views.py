@@ -112,6 +112,7 @@ from partners.serializers import (
     ChannelPartnerUserSerializer,
     CloudStorageUsageReportSerializer,
     CloudSystemIdExternalIdSerializer,
+    CloudSystemLightSerializer,
     CloudSystemSerializer,
     CreateChannelPartnerSerializer,
     CreateGroupSerializer,
@@ -1092,6 +1093,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
+    _organization = None
 
     def get_queryset(self):
         param_serializer = OrganizationSystemsQueryParamsSerializer(data=self.request.query_params)
@@ -1107,13 +1109,35 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
         )
 
     def get_permissions(self):
-        return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_organization_systems)
+        if self.action != 'user_systems':
+            return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_organization_systems)
+        return [IsAuthenticated()]
 
     def check_permissions(self, request):
         super().check_permissions(request)
-        m2m_key, val = self.get_related_pair()
-        organization = get_object_or_404(Organization, pk=val)
-        self.check_object_permissions(request, organization)
+        if action != 'user_systems':
+            m2m_key, val = self.get_related_pair()
+            organization = get_object_or_404(Organization, pk=val)
+            self.check_object_permissions(request, organization)
+
+    @extend_schema(
+        summary='Get list of Systems for an Organization which User has access to.',
+        description='Endpoint provide list of system in organization which User has access to. It '
+                    'contains limited information about system. The main purpose of this endpoint '
+                    'is to fetch systems list to fill folders structures.',
+        extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'},
+        responses={200: CloudSystemLightSerializer(many=True)},
+        methods=['get'],
+    )
+    @action(detail=False, methods=['get'])
+    def user_systems(self, request, parent_lookup_organization):
+        organization = get_object_or_404(Organization, pk=parent_lookup_organization)
+        user = self.request.user
+        queryset = organization.user_systems(user)
+        if queryset is None:
+            raise exceptions.PermissionDenied(detail="User is not authorized to access systems in this organization.")
+        return paginated_response(self, queryset, serializer_class=CloudSystemLightSerializer,
+                                  serializer_context=self.get_serializer_context())
 
 
 @extend_schema_view(
