@@ -1,8 +1,41 @@
-<div>
-    <div>
-        <!-- Search bar -->
+<ng-template #filter>
+    <div
+        #filterContainer
+        [style.height.px]="
+            filterContainerHeight() && !showMoreDialogOpen() ? filterContainerHeight() : null
+        "
+        class="filter-items-container"
+    >
+        @if (searchable()) {
+            <div class="search-bar-container">
+                <input
+                    [(ngModel)]="searchInputText"
+                    type="text"
+                    class="form-control"
+                    name="query"
+                    autocomplete="off"
+                    placeholder="Quick Search"
+                />
+            </div>
+        }
+        <div [class.filter-items-dialog-container]="showMoreDialogOpen()">
+            <ng-content></ng-content>
+        </div>
+        @if (!showMoreDialogOpen()) {
+            <div
+                class="show-more"
+                translate
+                (click)="onShowMoreClick(filter)"
+            >
+                Show more
+            </div>
+        }
     </div>
-    <div>
-        <ng-content></ng-content>
+</ng-template>
+@if (showMoreDialogOpen()) {
+    <div [style.height.px]="filterContainerHeight()">
+        <nx-pre-loader></nx-pre-loader>
     </div>
-</div>
+} @else {
+    <ng-container *ngTemplateOutlet="filter"></ng-container>
+}

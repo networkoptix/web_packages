@@ -332,6 +332,12 @@ export type BookmarkDownload = DialogType<
 
 export type BookmarkShare = DialogType<BookmarkV4, void>;
 
+type ShowMoreFiltersData = {
+    template: TemplateRef<Element>;
+    header: string;
+};
+export type ShowMoreFilters = DialogType<ShowMoreFiltersData, void>;
+
 /* New feature */
 export interface NewFeatureDynamicData {
     content: TemplateRef<unknown>;

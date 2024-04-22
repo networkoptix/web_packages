@@ -37,4 +37,8 @@ export class SandboxFiltersComponent {
 
     ALL_STATES = ALL_STATES;
     ALL_PEOPLE = ALL_PEOPLE;
+
+    reducerRolesToString(acc: string, role: string): string {
+        return `${acc} ${role}`;
+    }
 }

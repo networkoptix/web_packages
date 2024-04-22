@@ -583,6 +583,11 @@ export class NxDialogsService {
         { width: '600px' },
     );
 
+    filterShowMore = this.dialogV2Factory<Dt.ShowMoreFilters>(
+        () => import('./filters/show-more.component').then(m => m.NxShowMoreFiltersComponent),
+        { width: DIALOG_SIZE.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' },
+    );
+
     /* New feature */
     /**
      * Factory to create method for the new feature information modal.

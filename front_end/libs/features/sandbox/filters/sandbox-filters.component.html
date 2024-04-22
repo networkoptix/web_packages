@@ -6,7 +6,10 @@
         <nx-filter-container header="Single State">
             <nx-single-filter [(ngModel)]="selectedState">
                 @for (state of ALL_STATES; track state) {
-                    <nx-radio-filter-item [value]="state">
+                    <nx-radio-filter-item
+                        [value]="state"
+                        [searchString]="state"
+                    >
                         {{ state }}
                     </nx-radio-filter-item>
                 }
@@ -17,7 +20,10 @@
         <nx-filter-container header="State Tags">
             <nx-multi-filter [(ngModel)]="selectedStatesTags">
                 @for (state of ALL_STATES; track state) {
-                    <nx-chip-filter-item [value]="state">
+                    <nx-chip-filter-item
+                        [value]="state"
+                        [searchString]="state"
+                    >
                         {{ state }}
                     </nx-chip-filter-item>
                 }
@@ -33,7 +39,10 @@
         <nx-filter-container header="Multiple States">
             <nx-multi-filter [(ngModel)]="selectedStates">
                 @for (state of ALL_STATES; track state) {
-                    <nx-checkbox-filter-item [value]="state">
+                    <nx-checkbox-filter-item
+                        [value]="state"
+                        [searchString]="state"
+                    >
                         {{ state }}
                     </nx-checkbox-filter-item>
                 }
@@ -44,7 +53,18 @@
         <nx-filter-container header="People">
             <nx-single-filter [(ngModel)]="selectedPerson">
                 @for (person of ALL_PEOPLE; track person.userId) {
-                    <nx-radio-filter-item [value]="person">
+                    <nx-radio-filter-item
+                        [value]="person"
+                        [searchString]="
+                            person.fullName +
+                            ' ' +
+                            person.userId +
+                            ' ' +
+                            person.email +
+                            ' ' +
+                            person.roles.reduce(reducerRolesToString, '')
+                        "
+                    >
                         {{ person.fullName }}
                     </nx-radio-filter-item>
                 }
@@ -53,9 +73,16 @@
     </div>
     <div class="col-4">
         <nx-filter-container header="Multiple States">
-            <nx-multi-filter [(ngModel)]="selectedStates">
+            <nx-multi-filter
+                [(ngModel)]="selectedStates"
+                [searchable]="false"
+                [displayLimit]="9"
+            >
                 @for (state of ALL_STATES; track state) {
-                    <nx-checkbox-filter-item [value]="state">
+                    <nx-checkbox-filter-item
+                        [value]="state"
+                        [searchString]="state"
+                    >
                         {{ state }}
                     </nx-checkbox-filter-item>
                 }

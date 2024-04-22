@@ -1,0 +1,19 @@
+<div class="outer-container">
+    <div class="modal-header">
+        <div class="header-title">
+            {{ dialogData.header }}
+        </div>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="body">
+        <ng-container [ngTemplateOutlet]="dialogData.template"></ng-container>
+    </div>
+</div>

@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, forwardRef, signal } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 
 import { BaseFilterComponent } from './base-filter.component';
 import { BaseFilterInjectionToken } from './filters.types';
 
 @Component({
-    imports: [CommonModule],
+    imports: [CommonModule, NxPreLoaderComponent, FormsModule],
     selector: 'nx-single-filter',
     templateUrl: 'filter.component.html',
     styleUrls: ['filter.component.scss'],
