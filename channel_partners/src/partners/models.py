@@ -1549,6 +1549,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                 roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
             ).exists()
             if channel_partner_manager:
+                user.cpal_on = self.id
                 return True
         return False
 
@@ -1625,6 +1626,22 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             OrganizationToUser.objects.filter(organization=self, system_group__isnull=True, user=user).exists()
             or self.channel_partner.is_member_in_branch(user)
         )
+
+    def user_systems(self, user: CloudUser):
+        if self.can_access_systems(user):
+            return CloudSystemId.objects.filter(
+                organization=self,
+                system_state=CloudSystemStates.ACTIVATED
+            )
+        if self.organizationtouser_set.filter(user=user).exists():
+            allowed_role_uuid = self.allowed_role_uuid(OrganizationPermissions.access_systems)
+            return CloudSystemId.objects.filter(
+                organization=self,
+                system_state=CloudSystemStates.ACTIVATED,
+                organization__organizationtouser__user=user,
+                organization__organizationtouser__roles__overlap=allowed_role_uuid,
+                path__overlap=ToArray('organization__organizationtouser__system_group_id')
+            )
 
     def can_alter_state(self, user: CloudUser):
         return self.channel_partner.can_alter_organization_state(user)
