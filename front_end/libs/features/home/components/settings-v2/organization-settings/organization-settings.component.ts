@@ -1,9 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, input, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, OnInit, computed, inject, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+    MatButtonToggleModule,
+} from '@angular/material/button-toggle';
+import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
@@ -12,42 +20,65 @@ import {
     selectCurrentPartner,
     selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
-    selectCurrentSubchannelPartners,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { settingsViews } from '@pages/home/home.types';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
-    ChannelPartner,
     Organization,
+    OrgRoleIds,
     State,
-    UpdateChannelPartner,
     UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-// import { NxSettingsDisconnectComponent } from './components/disconnect/disconnect.component';
 import { MAX_NAME_LENGTH } from '@static-variables';
+import { icons } from '@variables/static-variables';
 
-import { NxSettingsGeneralComponent } from './components/general/general.component';
-import { NxSettingsStateComponent } from './components/state/state.component';
+import { NxSettingsGeneralComponent } from '../../settings/components/general/general.component';
+import { NxSettingsStateComponent } from '../../settings/components/state/state.component';
 
 interface SettingsState {
-    view?: string;
-    item?: ChannelPartner | Organization;
+    item?: Organization;
     canUpdateStatus: boolean;
 }
 
+const partnerAccess: DropdownItem<string | null>[] = [
+    {
+        name: 'Organization Administrator',
+        value: OrgRoleIds.OrgAdmin,
+    },
+    {
+        name: 'System Health Viewer',
+        value: OrgRoleIds.SysHealthViewer,
+    },
+    {
+        name: 'Service Management Only',
+        value: null,
+    },
+];
+
+const accessMap: { [key: string]: DropdownItem<string | null> } = {
+    [OrgRoleIds.OrgAdmin]: partnerAccess[0],
+    [OrgRoleIds.SysHealthViewer]: partnerAccess[1],
+    null: partnerAccess[2],
+};
+
 @Component({
     selector: 'nx-organization-settings',
-    templateUrl: 'settings.component.html',
-    styleUrls: ['settings.component.scss'],
+    templateUrl: 'organization-settings.component.html',
+    styleUrls: ['organization-settings.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -56,11 +87,22 @@ interface SettingsState {
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         TranslateModule,
-        // NxSettingsDisconnectComponent,
+        FormsModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxFocusMeDirective,
+        NxGenericDropdownModule,
+        AngularSvgIconModule,
+        LetDirective,
+        MatButtonToggle,
+        MatButtonToggleModule,
+        MatButtonToggleGroup,
+        NgxTranslateCutModule,
     ],
 })
 export class NxOrganizationSettingsComponent implements OnInit {
     LANG = staticLang;
+    icons = icons;
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
     permissionsStore = inject(PermissionsStore);
@@ -70,46 +112,18 @@ export class NxOrganizationSettingsComponent implements OnInit {
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    subchannelPartners$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
     currentName$ = new BehaviorSubject<string | null>(null);
     currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
     currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
 
-    // eslint-disable-next-line nx/signal-naming-convention
-    cpSettings = input<boolean>();
-    // eslint-disable-next-line nx/signal-naming-convention
-    orgSettings = input<boolean>();
-    // eslint-disable-next-line nx/signal-naming-convention
-    subchannelSettings = input<boolean>();
-
-    subChannelId$$ = toSignal(
-        this.cpService.paramStateHandler.state$.pipe(
-            map(({ params: { subchannelId } }) => subchannelId),
-            distinctUntilChanged(),
-        ),
-    );
-
     currentState$$ = computed<SettingsState>(() => {
         const currentPartner = this.currentPartner$$();
-        const state: SettingsState = {
+        const currentOrg = this.currentOrg$$();
+        return {
             canUpdateStatus: currentPartner?.effectiveState === 'active',
+            item: currentOrg,
         };
-
-        if (this.cpSettings()) {
-            state.item = currentPartner;
-            state.view = settingsViews.CHANNEL_PARTNERS;
-        } else if (this.orgSettings()) {
-            state.item = this.currentOrg$$();
-            state.view = settingsViews.ORGANIZATIONS;
-        } else if (this.subchannelSettings()) {
-            const subchannelsMap = new Map<string, ChannelPartner>(
-                this.subchannelPartners$$().map(partner => [partner.id, partner]),
-            );
-            state.item = subchannelsMap.get(this.subChannelId$$());
-            state.view = settingsViews.SUBCHANNELS;
-        }
-        return state;
     });
 
     // This pattern is not idea, but because we are not live updating the page it's okay for now.
@@ -133,25 +147,22 @@ export class NxOrganizationSettingsComponent implements OnInit {
     });
     // Think about these
     permissions$$ = computed(() => {
-        const {
-            canChangeOrganizationState$$,
-            canConfigureOrganization$$,
-            canChangePartnerState$$,
-            canViewPartnerSettings$$,
-        } = this.permissionsStore;
-        const orgSettings = this.orgSettings();
-        const cpSettings = this.cpSettings();
+        const { canChangeOrganizationState$$, canConfigureOrganization$$ } = this.permissionsStore;
         return {
-            canAlterState: orgSettings ? canChangeOrganizationState$$() : canChangePartnerState$$(),
-            canConfigure: orgSettings
-                ? canConfigureOrganization$$()
-                : cpSettings
-                  ? canViewPartnerSettings$$()
-                  : false,
+            canAlterState: canChangeOrganizationState$$(),
+            canConfigure: canConfigureOrganization$$(),
         };
     });
 
     State = State;
+
+    @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
+
+    readonly partnerAccess = partnerAccess;
+
+    currAccess$$ = computed<DropdownItem<string | null>>(
+        () => accessMap?.[this.accessLevel$$()] || null,
+    );
 
     constructor(
         private store: Store,
@@ -164,34 +175,11 @@ export class NxOrganizationSettingsComponent implements OnInit {
     ngOnInit(): void {
         this.updateStateProcess = this.processService.createProcess(
             () => {
-                const currentState = this.currentState$$();
-                switch (currentState.view) {
-                    case this.settingsViews.CHANNEL_PARTNERS:
-                        return this.updateChannelPartner();
-                    case this.settingsViews.ORGANIZATIONS:
-                        return this.updateOrganization();
-                    case this.settingsViews.SUBCHANNELS:
-                        return this.updateSubchannel(currentState);
-                    default:
-                        console.error('Invalid current view');
-                }
-                return firstValueFrom(of(true));
+                return this.updateOrganization();
             },
             {},
             res => {
-                const currentState = this.currentState$$();
-                switch (currentState.view) {
-                    case this.settingsViews.SUBCHANNELS:
-                        this.updateSubchannelStore(res);
-                        break;
-                    case this.settingsViews.CHANNEL_PARTNERS:
-                        this.updateChannelPartnerStore(res);
-                        break;
-                    case this.settingsViews.ORGANIZATIONS:
-                        this.updateOrganizationStore(res);
-                        break;
-                }
-
+                this.updateOrganizationStore(res);
                 this.resetUpdates();
             },
             () => {},
@@ -203,7 +191,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
         this.currentName$.next(name);
     };
 
-    handleAccessUpdate = (id: string): void => {
+    handleAccessUpdate = (id: string | null): void => {
         const currLevel = this.accessLevel$$();
         if (id !== currLevel) {
             this.currentPartnerAccess$.next(null);
@@ -233,12 +221,15 @@ export class NxOrganizationSettingsComponent implements OnInit {
         this.currentState$.next(state);
     };
 
-    get hasChange(): boolean {
+    get generalHasChange(): boolean {
         return (
             this.currentName$.value !== this.name$$() ||
-            this.currentPartnerAccess$.value !== this.accessLevel$$() ||
-            this.currentState$.value !== this.effectState$$()
+            this.currentPartnerAccess$.value !== this.accessLevel$$()
         );
+    }
+
+    get stateHasChange(): boolean {
+        return this.currentState$.value !== this.effectState$$();
     }
 
     resetUpdates = (): void => {
@@ -246,27 +237,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
         this.currentName$.next(this.name$$());
         this.currentPartnerAccess$.next(this.accessLevel$$());
     };
-
-    // Process helper functions
-    updateChannelPartner(): Promise<ChannelPartner> {
-        const cpBody: UpdateChannelPartner = {};
-        if (this.name$$() !== this.currentName$.value) {
-            cpBody.name = this.currentName$.value;
-        }
-        // Todo: add extId to body when API is ready
-        return firstValueFrom(
-            this.cpService.updateChannelPartner(this.currentPartnerId$$(), cpBody),
-        );
-    }
-
-    updateChannelPartnerStore(updatedPartner: ChannelPartner): void {
-        const currPartners = [...this.channelPartners$$()];
-        const currPartnerIndex = currPartners.findIndex(
-            partner => partner.id === updatedPartner.id,
-        );
-        currPartners[currPartnerIndex] = updatedPartner;
-        this.store.dispatch(cpActions.setChannelPartners({ channelPartners: currPartners }));
-    }
 
     updateOrganization(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
@@ -302,30 +272,21 @@ export class NxOrganizationSettingsComponent implements OnInit {
         }
     }
 
-    updateSubchannel(currentState: SettingsState): Promise<ChannelPartner> {
-        const subchannelBody: UpdateChannelPartner = {};
-        if (this.name$$() !== this.currentName$.value) {
-            subchannelBody.name = this.currentName$.value;
-        }
-        if (this.effectState$$() !== this.currentState$.value) {
-            subchannelBody.state = this.currentState$.value;
-        }
-        return firstValueFrom(
-            this.cpService.updateChannelPartner(currentState.item?.id, subchannelBody),
-        );
-    }
+    onNameChange(value: string): void {
+        const { orgName } = this.settingsGeneralForm?.controls;
 
-    updateSubchannelStore(updatedSubchannel: ChannelPartner): void {
-        const subchannelPartners = [...this.subchannelPartners$$()];
-        const subchannelIndex = subchannelPartners.findIndex(
-            partner => partner.id === updatedSubchannel.id,
-        );
-        subchannelPartners[subchannelIndex] = updatedSubchannel;
-        this.store.dispatch(
-            cpActions.setCurrentSubchannelPartners({
-                currentSubchannels: subchannelPartners,
-            }),
-        );
+        if (value.length === 0) {
+            orgName.setErrors({ required: true });
+            orgName.markAsTouched();
+            orgName.markAsDirty();
+        } else if (value.length > MAX_NAME_LENGTH) {
+            orgName.setErrors({ tooLong: true });
+            orgName.markAsTouched();
+            orgName.markAsDirty();
+        } else {
+            orgName.setErrors(null);
+        }
+        this.currentName$.next(value);
     }
 
     protected readonly MAX_ORG_NAME_LENGTH = MAX_NAME_LENGTH;

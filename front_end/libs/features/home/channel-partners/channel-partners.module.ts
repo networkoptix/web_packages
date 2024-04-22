@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
-import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
+import { NxChannelPartnersSettingsComponent } from '../components/settings-v2/channel-partners-settings/channel-partners-settings.component';
 import { NxSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
@@ -48,10 +48,7 @@ const CPRoutes: Routes = withTabReporterResolver([
             {
                 path: 'settings',
                 canActivate: [cpTabGuard],
-                data: {
-                    cpSettings: true,
-                },
-                component: NxOrganizationSettingsComponent,
+                component: NxChannelPartnersSettingsComponent,
             },
             {
                 path: 'subchannels',
@@ -72,7 +69,7 @@ const CPRoutes: Routes = withTabReporterResolver([
                                 data: {
                                     subchannelSettings: true,
                                 },
-                                component: NxOrganizationSettingsComponent,
+                                component: NxChannelPartnersSettingsComponent,
                             },
                             {
                                 path: 'users',

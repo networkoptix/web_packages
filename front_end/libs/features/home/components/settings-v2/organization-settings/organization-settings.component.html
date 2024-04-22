@@ -1,0 +1,362 @@
+@if (currentState$$(); as state) {
+    <div class="settings">
+        <div class="settings-container">
+            @if (state.item) {
+                <ng-container>
+                    <div class="row">
+                        <div class="col-10">
+                            @if (permissions$$().canConfigure) {
+                                <nx-block>
+                                    <header>
+                                        <h4 translate>General</h4>
+                                    </header>
+
+                                    <nx-section>
+                                        <div class="body">
+                                            <form
+                                                name="settingsGeneralForm"
+                                                #settingsGeneralForm="ngForm"
+                                                novalidate
+                                            >
+                                                <div class="row m-0 pl-2">
+                                                    <div
+                                                        class="label d-flex align-items-center justify-content-end text-nowrap text-right"
+                                                    >
+                                                        <label
+                                                            for="orgName"
+                                                            class="control-label"
+                                                            translate
+                                                            >Name</label
+                                                        >
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <input
+                                                            type="text"
+                                                            class="fs-mask form-control"
+                                                            name="orgName"
+                                                            id="orgName"
+                                                            #orgName="ngModel"
+                                                            [disabled]="
+                                                                !permissions$$().canConfigure
+                                                            "
+                                                            [ngModel]="currentName$ | async"
+                                                            (ngModelChange)="onNameChange($event)"
+                                                            nxFocusMe
+                                                        />
+                                                    </div>
+                                                    @if (orgName.invalid && orgName.touched) {
+                                                        <div class="col-6 offset-2">
+                                                            @if (orgName.errors.required) {
+                                                                <span class="input-error">{{
+                                                                    LANG.customValidatorMsg
+                                                                        .nameRequired | translate
+                                                                }}</span>
+                                                            }
+                                                            @if (orgName.errors.tooLong) {
+                                                                <span class="input-error">{{
+                                                                    LANG.customValidatorMsg
+                                                                        .nameTooLong
+                                                                        | translate: { chars: 15 }
+                                                                }}</span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                <div class="row m-0 pt-3 pl-2">
+                                                    <div
+                                                        class="label d-flex align-items-center justify-content-end text-wrap text-right"
+                                                    >
+                                                        <label
+                                                            for="channelPartnerAccessSelect"
+                                                            class="control-label"
+                                                            translate
+                                                            >Channel Partner Access</label
+                                                        >
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <nx-select
+                                                            [componentId]="
+                                                                'channelPartnerAccessSelect'
+                                                            "
+                                                            [items]="partnerAccess"
+                                                            [selected]="currAccess$$()"
+                                                            (onSelected)="
+                                                                handleAccessUpdate($event.value)
+                                                            "
+                                                        ></nx-select>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="row m-0">
+                                                @if (generalHasChange) {
+                                                    <div class="footer pt-4 pl-2 pb-2">
+                                                        <nx-process-button
+                                                            [buttonDisabled]="
+                                                                !currentName$.getValue()?.length ||
+                                                                currentName$.getValue()?.length >
+                                                                    MAX_ORG_NAME_LENGTH
+                                                            "
+                                                            [removeMinWidth]="true"
+                                                            [process]="updateStateProcess"
+                                                            [buttonText]="'Save' | translate"
+                                                        >
+                                                        </nx-process-button>
+                                                        <nx-cancel-button
+                                                            [process]="updateStateProcess"
+                                                            [discardFn]="resetUpdates"
+                                                        >
+                                                        </nx-cancel-button>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </nx-section>
+                                </nx-block>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            @if (!state.canUpdateStatus) {
+                                <ng-template>
+                                    <div class="change-unavailable">
+                                        <svg-icon
+                                            [src]="icons.dirNonStandard + 'warning.svg'"
+                                        ></svg-icon>
+                                        <div translate>
+                                            Status change is unavailable because it it inherited
+                                            from the entity above
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            }
+                            @if (canChangeStateUI && permissions$$().canAlterState) {
+                                <div>
+                                    <nx-block>
+                                        <header>
+                                            <h4 translate>State</h4>
+                                        </header>
+
+                                        <nx-section>
+                                            @if (state.canUpdateStatus) {
+                                                <div>
+                                                    <div class="body state-body">
+                                                        <mat-button-toggle-group
+                                                            name="state"
+                                                            [value]="effectState$$()"
+                                                        >
+                                                            <mat-button-toggle
+                                                                [name]="State.Active"
+                                                                [value]="State.Active"
+                                                                (change)="
+                                                                    handleStateUpdate(State.Active)
+                                                                "
+                                                                disableRipple
+                                                            >
+                                                                <svg-icon
+                                                                    [src]="icons.dir + 'play.svg'"
+                                                                ></svg-icon>
+                                                                <span translate>Active</span>
+                                                            </mat-button-toggle>
+                                                            <mat-button-toggle
+                                                                [name]="State.Suspended"
+                                                                [value]="State.Suspended"
+                                                                (change)="
+                                                                    handleStateUpdate(
+                                                                        State.Suspended
+                                                                    )
+                                                                "
+                                                                disableRipple
+                                                            >
+                                                                <svg-icon
+                                                                    [src]="icons.dir + 'pause.svg'"
+                                                                ></svg-icon>
+                                                                <span translate>Suspended</span>
+                                                            </mat-button-toggle>
+                                                            <mat-button-toggle
+                                                                id="shutdown-btn"
+                                                                [name]="State.ShutDown"
+                                                                [value]="State.ShutDown"
+                                                                (change)="
+                                                                    handleStateUpdate(
+                                                                        State.ShutDown
+                                                                    )
+                                                                "
+                                                                disableRipple
+                                                            >
+                                                                <svg-icon
+                                                                    [src]="icons.dir + 'stop.svg'"
+                                                                ></svg-icon>
+                                                                <span translate>Shutdown</span>
+                                                            </mat-button-toggle>
+                                                        </mat-button-toggle-group>
+
+                                                        <ul class="status-info">
+                                                            @switch (effectState$$()) {
+                                                                @case (State.Active) {
+                                                                    <ng-container>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .usersAccess
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .systemsAccess
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .recordingEnabled
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                    </ng-container>
+                                                                }
+                                                                @case (State.Suspended) {
+                                                                    <ng-container>
+                                                                        <li
+                                                                            *ngrxLet="
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .usersNoAccess
+                                                                                    | translate as usersNoAccess
+                                                                            "
+                                                                        >
+                                                                            <span>{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 0
+                                                                            }}</span
+                                                                            ><span class="error">{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 1
+                                                                            }}</span
+                                                                            ><span>{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 2
+                                                                            }}</span>
+                                                                        </li>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .systemsAccess
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .recordingEnabled
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                    </ng-container>
+                                                                }
+
+                                                                @case (State.ShutDown) {
+                                                                    <ng-container>
+                                                                        <li
+                                                                            *ngrxLet="
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .usersNoAccess
+                                                                                    | translate as usersNoAccess
+                                                                            "
+                                                                        >
+                                                                            <span>{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 0
+                                                                            }}</span
+                                                                            ><span class="error">{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 1
+                                                                            }}</span
+                                                                            ><span>{{
+                                                                                usersNoAccess
+                                                                                    | translateCut
+                                                                                        : 2
+                                                                            }}</span>
+                                                                        </li>
+                                                                        <li>
+                                                                            {{
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .systemsAccess
+                                                                                    | translate
+                                                                            }}
+                                                                        </li>
+                                                                        <li
+                                                                            *ngrxLet="
+                                                                                LANG.dialogs
+                                                                                    .channelPartners
+                                                                                    .recordingDisabled
+                                                                                    | translate as recordingDisabled
+                                                                            "
+                                                                        >
+                                                                            <span>{{
+                                                                                recordingDisabled
+                                                                                    | translateCut
+                                                                                        : 0
+                                                                            }}</span
+                                                                            ><span class="error">{{
+                                                                                recordingDisabled
+                                                                                    | translateCut
+                                                                                        : 1
+                                                                            }}</span
+                                                                            ><span>{{
+                                                                                recordingDisabled
+                                                                                    | translateCut
+                                                                                        : 2
+                                                                            }}</span>
+                                                                        </li>
+                                                                    </ng-container>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (stateHasChange) {
+                                                <div class="footer pb-2 pl-2">
+                                                    <nx-process-button
+                                                        [process]="updateStateProcess"
+                                                        [buttonText]="'Save' | translate"
+                                                        [removeMinWidth]="true"
+                                                    >
+                                                    </nx-process-button>
+                                                    <nx-cancel-button
+                                                        [process]="updateStateProcess"
+                                                        [discardFn]="resetUpdates"
+                                                    >
+                                                    </nx-cancel-button>
+                                                </div>
+                                            }
+                                        </nx-section>
+                                    </nx-block>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </ng-container>
+            }
+        </div>
+    </div>
+}

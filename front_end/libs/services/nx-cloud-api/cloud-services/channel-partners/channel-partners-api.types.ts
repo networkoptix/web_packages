@@ -68,6 +68,7 @@ export interface ChannelPartner {
     users: number[];
     organizationCount: number;
     partnerCount: number;
+    channelPartnerAccessLevel: null | string;
 }
 
 export enum PartnerRoles {

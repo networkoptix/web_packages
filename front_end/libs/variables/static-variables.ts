@@ -30,7 +30,7 @@ export const openClientError: string = 'notVisited';
 export const openMobileClientTimeout: number = 300;
 export const responseOk: string = 'ok';
 export const updateInterval: number = 30 * 1000;
-export const MAX_ORG_NAME_LENGTH = 150; // chars
+export const MAX_NAME_LENGTH = 150; // chars
 
 export const apiTool: configTypes.APIToolSettings = {
     manualSystemChangeCooldown: 5000,
