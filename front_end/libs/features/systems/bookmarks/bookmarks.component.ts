@@ -251,8 +251,7 @@ export class NxBookmarksComponent implements OnInit {
             searchParams.endTimeMs = endDatetime;
         }
         if (this.sharingFilter) {
-            searchParams.shareFilter =
-                this.sharingFilter === 'shared' ? 'shareable' : 'nonShareable';
+            searchParams.shareFilter = this.sharingFilter;
         }
         return searchParams;
     }

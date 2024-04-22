@@ -13,9 +13,9 @@ import { BaseFilterInjectionToken } from '../filters.types';
 
 @Component({ template: '' })
 export abstract class BaseFilterItem<T> {
-    private value = input.required<T>();
+    value = input.required<T>();
 
-    private searchString = input('', { transform: (value: string) => value.toLowerCase() });
+    searchString = input('', { transform: (value: string) => value.toLowerCase() });
 
     searchableValue = computed<string | undefined>(() => {
         if (this.searchString()) {

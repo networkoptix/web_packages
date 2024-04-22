@@ -287,7 +287,7 @@ export type BookmarksParams = HiddenParams &
         creationStartTimeMs: number;
         creationEndTimeMs: number;
         _orderBy: Boomarks_orderBy | Boomarks_orderBy[];
-        shareFilter: 'shareable' | 'nonShareable';
+        shareFilter: 'shared' | 'notShared';
     }>;
 type Boomarks_orderBy =
     | 'id'
