@@ -116,6 +116,7 @@ export class NxBootstrapProvider {
             hostProtocol === data.cloudHost ? `https://${data.cloudHost}` : data.cloudHost;
         // this.CONFIG.featureFlags = await this.http.get<Record<string, unknown>>(`${this.CONFIG.cloudHost}/api/utils/webadmin_feature_flags/`, {}).toPromise().catch(() => ({}));
         this.CONFIG.cloudSystemId = data.cloudSystemId;
+        this.CONFIG.organizationId = data.organizationId;
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
         this.CONFIG.system.name = data.systemName || data.name;

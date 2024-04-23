@@ -192,6 +192,7 @@ export const nxConfig: IConfig = {
     featureFlagStrings: FeatureFlagStrings,
     localSystemId: '',
     localServerId: '',
+    organizationId: '',
     company: {
         copyrightYear: '',
         links: {
