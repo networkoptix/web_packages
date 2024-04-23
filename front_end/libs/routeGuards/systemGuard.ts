@@ -62,7 +62,9 @@ export const SystemGuard: CanActivateFn = (
             users: permissions.editUsers,
             'cloud-storage': system.canUserViewCloudStorage(),
             health: permissions.systemHealth,
-            licenses: isAdmin,
+            // TODO: when !isLocal check system info using isUserSystem util.
+            //  Leaving as true for vms_6.0 since it doesn't use cloud.
+            licenses: isAdmin && (environment.isLocal ? !nxConfig.organizationId : true),
             advanced: isAdmin,
             servers: isAdmin,
             monitoring: permissions.systemHealth,

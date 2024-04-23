@@ -178,6 +178,7 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path: 'licenses',
                 title: SystemTitleResolver,
+                canActivate: [SystemGuard],
                 resolve: { system: currentSystemResolver },
                 component: NxSystemLicensesComponent,
             },
