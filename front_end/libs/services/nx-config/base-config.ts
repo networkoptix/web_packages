@@ -68,6 +68,7 @@ export interface BaseConfig {
     cloudSystemId: string;
     localSystemId: string;
     localServerId: string;
+    organizationId: string;
     company: Company;
     dynamicMenus: MenusStructure;
     docMenuMap: DocMenuMap;
