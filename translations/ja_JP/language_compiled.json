@@ -1552,7 +1552,7 @@
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "このシステムにはあなた以外のユーザーはいません。権利を譲渡するためには、他のユーザーをシステムに追加してください",
     "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "このカメラへの接続試行が多すぎます。しばらく待ってからもう一度お試しください。",
     "There are unsaved changes on the layout": "このレイアウトには、保存されていない変更点があります",
-    "There is a another layout with the same name. Overwrite existing layout?": "同じ名前の別のレイアウトがあります。既存のレイアウトを上書きしますか?",
+    "There is a another layout with the same name. Overwrite existing layout?": "同名のレイアウトが存在します。既存のレイアウトを上書きしますか?",
     "There must be at least one administrator. To change the role, add another user with the administrator role.": "少なくとも 1 人の管理者が必要です。ロールを変更するには、管理者ロールを持つ別のユーザーを追加してください。",
     "There was a problem restarting the server.": "サーバーの再起動中に問題が発生しました。",
     "There will be more than <strong>{maxServers}</strong> servers in the merged System.": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。",
