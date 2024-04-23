@@ -40,7 +40,7 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/lang_es_ES',
             '/static/styles',
-            '/static/images',
+            // '/static/images', // Uncomment if we want it from cloud for some reason
             '/static/fonts',
             '/swagger-ui',
             '/static/scripts/commonPasswordsList.json',

@@ -27,6 +27,11 @@ export class SelectBindTypeComponent {
     protected readonly bindType = BindType;
     orgs$$ = signal<Org[]>([]);
     orgCount$$ = computed(() => this.orgs$$().length);
+    noValidOrgs$$ = computed(() => {
+        const orgCount = this.orgCount$$();
+        const orgs = this.orgs$$();
+        return orgCount === 0 || (orgCount === 1 && orgs[0].effectiveState !== 'active');
+    });
     protected selectedBindType: BindType | undefined;
 
     @Input() set orgs(orgs: Org[]) {

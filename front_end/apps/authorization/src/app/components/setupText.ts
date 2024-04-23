@@ -18,7 +18,7 @@ export function setupText(type?: string): TemplateText {
     const subHeader = auth.asAccountSubheader;
 
     const connect: AuthHeader = {
-        header: auth.connectHeader,
+        header: auth.loginCloudHeader,
         subHeader: auth.toAccountSubheader,
     };
     const passwordApply: AuthHeader = {

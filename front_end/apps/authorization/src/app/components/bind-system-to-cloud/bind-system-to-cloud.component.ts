@@ -5,6 +5,7 @@ import {
     effect,
     EventEmitter,
     inject,
+    input,
     Input,
     OnInit,
     Output,
@@ -15,6 +16,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthorizeState } from '@authorization/src/app/components/authorize.component.types';
+import { BindErrorStateComponent } from '@authorization/src/app/components/bind-system-to-cloud/bind-error-state/bind-error-state.component';
 import { BindToCloudService } from '@authorization/src/app/components/bind-system-to-cloud/bind-to-cloud.service';
 import { BindResponse } from '@authorization/src/app/types/bind-service.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -24,6 +26,7 @@ import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 
 import { BindType, CloudBindData, Org } from '../../types/cloud-bind.types';
 import { AuthFooterComponent } from '../auth-footer/auth-footer.component';
@@ -35,12 +38,14 @@ import { SelectOrgComponent } from './select-org/select-org.component';
 enum BindDialogStates {
     error = 'error',
     initial = 'initial',
+    confirmAccount = 'confirmAccount',
     selectOrg = 'selectOrg',
     finished = 'finished',
 }
 
 interface BindState {
     bindType: BindType | undefined;
+    email: string;
     orgs: Org[];
     selectedOrg: Org | undefined;
     fsmState: BindDialogStates;
@@ -63,15 +68,17 @@ interface BindState {
         AuthFooterComponent,
         SelectBindTypeComponent,
         SelectOrgComponent,
+        BindErrorStateComponent,
     ],
 })
 export class BindSystemToCloudComponent implements OnInit {
     protected readonly environment = environment;
     protected readonly channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
+    protected readonly icons = icons;
     readonly fsmStates = BindDialogStates;
-    @Input() set code(code: string) {
-        this.code$$.set(code);
-    }
+
+    code$$ = input.required<string>({ alias: 'code' });
+
     @Input() viewType: string = 'web';
     @Input({ required: true }) redirectUri: string | undefined;
     @Input({ required: true }) systemName: string | undefined;
@@ -82,11 +89,10 @@ export class BindSystemToCloudComponent implements OnInit {
     private processService = inject(NxProcessService);
     bindSystem: Process;
 
-    // Data
-    code$$ = signal<string>('');
     // State management
     state$$ = signal<BindState>({
         bindType: undefined,
+        email: '',
         orgs: [],
         selectedOrg: undefined,
         fsmState: BindDialogStates.initial,
@@ -127,8 +133,12 @@ export class BindSystemToCloudComponent implements OnInit {
                     bindType: BindType.account,
                     fsmState: BindDialogStates.finished,
                 }));
-                this.bindSystem.run();
+                this.fsmState = BindDialogStates.confirmAccount;
             }
+            this.state$$.update(state => ({
+                ...state,
+                email: this.bindService.getEmailFromToken(),
+            }));
         }
     });
 
@@ -149,6 +159,7 @@ export class BindSystemToCloudComponent implements OnInit {
         this.bindType = option;
         if (option === BindType.account) {
             this.selectedOrg = undefined;
+            this.fsmState = BindDialogStates.confirmAccount;
         } else if (this.orgs$$().length === 1) {
             this.selectedOrg = this.state$$().orgs[0];
         } else {
@@ -172,6 +183,9 @@ export class BindSystemToCloudComponent implements OnInit {
             { errorCodes: { badRequest: 'Org was not selected' }, ignoreError: true },
             (res: BindResponse) => {
                 this.handleBindData(res);
+            },
+            () => {
+                this.fsmState = BindDialogStates.error;
             },
         );
     }

@@ -14,7 +14,10 @@
                 }"
             >
                 @if (org.effectiveState === 'active') {
-                    {{ org.name }}
+                    <nx-search-highlight
+                        [text]="org.name"
+                        [search]="search$$() ?? null"
+                    ></nx-search-highlight>
                 } @else {
                     {{
                         '{name} ({state})'

@@ -28,7 +28,7 @@
             [process]="bindProcess"
             [buttonDisabled]="!readyToBind"
             [removeMinWidth]="true"
-            [buttonText]="'Connect' | translate"
+            [buttonText]="buttonText() | translate"
             data-testid="btnConnect"
         >
         </nx-process-button>
