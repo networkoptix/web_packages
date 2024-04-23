@@ -75,7 +75,7 @@
         </nx-multi-select-v2>
     </div>
     <div class="col-4 dropdownPadding">
-        <nx-dropdown
+        <nx-select-v2
             placeholder="Changing Dropdown Options"
             [(ngModel)]="selectedTimer"
         >
@@ -91,7 +91,7 @@
             >
                 {{ timer2 | async }}
             </nx-select-item>
-        </nx-dropdown>
+        </nx-select-v2>
     </div>
 </div>
 <div
@@ -105,7 +105,7 @@
             (ngSubmit)="onDropdownFormSubmit()"
             class="col-4"
         >
-            <nx-dropdown formControlName="singleStateDropdown">
+            <nx-select-v2 formControlName="singleStateDropdown">
                 @for (state of states; track state) {
                     <nx-select-item
                         [value]="state"
@@ -114,7 +114,7 @@
                         {{ state }}
                     </nx-select-item>
                 }
-            </nx-dropdown>
+            </nx-select-v2>
             <nx-multi-select-v2 formControlName="multiStateDropdown">
                 @for (state of states; track state) {
                     <nx-multi-select-item
