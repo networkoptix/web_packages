@@ -500,7 +500,7 @@ class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
     summary='Services that belong to channel partner queried',
     parameters=[OpenApiParameter('parent_lookup_created_by_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerOwnedServiceViewset(NestedViewSetMixin, ModelViewSet):
+class ChannelPartnerOwnedServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = ServiceSerializer
@@ -509,12 +509,19 @@ class ChannelPartnerOwnedServiceViewset(NestedViewSetMixin, ModelViewSet):
     filterset_class = filters.CreatedTsAndNameFilter
 
     def get_permissions(self):
-        perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action == 'retrieve':
-            perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_access))
-        if self.action == 'partial_update':
-            perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage))
+        perms = [IsAuthenticated()]
+        if self.action in ('retrieve', 'list'):
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.is_member_in_branch))
         return perms
+
+    def check_permissions(self, request):
+        super().check_permissions(request)
+        m2m_key, val = self.get_related_pair()
+        channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        super().check_object_permissions(request, channel_partner)
+
+    def check_object_permissions(self, request, obj):
+        pass
 
 @extend_schema(
     tags=['Service Management'],

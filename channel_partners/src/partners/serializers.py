@@ -1028,15 +1028,19 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     createdByChannelPartner = serializers.PrimaryKeyRelatedField(source='created_by_channel_partner', read_only=True)
+    parentServiceId = serializers.UUIDField(source='parent_service_id', read_only=True)
     type = CodeChoiceField(choices=list(ChannelPartnerService.SERVICE_TYPE_CODES))
+    subType = CodeChoiceField(source='sub_type', choices=list(ChannelPartnerService.SUB_TYPES_CODES))
     state = CodeChoiceField(choices=list(ChannelPartnerService.STATES_CODES))
+    duration = serializers.IntegerField(default=0)
     displayName = serializers.CharField(source='name')
     created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = ChannelPartnerService
-        fields = ['id', 'type', 'state', 'displayName', 'description',
-                  'createdByChannelPartner', 'parameters', 'created']
+        fields = ['id', 'type', 'subType', 'state', 'displayName', 'description',
+                  'createdByChannelPartner', 'parameters', 'created',
+                  'parentServiceId', 'duration']
 
 
 class AvailableChannelPartnerServiceSerializer(serializers.ModelSerializer):
