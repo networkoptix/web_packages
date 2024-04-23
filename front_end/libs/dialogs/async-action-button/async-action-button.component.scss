@@ -1,7 +1,38 @@
 @use "mixins" as mixins;
 
-button {
+.async-action-button {
     position: relative;
+
+    &.invalid {
+        cursor: not-allowed;
+        opacity: 0.3; // Match disabled styling
+    }
+
+    &.busy {
+        cursor: progress;
+    }
+
+    &.invalid,
+    &.busy {
+        // Overrides for global button styling
+        &:hover, &:focus, &:active {
+            &.btn-default {
+                color: var(--btn-default-color) !important;
+                background-color: var(--btn-default-bg) !important;
+                box-shadow: var(--btn-default-shadow) !important;
+            }
+            &.btn-primary {
+                color: var(--btn-primary-color) !important;
+                background-color: var(--btn-primary-bg) !important;
+                box-shadow: var(--btn-primary-shadow) !important;
+            }
+            &.btn-danger {
+                color: var(--btn-danger-color) !important;
+                background-color: var(--btn-danger-bg) !important;
+                box-shadow: inset 0 -1px 0 0 var(--btn-danger-shadow) !important;
+           }
+        }
+    }
 }
 
 .loading-dots {

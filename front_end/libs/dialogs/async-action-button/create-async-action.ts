@@ -7,11 +7,6 @@ export interface AsyncAction<T> {
     success: (res: T) => void;
     /** The callback for action error */
     error?: (error: unknown) => void;
-    /** The callback for after `NxAsyncActionButtonComponent` sets `busy$$` to false
-     *
-     * Use this to focus elements after error handling by `error`
-     */
-    postError?: () => void;
 }
 
 /** Use this to enforce typing on the AsyncAction passed in */

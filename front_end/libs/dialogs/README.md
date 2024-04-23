@@ -25,9 +25,9 @@ Dialogs are handled by the `NxDialogsService` and the [Angular CDK](https://mate
 
     a. The three ways of closing the dialog above should be disabled
 
-    b. All inputs should be made readonly/disabled
+    b. All inputs should be disabled
 
-5. If the action errors, focus the first offending input if there is one
+5. If the action errors and there is only one input, focus it if that does not block errors
 
 ## Creating a new dialog
 
@@ -77,7 +77,7 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
 `ModalBase` provides properties and methods for managing dialogs:
 
 - `closable` to determine when the dialog can be closed with the X button
-- `busy$$` to track the busy state of the dialog
+- `busy` and `busy$$` to track the busy state of the dialog
 - An `effect` which syncs `busy$$` to `dialogRef.disbleClose` (the property that controls quick close)
 - `lock()` and `unlock()` for manual state management
 - `close()` to close the dialog
@@ -90,38 +90,36 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
     >
         Reset Camera
     </h1>
-    <button
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-        (click)="close()"
-        *ngIf="closable"
-    >
-        <div class="close-content"></div>
-    </button>
+    @if (closable) {
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <div class="close-content"></div>
+        </button>
+    }
 </div>
 <!-- <form> is required for the action button to fire on Enter key -->
-<form
-    #resetCameraForm="ngForm"
-    name="resetCameraForm"
->
+<form>
     <div class="modal-body">
         <!-- Body content here -->
     </div>
     <div class="modal-footer">
-        <!-- If the dialog action isn't async a normal <button> can be used here instead -->
+        <!-- If the dialog action isn't async and doesn't require validation
+        a normal <button> can be used here instead -->
         <nx-async-action-button
             [action]="resetCameraAction"
-            [busy]="busy$$()"
-            (busyChange)="busy$$.set($event)"
+            [(busy)]="busy$$"
         >
             {{ 'Reset' | translate }}
         </nx-async-action-button>
         <button
             type="button"
             class="btn btn-default"
-            [disabled]="busy$$()"
+            [disabled]="busy"
             (click)="close()"
         >
             Cancel

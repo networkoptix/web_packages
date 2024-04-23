@@ -98,10 +98,11 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
                 );
             }
         },
-        postError: () => {
-            this.self.nativeElement.querySelector('input')?.focus();
-        },
     });
+
+    onErrFocus = (): void => {
+        this.self.nativeElement.querySelector('input')?.focus();
+    };
 
     constructor(
         configService: NxConfigService,

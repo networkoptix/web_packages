@@ -39,13 +39,139 @@
         <span [innerText]="'Secondary' | translate"></span>
     </nx-button>
 </div>
-<div class="mt-3">
-    <span>Async action button (success)</span>
-    <nx-async-action-button [action]="successAction">Success</nx-async-action-button>
-</div>
-<div class="mt-3">
-    <span>Async action button (error)</span>
-    <nx-async-action-button [action]="errorAction">Error</nx-async-action-button>
+
+<h3>Async action button</h3>
+<div
+    [ngStyle]="{
+        border: '1px solid lightgray',
+        padding: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '5px'
+    }"
+>
+    <div class="horizontal-flex">
+        <nx-async-action-button [action]="successAction">Success</nx-async-action-button>
+        <nx-async-action-button
+            [action]="errorAction"
+            buttonColor="danger"
+            >Error</nx-async-action-button
+        >
+        <nx-async-action-button
+            [action]="endlessAction"
+            [invalid]="true"
+            noInvalidUntouchedClick
+            >Invalid</nx-async-action-button
+        >
+        <nx-async-action-button
+            class="endless-action-button"
+            [action]="endlessAction"
+            buttonColor="primary"
+            >Infinity</nx-async-action-button
+        >
+        <nx-async-action-button
+            class="endless-action-button"
+            [action]="endlessAction"
+            buttonColor="danger"
+            >Infinity</nx-async-action-button
+        >
+        <nx-async-action-button
+            class="endless-action-button"
+            [action]="endlessAction"
+            buttonColor="default"
+            >Infinity</nx-async-action-button
+        >
+    </div>
+    <div class="horizontal-flex">
+        <form
+            class="gray-border-box"
+            style="width: 300px"
+        >
+            <h4>Form validation after controls touched</h4>
+            <label
+                class="mr-2"
+                for="fourDigits"
+                >Enter a 4 digit number</label
+            >
+            <input
+                #fourDigitsModel="ngModel"
+                [(ngModel)]="fourDigits"
+                name="fourDigits"
+                class="four-digits-input"
+                type="text"
+                pattern="[0-9]{4}"
+                required
+                [disabled]="fourDigitsBusy"
+            />
+            <div>
+                <span>
+                    @if (fourDigitsModel.untouched) {
+                        Untouched
+                    } @else {
+                        Touched
+                    }
+                </span>
+                |
+                <span>
+                    @if (fourDigitsModel.valid) {
+                        Valid
+                    } @else if (fourDigitsModel.errors) {
+                        Errors: {{ fourDigitsModel.errors | json }}
+                    }
+                </span>
+            </div>
+            <nx-async-action-button
+                [action]="fourDigitsAction"
+                [(busy)]="fourDigitsBusy"
+                [onErrFocus]="fourDigitsInput"
+                >Action</nx-async-action-button
+            >
+        </form>
+        <form
+            class="gray-border-box"
+            style="width: 250px"
+        >
+            <h4>Form validation always</h4>
+            <label
+                class="mr-2"
+                for="fiveDigits"
+                >Enter a 5 digit number</label
+            >
+            <input
+                #fiveDigitsModel="ngModel"
+                [(ngModel)]="fiveDigits"
+                name="fiveDigits"
+                class="five-digits-input"
+                type="text"
+                pattern="[0-9]{5}"
+                required
+                [disabled]="fiveDigitsBusy"
+            />
+            <div>
+                <span>
+                    @if (fiveDigitsModel.untouched) {
+                        Untouched
+                    } @else {
+                        Touched
+                    }
+                </span>
+                |
+                <span>
+                    @if (fiveDigitsModel.valid) {
+                        Valid
+                    } @else if (fiveDigitsModel.errors) {
+                        Errors: {{ fiveDigitsModel.errors | json }}
+                    }
+                </span>
+            </div>
+            <nx-async-action-button
+                [action]="fiveDigitsAction"
+                [(busy)]="fiveDigitsBusy"
+                noInvalidUntouchedClick
+                >Action</nx-async-action-button
+            >
+        </form>
+    </div>
 </div>
 <div class="mt-3">
     <span>Action button (timeline)</span>

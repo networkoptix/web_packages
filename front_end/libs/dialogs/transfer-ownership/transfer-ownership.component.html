@@ -1,318 +1,327 @@
-<form
-    #transferOwnershipForm="ngForm"
-    name="transferOwnershipForm"
->
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            Transfer Ownership
-        </h1>
-        <button
-            *ngIf="closable"
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-            (click)="close(transferInfo)"
-        >
-            <div class="close-content"></div>
-        </button>
-    </div>
+<div class="modal-header">
+    <h1
+        class="modal-title"
+        translate
+    >
+        Transfer Ownership
+    </h1>
+    <button
+        *ngIf="closable"
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close(transferInfo)"
+    >
+        <div class="close-content"></div>
+    </button>
+</div>
 
-    @if (channelPartnersEnabled ? !orgs$$ : !users$$) {
-        <nx-pre-loader></nx-pre-loader>
-    } @else {
-        <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
-            <cdk-step>
-                <ng-container
-                    [ngTemplateOutlet]="orgs$$().length ? selectOrgOrUser : selectUser"
-                ></ng-container>
-            </cdk-step>
-            <cdk-step><ng-container [ngTemplateOutlet]="confirmation"></ng-container></cdk-step>
-            <cdk-step><ng-container [ngTemplateOutlet]="success"></ng-container></cdk-step>
-        </nx-transfer-stepper>
-    }
+@if (channelPartnersEnabled ? !orgs$$ : !users$$) {
+    <nx-pre-loader></nx-pre-loader>
+} @else {
+    <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
+        <cdk-step>
+            <ng-container
+                [ngTemplateOutlet]="orgs$$().length ? selectOrgOrUserStep : selectUserStep"
+            ></ng-container>
+        </cdk-step>
+        <cdk-step><ng-container [ngTemplateOutlet]="confirmationStep"></ng-container></cdk-step>
+        <cdk-step><ng-container [ngTemplateOutlet]="successStep"></ng-container></cdk-step>
+    </nx-transfer-stepper>
+}
 
-    <ng-template #emailSelect>
-        <nx-autocomplete-v2
-            class="fs-mask"
-            #emailAutocomplete="ngModel"
-            name="emailAutocomplete"
-            [(ngModel)]="userSearch"
-            requireSelection
-            [placeholder]="'Email' | translate"
-            [noMatchesContent]="'User not found' | translate"
+<ng-template #selectOrgOrUserStep>
+    <div class="modal-body modal-body--org-and-user-select">
+        <div class="radio-container">
+            <nx-radio
+                name="transfertarget"
+                [ngModel]="transferTargetType$$()"
+                (ngModelChange)="transferTargetType$$.set($event)"
+                componentId="org"
+                value="org"
+                [label]="'To Organization' | translate"
+            ></nx-radio>
+            <nx-radio
+                name="transfertarget"
+                [ngModel]="transferTargetType$$()"
+                (ngModelChange)="transferTargetType$$.set($event)"
+                componentId="user"
+                value="user"
+                [label]="'To User' | translate"
+            ></nx-radio>
+        </div>
+        <!-- Hide instead of not creating to preserve autocomplete internal error state -->
+        <form
+            class="org-select-container"
+            [ngStyle]="{ display: !toOrg$$() ? 'none' : undefined }"
         >
-            @for (user of users$$(); track user.email) {
-                <nx-autocomplete-item
-                    [value]="user.email"
-                    [disabled]="!user.isEnabled"
-                    >{{ user.email }}</nx-autocomplete-item
-                >
-            }
-        </nx-autocomplete-v2>
-        <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
-            <span
-                *ngIf="emailAutocomplete.errors.required"
-                class="input-info subtext error-label"
-                translate
-                >Select a user</span
+            <nx-autocomplete-v2
+                class="fs-mask"
+                #orgAutocomplete="ngModel"
+                name="orgAutocomplete"
+                [(ngModel)]="orgSearch"
+                (select)="selectedOrg = $event"
+                requireSelection
+                [placeholder]="'Organization' | translate"
+                [noMatchesContent]="'Organization not found' | translate"
             >
-        </div>
-    </ng-template>
-
-    <ng-template #noUsers>
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dirSectionPlaceholder + 'NoUsers.svg'"
-            [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
-        ></svg-icon>
-        <h3 translate>No users</h3>
-        <div class="msg-wrapper">
-            <p translate>There are no other users on the system besides you.</p>
-            <p translate>Add them to system to be able to transfer rights</p>
-        </div>
-        <button
-            class="btn btn-default"
-            (click)="openAddUserDialog()"
-            translate
-        >
-            Add Users
-        </button>
-    </ng-template>
-
-    <ng-template #selectOrgOrUser>
-        <div class="modal-body">
-            <div class="radio-container">
-                <nx-radio
-                    name="transfertarget"
-                    [ngModel]="transferTargetType$$()"
-                    (ngModelChange)="transferTargetType$$.set($event)"
-                    componentId="org"
-                    value="org"
-                    [label]="'To Organization' | translate"
-                ></nx-radio>
-                <nx-radio
-                    name="transfertarget"
-                    [ngModel]="transferTargetType$$()"
-                    (ngModelChange)="transferTargetType$$.set($event)"
-                    componentId="user"
-                    value="user"
-                    [label]="'To User' | translate"
-                ></nx-radio>
+                @for (org of orgs$$(); track org.id) {
+                    <nx-autocomplete-item
+                        [value]="org"
+                        [name]="org.name"
+                        [disabled]="org.effectiveState !== 'active'"
+                    >
+                        <div class="org-item">
+                            <span class="org-item__name">{{ org.name }}</span>
+                            @if (org.effectiveState !== 'active') {
+                                <div
+                                    class="org-item__state"
+                                    [ngClass]="'org-item__state--' + org.effectiveState"
+                                >
+                                    {{ org.effectiveState | translate | uppercase }}
+                                </div>
+                            }
+                        </div>
+                    </nx-autocomplete-item>
+                }
+            </nx-autocomplete-v2>
+            <div *ngIf="orgAutocomplete.touched && orgAutocomplete.errors">
+                <span
+                    *ngIf="orgAutocomplete.errors.required"
+                    class="input-info subtext error-label"
+                    translate
+                    >Select an organization</span
+                >
             </div>
-            <!-- Hide instead of not creating to preserve autocomplete internal error state -->
-            <div [ngStyle]="{ display: !toOrg$$() ? 'none' : undefined }">
+            <div class="footer modal-footer__justify-right">
+                <nx-async-action-button
+                    [action]="advanceToConfirmAction"
+                    [(busy)]="busy"
+                >
+                    <ng-container [ngTemplateOutlet]="nextWithArrow"></ng-container>
+                </nx-async-action-button>
+            </div>
+        </form>
+        <form
+            class="user-select-container"
+            [ngStyle]="{ display: !toUser$$() ? 'none' : undefined }"
+        >
+            @if (users$$().length) {
                 <nx-autocomplete-v2
                     class="fs-mask"
-                    #orgAutocomplete="ngModel"
-                    name="orgAutocomplete"
-                    [(ngModel)]="orgSearch"
-                    (select)="selectedOrg = $event"
+                    #emailAutocomplete="ngModel"
+                    name="emailAutocomplete"
+                    [(ngModel)]="userSearch"
                     requireSelection
-                    [placeholder]="'Organization' | translate"
-                    [noMatchesContent]="'Organization not found' | translate"
+                    [placeholder]="'Email' | translate"
+                    [noMatchesContent]="'User not found' | translate"
                 >
-                    @for (org of orgs$$(); track org.id) {
+                    @for (user of users$$(); track user.email) {
                         <nx-autocomplete-item
-                            [value]="org"
-                            [name]="org.name"
-                            [disabled]="org.effectiveState !== 'active'"
+                            [value]="user.email"
+                            [disabled]="!user.isEnabled"
+                            >{{ user.email }}</nx-autocomplete-item
                         >
-                            <div class="org-item">
-                                <span class="org-item__name">{{ org.name }}</span>
-                                @if (org.effectiveState !== 'active') {
-                                    <div
-                                        class="org-item__state"
-                                        [ngClass]="'org-item__state--' + org.effectiveState"
-                                    >
-                                        {{ org.effectiveState | translate | uppercase }}
-                                    </div>
-                                }
-                            </div>
-                        </nx-autocomplete-item>
                     }
                 </nx-autocomplete-v2>
-                <div *ngIf="orgAutocomplete.touched && orgAutocomplete.errors">
+                <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
                     <span
-                        *ngIf="orgAutocomplete.errors.required"
+                        *ngIf="emailAutocomplete.errors.required"
                         class="input-info subtext error-label"
                         translate
-                        >Select an organization</span
+                        >Select a user</span
                     >
                 </div>
-            </div>
-            <div
-                class="modal-body__user-select-container"
-                [ngStyle]="{ display: !toUser$$() ? 'none' : undefined }"
-            >
-                @if (users$$().length) {
-                    <ng-container [ngTemplateOutlet]="emailSelect"></ng-container>
-                } @else {
-                    <div class="no-users no-users__with-orgs">
-                        <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
-                    </div>
-                }
-            </div>
-        </div>
-        <div
-            class="modal-footer modal-footer__justify-right"
-            *ngIf="users$$().length || toOrg$$()"
-        >
-            <button
-                class="btn btn-primary"
-                type="submit"
-                (click)="advanceToConfirm()"
-                [disabled]="
-                    (toOrg$$() && !!orgAutocomplete?.invalid) ||
-                    (toUser$$() && !!emailAutocomplete?.invalid)
-                "
-            >
-                <div class="next-with-arrow">
-                    {{ 'Next' | translate }}
-                    <svg-icon
-                        [src]="icons.dir + 'arrow_right.svg'"
-                        [svgStyle]="{ 'height.px': 24 }"
-                    ></svg-icon>
+                <div class="footer modal-footer__justify-right">
+                    <nx-async-action-button
+                        [action]="advanceToConfirmAction"
+                        [(busy)]="busy"
+                    >
+                        <ng-container [ngTemplateOutlet]="nextWithArrow"></ng-container>
+                    </nx-async-action-button>
                 </div>
-            </button>
-        </div>
-    </ng-template>
-    <ng-template #selectUser>
+            } @else {
+                <div class="no-users">
+                    <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
+                </div>
+            }
+        </form>
+    </div>
+</ng-template>
+<ng-template #selectUserStep>
+    <form class="modal-body modal-body--user-select">
         @if (users$$().length) {
-            <div class="modal-body">
-                <div class="form-group">
-                    <label
-                        for="newSystemOwner"
-                        translate
-                        >To User</label
+            <label
+                for="emailAutocomplete"
+                translate
+                >To User</label
+            >
+            <nx-autocomplete-v2
+                class="fs-mask"
+                #emailAutocomplete="ngModel"
+                name="emailAutocomplete"
+                [(ngModel)]="userSearch"
+                requireSelection
+                [placeholder]="'Email' | translate"
+                [noMatchesContent]="'User not found' | translate"
+            >
+                @for (user of users$$(); track user.email) {
+                    <nx-autocomplete-item
+                        [value]="user.email"
+                        [disabled]="!user.isEnabled"
+                        >{{ user.email }}</nx-autocomplete-item
                     >
-                    <ng-container [ngTemplateOutlet]="emailSelect"></ng-container>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer__justify-right">
-                <button
-                    class="btn btn-primary"
-                    type="submit"
-                    (click)="advanceToConfirm()"
-                    [disabled]="!!emailAutocomplete?.invalid"
+                }
+            </nx-autocomplete-v2>
+            <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
+                <span
+                    *ngIf="emailAutocomplete.errors.required"
+                    class="input-info subtext error-label"
+                    translate
+                    >Select a user</span
                 >
-                    <div class="next-with-arrow">
-                        {{ 'Next' | translate }}
-                        <svg-icon
-                            [src]="icons.dir + 'arrow_right.svg'"
-                            [svgStyle]="{ 'height.px': 24 }"
-                        ></svg-icon>
-                    </div>
-                </button>
+            </div>
+            <div class="footer modal-footer__justify-right">
+                <nx-async-action-button
+                    [action]="advanceToConfirmAction"
+                    [(busy)]="busy"
+                >
+                    <ng-container [ngTemplateOutlet]="nextWithArrow"></ng-container>
+                </nx-async-action-button>
             </div>
         } @else {
-            <div class="modal-body no-users no-users__without-orgs">
+            <div class="no-users">
                 <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
             </div>
         }
-    </ng-template>
+    </form>
+</ng-template>
 
-    <ng-template #confirmation>
-        <div class="modal-body">
-            <p
-                class="about-to-transfer"
-                *ngrxLet="
-                    LANG.dialogs.transferOwnership.aboutToTransfer
-                        | translate: { newOwner } as aboutToTransfer
-                "
-            >
-                <span>{{ aboutToTransfer | translateCut: 0 }}</span
-                ><span
-                    ><strong>{{ aboutToTransfer | translateCut: 1 }}</strong></span
-                ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
-            </p>
-            <div
-                *ngIf="toUser$$()"
-                class="warning-block"
-            >
-                <div class="warning-block__header mb-1">
-                    <svg-icon
-                        [src]="icons.dirNonStandard + 'warning.svg'"
-                        [svgStyle]="{ height: '18px' }"
-                    ></svg-icon
-                    ><span translate>WARNING</span>
-                </div>
-                <p
-                    *ngIf="currentOwnerType === 'user'"
-                    translate
-                >
-                    Once the ownership transfer is complete, you will be removed from the system.
-                </p>
-            </div>
-        </div>
-        <div class="modal-footer modal-footer__justify-between">
-            <button
-                class="btn btn-default"
-                (click)="selectedIndex = selectedIndex - 1"
-                [disabled]="busy$$()"
-                type="button"
-            >
+<ng-template #nextWithArrow>
+    <div class="next-with-arrow">
+        {{ 'Next' | translate }}
+        <svg-icon
+            [src]="icons.dir + 'arrow_right.svg'"
+            [svgStyle]="{ 'height.px': 24 }"
+        ></svg-icon>
+    </div>
+</ng-template>
+
+<ng-template #noUsers>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dirSectionPlaceholder + 'NoUsers.svg'"
+        [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
+    ></svg-icon>
+    <h3 translate>No users</h3>
+    <div class="msg-wrapper">
+        <p translate>There are no other users on the system besides you.</p>
+        <p translate>Add them to system to be able to transfer rights</p>
+    </div>
+    <button
+        class="btn btn-default"
+        (click)="openAddUserDialog()"
+        translate
+    >
+        Add Users
+    </button>
+</ng-template>
+
+<ng-template #confirmationStep>
+    <div class="modal-body">
+        <p
+            class="about-to-transfer"
+            *ngrxLet="
+                LANG.dialogs.transferOwnership.aboutToTransfer
+                    | translate: { newOwner } as aboutToTransfer
+            "
+        >
+            <span>{{ aboutToTransfer | translateCut: 0 }}</span
+            ><span
+                ><strong>{{ aboutToTransfer | translateCut: 1 }}</strong></span
+            ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
+        </p>
+        <div
+            *ngIf="toUser$$()"
+            class="warning-block"
+        >
+            <div class="warning-block__header mb-1">
                 <svg-icon
-                    class="arrow-left"
-                    [src]="icons.dir + 'arrow_left.svg'"
-                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                ></svg-icon>
-            </button>
-            <!-- Invalid inputs from selection step are still detected in confirm step -->
-            <nx-async-action-button
-                [action]="transferSystemAction"
-                [busy]="busy$$()"
-                (busyChange)="busy$$.set($event)"
-                disableFormValidation
-            >
-                {{ 'Transfer' | translate }}
-            </nx-async-action-button>
-        </div>
-    </ng-template>
-
-    <ng-template #success>
-        <div class="modal-body d-flex flex-column align-items-center mb-4">
-            <svg-icon
-                nx-add-svg-src
-                class="mt-1 mb-2"
-                [svgStyle]="{ 'height.px': '79' }"
-                [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
-            ></svg-icon>
+                    [src]="icons.dirNonStandard + 'warning.svg'"
+                    [svgStyle]="{ height: '18px' }"
+                ></svg-icon
+                ><span translate>WARNING</span>
+            </div>
             <p
-                *ngIf="toOrg$$(); else normalResult"
+                *ngIf="currentOwnerType === 'user'"
+                translate
+            >
+                Once the ownership transfer is complete, you will be removed from the system.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer modal-footer__justify-between">
+        <button
+            class="btn btn-default"
+            (click)="selectedIndex = selectedIndex - 1"
+            [disabled]="busy$$()"
+            type="button"
+        >
+            <svg-icon
+                class="arrow-left"
+                [src]="icons.dir + 'arrow_left.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+            ></svg-icon>
+        </button>
+        <nx-async-action-button
+            [action]="transferSystemAction"
+            [(busy)]="busy"
+        >
+            {{ 'Transfer' | translate }}
+        </nx-async-action-button>
+    </div>
+</ng-template>
+
+<ng-template #successStep>
+    <div class="modal-body d-flex flex-column align-items-center mb-4">
+        <svg-icon
+            nx-add-svg-src
+            class="mt-1 mb-2"
+            [svgStyle]="{ 'height.px': '79' }"
+            [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
+        ></svg-icon>
+        <p
+            *ngIf="toOrg$$(); else normalResult"
+            id="request-sent"
+            class="mt-1"
+            translate
+        >
+            System ownership was successfully changed
+        </p>
+        <ng-template #normalResult>
+            <p
                 id="request-sent"
                 class="mt-1"
                 translate
             >
-                System ownership was successfully changed
+                Request has been sent
             </p>
-            <ng-template #normalResult>
-                <p
-                    id="request-sent"
-                    class="mt-1"
-                    translate
-                >
-                    Request has been sent
-                </p>
-                <p
-                    class="subtext mt-1"
-                    translate
-                >
-                    Ownership transfer will occur as soon as the new owner accepts the request.
-                </p>
-            </ng-template>
-        </div>
-        <div class="modal-footer modal-footer__justify-right">
-            <button
-                class="btn btn-primary min-w-100 mt-4 mb-4"
-                (click)="close(transferInfo)"
+            <p
+                class="subtext mt-1"
                 translate
             >
-                OK
-            </button>
-        </div>
-    </ng-template>
-</form>
+                Ownership transfer will occur as soon as the new owner accepts the request.
+            </p>
+        </ng-template>
+    </div>
+    <div class="modal-footer modal-footer__justify-right">
+        <button
+            class="btn btn-primary min-w-100 mt-4 mb-4"
+            (click)="close(transferInfo)"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</ng-template>
