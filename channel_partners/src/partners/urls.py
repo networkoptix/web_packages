@@ -50,9 +50,9 @@ channel_partner_urls = [
 channel_partner_internal_urls = [
     path('events', partner_events, name='events'),
     path('services', all_services, name='services'),
-    path('systems/<uuid:system_id>/users', system_users, name='system_users'),
-    path('systems/<uuid:system_id>/users/<str:email>', system_user, name='system_user'),
-    path('users/<str:email>/systems', user_systems, name='user_systems'),
+    path('systems/<uuid:system_id>/users/', system_users, name='system_users'),
+    path('systems/<uuid:system_id>/users/<str:email>/', system_user, name='system_user'),
+    path('users/<str:email>/systems/', user_systems, name='user_systems'),
     path('users/all', all_org_users, name='all_org_users'),
     path('users/cloud_storage_usage_report', cloud_storage_usage_report, name='cloud_storage_usage_report'),
 ]
