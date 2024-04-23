@@ -198,6 +198,20 @@ export class NxHeaderComponent implements OnInit {
             )
             .subscribe(combinedWidths => this.combinedWidths$.next(combinedWidths));
 
+        // Updates the system name in the header when it is changed in settings
+        this.systemsService.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {
+            if (this.headerService.activeSystem$.getValue()) {
+                const updatedSystem = systems.find(
+                    system => system.id === this.headerService.activeSystem$.getValue().id,
+                );
+                if (updatedSystem) {
+                    const activeSystem = this.headerService.activeSystem$.getValue();
+                    activeSystem.info.name = updatedSystem.name;
+                    this.headerService.activeSystem$.next(activeSystem);
+                }
+            }
+        });
+
         // This handles the adaptive behavior of the header, in most cases navWidth is used to toggle different component views
         // For cases where the component view to use is determined by breakpoint, that logic should be implemented here instead of CSS
         // It's non-standard but will make the code easier to reason about when all logic for determining component size/views are in one place
