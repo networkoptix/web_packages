@@ -20,7 +20,20 @@
                 "main": "apps/authorization/src/main.ts",
                 "polyfills": "apps/authorization/src/polyfills.ts",
                 "tsConfig": "apps/authorization/tsconfig.app.json",
-                "assets": ["apps/authorization/src/favicon.ico", "apps/authorization/src/assets"],
+                "assets": [
+                    "apps/authorization/src/favicon.ico",
+                    "apps/authorization/src/assets",
+                    {
+                        "glob": "**/*",
+                        "input": "common/images",
+                        "output": "images"
+                    },
+                    {
+                        "glob": "**/*",
+                        "input": "common/styles",
+                        "output": "styles"
+                    }
+                ],
                 "styles": ["common/styles/main.scss", "apps/authorization/src/styles.scss"],
                 "stylePreprocessorOptions": {
                     "includePaths": [

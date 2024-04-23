@@ -6,7 +6,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { caseInsenstiveSearch } from '@utils/general';
 import { SignalEventEmitter } from '@utils/signals';
 
 import { Org } from '../../../types/cloud-bind.types';
@@ -26,6 +28,7 @@ import { SearchInputComponent } from '../../basic-search-input/basic-search-inpu
         CdkFixedSizeVirtualScroll,
         SearchInputComponent,
         NxTagComponent,
+        NxSearchHighlightComponent,
     ],
 })
 export class SelectOrgComponent {
@@ -40,6 +43,6 @@ export class SelectOrgComponent {
     visibleOrgs$$ = computed(() => {
         const orgs = this.orgs$$();
         const search = this.search$$() || '';
-        return orgs.filter(org => org.name.includes(search));
+        return orgs.filter(org => caseInsenstiveSearch(org.name, search));
     });
 }

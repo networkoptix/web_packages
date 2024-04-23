@@ -40,6 +40,14 @@ export class BindToCloudService {
         });
     }
 
+    getEmailFromToken(): string {
+        const token = this.tokens$$().access_token;
+        // token is in three parts header, payload, signature
+        const payload = token.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payload));
+        return decodedPayload.sub;
+    }
+
     getTokens(code: string): Observable<CloudTokens> {
         return this.http
             .post<CloudTokens>('/cdb/oauth2/token', {

@@ -13,15 +13,19 @@
 </div>
 <div
     class="bind-btn btn btn-default"
-    [class.disabled]="!orgCount$$()"
+    [class.disabled]="noValidOrgs$$()"
     [class.active]="selectedBindType === bindType.org"
-    [style.pointer-events]="!orgCount$$() ? 'none' : 'unset'"
+    [style.pointer-events]="noValidOrgs$$() ? 'none' : 'unset'"
     (click)="setBind(bindType.org)"
 >
     <svg-icon
         nx-add-svg-src
         [src]="icons.dir + 'organization.svg'"
-        [svgStyle]="{ width: '64px', height: '64px' }"
+        [svgStyle]="{
+            width: '64px',
+            height: '64px',
+            opacity: noValidOrgs$$() ? 0.2 : 1
+        }"
     ></svg-icon>
     @switch (orgCount$$()) {
         @case (0) {

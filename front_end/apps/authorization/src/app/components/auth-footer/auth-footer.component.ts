@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, EventEmitter, Input, Output } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, input, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -27,4 +27,6 @@ export class AuthFooterComponent {
     @Input({ transform: booleanAttribute }) readyToBind: boolean = false;
     @Input() viewType: string;
     @Output() goBack = new EventEmitter<void>();
+
+    buttonText = input.required<string>();
 }
