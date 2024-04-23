@@ -7,7 +7,7 @@
             >
                 Lifetime
             </div>
-            <nx-dropdown formControlName="expiresTime">
+            <nx-select-v2 formControlName="expiresTime">
                 @if (initialExpirationTime() !== 0) {
                     <nx-select-item [value]="initialExpirationTime()">
                         {{ (initialExpirationTimeString() | async) || '' | nxTranslate }}
@@ -37,7 +37,7 @@
                 >
                     Never expires
                 </nx-select-item>
-            </nx-dropdown>
+            </nx-select-v2>
         </div>
         <div class="input-section input-section-password">
             <div

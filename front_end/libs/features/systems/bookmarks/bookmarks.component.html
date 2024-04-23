@@ -31,6 +31,7 @@
                         <nx-single-filter
                             [(ngModel)]="sharingFilter"
                             (ngModelChange)="updateParam('sharing')"
+                            [searchable]="false"
                         >
                             <nx-radio-filter-item
                                 value="shared"
