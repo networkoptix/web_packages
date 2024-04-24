@@ -76,10 +76,13 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
     }
     @Output() busyChange = new EventEmitter<boolean>();
     busy$$ = signal(false);
-    _busyChangeEffect = effect(() => {
-        const busy = this.busy$$();
-        this.busyChange.emit(busy);
-    });
+    _busyChangeEffect = effect(
+        () => {
+            const busy = this.busy$$();
+            this.busyChange.emit(busy);
+        },
+        { allowSignalWrites: true },
+    );
 
     CONFIG = nxConfig;
 
