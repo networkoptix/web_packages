@@ -9,6 +9,10 @@
     max-width: 440px !important;
 }
 
+.modal-body {
+    word-wrap: break-word;
+}
+
 .modal-footer.stacked {
     flex-direction: column;
     align-items: flex-start;
