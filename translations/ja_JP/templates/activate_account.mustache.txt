@@ -5,4 +5,4 @@
 {{config.portal_url}}/authorize/activate/{{message.code}}
 
 %CLOUD_NAME% に登録した心当たりがない場合は、このメールを無視してください。
-メッセージやリンクを他の人と共有しないでください
+メッセージやリンクを他の人に共有しないでください。
