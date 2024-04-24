@@ -797,9 +797,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ];
 
             if (
-                // TODO: when !isLocal check system info using isUserSystem util.
-                //  Leaving as true for vms_6.0 since it doesn't use cloud.
-                (environment.isLocal ? !nxConfig.organizationId : true) &&
+                (environment.isLocal
+                    ? !nxConfig.organizationId
+                    : !('organizationId' in this.system.info)) &&
                 (this.system.permissionManager.isAdmin$$() ||
                     this.system.permissionManager.isOwner$$())
             ) {
