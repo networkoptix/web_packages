@@ -437,3 +437,26 @@ approval-check:
             python3 approval-check.py "https://@gitlab.nxvms.dev/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/approvals" "$CANCEL_PIPELINE_ACCESS_TOKEN" "$(git rev-parse mr_upstream/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME)"
           popd
         fi
+
+portal-nginx-conf-test:
+  image: nginx:1.14.0-alpine
+  stage: check
+  variables:
+    DATA_HOSTS: "relay.relay.cloud.hdw.mx,relay.cloud.hdw.mx,*.relay.relay.cloud.hdw.mx,*.relay.cloud.hdw.mx,nxcloud-test-integrations-static.s3.amazonaws.com,*.hdw.mx,*.vmsproxy.com"
+    CUSTOMIZATION: "default"
+    PORTAL_HOST: "localhost"
+    PORTAL_BUCKET: "cloud-portal"
+  script:
+    - cd /builds/dev/cloud_portal
+    - mkdir -p etc/nginx
+    - cp deploy/cloud_portal_nginx/nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
+    - cp deploy/cloud_portal_nginx/static_caching.conf /etc/nginx/static_caching.conf
+    - cp deploy/cloud_portal_nginx/one_day_caching.conf /etc/nginx/one_day_caching.conf
+    - cp deploy/cloud_portal_nginx/proxy.conf /etc/nginx/proxy.conf
+    - sh etc/scripts/test_nginx.sh
+  rules:
+    - if: !reference [ .enable_for_mr ]
+      changes:
+        - deploy/cloud_portal_nginx/**/*
+
+
