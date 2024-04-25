@@ -165,11 +165,9 @@ export class NxAccessTableContainerComponent {
             .then(async confirm => {
                 if (confirm) {
                     Object.values(this.selectedGroups).map(userRecord =>
-                        this.orgUsersStore.removeUser(
-                            this.currentOrg$$()!.id,
+                        this.orgUsersStore.removeUser(this.currentOrg$$()!.id, userRecord.email, [
                             userRecord.groupRoles![0].groupId,
-                            userRecord.email,
-                        ),
+                        ]),
                     );
                 }
             });

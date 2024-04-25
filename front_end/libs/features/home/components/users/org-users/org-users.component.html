@@ -1,11 +1,39 @@
 <div class="actions p-3">
-    <button
-        class="btn btn-default"
-        translate
-        (click)="newUserDialog()"
-    >
-        Add User
-    </button>
+    @if (selectedCount) {
+        <div class="selected-users">
+            <div class="text">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'close.svg'"
+                    [svgStyle]="{ 'width.px': '12' }"
+                ></svg-icon>
+                {{ selectedCount }}
+                <span translate> selected: </span>
+            </div>
+            <button
+                class="btn"
+                translate
+                (click)="orgUsersTable.bulkDeleteUsers()"
+            >
+                <svg-icon
+                    class="delete"
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'delete.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                ></svg-icon>
+
+                Delete
+            </button>
+        </div>
+    } @else {
+        <button
+            class="btn btn-default"
+            translate
+            (click)="newUserDialog()"
+        >
+            Add User
+        </button>
+    }
     <div class="filter">
         <nx-search
             [(ngModel)]="searchModel"
@@ -20,14 +48,9 @@
 </div>
 @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
     <nx-org-users-table
-        [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
-        [inGroup]="inGroup$$()"
         [headers]="headers"
         [records]="orgUserStore.filteredRecords$$()"
-        [roles]="orgRoles$$() || []"
-        (selectedUsersEmitter)="updateSelectedUsers($event)"
-        (onDeleteClick)="deleteUsers($event)"
-        (onAdduser)="newUserDialog()"
+        (selectedCountEmitter)="updateSelectedCount($event)"
     ></nx-org-users-table>
 } @else {
     <nx-users-table

@@ -9,8 +9,7 @@ import { StranglerImports } from './strangler-imports';
  */
 @Component({
     selector: 'nx-strangler-users-table',
-    templateUrl: 'strangler-table.component.html',
-    styleUrls: ['strangler-table.component.scss'],
+    template: '',
     standalone: true,
     imports: [StranglerImports],
 })

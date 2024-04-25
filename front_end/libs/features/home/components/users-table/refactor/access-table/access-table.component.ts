@@ -178,11 +178,9 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
             })
             .then(async confirm => {
                 if (confirm) {
-                    return this.orgUsersStore.removeUser(
-                        this.currentOrg$$()!.id,
+                    return this.orgUsersStore.removeUser(this.currentOrg$$()!.id, row.email, [
                         groupId,
-                        row.email,
-                    );
+                    ]);
                 }
             });
     }
@@ -209,11 +207,9 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
             .then(confirm => {
                 if (confirm) {
                     this.selectedGroups$$()?.forEach((group: UserRecord): void => {
-                        this.orgUsersStore.removeUser(
-                            this.currentOrg$$()!.id,
+                        this.orgUsersStore.removeUser(this.currentOrg$$()!.id, group.email, [
                             this.getGroupId(group),
-                            group.email,
-                        );
+                        ]);
                     });
                 }
             });

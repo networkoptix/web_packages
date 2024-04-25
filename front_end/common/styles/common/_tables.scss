@@ -319,10 +319,10 @@
 .CP-users {
     .nx-new-table {
         .header {
-            grid-template-columns: 42px 1fr 1fr 1fr 42px;
+            grid-template-columns: 42px 1fr 1fr 1fr 1fr 42px 42px;
         }
         .big-row {
-            grid-template-columns: 42px 1fr 1fr 1fr 42px;
+            grid-template-columns: 42px 1fr 1fr 1fr 1fr 42px 42px;
             grid-template-rows: 40px;
 
             & > div:last-child {

@@ -318,14 +318,22 @@ export const OrgUsersStore = signalStore(
                             }),
                         );
                     },
-                    removeUser: (orgId: string, folder: string, email: string) => {
+                    removeUser: (orgId: string, email: string, folders: string[] = []) => {
                         iif(
-                            () => orgId === folder,
+                            () => store.currentGroupUsersEntityMap()[email]!.isOrgUser,
                             chpService.deleteOrganizationUser(orgId, email),
-                            chpService.deleteBulkGroupUsers(folder, [email]),
-                        ).subscribe(() =>
-                            patchState(store, removeEntity(email, currentGroupUsersEntity)),
-                        );
+                            chpService.deleteBulkUserGroups(
+                                orgId,
+                                email,
+                                folders.length
+                                    ? folders
+                                    : store
+                                          .currentGroupUsersEntityMap()
+                                          [email]!.groupRoles.map(group => group.groupId),
+                            ),
+                        ).subscribe(() => {
+                            patchState(store, removeEntity(email, currentGroupUsersEntity));
+                        });
                     },
                     removeUsers: (orgId: string, folder: string, emails: string[]) => {
                         const users: { orgUsers: OrgUser[]; groupUsers: OrgUser[] } = store
@@ -382,14 +390,15 @@ export const OrgUsersStore = signalStore(
                             patchState(store, removeEntities(emails, currentGroupUsersEntity)),
                         );
                     },
-                    setUsers: (users: OrgUser[]) =>
+                    setUsers: (users: OrgUser[]) => {
                         patchState(
                             store,
                             setEntities(users, {
                                 idKey: 'email',
                                 collection: currentGroupUsersEntity.collection,
                             }),
-                        ),
+                        );
+                    },
                     updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
                         iif(
                             () => !!folder && roleId !== OrgRoleIds.OrgAdmin,
@@ -398,8 +407,15 @@ export const OrgUsersStore = signalStore(
                                 email,
                             }),
                             chpService.updateOrganizationUser(orgId, { roleId, email }),
-                        ).subscribe(); // Once the user is changed that's it because we fetch on each load.
-                        // In the future we can patch the state if it becomes necessary.
+                        ).subscribe(updatedUser =>
+                            patchState(
+                                store,
+                                updateEntity(
+                                    { id: email, changes: { ...updatedUser } },
+                                    currentGroupUsersEntity,
+                                ),
+                            ),
+                        );
                     },
                 },
                 refreshUsers,

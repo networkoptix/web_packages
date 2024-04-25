@@ -1,0 +1,191 @@
+<div class="nx-new-table-container CP-users">
+    @if (orgUserRecords()?.length > 0) {
+        <nx-table
+            set-pagination
+            set-sorting
+            set-rows-auto
+            [set-arrange]="setHeaders"
+            [set-multiple-selected-item-ids]="selectedOrgUsersMap$$()"
+            [set-id-prop-name]="idPropName"
+            [data]="orgUserRecords()"
+            checkAllContainer
+            #containerRef="checkAllContainer"
+        >
+            <ng-template #header>
+                <div style="grid-area: userId">
+                    <nx-checkbox
+                        componentId="checkAll"
+                        [disabled]="!canManageUsers$$()"
+                        checkAll
+                    ></nx-checkbox>
+                </div>
+                @for (head of headers; track head.value) {
+                    <div
+                        #sortItem
+                        [attr.id]="head.name"
+                        [attr.data-sort]="head.sort"
+                        [style.justify-content]="head.align || 'flex-start'"
+                    >
+                        <span
+                            class="head-title ellipsis caption"
+                            title="{{ head.value }}"
+                            >{{ head.value | translate }}</span
+                        >
+                    </div>
+                }
+            </ng-template>
+            <ng-template
+                #rows
+                let-row
+            >
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: userId"
+                >
+                    <nx-checkbox
+                        componentId="checkBox{{ row[idPropName] }}"
+                        [disabled]="!canManageUsers$$()"
+                        [data]="row"
+                    >
+                    </nx-checkbox>
+                </div>
+                <div
+                    class="div-container-wrapper"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: email"
+                >
+                    {{ row.email }}
+                </div>
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: fullName"
+                >
+                    {{ row.fullName }}
+                </div>
+
+                <div
+                    class="div-container-wrapper"
+                    #roleWrapper
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: accessLevel"
+                    toggleOnClick
+                    reversePositionOrder
+                    ignoreMaxWidth
+                    [nxTooltip]="row.groupRoles?.length > 1 && foldersTooltip"
+                >
+                    <ng-template #foldersTooltip>
+                        <div
+                            [style.width.px]="roleWrapper.clientWidth - 16"
+                            class="folders-tooltip"
+                        >
+                            @for (role of row.groupRoles; track role.groupId) {
+                                <div>
+                                    <svg-icon
+                                        [src]="icons.dir + 'folder2.svg'"
+                                        [svgStyle]="{ 'width.px': '20px' }"
+                                    ></svg-icon>
+                                    {{ groupsStore.groupPathMap$$()[role.groupId].pathString }}
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
+                    @if (row.isOrgUser) {
+                        <svg-icon
+                            [src]="icons.dir + 'organization_2.svg'"
+                            [svgStyle]="{ 'width.px': '20px' }"
+                        ></svg-icon>
+                        {{ currentOrg$$().name }}
+                    } @else {
+                        <svg-icon
+                            [src]="icons.dir + 'folder2.svg'"
+                            [svgStyle]="{ 'width.px': '20px' }"
+                        ></svg-icon>
+                        @if (row.groupRoles) {
+                            {{
+                                row.groupRoles?.length > 1
+                                    ? row.groupRoles.length + ' folders'
+                                    : row.groupRoles[0]?.name
+                            }}
+                        } @else {
+                            {{ row.accessLevel.name }}
+                        }
+                    }
+                </div>
+                <div
+                    class="div-container-wrapper roles-container"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: roles"
+                    [ngClass]="{ dropdown: canUpdateUserRole(row) }"
+                >
+                    <div class="div-container roles">
+                        @if (!canUpdateUserRole(row)) {
+                            {{ getDisplayRole(row) | translate }}
+                        } @else {
+                            <nx-select-v2
+                                [ngModel]="getRowRoleId(row)"
+                                (ngModelChange)="updateRole(row, $event)"
+                            >
+                                @for (role of roles$$(); track role.id) {
+                                    <nx-select-item [value]="role.id">
+                                        {{ role.name | translate }}
+                                    </nx-select-item>
+                                }
+                            </nx-select-v2>
+                        }
+                    </div>
+                </div>
+                <div
+                    class="div-container-wrapper icon"
+                    style="grid-area: delete"
+                >
+                    @if (
+                        canManageUsers$$() &&
+                        (!row.isOrgUser ||
+                            (!inGroup$$() &&
+                                row.isOrgUser &&
+                                hasOnlyOneAdmin$$() &&
+                                onlyAdmin$$() !== row.email) ||
+                            !hasOnlyOneAdmin$$())
+                    ) {
+                        <svg-icon
+                            class="delete clickable"
+                            nx-add-svg-src
+                            (click)="deleteUser(row)"
+                            [src]="icons.dirTextButtons + 'delete.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    } @else {
+                        <svg-icon
+                            class="info"
+                            [nxTooltip]="
+                                (inGroup$$()
+                                    ? LANG.channelPartners.usersTable.infoToolTip
+                                    : hasOnlyOneAdmin$$() && onlyAdmin$$() !== row.email
+                                      ? LANG.channelPartners.usersTable.adminTooltip
+                                      : LANG.channelPartners.usersTable.infoToolTip
+                                ) | translate
+                            "
+                            [src]="icons.dirTextButtons + 'info.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    }
+                </div>
+                <div
+                    class="div-container-wrapper icon"
+                    style="grid-area: expand"
+                >
+                    <svg-icon
+                        [src]="icons.dirTextButtons + 'arrow_right.svg'"
+                        [routerLink]="row.email | mapWith: routerState.getUserAccessLink$$()"
+                    >
+                    </svg-icon>
+                </div>
+            </ng-template>
+        </nx-table>
+    } @else {
+        <nx-page-placeholder-v2
+            [type]="PAGE_PLACEHOLDER.NO_USERS"
+            [clickFn]="newUserDialog"
+        ></nx-page-placeholder-v2>
+    }
+</div>
