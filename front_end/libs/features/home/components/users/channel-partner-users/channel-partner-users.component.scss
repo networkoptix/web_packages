@@ -51,5 +51,9 @@
         font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background: none;
         color: var(--light16);
+
+        .icon-with-fill {
+            fill: var(--light16);
+        }
     }
 }

@@ -64,6 +64,7 @@ export class NxChannelPartnersService {
     updateChannelPartnerUser = this.cpApi.updateChannelPartnerUser;
     getChannelPartnerUser = this.cpApi.getChannelPartnerUser;
     deleteChannelPartnerUser = this.cpApi.deleteChannelPartnerUser;
+    bulkDeleteChannelPartnerUsers = this.cpApi.bulkDeleteChannelPartnerUsers;
     getSelfChannelPartnerUser = this.cpApi.getSelfChannelPartnerUser;
 
     /* Channel Partner Reports */

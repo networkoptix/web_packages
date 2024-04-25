@@ -1,6 +1,6 @@
-@defer (when recordStore.filteredRecords$$()) {
-    <div class="actions">
-        @if (hasSelectedUsers) {
+@defer (when channelPartnerUsersStore.filteredRecords$$()) {
+    <div class="actions p-3">
+        @if (selectedCount) {
             <div class="selected-users">
                 <div class="text">
                     <svg-icon
@@ -8,13 +8,13 @@
                         [src]="icons.dirTextButtons + 'close.svg'"
                         [svgStyle]="{ 'width.px': '12' }"
                     ></svg-icon>
-                    {{ selectedUsersLength }}
+                    {{ selectedCount }}
                     <span translate> selected: </span>
                 </div>
                 <button
                     class="btn"
                     translate
-                    (click)="deleteChannelPartnerUser()"
+                    (click)="channelPartnersUsersTable.bulkDeleteUsers()"
                 >
                     <svg-icon
                         class="delete"
@@ -39,7 +39,6 @@
         <div class="filter">
             <nx-search
                 [(ngModel)]="searchModel"
-                (ngModelChange)="setQuery($event)"
                 layout="search"
                 instant
             ></nx-search>
@@ -55,20 +54,14 @@
         <div [style.display]="'block'">
             @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
                 <nx-channel-partner-users-table
-                    [userType]="UserType.CHANNEL_PARTNER"
-                    [headers]="headers"
-                    [records]="recordStore.filteredRecords$$()"
-                    (onDeleteClick)="deleteChannelPartnerUser($event)"
-                    (selectedUsersEmitter)="updateSelectedUsers($event)"
-                    (onAdduser)="newUserDialog()"
-                    [roles]="roles$$()"
-                    [searching]="searchModel.query !== ''"
+                    [records]="channelPartnerUsersStore.filteredRecords$$()"
+                    (selectedCountEmitter)="updateSelectedCount($event)"
                 ></nx-channel-partner-users-table>
             } @else {
                 <nx-users-table
                     [userType]="UserType.CHANNEL_PARTNER"
                     [headers]="headers"
-                    [records]="recordStore.filteredRecords$$()"
+                    [records]="channelPartnerUsersStore.filteredRecords$$()"
                     (onDeleteClick)="deleteChannelPartnerUser($event)"
                     (selectedUsersEmitter)="updateSelectedUsers($event)"
                     (onAdduser)="newUserDialog()"
