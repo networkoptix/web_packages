@@ -1,13 +1,14 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, computed, inject } from '@angular/core';
+import { Component, HostBinding, Input, booleanAttribute, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { groupBy, identity, zip } from 'lodash-es';
 import { firstValueFrom, map, switchMap } from 'rxjs';
 
 import {
@@ -15,15 +16,19 @@ import {
     selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
+import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoItemsComponent } from '@components/placeholdersV2/page/no-items/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import type { DraggableItem } from '@pages/home/home.types';
+import { flattenGroups } from '@pages/home/store/groups/groups-utils';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
@@ -36,7 +41,7 @@ import {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
-import { caseInsenstiveSearch } from '@utils/general';
+import { alphabeticalSort, caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
@@ -62,6 +67,9 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         NxTagComponent,
         PipesModule,
         NxPagePlaceholderNoItemsComponent,
+        NxSearchHighlightComponent,
+        NxHidableModule,
+        NxResizeObserver,
     ],
 })
 export class NxOrganizationCardContainerComponent {
@@ -73,6 +81,7 @@ export class NxOrganizationCardContainerComponent {
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 
+    stickyHeading = true;
     permissionsStore = inject(PermissionsStore);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
@@ -87,7 +96,7 @@ export class NxOrganizationCardContainerComponent {
 
     hasEnoughGroupsOrSystems$$ = computed(() => {
         return (
-            this.groupsStore.currentGroups$$().length + this.groupsStore.currentSystems$$().length >
+            this.groupsStore.totalOrgGroupsOrSystems$$() >
             searchConfig.channelPartners.searchMinimumCards
         );
     });
@@ -98,7 +107,6 @@ export class NxOrganizationCardContainerComponent {
             !this.groupsStore.currentSystems$$()?.length
         );
     });
-
     groupName: string = '';
 
     constructor(
@@ -159,22 +167,183 @@ export class NxOrganizationCardContainerComponent {
     }
 
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
-    filteredGroups$$ = computed(() => {
+    currentGroupGroupsSearchResults$$ = computed(() => {
         const search = this.search$$();
         const groups = this.groupsStore.currentGroups$$();
         if (!search) {
             return groups;
         }
-        return groups.filter(group => caseInsenstiveSearch(group.name, search));
+        return Object.values(flattenGroups(groups))
+            .map(group => ({ ...group, children: [] }))
+            .filter(group => caseInsenstiveSearch(group.name, search));
     });
-    filteredSystems$$ = computed<SystemItem[]>(() => {
+
+    currentOrganizationGroupsSearchResults$$ = computed(() => {
         const search = this.search$$();
-        const systems = this.groupsStore.currentSystems$$();
+        const groups = this.groupsStore.groupsEntities();
         if (!search) {
-            return systems;
+            return groups;
         }
-        return systems.filter(system => caseInsenstiveSearch(system.name, search));
+
+        const currentFolderResults = this.currentGroupGroupsSearchResults$$().map(({ id }) => id);
+        return Object.values(flattenGroups(groups))
+            .filter(({ id }) => !currentFolderResults.includes(id))
+            .map(group => ({ ...group, children: [] }))
+            .filter(group => caseInsenstiveSearch(group.name, search));
     });
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    mapSearchResults = (groups: GroupItem[], systems: SystemItem[]) => {
+        const paths = this.groupsStore.groupPathMap$$();
+        const groupsFlatMap = this.groupsStore.groupFlatMap$$();
+        const currentOrg = this.currentOrg$$();
+        const orgName = currentOrg?.name || '';
+
+        const getParentId = (id: string | null): string | null =>
+            id ? groupsFlatMap[id]?.parentId : null;
+
+        const groupMatches = groups.map(group => {
+            const parentId = getParentId(group.id);
+            const pathInfo = parentId ? paths[parentId] : null;
+            const path = pathInfo ? `${orgName} ${pathInfo.pathString}` : orgName;
+            return {
+                path,
+                pathParents: pathInfo ? pathInfo.path : [],
+                system: null,
+                group,
+            };
+        });
+        const systemMatches = systems.map(system => {
+            const parentId = system.groupId;
+            const pathInfo = parentId ? paths[parentId] : null;
+            const path = pathInfo ? `${orgName} ${pathInfo.pathString}` : orgName;
+            return {
+                path,
+                pathParents: pathInfo ? pathInfo.path : [],
+                system,
+                group: null,
+            };
+        });
+        const notEmpty = <TValue>(value: TValue | null | undefined): value is TValue =>
+            value !== null && value !== undefined;
+        return Object.entries(groupBy([...groupMatches, ...systemMatches], 'path'))
+            .map(([path, groups]) => ({
+                path,
+                pathParents: groups[0].pathParents,
+                groups: groups
+                    .map(({ group }) => group)
+                    .filter(notEmpty)
+                    .sort(alphabeticalSort(group => group.name)),
+                systems: groups
+                    .map(({ system }) => system)
+                    .filter(notEmpty)
+                    .sort(alphabeticalSort(system => system.name)),
+            }))
+            .filter(({ groups, systems }) => groups.length || systems.length)
+            .sort((a, b) => {
+                const aParents = a.pathParents.map(({ name }) => name);
+                const bParents = b.pathParents.map(({ name }) => name);
+                const zipped = zip(aParents, bParents);
+                const [first = '', second = ''] =
+                    zipped.find(([aParent, bParent]) => aParent !== bParent) || [];
+                return alphabeticalSort(identity)(first, second);
+            })
+            .map(result => ({
+                ...result,
+                matches: result.systems.length + result.groups.length,
+            }));
+    };
+
+    currentOrganizationResults$$ = computed(() =>
+        this.mapSearchResults(
+            this.currentOrganizationGroupsSearchResults$$(),
+            this.currentOrganizationSystemsSearchResults$$(),
+        ),
+    );
+
+    currentFolderResults$$ = computed(() =>
+        this.mapSearchResults(
+            this.currentGroupGroupsSearchResults$$(),
+            this.currentGroupSystemsSearchResults$$(),
+        ),
+    );
+
+    getCount = (results: { matches: number }[]): number =>
+        results.reduce((acc, { matches }) => acc + matches, 0);
+
+    currentFolderResultsCount$$ = computed(() => this.getCount(this.currentFolderResults$$()));
+
+    currentOrganizationResultsCount$$ = computed(() =>
+        this.getCount(this.currentOrganizationResults$$()),
+    );
+
+    totalResults$$ = computed(
+        () => this.currentFolderResultsCount$$() + this.currentOrganizationResultsCount$$(),
+    );
+
+    systemsSearchResults$$ = computed(() => {
+        const search = this.search$$();
+
+        if (!search) {
+            return {
+                current: [],
+                other: [],
+            };
+        }
+
+        const currentGroup = this.groupsStore.currentGroupId$$();
+        const pathMap = this.groupsStore.groupPathMap$$();
+        const allOrgSystems = this.groupsStore
+            .allOrgSystems$$()
+            .filter(system => caseInsenstiveSearch(system.name, search));
+
+        if (currentGroup.isRoot) {
+            return {
+                current: allOrgSystems,
+                other: [],
+            };
+        }
+        return allOrgSystems.reduce(
+            (acc, system) => {
+                const inCurrentGroup =
+                    system.groupId &&
+                    pathMap[system.groupId].path.find(({ id }) => id === currentGroup.id);
+                if (inCurrentGroup) {
+                    acc.current.push(system);
+                } else {
+                    acc.other.push(system);
+                }
+                return acc;
+            },
+            { current: [] as SystemItem[], other: [] as SystemItem[] },
+        );
+    });
+
+    systemSearchResultsFactory =
+        (
+            resultsFor: keyof ReturnType<
+                NxOrganizationCardContainerComponent['systemsSearchResults$$']
+            >,
+        ) =>
+        () =>
+            this.search$$()
+                ? this.systemsSearchResults$$()[resultsFor]
+                : this.groupsStore.currentSystems$$();
+
+    /**
+     * Placeholder until endpoint is updated
+     */
+    currentGroupSystemsSearchResults$$ = computed<SystemItem[]>(
+        this.systemSearchResultsFactory('current'),
+    );
+
+    /**
+     * Placeholder until endpoint is updated
+     */
+    currentOrganizationSystemsSearchResults$$ = computed<SystemItem[]>(
+        this.systemSearchResultsFactory('other'),
+    );
+
     groupActions$$ = computed<Record<string, ActionItems[]>>(() => {
         const groups = this.groupsStore.currentGroups$$() || [];
         if (!this.canManageSystems$$()) {
@@ -353,4 +522,12 @@ export class NxOrganizationCardContainerComponent {
                     }
                 }),
         );
+
+    @HostBinding('style.--channel-partners-header-height') headerHeight = '324px';
+
+    updateHeaderSize(el: HTMLElement): void {
+        const padding = 16 as const;
+        const headerHeight = el.getBoundingClientRect().top;
+        this.headerHeight = `${Math.floor(headerHeight + padding)}px`;
+    }
 }

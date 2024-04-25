@@ -74,7 +74,10 @@
             <ng-template #cards>
                 <nx-hidable>
                     @if (inChannelPartner) {
-                        <a [routerLink]="routerState.partnersRoot$$()">
+                        <a
+                            [routerLink]="routerState.partnersRoot$$()"
+                            queryParamsHandling="preserve"
+                        >
                             @if (!groupsStore.groupsPath$$().length) {
                                 <svg-icon
                                     nx-add-svg-src
@@ -88,6 +91,7 @@
                         <a
                             [nxHidableItem]="inChannelPartner"
                             [routerLink]="routerState.rootGroupLink$$()"
+                            queryParamsHandling="preserve"
                         >
                             <svg-icon
                                 nx-add-svg-src
@@ -109,6 +113,7 @@
                             [nxHidableItem]="!last"
                             [ngStyle]="{ display: 'inline' }"
                             [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                            queryParamsHandling="preserve"
                         >
                             <svg-icon
                                 nx-add-svg-src

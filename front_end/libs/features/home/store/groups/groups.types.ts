@@ -1,6 +1,6 @@
 import { RibbonContext } from '@components/ribbon/ribbon.types';
 import {
-    CloudSystem,
+    CloudSystemLight,
     GroupItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -20,7 +20,7 @@ export type Undo = () => void;
 export interface SystemsByOrgOrGroup {
     id: string;
     systems: string[];
-    cloudSystems: CloudSystem[];
+    cloudSystems: CloudSystemLight[];
 }
 
 export type GroupFlatItem = Omit<GroupItem, 'children'>;

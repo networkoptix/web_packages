@@ -199,7 +199,11 @@ export interface CloudSystem {
     effectiveState: string;
 }
 
+export type CloudSystemLight = Omit<CloudSystem, 'services' | 'activated'>;
+
 export type PaginatedCloudSystemList = Page<CloudSystem>;
+
+export type PaginatedCloudSystemLightList = Page<CloudSystemLight>;
 
 export interface BindSystemToOrganization {
     cloudSystemId: string;

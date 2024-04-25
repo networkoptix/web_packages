@@ -16,7 +16,7 @@ import {
     setEntity,
     withEntities,
 } from '@ngrx/signals/entities';
-import { isEqual } from 'lodash-es';
+import { groupBy, isEqual } from 'lodash-es';
 import {
     Observable,
     catchError,
@@ -40,7 +40,7 @@ import type { DraggableItem } from '@pages/home/home.types';
 import { Translatable, isTranslatable } from '@pipes/nx-translate.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
-    CloudSystem,
+    CloudSystemLight,
     Group,
     GroupItem,
     SystemItem,
@@ -49,14 +49,8 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo, NxOrgSystemInfo } from '@services/systems.service.types';
 import { alphaNumericSort } from '@utils/general';
 
-import { generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
-import type {
-    SystemsByOrgOrGroup,
-    Undo,
-    GroupFlatMap,
-    GroupFlatItem,
-    RibbonContextState,
-} from './groups.types';
+import { flattenGroups, generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
+import type { SystemsByOrgOrGroup, Undo, GroupFlatItem, RibbonContextState } from './groups.types';
 
 const initialState = {
     loadingGroups: true,
@@ -397,7 +391,7 @@ export const GroupsStore = signalStore(
                 : channelPartnerService.updateSystemGroup(movedItem.systemId, {
                       groupId: targetItem.id,
                   });
-            return (persist$ as Observable<GroupItem | CloudSystem>).pipe(
+            return (persist$ as Observable<GroupItem | CloudSystemLight>).pipe(
                 catchError((_, caught) => {
                     undo();
                     return caught;
@@ -430,25 +424,34 @@ export const GroupsStore = signalStore(
             );
         },
         initializeSystems: (orgId: string, groupId?: string) => {
+            const orgSystems = store.systemsEntityMap()[orgId];
             return (
-                groupId
+                groupId && orgSystems
                     ? channelPartnerService.getGroup(groupId).pipe(
-                          map(({ systems, cloudSystems }) => ({
-                              id: groupId!,
-                              systems,
-                              cloudSystems,
-                          })),
+                          map(({ systems, cloudSystems }) => [
+                              {
+                                  id: groupId!,
+                                  systems,
+                                  cloudSystems,
+                              },
+                          ]),
                       )
-                    : channelPartnerService.getOrgSystems(orgId, true).pipe(
-                          map(cloudSystems => ({
-                              id: orgId,
-                              cloudSystems,
-                              systems: cloudSystems.map(({ systemId }) => systemId),
-                          })),
+                    : channelPartnerService.getUserSystems(orgId, orgSystems && !groupId).pipe(
+                          map(cloudSystems => {
+                              const grouped = groupBy(cloudSystems, 'groupId');
+                              const mapped = Object.entries(grouped).map(
+                                  ([groupId, cloudSystems]) => ({
+                                      id: groupId === 'null' ? orgId : groupId,
+                                      cloudSystems,
+                                      systems: cloudSystems.map(({ systemId }) => systemId),
+                                  }),
+                              );
+                              return mapped;
+                          }),
                       )
             ).pipe(
                 tap(orgOrGroupSystems =>
-                    patchState(store, setEntity(orgOrGroupSystems, systemsEntity)),
+                    patchState(store, setEntities(orgOrGroupSystems, systemsEntity)),
                 ),
             );
         },
@@ -643,13 +646,8 @@ export const GroupsStore = signalStore(
                 };
             });
 
-            const currentSystems$$ = computed<SystemItem[]>(() => {
-                const systems = store.systemsEntityMap();
-                const { id, isRoot } = currentGroupId$$();
+            const mapToSystemItem = (cloudSystems: CloudSystemLight[]): SystemItem[] => {
                 const systemInfoMap = systemsService.systemInfoMap$$();
-
-                const currentGroup = systems[id];
-                const cloudSystems = currentGroup?.cloudSystems || [];
                 const systemItems: SystemItem[] = [];
                 for (const system of cloudSystems) {
                     const systemInfo = systemInfoMap.get(system.systemId) || ({} as NxSystemInfo);
@@ -672,26 +670,30 @@ export const GroupsStore = signalStore(
                         effectiveState,
                     });
                 }
-                return systemItems
-                    .filter(({ groupId }) => (isRoot ? groupId === null : groupId === id))
-                    .sort(alphaNumericSort(window.navigator.language, group => group.name));
+                return systemItems.sort(
+                    alphaNumericSort(window.navigator.language, group => group.name),
+                );
+            };
+
+            const allOrgSystems$$ = computed(() => {
+                const systems = store.systemsEntities().flatMap(({ cloudSystems }) => cloudSystems);
+                return mapToSystemItem(systems);
+            });
+
+            const currentSystems$$ = computed<SystemItem[]>(() => {
+                const systems = store.systemsEntityMap();
+                const { id, isRoot } = currentGroupId$$();
+
+                const currentGroup = systems[id];
+                const cloudSystems = currentGroup?.cloudSystems || [];
+
+                return mapToSystemItem(cloudSystems).filter(({ groupId }) =>
+                    isRoot ? groupId === null : groupId === id,
+                );
             });
 
             const groupFlatMap$$ = computed(() => {
                 const groups = store.groupsEntities();
-                const flattenGroups = (
-                    groups: GroupItem[],
-                    groupMap: GroupFlatMap = {},
-                ): GroupFlatMap => {
-                    for (const group of groups) {
-                        const { children, ...withoutChild } = group;
-                        groupMap[group.id] = withoutChild;
-                        if (children?.length) {
-                            flattenGroups(group.children, groupMap);
-                        }
-                    }
-                    return groupMap;
-                };
                 return flattenGroups(groups);
             });
 
@@ -725,6 +727,17 @@ export const GroupsStore = signalStore(
                 }
             });
 
+            const totalOrgGroupsOrSystems$$ = computed(() => {
+                const groups = Object.values(groupFlatMap$$());
+                const groupCount = groups.length;
+                const systemsCount = groups.reduce(
+                    (acc, { systemCount, parentId }) =>
+                        parentId === null ? acc + systemCount : acc,
+                    0,
+                );
+                return groupCount + systemsCount;
+            });
+
             return {
                 sortedGroups$$,
                 // groupStateAdapter$$,
@@ -737,6 +750,8 @@ export const GroupsStore = signalStore(
                 groupPathMap$$,
                 currentRibbonContext$$,
                 currentGroupName$$,
+                totalOrgGroupsOrSystems$$,
+                allOrgSystems$$,
             };
         },
     ),

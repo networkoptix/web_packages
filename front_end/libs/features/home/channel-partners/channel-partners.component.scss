@@ -1,5 +1,5 @@
 @use "theme_variables_common" as *;
-$channel-partners-container-height: 72.5%;
+$channel-partners-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
 
 :host {
     display: block;
@@ -23,7 +23,7 @@ $channel-partners-container-height: 72.5%;
         }
 
         .cards-container {
-            height: $channel-partners-container-height !important;
+            max-height: $channel-partners-container-height !important;
         }
 
         .actions {

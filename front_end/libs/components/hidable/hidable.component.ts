@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
-import { Subject, animationFrameScheduler, debounceTime, map, merge } from 'rxjs';
+import { BehaviorSubject, animationFrameScheduler, debounceTime, map, merge } from 'rxjs';
 
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { Size } from '@directives/resize/nx-resize.directive.types';
@@ -57,7 +57,7 @@ export class NxHidableComponent extends AbstractHidableDirective {
      * was moved to AbstractHidableDirective in case we want to create a version
      * in the future that supports on the y-axis.
      */
-    protected width$ = new Subject<number>();
+    protected width$ = new BehaviorSubject(0);
 
     protected widthTracker$ = this.width$;
 

@@ -318,7 +318,9 @@ export class AppComponent implements OnInit {
             .subscribe(
                 (event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
                     if (event instanceof GuardsCheckStart) {
-                        this.loading = true;
+                        const nextRoute = event.url?.split('?')?.[0];
+                        const currentRoute = this.router.url?.split('?')?.[0];
+                        this.loading = nextRoute !== currentRoute || nextRoute === '/';
                         return;
                     }
                     if (event instanceof GuardsCheckEnd) {

@@ -1,12 +1,14 @@
 @use '../../components/card/card.component' as system-card;
-$org-cards-container-height: 70%;
+@use "typography";
+
+$org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
 
 .cards-container {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     overflow-y: auto;
-    height: $org-cards-container-height;
+    max-height: $org-cards-container-height;
 
     .cdk-drop-list {
         width: system-card.$card-width;
@@ -74,10 +76,11 @@ $org-cards-container-height: 70%;
 }
 
 .no-systems {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
+    display: grid;
+    place-items: center;
+    height: $org-cards-container-height;
+    overflow-y: auto;
+    padding-bottom: 64px;
 }
 
 .actions {
@@ -94,7 +97,7 @@ $org-cards-container-height: 70%;
         border: 1px solid var(--system-card-border-color);
         border-radius: 2px;
         margin-left: auto;
-        
+
 
         input {
             height: 100%;
@@ -112,7 +115,7 @@ $org-cards-container-height: 70%;
 .no-search-results {
     margin: auto;
     text-align: center;
-    
+
     h3 {
         color: var(--placehoder-v2-title-color)!important;
     }
@@ -128,4 +131,88 @@ $org-cards-container-height: 70%;
 
 .icon-with-fill {
     fill: var(--attention-yellow);
+}
+h3, nx-hidable {
+    &.sticky-heading {
+        position: sticky;
+    }
+}
+
+h3.sticky-heading {
+    background-color: var(--body-bg);
+}
+
+nx-hidable.sticky-heading {
+    &:first-of-type {
+        background-image: linear-gradient(to bottom, var(--body-bg) 70%, transparent);
+    }
+
+    &:not(:first-of-type) {
+        background-image: linear-gradient(to bottom, transparent, var(--body-bg) 35%, var(--body-bg) 70%, transparent 70%);
+    }
+}
+
+.search-results {
+    overflow-y: auto;
+    position: relative;
+    height: $org-cards-container-height;
+    user-select: none;
+
+    &.center-placeholder {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    & > h3 {
+        &:not(:first-of-type) {
+            margin-top: 1.5rem;
+        }
+        margin: 0;
+        padding-bottom: 0.5rem;
+        z-index: 3;
+        top: 0;
+    }
+
+    & > nx-hidable, & > h4 {
+        @include typography.regular16nocolor;
+        color: var(--other-sites-title) !important;
+        margin: 0;
+        top: 1rem;
+        padding: 1rem 0;
+        z-index: 2;
+        width: 100%;
+    }
+}
+
+.results-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+nx-hidable {
+    span {
+        position: relative;
+        margin-right: 1em;
+        align-items: center;
+        display: inline-flex;
+
+        &:not(:first-of-type) {
+            &::after {
+                pointer-events: none;
+                position: absolute;
+                left: -1em;
+                content: '/';
+            }
+            margin-left: 1em;
+        }
+    }
+}
+
+nx-page-placeholder-no-items ::ng-deep {
+    .page-placeholder {
+        min-height: unset !important;
+    }
 }
