@@ -1,8 +1,10 @@
 import { inject, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { filter, of, switchMap } from 'rxjs';
 
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
+import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxChannelPartnersSettingsComponent } from '../components/settings-v2/channel-partners-settings/channel-partners-settings.component';
@@ -17,10 +19,19 @@ import { withTabReporterResolver } from '../resolvers/tab-id-reporter-resolver';
 import { NxChannelPartnersComponent } from './channel-partners.component';
 
 const setPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
-    inject(Store).dispatch(
-        CPActions.setCurrentPartnerId({ currentPartnerId: route.params.partnerId }),
+    const store = inject(Store);
+    store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: route.params.partnerId }));
+    return store.select(CPSelectors.selectHasStoreLoaded).pipe(
+        switchMap(loaded => {
+            if (loaded) {
+                return of(true);
+            }
+
+            store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
+            return store.select(CPSelectors.selectHasStoreLoaded);
+        }),
+        filter(Boolean),
     );
-    return true;
 };
 
 const CPRoutes: Routes = withTabReporterResolver([
