@@ -29,6 +29,7 @@
             <div class="group">
                 <a
                     [routerLink]="channelPartnersRouteStore.rootGroupLink$$()"
+                    queryParamsHandling="preserve"
                     (click)="$event.stopPropagation()"
                     class="level-name"
                     [nxTooltip]="rootOrg.name"
@@ -89,6 +90,7 @@
                         [routerLink]="
                             group.id | mapWith: channelPartnersRouteStore.getGroupLink$$()
                         "
+                        queryParamsHandling="preserve"
                         (click)="$event.stopPropagation()"
                         class="level-name"
                         [nxTooltip]="group.name"

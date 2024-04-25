@@ -4,21 +4,84 @@
 <ng-container *ngIf="!groupsStore.currentGroups$$(); else showContent">
     <nx-pre-loader></nx-pre-loader>
 </ng-container>
-
-<ng-template #showContent>
+<ng-template #showSearch>
     <div
-        *ngIf="noGroupsOrSystems$$(); else showGroups"
-        class="no-systems"
+        class="px-3 search-results"
+        [ngClass]="{ 'center-placeholder': !totalResults$$() }"
     >
-        @if (inRoot) {
-            <nx-no-systems-cards />
+        @if (!totalResults$$()) {
+            <div class="no-search-results">
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '64',
+                        'height.px': '64'
+                    }"
+                    [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
+                ></svg-icon>
+                <h3 translate>No Results</h3>
+                <p translate>Try changing the search string</p>
+            </div>
         } @else {
-            <nx-page-placeholder-no-items />
+            @for (
+                resultSection of [
+                    {
+                        title: 'Search Results' | translate,
+                        noResults: 'Nothing found in this directory' | translate,
+                        results: currentFolderResults$$()
+                    },
+                    {
+                        title: 'Other Results' | translate,
+                        noResults: null,
+                        results: currentOrganizationResults$$()
+                    }
+                ];
+                track resultSection.title
+            ) {
+                @if (resultSection.results.length || resultSection.noResults) {
+                    <h3 [ngClass]="{ 'sticky-heading': stickyHeading }">
+                        {{ resultSection.title }}
+                    </h3>
+                }
+                @for (group of resultSection.results; track group.path) {
+                    @if (group.groups.length || group.systems.length) {
+                        <nx-hidable [ngClass]="{ 'sticky-heading': stickyHeading }">
+                            <span>{{ currentOrg$$()?.name }}</span>
+                            <span nxHidableTemplate>...</span>
+                            @for (
+                                parent of group.pathParents;
+                                track parent.id;
+                                let first = $first
+                            ) {
+                                <span nxHidableItem>
+                                    {{ parent.name }}
+                                </span>
+                            }
+                        </nx-hidable>
+                    }
+                    <div class="results-wrapper">
+                        @for (group of group.groups; track group.id) {
+                            <ng-container
+                                *ngTemplateOutlet="groupCard; context: { group: group }"
+                            ></ng-container>
+                        }
+                        @for (system of group.systems; track system.systemId) {
+                            <ng-container
+                                *ngTemplateOutlet="systemCard; context: { system: system }"
+                            ></ng-container>
+                        }
+                    </div>
+                } @empty {
+                    @if (resultSection.noResults) {
+                        <h4>{{ resultSection.noResults }}</h4>
+                    }
+                }
+            }
         }
     </div>
 </ng-template>
 
-<ng-template #showGroups>
+<ng-template #showContent>
     <div class="actions">
         <button
             *ngIf="canManageSystems$$()"
@@ -37,97 +100,133 @@
             instant
         ></nx-search>
     </div>
-    <div class="cards-container">
+    <ng-container *ngTemplateOutlet="search$$() ? showSearch : showGroups"></ng-container>
+</ng-template>
+
+<ng-template
+    #groupCard
+    let-group="group"
+>
+    <nx-card
+        class="card-content"
+        [icon]="icons.dir + 'folder2.svg'"
+        [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
+        [routerLink]="group.id | mapWith: channelPartnersRouteStore.getGroupLink$$()"
+        [relativeTo]="route.parent"
+        queryParamsHandling="merge"
+        [queryParams]="{ search: '' }"
+        [dropdownItems]="groupActions$$()[group.id] || []"
+        (toggleShow)="$event && getGroupUsers(group.id)"
+    >
+        <h3>
+            <nx-search-highlight
+                [text]="group.name"
+                [search]="search$$() || ''"
+            ></nx-search-highlight>
+        </h3>
+        <div>{{ group.systemCount }}</div>
+    </nx-card>
+</ng-template>
+
+<ng-template
+    #systemCard
+    let-system="system"
+>
+    <nx-card
+        class="card-content"
+        [routerLink]="
+            openServices$$()
+                ? ['/systems', system.systemId, 'services']
+                : ['/systems', system.systemId]
+        "
+        [ngClass]="{
+            'offline-system':
+                system.effectiveState !== 'active' || system.stateOfHealth === 'offline'
+        }"
+        [dropdownItems]="systemActions$$()[system.systemId]"
+    >
+        <h3>
+            <nx-search-highlight
+                [text]="system.name"
+                [search]="search$$() || ''"
+            ></nx-search-highlight>
+        </h3>
+        <svg-icon
+            *ngIf="system.system2faEnabled && system.stateOfHealth === 'online'"
+            [src]="icons.dir + 'key.svg'"
+            [svgStyle]="{ 'height.px': '24' }"
+        ></svg-icon>
+        <nx-tag
+            *ngIf="system.stateOfHealth === 'offline'"
+            [clickable]="false"
+            [customClass]="'status'"
+            type="default"
+            size="large"
+            translate
+            >OFFLINE</nx-tag
+        >
+    </nx-card>
+</ng-template>
+
+<ng-template #showGroups>
+    @if (noGroupsOrSystems$$()) {
         <div
-            *ngFor="let group of filteredGroups$$(); trackBy: trackGroup"
-            class="group-card"
-            cdkDropList
-            cdkDropListSortingDisabled
-            [cdkDropListData]="group"
-            (cdkDropListDropped)="onDrop($event)"
+            #noSystemsContainer
+            (resize)="updateHeaderSize(noSystemsContainer)"
+            class="no-systems"
+        >
+            @if (inRoot) {
+                <nx-no-systems-cards />
+            } @else {
+                <nx-page-placeholder-no-items />
+            }
+        </div>
+    } @else {
+        <div
+            #cardsContainer
+            (resize)="updateHeaderSize(cardsContainer)"
+            class="cards-container"
         >
             <div
-                cdkDrag
-                [cdkDragDisabled]="!canManageSystems$$()"
-                [cdkDragData]="group"
+                *ngFor="let group of groupsStore.currentGroups$$(); trackBy: trackGroup"
+                class="group-card"
+                cdkDropList
+                cdkDropListSortingDisabled
+                [cdkDropListData]="group"
+                (cdkDropListDropped)="onDrop($event)"
             >
-                <div *cdkDragPlaceholder></div>
-                <nx-card
-                    class="card-content"
-                    [icon]="icons.dir + 'folder2.svg'"
-                    [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
-                    [routerLink]="group.id | mapWith: channelPartnersRouteStore.getGroupLink$$()"
-                    [relativeTo]="route.parent"
-                    queryParamsHandling="merge"
-                    [dropdownItems]="groupActions$$()[group.id]"
-                    (toggleShow)="$event && getGroupUsers(group.id)"
+                <div
+                    cdkDrag
+                    [cdkDragDisabled]="!canManageSystems$$()"
+                    [cdkDragData]="group"
                 >
-                    <h3>{{ group.name }}</h3>
-                    <div>{{ group.systemCount }}</div>
-                </nx-card>
-                <div class="placeholder-shadow"></div>
+                    <div *cdkDragPlaceholder></div>
+                    <ng-container
+                        *ngTemplateOutlet="groupCard; context: { group: group }"
+                    ></ng-container>
+                    <div class="placeholder-shadow"></div>
+                </div>
             </div>
-        </div>
-        <div
-            *ngFor="let system of filteredSystems$$(); trackBy: trackSystem"
-            class="system-card"
-            cdkDropList
-            cdkDropListSortingDisabled
-            [cdkDropListData]="system"
-        >
-            <!-- Update to check if system requests ownership transfer -->
             <div
-                cdkDrag
-                [cdkDragDisabled]="!canManageSystems$$()"
-                [cdkDragData]="system"
+                *ngFor="let system of groupsStore.currentSystems$$(); trackBy: trackSystem"
+                class="system-card"
+                cdkDropList
+                cdkDropListSortingDisabled
+                [cdkDropListData]="system"
             >
-                <div *cdkDragPlaceholder></div>
-                <nx-card
-                    class="card-content"
-                    [routerLink]="
-                        openServices$$()
-                            ? ['/systems', system.systemId, 'services']
-                            : ['/systems', system.systemId]
-                    "
-                    [ngClass]="{
-                        'offline-system':
-                            system.effectiveState !== 'active' || system.stateOfHealth === 'offline'
-                    }"
-                    [dropdownItems]="systemActions$$()[system.systemId]"
+                <!-- Update to check if system requests ownership transfer -->
+                <div
+                    cdkDrag
+                    [cdkDragDisabled]="!canManageSystems$$()"
+                    [cdkDragData]="system"
                 >
-                    <h3>{{ system.name }}</h3>
-                    <svg-icon
-                        *ngIf="system.system2faEnabled && system.stateOfHealth === 'online'"
-                        [src]="icons.dir + 'key.svg'"
-                        [svgStyle]="{ 'height.px': '24' }"
-                    ></svg-icon>
-                    <nx-tag
-                        *ngIf="system.stateOfHealth === 'offline'"
-                        [clickable]="false"
-                        [customClass]="'status'"
-                        type="default"
-                        size="large"
-                        translate
-                        >OFFLINE</nx-tag
-                    >
-                </nx-card>
-                <div class="placeholder-shadow"></div>
+                    <div *cdkDragPlaceholder></div>
+                    <ng-container
+                        *ngTemplateOutlet="systemCard; context: { system: system }"
+                    ></ng-container>
+                    <div class="placeholder-shadow"></div>
+                </div>
             </div>
         </div>
-        <div
-            *ngIf="!filteredSystems$$().length && !filteredGroups$$().length && search$$()"
-            class="no-search-results"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '64',
-                    'height.px': '64'
-                }"
-                [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
-            ></svg-icon>
-            <h3 translate>No Results</h3>
-            <p translate>Try changing the search string</p>
-        </div>
-    </div>
+    }
 </ng-template>

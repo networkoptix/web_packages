@@ -29,3 +29,14 @@ export function isSystemItem(item: SystemItem | GroupItem): item is SystemItem {
 export function isGroupItem(item: GroupItem | SystemItem): item is GroupItem {
     return 'id' in item;
 }
+
+export const flattenGroups = (groups: GroupItem[], groupMap: GroupFlatMap = {}): GroupFlatMap => {
+    for (const group of groups) {
+        const { children, ...withoutChild } = group;
+        groupMap[group.id] = withoutChild;
+        if (children?.length) {
+            flattenGroups(group.children, groupMap);
+        }
+    }
+    return groupMap;
+};

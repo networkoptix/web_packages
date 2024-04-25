@@ -36,7 +36,7 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
         this.translate.get(key, interpolateParams).subscribe(onTranslation);
     }
 
-    transform(query: string, ...args: any[]): any {
+    transform(query: string, ...args: any[]): string {
         if (!query || !query.length) {
             return query;
         }

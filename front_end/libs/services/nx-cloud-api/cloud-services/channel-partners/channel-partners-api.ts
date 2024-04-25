@@ -50,6 +50,8 @@ import {
     PartnerServiceReportResponse,
     OrgServiceReportResponse,
     DetailTableResponse,
+    CloudSystemLight,
+    PaginatedCloudSystemLightList,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -377,8 +379,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'services']));
 
     /* Systems */
-    getUserSystems = (): Observable<CloudSystem[]> => {
-        return this.get<PaginatedCloudSystemList>('/cloud_systems/').pipe(getResults());
+    getUserSystems = (orgId: string, rootOnly = false): Observable<CloudSystemLight[]> => {
+        return this.get<PaginatedCloudSystemLightList>(
+            this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'cloud_systems', 'user_systems']),
+            { params: { rootOnly } },
+        ).pipe(getResults());
     };
 
     transferSystemToOrg = (orgId: string, systemId: string): Observable<CloudSystem> => {

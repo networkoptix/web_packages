@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, DestroyRef, inject, computed, input } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, computed, input, HostBinding } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -31,6 +31,7 @@ import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PipesModule } from '@pipes/pipes.module';
@@ -67,6 +68,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxAddSvgSrcDirective,
         NxTagComponent,
         PipesModule,
+        NxResizeObserver,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -205,5 +207,13 @@ export class NxChannelPartnersComponent implements OnInit {
     setSearch(model: { query: string }): void {
         this.search.value = model.query;
         this.searchChanged.next();
+    }
+
+    @HostBinding('style.--channel-partners-header-height') headerHeight = '324px';
+
+    updateHeaderSize(el: HTMLElement): void {
+        const padding = 16 as const;
+        const headerHeight = el.getBoundingClientRect().top;
+        this.headerHeight = `${Math.floor(headerHeight + padding)}px`;
     }
 }
