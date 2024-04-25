@@ -1,7 +1,6 @@
 import {
     EventEmitter,
     Input,
-    OnChanges,
     OnInit,
     Output,
     WritableSignal,
@@ -34,7 +33,6 @@ import {
     OrganizationRole,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-import { NgChanges } from '@utils/ng-changes';
 
 import {
     UserRecord,
@@ -45,7 +43,7 @@ import {
  * This is the code copied from the original user table.
  */
 @Directive()
-export abstract class InitialUserTable implements OnInit, OnChanges {
+export abstract class InitialUserTable implements OnInit {
     protected store = inject(Store);
     protected cpService = inject(NxChannelPartnersService);
     protected accountService = inject(NxAccountService);
@@ -84,7 +82,6 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
     subLevels: boolean = false;
     expandRowId: string;
     icons = icons;
-    hasOnlyOneAdmin$$: WritableSignal<boolean> = signal(true);
     canManageUsers$$ = computed(() => {
         const canManagePartnerUsers = this.permissionStore.canViewPartnerUsers$$();
         const canManageOrgUsers = this.permissionStore.canViewOrgUsers$$();
@@ -116,12 +113,6 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
         }
         if (this.accessTable) {
             this.setHeaders = ['userId', 'accessLevel', 'roles', 'delete'];
-        }
-    }
-
-    ngOnChanges(changes: NgChanges<InitialUserTable>): void {
-        if (changes.records?.currentValue) {
-            this.findAdmins(changes.records.currentValue);
         }
     }
 
@@ -219,7 +210,6 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
                         rolesIds: updatedUser.rolesIds,
                     };
                     this.records = copy;
-                    this.findAdmins(copy);
                     const email = this.accountService.email;
                     if (updatedUser.email === email) {
                         const channelPartners = structuredClone(this.channelPartners$$());
@@ -248,6 +238,25 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
         }
     }
 
+    userIsOnlyAdmin(row: UserRecord, records: UserRecord[]): boolean {
+        const hasOnlyOneAdmin = (users: UserRecord[]): boolean => {
+            let count = 0;
+            for (const user of users) {
+                if (['Organization Administrator', 'Administrator'].includes(user.roles[0])) {
+                    count += 1;
+                    if (count >= 2) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        if (!hasOnlyOneAdmin(records)) {
+            return false;
+        }
+        return ['Organization Administrator', 'Administrator'].includes(row.roles[0]);
+    }
+
     showRole(row: UserRecord): boolean {
         const currentGroupId = this.currentGroupId$$();
         const orgId = this.currentOrg$$()?.id;
@@ -255,7 +264,7 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
             (currentGroupId ? this.accessTable && !!row.groupRoles?.length : true) &&
             this.canManageUsers$$()
         ) {
-            return this.userIsOnlyAdmin(row);
+            return this.userIsOnlyAdmin(row, this.records);
         }
         return (
             (this.userType !== UserType.CHANNEL_PARTNER &&
@@ -266,32 +275,11 @@ export abstract class InitialUserTable implements OnInit, OnChanges {
         );
     }
 
-    userIsOnlyAdmin(row: UserRecord): boolean {
-        if (!row.roles?.length || this.userType !== UserType.CHANNEL_PARTNER) {
-            return false;
-        }
-        return row.roles[0].includes('Administrator') && this.hasOnlyOneAdmin$$();
-    }
-
     get tableType(): string {
         if (this.accessTable) {
             return 'access-table';
         }
         return this.userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users';
-    }
-
-    findAdmins(records: UserRecord[]): void {
-        let adminCount = 0;
-        for (const record of records) {
-            if (record.roles?.includes('Administrator')) {
-                adminCount += 1;
-                if (adminCount === 2) {
-                    this.hasOnlyOneAdmin$$.set(false);
-                    return;
-                }
-            }
-        }
-        this.hasOnlyOneAdmin$$.set(true);
     }
 
     newUserDialog = (): void => {

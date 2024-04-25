@@ -7,17 +7,20 @@ import {
     booleanAttribute,
     inject,
     computed,
+    ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
@@ -25,6 +28,7 @@ import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { nxConfig } from '@services/nx-config/config';
+import { icons } from '@static-variables';
 
 import { NxOrgUsersTableComponent } from '../../users-table/refactor/org-users-table/org-users-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
@@ -45,16 +49,20 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
         TranslateModule,
         NxSearchComponent,
         FormsModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
+    icons = icons;
     CONFIG = nxConfig;
     UserType = UserType;
     orgUserStore = inject(OrgUsersStore);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
 
+    @ViewChild(NxOrgUsersTableComponent) orgUsersTable: NxOrgUsersTableComponent;
     @Input({ transform: booleanAttribute }) inGroup: boolean;
     searchModel: SearchFilter = { query: '' };
     inGroup$$ = computed(() => !!this.routerState.groupId());
@@ -77,6 +85,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     rootGroups$$ = this.groupsStore.groupsEntities;
     orgRoles$$ = this.CPService.organizationRoles$$;
     selectedUsers: { [key: string]: UserRecord } = {};
+    selectedCount = 0;
     destroyRef = inject(DestroyRef);
 
     constructor(
@@ -162,7 +171,7 @@ export class NxOrganizationUsersComponent implements OnInit {
                             Object.keys(this.selectedUsers),
                         );
                     } else {
-                        this.orgUserStore.removeUser(orgId, folderId, user.email);
+                        this.orgUserStore.removeUser(orgId, user.email, [folderId]);
                     }
                 }
             });
@@ -172,5 +181,9 @@ export class NxOrganizationUsersComponent implements OnInit {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateSelectedUsers(users: any): void {
         this.selectedUsers = users;
+    }
+
+    updateSelectedCount(count: number): void {
+        this.selectedCount = count;
     }
 }

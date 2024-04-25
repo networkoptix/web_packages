@@ -67,8 +67,8 @@
                             class="big-row {{ tableClasses }}"
                             id="{{ row['id'] }}"
                             [ngClass]="
-                                selectedItemId === row[idPropName] ||
-                                selectItemIds?.has(row[idPropName])
+                                (selectedItemId && selectedItemId === row[idPropName]) ||
+                                selectItemIds.has(row[idPropName])
                                     ? 'selected'
                                     : ''
                             "

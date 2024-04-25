@@ -1,3 +1,18 @@
 .org-users-body {
   overflow-y: auto;
 }
+
+.actions {
+  .selected-users {
+    display: flex;
+    align-items: center;
+  
+    button {
+        .icon-with-fill {
+            fill: var(--light16);
+        }
+        color: var(--light16);
+    }
+  }
+
+}
