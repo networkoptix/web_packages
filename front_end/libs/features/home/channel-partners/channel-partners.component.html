@@ -36,7 +36,7 @@
             </nx-base-tab>
         </nx-tabs>
         <ng-container *ngIf="showOrganizations; else tabOutlet">
-            <div class="actions p-3">
+            <div class="actions">
                 <button
                     *ngIf="
                         permissionStore.canCreateOrgs$$() && (organizations$ | async)?.length > 0
@@ -64,7 +64,7 @@
             <nx-pre-loader *ngIf="isLoading$$(); else cards"></nx-pre-loader>
             <ng-template #cards>
                 <ng-container *ngIf="(filteredOrganizations$ | async)?.length > 0; else noOrgs">
-                    <div class="px-3 cards-container">
+                    <div class="cards-container">
                         <ng-container *ngFor="let organization of filteredOrganizations$ | async">
                             <nx-card
                                 class="card-content"
