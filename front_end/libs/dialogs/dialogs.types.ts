@@ -12,6 +12,7 @@ import type {
     ChannelPartner,
     ChannelPartnerUser,
     CloudSystem,
+    DetailTableResponse,
     Group,
     GroupItem,
     GroupUser,
@@ -214,6 +215,13 @@ export type ChangeService = DialogType<
         };
     },
     [SystemService[], ServiceQuantities, monthlyServiceCap: number | null]
+>;
+
+/* Channel Partner Reports */
+
+export type ViewUsageDetails = DialogType<
+    { detailTableData$: Observable<DetailTableResponse>; entityName: string },
+    void
 >;
 
 /* Admin */

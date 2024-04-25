@@ -1,0 +1,13 @@
+@use 'theme_palette' as *;
+
+.numeric-column {
+    justify-content: flex-end;
+}
+
+.positive {
+    color: $green_d1;
+};
+
+.negative {
+    color: $red_d1;
+};

@@ -43,6 +43,8 @@ export const ServiceUsageDetailsStore = signalStore(
                 .entityServiceChanges()
                 .map(
                     ({
+                        id,
+                        type,
                         name,
                         changes_count,
                         last_changed,
@@ -50,6 +52,8 @@ export const ServiceUsageDetailsStore = signalStore(
                         monthly_rate,
                         daily_rate,
                     }) => ({
+                        id,
+                        type,
                         usedBy: name,
                         changed: getChangedColumnText(changes_count, last_changed),
                         activeChannels: channels,
@@ -63,6 +67,7 @@ export const ServiceUsageDetailsStore = signalStore(
                 .systemServiceChanges()
                 .map(
                     ({
+                        system_id,
                         system_name,
                         changes_count,
                         last_changed,
@@ -70,6 +75,8 @@ export const ServiceUsageDetailsStore = signalStore(
                         monthly_rate,
                         daily_rate,
                     }) => ({
+                        id: system_id,
+                        type: 'system',
                         usedBy: system_name,
                         changed: getChangedColumnText(changes_count, last_changed),
                         activeChannels: channels,

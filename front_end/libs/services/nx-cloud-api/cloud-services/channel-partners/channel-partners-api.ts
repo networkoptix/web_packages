@@ -49,6 +49,7 @@ import {
     OrgUsageReportEntry,
     PartnerServiceReportResponse,
     OrgServiceReportResponse,
+    DetailTableResponse,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -201,6 +202,20 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
+    getPartnerDetailTable = (
+        partnerId: string,
+        serviceId: string,
+    ): Observable<DetailTableResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                serviceId,
+                'regular_detail_table',
+            ]),
+        );
+    };
+
     getPartnerServiceChanges = (
         partnerId: string,
         startTs: string,
@@ -306,6 +321,37 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 'reports',
                 serviceId,
                 'regular_service_report',
+            ]),
+        );
+    };
+
+    getOrganizationDetailTable = (
+        orgId: string,
+        serviceId: string,
+    ): Observable<DetailTableResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                serviceId,
+                'regular_detail_table',
+            ]),
+        );
+    };
+
+    getOrgSystemDetailTable = (
+        orgId: string,
+        systemId: string,
+        serviceId: string,
+    ): Observable<DetailTableResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                serviceId,
+                'cloud_system',
+                systemId,
+                'regular_detail_table',
             ]),
         );
     };
