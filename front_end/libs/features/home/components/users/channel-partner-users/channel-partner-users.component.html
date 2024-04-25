@@ -1,5 +1,5 @@
 @defer (when recordStore.filteredRecords$$()) {
-    <div class="actions p-3">
+    <div class="actions">
         @if (hasSelectedUsers) {
             <div class="selected-users">
                 <div class="text">
@@ -50,7 +50,7 @@
     </div>
     <div
         #tableContainer
-        class="m-0 px-3 table-grid"
+        class="table-grid"
     >
         <div [style.display]="'block'">
             @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {

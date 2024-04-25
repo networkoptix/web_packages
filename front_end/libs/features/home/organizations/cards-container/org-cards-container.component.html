@@ -19,7 +19,7 @@
 </ng-template>
 
 <ng-template #showGroups>
-    <div class="actions p-3">
+    <div class="actions">
         <button
             *ngIf="canManageSystems$$()"
             class="btn btn-default"
@@ -37,7 +37,7 @@
             instant
         ></nx-search>
     </div>
-    <div class="px-3 cards-container">
+    <div class="cards-container">
         <div
             *ngFor="let group of filteredGroups$$(); trackBy: trackGroup"
             class="group-card"

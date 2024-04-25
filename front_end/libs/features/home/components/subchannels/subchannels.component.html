@@ -8,7 +8,7 @@
         *ngIf="!(inSubchannels$ | async); else outlet"
     >
         <div
-            class="actions p-3"
+            class="actions"
             [ngClass]="{ search: !canCreatePartners$$() }"
         >
             <button
@@ -31,7 +31,7 @@
             ></nx-search>
         </div>
         <ng-container *ngIf="filteredSubchannels$$().length > 0; else noPartners">
-            <div class="px-3 cards-container">
+            <div class="cards-container">
                 <ng-container *ngFor="let channel of filteredSubchannels$$()">
                     <nx-card
                         class="card-content"
