@@ -390,6 +390,16 @@ export interface PartnerServiceReportResponse {
     sub_entities: EntityServiceChangeEntry[];
 }
 
+export interface DetailTableEntry {
+    date: string;
+    channels: number;
+    monthly_rate: number;
+    daily_rate: number;
+    transactions: number;
+}
+
+export type DetailTableResponse = DetailTableEntry[];
+
 export interface SystemServiceChangeEntry {
     system_id: string;
     system_name: string;

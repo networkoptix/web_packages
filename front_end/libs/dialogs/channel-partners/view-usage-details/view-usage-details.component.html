@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h1 class="modal-title">
+        {{ entityName }}
+    </h1>
+    <button
+        type="button"
+        class="close"
+        id="closeUsageDetailsModal"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <div class="close-content"></div>
+    </button>
+</div>
+<div>
+    @if (isLoading$$()) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else {
+        <nx-usage-details-dialog-table
+            [records]="formattedRecords$$()"
+        ></nx-usage-details-dialog-table>
+    }
+</div>

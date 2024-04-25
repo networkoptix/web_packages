@@ -392,6 +392,16 @@ export class NxDialogsService {
         { width: '400px' },
     );
 
+    /* Channel Partner Reports */
+
+    viewUsageDetails = this.dialogV2Factory<Dt.ViewUsageDetails>(
+        () =>
+            import('./channel-partners/view-usage-details/view-usage-details.component').then(
+                m => m.NxUsageDetailsModalContent,
+            ),
+        { width: DIALOG_SIZE.EXTRA_LARGE },
+    );
+
     /* Admin */
     connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(() =>
         import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),

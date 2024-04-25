@@ -1,4 +1,5 @@
 export enum DIALOG_SIZE {
+    EXTRA_LARGE = '900px',
     LARGE = '800px',
     INFO = '774px',
     ACTION = '448px',
