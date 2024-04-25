@@ -3,6 +3,7 @@ services:
   mysql:
     image: mysql/mysql-server:8.0
     container_name: mysql1
+    profiles: [default]
     restart: always
     ports:
       - "3306:3306"
@@ -20,6 +21,7 @@ services:
   redis:
     image: redis:5.0.6-alpine
     container_name: redis1
+    profiles: [default]
     restart: always
     ports:
       - "6379:6379"
@@ -32,6 +34,7 @@ services:
   meilisearch:
     image: getmeili/meilisearch:v0.24.0
     command: ./meilisearch --master-key=qweasd1234 --no-analytics=true
+    profiles: [default]
     ports:
         -   target: 7700
             published: 7700
@@ -57,21 +60,45 @@ services:
 #   run 'python manage runserver 0.0.0.0:5000'
 # =========================================================
 
-#  nginx:
-#    image: nginx:1.14.0-alpine
-#    container_name: cloud_portal_nginx
-#    ports:
-#      - "80:80"
-#    environment:
-#      - DATA_HOSTS_STR=https://relay.cloud-test.hdw.mx https://relay-aws.cloud-test.hdw.mx https://*.relay.cloud-test.hdw.mx https://*.relay-aws.cloud-test.hdw.mx https://nxcloud-cloud-test-integrations-static.s3.amazonaws.com  https://*.google-analytics.com https://*.hotjar.com;
-#      - CUSTOMIZATION=default
-#      - PORTAL_HOST=host.docker.internal
-#      - PORTAL_BUCKET=cloud-portal
-#
-#    volumes:
-#      - ../cloud/static:/app/app/static
-#      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
-#      - ./nginx/static_caching.conf:/etc/nginx/static_caching.conf
-#      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
-#      - ./nginx/run_nginx.sh:/run_nginx.sh
-#    command: sh /run_nginx.sh
+  nginx:
+    image: nginx:1.14.0-alpine
+    container_name: cloud_portal_nginx
+    profiles: [nginx]
+    ports:
+      - "80:80"
+    environment:
+      - DATA_HOSTS=relay.relay.cloud.hdw.mx,relay.cloud.hdw.mx,*.relay.relay.cloud.hdw.mx,*.relay.cloud.hdw.mx,nxcloud-test-integrations-static.s3.amazonaws.com,*.hdw.mx,*.vmsproxy.com
+      - CUSTOMIZATION=default
+      - PORTAL_HOST=host.docker.internal
+      - PORTAL_BUCKET=cloud-portal
+
+    volumes:
+      - ../cloud/static:/app/app/static
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+      - ./nginx/one_day_caching.conf:/etc/nginx/one_day_caching.conf
+      - ./nginx/static_caching.conf:/etc/nginx/static_caching.conf
+      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
+      - ./nginx/run_nginx.sh:/run_nginx.sh
+    command: sh /run_nginx.sh
+
+  nginx_test:
+    image: nginx:1.14.0-alpine
+    container_name: cloud_portal_nginx_test
+    profiles: [nginx_test]
+    ports:
+      - "80:80"
+    environment:
+      - DATA_HOSTS=relay.relay.cloud.hdw.mx,relay.cloud.hdw.mx,*.relay.relay.cloud.hdw.mx,*.relay.cloud.hdw.mx,nxcloud-test-integrations-static.s3.amazonaws.com,*.hdw.mx,*.vmsproxy.com
+      - CUSTOMIZATION=default
+      - PORTAL_HOST=host.docker.internal
+      - PORTAL_BUCKET=cloud-portal
+
+    volumes:
+      - ../cloud/static:/app/app/static
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+      - ./nginx/one_day_caching.conf:/etc/nginx/one_day_caching.conf
+      - ./nginx/static_caching.conf:/etc/nginx/static_caching.conf
+      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
+      - ./nginx/run_nginx.sh:/run_nginx.sh
+      - ./nginx/test_nginx.sh:/test_nginx.sh
+    command: sh /test_nginx.sh

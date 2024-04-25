@@ -232,13 +232,50 @@ function start_celery() {
 function start_docker_containers() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
         printf "Starting mysql, redis, and meilisearch containers\n\n"
-        docker-compose -f ${DOCKER_COMPOSE} up -d
+        docker-compose -f ${DOCKER_COMPOSE}  --profile default up -d
         printf "\n\n"
     else
         printf "No docker-compose file found in ./etc\n\n"
         exit 1
     fi
 }
+
+function start_nginx_container() {
+    if [[ -e ${DOCKER_COMPOSE} ]]; then
+        printf "Starting mysql, redis, and meilisearch containers\n\n"
+        docker-compose -f ${DOCKER_COMPOSE}  --profile nginx up -d
+        printf "\n\n"
+    else
+        printf "No docker-compose file found in ./etc\n\n"
+        exit 1
+    fi
+}
+
+function test_nginx_docker() {
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    NC='\033[0m' # No Color
+    python etc/scripts/copy_nginx_configs.py --project_dir $(pwd)
+    if [[ -e ${DOCKER_COMPOSE} ]]; then
+        printf "Starting mysql, redis, and meilisearch containers\n\n"
+        docker-compose -f ${DOCKER_COMPOSE}  --profile nginx_test run --rm nginx_test
+        if [[ $? -ne 0 ]]; then
+            printf "\n\n"
+            echo -e "${RED}ERROR!!! NGINX configuration test failed!${NC}"
+            printf "\n\n"
+            exit 1
+        else
+            printf "\n\n"
+            echo -e "${GREEN}SUCCESS!!! Test of configuration passed.${NC}"
+            printf "\n\n"
+        fi
+    else
+        printf "No docker-compose file found in ./etc\n\n"
+        exit 1
+    fi
+}
+
+
 
 function stop_docker_containers() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
@@ -798,6 +835,12 @@ do
         migrate)
             migrate
             ;;
+        test_nginx_docker)
+            test_nginx_docker
+            ;;
+        start_nginx_container)
+            start_nginx_container
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -831,6 +874,8 @@ do
             echo 'update_py_package - Updates poetry requirements. Accepts package name. "./cloud_helper.sh update_py_package {package name}"'
             echo 'setup_webadmin_conan - Sets up the env for the conan helper script'
             echo 'reinstall_virtualenv - Installing python virtual environment with a correct version and updating all packages"'
+            echo 'test_nginx_docker - Test nginx configuration file using `nginx -t` in docker container."'
+            echo 'start_nginx_container - Start nginx docker container."'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then

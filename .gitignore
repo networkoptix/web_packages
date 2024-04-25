@@ -40,6 +40,9 @@ cloud/requirements-license.json
 PythonRobot/letsencrypt-stg.crt
 PythonRobot/chromedriver
 
+# Local NGINX
+etc/nginx
+
 # Local Netlify folder
 .netlify
 PythonRobot/qr_code.png

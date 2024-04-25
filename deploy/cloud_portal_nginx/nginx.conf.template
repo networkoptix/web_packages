@@ -77,17 +77,21 @@ http {
 
         set ${DOLLAR}r "";
 
+        ##### Remove for local #####
         if (${DOLLAR}http_x_forwarded_proto != "https") {
             set ${DOLLAR}r A;
         }
+        ##### Remove for local END #####
 
         if (${DOLLAR}request_uri != "/health/") {
             set ${DOLLAR}r "${DOLLAR}{r}B";
         }
 
+        ##### Remove for local #####
         if (${DOLLAR}r = AB) {
             return 301 https://${DOLLAR}host${DOLLAR}request_uri;
         }
+        ##### Remove for local END #####
 
         set ${DOLLAR}logging 1;
 
