@@ -1,3 +1,6 @@
+from unittest.mock import MagicMock
+
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.backends.db import SessionStore
 
 from asgiref.sync import async_to_sync
@@ -5,8 +8,8 @@ import asyncio
 import pytest
 from rest_framework import status
 from rest_framework.request import Request
-
 from api.views.account import *
+from api import models
 from cloud.helpers.exceptions import kill_tokens
 from notifications.models import PushDevice
 
@@ -567,3 +570,157 @@ class TestAccountViews:
         req.session = {}
         # must passes without exceptions
         await time_since_password(req)
+        
+        
+class TestLoginView:
+    @pytest.fixture(autouse=True)
+    def setup(self, arf, mocker):
+        self.mock_get_token = mocker.patch('cloud.controllers.cloud_api.Auth.get_token', autospec=True)
+        self.mock_validate_token = mocker.patch('cloud.controllers.cloud_api.Auth.validate_token', autospec=True)
+        self.mock_is_email_in_portal = mocker.patch('api.models.AccountManager.is_email_in_portal',
+                                                    autospec=True, return_value=True)
+
+    def test_successful_login_scenario(self, arf, superuser):
+        data = {'email': superuser.email, 'password': 'testpassword'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_get_token.return_value = {'access_token': 'valid_token', 'refresh_token': 'refresh_token'}
+        self.mock_validate_token.return_value = {'username': data['email']}
+        response = async_to_sync(login)(request)
+        assert response.status_code == 200
+
+    def test_login_with_invalid_credentials(self, arf, superuser):
+        data = {'email': 'test@test.com', 'password': 'wrongpassword'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_get_token.side_effect = APINotAuthorisedException('not authorized error')
+        response = async_to_sync(login)(request)
+        assert response.status_code == 401
+
+    def test_login_with_non_existent_user(self, arf, superuser):
+        data = {'email': 'nonexistent@test.com', 'password': 'testpassword'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_get_token.return_value = {'access_token': 'valid_token'}
+        self.mock_validate_token.return_value = {'username': data['email']}
+        self.mock_is_email_in_portal.return_value = False
+        response = async_to_sync(login)(request)
+        assert response.status_code == 404
+
+    def test_login_with_blocked_account(self, arf, superuser):
+        data = {'email': 'blocked@test.com', 'password': 'testpassword'}
+        request = arf.post('/api/account/login', data)
+        request.session = {}
+        request.session['account_blocked'] = True
+        self.mock_get_token.return_value = {'access_token': 'valid_token'}
+        self.mock_validate_token.return_value = {'username': data['email']}
+        response = async_to_sync(login)(request)
+        assert response.status_code == 401
+        assert response.data['errorText'] == 'Account is blocked'
+        assert response.data['resultCode'] == 'accountBlocked'
+
+
+class TestLoginWithCodeView:
+    @pytest.fixture(autouse=True)
+    def setup(self, arf, mocker):
+        self.mock_get_token = mocker.patch('cloud.controllers.cloud_api.Auth.get_access_token', autospec=True)
+        self.mock_validate_token = mocker.patch('cloud.controllers.cloud_api.Auth.validate_token', autospec=True)
+        self.mock_account_get = mocker.patch('cloud.controllers.cloud_api.Account.get',
+                                             autospec=True,
+                                             return_value={'customization': 'default',
+                                                           'fullName': 'Test User',
+                                                           'email': "test_user@networkoptix.com"})
+        self.mock_is_email_in_portal = mocker.patch('api.models.AccountManager.is_email_in_portal',
+                                                    autospec=True, return_value=True)
+
+    def test_successful_login_scenario_without_customization(self, arf, default_customization, superuser):
+        data = {'code': f'{uuid4()}'}
+        request = arf.post('/api/account/loginCode', data)
+        request.session = MagicMock()
+        self.mock_get_token.return_value = {'access_token': 'valid_token', 'refresh_token': 'refresh_token'}
+        self.mock_validate_token.return_value = {'username': superuser.email}
+        response = async_to_sync(login_with_code)(request)
+        assert response.status_code == 200
+        self.mock_account_get.assert_called_once_with({'access_token': 'valid_token', 'refresh_token': 'refresh_token'})
+        superuser.refresh_from_db()
+        assert superuser.customization == default_customization.name
+
+    def test_successful_login_scenario(self, arf, default_customization, superuser):
+        superuser.customization = default_customization.name
+        superuser.save()
+        data = {'code': f'{uuid4()}'}
+        request = arf.post('/api/account/loginCode', data)
+        request.session = MagicMock()
+        self.mock_get_token.return_value = {'access_token': 'valid_token'}
+        self.mock_validate_token.return_value = {'username': superuser.email}
+        response = async_to_sync(login_with_code)(request)
+        assert response.status_code == 200
+        self.mock_account_get.assert_not_called()
+
+    def test_login_with_invalid_credentials(self, arf, superuser):
+        data = {'code': f'{uuid4()}'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_get_token.side_effect = APINotAuthorisedException('not authorized error')
+        response = async_to_sync(login_with_code)(request)
+        assert response.status_code == 401
+
+    def test_login_with_non_existent_user(self, arf, superuser):
+        data = {'code': f'{uuid4()}'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_get_token.return_value = {'access_token': 'valid_token'}
+        self.mock_validate_token.return_value = {'username': "test_user@networkoptix.com"}
+        response = async_to_sync(login_with_code)(request)
+        assert response.status_code == 200
+        test_user = models.Account.objects.get(email='test_user@networkoptix.com')
+        assert test_user.customization == 'default'
+
+
+class TestLoginTokensView:
+    @pytest.fixture(autouse=True)
+    def setup(self, arf, mocker):
+        self.mock_validate_token = mocker.patch('cloud.controllers.cloud_api.Auth.validate_token', autospec=True)
+        self.mock_account_get = mocker.patch('cloud.controllers.cloud_api.Account.get',
+                                             autospec=True,
+                                             return_value={'customization': 'default',
+                                                           'fullName': 'Test User',
+                                                           'email': "test_user@networkoptix.com"})
+        self.mock_kill_tokens = mocker.patch('api.views.account.kill_tokens', autospec=True)
+        self.mock_kill_session = mocker.patch('api.views.account.kill_session', autospec=True)
+
+    def test_successful_login_scenario(self, arf, default_customization, superuser):
+        data = {'access_token': 'valid_token', 'refresh_token': 'refresh_token'}
+        request = arf.post('/api/account/loginCode', data)
+        request.session = MagicMock()
+        self.mock_validate_token.return_value = {'username': superuser.email}
+        response = async_to_sync(login_with_tokens)(request)
+        assert response.status_code == 200
+        self.mock_kill_tokens.assert_called_once()
+        self.mock_kill_session.assert_called_once()
+
+    def test_successful_login_scenario_without_refresh_token(self, arf, default_customization, superuser):
+        data = {'access_token': 'valid_token'}
+        request = arf.post('/api/account/loginCode', data)
+        request.session = MagicMock()
+        self.mock_validate_token.return_value = {'username': superuser.email}
+        response = async_to_sync(login_with_tokens)(request)
+        assert response.status_code == 200
+        self.mock_kill_tokens.assert_called_once()
+        self.mock_kill_session.assert_called_once()
+
+    def test_login_with_invalid_credentials(self, arf, superuser):
+        data = {'access_token': 'invalid_token'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_validate_token.side_effect = APINotAuthorisedException('not authorized error')
+        response = async_to_sync(login_with_tokens)(request)
+        assert response.status_code == 401
+
+    def test_login_with_non_existent_user(self, arf, superuser):
+        data = {'access_token': 'valid_token'}
+        request = arf.post('/api/account/login', data)
+        request.session = MagicMock()
+        self.mock_validate_token.return_value = {'username': "test_user@networkoptix.com"}
+        response = async_to_sync(login_with_tokens)(request)
+        assert response.status_code == 404

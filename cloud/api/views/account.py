@@ -214,7 +214,7 @@ async def login(request):
     try:
         user = await models.Account.objects.aget(email=email)
     except models.Account.DoesNotExist:
-        send_login_failed_signal(__name__, email, password, request)
+        await sync_to_async(send_login_failed_signal)(__name__, email, password, request)
         user = None
 
     if user is None:
