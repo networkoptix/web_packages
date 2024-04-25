@@ -1,24 +1,17 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import {
     Component,
-    computed,
     inject,
     Input,
     OnInit,
     Signal,
     signal,
+    ViewChild,
     WritableSignal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { signalStore, patchState, withMethods, withComputed, withState } from '@ngrx/signals';
-import {
-    withEntities,
-    addEntity,
-    removeEntities,
-    removeEntity,
-    setAllEntities,
-} from '@ngrx/signals/entities';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap, zip } from 'rxjs';
@@ -35,49 +28,13 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
 
 import { NxChannelPartnersUsersTableComponent } from '../../users-table/refactor/channel-partner-users-table/channel-partner-users-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
+import { ChannelPartnerUsersStore } from './channel-partner-users.store';
 import type { UserRecord } from './channel-partner-users.types';
 import { UserType } from './channel-partner-users.types';
-
-const initialState: { searchQuery: string } = {
-    searchQuery: '',
-};
-
-function getUsersByModel(records: UserRecord[] | undefined, query: string): UserRecord[] {
-    if (records) {
-        return records.filter(user => caseInsenstiveSearch(user.email, query));
-    }
-    return [];
-}
-
-const RecordStore = signalStore(
-    withState(initialState),
-    withEntities<UserRecord>(),
-    withMethods(store => ({
-        addRecord: record => patchState(store, addEntity(record, { idKey: 'userId' })),
-        removeRecord: record => patchState(store, removeEntity(record)),
-        removeRecords: records => patchState(store, removeEntities(records)),
-        setRecords: records => patchState(store, setAllEntities(records, { idKey: 'userId' })),
-        setSearchQuery: search => patchState(store, () => ({ searchQuery: search })),
-    })),
-    withComputed(({ searchQuery: searchQuery$$, entities: entities$$ }) => ({
-        filteredRecords$$: computed(() => {
-            const records = entities$$();
-            const search = searchQuery$$();
-            if (!records) {
-                return undefined; // avoid showing "No data" msg.
-            } else if (search.length) {
-                return getUsersByModel(records, search);
-            } else {
-                return records;
-            }
-        }),
-    })),
-);
 
 const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
     return {
@@ -95,7 +52,7 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
         '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
-    providers: [RecordStore],
+    providers: [ChannelPartnerUsersStore],
     imports: [
         CommonModule,
         FormsModule,
@@ -114,7 +71,8 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     CONFIG = nxConfig;
     UserType = UserType;
     icons = icons;
-    recordStore = inject(RecordStore);
+    channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
+    Router = inject(Router);
 
     @Input() inSubchannel: boolean = false;
     searchModel: SearchFilter = { query: '' };
@@ -125,7 +83,11 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     roles$$ = toSignal(this.CPService.getChannelPartnerRoles());
     filteredRecords$$: WritableSignal<UserRecord[] | undefined> = signal(undefined);
     selectedUsers: { [key: string]: UserRecord } = {};
+    selectedCount = 0;
     totalRecords: number;
+
+    @ViewChild(NxChannelPartnersUsersTableComponent)
+    channelPartnersUsersTable!: NxChannelPartnersUsersTableComponent;
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -142,7 +104,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             map(({ params: { subchannelId } }) => subchannelId),
             distinctUntilChanged(),
         );
-        this.recordStore.setSearchQuery(this.searchModel.query);
     }
 
     ngOnInit(): void {
@@ -174,8 +135,8 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 ),
             )
             .subscribe(records => {
-                this.recordStore.setRecords(records);
-                this.totalRecords = this.recordStore.filteredRecords$$().length;
+                this.channelPartnerUsersStore.setRecords(records);
+                this.totalRecords = this.channelPartnerUsersStore.filteredRecords$$().length;
             });
     }
 
@@ -191,10 +152,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         return Object.keys(this.selectedUsers).length;
     }
 
-    setQuery(model: SearchFilter): void {
-        this.recordStore.setSearchQuery(model.query);
-    }
-
     newUserDialog(id?: string): void {
         const partnerId = id || this.currentPartnerId$$();
         if (this.inSubchannel) {
@@ -205,19 +162,22 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 )
                 .subscribe(id => {
                     this.dialogsService
-                        .addPartnerUser({ partnerId, users: this.recordStore.entities() })
+                        .addPartnerUser({
+                            partnerId,
+                            users: this.channelPartnerUsersStore.entities(),
+                        })
                         .then(user => {
                             if (user) {
-                                this.recordStore.addRecord(mapCpUser(user));
+                                this.channelPartnerUsersStore.addRecord(mapCpUser(user));
                             }
                         });
                 });
         } else {
             this.dialogsService
-                .addPartnerUser({ partnerId, users: this.recordStore.entities() })
+                .addPartnerUser({ partnerId, users: this.channelPartnerUsersStore.entities() })
                 .then(user => {
                     if (user) {
-                        this.recordStore.addRecord(mapCpUser(user));
+                        this.channelPartnerUsersStore.addRecord(mapCpUser(user));
                     }
                 });
         }
@@ -278,7 +238,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                                 }),
                             )
                             .subscribe(_ => {
-                                this.recordStore.removeRecords(
+                                this.channelPartnerUsersStore.removeRecords(
                                     Object.values(this.selectedUsers).map(user => user.userId),
                                 );
                                 this.selectedUsers = {};
@@ -294,7 +254,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                             .subscribe({
                                 error: err => console.error(err),
                                 next: () => {
-                                    this.recordStore.removeRecord(user?.userId);
+                                    this.channelPartnerUsersStore.removeRecord(user?.userId);
                                 },
                             });
                     }
@@ -304,5 +264,9 @@ export class NxChannelPartnerUsersComponent implements OnInit {
 
     sortRecords(): void {
         alert('Will implement sort');
+    }
+
+    updateSelectedCount(count: number): void {
+        this.selectedCount = count;
     }
 }

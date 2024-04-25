@@ -181,6 +181,16 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', email]));
     };
 
+    bulkDeleteChannelPartnerUsers = (
+        partnerId: string,
+        users: string[],
+    ): Observable<{ emails: string[] }> => {
+        return this.post(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', 'bulk_delete']),
+            { body: users },
+        );
+    };
+
     /* Channel Partner Reports */
     getPartnerServiceUsage = (partnerId: string): Observable<PartnerUsageReportEntry[]> => {
         return this.get(

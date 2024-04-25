@@ -1,0 +1,122 @@
+<div class="nx-new-table-container CP-users">
+    @if (channelPartnerUserRecords()?.length > 0) {
+        <nx-table
+            set-pagination
+            set-sorting
+            set-rows-auto
+            [set-arrange]="setArrange"
+            [set-multiple-selected-item-ids]="selectedChannelPartnerUsersMap$$()"
+            [set-id-prop-name]="idPropName"
+            [data]="channelPartnerUserRecords()"
+            checkAllContainer
+            #containerRef="checkAllContainer"
+        >
+            <ng-template #header>
+                <div style="grid-area: userId">
+                    <nx-checkbox
+                        componentId="checkAll"
+                        [disabled]="!canManageUsers$$()"
+                        checkAll
+                    ></nx-checkbox>
+                </div>
+                @for (head of headers; track head.value) {
+                    <div
+                        #sortItem
+                        [attr.id]="head.name"
+                        [attr.data-sort]="head.sort"
+                        [style.justify-content]="head.align || 'flex-start'"
+                    >
+                        <span
+                            class="head-title ellipsis caption"
+                            title="{{ head.value }}"
+                            >{{ head.value | translate }}</span
+                        >
+                    </div>
+                }
+            </ng-template>
+            <ng-template
+                #rows
+                let-row
+            >
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: userId"
+                >
+                    <nx-checkbox
+                        componentId="checkBox{{ row[idPropName] }}"
+                        [disabled]="!canManageUsers$$()"
+                        [data]="row"
+                    >
+                    </nx-checkbox>
+                </div>
+                <div
+                    class="div-container-wrapper"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: email"
+                >
+                    {{ row.email }}
+                </div>
+                <div
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: fullName"
+                >
+                    {{ row.fullName }}
+                </div>
+                <div
+                    class="div-container-wrapper roles-container"
+                    data-id="{{ row[idPropName] }}"
+                    style="grid-area: roles"
+                    [ngClass]="{ dropdown: !showRole(row) }"
+                >
+                    <div class="div-container roles">
+                        @if (showRole(row)) {
+                            {{ getDisplayRole(row) | translate }}
+                        } @else {
+                            <nx-select-v2
+                                [ngModel]="getRowRoleId(row)"
+                                (ngModelChange)="updateRole(row, $event)"
+                            >
+                                @for (role of roles$$(); track role.id) {
+                                    <nx-select-item [value]="role.id">
+                                        {{ role.name | translate }}
+                                    </nx-select-item>
+                                }
+                            </nx-select-v2>
+                        }
+                    </div>
+                </div>
+                <div
+                    class="div-container-wrapper icon"
+                    style="grid-area: delete"
+                >
+                    @if (canManageUsers$$() && onlyAdmin$$() !== row.email) {
+                        <svg-icon
+                            class="delete clickable"
+                            nx-add-svg-src
+                            (click)="deleteUser(row)"
+                            [src]="icons.dirTextButtons + 'delete.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    } @else {
+                        <svg-icon
+                            class="info"
+                            [nxTooltip]="
+                                (row.roles[0] === 'Administrator' && hasOneAdmin$$()
+                                    ? LANG.channelPartners.usersTable.adminTooltip
+                                    : LANG.channelPartners.usersTable.infoToolTip
+                                ) | translate
+                            "
+                            [src]="icons.dirTextButtons + 'info.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    }
+                </div>
+            </ng-template>
+        </nx-table>
+    } @else {
+        <nx-page-placeholder-v2
+            [type]="PAGE_PLACEHOLDER.NO_USERS"
+            [clickFn]="newUserDialog"
+        ></nx-page-placeholder-v2>
+    }
+</div>
