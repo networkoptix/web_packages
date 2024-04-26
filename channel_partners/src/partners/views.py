@@ -98,6 +98,7 @@ from partners.serializers import (
     BindLocalSystemSerializer,
     ChannelPartnerAggDataSerializer,
     ChannelPartnerAllServicesParamSerializer,
+    ChannelPartnerDataSerializer,
     ChannelPartnerEventParamSerializer,
     ChannelPartnerEventSerializer,
     ChannelPartnerExternalIdSerializer,
@@ -110,6 +111,7 @@ from partners.serializers import (
     ChannelPartnerStateChangeSerializer,
     ChannelPartnerStateConfirmationSerializer,
     ChannelPartnerUserSerializer,
+    ChannelStructureResponseSerializer,
     CloudStorageUsageReportSerializer,
     CloudSystemIdExternalIdSerializer,
     CloudSystemLightSerializer,
@@ -595,6 +597,24 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
         return perms
 
 
+@extend_schema(tags=["Channel Partners"])
+class ChannelStructureViewSet(GenericViewSet):
+    http_method_names = ['get']
+    authentication_classes = (NxCloudOauthTokenAuthentication,)
+    queryset = ChannelPartner.objects.order_by('created_ts')
+    pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ChannelPartnerFilter
+
+    @extend_schema(summary="Retrieves the Channel Structure.",
+                   responses=ChannelStructureResponseSerializer(many=False))
+    @action(detail=False, methods=['get'],)
+    def channel_structure(self, request):
+        service = ChannelPartnerGroupStructureService()
+        structured_data = service.process_full_structure(request.user)
+        serializer = ChannelStructureResponseSerializer(structured_data)
+        return Response(serializer.data)
+
 @extend_schema(
     tags=['Channel Partners']
 )
@@ -661,11 +681,11 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
 
         service = ChannelPartnerGroupStructureService()
         try:
-            structured_data = service.process(channel_partner, request.user)
+            structured_data = service.process_descendants(channel_partner, request.user)
         except PermissionDenied:
             return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
-
-        return Response(structured_data)
+        serializer = ChannelPartnerDataSerializer(structured_data, many=True)
+        return Response(serializer.data)
 
 
     @extend_schema(request=CreateChannelPartnerSerializer,

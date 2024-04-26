@@ -1,5 +1,6 @@
 import pytest
 
+from partners.models import OrganizationToUser
 from partners.services.channel_partner_group_structure_service import (
     ChannelPartnerGroupStructureService,
 )
@@ -10,6 +11,7 @@ class TestChannelPartnerGroupStructureService:
     @pytest.fixture(autouse=True)
     def setUp(self, cloud_test_host, channel_partner_factory, organization_factory, cp_user_factory):
         self.host = cloud_test_host
+
         """
                 root_nx_channel_partner (Hidden Root)
                 │
@@ -95,7 +97,7 @@ class TestChannelPartnerGroupStructureService:
 
     def test_channel_partner_group_structure_other_cp_child(self):
         service = ChannelPartnerGroupStructureService()
-        actual = service.process(self.cp_other_child, self.cp_other_child_user.user)
+        actual = service.process_descendants(self.cp_other_child, self.cp_other_child_user.user)
 
         assert len(actual) == 1
         assert actual[0]["name"] == "cp_other_child"
@@ -106,7 +108,7 @@ class TestChannelPartnerGroupStructureService:
 
     def test_channel_partner_group_structure_other_cp(self):
         service = ChannelPartnerGroupStructureService()
-        actual = service.process(self.cp_other, self.cp_other_user.user)
+        actual = service.process_descendants(self.cp_other, self.cp_other_user.user)
 
         assert len(actual) == 1
 
@@ -123,10 +125,9 @@ class TestChannelPartnerGroupStructureService:
 
         assert len(cp_other_child["organizations"]) == 0
 
-
     def test_channel_partner_group_structure_cp(self):
         service = ChannelPartnerGroupStructureService()
-        actual = service.process(self.cp, self.cp_user.user)
+        actual = service.process_descendants(self.cp, self.cp_user.user)
 
         assert len(actual) == 1
 
@@ -142,9 +143,82 @@ class TestChannelPartnerGroupStructureService:
 
     def test_channel_partner_group_structure_cp_parent(self):
         service = ChannelPartnerGroupStructureService()
-        actual = service.process(self.cp_parent, self.cp_parent_user.user)
+        actual = service.process_descendants(self.cp_parent, self.cp_parent_user.user)
 
         assert len(actual) == 1
         assert len(actual[0].get("subChannels")) == 2
         assert len(actual[0].get("subChannels")[0].get("subChannels")) == 0
         assert len(actual[0].get("subChannels")[1].get("subChannels")) == 0
+
+    def test_deep_nested_structure_with_multi_cp_user(
+            self,
+            multi_cp_user_factory,
+            channel_partner_factory,
+            organization_factory):
+        """
+            root_cp
+            ├── root_cp_org [multi_cp_user]
+            |
+            └── cp_level_1
+                │
+                ├── org_level_1_1
+                ├── org_level_1_2
+                │
+                └── cp_level_2 [multi_cp_user]
+                │   ├── org_level_2_1
+                │   └── org_level_2_2
+                │       ...
+                │           └── cp_level_18
+                │               ├── org_level_18_1
+                │               ├── org_level_18_2
+                │               └── cp_level_19 [multi_cp_user]
+                │                   ├── org_level_19_1
+                │                   └── org_level_19_2
+                │                       └── cp_level_20
+                │                           ├── org_level_20_1
+                │                           └── org_level_20_2
+            """
+        # Create a root channel partner
+        root_cp = channel_partner_factory(name='root_cp', cloud_host=self.host)
+
+        # List to hold specific channel partners for multi_cp_user
+        cp_for_multi_user = []
+
+        # Create a nested structure 20 layers deep
+        current_parent = root_cp
+        for i in range(1, 21):
+            cp = channel_partner_factory(
+                parent_channel_partner=current_parent,
+                name=f"cp_level_{i}",
+                cloud_host=self.host)
+            organization_factory(channel_partner=cp, name=f"org_level_{i}_1")
+            if i == 2 or i == 19:  # Identify channel partners for multi_cp_user
+                cp_for_multi_user.append(cp)
+            current_parent = cp
+
+        # Create multi_cp_user associated with the 2nd and 19th level channel partners
+        user, multi_cp_user_links = multi_cp_user_factory(channel_partners=cp_for_multi_user)
+
+        # Add user to an organization that's not related
+        user_org = OrganizationToUser.objects.create(
+            user=user,
+            organization=organization_factory(channel_partner=root_cp, name="root_cp_org"))
+        user_org.save()
+
+        # Use the final_cp and multi_cp_user for making a request and asserting the structure
+        service = ChannelPartnerGroupStructureService()
+        actual = service.process_full_structure(user)
+
+        actual_channel_partners = actual.get("channelPartners")
+        actual_organizations = actual.get("organizations")
+
+        assert len(actual_channel_partners) == 2
+
+        assert actual_channel_partners[0]["name"] == "cp_level_19"
+        assert actual_channel_partners[0]["subChannels"][0]["name"] == "cp_level_20"
+
+        assert actual_channel_partners[1]["name"] == "cp_level_2"
+        assert actual_channel_partners[1]["subChannels"][0]["name"] == "cp_level_3"
+
+        assert len(actual_organizations) == 1
+        assert actual_organizations[0]["name"] == "root_cp_org"

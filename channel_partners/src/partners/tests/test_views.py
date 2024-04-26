@@ -46,6 +46,7 @@ from partners.models import (
     OrganizationPermissions,
     OrganizationRole,
     OrganizationRoles,
+    OrganizationToUser,
     ServiceUsage,
     VmsRoles,
 )
@@ -739,6 +740,108 @@ class TestChannelPartnerNestedViewSet:
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 403
 
+class TestChannelStructureViewSet:
+    @pytest.fixture(autouse=True)
+    def setUp(
+            self,
+            cloud_test_host,
+            multi_cp_user_factory,
+            channel_partner_factory,
+            organization_factory,
+            cp_user_factory,
+            mock_auth_with_user
+    ):
+        self.client = APIClient()
+        self.host = cloud_test_host
+        self.mock_auth = mock_auth_with_user
+
+    def __make_request_get_response(self, user: CloudUser):
+        self.mock_auth(user)
+
+        bearer = f"Bearer {uuid4()}"
+        view_name = "subchannels-channel-structure"
+
+        self.client.credentials(HTTP_AUTHORIZATION=bearer)
+
+        path = reverse(view_name)
+
+        return self.client.get(path, SERVER_NAME=self.host.hostname)
+
+
+    def test_deep_nested_structure_with_multi_cp_user(
+            self,
+            multi_cp_user_factory,
+            channel_partner_factory,
+            organization_factory):
+        """
+            root_cp
+            ├── root_cp_org [multi_cp_user]
+            |
+            └── cp_level_1
+                │
+                ├── org_level_1_1
+                ├── org_level_1_2
+                │
+                └── cp_level_2 [multi_cp_user]
+                │   ├── org_level_2_1
+                │   └── org_level_2_2
+                │       ...
+                │           └── cp_level_18
+                │               ├── org_level_18_1
+                │               ├── org_level_18_2
+                │               └── cp_level_19 [multi_cp_user]
+                │                   ├── org_level_19_1
+                │                   └── org_level_19_2
+                │                       └── cp_level_20
+                │                           ├── org_level_20_1
+                │                           └── org_level_20_2
+            """
+        # Create a root channel partner
+        root_cp = channel_partner_factory(name='root_cp', cloud_host=self.host)
+
+        # List to hold specific channel partners for multi_cp_user
+        cp_for_multi_user = []
+
+        # Create a nested structure 20 layers deep
+        current_parent = root_cp
+        for i in range(1, 21):
+            cp = channel_partner_factory(
+                parent_channel_partner=current_parent,
+                name=f"cp_level_{i}",
+                cloud_host=self.host)
+            organization_factory(channel_partner=cp, name=f"org_level_{i}_1")
+            if i == 2 or i == 19:  # Identify channel partners for multi_cp_user
+                cp_for_multi_user.append(cp)
+            current_parent = cp
+
+        # Create multi_cp_user associated with the 2nd and 19th level channel partners
+        user, multi_cp_user_links = multi_cp_user_factory(channel_partners=cp_for_multi_user)
+
+        # Add user to an organization that's not related
+        user_org = OrganizationToUser.objects.create(
+            user=user,
+            organization=organization_factory(channel_partner=root_cp, name="root_cp_org"))
+        user_org.save()
+
+        # Use the final_cp and multi_cp_user for making a request and asserting the structure
+        response = self.__make_request_get_response(user=multi_cp_user_links[0])
+
+        assert response.status_code == 200
+
+        actual = response.data
+        actual_channel_partners = actual.get("channelPartners")
+        actual_organizations = actual.get("organizations")
+
+        assert len(actual_channel_partners) == 2
+
+        assert actual_channel_partners[0]["name"] == "cp_level_19"
+        assert actual_channel_partners[0]["subChannels"][0]["name"] == "cp_level_20"
+
+        assert actual_channel_partners[1]["name"] == "cp_level_2"
+        assert actual_channel_partners[1]["subChannels"][0]["name"] == "cp_level_3"
+
+        assert len(actual_organizations) == 1
+        assert actual_organizations[0]["name"] == "root_cp_org"
 
 class TestChannelPartnerStructureNestedViewSet:
     @pytest.fixture(autouse=True)

@@ -1028,17 +1028,6 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 transaction.on_commit(
                     lambda: run_organization_state_changed_tasks.apply_async(args=[updated_descendants]))
 
-        # If the effective_state has changed, purge cache
-        if effective_state_changed:
-            self._invalidate_channel_partner_structure()
-
-    def _invalidate_channel_partner_structure(self) -> None:
-        from tasks.purge_caches import purge_cache_for_channel_partners
-        ancestor_ids = self.path or []
-        descendant_ids = list(ChannelPartner.objects.filter(path__contains=[self.id]).values_list('id', flat=True))
-        channel_partner_ids = set(ancestor_ids + descendant_ids + [self.id])
-        purge_cache_for_channel_partners.delay(list(channel_partner_ids))
-
     @staticmethod
     def invalidate_cache(pk: str) -> None:
         cache_key: str = cp_direct_children_count(pk)
@@ -1414,15 +1403,6 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                 )
                 transaction.on_commit(lambda: run_organization_state_changed_tasks.apply_async(args=[[self.id]]))
 
-
-        if effective_state_changed:
-            self._invalidate_channel_partner_structure()
-
-
-    def _invalidate_channel_partner_structure(self):
-        from tasks.purge_caches import purge_cache_for_channel_partners
-        channel_partner_ids = [self.channel_partner_id] + (self.channel_partner.path or [])
-        purge_cache_for_channel_partners.delay(channel_partner_ids)
 
     @property
     def system_count(self) -> int:

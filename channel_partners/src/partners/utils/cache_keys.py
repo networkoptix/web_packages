@@ -21,5 +21,9 @@ def organization_system_count(id: str | UUID) -> str:
     return f'organization-system-count-{id}'
 
 
-def cache_key_channel_partner_structure(channel_partner_id: str | UUID, user_id: str | UUID) -> str:
-    return f'channel_partner-structure-{channel_partner_id}-{user_id}'
+def cache_key_channel_partner_descendents_structure(channel_partner_id: str | UUID, user_id: str | UUID) -> str:
+    return f'channel_partner-descendents-structure-{channel_partner_id}-{user_id}'
+
+
+def cache_key_full_channel_partner_structure(user_id: str | UUID) -> str:
+    return f'full-channel_partner-structure-{user_id}'

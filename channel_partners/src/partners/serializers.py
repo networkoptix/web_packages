@@ -162,18 +162,47 @@ class DeletedEmailsSerializer(serializers.Serializer):
     emails = serializers.ListField(child=serializers.EmailField())
 
 
+class RecursiveField(serializers.Serializer):
+    """
+    Serializer for recursive fields.
+    There's also a much fuller implementation: https://github.com/heywbj/django-rest-framework-recursive
+    """
+    def __init__(self, parent_class, *args, **kwargs):
+        if isinstance(parent_class, str):
+            # To handle forward references
+            self.parent_class_name = parent_class
+            self.parent_class = None
+        else:
+            self.parent_class_name = None
+            self.parent_class = parent_class
+        super().__init__(*args, **kwargs)
+
+    def to_representation(self, value):
+        if self.parent_class is None:
+            parent_class = globals()[self.parent_class_name]
+        else:
+            parent_class = self.parent_class
+        serializer = parent_class(value, context=self.context)
+        return serializer.to_representation(value)
+
+
 class OrganizationDataSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
-    effectiveState = serializers.CharField(source='effective_state')
+    effectiveState = serializers.CharField()
 
 
 class ChannelPartnerDataSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
-    effectiveState = serializers.CharField(source='effective_state')
-    subChannels = serializers.ListField(child=serializers.DictField(), required=False)
+    effectiveState = serializers.CharField()
+    subChannels = serializers.ListField(child=RecursiveField('ChannelPartnerDataSerializer'), required=False)
     organizations = OrganizationDataSerializer(many=True)
+
+
+class ChannelStructureResponseSerializer(serializers.Serializer):
+    organizations = OrganizationDataSerializer(many=True)
+    channelPartners = ChannelPartnerDataSerializer(many=True)
 
 
 class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
