@@ -89,9 +89,16 @@ export const GroupsStore = signalStore(
     withEntities({ entity: type<GroupItem>(), collection: 'groups' }),
     withEntities({ entity: type<SystemsByOrgOrGroup>(), collection: 'systems' }),
     withEntities({ entity: type<{ id: string; open: boolean }>(), collection: 'openGroups' }),
-    withMethods((_, channelPartnerService = inject(NxChannelPartnersService)) => ({
-        getChannelPartnersService: () => channelPartnerService,
-    })),
+    withMethods(
+        (
+            _,
+            channelPartnerService = inject(NxChannelPartnersService),
+            systemsService = inject(NxSystemsService),
+        ) => ({
+            getChannelPartnersService: () => channelPartnerService,
+            getSystemsService: () => systemsService,
+        }),
+    ),
     // 2. Define mutations for state. All mutations should return an undo function
     withMethods(store => {
         const updateSystemCounts = (
@@ -397,6 +404,19 @@ export const GroupsStore = signalStore(
                     return caught;
                 }),
             );
+        },
+        deleteSystem: (systemId: string) => {
+            const systems = store
+                .systemsEntities()
+                .filter(({ systems }) => systems.includes(systemId))
+                .map(({ systems, cloudSystems, ...rest }) => ({
+                    systems: systems.filter(id => id !== systemId),
+                    cloudSystems: cloudSystems.filter(({ systemId: id }) => id !== systemId),
+                    ...rest,
+                }));
+
+            patchState(store, setEntities(systems, systemsEntity));
+            return store.getSystemsService().deleteSystem(systemId);
         },
         /**
          * Initialize groups for store.

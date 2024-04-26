@@ -19,7 +19,7 @@ import { NgForm } from '@angular/forms';
 import { Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable, Subscription, take, timer } from 'rxjs';
+import { firstValueFrom, Observable, Subscription, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -28,6 +28,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -378,6 +379,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         this.applyService.resetFormWatchers();
     }
 
+    groupsStore = inject(GroupsStore);
+
     initProcesses(): void {
         this.connectToCloudProcess = this.processService.createProcess(
             () => this.connectLocalToCloud(),
@@ -472,6 +475,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     return;
                 }
                 if (!this.environment.isLocal) {
+                    this.groupsStore.deleteSystem(this.system.id);
                     return this.router.navigate([redirect.authorised]).catch(error => {
                         console.error(error);
                     });
@@ -535,16 +539,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     updateAndGoToSystems = (): void => {
         this.systemsService.userDisconnectSystem = true;
-        this.systemsService
-            .forceUpdateSystems()
-            .pipe(take(1))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.router.navigate([redirect.authorised]).catch(error => {
-                        console.error(error);
-                    });
-                });
+        this.groupsStore.deleteSystem(this.system.id);
+        setTimeout(() => {
+            this.router.navigate([redirect.authorised]).catch(error => {
+                console.error(error);
             });
+        });
     };
 
     delete() {

@@ -63,16 +63,28 @@ export class NxSystemsService {
         ),
         distinctUntilChanged<Account>(isEqual),
     );
-    private updateSystems$ = new Subject<void>();
+    private updateSystems$ = new Subject<void | NxSystemInfo[]>();
     mergingSystems = new Set<string>();
     systemsSubject = merge(this.currentUser$, this.updateSystems$).pipe(
         withLatestFrom(this.currentUser$),
         filter(([_, email]) => environment.isLocal || !!email),
         // Ignore manual update signal if email has not been assigned
-        switchMap(() => (environment.isLocal ? Promise.resolve([]) : this._getSystems())),
-        map(systems => this.processSystems(systems)),
+        switchMap(([systems]) => {
+            if (environment.isLocal) {
+                return Promise.resolve([] as NxSystemInfo[]);
+            }
+            return Array.isArray(systems)
+                ? this._getSystems(undefined, 15_000).pipe(
+                      map(systems => this.processSystems(systems)),
+                      startWith(systems),
+                  )
+                : this._getSystems().pipe(map(systems => this.processSystems(systems)));
+        }),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
+
+    deleteSystem = (systemId: string): void =>
+        this.updateSystems$.next(this.systems$$().filter(system => system.id !== systemId));
 
     systems$$ = toSignal(this.systemsSubject, { initialValue: [] });
     systemInfoMap$$ = computed<Map<string, NxSystemInfo>>(() => {
@@ -189,12 +201,9 @@ export class NxSystemsService {
         }
     }
     // Dropped the decorator because it caused a memory leak.
-    private _getSystems(systemId?: string): Observable<System[]> {
-        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(
-            switchMap(() => {
-                // console.log(systemId);
-                return this.cloudApi.systems(systemId);
-            }),
+    private _getSystems(systemId?: string, initialDelay = 0): Observable<System[]> {
+        return combineLatest([timer(initialDelay, updateInterval), this.currentUser$]).pipe(
+            switchMap(() => this.cloudApi.systems(systemId)),
         );
     }
 
