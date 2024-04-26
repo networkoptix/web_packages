@@ -14,6 +14,7 @@ from partners.views import (
     ChannelPartnerServiceExternalIdViewset,
     ChannelPartnerUserViewSet,
     ChannelPartnerViewSet,
+    ChannelStructureViewSet,
     CloudSystemExternalIdViewset,
     CloudSystemNestedViewSet,
     CloudSystemViewSet,
@@ -62,6 +63,7 @@ channel_partners_router.register(rf'^channel_partners/(?P<channel_partner_id>{co
 channel_partners_router.register(rf'^organizations/(?P<channel_partner_id>{converters.UUIDConverter.regex})/external_ids', OrganizationrExternalIdViewset, basename='organization-externalid')
 channel_partners_router.register(rf'^services/(?P<channel_partner_id>{converters.UUIDConverter.regex})/external_ids', ChannelPartnerServiceExternalIdViewset, basename='channelpartnerservice-externalid')
 channel_partners_router.register(rf'^cloud_systems/(?P<channel_partner_id>{converters.UUIDConverter.regex})/external_ids', CloudSystemExternalIdViewset, basename='cloudsystem-externalid')
+channel_partners_router.register('channel_partners', ChannelStructureViewSet, basename='subchannels')
 
 channel_partners_routes = channel_partners_router.register('channel_partners', ChannelPartnerViewSet, basename='channelpartner')
 channel_partners_routes.register('users', ChannelPartnerUserViewSet, basename='channelpartners-user', parents_query_lookups=['channel_partner'])
