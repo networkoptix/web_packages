@@ -4,10 +4,20 @@ import md5 from 'md5';
 import { iif, Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+import staticLang from '@language_static';
+import { nxConfig } from '@services/nx-config/config';
+import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
 import { WINDOW } from '@services/window-provider';
+import { dirtyId } from '@utils/general';
 import { memoizeAsyncMedium, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
-import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
+import {
+    CloudResponse,
+    CloudUser,
+    CloudUserV0,
+    System,
+    WithFreshSession,
+} from '../../nx-cloud-api.types';
 import {
     BaseCloudServiceAPI,
     CreateApiFactory,
@@ -92,8 +102,37 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         );
     }
 
-    public getCloudUsers(systemId = ''): Observable<CloudUser[]> {
-        return this.get<CloudUser[]>(this.systemEndpoint(systemId, SystemIdEndpoint.users));
+    public getCloudUsers(systemId = '', usesGroups = false): Observable<CloudUser[]> {
+        return this.get<CloudUserV0[]>(
+            '/v0' + this.systemEndpoint(systemId, SystemIdEndpoint.users),
+        ).pipe(
+            map(users =>
+                users.map(user => {
+                    const roleIds = user.roleIds.map(roleId => dirtyId(roleId));
+                    const firstRole = roleIds?.[0] || '';
+                    const defaultGroup = DefaultUserGroups.find(group => group.id === firstRole);
+                    const defaultRole = nxConfig.accessRoles.predefinedRoles.find(
+                        ({ id }) => id === firstRole,
+                    );
+                    return {
+                        ...user,
+                        userRoleId: firstRole,
+                        accessRole: !firstRole
+                            ? 'none'
+                            : (usesGroups ? defaultGroup?.name : defaultRole?.name) ||
+                              staticLang.accessRoles.custom.label,
+                        permissions:
+                            user.permissions.join('|') ||
+                            (usesGroups ? defaultGroup?.permissions : defaultRole?.permissions) ||
+                            '',
+                        groupIds: roleIds,
+                        attributes: [user.readonly ? 'readonly' : '', user.hidden ? 'hidden' : '']
+                            .filter(Boolean)
+                            .join('|'),
+                    };
+                }),
+            ),
+        );
     }
 
     public sharing(systemId: string): Observable<CloudUser[]>;

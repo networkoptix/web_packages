@@ -263,6 +263,7 @@ export class UserWithGroupsManager extends UserManager {
          * or do I need to iterate through and form my own set of master permissions?
          */
         this.users = usersWithGroups
+            .filter(({ attributes }) => !attributes?.includes('hidden'))
             .map((user: NxUser) => {
                 // if local user has no fullName, do we need to add name as fullName?
                 // if (!user.fullName && user.name) {
@@ -284,8 +285,8 @@ export class UserWithGroupsManager extends UserManager {
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
                 user.hasCustomPermissions =
-                    user.permissions !== 'none' ||
-                    Object.keys(user.resourceAccessRights).length > 0;
+                    !['none', ''].includes(user.permissions) ||
+                    Object.keys(user?.resourceAccessRights || {}).length > 0;
 
                 if (
                     this.userId === user.id ||

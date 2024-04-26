@@ -25,6 +25,7 @@ export interface BaseRole {
 }
 
 export interface PredefinedLegacyRole extends BaseRole {
+    id: string;
     isOwner: boolean;
 }
 

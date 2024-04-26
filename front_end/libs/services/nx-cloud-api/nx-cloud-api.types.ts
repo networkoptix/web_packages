@@ -193,12 +193,28 @@ export interface OrgSystem extends BaseSystem {
 export type System = UserSystem | OrgSystem;
 
 /** Cached user when system cannot be reached */
+export interface CloudUserV0 {
+    accountEmail: string;
+    roleIds: string[];
+    permissions: string[];
+    isEnabled: boolean;
+    vmsUserId: string;
+    systemId: string;
+    accountId: string;
+    accountFullName: string;
+    usageFrequency: number;
+    lastLoginTime: string;
+    type: string;
+    hidden: boolean;
+    readonly: boolean;
+}
 export interface CloudUser {
     accessRole: string;
     accountEmail: string;
     accountFullName: string;
     accountId: string;
-    customPermissions: string;
+    attributes: string;
+    groupIds: string[];
     isEnabled: boolean;
     lastLoginTime: string;
     permissions: string;

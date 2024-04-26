@@ -107,9 +107,15 @@ const initializeAccessRights = (): AccessRightsForResource => ({
 
 export class PermissionManager {
     private readonly LANG = staticLang;
-    private user$$ = signal<SystemUser>(undefined);
+    private user$$ = signal<SystemUser | undefined>(undefined);
     private currentUserPermissions$$ = signal<string>('');
-    private type$$ = computed<string>(() => coerceUserType(this.user$$()));
+    private type$$ = computed<string>(() => {
+        const user = this.user$$();
+        if (!user) {
+            return '';
+        }
+        return coerceUserType(user);
+    });
     private permissionsFromGroups$$ = computed<Permissions>(() => {
         const user = this.user$$();
         const aggregatedPermissions = this.currentUserPermissions$$(); // New permissions for groups
@@ -171,7 +177,7 @@ export class PermissionManager {
         }
         return roles.find(role => 'id' in role && role.id === userRoleId);
     });
-    currentUser$$ = computed<CurrentUser>(() => {
+    currentUser$$ = computed<CurrentUser | undefined>(() => {
         const user = this.user$$();
         if (!user) {
             return;
@@ -181,7 +187,6 @@ export class PermissionManager {
         const isAdmin = this.isAdmin$$();
         const permissions = this.permissions$$();
         const accessRole = this.accessRole$$();
-        const permissionsString = user.permissions.split('|').sort().join('|');
         const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
 
         return {
@@ -193,10 +198,10 @@ export class PermissionManager {
             groupIds: (user && 'groupIds' in user && user?.groupIds) || [], // TODO: use this
             resourceAccessRights: accessRights || {}, // TODO: use this
             hasCustomPermissions:
-                permissionsString !== 'none' || Object.keys(accessRights).length > 0,
+                user.permissions !== 'none' || Object.keys(accessRights).length > 0,
         };
     });
-    ownerEmail$$ = signal<string>(undefined);
+    ownerEmail$$ = signal<string | undefined>(undefined);
     isAdmin$$ = computed<boolean>(() => {
         const user = this.user$$();
         const isOwner = this.isOwner$$();
@@ -218,7 +223,7 @@ export class PermissionManager {
     isLocal$$ = computed<boolean>(
         () => this.type$$() === UserType.local || this.isTemporaryLocal$$(),
     );
-    private checkIsOwner = (user: SystemUser, ownerEmail: string): boolean => {
+    private checkIsOwner = (user: SystemUser | undefined, ownerEmail: string): boolean => {
         if (!user) {
             return false;
         }
@@ -231,21 +236,24 @@ export class PermissionManager {
     isOwner$$ = computed<boolean>(() => {
         const user = this.user$$();
         const ownerEmail = this.ownerEmail$$();
-        return this.checkIsOwner(user, ownerEmail) || this.accessRole$$() === 'owner';
+        const accessRole = this.accessRole$$();
+        if (!user || !ownerEmail) {
+            return accessRole === 'owner';
+        }
+        return this.checkIsOwner(user, ownerEmail) || accessRole === 'owner';
     });
     accessRole$$ = computed<string>(() => {
         const user = this.user$$();
         const customRole = this.customRole$$();
         const groups = this.groups$$();
         const roles = this.roles$$();
-        const ownerEmail = this.ownerEmail$$();
+        const ownerEmail = this.ownerEmail$$() || '';
         const isOwner = this.checkIsOwner(user, ownerEmail);
 
         if (!user) {
             return '';
         }
         let accessRole = '';
-        const permissionsString = user.permissions.split('|').sort().join('|');
 
         if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds.length) {
             accessRole = (user as RestV3User).groupIds
@@ -258,7 +266,7 @@ export class PermissionManager {
                     role =>
                         'isOwner' in role &&
                         role.isOwner === isOwner &&
-                        role.permissions === permissionsString,
+                        role.permissions === user.permissions,
                 )?.name ||
                 customRole?.name ||
                 '';
@@ -331,7 +339,7 @@ export class PermissionManager {
         try {
             const user = await firstValueFrom(
                 this.cloudApi
-                    .users(this.systemId)
+                    .users(this.systemId, this.mediaserver.version > 5.1)
                     .pipe(
                         map(users =>
                             users.find(
@@ -341,17 +349,16 @@ export class PermissionManager {
                     ),
             );
             if (user) {
-                const { customPermissions, permissions } = user || {};
+                const { permissions } = user || {};
                 this.user$$.set({
                     ...user,
                     name: user.accountEmail,
                     email: user.accountEmail,
-                    permissions: permissions || customPermissions || '',
+                    permissions: (permissions || '').split('|').sort().join('|'),
                     isCloud: true,
                     isLdap: false,
                     id: user.vmsUserId,
                     fullName: user.accountFullName,
-                    groupIds: [],
                 });
             }
         } catch {
@@ -380,10 +387,11 @@ export class PermissionManager {
         }
         const user = await this.mediaserver.getCurrentUser(true);
         if (user) {
+            user.permissions = (user.permissions || '').split('|').sort().join('|');
             this.user$$.set(user);
             // Pre 6.0 systems use accessibleResources to effectively give the 'view' permission to the resourceId.
             // 6.0 has groups and resourceAccessRights so we skip this for them.
-            if ('accessibleResources' in user) {
+            if ('accessibleResources' in user && user.accessibleResources) {
                 const _resourceAccessRights: ResourceAccessRights = Object.fromEntries(
                     user.accessibleResources.map(id => [
                         cleanId(id),
@@ -415,15 +423,16 @@ export class PermissionManager {
                     this.userResourceAccessRights$$.set(_resourceAccessRights);
                 }
             });
+        } else {
+            this.mediaserver.getAllRoles().subscribe(roles => {
+                this.roles$$.set(
+                    roles.map(role => {
+                        role.permissions = role.permissions?.split('|').sort().join('|');
+                        return role;
+                    }),
+                );
+            });
         }
-        this.mediaserver.getAllRoles().subscribe(roles => {
-            this.roles$$.set(
-                roles.map(role => {
-                    role.permissions = role.permissions?.split('|').sort().join('|');
-                    return role;
-                }),
-            );
-        });
     }
 
     private convertAccessRightsStringToObj(accessRightsString: string): AccessRightsForResource {
@@ -443,9 +452,9 @@ export class PermissionManager {
      * @param injector - The injector to use for the context. This is required to convert the signal to an observable
      * @returns currentUser - The currentUser after permissions have been resolved
      */
-    public permissionsInitialized = (injector: Injector): Observable<CurrentUser> =>
+    public permissionsInitialized = (injector: Injector): Observable<CurrentUser | undefined> =>
         runInInjectionContext(injector, () => toObservable(this.currentUser$$)).pipe(
-            filter(user => user && Object.values(user.permissions).some(identity)),
+            filter(user => !!user && Object.values(user.permissions).some(identity)),
             timeout({ first: 10000, with: () => Promise.resolve(this.currentUser$$()) }),
             take(1),
         );
