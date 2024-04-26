@@ -7,24 +7,25 @@
             novalidate
         >
             <div class="form-group">
-                <nx-autocomplete-v2
+                <nx-autocomplete
                     name="mergeDropdown"
                     style="text-align: left"
                     #mergeDropdown="ngModel"
-                    [(ngModel)]="remoteSystem"
+                    [(ngModel)]="remoteSystemUrl"
                     (select)="setRemoteSystem($event)"
                     [placeholder]="'Existing System URL (https://host:port)'"
                     [noMatchesContent]="'No peers found'"
-                    requireSelection
+                    [validator]="urlRegex"
+                    required
                 >
-                    @for (item of items; track $index) {
+                    @for (peer of peers; track peer.url) {
                         <nx-autocomplete-item
-                            [name]="item.value"
-                            [value]="item"
-                            >{{ item.name }}</nx-autocomplete-item
+                            [value]="peer.url"
+                            [searchBy]="peer.name + ' ' + peer.url"
+                            >{{ peer.name }} - ({{ peer.url }})</nx-autocomplete-item
                         >
                     }
-                </nx-autocomplete-v2>
+                </nx-autocomplete>
             </div>
             <div class="form-group">
                 <input

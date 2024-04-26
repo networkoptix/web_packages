@@ -14,7 +14,6 @@ import {
     DATA_TYPE,
     MultiSelectItem,
 } from '@components/dropdowns/multi-select/multi-select.component.types';
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
 import { NxMultiSelectV2ItemComponent } from '@components/select-v2/items/multi-select-item/multi-select-item.component';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
@@ -40,7 +39,6 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
         NxMultiSelectDropdown,
         NxMatLikeGenericDropdownModule,
         NxGenericDropdownModule,
-        NxSearchableDropdown,
         NxCheckboxComponent,
         CdkFixedSizeVirtualScroll,
         CdkVirtualScrollViewport,
@@ -63,8 +61,6 @@ export class MultiSelectComponent {
     selectedDDItem: DropdownItem<string>;
     itemsDDSingleOther: DropdownItem<string>[];
     selectedDDItemOther: DropdownItem<string>;
-    itemsSearchableDDSingle: DropdownItem<string>[];
-    selectedSearchableDDItem: DropdownItem<string>;
     dropdownConfiguration: DropdownConfiguration;
     booleanConfigurationArray: string[];
     stringConfigurationArray: string[];
@@ -369,39 +365,6 @@ export class MultiSelectComponent {
             { value: '15824256', name: '16mp' },
         ];
 
-        // this.selectedDDItem = { value: '0', name: 'All' };
-        this.itemsSearchableDDSingle = [
-            {
-                value: 'test adawdq  dqwd qw dqw d qw d qw dqw d qw d qw d qw d qw dqw d qwd',
-                name: 'test adawdq  dqwd qw dqw d qw d qw dqw d qw d qw d qw d qw dqw d qwd',
-            },
-            { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
-            {
-                value: 'test1@test.com',
-                name: 'test1@test.com',
-                help: 'Test Test Test Test Test Test Test',
-            },
-            { value: 'test2@test.com', name: 'test2@test.com', help: 'Test 2' },
-            { value: 'test3@test.com', name: 'test3@test.com', help: 'Test 3' },
-            { value: 'test4@test.com', name: 'test4@test.com', help: 'Test 4' },
-            { value: 'test5@test.com', name: 'test5@test.com', help: 'Test 5' },
-            { value: 'test6@test.com', name: 'test6@test.com', help: 'Test 6' },
-            { value: 'test7@test.com', name: 'test7@test.com', help: 'Test 7' },
-            { value: 'test8@test.com', name: 'test8@test.com', help: 'Test 8' },
-            { value: 'test9@test.com', name: 'test9@test.com', help: 'Test 9' },
-            { value: 'test10@test.com', name: 'test10@test.com', help: 'Test 10' },
-            { value: 'test11@test.com', name: 'test11@test.com', help: 'Test 11' },
-            { value: 'test12@test.com', name: 'test12@test.com', help: 'Test 12' },
-            { value: 'test13@test.com', name: 'test13@test.com', help: 'Test 13' },
-            { value: 'test14@test.com', name: 'test14@test.com', help: 'Test 14' },
-            { value: 'test15@test.com', name: 'test15@test.com', help: 'Test 15' },
-            { value: 'test16@test.com', name: 'test16@test.com', help: 'Test 16' },
-            { value: 'test17@test.com', name: 'test17@test.com', help: 'Test 17' },
-            { value: 'test18@test.com', name: 'test18@test.com', help: 'Test 18' },
-            { value: 'test19@test.com', name: 'test19@test.com', help: 'Test 19' },
-            { value: 'test20@test.com', name: 'test20@test.com', help: 'Test 20' },
-        ];
-
         this.mode = [
             { name: 'Main', value: 'qwerty2' },
             { name: 'Backup', value: 'qwerty3' },
@@ -449,11 +412,6 @@ export class MultiSelectComponent {
     ddSingleModelChangedOther(result: DropdownItem<string>): void {
         // ensure 'change' will be triggered
         this.selectedDDItemOther = { ...result };
-    }
-
-    ddSearchableModelChanged(result: DropdownItem<string>): void {
-        // ensure 'change' will be triggered
-        this.selectedSearchableDDItem = { ...result };
     }
 
     protected readonly DATA_TYPE = DATA_TYPE;

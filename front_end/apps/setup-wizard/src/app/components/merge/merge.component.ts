@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
-import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
-import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
@@ -18,17 +17,16 @@ import { WizardStateService } from '../../services/wizard-state.service';
         CommonModule,
         FormsModule,
         TranslateModule,
-        NxAutocompleteV2Component,
+        NxAutocompleteComponent,
         NxAutoCompleteItemComponent,
     ],
     templateUrl: 'merge.component.html',
     styleUrls: ['merge.component.scss'],
 })
-export class MergeComponent implements OnInit, AfterViewInit {
-    item: Item;
-    items: Item[];
-    remoteSystem: string;
-    urlRegex: string;
+export class MergeComponent implements AfterViewInit {
+    peers = this.wizardService.peers;
+    remoteSystemUrl = '';
+    urlRegex = new RegExp(this.wizardService.getURLRegex());
 
     @ViewChild('mergeForm', { static: false }) mergeForm: NgForm;
 
@@ -40,8 +38,8 @@ export class MergeComponent implements OnInit, AfterViewInit {
         this.wizardService.setupConfig.remotePassword = password;
     }
 
-    setRemoteSystem(item: Item): void {
-        this.wizardService.setupConfig.remoteSystem = item;
+    setRemoteSystem(url: string | undefined): void {
+        this.wizardService.setupConfig.remoteSystemUrl = url ?? '';
     }
 
     // User is hardcoded to "admin" ... for now
@@ -54,17 +52,6 @@ export class MergeComponent implements OnInit, AfterViewInit {
     // }
 
     constructor(private wizardService: WizardStateService) {}
-
-    ngOnInit(): void {
-        this.remoteSystem = this.wizardService?.setupConfig?.remoteSystem.value;
-        this.urlRegex = this.wizardService.getURLRegex();
-
-        this.items = this.wizardService.peers.map(peer => ({
-            name: `${peer.name} - (${peer.ip})`,
-            value: peer.url,
-            help: '',
-        }));
-    }
 
     ngAfterViewInit(): void {
         this.mergeForm.statusChanges.pipe(untilDestroyed(this)).subscribe((result: string) => {

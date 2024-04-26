@@ -56,7 +56,7 @@
             class="org-select-container"
             [ngStyle]="{ display: !toOrg$$() ? 'none' : undefined }"
         >
-            <nx-autocomplete-v2
+            <nx-autocomplete
                 class="fs-mask"
                 #orgAutocomplete="ngModel"
                 name="orgAutocomplete"
@@ -85,7 +85,7 @@
                         </div>
                     </nx-autocomplete-item>
                 }
-            </nx-autocomplete-v2>
+            </nx-autocomplete>
             <div *ngIf="orgAutocomplete.touched && orgAutocomplete.errors">
                 <span
                     *ngIf="orgAutocomplete.errors.required"
@@ -108,7 +108,7 @@
             [ngStyle]="{ display: !toUser$$() ? 'none' : undefined }"
         >
             @if (users$$().length) {
-                <nx-autocomplete-v2
+                <nx-autocomplete
                     class="fs-mask"
                     #emailAutocomplete="ngModel"
                     name="emailAutocomplete"
@@ -124,7 +124,7 @@
                             >{{ user.email }}</nx-autocomplete-item
                         >
                     }
-                </nx-autocomplete-v2>
+                </nx-autocomplete>
                 <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
                     <span
                         *ngIf="emailAutocomplete.errors.required"
@@ -157,7 +157,7 @@
                 translate
                 >To User</label
             >
-            <nx-autocomplete-v2
+            <nx-autocomplete
                 class="fs-mask"
                 #emailAutocomplete="ngModel"
                 name="emailAutocomplete"
@@ -173,7 +173,7 @@
                         >{{ user.email }}</nx-autocomplete-item
                     >
                 }
-            </nx-autocomplete-v2>
+            </nx-autocomplete>
             <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
                 <span
                     *ngIf="emailAutocomplete.errors.required"

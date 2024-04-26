@@ -241,22 +241,6 @@
         </nx-select>
     </div>
     <div class="col-4 p-4">
-        <h4>Searchable select</h4>
-        <nx-searchable-select
-            name="ddSearchableSingle"
-            [items]="itemsSearchableDDSingle"
-            [ngModel]="selectedSearchableDDItem"
-            (ngModelChange)="ddSearchableModelChanged($event)"
-            [placeholder]="'Email' | translate"
-            [freeText]="true"
-        >
-        </nx-searchable-select>
-    </div>
-    <div class="col-4 p-4">
-        <h4>Searchable selected</h4>
-        {{ selectedSearchableDDItem | json }}
-    </div>
-    <div class="col-4 p-4">
         <h4>Basic Searchable</h4>
         <nx-basic-search-input formControlName="search"></nx-basic-search-input>
         <cdk-virtual-scroll-viewport

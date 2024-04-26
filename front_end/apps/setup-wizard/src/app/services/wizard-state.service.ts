@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, Observable, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import staticLang from '@language_static';
 import { Setting, SettingsConfig } from '@services/nx-config/base-config';
@@ -86,7 +85,7 @@ interface SetupConfig {
     localPasswordConfirmation: string;
     localLoginDataState: string;
 
-    remoteSystem: Item;
+    remoteSystemUrl: string;
     remoteLogin: string;
     remotePassword: string;
     mergeDataState: string;
@@ -168,10 +167,7 @@ export class WizardStateService {
         localPasswordConfirmation: '',
         localLoginDataState: FORM_STATE.INVALID,
 
-        remoteSystem: {
-            name: '',
-            value: '',
-        },
+        remoteSystemUrl: '',
         remoteLogin: 'admin',
         remotePassword: '',
         mergeDataState: FORM_STATE.INVALID,
@@ -651,7 +647,7 @@ export class WizardStateService {
             return url.toString();
         };
 
-        const systemUrl = normalizeUrl(this.setupConfig.remoteSystem.value);
+        const systemUrl = normalizeUrl(this.setupConfig.remoteSystemUrl);
         this.server
             .mergeSystems(systemUrl, undefined, false, this.setupConfig.remotePassword, true)
             .pipe(untilDestroyed(this))

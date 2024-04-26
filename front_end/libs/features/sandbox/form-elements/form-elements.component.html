@@ -138,21 +138,6 @@
                 ></nx-radio>
             </div>
 
-            <div class="form-group">
-                <nx-searchable-select
-                    name="ddSearchableSingle"
-                    componentId="ddSearchableSingle"
-                    [form]="testForm"
-                    [items]="itemsSearchableDDSingle"
-                    [ngModel]="selectedSearchableDDItem"
-                    (ngModelChange)="ddSearchableModelChanged($event)"
-                    [placeholder]="'Email' | translate"
-                    [noMatchMsg]="'No matches found' | translate"
-                    [freeText]="true"
-                >
-                </nx-searchable-select>
-            </div>
-
             <button
                 type="submit"
                 class="btn btn-default"

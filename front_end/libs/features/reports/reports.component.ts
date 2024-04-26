@@ -9,15 +9,20 @@ import {
     selectChannelPartners,
     selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
-import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
-import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+interface Item {
+    name: string;
+    value: string;
+    prefix?: string;
+}
 
 @Component({
     selector: 'nx-reports',
@@ -29,7 +34,7 @@ import type {
         FormsModule,
         TranslateModule,
         RouterModule,
-        NxAutocompleteV2Component,
+        NxAutocompleteComponent,
         NxAutoCompleteItemComponent,
     ],
     standalone: true,
@@ -39,14 +44,15 @@ export class NxReportsComponent implements OnInit {
     channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     organizations$$ = this.store.selectSignal<Organization[]>(selectOrganizations);
 
-    dropdownItems$$ = computed<SearchableDropdownItem[]>(() => {
+    dropdownItems$$ = computed<Item[]>(() => {
         const channelPartners = this.channelPartners$$();
         const organizations = this.organizations$$();
         const items = [
             ...channelPartners.map(({ id, name }) => ({ name, value: `channel-partner/${id}` })),
-            ...organizations.map(({ id, name: orgName }) => ({
-                name: '[org] ' + orgName,
+            ...organizations.map(({ id, name }) => ({
+                name,
                 value: `organization/${id}`,
+                prefix: '[org] ',
             })),
         ];
         return items;
@@ -62,8 +68,8 @@ export class NxReportsComponent implements OnInit {
         this.appStateService.ready = true;
     }
 
-    selectItem(selectedItem: SearchableDropdownItem): void {
-        if (selectedItem?.value) {
+    selectItem(selectedItem: Item | undefined): void {
+        if (selectedItem) {
             const urlSegments = this.router.url.split('/');
             const [entityType, entityId] = selectedItem.value.split('/');
             this.router.navigate([

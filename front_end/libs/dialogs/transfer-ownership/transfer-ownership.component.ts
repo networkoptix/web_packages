@@ -9,8 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
-import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -56,7 +56,7 @@ import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.
         NxRadioComponent,
         NxPreLoaderComponent,
         NxAddSvgSrcDirective,
-        NxAutocompleteV2Component,
+        NxAutocompleteComponent,
         NxAutoCompleteItemComponent,
         NxAsyncActionButtonComponent,
     ],

@@ -15,7 +15,7 @@
     <div class="pt-3">Search tags: {{ filter.tags | json }}</div>
 </div>
 
-<h3>NxAutocompleteV2</h3>
+<h3>NxAutocomplete</h3>
 <div
     class="autocomplete"
     [ngStyle]="{
@@ -24,7 +24,7 @@
     }"
 >
     <div>
-        <nx-autocomplete-v2
+        <nx-autocomplete
             #elementsModel="ngModel"
             [(ngModel)]="elementsSearch"
             (select)="selectedElement = $event"
@@ -41,7 +41,7 @@
                     <span class="subtext">{{ element.atomic_number }} {{ element.symbol }}</span>
                 </nx-autocomplete-item>
             }
-        </nx-autocomplete-v2>
+        </nx-autocomplete>
         <ng-template #noMatches>No matches found for {{ elementsSearch }}</ng-template>
         <div
             class="message-container"
@@ -58,7 +58,7 @@
     </div>
 
     <div>
-        <nx-autocomplete-v2
+        <nx-autocomplete
             #statesModel="ngModel"
             [ngModel]="statesSearch()"
             (ngModelChange)="statesSearch.set($event)"
@@ -85,7 +85,7 @@
                     ></nx-search-highlight>
                 </nx-autocomplete-item>
             }
-        </nx-autocomplete-v2>
+        </nx-autocomplete>
         <div class="message-container">
             @if (!statesModel.touched) {
                 Untouched
@@ -98,7 +98,7 @@
     </div>
 
     <div>
-        <nx-autocomplete-v2
+        <nx-autocomplete
             #editorModel="ngModel"
             [(ngModel)]="editorSearch"
             placeholder="Editor"
@@ -114,7 +114,7 @@
                     ></svg-icon>
                 </div>
             </nx-autocomplete-item>
-        </nx-autocomplete-v2>
+        </nx-autocomplete>
         <div class="message-container">
             @if (!editorModel.touched) {
                 Untouched
@@ -125,19 +125,19 @@
     </div>
 
     <div>
-        <nx-autocomplete-v2
+        <nx-autocomplete
             [(ngModel)]="responseSearch"
             placeholder="Message"
         >
             @for (response of responses; track response) {
                 <nx-autocomplete-item [value]="response">{{ response }}</nx-autocomplete-item>
             }
-        </nx-autocomplete-v2>
+        </nx-autocomplete>
         <div class="message-container">Value optional</div>
     </div>
 
     <div>
-        <nx-autocomplete-v2
+        <nx-autocomplete
             [(ngModel)]="reactiveSearch"
             placeholder="Reactive data"
             requireSelection
@@ -145,17 +145,57 @@
             @for (data of reactiveData$ | async; track data) {
                 <nx-autocomplete-item [value]="data">{{ data }}</nx-autocomplete-item>
             }
-        </nx-autocomplete-v2>
+        </nx-autocomplete>
         <div class="message-container">Options reset every 5 seconds</div>
     </div>
 
-    <nx-autocomplete-v2
+    <div>
+        <nx-autocomplete
+            #iceCreamModel="ngModel"
+            [(ngModel)]="iceCreamSearch"
+            [validator]="onlyStrawberry"
+            placeholder="Guess the flavor of the day"
+        >
+            @for (
+                data of [
+                    'Vanilla',
+                    'Chocolate',
+                    'Rocky Road',
+                    'Strawberry',
+                    'Mint Chocolate Chip',
+                    'Mango'
+                ];
+                track data
+            ) {
+                <nx-autocomplete-item [value]="data">{{ data }}</nx-autocomplete-item>
+            }
+        </nx-autocomplete>
+        <div class="message-container">
+            {{ iceCreamModel.errors?.invalid ? iceCreamModel.errors!.invalid : 'Correct!' }}
+        </div>
+    </div>
+
+    <div>
+        <nx-autocomplete
+            #hexModel="ngModel"
+            [(ngModel)]="hexSearch"
+            [validator]="hexRegex"
+            placeholder="Hex value"
+        >
+            @for (data of ['000000', 'ffffff']; track data) {
+                <nx-autocomplete-item [value]="data">{{ data }}</nx-autocomplete-item>
+            }
+        </nx-autocomplete>
+        <div class="message-container">Error: {{ hexModel.errors?.pattern | json }}</div>
+    </div>
+
+    <nx-autocomplete
         [ngModel]="'Readonly'"
         readOnly
-    ></nx-autocomplete-v2>
+    ></nx-autocomplete>
 
-    <nx-autocomplete-v2
+    <nx-autocomplete
         [ngModel]="'Disabled'"
         disabled
-    ></nx-autocomplete-v2>
+    ></nx-autocomplete>
 </div>
