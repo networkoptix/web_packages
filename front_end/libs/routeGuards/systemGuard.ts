@@ -142,9 +142,12 @@ export const SystemGuard: CanActivateFn = (
             await currSystem.update();
         }
 
-        menusService.currentUser = await firstValueFrom(
+        const currentUser = await firstValueFrom(
             currSystem.permissionManager.permissionsInitialized(injector),
         );
+        if (currentUser) {
+            menusService.currentUser = currentUser;
+        }
         menusService.updateActiveSystemMenu(currSystem);
 
         if (currentRoute) {

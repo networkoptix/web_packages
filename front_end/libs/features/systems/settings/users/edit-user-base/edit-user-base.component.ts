@@ -73,7 +73,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     protected isMe$$ = signal(false);
     protected canBeEdited$$ = computed(() => {
         this.system.permissionManager.currentUser$$();
-        return this.selectedUser$$()?.canBeEdited || false;
+        return (this.system.isOnline && this.selectedUser$$()?.canBeEdited) || false;
     });
     protected hasCustomPermissions$$ = signal(false);
 

@@ -982,12 +982,12 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      */
     getUsersCachedInCloud(): Promise<CloudUserCompat[]> {
         this.isAvailable = false;
-        return firstValueFrom(this.cloudApi.users(this.id))
+        return firstValueFrom(this.cloudApi.users(this.id, this.version > 5.1))
             .then(data => {
                 return data.map<SystemUser>(user => ({
                     ...user,
                     isCloud: true,
-                    permissions: this.userManager.normalizePermissionString(user.customPermissions),
+                    permissions: this.userManager.normalizePermissionString(user.permissions),
                     email: user.accountEmail,
                     id: user.accountId,
                     fullName: user.accountFullName,

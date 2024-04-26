@@ -495,8 +495,8 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncLong
-    users(systemId: string) {
-        return this.cloudDbApi.getCloudUsers(systemId);
+    users(systemId: string, usesGroups = false) {
+        return this.cloudDbApi.getCloudUsers(systemId, usesGroups);
     }
 
     removeUser(systemId: string, userEmail: string, password?: string) {

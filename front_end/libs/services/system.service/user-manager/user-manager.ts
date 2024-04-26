@@ -105,8 +105,8 @@ export class UserManager {
         const roles = this.accessRoles;
         let role = roles.find(role => {
             // Owner flag has top priority and overrides everything
-            if ('isOwner' in role && role.isOwner) {
-                return this.isOwner(user);
+            if ('isOwner' in role && role.isOwner && this.isOwner(user)) {
+                return true;
             }
             if ('id' in role && role.id !== ZERO_ID) {
                 const userRoleId = 'userRoleId' in user && user.userRoleId;

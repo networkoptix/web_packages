@@ -278,7 +278,12 @@ export class EmailNotificationsComponent {
         this.selectedSystem$
             .pipe(
                 filter(systemId => !!systemId),
-                switchMap(({ value: systemId }) => this.cloudApi.users(systemId)),
+                switchMap(({ value: systemId }) => {
+                    const useGroups =
+                        (this.systemsService.systems.find(({ id }) => id === systemId)?.version ??
+                            0) > 5.1;
+                    return this.cloudApi.users(systemId, useGroups);
+                }),
                 shareReplay({
                     bufferSize: 1,
                     refCount: true,

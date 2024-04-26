@@ -109,7 +109,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                     // Unknown session token
                     if (err.errorId === 'cantProcessRequest') {
                         this.accessToken = '';
-                    } else if (err.error.errorString === `Resource '${userId}' is not found`) {
+                    } else if (err.error?.errorString === `Resource '${userId}' is not found`) {
                         // Set the error string here to avoid making another API call for userId at Login
                         err.error.errorString = 'user is disabled';
                         return Promise.reject(err.error);

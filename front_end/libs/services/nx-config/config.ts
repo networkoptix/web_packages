@@ -232,35 +232,41 @@ export const nxConfig: IConfig = {
         },
         predefinedRoles: [
             {
+                id: '{00000000-0000-0000-0000-100000000000}',
                 isOwner: true,
                 name: 'Owner',
                 permissions:
                     'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                id: '{00000000-0000-0000-0000-100000000001}',
                 isOwner: false,
                 name: 'Administrator',
                 permissions:
                     'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                id: '{00000000-0000-0000-0000-100000000002}',
                 isOwner: false,
                 name: 'Advanced Viewer',
                 permissions:
                     'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                id: '{00000000-0000-0000-0000-100000000003}',
                 isOwner: false,
                 name: 'Viewer',
                 permissions:
                     'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission',
             },
             {
+                id: '{00000000-0000-0000-0000-100000000004}',
                 isOwner: false,
                 name: 'Live Viewer',
                 permissions: 'GlobalAccessAllMediaPermission',
             },
             {
+                id: '',
                 isOwner: false,
                 name: 'Custom',
                 permissions: 'NoPermission',
