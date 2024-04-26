@@ -999,7 +999,7 @@
             "recordingEnabled": "Recording will continue",
             "recordingDisabled": "Recording \u200B | will be stopped | \u200B immediately",
             "directAccess": "User has access as { role }. Permissions for the selected folder will be overwritten",
-            "parentAccess": "User already has accesss to a parent folder",
+            "parentAccess": "User already has access to a parent folder",
             "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }",
             "selfAdd": "You cannot add yourself",
             "systemAlreadyInFolder": "System is already in that folder",
@@ -1151,7 +1151,7 @@
         "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
-        "unexpectedError": "An unexpected error occured, please refresh the page and try again",
+        "unexpectedError": "An unexpected error occurred, please refresh the page and try again",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists \u2013 please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "wrongAuthCode": "Code is expired or incorrect",
         "wrongCode": "Account is already activated or confirmation code is incorrect",
@@ -1710,7 +1710,7 @@
         "unavailable": "unavailable"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the beginning of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
