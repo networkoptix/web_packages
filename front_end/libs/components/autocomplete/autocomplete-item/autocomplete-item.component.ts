@@ -11,8 +11,8 @@ import {
 
 import { environment } from '@environments/environment';
 
-import { AutocompleteV2InjectionToken } from '../autocomplete-v2-injection-token';
-import { NxAutocompleteV2Component } from '../autocomplete-v2.component';
+import { NxAutocompleteInjectionToken } from '../autocomplete-injection-token';
+import { NxAutocompleteComponent } from '../autocomplete.component';
 
 @Component({
     selector: 'nx-autocomplete-item',
@@ -64,6 +64,6 @@ export class NxAutoCompleteItemComponent<T> {
     }
 
     constructor(
-        @Inject(AutocompleteV2InjectionToken) private autocomplete: NxAutocompleteV2Component<T>,
+        @Inject(NxAutocompleteInjectionToken) private autocomplete: NxAutocompleteComponent<T>,
     ) {}
 }

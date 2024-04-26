@@ -7,8 +7,8 @@ import { range } from 'lodash-es';
 import { timer, map } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { NxAutoCompleteItemComponent } from '@components/autocomplete-v2/autocomplete-item/autocomplete-item.component';
-import { NxAutocompleteV2Component } from '@components/autocomplete-v2/autocomplete-v2.component';
+import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';
+import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { highlightRegex } from '@components/search-highlight/highlight-regex';
@@ -27,7 +27,7 @@ import { elements } from './elements';
         FormsModule,
         AngularSvgIconModule,
         NxSearchComponent,
-        NxAutocompleteV2Component,
+        NxAutocompleteComponent,
         NxAutoCompleteItemComponent,
         NxSearchHighlightComponent,
     ],
@@ -62,6 +62,14 @@ export class SearchComponent {
         takeUntilDestroyed(this.destroyRef),
         map(_ => range(0, 5).map(_ => uuid().slice(0, 6))),
     );
+
+    iceCreamSearch = '';
+    onlyStrawberry(value: string): string | undefined {
+        return /^strawberry$/i.test(value) ? undefined : 'Wrong';
+    }
+
+    hexSearch = '';
+    hexRegex = /^[a-f0-9]{6}$/i;
 
     constructor(private menuService: NxMenuService) {}
 

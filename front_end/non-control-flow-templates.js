@@ -22,7 +22,6 @@ module.exports = [
     "libs/components/advanced-filter/advanced-filter.component.html",
     "libs/components/apply/apply.component.html",
     "libs/components/applyV2/apply.component.html",
-    "libs/components/autocomplete/autocomplete.component.html",
     "libs/components/carousel/carousel.component.html",
     "libs/components/checkbox/checkbox.component.html",
     "libs/components/console-table/console-table.component.html",

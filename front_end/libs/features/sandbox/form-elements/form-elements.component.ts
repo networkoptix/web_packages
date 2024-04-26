@@ -4,12 +4,10 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
-import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
 import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
+import type { SearchableDropdownItem } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component.types';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
@@ -35,7 +33,6 @@ import {
         FormsModule,
         TranslateModule,
         NxCheckboxComponent,
-        NxSearchableDropdown,
         NxMatLikeInputComponent,
         NxMatLikePasswordComponent,
         NxMatLikeTypeAheadDropdown,
@@ -61,18 +58,16 @@ export class FormElementsComponent {
     aspectRatioOptions = ASPECT_RATIOS;
     selectedRotation: number = 0;
     rotations = ROTATION_OPTIONS;
-    itemsSearchableDDSingle: DropdownItem<string>[];
-    selectedSearchableDDItem: DropdownItem<string>;
 
     user = {
         firstName: '',
     };
     newPasswordForUser: string;
 
-    item: Item;
-    items: Item[];
+    item: SearchableDropdownItem;
+    items: SearchableDropdownItem[];
     urlRegex: string;
-    _remoteSystem: Item;
+    _remoteSystem: SearchableDropdownItem;
     _sliderValue: number = 0;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
@@ -96,34 +91,6 @@ export class FormElementsComponent {
 
         this.wholeText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 
-        this.itemsSearchableDDSingle = [
-            { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
-            {
-                value: 'test1@test.com',
-                name: 'test1@test.com',
-                help: 'Test Test Test Test Test Test Test',
-            },
-            { value: 'test2@test.com', name: 'test2@test.com', help: 'Test 2' },
-            { value: 'test3@test.com', name: 'test3@test.com', help: 'Test 3' },
-            { value: 'test4@test.com', name: 'test4@test.com', help: 'Test 4' },
-            { value: 'test5@test.com', name: 'test5@test.com', help: 'Test 5' },
-            { value: 'test6@test.com', name: 'test6@test.com', help: 'Test 6' },
-            { value: 'test7@test.com', name: 'test7@test.com', help: 'Test 7' },
-            { value: 'test8@test.com', name: 'test8@test.com', help: 'Test 8' },
-            { value: 'test9@test.com', name: 'test9@test.com', help: 'Test 9' },
-            { value: 'test10@test.com', name: 'test10@test.com', help: 'Test 10' },
-            { value: 'test11@test.com', name: 'test11@test.com', help: 'Test 11' },
-            { value: 'test12@test.com', name: 'test12@test.com', help: 'Test 12' },
-            { value: 'test13@test.com', name: 'test13@test.com', help: 'Test 13' },
-            { value: 'test14@test.com', name: 'test14@test.com', help: 'Test 14' },
-            { value: 'test15@test.com', name: 'test15@test.com', help: 'Test 15' },
-            { value: 'test16@test.com', name: 'test16@test.com', help: 'Test 16' },
-            { value: 'test17@test.com', name: 'test17@test.com', help: 'Test 17' },
-            { value: 'test18@test.com', name: 'test18@test.com', help: 'Test 18' },
-            { value: 'test19@test.com', name: 'test19@test.com', help: 'Test 19' },
-            { value: 'test20@test.com', name: 'test20@test.com', help: 'Test 20' },
-        ];
-
         this.urlRegex = simpleURLRegex;
         this.items = [
             {
@@ -134,11 +101,11 @@ export class FormElementsComponent {
         ];
     }
 
-    get remoteSystem(): Item {
+    get remoteSystem(): SearchableDropdownItem {
         return this._remoteSystem;
     }
 
-    set remoteSystem(item: Item) {
+    set remoteSystem(item: SearchableDropdownItem) {
         this._remoteSystem = item;
     }
 
@@ -148,11 +115,6 @@ export class FormElementsComponent {
 
     get sliderValue(): number {
         return this._sliderValue;
-    }
-
-    ddSearchableModelChanged(result: DropdownItem<string>): void {
-        // ensure 'change' will be triggered
-        this.selectedSearchableDDItem = { ...result };
     }
 
     private touchForm(form: NgForm): void {

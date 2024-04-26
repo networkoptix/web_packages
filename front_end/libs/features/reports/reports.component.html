@@ -1,5 +1,5 @@
 <div class="nx-reports-sidebar">
-    <nx-autocomplete-v2
+    <nx-autocomplete
         class="fs-mask w-100 mx-2"
         [(ngModel)]="search"
         (select)="selectItem($event)"
@@ -10,9 +10,9 @@
             <nx-autocomplete-item
                 [name]="item.name"
                 [value]="item"
-                >{{ item.name }}</nx-autocomplete-item
+                >{{ item.prefix ?? '' }}{{ item.name }}</nx-autocomplete-item
             >
         }
-    </nx-autocomplete-v2>
+    </nx-autocomplete>
 </div>
 <router-outlet></router-outlet>
