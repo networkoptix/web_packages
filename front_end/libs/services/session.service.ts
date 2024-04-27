@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -16,15 +16,12 @@ export class NxSessionService {
     loginStateSubject: BehaviorSubject<string>;
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
-    private session: LocalStorageService;
 
     constructor(
-        private localStorageService: LocalStorageService,
+        private session: SessionStorageService,
         private nxCache: NxSwCacheService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.session = this.localStorageService;
-
         this.email$ = new BehaviorSubject<string>(this.session.retrieve('email'));
         this.loginStateSubject = new BehaviorSubject<string>(this.loginState || '');
         this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
