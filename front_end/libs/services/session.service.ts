@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { LocalStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -15,7 +15,7 @@ import { NxSwCacheService } from './sw-cache.service';
 export class NxSessionService {
     readonly LOGIN_STATE = LOGIN_STATE;
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
-    private session: LocalStorageService = inject(LocalStorageService);
+    private session: SessionStorageService = inject(SessionStorageService);
     private systemService = inject(NxSystemService);
 
     private state$$ = signal<LOGIN_STATE>(LOGIN_STATE.UNAUTHORIZED);
