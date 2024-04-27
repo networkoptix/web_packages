@@ -1,7 +1,9 @@
 import type {
+    CloudSystemLight,
     GroupItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxOrgSystemInfo, NxSystemInfo } from '@services/systems.service.types';
 import { alphaNumericSort } from '@utils/general';
 
 import { GroupFlatItem, GroupFlatMap } from './groups.types';
@@ -39,4 +41,53 @@ export const flattenGroups = (groups: GroupItem[], groupMap: GroupFlatMap = {}):
         }
     }
     return groupMap;
+};
+
+export const mapToSystemItem = (
+    cloudSystems: CloudSystemLight[],
+    systemInfoMap: Map<string, NxSystemInfo>,
+): SystemItem[] => {
+    const systemItems: SystemItem[] = [];
+    for (const system of cloudSystems) {
+        const systemInfo = systemInfoMap.get(system.systemId) || ({} as NxSystemInfo);
+        const { systemId, groupId, effectiveState } = system;
+        // API sometimes forgets the system name on CloudSystem, patch for now
+        // https://networkoptix.atlassian.net/browse/CLOUD-13056?focusedCommentId=194015
+        const {
+            system2faEnabled = false,
+            stateOfHealth = '',
+            name = system.name || '',
+            organizationId = system.organization,
+        } = systemInfo as NxOrgSystemInfo;
+        systemItems.push({
+            systemId,
+            organizationId,
+            groupId,
+            name,
+            system2faEnabled,
+            stateOfHealth,
+            effectiveState,
+        });
+    }
+    return systemItems.sort(alphaNumericSort(window.navigator.language, group => group.name));
+};
+
+export const findItem = (
+    items: GroupItem[],
+    id: string | null,
+    remove = false,
+): GroupItem | undefined => {
+    for (let index = 0; index < items.length; index++) {
+        const item = items[index];
+        const found = item.id === id;
+
+        if (found) {
+            return remove ? items.splice(index, 1)[0] : item;
+        } else if (item.children.length) {
+            const foundChild = findItem(item.children, id, remove);
+            if (foundChild) {
+                return foundChild;
+            }
+        }
+    }
 };

@@ -1,4 +1,4 @@
-import { InjectionToken, computed, inject } from '@angular/core';
+import { InjectionToken, Injector, computed, inject, runInInjectionContext } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     signalStore,
@@ -46,10 +46,16 @@ import {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo, NxOrgSystemInfo } from '@services/systems.service.types';
-import { alphaNumericSort } from '@utils/general';
 
-import { flattenGroups, generatePath, isGroupItem, isSystemItem, sortGroups } from './groups-utils';
+import {
+    findItem,
+    flattenGroups,
+    generatePath,
+    isGroupItem,
+    isSystemItem,
+    mapToSystemItem,
+    sortGroups,
+} from './groups-utils';
 import type { SystemsByOrgOrGroup, Undo, GroupFlatItem, RibbonContextState } from './groups.types';
 
 const initialState = {
@@ -65,22 +71,6 @@ const systemsEntity = { collection: 'systems' } as const;
 const GROUPS_STATE = new InjectionToken<typeof initialState>('GroupsState', {
     factory: () => initialState,
 });
-
-const findItem = (items: GroupItem[], id: string | null, remove = false): GroupItem | undefined => {
-    for (let index = 0; index < items.length; index++) {
-        const item = items[index];
-        const found = item.id === id;
-
-        if (found) {
-            return remove ? items.splice(index, 1)[0] : item;
-        } else if (item.children.length) {
-            const foundChild = findItem(item.children, id, remove);
-            if (foundChild) {
-                return foundChild;
-            }
-        }
-    }
-};
 
 export const GroupsStore = signalStore(
     { providedIn: 'root' },
@@ -196,10 +186,13 @@ export const GroupsStore = signalStore(
 
         const hideRibbon = (): void => patchState(store, { ribbonContext: { showForSeconds: 0 } });
 
-        const showRibbon = (ribbonContext: RibbonContextState | Translatable): Undo => {
+        const showRibbon = (
+            ribbonContext: RibbonContextState | Translatable,
+            showForSeconds = 5,
+        ): Undo => {
             if (isTranslatable(ribbonContext)) {
                 ribbonContext = {
-                    showForSeconds: 5,
+                    showForSeconds,
                     context: {
                         message: ribbonContext,
                         actions: [],
@@ -360,149 +353,157 @@ export const GroupsStore = signalStore(
         return methods;
     }),
     // 3. Define data persistence methods
-    withMethods((store, channelPartnerService = inject(NxChannelPartnersService)) => ({
-        toggleOpenState: (id: string) => {
-            const openGroups = store.openGroupsEntityMap();
-            const open = !openGroups[id]?.open;
-            patchState(store, setEntity({ id, open }, { collection: 'openGroups' }));
-        },
-        moveItem: (
-            movedItem: DraggableItem,
-            targetItem: GroupItem | { id: null } = { id: null },
-        ) => {
-            const { draggableType, errorMsg } = staticLang.systemGroups;
-            const type = {
-                value: isGroupItem(movedItem) ? draggableType.folder : draggableType.system,
-            };
-            if (
-                isGroupItem(movedItem) &&
-                movedItem.children &&
-                findItem(movedItem.children, targetItem.id)
-            ) {
-                const value = errorMsg.childInFolder;
-                store.showRibbon({ value, params: { type } });
-                return from(Promise.reject(value));
-            }
+    withMethods(
+        (
+            store,
+            channelPartnerService = inject(NxChannelPartnersService),
+            injector = inject(Injector),
+        ) => ({
+            toggleOpenState: (id: string) => {
+                const openGroups = store.openGroupsEntityMap();
+                const open = !openGroups[id]?.open;
+                patchState(store, setEntity({ id, open }, { collection: 'openGroups' }));
+            },
+            moveItem: (
+                movedItem: DraggableItem,
+                targetItem: GroupItem | { id: null } = { id: null },
+            ) => {
+                const { draggableType, errorMsg } = staticLang.systemGroups;
+                const type = {
+                    value: isGroupItem(movedItem) ? draggableType.folder : draggableType.system,
+                };
+                if (
+                    isGroupItem(movedItem) &&
+                    movedItem.children &&
+                    findItem(movedItem.children, targetItem.id)
+                ) {
+                    const value = errorMsg.childInFolder;
+                    store.showRibbon({ value, params: { type } });
+                    return from(Promise.reject(value));
+                }
 
-            const targetGroupId = store.getTargetGroupId(movedItem);
+                const targetGroupId = store.getTargetGroupId(movedItem);
 
-            if (targetGroupId === targetItem.id) {
-                const value = targetGroupId ? errorMsg.alreadyInFolder : errorMsg.alreadyInRoot;
-                store.showRibbon({ value, params: { type } });
-                return from(Promise.reject(value));
-            }
+                if (targetGroupId === targetItem.id) {
+                    const value = targetGroupId ? errorMsg.alreadyInFolder : errorMsg.alreadyInRoot;
+                    store.showRibbon({ value, params: { type } });
+                    return from(Promise.reject(value));
+                }
 
-            const undo = store.moveItemWithUndo(movedItem, targetItem);
-            const persist$ = isGroupItem(movedItem)
-                ? channelPartnerService.patchGroup(movedItem.id, { parentId: targetItem.id })
-                : channelPartnerService.updateSystemGroup(movedItem.systemId, {
-                      groupId: targetItem.id,
-                  });
-            return (persist$ as Observable<GroupItem | CloudSystemLight>).pipe(
-                catchError((_, caught) => {
-                    undo();
-                    return caught;
-                }),
-            );
-        },
-        deleteSystem: (systemId: string) => {
-            const systems = store
-                .systemsEntities()
-                .filter(({ systems }) => systems.includes(systemId))
-                .map(({ systems, cloudSystems, ...rest }) => ({
-                    systems: systems.filter(id => id !== systemId),
-                    cloudSystems: cloudSystems.filter(({ systemId: id }) => id !== systemId),
-                    ...rest,
-                }));
+                const undo = store.moveItemWithUndo(movedItem, targetItem);
+                const persist$ = isGroupItem(movedItem)
+                    ? channelPartnerService.patchGroup(movedItem.id, { parentId: targetItem.id })
+                    : channelPartnerService.updateSystemGroup(movedItem.systemId, {
+                          groupId: targetItem.id,
+                      });
+                return (persist$ as Observable<GroupItem | CloudSystemLight>).pipe(
+                    catchError((_, caught) => {
+                        undo();
+                        return caught;
+                    }),
+                );
+            },
+            deleteSystem: (systemId: string) => {
+                const systems = store
+                    .systemsEntities()
+                    .filter(({ systems }) => systems.includes(systemId))
+                    .map(({ systems, cloudSystems, ...rest }) => ({
+                        systems: systems.filter(id => id !== systemId),
+                        cloudSystems: cloudSystems.filter(({ systemId: id }) => id !== systemId),
+                        ...rest,
+                    }));
 
-            patchState(store, setEntities(systems, systemsEntity));
-            return store.getSystemsService().deleteSystem(systemId);
-        },
-        /**
-         * Initialize groups for store.
-         *
-         * @param orgId - OrganizationId to initialize groups for store
-         * @returns GroupItem[] - Array of groups
-         */
-        initializeGroups: (orgId: string) => {
-            const undo = store.initializeGroupsWithUndo();
-            return channelPartnerService.getGroupsStructure(orgId).pipe(
-                tap(groups =>
-                    patchState(
-                        store,
-                        removeAllEntities(groupsEntity),
-                        setEntities(groups as GroupItem[], groupsEntity),
-                    ),
-                ),
-                catchError((_, caught) => {
-                    undo();
-                    return caught;
-                }),
-                repeat({
-                    delay: 30 * 1000,
-                }),
-            );
-        },
-        initializeSystems: (orgId: string, groupId?: string) => {
-            const orgSystems = store.systemsEntityMap()[orgId];
-            return (
-                groupId && orgSystems
-                    ? channelPartnerService.getGroup(groupId).pipe(
-                          map(({ systems, cloudSystems }) => [
-                              {
-                                  id: groupId!,
-                                  systems,
-                                  cloudSystems,
-                              },
-                          ]),
-                      )
-                    : channelPartnerService.getUserSystems(orgId, orgSystems && !groupId).pipe(
-                          map(cloudSystems => {
-                              const grouped = groupBy(cloudSystems, 'groupId');
-                              const mapped = Object.entries(grouped).map(
-                                  ([groupId, cloudSystems]) => ({
-                                      id: groupId === 'null' ? orgId : groupId,
-                                      cloudSystems,
-                                      systems: cloudSystems.map(({ systemId }) => systemId),
-                                  }),
-                              );
-                              return mapped;
-                          }),
-                      )
-            ).pipe(
-                tap(orgOrGroupSystems =>
-                    patchState(store, setEntities(orgOrGroupSystems, systemsEntity)),
-                ),
-            );
-        },
-        initializeOpenGroupsSync: () =>
-            channelPartnerService.paramStateHandler.state$.pipe(
-                map(({ queryParams: { openGroups } }) => openGroups || []),
-                take(1),
-                switchMap(openGroups => {
-                    patchState(
-                        store,
-                        setEntities(
-                            openGroups.map(id => ({
-                                id,
-                                open: true,
-                            })),
-                            { collection: 'openGroups' },
+                patchState(store, setEntities(systems, systemsEntity));
+                return store.getSystemsService().deleteSystem(systemId);
+            },
+            /**
+             * Initialize groups for store.
+             *
+             * @param orgId - OrganizationId to initialize groups for store
+             * @returns GroupItem[] - Array of groups
+             */
+            initializeGroups: (orgId: string) => {
+                const undo = store.initializeGroupsWithUndo();
+                return channelPartnerService.getGroupsStructure(orgId).pipe(
+                    tap(groups =>
+                        patchState(
+                            store,
+                            removeAllEntities(groupsEntity),
+                            setEntities(groups as GroupItem[], groupsEntity),
                         ),
-                    );
-                    return toObservable(store.openGroupsEntities);
-                }),
-                skip(1),
-                tap(openGroupsState => {
-                    const openGroups = openGroupsState.flatMap(({ id, open }) =>
-                        open ? [id] : [],
-                    );
-                    channelPartnerService.paramStateHandler.state$$.set({
-                        queryParams: { openGroups },
-                    });
-                }),
-            ),
-    })),
+                    ),
+                    catchError((_, caught) => {
+                        undo();
+                        return caught;
+                    }),
+                    repeat({
+                        delay: 30 * 1000,
+                    }),
+                );
+            },
+            initializeSystems: (orgId: string, groupId?: string) => {
+                const orgSystems = store.systemsEntityMap()[orgId];
+                return (
+                    groupId
+                        ? channelPartnerService.getGroup(groupId).pipe(
+                              map(({ systems, cloudSystems }) => [
+                                  {
+                                      id: groupId!,
+                                      systems,
+                                      cloudSystems,
+                                  },
+                              ]),
+                          )
+                        : channelPartnerService.getUserSystems(orgId, !!orgSystems).pipe(
+                              map(cloudSystems => {
+                                  const grouped = groupBy(cloudSystems, 'groupId');
+                                  const mapped = Object.entries(grouped).map(
+                                      ([groupId, cloudSystems]) => ({
+                                          id: groupId === 'null' ? orgId : groupId,
+                                          cloudSystems,
+                                          systems: cloudSystems.map(({ systemId }) => systemId),
+                                      }),
+                                  );
+                                  return mapped;
+                              }),
+                          )
+                ).pipe(
+                    tap(orgOrGroupSystems =>
+                        patchState(store, setEntities(orgOrGroupSystems, systemsEntity)),
+                    ),
+                );
+            },
+            initializeOpenGroupsSync: () =>
+                channelPartnerService.paramStateHandler.state$.pipe(
+                    map(({ queryParams: { openGroups } }) => openGroups || []),
+                    take(1),
+                    switchMap(openGroups => {
+                        patchState(
+                            store,
+                            setEntities(
+                                openGroups.map(id => ({
+                                    id,
+                                    open: true,
+                                })),
+                                { collection: 'openGroups' },
+                            ),
+                        );
+                        return runInInjectionContext(injector, () =>
+                            toObservable(store.openGroupsEntities),
+                        );
+                    }),
+                    skip(1),
+                    tap(openGroupsState => {
+                        const openGroups = openGroupsState.flatMap(({ id, open }) =>
+                            open ? [id] : [],
+                        );
+                        channelPartnerService.paramStateHandler.state$$.set({
+                            queryParams: { openGroups },
+                        });
+                    }),
+                ),
+        }),
+    ),
     // 4. Define side effects
     withHooks({
         onInit: store => {
@@ -592,21 +593,6 @@ export const GroupsStore = signalStore(
 
             const sortedGroups$$ = computed(() => sortGroups(store.groupsEntities()));
 
-            // const groupStateAdapter$$ = computed((): GroupsState => {
-            //     const groups = processGroups(sortedGroups$$());
-            //     const openGroups = Object.fromEntries(
-            //         store.openGroupsEntities().map(({ id, open }) => [id, open]),
-            //     );
-            //     const systems = store.systemsEntities() as unknown as SystemItem[];
-            //     const currentGroupId = store.currentGroupId();
-            //     return {
-            //         groups,
-            //         openGroups,
-            //         systems,
-            //         currentGroupId,
-            //     };
-            // });
-
             const currentGroups$$ = computed(() => {
                 const groups = sortedGroups$$();
                 const currentGroup = currentGroupId$$();
@@ -627,13 +613,13 @@ export const GroupsStore = signalStore(
             });
 
             function* getOpenGroups(
-                groups: { id: string; parentId: string }[],
+                groups: { id: string; parentId: string | null }[],
                 currentGroupId: string,
             ): Generator<string> {
                 while (currentGroupId) {
                     yield currentGroupId;
                     const group = groups.find(group => group.id === currentGroupId);
-                    if (group) {
+                    if (group && group.parentId) {
                         currentGroupId = group.parentId;
                     } else {
                         return;
@@ -649,11 +635,11 @@ export const GroupsStore = signalStore(
                 const currentGroup = currentGroupId$$();
                 const params = params$$();
 
-                const organizationId = params!.organizationId;
+                const organizationId = params!.organizationId!;
 
                 const fromOpen = currentGroup.isRoot
                     ? { [currentGroup.id]: true }
-                    : Object.fromEntries(
+                    : Object.fromEntries<boolean>(
                           [...getOpenGroups(groups, currentGroup.id), organizationId].map(id => [
                               id,
                               true,
@@ -666,38 +652,9 @@ export const GroupsStore = signalStore(
                 };
             });
 
-            const mapToSystemItem = (cloudSystems: CloudSystemLight[]): SystemItem[] => {
-                const systemInfoMap = systemsService.systemInfoMap$$();
-                const systemItems: SystemItem[] = [];
-                for (const system of cloudSystems) {
-                    const systemInfo = systemInfoMap.get(system.systemId) || ({} as NxSystemInfo);
-                    const { systemId, groupId, effectiveState } = system;
-                    // API sometimes forgets the system name on CloudSystem, patch for now
-                    // https://networkoptix.atlassian.net/browse/CLOUD-13056?focusedCommentId=194015
-                    const {
-                        system2faEnabled = false,
-                        stateOfHealth = '',
-                        name = system.name,
-                        organizationId = system.organization,
-                    } = systemInfo as NxOrgSystemInfo;
-                    systemItems.push({
-                        systemId,
-                        organizationId,
-                        groupId,
-                        name,
-                        system2faEnabled,
-                        stateOfHealth,
-                        effectiveState,
-                    });
-                }
-                return systemItems.sort(
-                    alphaNumericSort(window.navigator.language, group => group.name),
-                );
-            };
-
             const allOrgSystems$$ = computed(() => {
                 const systems = store.systemsEntities().flatMap(({ cloudSystems }) => cloudSystems);
-                return mapToSystemItem(systems);
+                return mapToSystemItem(systems, systemsService.systemInfoMap$$());
             });
 
             const currentSystems$$ = computed<SystemItem[]>(() => {
@@ -707,8 +664,8 @@ export const GroupsStore = signalStore(
                 const currentGroup = systems[id];
                 const cloudSystems = currentGroup?.cloudSystems || [];
 
-                return mapToSystemItem(cloudSystems).filter(({ groupId }) =>
-                    isRoot ? groupId === null : groupId === id,
+                return mapToSystemItem(cloudSystems, systemsService.systemInfoMap$$()).filter(
+                    ({ groupId }) => (isRoot ? groupId === null : groupId === id),
                 );
             });
 
@@ -760,7 +717,6 @@ export const GroupsStore = signalStore(
 
             return {
                 sortedGroups$$,
-                // groupStateAdapter$$,
                 currentGroupId$$,
                 currentGroups$$,
                 currentSystems$$,
@@ -776,3 +732,5 @@ export const GroupsStore = signalStore(
         },
     ),
 );
+
+export type GroupsStoreType = typeof GroupsStore;

@@ -280,7 +280,7 @@ export interface Group {
     name: string;
     /** @deprecated Use `cloudSystems` property instead */
     systems: string[];
-    cloudSystems: CloudSystem[];
+    cloudSystems: CloudSystemLight[];
     /** Only direct desendants */
     children: { id: string; name: string }[];
     parentId: string | null;
