@@ -3,7 +3,7 @@ export interface FormattedServiceDetailRecord {
     type: string;
     usedBy: string;
     changed: string;
-    activeChannels: number;
+    channels: number;
     monthlyRate: number;
     fractionalUsage: number;
 }

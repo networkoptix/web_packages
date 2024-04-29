@@ -17,6 +17,9 @@
                     title="{{ head.value }}"
                     >{{ head.value }}</span
                 >
+                @if (head.tooltip) {
+                    <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint>
+                }
             </div>
         }
     </ng-template>
