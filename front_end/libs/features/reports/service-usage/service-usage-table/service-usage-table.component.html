@@ -20,6 +20,9 @@
                     title="{{ head.value }}"
                     >{{ head.value }}</span
                 >
+                @if (head.tooltip) {
+                    <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint>
+                }
             </div>
         }
     </ng-template>
@@ -31,7 +34,14 @@
             {{ row.serviceName }}
         </div>
         <div>
-            {{ row.usedBy }}
+            @if (row.usedByPartnerOrSystemCount > 0) {
+                {{ row.usedByPartnerOrSystemCount }}
+                <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+            }
+            @if (row.usedByOrgCount > 0) {
+                {{ row.usedByOrgCount }}
+                <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+            }
         </div>
         <div>
             {{ row.channels }}
