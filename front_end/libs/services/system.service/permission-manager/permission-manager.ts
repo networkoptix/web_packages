@@ -223,7 +223,10 @@ export class PermissionManager {
     isLocal$$ = computed<boolean>(
         () => this.type$$() === UserType.local || this.isTemporaryLocal$$(),
     );
-    private checkIsOwner = (user: SystemUser | undefined, ownerEmail: string): boolean => {
+    private checkIsOwner = (
+        user: SystemUser | undefined,
+        ownerEmail: string | undefined,
+    ): boolean => {
         if (!user) {
             return false;
         }
@@ -237,10 +240,13 @@ export class PermissionManager {
         const user = this.user$$();
         const ownerEmail = this.ownerEmail$$();
         const accessRole = this.accessRole$$();
-        if (!user || !ownerEmail) {
-            return accessRole === 'owner';
+        if (!user && !ownerEmail) {
+            return false;
         }
-        return this.checkIsOwner(user, ownerEmail) || accessRole === 'owner';
+        return (
+            this.checkIsOwner(user, ownerEmail) ||
+            ['owner', DefaultUserGroups[0].name].includes(accessRole) // DefaultUserGroups[0] is the administrator group.
+        );
     });
     accessRole$$ = computed<string>(() => {
         const user = this.user$$();
