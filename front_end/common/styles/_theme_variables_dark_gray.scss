@@ -95,6 +95,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --tooltip-shadow-color : #000000;  //$dark_gray_1;
     --tooltip-bg : #606060; //$dark_gray_13;
     --tooltip-color : #E8E8E8; //$light_gray_4;
+    --tooltip-contrast-bg: #{$additional_light2};
+    --tooltip-contrast-color : #{$dark9};
 
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$dark_gray_9};
@@ -669,7 +671,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --system-card-offline-color: var(--light_gray_4);
     --system-card-border-color: var(--dark_gray_10);
     --system-card-owner-color: var(--dark_gray_16);
-    
+
     --group-system-card-color: var(---dark_gray_15);
 
     --card-subtext-color: var(--dark_gray_4);

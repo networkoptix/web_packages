@@ -509,11 +509,11 @@ function compass8ToAngularPosition(direction: Compass8Shorthand): {
             return { x: 'start', y: 'top' };
     }
 }
-function originPosition(direction: Compass8Shorthand): OriginConnectionPosition {
+export function cdkOriginPosition(direction: Compass8Shorthand): OriginConnectionPosition {
     const { x, y } = compass8ToAngularPosition(direction);
     return { originX: x, originY: y };
 }
-function overlayPosition(direction: Compass8Shorthand): OverlayConnectionPosition {
+export function cdkOverlayPosition(direction: Compass8Shorthand): OverlayConnectionPosition {
     const { x, y } = compass8ToAngularPosition(direction);
     return { overlayX: x, overlayY: y };
 }
@@ -526,8 +526,8 @@ export function connectedPosition(
 ): ConnectedPosition {
     const { originPoint, overlayPoint, ...other } = position;
     return {
-        ...originPosition(originPoint),
-        ...overlayPosition(overlayPoint),
+        ...cdkOriginPosition(originPoint),
+        ...cdkOverlayPosition(overlayPoint),
         ...other,
     };
 }

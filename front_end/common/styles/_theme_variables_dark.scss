@@ -106,6 +106,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --tooltip-bg : #3F545F; //$dark13;
     --tooltip-color : #E1E7EA; //$light4;
     --tooltip-box-shadow-color: rgba(73, 98, 111, 0.4);
+    --tooltip-contrast-bg: #{$additional_light2};
+    --tooltip-contrast-color : #{$dark9};
 
     --popover-shadow-color : none;
     --popover-bg           : #3F545F; //$dark13;

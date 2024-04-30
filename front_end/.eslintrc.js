@@ -445,13 +445,6 @@ module.exports = {
         since old directives (*ngIf, *ngFor, etc.) cannot detect constant conditions while
         control flow can. New components should be only using control flow. */
         {
-            files: ['*.ts'],
-            excludedFiles: ['*.component.ts'],
-            rules: {
-                'nx/signal-naming-convention': 'error',
-            },
-        },
-        {
             files: nonControlFlowTemplates.map(t => t.replace('.html', '.ts')),
             rules: {
                 'nx/signal-naming-convention': 'error',

@@ -1,0 +1,191 @@
+h2:not(:first-of-type) {
+    margin-top: 1rem;
+}
+
+.gray-square {
+    height: 20px;
+    width: 20px;
+    background: gray;
+    border: 1px solid black;
+}
+
+button:focus {
+    background-color: var(--brand-core) !important;
+    color: white !important;
+}
+
+.appearance {
+    display: flex;
+    gap: 2rem;
+}
+
+.position-examples {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 0 4rem 0;
+
+    .direction-box {
+        text-align: center;
+        width: 4rem;
+        height: 1.5rem;
+        border: 1px solid gray;
+    }
+
+    .vertical {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        width: 16rem;
+        gap: 100px;
+        flex-grow: 0;
+
+        .pair {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+
+            &:first-child {
+                justify-content: center;
+                gap: 15px;
+            }
+
+            &:not(:first-child) {
+                align-self: stretch;
+                justify-content: space-between;
+            }
+
+            &:last-child {
+                margin-top: 20px;
+            }
+        }
+    }
+
+    .horizontal {
+        flex-grow: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 70px;
+
+        .left, .right {
+            width: 19rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .left {
+            align-items: flex-end;
+        }
+        .right {
+            align-items: flex-start;
+        }
+    }
+}
+
+.push-example {
+    border: 1px solid gray;
+    overflow: hidden;
+    position: relative;
+    height: 4rem;
+
+    &__button {
+        position: absolute;
+        left: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .gray-square {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.triggers-container {
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+
+    padding: 2rem 0 3rem 0;
+}
+.hover-example {
+    padding: 0.5rem;
+    border: 1px solid gray;
+    &:hover {
+        background-color: rgba(var(--brand-core--rgb), 0.1)
+    }
+}
+
+.delays-container {
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+
+    padding: 2rem 0 4rem 0;
+
+    .speedup {
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .autohide-example {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+}
+
+.styling {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.styling-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding-top: 2.5rem;
+
+    .rgb-container {
+        width: 18rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 30px;
+    }
+
+    .tooltip-elem-examples {
+        width: 18rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 40px;
+    }
+}
+
+.red {
+    color: darkred;
+    font-weight: bold;
+}
+.green {
+    color: forestgreen;
+    font-style: italic;
+}
+.blue {
+    color: midnightblue;
+    text-decoration: underline;
+}
+
+.first-letter {
+    font-size: 1.25rem;
+}

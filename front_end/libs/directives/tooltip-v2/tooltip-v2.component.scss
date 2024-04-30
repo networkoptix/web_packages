@@ -1,0 +1,99 @@
+:host {
+    position: relative;
+}
+
+.nx-tooltip {
+    &__arrow {
+        position: absolute;
+        border-width: var(--arrow-height);
+        border-style: solid;
+        border-color: var(--tooltip-bg);
+
+        &--high-contrast {
+            border-color: var(--tooltip-contrast-bg);
+        }
+    }
+
+    &__body {
+        padding: 0.25rem 0.5rem;
+        color: var(--tooltip-color);
+        background-color: var(--tooltip-bg);
+        border-radius: var(--border-radius);
+        max-width: 14rem; // About 40 characters
+        min-height: calc(2 * (var(--arrow-height) + var(--arrow-offset)));
+        // The minimum height for the start/end arrows to not cross the center
+        user-select: none;
+
+        &--high-contrast {
+            background-color: var(--tooltip-contrast-bg);
+            color: var(--tooltip-contrast-color);
+        }
+    }
+}
+
+@mixin arrow($arrow-dir, $orthogonal1, $orthogonal2) {
+    .nx-tooltip__arrow {
+        #{$arrow-dir}: 0;
+        border-#{$orthogonal1}-color: transparent;
+        border-#{$orthogonal2}-color: transparent;
+        border-#{$arrow-dir}-color: transparent;
+        border-#{$arrow-dir}-width: 0;
+    }
+
+    .nx-tooltip__body {
+        margin-#{$arrow-dir}: calc(var(--arrow-height) - 1px);
+        // Sometimes there's a line when flush so overlap a bit to avoid
+    }
+}
+
+:host-context(.tooltip-origin-connect-end.tooltip-overlay-vertical-center),
+:host-context(.tooltip-origin-connect-start.tooltip-overlay-vertical-center) {
+    .nx-tooltip__arrow {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+:host-context(.tooltip-origin-connect-end.tooltip-overlay-vertical-top),
+:host-context(.tooltip-origin-connect-start.tooltip-overlay-vertical-top) {
+    .nx-tooltip__arrow {
+        top: var(--arrow-offset);
+    }
+}
+:host-context(.tooltip-origin-connect-end.tooltip-overlay-vertical-bottom),
+:host-context(.tooltip-origin-connect-start.tooltip-overlay-vertical-bottom) {
+    .nx-tooltip__arrow {
+        bottom: var(--arrow-offset);
+    }
+}
+:host-context(.tooltip-origin-connect-end) {
+    @include arrow(left, top, bottom);
+}
+:host-context(.tooltip-origin-connect-start) {
+    @include arrow(right, top, bottom);
+}
+
+:host-context(.tooltip-origin-connect-top.tooltip-overlay-horizontal-center),
+:host-context(.tooltip-origin-connect-bottom.tooltip-overlay-horizontal-center) {
+    .nx-tooltip__arrow {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+:host-context(.tooltip-origin-connect-top.tooltip-overlay-horizontal-start),
+:host-context(.tooltip-origin-connect-bottom.tooltip-overlay-horizontal-start) {
+    .nx-tooltip__arrow {
+        left: var(--arrow-offset);
+    }
+}
+:host-context(.tooltip-origin-connect-top.tooltip-overlay-horizontal-end),
+:host-context(.tooltip-origin-connect-bottom.tooltip-overlay-horizontal-end) {
+    .nx-tooltip__arrow {
+        right: var(--arrow-offset);
+    }
+}
+:host-context(.tooltip-origin-connect-top) {
+    @include arrow(bottom, left, right);
+}
+:host-context(.tooltip-origin-connect-bottom) {
+    @include arrow(top, left, right);
+}

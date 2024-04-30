@@ -28,6 +28,7 @@ import { NxSignalsComponent } from './signals/signals.component';
 import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { ToasterComponent } from './toaster/toaster.component';
+import { NxTooltipSandboxComponent } from './tooltip/tooltip-sandbox.component';
 import { ValidationComponent } from './validation/validation.component';
 
 const appRoutes: Routes = [
@@ -112,6 +113,10 @@ const appRoutes: Routes = [
             {
                 path: 'tags',
                 component: TagsComponent,
+            },
+            {
+                path: 'tooltip',
+                component: NxTooltipSandboxComponent,
             },
             {
                 path: 'ngrx-demo',
