@@ -1,8 +1,11 @@
 import uuid
+from dataclasses import dataclass
 from hashlib import sha256
 from typing import (
-    List,
+    Dict,
+    Iterable,
     Optional,
+    Set,
     Tuple,
 )
 
@@ -48,6 +51,39 @@ logger = structlog.getLogger(__name__)
 
 CREDENTIALS_REMOVED_PERMANENTLY = 'credentialsRemovedPermanently'
 
+
+@dataclass
+class IntrospectionResult:
+    email: Optional[str]
+    introspected_systems_roles: Dict[uuid.UUID, Set[uuid.UUID]]
+
+    def get_email(self) -> str:
+        return self.email.lower() if self.email else ''
+
+    def __post_init__(self):
+        self.introspected_systems_roles = {
+            cast_uuid(system_id): {cast_uuid(role) for role in roles}
+            for system_id, roles in self.introspected_systems_roles.items()
+        }
+
+    def has_roles_in_system(self, email: str, system_id: uuid.UUID, expected_roles: Iterable[uuid]) -> bool:
+        return bool(
+                email
+                and email.lower() == self.get_email().lower()
+                and system_id in self.introspected_systems_roles
+                and set(expected_roles).intersection(self.introspected_systems_roles[system_id])
+        )
+
+    @classmethod
+    def none(cls) -> 'IntrospectionResult':
+        return cls(email=None, introspected_systems_roles={})
+
+    @classmethod
+    def from_cdb_response(cls, cdb_response: dict) -> 'IntrospectionResult':
+        return cls(email=cdb_response.get('username'),
+                   introspected_systems_roles=cdb_response.get('system_role_ids', {}))
+
+
 class TokenCache:
     timeout: int = 600
 
@@ -89,14 +125,14 @@ class TokenCache:
         )
 
     @classmethod
-    def get_token_system(cls, token: str, system_id: str | uuid.UUID) -> Tuple[str, List[str] | None] | None:
+    def get_system_introspection(cls, token: str, system_id: str | uuid.UUID) -> IntrospectionResult:
         return cls.cache().get(cls.token_system_cache_key(token, system_id))
 
     @classmethod
-    def set_token_system(cls, token: str, system_id: str | uuid.UUID,
-                         email: str, roles_ids: List[str | uuid.UUID], expires_in: int = None):
+    def set_system_introspection(cls, token: str, system_id: str | uuid.UUID,
+                                 introspection: IntrospectionResult, expires_in: int = None):
         cls.cache().set(
-            cls.token_system_cache_key(token, system_id=system_id), (email, roles_ids),
+            cls.token_system_cache_key(token, system_id=system_id), introspection,
             timeout=cls.get_timeout(expires_in)
         )
 
@@ -353,28 +389,6 @@ class NxCloudOauthTokenAuthentication(TokenAuthentication):
             raise exceptions.AuthenticationFailed('Invalid or expired token')
 
 
-class NxCloudOauthIntrospectAuthentication(NxCloudOauthTokenAuthentication):
-
-    def get_user_from_token(self, token, request=None):
-        # TODO. get rid off this authentication class when JWT is fully tested.
-        kwargs = request.parser_context.get('kwargs', {})
-        system_id = (kwargs.get('system_id') or kwargs.get('id'))
-        try:
-            # check JWT token, is it is not authorized do not proceed
-            if authenticate_jwt_token(token) is None:
-                return None
-        except FallbackToRegToken as ex:
-            logger.info("Fallback to regular token authentication",
-                        exception=str(ex), reason=ex.reason)
-        email, system_id, system_roles_ids = CdbInternalAuthentication.introspect_with_system(
-            token, request.cloud_host.hostname, system_id
-        )
-        if email:
-            request.introspected_system_id = system_id
-            request.introspected_system_roles_ids = system_roles_ids
-        return email
-
-
 class NxCloudOauthTokenAuthenticationExtension(OpenApiAuthenticationExtension):
     target_class = 'partners.authentication.NxCloudOauthTokenAuthentication'
     name = 'Cloud Oauth Token'
@@ -429,12 +443,18 @@ class CdbInternalAuthentication:
         return CdbInternalAuthentication.auth_header(request).lower().startswith('bearer')
 
     @staticmethod
+    def get_bearer_token(request) -> Optional[str]:
+        if not CdbInternalAuthentication.is_token_auth(request):
+            return None
+        return CdbInternalAuthentication.auth_header(request)[6:].strip()
+
+    @staticmethod
     def introspect_with_system(
             token, cloud_host_name, system_id
-    ) -> Tuple[None, None, None] | Tuple[str, uuid.UUID, List[uuid.UUID]]:
-        cached = TokenCache.get_token_system(token, system_id)
+    ) -> IntrospectionResult:
+        cached = TokenCache.get_system_introspection(token, system_id)
         if cached:
-            return cached[0], cast_uuid(system_id), cached[1]
+            return cached
         cdb_client = NxCloudApiClientFactory.get_sync_client(
             host=cloud_host_name,
             access_token=token,
@@ -446,9 +466,23 @@ class CdbInternalAuthentication:
         if response.status_code == 200:
             introspection = response.json()
             if introspection.get('active') is True and (email := introspection.get('username')):
-                system_role_ids = introspection.get('system_role_ids', {}).get(str(system_id), [])
-                system_role_ids = [cast_uuid(system_role_id) for system_role_id in system_role_ids]
-                TokenCache.set_token_system(token, system_id, email, system_role_ids)
+                introspection_result = IntrospectionResult.from_cdb_response(introspection)
+                TokenCache.set_system_introspection(token, system_id, introspection_result)
                 TokenCache.set_token(token, email)
-                return email, system_id, system_role_ids
-        return None, None, None
+                return introspection_result
+        return IntrospectionResult.none()
+
+    @staticmethod
+    def has_vms_roles(request, system_id: uuid.UUID, roles: Iterable[uuid.UUID]) -> Optional[bool]:
+        if not (token := CdbInternalAuthentication.get_bearer_token(request)):
+            return None
+        system_introspection = CdbInternalAuthentication.introspect_with_system(
+            token=token, cloud_host_name=request.cloud_host.hostname, system_id=system_id
+        )
+        is_allowed = system_introspection.has_roles_in_system(
+            email=request.user.email,
+            system_id=system_id,
+            expected_roles=roles
+        )
+        request.system_introspection = system_introspection
+        return is_allowed

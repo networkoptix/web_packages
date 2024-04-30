@@ -14,10 +14,9 @@ from nx_jwt.jwt_auth import (
     FallbackToRegToken,
     get_jwk_client,
 )
-from rest_framework import exceptions
 
 from partners.authentication import (
-    NxCloudOauthIntrospectAuthentication,
+    CdbInternalAuthentication,
     TokenCache,
     authenticate_jwt_token,
     authenticate_regular_token,
@@ -210,123 +209,6 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     assert system_name is None
 
 
-
-class TestNxCloudOauthIntrospectAuthentication:
-
-    @pytest.fixture(autouse=True)
-    def setup(self, httpx_mock, cloud_test_host, channel_partner_factory, organization_factory,
-              cloud_user_factory, system_factory, arf):
-        self.url = f'https://{cloud_test_host.hostname}/cdb/oauth2/introspect'
-        httpx_mock.reset(False)
-
-        cp = channel_partner_factory()
-        organization = organization_factory(channel_partner=cp)
-        self.cloud_system = system_factory(organization=organization)
-        self.cloud_user = cloud_user_factory()
-        self.request = arf.get('/')
-        self.request.parser_context = {'kwargs': {'system_id': str(self.cloud_system.system_id)}}
-        self.token = 'HERE_MIGHT_BE_TOKEN'
-
-    def test_success(self, httpx_mock):
-        data = {
-            "active": True,
-            "username": self.cloud_user.email,
-            "token_type": "bearer",
-            "system_role_ids": {
-                f"{self.cloud_system.system_id}": [str(VmsRoles.ADMINISTRATOR)]
-            }
-        }
-        httpx_mock.add_response(url=self.url, json=data, status_code=200)
-        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        assert user == self.cloud_user
-        assert token == self.token
-        assert self.request.introspected_system_id == self.cloud_system.system_id
-        assert self.request.introspected_system_roles_ids == [VmsRoles.ADMINISTRATOR]
-        assert TokenCache.get_token(self.token) == self.cloud_user.email
-        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
-                (self.cloud_user.email, [VmsRoles.ADMINISTRATOR]))
-
-    def test_success_using_cached_data(self, httpx_mock):
-        data = {
-            "active": True,
-            "username": self.cloud_user.email,
-            "token_type": "bearer",
-            "system_role_ids": {
-                f"{self.cloud_system.system_id}": [str(VmsRoles.ADMINISTRATOR)]
-            }
-        }
-        httpx_mock.add_response(url=self.url, json=data, status_code=200)
-        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        assert user == self.cloud_user
-        assert token == self.token
-        assert self.request.introspected_system_id == self.cloud_system.system_id
-        assert self.request.introspected_system_roles_ids == [VmsRoles.ADMINISTRATOR]
-        assert TokenCache.get_token(self.token) == self.cloud_user.email
-        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
-                (self.cloud_user.email, [VmsRoles.ADMINISTRATOR]))
-
-    def test_viewer_role(self, httpx_mock):
-        data = {
-            "username": self.cloud_user.email,
-            "active": True,
-            "token_type": "bearer",
-            "system_role_ids": {
-                f"{self.cloud_system.system_id}": [f"{VmsRoles.VIEWER}"]
-            }
-        }
-        httpx_mock.add_response(url=self.url, json=data, status_code=200)
-        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        assert user == self.cloud_user
-        assert token == self.token
-        assert self.request.introspected_system_id == self.cloud_system.system_id
-        assert self.request.introspected_system_roles_ids == [VmsRoles.VIEWER]
-        assert TokenCache.get_token(self.token) == self.cloud_user.email
-        assert (TokenCache.get_token_system(self.token, self.cloud_system.system_id) ==
-                (self.cloud_user.email, [VmsRoles.VIEWER]))
-
-    def test_no_role(self, httpx_mock):
-        data = {
-            "username": self.cloud_user.email,
-            "active": True,
-            "token_type": "bearer",
-            "system_role_ids": {
-                f"{self.cloud_system.system_id}": []
-            }
-        }
-        httpx_mock.add_response(url=self.url, json=data, status_code=200)
-        user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        assert user == self.cloud_user
-        assert token == self.token
-        assert self.request.introspected_system_id == self.cloud_system.system_id
-        assert self.request.introspected_system_roles_ids == []
-        assert TokenCache.get_token(self.token) == self.cloud_user.email
-        assert TokenCache.get_token_system(self.token, self.cloud_system.system_id) == (self.cloud_user.email, [])
-
-    def test_inactive(self, httpx_mock):
-        data = {
-            "username": self.cloud_user.email,
-            "active": False,
-            "token_type": "bearer",
-        }
-        httpx_mock.add_response(url=self.url, json=data, status_code=200)
-        try:
-            user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        except exceptions.AuthenticationFailed:
-            pass
-        else:
-            assert False, "AuthenticationFailed must be raised"
-
-    def test_401(self, httpx_mock):
-        httpx_mock.add_response(url=self.url, status_code=401)
-        try:
-            user, token = NxCloudOauthIntrospectAuthentication().authenticate(request=self.request)
-        except exceptions.AuthenticationFailed:
-            pass
-        else:
-            assert False, "AuthenticationFailed must be raised"
-
-
 class TestAuthenticateJwtToken:
     @pytest.fixture(autouse=True)
     def setup(self, private_key_factory, jwk_key_factory, jwt_token_factory,
@@ -462,3 +344,107 @@ class TestAuthenticateJwtToken:
         assert email == random_email
         spy_authenticate_jwt_token.assert_called_once_with(token, verify_exp=True)
         mock_reg_token.assert_called_once_with(token, self.hostname)
+
+
+class TestCdbInternalAuthentication:
+    @pytest.fixture(autouse=True)
+    def setup(self, system_factory, cloud_user_factory):
+        self.user = cloud_user_factory()
+        self.system_1 = system_factory()
+        self.system_2 = system_factory()
+
+    def test_not_authorized(self, httpx_mock, cdb_introspect_url, cloud_test_host):
+        data = {
+            "errorClass": "unauthorized",
+            "errorDetail": "111",
+            "errorText": "badUsername",
+            "resultCode": "badUsername"
+        }
+        httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert not introspection.email
+        assert introspection.introspected_systems_roles == {}
+
+        data = {
+            "errorClass": "unauthorized",
+            "errorDetail": "111",
+            "errorText": "badUsername",
+            "resultCode": "badUsername"
+        }
+        httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=401)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert not introspection.email
+        assert introspection.introspected_systems_roles == {}
+
+    def test_no_system(self, mock_cdb_token_introspect, cloud_test_host):
+        mock_cdb_token_introspect(user=self.user)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert introspection.email == self.user.email
+        assert introspection.introspected_systems_roles == {}
+        assert not introspection.has_roles_in_system(email=self.user.email,
+                                                     system_id=self.system_1.system_id,
+                                                     expected_roles=VmsRoles.ALL_ROLES)
+
+    def test_no_role(self, mock_cdb_token_introspect, cloud_test_host):
+        mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=None)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert introspection.email == self.user.email
+        assert introspection.introspected_systems_roles == {self.system_1.system_id: set()}
+        assert not introspection.has_roles_in_system(email=self.user.email,
+                                                     system_id=self.system_1.system_id,
+                                                     expected_roles=VmsRoles.ALL_ROLES)
+
+    def test_roles_not_authorized(self, mock_cdb_token_introspect, cloud_test_host):
+        mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=VmsRoles.VIEWER)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert introspection.email == self.user.email
+        assert introspection.introspected_systems_roles == {self.system_1.system_id: {VmsRoles.VIEWER}}
+        assert not introspection.has_roles_in_system(email=self.user.email,
+                                                     system_id=self.system_1.system_id,
+                                                     expected_roles=[VmsRoles.ADMINISTRATOR])
+        assert not introspection.has_roles_in_system(email=self.user.email,
+                                                     system_id=self.system_2.system_id,
+                                                     expected_roles=[VmsRoles.VIEWER])
+        assert not introspection.has_roles_in_system(email='self.user.email',
+                                                     system_id=self.system_1.system_id,
+                                                     expected_roles=[VmsRoles.VIEWER])
+        assert not introspection.has_roles_in_system(email='',
+                                                     system_id=self.system_1.system_id,
+                                                     expected_roles=[VmsRoles.VIEWER])
+
+    def test_roles_authorized(self, mock_cdb_token_introspect, cloud_test_host):
+        mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=VmsRoles.VIEWER)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=f'{uuid4()}',
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        assert introspection.email == self.user.email
+        assert introspection.introspected_systems_roles == {self.system_1.system_id: {VmsRoles.VIEWER}}
+        assert introspection.has_roles_in_system(email=self.user.email,
+                                                 system_id=self.system_1.system_id,
+                                                 expected_roles=[VmsRoles.VIEWER])
+
+    def test_cache(self, mock_cdb_token_introspect, cloud_test_host):
+        token = f'{uuid4()}'
+        mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=VmsRoles.VIEWER)
+        introspection = CdbInternalAuthentication.introspect_with_system(
+            token=token,
+            cloud_host_name=cloud_test_host.hostname,
+            system_id=self.system_1.system_id)
+        cached = TokenCache.get_system_introspection(token, system_id=self.system_1.system_id)
+        assert cached == introspection

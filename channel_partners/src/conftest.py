@@ -275,12 +275,20 @@ def default_org_system_generator(default_organization, cloud_test_host):
 
 
 @pytest.fixture()
-def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker):
-    def mock(user: typing.Union[ChannelPartnerToUser, OrganizationToUser] = default_cp_admin, token=uuid4()):
+def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker, httpx_mock, cdb_introspect_url,):
+    def mock(user: typing.Union[CloudUser, ChannelPartnerToUser, OrganizationToUser] = default_cp_admin, token=uuid4()):
+        usr = getattr(user, 'user', user)
         mock_authenticate = mocker.patch(
             'partners.authentication.NxCloudOauthTokenAuthentication.authenticate',
-            return_value=(user.user, token)
+            return_value=(getattr(user, 'user', user), token)
         )
+        data = {
+            "username": usr.email,
+            "active": True,
+            "token_type": "bearer",
+            "where": "mock_auth_with_user"
+        }
+        httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
         return mock_authenticate
 
     return mock
@@ -325,11 +333,11 @@ def cdb_introspect_url(cloud_test_host):
 
 
 @pytest.fixture()
-def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_email):
+def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_email, mock_auth_with_user):
     def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
              system: CloudSystemId = None, system_id: uuid.UUID = None,
              active: bool = True, system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR,
-             jwt_is_valid: bool = True):
+             jwt_is_valid: bool = True, token_is_valid: bool = True):
         if system and system_id:
             raise ValueError('Cannot specify both system and system_id.')
         if user is None:
@@ -350,11 +358,15 @@ def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_ema
             "token_type": "bearer",
             **roles
         }
-        # mocking jwt authentication to email or none, to control this feature in tests
         mocker.patch(
             'partners.authentication.authenticate_jwt_token',
             return_value=email if jwt_is_valid else None
         )
+        mocker.patch(
+            'partners.authentication.authenticate_regular_token',
+            return_value=email if jwt_is_valid else None
+        )
+
         httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
         return email
 
@@ -723,3 +735,15 @@ def wrapped_report_mock_func(
 def mock_reports_decoration(mocker):
     return mocker.patch('partners.services.usage_reports_service.wrapped_report_func',
                         wrapped_report_mock_func)
+
+
+@pytest.fixture()
+def generate_random_jwt(jwk_key_factory, private_key_factory):
+    def factory(email, expiration=timezone.now() + datetime.timedelta(days=1)):
+        kid = f'{uuid4()}'
+        private_key = private_key_factory()
+        jwk = jwk_key_factory(kid=kid, priv_key=private_key)
+        jwt_token = f"nxcdb-{jwt_token_factory(f'{uuid4()}@netwrokotix.com', kid, private_key, exp=expiration)}"
+        return jwt_token
+
+    return factory

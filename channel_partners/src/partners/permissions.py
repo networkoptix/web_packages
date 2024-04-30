@@ -7,6 +7,8 @@ from uuid import UUID
 
 from rest_framework.permissions import BasePermission
 
+from partners.authentication import CdbInternalAuthentication
+
 
 class IsInternalToken(BasePermission):
     def has_permission(self, request, view):
@@ -60,13 +62,15 @@ class CanPerformChannelPartnerAction(BasePermission):
     def has_object_permission(self, request, view, obj: Any):
         if system := getattr(request, 'cloud_system', None):
             return system == obj and self.system_allowed
-        if self.direct_access_allowed is not None:
-            introspected_system_id = getattr(request, 'introspected_system_id', None)
-            if introspected_system_id == getattr(obj, 'system_id', None):
-                introspected_system_roles_ids = getattr(request, 'introspected_system_roles_ids', None)
-                if self.direct_access_allowed.intersection(set(introspected_system_roles_ids)):
-                    return True
         if request.user and request.user.is_authenticated and request.auth:
             if self.check_function:
-                return self.check_function(obj, request.user)
+                if self.check_function(obj, request.user):
+                    return True
+            # introspection requires for a valid token, so if request
+            # is not authenticated then introspection has no sense
+            if self.direct_access_allowed is not None:
+                system_id = getattr(obj, 'system_id', None)
+                if system_id:
+                    if CdbInternalAuthentication.has_vms_roles(request, system_id, self.direct_access_allowed):
+                        return True
         return False

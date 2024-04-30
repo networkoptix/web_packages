@@ -372,13 +372,13 @@ class UserAccessMatrix:
             # if field not explicitly defined in json access is always allowed
             return True
 
-        # check if authenticated user is a VMS user with some roles
+        # check if authenticated user is a VMS user with some roles.
+        # partners.authentication.CdbInternalAuthentication.has_vms_roles
         if (
-            (introspected_system_id := getattr(self.request, 'introspected_system_id', None))
-            and getattr(self.request, 'introspected_system_roles_ids', None)
+            (system_introspection := getattr(self.request, 'system_introspection', None))
             and (system_id := getattr(target_instance, 'system_id', None))
         ):
-            if introspected_system_id == system_id:
+            if system_introspection.introspected_systems_roles.get(system_id):
                 return True
 
         levels_permissions = self.access_matrix.fields.allowed_field_levels(field_name=field_name,
