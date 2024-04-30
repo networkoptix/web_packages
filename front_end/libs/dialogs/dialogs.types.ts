@@ -129,8 +129,9 @@ interface UpdateSessionData {
     noConnectionMsg?: string;
     processAction?: string;
     openingRef?: DialogRef;
+    isScopedRequest?: boolean;
 }
-export type UpdateSession = DialogType<UpdateSessionData, boolean>;
+export type UpdateSession = DialogType<UpdateSessionData, string | undefined>;
 export type Client2faWarning = DialogType<void, void>;
 
 /* Account */
