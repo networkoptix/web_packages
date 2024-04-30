@@ -54,7 +54,7 @@ import { icons } from '@static-variables';
 export class NxInfoGroupComponent {
     @Input() formId: string;
     @Input() linkCaption: string;
-    @Input() descrCaption: string = 'Description';
+    @Input() descrCaption: string = 'Description (optional)';
     @Input() linkPredicate: string;
     @Input() set data(data: InfoRow[]) {
         this.data$$.set(data);
