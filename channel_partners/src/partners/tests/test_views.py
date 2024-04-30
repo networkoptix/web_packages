@@ -66,7 +66,7 @@ class TestCloudSystemViewSetRetrieve:
 
     @pytest.fixture(autouse=True)
     def setup(self, system_factory, org_user_factory, cloud_test_host,
-              system_group_factory, sys_group_user_factory, httpx_mock, arf,
+              system_group_factory, sys_group_user_factory, jwt_token_factory, arf,
               channel_partner_factory, cp_user_factory, organization_factory):
         self.cp = channel_partner_factory()
         self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
@@ -379,8 +379,8 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
 class TestCloudSystemViewSet:
 
     def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
-                              arf, system_factory, mock_auth_with_user, cp_service_factory, service_record_factory,
-                              service_usage_factory, cloud_storage_usage_factory):
+                              arf, system_factory, cp_service_factory, service_record_factory,
+                              service_usage_factory, cloud_storage_usage_factory, mock_cdb_token_introspect):
         quantity = 10
         usage_storage = 9
         usage_recording = 330
@@ -420,14 +420,7 @@ class TestCloudSystemViewSet:
         CloudSystemViewSet.detail = True
         view = CloudSystemViewSet.as_view({'get': 'service_quantity'}, detail=True)
 
-        mock_auth_with_user(child_user)
-        req.user = child_user.user
-        with transaction.atomic():
-            response = view(req, id=str(system.system_id))
-
-        assert response.status_code == 403
-
-        mock_auth_with_user(root_user)
+        mock_cdb_token_introspect(root_user)
         req.user = root_user.user
         with transaction.atomic():
             response = view(req, id=str(system.system_id))
@@ -444,6 +437,12 @@ class TestCloudSystemViewSet:
         assert response.data['services'][str(analytics_service.id)]['used'] == 0
         assert response.data['services'][str(analytics_service.id)]['quantity'] == quantity
 
+        mock_cdb_token_introspect(user=child_user)
+        req.user = child_user.user
+        with transaction.atomic():
+            response = view(req, id=str(system.system_id))
+
+        assert response.status_code == 403
 
     def test_service_quantity_patch(self, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
@@ -1821,10 +1820,11 @@ class TestSystemUser:
         response = self.client.get(path)
         assert response.status_code == 403
 
-    def test_cdb_permission(self, mock_cdb_token_introspect, cloud_user_factory):
+    def test_cdb_permission(self, mock_cdb_token_introspect, cloud_user_factory,):
         sys_admin = cloud_user_factory()
         user_email = mock_cdb_token_introspect(
             user=sys_admin, system=self.org_sys, system_role=VmsRoles.POWER_USER)
+
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         url_args = {
             'system_id': str(self.org_sys.system_id),
@@ -2427,82 +2427,117 @@ class TestSystemTransferOffer:
 
 
 class TestGetAuthorizedSystem:
-    def test_system_auth(self, arf, channel_partner_factory, organization_factory, system_factory):
-        cp = channel_partner_factory()
-        organization = organization_factory(channel_partner=cp)
-        cloud_system = system_factory(organization=organization)
-        other_system = system_factory(organization=organization)
-        request = arf.get('/')
-        request.cloud_system = cloud_system
-        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
 
-        try:
-            get_authorized_system(request, other_system.system_id)
-        except exceptions.PermissionDenied as ex:
-            assert 'Insufficient permissions' in str(ex)
-        else:
-            assert False, 'Permission denied must be raised'
-
-    def test_token_auth(self, arf, channel_partner_factory, organization_factory, system_factory,
-                         cp_user_factory, sys_group_user_factory, org_user_factory):
+    @pytest.fixture(autouse=True)
+    def setup(self, arf, channel_partner_factory, organization_factory, system_factory,
+                         cp_user_factory, sys_group_user_factory, org_user_factory, mock_cdb_token_introspect):
         cp = channel_partner_factory()
         organization = organization_factory(channel_partner=cp)
         other_organization = organization_factory(channel_partner=cp)
         other_organization.channel_partner_access_level_id = None
         other_organization.save()
-        cp_admin = cp_user_factory(channel_partner=cp)
-        org_admin = org_user_factory(organization=organization)
-        other_admin = org_user_factory(organization=other_organization)
-        group_user = sys_group_user_factory(organization=organization)
-        cloud_system = system_factory(organization=organization)
-        group_system = system_factory(organization=organization, system_group=group_user.system_group)
-        other_system = system_factory(organization=other_organization)
+        self.cp_admin = cp_user_factory(channel_partner=cp)
+        self.org_admin = org_user_factory(organization=organization)
+        self.other_admin = org_user_factory(organization=other_organization)
+        self.group_user = sys_group_user_factory(organization=organization)
+        self.cloud_system = system_factory(organization=organization)
+        self.group_system = system_factory(organization=organization, system_group=self.group_user.system_group)
+        self.other_system = system_factory(organization=other_organization)
+
+
+    def test_system_auth(self, arf, channel_partner_factory, organization_factory, system_factory):
+
         request = arf.get('/')
-        request.auth = f'{uuid4()}'
+        request.cloud_system = self.cloud_system
+        assert get_authorized_system(request, self.cloud_system.system_id) == self.cloud_system
 
-        request.user = cp_admin.user
-        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
-        assert get_authorized_system(request, group_system.system_id) == group_system
         try:
-            get_authorized_system(request, other_system.system_id)
+            get_authorized_system(request, self.other_system.system_id)
         except exceptions.PermissionDenied as ex:
             assert 'Insufficient permissions' in str(ex)
         else:
             assert False, 'Permission denied must be raised'
 
-        request.user = org_admin.user
-        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
-        assert get_authorized_system(request, group_system.system_id) == group_system
+    def test_cp_admin(self, arf, mock_cdb_token_introspect):
+        request = arf.get('/')
+        request.auth = f'Bearer {uuid4()}'
+
+        request.user = self.cp_admin.user
+        mock_cdb_token_introspect(self.cp_admin)
+        assert get_authorized_system(request, self.cloud_system.system_id) == self.cloud_system
+        assert get_authorized_system(request, self.group_system.system_id) == self.group_system
+        # test cpal disabled
         try:
-            get_authorized_system(request, other_system.system_id)
+            get_authorized_system(request, self.other_system.system_id)
         except exceptions.PermissionDenied as ex:
             assert 'Insufficient permissions' in str(ex)
         else:
             assert False, 'Permission denied must be raised'
 
-        request.user = group_user.user
-        assert get_authorized_system(request, group_system.system_id) == group_system
+    def test_org_admin(self, arf, mock_cdb_token_introspect):
+        request = arf.get('/')
+        request.auth = f'Bearer {uuid4()}'
+        request.user = self.org_admin.user
+        mock_cdb_token_introspect(self.org_admin)
+
+        assert get_authorized_system(request, self.cloud_system.system_id) == self.cloud_system
+        assert get_authorized_system(request, self.group_system.system_id) == self.group_system
+
+        # test insufficient permissions
         try:
-            get_authorized_system(request, cloud_system.system_id)
-        except exceptions.PermissionDenied as ex:
-            assert 'Insufficient permissions' in str(ex)
-        else:
-            assert False, 'Permission denied must be raised'
-        try:
-            get_authorized_system(request, other_system.system_id)
+            get_authorized_system(request, self.other_system.system_id)
         except exceptions.PermissionDenied as ex:
             assert 'Insufficient permissions' in str(ex)
         else:
             assert False, 'Permission denied must be raised'
 
-        request.user = other_admin.user
-        assert get_authorized_system(request, other_system.system_id) == other_system
-        assert get_authorized_system(request, uuid4()) is None
+    def test_group_user(self, arf, mock_cdb_token_introspect):
+        request = arf.get('/')
+        request.auth = f'Bearer {uuid4()}'
+        request.user = self.group_user.user
+        mock_cdb_token_introspect(self.group_user)
+        assert get_authorized_system(request, self.group_system.system_id) == self.group_system
+        try:
+            get_authorized_system(request, self.cloud_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+        try:
+            get_authorized_system(request, self.other_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
 
-        request.introspected_system_id = cloud_system.system_id
-        request.introspected_system_roles_ids = [VmsRoles.ADMINISTRATOR]
-        assert get_authorized_system(request, cloud_system.system_id) == cloud_system
-        assert get_authorized_system(request, uuid4()) is None
+    def test_vms_user(self, arf, mock_cdb_token_introspect, cloud_user_factory, httpx_mock):
+        user = cloud_user_factory()
+        request = arf.get('/')
+        request.auth = f'Bearer {uuid4()}'
+        request.user = user
+        mock_cdb_token_introspect(user, system=self.other_system)
+        assert get_authorized_system(request, self.other_system.system_id) == self.other_system
+        try:
+            get_authorized_system(request, uuid4())
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
+        caches['default'].clear()
+        mock_cdb_token_introspect(user, system=self.cloud_system)
+        assert get_authorized_system(request, self.cloud_system.system_id) == self.cloud_system
+        caches['default'].clear()
+        mock_cdb_token_introspect(user, system=self.cloud_system, system_role=VmsRoles.VIEWER)
+        assert get_authorized_system(
+            request, self.cloud_system.system_id, roles=[VmsRoles.VIEWER]) == self.cloud_system
+
+        caches['default'].clear()
+        try:
+            get_authorized_system(request, self.cloud_system.system_id)
+        except exceptions.PermissionDenied as ex:
+            assert 'Insufficient permissions' in str(ex)
+        else:
+            assert False, 'Permission denied must be raised'
 
 
 class TestCloudStorageUsageReport:

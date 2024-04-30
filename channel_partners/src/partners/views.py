@@ -1,5 +1,8 @@
 from time import sleep
-from typing import List
+from typing import (
+    Iterable,
+    List,
+)
 from uuid import uuid4
 
 import httpx
@@ -55,7 +58,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from partners import filters
 from partners.authentication import (
-    NxCloudOauthIntrospectAuthentication,
+    CdbInternalAuthentication,
     NxCloudOauthTokenAuthentication,
     NxCloudSystemBasicAuthentication,
     NxTokenAuthentication,
@@ -1309,7 +1312,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
                          GenericViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     serializer_class = CloudSystemSerializer
-    authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication)
+    authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
     queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     filter_backends = [DjangoFilterBackend]
@@ -1583,25 +1586,21 @@ def all_services(request):
     return Response(ServiceSerializer(services, many=True).data)
 
 
-def get_authorized_system(request, system_id):
+def get_authorized_system(request, system_id, roles: Iterable = None):
+    if not roles:
+        roles = {VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER}
     if (cloud_system := getattr(request, 'cloud_system', None)):
         if str(system_id) != str(cloud_system.system_id):
             raise exceptions.PermissionDenied(detail='Insufficient permissions.')
         return cloud_system
     if not (hasattr(request, 'user') and request.user.is_authenticated):
         raise exceptions.NotAuthenticated()
-
     if cloud_system := CloudSystemId.objects.filter(system_id=system_id).first():
-        if (
-                str(getattr(request, 'introspected_system_id', None)) == str(system_id)
-                and (roles := getattr(request, 'introspected_system_roles_ids', None))
-        ):
-            allowed_roles = {VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER}
-            if set(roles).intersection(allowed_roles):
-                return cloud_system
-        if cloud_system.has_vms_role(request.user, vms_roles=[VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER]):
+        if CdbInternalAuthentication.has_vms_roles(request, system_id, roles):
             return cloud_system
-        raise exceptions.PermissionDenied(detail='Insufficient permissions.')
+        if cloud_system.has_vms_role(request.user, vms_roles=roles):
+            return cloud_system
+    raise exceptions.PermissionDenied(detail='Insufficient permissions or system does not exists.')
 
 
 @extend_schema(
@@ -1627,11 +1626,11 @@ def user_systems(request, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication])
+@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_user(request, system_id, email):
     if request.user and request.user.email.lower() == email.lower():
-        system = CloudSystemId.objects.filter(system_id=system_id).first()
+        system = get_authorized_system(request, system_id, roles=VmsRoles.ALL_ROLES)
     else:
         system = get_authorized_system(request, system_id)
     if not system or not system.organization:
@@ -1650,7 +1649,7 @@ def system_user(request, system_id, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthIntrospectAuthentication])
+@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_users(request, system_id):
     system = get_authorized_system(request, system_id)
