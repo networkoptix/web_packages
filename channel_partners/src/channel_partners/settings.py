@@ -239,7 +239,7 @@ DATABASES = {
 }
 
 # Cache
-REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
+REDIS_CACHE_BACKEND = "nx_django_redis.redis_cache.RedisSyncBackend"
 REDIS_CACHE_LOCATION = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
 REDIS_CELERY_DB = 15
