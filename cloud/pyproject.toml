@@ -56,7 +56,7 @@ mistletoe = "0.7.2" #MIT License|https://github.com/miyuchina/mistletoe|https://
 mysqlclient = "2.2.4" #GNU General Public License v2.0|https://github.com/PyMySQL/mysqlclient|https://github.com/PyMySQL/mysqlclient/blob/main/LICENSE
 MarkupSafe = "^1.1.1" #BSD 3-Clause "New" or "Revised" License|https://github.com/pallets/markupsafe|https://github.com/pallets/markupsafe/blob/main/LICENSE.rst
 packaging = "~21.0" #Apache 2.0 License and BSD License|https://github.com/pypa/packaging|https://github.com/pypa/packaging/blob/main/LICENSE
-Pillow = "^9.0.1" #HPND License|https://github.com/python-pillow/Pillow|https://github.com/python-pillow/Pillow/blob/main/LICENSE
+Pillow = "^10.3.0" #HPND License|https://github.com/python-pillow/Pillow|https://github.com/python-pillow/Pillow/blob/main/LICENSE
 py = "^1.10.0" #Unknown License|https://github.com/codebasics/py| ################################################################
 pycurl = "~7.44.1" #GNU Lesser General Public License v2.1|https://github.com/pycurl/pycurl|https://github.com/pycurl/pycurl/blob/master/COPYING-LGP
 pyjwt = { version="^2.8.0", extras=["crypto"] } #MIT License|https://github.com/jpadilla/pyjwt|https://github.com/jpadilla/pyjwt/blob/master/LICENSE

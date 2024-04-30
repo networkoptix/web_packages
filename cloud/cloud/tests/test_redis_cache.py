@@ -6,7 +6,7 @@ import pytest
 from django.core.cache import caches
 
 
-class TestCustomRedisCache:
+class TestSyncAsyncRedisBackend:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.cache = caches["global"]
@@ -150,7 +150,7 @@ class TestCustomRedisCache:
             assert data == self.cache.hget(hash, key)
 
 
-class TestCustomRedisCacheAsync:
+class TestSyncAsyncRedisBackendAsync:
     @pytest.fixture(autouse=True)
     async def setup(self):
         self.cache = caches["global"]
@@ -187,6 +187,7 @@ class TestCustomRedisCacheAsync:
         key_not_exists = await self.cache.ahexists('none', 'none')
         assert field_not_exists is False
         assert key_not_exists is False
+
     @pytest.mark.asyncio
     async def test_hlen(self):
         length = await self.cache.ahlen(self.key)

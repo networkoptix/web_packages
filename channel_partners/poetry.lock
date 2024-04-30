@@ -1005,6 +1005,45 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "etils"
+version = "1.8.0"
+description = "Collection of common python utils"
+optional = false
+python-versions = ">=3.11"
+files = [
+    {file = "etils-1.8.0-py3-none-any.whl", hash = "sha256:f31d7f27a889457eaa44eab18ce836d24fd6d40dbbb167d38879b7296f6456ea"},
+    {file = "etils-1.8.0.tar.gz", hash = "sha256:fb478f57fec202e260e54c9192b317692fd63db2d11d993e70bcdffa29cccd58"},
+]
+
+[package.dependencies]
+typing_extensions = {version = "*", optional = true, markers = "extra == \"epy\""}
+
+[package.extras]
+all = ["etils[array-types]", "etils[eapp]", "etils[ecolab]", "etils[edc]", "etils[enp]", "etils[epath-gcs]", "etils[epath-s3]", "etils[epath]", "etils[epy]", "etils[etqdm]", "etils[etree-dm]", "etils[etree-jax]", "etils[etree-tf]", "etils[etree]"]
+array-types = ["etils[enp]"]
+dev = ["chex", "dataclass_array", "optree", "pyink", "pylint (>=2.6.0)", "pytest", "pytest-subtests", "pytest-xdist", "torch"]
+docs = ["etils[all,dev]", "sphinx-apitree[ext]"]
+eapp = ["absl-py", "etils[epy]", "simple_parsing"]
+ecolab = ["etils[enp]", "etils[epy]", "etils[etree]", "jupyter", "mediapy", "numpy", "packaging", "protobuf"]
+edc = ["etils[epy]"]
+enp = ["etils[epy]", "numpy"]
+epath = ["etils[epy]", "fsspec", "importlib_resources", "typing_extensions", "zipp"]
+epath-gcs = ["etils[epath]", "gcsfs"]
+epath-s3 = ["etils[epath]", "s3fs"]
+epy = ["typing_extensions"]
+etqdm = ["absl-py", "etils[epy]", "tqdm"]
+etree = ["etils[array-types]", "etils[enp]", "etils[epy]", "etils[etqdm]"]
+etree-dm = ["dm-tree", "etils[etree]"]
+etree-jax = ["etils[etree]", "jax[cpu]"]
+etree-tf = ["etils[etree]", "tensorflow"]
+lazy-imports = ["etils[ecolab]"]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "gevent"
 version = "23.9.1"
 description = "Coroutine-based network library"
@@ -2471,4 +2510,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "0e9a449c8608ec3f546d3d3d0fb38484c5d7229ef63cf4e2f710f58ee6c2c184"
+content-hash = "db871f5611ab8a14596bfd046419c93b3c1f95fd9871ca37825167081c18d1e7"

@@ -247,7 +247,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # hashes which is not implemented in official Django redis backend. Both backend
 # and client are subclasses of django backend and client.
 REDIS_CACHE = {
-    "BACKEND": "cloud.helpers.redis_cache.CustomRedisCache",
+    "BACKEND": "nx_django_redis.redis_cache.SyncAsyncRedisBackend",
     "TIMEOUT": None
 }
 
