@@ -157,6 +157,11 @@ export class NxSandboxComponent {
                             path: '/toaster',
                         },
                         {
+                            id: 'tooltip',
+                            label: 'Tooltip',
+                            path: '/tooltip',
+                        },
+                        {
                             id: 'archsvg',
                             label: 'Architecture (SVG)',
                             path: '/arch',

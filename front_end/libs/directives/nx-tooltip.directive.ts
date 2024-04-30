@@ -27,6 +27,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { NxClickElsewhereDirective } from './nx-click-elsewhere';
 
+/** @deprecated Use v2 */
 @UntilDestroy()
 @Directive({
     selector: '[nxTooltip]',

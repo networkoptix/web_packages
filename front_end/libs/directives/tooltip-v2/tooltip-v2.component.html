@@ -1,0 +1,16 @@
+@if (withArrow()) {
+    <div
+        class="nx-tooltip__arrow"
+        [ngClass]="{ 'nx-tooltip__arrow--high-contrast': highContrast() }"
+    ></div>
+}
+<div
+    class="nx-tooltip__body"
+    [ngClass]="{ 'nx-tooltip__body--high-contrast': highContrast() }"
+>
+    @if (contentString()) {
+        {{ contentString() }}
+    } @else if (contentTemplate()) {
+        <ng-container [ngTemplateOutlet]="contentTemplate()!"></ng-container>
+    }
+</div>

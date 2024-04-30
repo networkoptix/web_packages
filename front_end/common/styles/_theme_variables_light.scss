@@ -105,6 +105,9 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --tooltip-bg : #{$dark1};
     --tooltip-color : #{$light1};
     --tooltip-box-shadow-color: rgba(var(--dark4--rgb), 0.2);
+    --tooltip-contrast-bg: var(--tooltip-bg);
+    --tooltip-contrast-color : var(--tooltip-color);
+    // Light tooltip is already high-contrast
 
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$light1};

@@ -95,6 +95,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --tooltip-shadow-color: #{$dark_gray_15};
     --tooltip-bg: #{$dark_gray_1};
     --tooltip-color: #{$light_gray_1};
+    --tooltip-contrast-bg: var(--tooltip-bg);
+    --tooltip-contrast-color : var(--tooltip-color);
 
     --validation-popover-shadow-color: none;
     --validation-popover-bg: #{$light_gray_1};

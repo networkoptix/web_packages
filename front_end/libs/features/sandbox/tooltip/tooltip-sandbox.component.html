@@ -1,0 +1,239 @@
+<h1>NxTooltipV2Directive</h1>
+
+<div class="appearance">
+    <div>
+        <h2>Positioning</h2>
+        <div class="position-examples">
+            <div class="vertical">
+                @for (i of [0, 1]; track $index) {
+                    <div class="pair">
+                        <div
+                            class="direction-box"
+                            [nxTooltipV2]="hamlet.vertical[2 * i]"
+                            [tooltipPositions]="[verticalPositions[2 * i]]"
+                            [(tooltipOpen)]="onLoadManualOpen"
+                        >
+                            {{ verticalPositions[2 * i].join(', ') }}
+                        </div>
+                        <div
+                            class="direction-box"
+                            [nxTooltipV2]="hamlet.vertical[1 + 2 * i]"
+                            [tooltipPositions]="[verticalPositions[1 + 2 * i]]"
+                            [(tooltipOpen)]="onLoadManualOpen"
+                        >
+                            {{ verticalPositions[1 + 2 * i].join(', ') }}
+                        </div>
+                    </div>
+                }
+                <div class="pair">
+                    <div
+                        class="direction-box"
+                        [nxTooltipV2]="hamlet.vertical[5]"
+                        [tooltipPositions]="[verticalPositions[4]]"
+                        [(tooltipOpen)]="onLoadManualOpen"
+                    >
+                        {{ verticalPositions[4].join(', ') }}
+                    </div>
+                    <div
+                        class="direction-box"
+                        [nxTooltipV2]="hamlet.vertical[4]"
+                        [tooltipPositions]="[verticalPositions[5]]"
+                        [(tooltipOpen)]="onLoadManualOpen"
+                    >
+                        {{ verticalPositions[5].join(', ') }}
+                    </div>
+                </div>
+            </div>
+            <div class="horizontal">
+                <div class="left">
+                    @for (position of leftPositions; track position) {
+                        <div
+                            class="direction-box"
+                            [nxTooltipV2]="hamlet.left[$index]"
+                            [tooltipPositions]="[position]"
+                            [(tooltipOpen)]="onLoadManualOpen"
+                        >
+                            {{ position.join(', ') }}
+                        </div>
+                    }
+                </div>
+                <div class="right">
+                    @for (position of rightPositions; track position) {
+                        <div
+                            class="direction-box"
+                            [nxTooltipV2]="hamlet.right[$index]"
+                            [tooltipPositions]="[position]"
+                            [(tooltipOpen)]="onLoadManualOpen"
+                        >
+                            {{ position.join(', ') }}
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="styling">
+        <h2>Styling</h2>
+        <div class="styling-container">
+            <div class="rgb-container">
+                @for (color of ['red', 'green', 'blue']; track color) {
+                    <div
+                        class="gray-square"
+                        [nxTooltipV2]="content"
+                        [tooltipPositions]="leftPositions[$index]"
+                        [tooltipOpen]="onLoadManualOpen"
+                    ></div>
+                    <ng-template #content>
+                        <span
+                            [class]="color"
+                            class="first-letter"
+                            >{{ hamletColors[$index].charAt(0) }}</span
+                        ><span [class]="color">{{ hamletColors[$index].slice(1) }}</span>
+                    </ng-template>
+                    <!-- Important: styling for template contents cannot be under :host -->
+                }
+            </div>
+            <div class="tooltip-elem-examples">
+                <div
+                    class="gray-square"
+                    nxTooltipV2="But that the dread of something after death,"
+                    [tooltipPositions]="['W', 'center']"
+                    [tooltipOpen]="onLoadManualOpen"
+                    tooltipTheme="contrast"
+                ></div>
+                <div
+                    class="gray-square"
+                    nxTooltipV2="The undiscovered country, from whose bourn"
+                    [tooltipPositions]="['W', 'center']"
+                    [tooltipArrow]="false"
+                    [tooltipOpen]="onLoadManualOpen"
+                ></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="push-example"
+    [ngStyle]="{ 'width.px': pushBuffer }"
+>
+    <button
+        class="push-example__button"
+        (click)="pushPull(pushed)"
+    >
+        <span>⬅️ Push/pull ➡️</span>
+    </button>
+
+    <div
+        class="gray-square"
+        #pushed="nxTooltipV2"
+        nxTooltipV2="When we have shuffled off this mortal coil,"
+        [tooltipOpen]="onLoadManualOpen && !!pushBuffer"
+    ></div>
+</div>
+
+<h2>Triggers</h2>
+<div class="triggers-container">
+    <div
+        class="hover-example"
+        nxTooltipV2="Must give us pause. There's the respect"
+        [tooltipPositions]="['S', 'start']"
+    >
+        Hover
+    </div>
+    <button
+        tooltipTrigger="focus"
+        nxTooltipV2="That makes Calamity of so long life:"
+        [tooltipPositions]="['N', 'start']"
+    >
+        Focus
+    </button>
+    <button
+        nxTooltipV2="For who would bear the Whips and Scorns of time,"
+        tooltipTrigger="click"
+        [tooltipPositions]="['S', 'start']"
+    >
+        Click
+    </button>
+
+    <button
+        nxTooltipV2="The Oppressor's wrong, the proud man's Contumely,"
+        tooltipTrigger="none"
+        #byMethod="nxTooltipV2"
+        (click)="byMethod.toggle()"
+        [tooltipOrigin]="nonTriggerOrigin"
+        [tooltipPositions]="['E', 'center']"
+    >
+        Method
+    </button>
+    <div
+        #nonTriggerOrigin
+        class="gray-square"
+        (click)="byMethod.opened() ? byMethod.close() : byMethod.open()"
+        [ngStyle]="{ cursor: 'pointer' }"
+    ></div>
+</div>
+
+<h2>Timing</h2>
+<div class="delays-container">
+    <button
+        nxTooltipV2="The pangs of despised Love, the Law’s delay,"
+        tooltipTrigger="none"
+        [tooltipPositions]="['S', 'start']"
+        #delayed="nxTooltipV2"
+        [tooltipDelay]="3000"
+        (click)="delayed.toggle(); delayedTrigger()"
+        style="width: 64px"
+    >
+        {{ delayText | async }}
+    </button>
+
+    <div class="speedup">
+        <button
+            nxTooltipV2="The insolence of Office, and the spurns"
+            #slowTooltip="nxTooltipV2"
+            [tooltipPositions]="['N', 'start']"
+            (click)="slowTooltip.toggle(); slowTransition = true"
+            (tooltipOpenChange)="slowTransition = false; resetCountdown()"
+            [tooltipDelay]="MS.s * 1000"
+            style="width: 96px"
+        >
+            {{ slowTransition ? (thousandCountdown | async) : 'Slow' }}
+        </button>
+        <button
+            [disabled]="!slowTransition"
+            (click)="
+                slowTooltip.opened() ? slowTooltip.close(0) : slowTooltip.open(0);
+                slowTransition = false;
+                resetCountdown()
+            "
+        >
+            Hurry up!
+        </button>
+        <button
+            [disabled]="!slowTransition"
+            (click)="
+                slowTooltip.opened() ? slowTooltip.open(0) : slowTooltip.close(0);
+                slowTransition = false;
+                resetCountdown()
+            "
+        >
+            Cancel
+        </button>
+    </div>
+
+    <div class="autohide-example">
+        <button
+            style="width: 96px"
+            nxTooltipV2="That patient merit of th'unworthy takes,"
+            #autohide="nxTooltipV2"
+            tooltipTrigger="hover"
+            (click)="autohide.open(); autohideUpdate(true)"
+            [tooltipPositions]="['S', 'start']"
+            [tooltipAutohide]="5000"
+            (tooltipOpenChange)="autohideUpdate($event)"
+        >
+            {{ autohideText | async }}
+        </button>
+        <span>⬅️ Click to refresh</span>
+    </div>
+</div>
