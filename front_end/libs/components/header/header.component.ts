@@ -531,7 +531,7 @@ export class NxHeaderComponent implements OnInit {
     }
 
     logout(): void {
-        this.accountService.logout(true);
+        this.accountService.logout();
     }
 
     updateActive(): void {
