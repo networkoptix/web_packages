@@ -300,15 +300,14 @@ export class NxChannelPartnerInformationComponent {
             this.validForms[type] = true;
         });
 
+        this.hasNoItems = this.noItems();
         // if change was canceled prior and no items in form - exit edit mode
         // button is having different caption per action
         // "Cancel" if form is dirty
         // "Back" if form is not dirty and no items
-        if (this.hasNoItems) {
+        if (this.hasNoItems || (this.editMode && this.hasDirty)) {
+            this.hasDirty = false;
             this.editMode = false;
-            return;
         }
-
-        this.hasNoItems = this.noItems();
     };
 }

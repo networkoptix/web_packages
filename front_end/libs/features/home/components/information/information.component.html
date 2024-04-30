@@ -189,7 +189,7 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            @if (hasNoItems || (editMode && !hasDirty)) {
+            @if (hasNoItems) {
                 <nx-apply-back
                     [visible]="true"
                     [saveDisabled]="true"
@@ -197,7 +197,7 @@
                 ></nx-apply-back>
             } @else {
                 <nx-apply
-                    [visible]="true"
+                    [visible]="editMode"
                     [saveDisabled]="!allValid || hasNoItems || !hasDirty"
                     [discard]="discardDataChanges"
                     [save]="saveDataChanges"
