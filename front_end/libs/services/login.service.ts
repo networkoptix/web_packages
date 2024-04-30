@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { firstValueFrom } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -13,6 +13,7 @@ import staticLang from '@language_static';
 import { oauthStore } from '../variables/static-variables';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
+import { NxCloudApiService } from './nx-cloud-api';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import type { NxSystem } from './system.service/system';
@@ -37,25 +38,36 @@ export class NxLoginService {
         private dialogs: NxDialogsService,
         private toasts: NxToastService,
         private cdkDialog: Dialog,
+        private cloudApi: NxCloudApiService,
     ) {}
 
     set currentSystem(system) {
         this._currentSystem = system;
     }
 
-    private handleCode(code): Promise<boolean> {
-        let sessionRenewal;
+    private handleCode(code: string, scopedToken: boolean): Promise<string> {
+        let sessionRenewal: Promise<string>;
 
         if (!environment.isLocal) {
             sessionRenewal = firstValueFrom(
                 this.http.post('/api/account/renewSession', { code }),
-            ).then(() => this._currentSystem.updateToken(true));
+            ).then(() => {
+                if (scopedToken) {
+                    return this._currentSystem.updateToken(true);
+                } else {
+                    return firstValueFrom(
+                        this.cloudApi
+                            .refreshAccessTokens()
+                            .pipe(map(({ accessToken }) => accessToken)),
+                    );
+                }
+            });
         } else {
             sessionRenewal = this._currentSystem.mediaserver
                 .logout()
                 .then(() => firstValueFrom(this._currentSystem.mediaserver.loginOauth(code)));
         }
-        return sessionRenewal.then(() => Promise.resolve(true)).catch(() => Promise.reject(false));
+        return sessionRenewal;
     }
 
     private pingCloud(): Promise<boolean> {
@@ -80,7 +92,7 @@ export class NxLoginService {
         return this.dialogs.temporaryUserLogin();
     }
 
-    async updateSession(state: string): Promise<boolean> {
+    async updateSession(state: string, scopedToken: boolean = true): Promise<string | undefined> {
         if (
             (['disconnect', 'transfer'].includes(state) && !environment.isLocal) ||
             (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth)
@@ -89,7 +101,7 @@ export class NxLoginService {
                 this.toasts.show(this.LANG.toastMessage.noInternet, ToastType.Warning);
                 this.cdkDialog.closeAll();
 
-                return Promise.resolve(false);
+                return Promise.resolve(undefined);
             }
 
             const params = new URLSearchParams();
@@ -107,9 +119,9 @@ export class NxLoginService {
             return firstValueFrom(
                 this.storage
                     .observe(oauthStore.code)
-                    .pipe(switchMap(code => this.handleCode(code))),
+                    .pipe(switchMap(code => this.handleCode(code, scopedToken))),
             );
         }
-        return Promise.resolve(false);
+        return Promise.resolve(undefined);
     }
 }

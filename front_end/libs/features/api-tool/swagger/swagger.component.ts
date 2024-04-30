@@ -214,11 +214,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private handleOldSession = (): void => {
         this.loginService.currentSystem = this.APIToolSystemService.currentSystem;
 
-        const handlePostUpdate = (updateSuccess: boolean) => {
+        const handlePostUpdate = (newToken: string | undefined) => {
             const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
             const { Success, Danger } = ToastType;
-            const toastMessage = updateSuccess ? sessionRenewed : failedToUpdateSession;
-            const toastType = updateSuccess ? Success : Danger;
+            const toastMessage = newToken ? sessionRenewed : failedToUpdateSession;
+            const toastType = newToken ? Success : Danger;
             this.toastService.notify(toastMessage, toastType);
         };
 

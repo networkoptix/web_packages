@@ -7,7 +7,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import staticLang from '@language_static';
 import { NxStorageService } from '@services/storage.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -63,6 +62,10 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
         return sessionState;
     }
 
+    isScopedRequest(url: string): boolean {
+        return !url.includes('partners/api');
+    }
+
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request).pipe(
             catchError(error => {
@@ -73,20 +76,21 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
                 ) {
                     const system = this.systemService.getCurrentSystem();
 
+                    const isScopedRequest = this.isScopedRequest(request.url);
+
                     return from(
                         this.dialogService.updateSession({
                             sessionState: this.calcSessionState(request.url, system),
                             system,
+                            isScopedRequest,
                         }),
                     ).pipe(
-                        switchMap(dialogSuccess => {
-                            if (dialogSuccess) {
-                                const mediaserver = system.mediaserver as NxSystemRestAPI;
-                                const accessToken = mediaserver.accessToken;
+                        switchMap(newAccessToken => {
+                            if (newAccessToken) {
                                 request = request.clone({
                                     headers: request.headers
-                                        .set('Authorization', `Bearer ${accessToken}`)
-                                        .set('x-runtime-guid', accessToken),
+                                        .set('Authorization', `Bearer ${newAccessToken}`)
+                                        .set('x-runtime-guid', newAccessToken),
                                 });
                                 return next.handle(request);
                             }

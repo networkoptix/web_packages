@@ -16,6 +16,7 @@ import staticLang from '@language_static';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { alertTimeout } from '@static-variables';
@@ -61,7 +62,14 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA)
-        { sessionState, system, noConnectionMsg, openingRef, processAction }: DT['data'],
+        {
+            sessionState,
+            system,
+            noConnectionMsg,
+            openingRef,
+            processAction,
+            isScopedRequest = true,
+        }: DT['data'],
         @Inject(WINDOW) private window: Window,
         processService: NxProcessService,
         toastService: NxToastService,
@@ -145,7 +153,11 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
                     },
                 },
             },
-            () => this.close(true),
+            () => {
+                const mediaserver = system.mediaserver as NxSystemRestAPI;
+                const accessToken = mediaserver.accessToken;
+                return this.close(accessToken);
+            },
             () => {
                 setTimeout(() => {
                     self.nativeElement.querySelector<HTMLInputElement>('#login_password')?.focus();
@@ -156,12 +168,12 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
         if (!environment.isLocal || system.mediaserver.isSessionOauth) {
             loginService.currentSystem = system;
             loginService
-                .updateSession(sessionState)
-                .then(ready => {
-                    this.close(ready);
+                .updateSession(sessionState, isScopedRequest)
+                .then(newToken => {
+                    this.close(newToken);
                 })
                 .catch(() => {
-                    this.close(false);
+                    this.close(undefined);
                 });
         }
     }
