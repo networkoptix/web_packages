@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxSystem } from '@services/system.service/system';
+import { reportsRegex } from '@static-variables';
 
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
@@ -16,6 +18,7 @@ import { createButtonType, MenuNodeNavProps } from './nx-header.service.types';
     providedIn: 'root',
 })
 export class NxHeaderService {
+    private LANG = staticLang;
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject<NxSystem>(null);
     public lastActive$ = new BehaviorSubject<NxSystem>(null);
@@ -42,6 +45,18 @@ export class NxHeaderService {
         this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
             if (event instanceof NavigationStart) {
                 this.setLocation(event.url);
+            }
+
+            if (event instanceof NavigationEnd) {
+                if (event.url.includes('/reports')) {
+                    const regex = new RegExp(reportsRegex);
+                    const matches = event.url.match(regex);
+                    if (matches) {
+                        const entityType = matches[1];
+                        const entityID = matches[2];
+                        this.dynamicallyUpdateReportsNode(entityType, entityID);
+                    }
+                }
             }
         });
 
@@ -134,6 +149,29 @@ export class NxHeaderService {
                     : [matchedRoute, editUrl];
                 this.setDynamicRoute(matchedRoutes, dynamicNode, url);
             }
+        }
+    }
+
+    dynamicallyUpdateReportsNode(entityType: string, entityId: string) {
+        const reportsLang = this.LANG.appHeader.headerMenuNodes.reports;
+        const reportsNode = this.nodes.find(node => node.name === reportsLang.displayName);
+        if (reportsNode) {
+            const serviceUsageNode = reportsNode.nodes.find(
+                node => node.name === reportsLang.nodes.serviceUsage.displayName,
+            );
+            const serviceChangesNode = reportsNode.nodes.find(
+                node => node.name === reportsLang.nodes.serviceChanges.displayName,
+            );
+            if (serviceUsageNode) {
+                serviceUsageNode.url = `/reports/${entityType}/${entityId}/service-usage`;
+            }
+            if (serviceChangesNode) {
+                serviceChangesNode.url = `/reports/${entityType}/${entityId}/service-changes`;
+            }
+            const newNodes = this.nodes.map(node =>
+                node.name === reportsLang.displayName ? reportsNode : node,
+            );
+            this.nodes$.next(newNodes);
         }
     }
 

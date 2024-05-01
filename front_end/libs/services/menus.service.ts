@@ -280,6 +280,16 @@ export class NxMenusService {
         return !environment.isLocal && systemId ? url + segment : segment;
     }
 
+    makeReportsMenuNode() {
+        const reportsLang = this.LANG.appHeader.headerMenuNodes.reports;
+        const reportsNode = new MenuNode(reportsLang.displayName, '/reports');
+        reportsNode.nodes.push(new MenuNode('', '/reports'));
+        reportsNode.nodes[0].invisible = true;
+        reportsNode.nodes.push(new MenuNode(reportsLang.nodes.serviceUsage.displayName, ''));
+        reportsNode.nodes.push(new MenuNode(reportsLang.nodes.serviceChanges.displayName, ''));
+        return reportsNode;
+    }
+
     makeSystemMenuNode() {
         if (nxConfig.featureFlags.channelPartners) {
             const homeLang = this.LANG.appHeader.headerMenuNodes.channelPartners;

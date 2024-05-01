@@ -325,6 +325,12 @@ export class NxHeaderComponent implements OnInit {
                     if (!this.loginState) {
                         nodes.unshift(this.menusService.makeWelcomeNode());
                     } else {
+                        if (
+                            nxConfig.featureFlags.channelPartners &&
+                            nxConfig.featureFlags.channelPartnersReportsUI
+                        ) {
+                            nodes.unshift(this.menusService.makeReportsMenuNode());
+                        }
                         nodes.unshift(this.menusService.makeSystemMenuNode());
                         nodes.push(this.menusService.makeAccountSettingsNode());
                     }
