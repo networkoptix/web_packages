@@ -17,6 +17,7 @@ from typing import (
     Union,
 )
 
+import structlog
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from django.db.models import (
@@ -34,6 +35,8 @@ from partners.models import (
 )
 from tools.helpers import get_today
 
+
+logger = structlog.getLogger(__name__)
 
 MAX_SIZE = sys.maxsize
 
@@ -63,6 +66,7 @@ ExpiringUsageDetailList = List[ExpiringUsageDetailRecord]
 class SystemRegularUsage(TypedDict):
     system_id: uuid.UUID
     system_name: str
+
     report: RegularUsageDetailList
 
 
@@ -371,7 +375,11 @@ class ReportSnapshotService:
             lookup_kwargs['service_id'] = self.service_id
         else:
             lookup_kwargs['service_id__isnull'] = True
-        return ReportSnapshot.objects.filter(**lookup_kwargs).first()
+        try:
+            return ReportSnapshot.objects.get(**lookup_kwargs)
+        except ReportSnapshot.DoesNotExist:
+            return None
+
 
     @property
     def needs_generation(self) -> bool:
@@ -476,6 +484,12 @@ def wrapped_report_func(
         organization_id=organization_id,
     )
     if not snapshot_service.snapshot and not snapshot_service.generate:
+        logger.debug(
+            "ReportSnapshot does not exists for service",
+            entity_id=entity_id,
+            report_type=report_type,
+            period_start=func_args.arguments['period_start'],
+            service_id=service_id,)
         raise ReportSnapshotDoesNotExists(
             f"ReportSnapshot does not exists for: {snapshot_service}.")
     if not snapshot_service.needs_generation:
@@ -555,6 +569,10 @@ def build_aggregate_from_regular_usages(
         record: RegularUsageDetailRecord
         transactions = record.get('transactions')
         if record['date'] == last_date:
+            logger.debug(
+                "Merging usage records",
+                current_object=usage_details[-1],
+                new_record=record)
             current_object = usage_details[-1]
             current_object['channels'] += record['channels']
             current_object['monthly_rate'] += record['monthly_rate']
@@ -562,6 +580,9 @@ def build_aggregate_from_regular_usages(
             if transactions is not None:
                 current_object['transactions'] = current_object.get('transactions', 0) + record['transactions']
         else:
+            logger.debug(
+                "Appending usage record",
+                record=record)
             usage_details.append(RegularUsageDetailRecord(
                 date=record['date'], channels=record['channels'], monthly_rate=record['monthly_rate'],
                 daily_rate=record['daily_rate']
@@ -571,6 +592,7 @@ def build_aggregate_from_regular_usages(
             last_date = record['date']
 
     if not usage_details:
+        logger.debug("No usage details found, adding default records")
         usage_details: RegularUsageDetailList = [
             RegularUsageDetailRecord(date=BeginningOfPeriodDate, transactions=0, monthly_rate=0, daily_rate=0,
                                      channels=0),
@@ -598,17 +620,24 @@ def build_aggregate_from_expiring_usages(
 
     record: ExpiringUsageDetailRecord
     for record in sorted_usage_records:
-        if record['expiration_date'] == last_expiration_date:
-            # Aggregate channels if the expiration date matches the last one
-            usage_details[-1]['channels'] += record['channels']
-        else:
-            usage_details.append({
-                'expiration_date': record['expiration_date'],
-                'channels': record['channels']
-            })
-            last_expiration_date = record['expiration_date']
-        total_channels += record['channels']
+        expiration_date = record['expiration_date']
+        channels = record['channels']
 
+        if expiration_date:
+            if expiration_date == last_expiration_date:
+                # Aggregate channels if the expiration date matches the last one
+                usage_details[-1]['channels'] += channels
+            else:
+                usage_details.append({
+                    'expiration_date': expiration_date,
+                    'channels': channels
+                })
+                last_expiration_date = expiration_date
+            total_channels += channels
+    logger.debug(
+        "Built aggregate from expiring usages",
+        total_channels=total_channels,
+        usage_details_count=len(usage_details))
     # Handle edge case for empty usage details
     if not usage_details:
         usage_details.append({'expiration_date': TotalUsageDate, 'channels': 0})
@@ -619,7 +648,9 @@ def build_aggregate_from_expiring_usages(
             'expiration_date': TotalUsageDate,
             'channels': total_channels
         })
-
+        logger.debug(
+            "Appended total channels record to usage details",
+            total_channels=total_channels)
     return usage_details
 
 
@@ -631,6 +662,39 @@ class RegularUsageCalculator:
             date=BeginningOfPeriodDate, channels=records_aggregate['channels'],
             monthly_rate=records_aggregate['channels'], daily_rate=0
         )
+
+    @staticmethod
+    def calculate_daily_delta(
+            channel_delta: int,
+            total_usage: dict,
+            remaining_days: int,
+            daily_delta_from_prorated_monthly_channels: int
+    ) -> int:
+        """
+        Calculate the daily delta based on channel delta, total usage, remaining days, and daily delta from prorated monthly channels.
+
+        Args:
+            channel_delta (int): The change in channel count.
+            total_usage (dict): A dictionary containing the total usage data.
+            remaining_days (int): The remaining days in the month.
+            daily_delta_from_prorated_monthly_channels (int): The daily delta calculated from prorated monthly channels.
+
+        Returns:
+            int: The calculated daily delta.
+        """
+        # Calculate the difference between total channels and monthly rate
+        channel_monthly_diff = total_usage['channels'] - total_usage['monthly_rate']
+
+        # Calculate the maximum value between channel_delta and the negative of channel_monthly_diff
+        max_value = max(channel_delta, -channel_monthly_diff)
+
+        # Multiply the max_value by remaining_days
+        delta = max_value * remaining_days
+
+        # Add the daily_delta_from_prorated_monthly_channels to get the final daily_delta
+        daily_delta = delta + daily_delta_from_prorated_monthly_channels
+
+        return daily_delta
 
     @staticmethod
     def calculate_steps_from_records(records: QuerySet[ChannelPartnerServiceRecord], beginning_usage: dict) -> RegularUsageDetailList:
@@ -653,7 +717,11 @@ class RegularUsageCalculator:
             elif channel_delta < 0:
                 monthly_delta = min(0, new_total_channel_count - total_usage['monthly_rate'])
                 daily_delta_from_prorated_monthly_channels = -monthly_delta * date.day
-                daily_delta = (max(channel_delta, -(total_usage['channels'] - total_usage['monthly_rate'])) * remaining_days) + daily_delta_from_prorated_monthly_channels
+                daily_delta = RegularUsageCalculator.calculate_daily_delta(
+                    channel_delta=channel_delta,
+                    total_usage=total_usage,
+                    remaining_days=remaining_days,
+                    daily_delta_from_prorated_monthly_channels=daily_delta_from_prorated_monthly_channels)
             else:
                 continue
 
@@ -675,30 +743,53 @@ class RegularUsageCalculator:
             last_date = date
 
         usage_list.append(total_usage)
+        logger.debug(
+            "Calculated usage steps from records",
+            record_count=records.count())
         return usage_list
 
+
+
     @classmethod
-    def generate_usage_list(cls, records: QuerySet[ChannelPartnerServiceRecord], start_date: datetime.date, end_date: datetime.date) -> RegularUsageDetailList:
+    def generate_usage_list(
+            cls,
+            records: QuerySet[ChannelPartnerServiceRecord],
+            start_date: datetime.date,
+            end_date: datetime.date
+    ) -> RegularUsageDetailList:
         records_start = records.filter(created_ts__lt=start_date)
         records_change = records.filter(created_ts__gte=start_date, created_ts__lt=end_date)
 
         beginning_usage = cls.calculate_beginning_usage_row(records=records_start)
         usage_list = cls.calculate_steps_from_records(
-            records=records_change.order_by('created_ts'), beginning_usage=beginning_usage
-        )
+            records=records_change.order_by('created_ts'),
+            beginning_usage=beginning_usage)
+
+        logger.debug("Generated usage list", usage_list_count=len(usage_list))
         return usage_list
 
 
 # Not actual, waiting on updates from design
 class ExpiringUsageCalculatorService:
     @classmethod
-    def generate_usage_record(cls, records: QuerySet[ChannelPartnerServiceRecord], service: ChannelPartnerService, end_date: datetime.date) -> ExpiringUsageDetailRecord:
+    def generate_usage_record(
+            cls,
+            records: QuerySet[ChannelPartnerServiceRecord],
+            service: ChannelPartnerService,
+            end_date: datetime.date
+    ) -> ExpiringUsageDetailRecord:
         duration_delta = relativedelta(months=service.duration)
         first_usage = records.order_by('created_ts').first()
         if first_usage:
             expiration = first_usage.created_ts.date() + duration_delta
             records_sum = records.filter(created_ts__lt=end_date).aggregate(channels=Sum('quantity', default=0))
             return ExpiringUsageDetailRecord(channels=records_sum['channels'], expiration_date=expiration)
+        logger.debug(
+            "Generating expiring record for service",
+            service=service.name,
+            end_date=end_date,
+            records_count=records.count(),
+            first_usage=first_usage)
         return ExpiringUsageDetailRecord(channels=0, expiration_date=None)
 
 
@@ -719,8 +810,14 @@ class CloudSystemReportsService:
         records = ChannelPartnerServiceRecord.objects.filter(
             cloud_system=cloud_system,
             organization=organization,
-            service=service
-        )
+            service=service)
+        logger.debug(
+            "Generating expiring report for cloud system of organization",
+            cloud_system=cloud_system.system_id,
+            organization=organization.name,
+            period_start=period_start,
+            service=service.name,
+            records_count=records.count())
         return [ExpiringUsageCalculatorService.generate_usage_record(
             service=service,
             records=records,
@@ -751,6 +848,12 @@ class CloudSystemReportsService:
             start_date=period_start,
             end_date=period_end
         )
+        logger.debug(
+            "Generated regular report for cloud system of organization",
+            cloud_system=cloud_system.system_id,
+            organization=organization.name,
+            period_start=period_start,
+            service=service.name)
         return report
 
 
@@ -784,6 +887,12 @@ class OrganizationReportsService:
                                 service=service,
                                 generate=generate)
             ))
+        logger.debug(
+            "Generated regular system reports for organization",
+            organization=organization.name,
+            period_start=period_start,
+            service=service.name,
+            systems=[system.name for system in systems])
         return system_reports
 
     @classmethod
@@ -815,6 +924,12 @@ class OrganizationReportsService:
                         service=service,
                         generate=generate)
                 ))
+        logger.debug(
+            "Generated expiring system reports for organization",
+            organization=organization.name,
+            period_start=period_start,
+            service=service.name,
+            systems=[system.name for system in systems])
         return system_reports
 
     @classmethod
@@ -849,6 +964,10 @@ class OrganizationReportsService:
             summary['daily_rate'] += system_service_dict['daily_rate']
             summary['systems'] += 1
             systems.append(system_service_dict)
+        logger.debug(
+            "Generated regular service summary from system reports",
+            systems=systems,
+            summary=summary)
         return OrganizationRegularServiceReport(systems=systems, summary=summary)
 
     @classmethod
@@ -875,6 +994,10 @@ class OrganizationReportsService:
                 expirations.add(system_service_dict['expiration_date'])
             systems.append(system_service_dict)
         summary['expirations'] = list(expirations)
+        logger.debug(
+            "Generated expiring service summary from system reports",
+            systems=systems,
+            summary=summary)
         return OrganizationExpiringServiceReport(systems=systems, summary=summary)
 
     @classmethod
@@ -894,8 +1017,12 @@ class OrganizationReportsService:
             organization=organization,
             service=service,
             period_start=period_start,
-            generate=generate,
-        )
+            generate=generate)
+        logger.debug(
+            "Generated regular service report from system reports",
+            organization=organization.name,
+            service=service.name,
+            system_reports=system_reports)
         return cls.build_regular_service_summary_from_system_reports(reports=system_reports)
 
     @classmethod
@@ -915,8 +1042,12 @@ class OrganizationReportsService:
             organization=organization,
             service=service,
             period_start=period_start,
-            generate=generate,
-        )
+            generate=generate)
+        logger.debug(
+            "Generated regular detail table from system reports",
+            organization=organization.name,
+            service=service.name,
+            system_usages=system_usages)
         return build_aggregate_from_regular_usages(usages=system_usages)
 
     @classmethod
@@ -936,8 +1067,12 @@ class OrganizationReportsService:
             organization=organization,
             service=service,
             period_start=period_start,
-            generate=generate,
-        )
+            generate=generate)
+        logger.debug(
+            "Generated expiring detail table from system reports",
+            organization=organization.name,
+            service=service.name,
+            system_usages=system_usages)
         return build_aggregate_from_expiring_usages(usages=system_usages)
 
     @classmethod
@@ -957,6 +1092,11 @@ class OrganizationReportsService:
                 generate=generate,
             )
             service_reports[service.id] = report
+        logger.debug(
+            "Generated regular reports for all services of organization",
+            organization=organization.name,
+            period_start=period_start,
+            services=[service.name for service in services])
         return service_reports
 
     @classmethod
@@ -976,6 +1116,11 @@ class OrganizationReportsService:
                 generate=generate,
             )
             service_reports[service.id] = report
+        logger.debug(
+            "Generated expiring reports for all services of organization",
+            organization=organization.name,
+            period_start=period_start,
+            services=[service.name for service in services])
         return service_reports
 
     @classmethod
@@ -997,6 +1142,7 @@ class OrganizationReportsService:
             period_start=period_start,
             generate=generate,
         )
+        logger.debug("Generated expiring service report from system reports")
         return cls.build_expiring_service_summary_from_system_reports(reports=system_reports)
 
     @classmethod
@@ -1023,6 +1169,7 @@ class OrganizationReportsService:
                         daily_rate=summary.get('daily_rate', 0)
                     )
                 )
+        logger.debug("Generated organization report from service reports")
         return organization_report
 
     @classmethod
@@ -1037,19 +1184,31 @@ class OrganizationReportsService:
     ) -> OrganizationUsageReport:
         period_start, period_end = get_period_boundaries(period_start)
         services = organization.channel_partner.services.all()
+
+        logger.debug(
+            "Generating regular reports for all services of organization",
+            organization=organization.name,
+            period_start=period_start,
+            period_end=period_end,
+            services=[service.name for service in services])
         regular_reports = cls.get_regular_reports_for_services(
             organization=organization,
             period_start=period_start,
             services=services.filter(sub_type=ChannelPartnerService.REGULAR),
-            generate=generate,
-        )
+            generate=generate)
 
+        logger.debug(
+            "Generating expiring reports for all services of organization",
+            organization=organization.name,
+            period_start=period_start,
+            period_end=period_end,
+            services=[service.name for service in services])
         expiring_reports = cls.get_expiring_reports_for_services(
             organization=organization,
             period_start=period_start,
             services=services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.TRIAL]),
-            generate=generate,
-        )
+            generate=generate)
+
         return cls.build_organization_report_from_service_reports(
             regular_service_reports=regular_reports, expiring_service_reports=expiring_reports, services=services
         )
@@ -1071,6 +1230,12 @@ class ChannelPartnerReportsService:
         organizations = channel_partner.organizations.all()
         organization_usages: OrganizationRegularUsageList = []
         for organization in organizations:
+            logger.debug(
+                "Generating regular report for organization",
+                organization=organization.name,
+                service=service.name,
+                period_start=period_start,
+                generate=generate)
             organization_usages.append(
                 OrganizationRegularUsage(
                     organization_id=organization.id,
@@ -1082,6 +1247,12 @@ class ChannelPartnerReportsService:
                                 generate=generate)
                 )
             )
+        logger.debug(
+            "Generated regular report for all organizations",
+            channel_partner=channel_partner.name,
+            service=service.name,
+            organization_usages=organization_usages,
+        )
         return organization_usages
 
     @classmethod
@@ -1099,6 +1270,12 @@ class ChannelPartnerReportsService:
         organizations = channel_partner.organizations.all()
         organization_usages: OrganizationExpiringUsageList = []
         for organization in organizations:
+            logger.debug(
+                "Generating expiring report for organization",
+                organization=organization.name,
+                service=service.name,
+                period_start=period_start,
+                generate=generate)
             organization_usages.append(
                 OrganizationExpiringUsage(
                     organization_id=organization.id,
@@ -1127,6 +1304,12 @@ class ChannelPartnerReportsService:
         channel_partners = channel_partner.channel_partners.all()
         channel_partner_usages: ChannelPartnerRegularUsageList = []
         for sub_channel_partner in channel_partners:
+            logger.debug(
+                "Generating regular report for channel partner",
+                channel_partner=sub_channel_partner.name,
+                service=service.name,
+                period_start=period_start,
+                generate=generate)
             channel_partner_usages.append(ChannelPartnerRegularUsage(
                 channel_partner_id=sub_channel_partner.id,
                 channel_partner_name=sub_channel_partner.name,
@@ -1165,7 +1348,11 @@ class ChannelPartnerReportsService:
                     generate=generate
                 )
             ))
-
+        logger.debug(
+            "Generated expiring report for usages for all sub channel partners of channel partner",
+            channel_partner=channel_partner.name,
+            sub_channel_partners=[sub_channel_partner.name for sub_channel_partner in channel_partners],
+            service=service.name)
         return channel_partner_usages
 
     @classmethod
@@ -1183,7 +1370,9 @@ class ChannelPartnerReportsService:
         period_start, period_end = get_period_boundaries(period_start)
         sub_channel_usages: List[ChannelPartnerRegularUsage] = []
         organization_usages: List[OrganizationRegularUsage] = []
-        for sub_service in channel_partner.services.filter(parent_service=service):
+        sub_services = channel_partner.services.filter(parent_service=service)
+
+        for sub_service in sub_services:
             sub_channel_usages.extend(
                 cls.get_regular_channel_partner_usages(
                     channel_partner=channel_partner,
@@ -1200,6 +1389,11 @@ class ChannelPartnerReportsService:
                     generate=generate,
                 )
             )
+        logger.debug(
+            "Generated regular detail table for all organizations and channel partners",
+            channel_partner=channel_partner.name,
+            service=service.name,
+            sub_services=[sub_service.name for sub_service in sub_services])
         return build_aggregate_from_regular_usages(usages=organization_usages + sub_channel_usages)
 
     @classmethod
@@ -1217,7 +1411,9 @@ class ChannelPartnerReportsService:
         period_start, period_end = get_period_boundaries(period_start)
         sub_channel_usages: List[ChannelPartnerExpiringUsage] = []
         organization_usages: List[OrganizationExpiringUsage] = []
-        for sub_service in channel_partner.services.filter(parent_service=service):
+        sub_services = channel_partner.services.filter(parent_service=service)
+
+        for sub_service in sub_services:
             sub_channel_usages.extend(
                 cls.get_expiring_channel_partner_usages(
                     channel_partner=channel_partner,
@@ -1234,6 +1430,11 @@ class ChannelPartnerReportsService:
                     generate=generate,
                 )
             )
+        logger.debug(
+            "Generated expiring table for all organizations and channel partners",
+            channel_partner=channel_partner.name,
+            service=service.name,
+            sub_services=[sub_service.name for sub_service in sub_services])
         return build_aggregate_from_expiring_usages(usages=organization_usages + sub_channel_usages)
 
     @classmethod
@@ -1263,6 +1464,10 @@ class ChannelPartnerReportsService:
                 else:
                     last_changed = None
                 if type == ORGANIZATION:
+                    logger.debug(
+                        "Building regular service summary for organization from sub entity report",
+                        organization=usage_dict['organization_name'],
+                        total_usage=total_usage)
                     sub_entity_service_dict = ChannelPartnerRegularServiceEntity(
                         channels=total_usage['channels'],
                         monthly_rate=total_usage['monthly_rate'],
@@ -1275,6 +1480,10 @@ class ChannelPartnerReportsService:
                     )
                     summary['organizations'] += 1
                 else:
+                    logger.debug(
+                        "Building regular service summary for channel partner from sub entity report",
+                        channel_partner=usage_dict['channel_partner_name'],
+                        total_usage=total_usage)
                     sub_entity_service_dict = ChannelPartnerRegularServiceEntity(
                         channels=total_usage['channels'],
                         monthly_rate=total_usage['monthly_rate'],
@@ -1283,8 +1492,7 @@ class ChannelPartnerReportsService:
                         changes_count=changes_count,
                         last_changed=last_changed,
                         name=usage_dict['channel_partner_name'],
-                        type=type
-                    )
+                        type=type)
                     summary['channel_partners'] += 1
 
                 summary['channels'] += sub_entity_service_dict['channels']
@@ -1312,22 +1520,39 @@ class ChannelPartnerReportsService:
                 total_usage = report[-1]
 
                 if type == ORGANIZATION:
+                    logger.debug(
+                        "Building expiring service summary for organization from sub entity report",
+                        organization=usage_dict['organization_name'],
+                        total_usage=total_usage)
                     sub_entity_service_dict = ChannelPartnerExpiringServiceEntity(
                         channels=total_usage['channels'],
                         id=usage_dict['organization_id'],
                         name=usage_dict['organization_name'],
                         type=type,
-                        expirations=[usage_row['expiration_date'] for usage_row in report if usage_row['expiration_date'] and usage_row['expiration_date'] != TotalUsageDate]
+                        expirations=[
+                            usage_row['expiration_date']
+                            for usage_row in report
+                            if usage_row['expiration_date']
+                               and usage_row['expiration_date'] != TotalUsageDate
+                        ]
                     )
                     summary['organizations'] += 1
                 else:
+                    logger.debug(
+                        "Building expiring service summary for channel partner from sub entity report",
+                        channel_partner=usage_dict['channel_partner_name'],
+                        total_usage=total_usage)
                     sub_entity_service_dict = ChannelPartnerExpiringServiceEntity(
                         channels=total_usage['channels'],
                         id=usage_dict['channel_partner_id'],
                         name=usage_dict['channel_partner_name'],
                         type=type,
-                        expirations=[usage_row['expiration_date'] for usage_row in report if
-                                     usage_row['expiration_date'] and usage_row['expiration_date'] != TotalUsageDate]
+                        expirations=[
+                            usage_row['expiration_date']
+                            for usage_row in report
+                            if usage_row['expiration_date']
+                               and usage_row['expiration_date'] != TotalUsageDate
+                        ]
                     )
                     summary['channel_partners'] += 1
                 summary['channels'] += sub_entity_service_dict['channels']
@@ -1377,18 +1602,29 @@ class ChannelPartnerReportsService:
             generate: bool = False,
     ) -> ChannelPartnerExpiringServiceReport:
         period_start, period_end = get_period_boundaries(period_start)
+        logger.debug(
+            "Generating expiring service report for channel partner",
+            channel_partner=channel_partner.name,
+            service_name=service.name,
+            period_start=period_start,
+            generate=generate)
         organization_usages = cls.get_expiring_organization_usages(
             channel_partner=channel_partner,
             service=service,
             period_start=period_start,
             generate=generate,
         )
+        logger.debug(
+            "Generated organization usages for channel partner",
+            channel_partner=channel_partner.name,
+            service_name=service.name,
+            period_start=period_start,
+            organization_usages_count=len(organization_usages))
         channel_partner_usages = cls.get_expiring_channel_partner_usages(
             channel_partner=channel_partner,
             service=service,
             period_start=period_start,
-            generate=generate,
-        )
+            generate=generate)
         return cls.build_expiring_service_summary_from_sub_entity_reports(
             organization_usages=organization_usages,
             channel_partner_usages=channel_partner_usages)
@@ -1403,6 +1639,13 @@ class ChannelPartnerReportsService:
     ) -> ChannelPartnerRegularServiceReports:
         service_reports: ChannelPartnerRegularServiceReports = {}
         for service in services:
+            logger.debug(
+                "Generating regular service report for channel partner",
+                channel_partner=channel_partner.name,
+                service_name=service.name,
+                service_id=service.id,
+                period_start=period_start,
+                generate=generate)
             service_reports[service.id] = cls.get_regular_service_report(
                                                 channel_partner=channel_partner,
                                                 service=service,
@@ -1420,6 +1663,13 @@ class ChannelPartnerReportsService:
     ) -> ChannelPartnerExpiringServiceReports:
         service_reports: ChannelPartnerExpiringServiceReports = {}
         for service in services:
+            logger.debug(
+                "Generating expiring service report for channel partner",
+                channel_partner=channel_partner.name,
+                service_name=service.name,
+                service_id=service.id,
+                period_start=period_start,
+                generate=generate)
             service_reports[service.id] = cls.get_expiring_service_report(
                 channel_partner=channel_partner,
                 service=service,
@@ -1437,9 +1687,18 @@ class ChannelPartnerReportsService:
         reports = {**regular_service_reports, **expiring_service_reports}
         channel_partner_report: ChannelPartnerUsageReport = []
         for service in services:
+            logger.debug(
+                "Building channel partner report from service reports",
+                service=service.name,
+                service_id=service.id)
             service: ChannelPartnerService
             report = reports.get(service.id)
             if report:
+                logger.debug(
+                    "Adding service report to channel partner report",
+                    service=service.name,
+                    service_id=service.id,
+                    report=report)
                 summary = report.get('summary')
                 channel_partner_report.append(ChannelPartnerUsageReportRecord(
                     service_id=service.id,
@@ -1453,6 +1712,11 @@ class ChannelPartnerReportsService:
                     parent_service_id=service.parent_service.id if service.parent_service else None,
                     parent_service_name=service.parent_service.name if service.parent_service else ''
                 ))
+            else:
+                logger.debug(
+                    "Service report not found for channel partner",
+                    service=service.name,
+                    service_id=service.id)
         return channel_partner_report
 
     @classmethod
@@ -1467,16 +1731,39 @@ class ChannelPartnerReportsService:
     ) -> ChannelPartnerUsageReport:
         period_start, period_end = get_period_boundaries(period_start)
         services = channel_partner.services.all().select_related('parent_service')
+
+        regular_services = services.filter(sub_type=ChannelPartnerService.REGULAR)
+        logger.debug(
+            "Generating regular channel partner report",
+            channel_partner=channel_partner.name,
+            period_start=period_start,
+            services=[service.name for service in regular_services])
         regular_reports = cls.get_regular_service_reports(
             channel_partner=channel_partner,
             period_start=period_start,
-            services=services.filter(sub_type=ChannelPartnerService.REGULAR),
+            services=regular_services,
             generate=generate,
         )
+        expiring_services = services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.TRIAL])
+        logger.debug(
+            "Generating expiring channel partner report",
+            channel_partner=channel_partner.name,
+            period_start=period_start,
+            services=[service.name for service in expiring_services])
         expiring_reports = cls.get_expiring_service_reports(
             channel_partner=channel_partner,
             period_start=period_start,
-            services=services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.TRIAL]),
+            services=expiring_services,
             generate=generate,
         )
-        return cls.build_channel_partner_report_from_service_reports(regular_service_reports=regular_reports, expiring_service_reports=expiring_reports, services=services)
+        logger.debug(
+            "Building channel partner report",
+            channel_partner=channel_partner.name,
+            period_start=period_start,
+            services_count=services.count(),
+            regular_reports_count=len(regular_reports),
+            expiring_reports_count=len(expiring_reports))
+        return cls.build_channel_partner_report_from_service_reports(
+            regular_service_reports=regular_reports,
+            expiring_service_reports=expiring_reports,
+            services=services)

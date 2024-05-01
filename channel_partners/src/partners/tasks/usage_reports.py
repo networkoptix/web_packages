@@ -58,13 +58,31 @@ class DjangoDBPoolExecutor(ThreadPoolExecutor):
 
 def calculate_system_reports(system, services, period_start):
     for service in services:
-        CloudSystemReportsService.get_regular_report(
-            cloud_system=system,
-            organization=system.organization,
-            service=service,
-            period_start=period_start,
-            generate=True,
-        )
+        if service.is_expiring:
+            logger.debug(
+                "Cloud System Report -- Getting Expiring Report",
+                system=system.name,
+                org=system.organization.name,
+                service=service.name)
+            CloudSystemReportsService.get_expiring_report(
+                cloud_system=system,
+                organization=system.organization,
+                service=service,
+                period_start=period_start,
+                generate=True,
+            )
+        else:
+            logger.debug(
+                "Cloud System Report -- Getting Regular Report",
+                system=system.name,
+                org=system.organization.name,
+                service=service.name)
+            CloudSystemReportsService.get_regular_report(
+                cloud_system=system,
+                organization=system.organization,
+                service=service,
+                period_start=period_start,
+                generate=True)
 
 
 def calculate_organization_reports(
@@ -74,25 +92,42 @@ def calculate_organization_reports(
 ):
     for service in services:
         if service.is_expiring:
+            logger.debug(
+                "Organization Report -- Getting Expiring System Report",
+                org=organization.name,
+                service=service.name,
+                period_start=period_start)
             OrganizationReportsService.get_expiring_system_reports(
                 organization=organization,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Organization Report -- Getting Expiring Service Report",
+                org=organization.name,
+                service=service.name,
+                period_start=period_start)
             OrganizationReportsService.get_expiring_service_report(
                 organization=organization,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
         else:
+            logger.debug(
+                "Organization Report -- Getting Regular System Report",
+                org=organization.name,
+                service=service.name,
+                period_start=period_start)
             OrganizationReportsService.get_regular_system_reports(
                 organization=organization,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Organization Report -- Getting Regular Service Report",
+                org=organization.name,
+                service=service.name,
+                period_start=period_start)
             OrganizationReportsService.get_regular_service_report(
                 organization=organization,
                 service=service,
@@ -105,6 +140,10 @@ def calculate_organization_reports(
         #     period_start=period_start,
         #     generate=True
         # )
+    logger.debug(
+        "Organization Report -- Getting Organization Report",
+        org=organization.name,
+        period_start=period_start)
     OrganizationReportsService.get_organization_report(
         organization=organization,
         period_start=period_start,
@@ -122,8 +161,19 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
     # TODO. Remove that hack see CLOUD-13213. Testing is broken when used with django_db(transaction=true).
     if settings.TESTING:
         for system in systems:
+            logger.debug(
+                "Calculating reports for system",
+                system=system.name,
+                services=len(services),
+                org=system.organization.name,
+                period_start=period_start)
             calculate_system_reports(system, services, period_start)
         for organization in channel_partner.organizations.all():
+            logger.debug(
+                "Calculating reports for organization",
+                org=organization.name,
+                services=len(services),
+                period_start=period_start)
             calculate_organization_reports(organization, services, period_start)
     else:
         with DjangoDBPoolExecutor(max_workers=WORKERS_NUMBER) as executor:
@@ -144,54 +194,91 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
                 future.result()
     for service in services:
         if service.is_expiring:
+            logger.debug(
+                "Channel Partner Report -- Getting Expiring Organization Usages",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_expiring_organization_usages(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Channel Partner Report -- Getting Expiring Channel Partner Usages",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_expiring_channel_partner_usages(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Channel Partner Report -- Getting Expiring Service Report",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_expiring_service_report(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Channel Partner Report -- Getting Expiring Detail Table",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
+            ChannelPartnerReportsService.get_expiring_detail_table(
+                channel_partner=channel_partner,
+                service=service,
+                period_start=period_start,
+                generate=True)
         else:
+            logger.debug(
+                "Channel Partner Report -- Getting Regular Organization Usages",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_regular_organization_usages(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Channel Partner Report -- Getting Regular Channel Partner Usages",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_regular_channel_partner_usages(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
+            logger.debug(
+                "Channel Partner Report -- Getting Regular Service Report",
+                channel_partner=channel_partner.name,
+                service=service.name,
+                period_start=period_start)
             ChannelPartnerReportsService.get_regular_service_report(
                 channel_partner=channel_partner,
                 service=service,
                 period_start=period_start,
-                generate=True
-            )
+                generate=True)
         # ChannelPartnerReportsService.get_regular_detail_table(
         #     channel_partner=channel_partner,
         #     service=service,
         #     period_start=period_start,
         #     generate=True
         # )
+    logger.debug(
+        "Channel Partner Report -- Getting Channel Partner Report",
+        channel_partner=channel_partner.name,
+        period_start=period_start)
     ChannelPartnerReportsService.get_channel_partner_report(
         channel_partner=channel_partner,
         period_start=period_start,
-        generate=True
-    )
+        generate=True)
 
 
 def calculate_all_reports():
@@ -200,6 +287,7 @@ def calculate_all_reports():
     partners_list = ChannelPartner.objects.filter(path__isnull=False).order_by("-path__len")
     partners_list = list(partners_list) + list(ChannelPartner.objects.filter(path__isnull=True))
     for channel_partner in partners_list:
+        logger.debug("Calculating reports for channel partner", channel_partner=channel_partner.name)
         calculate_partner_reports(channel_partner, period_start)
 
 

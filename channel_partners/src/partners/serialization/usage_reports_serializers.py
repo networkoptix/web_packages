@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from partners.models import ChannelPartnerService
+from partners.serializers import CodeChoiceField
 from partners.services.usage_reports_service import (
     BeginningOfPeriodDate,
     TotalUsageDate,
@@ -63,6 +65,10 @@ class OrganizationUsageReportRecordSerializer(serializers.Serializer):
     # expirations = serializers.ListSerializer(child=serializers.UUIDField(), allow_empty=True)
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
+    sub_type = CodeChoiceField(
+        choices=list(ChannelPartnerService.SUB_TYPES_CODES),
+        required=False,
+        source='service_sub_type')
 
 
 class ChannelPartnerSubEntityServicesSerializer(serializers.Serializer):
@@ -111,3 +117,47 @@ class ChannelPartnerUsageReportRecordSerializer(serializers.Serializer):
     # expirations = serializers.ListField(child=serializers.UUIDField(), allow_empty=True)
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
+    sub_type = subType = CodeChoiceField(choices=list(ChannelPartnerService.SUB_TYPES_CODES))
+
+
+# Expiring Serializers
+class SystemExpiringServiceSummarySerializer(serializers.Serializer):
+    system_id = serializers.UUIDField()
+    system_name = serializers.CharField()
+    channels = serializers.IntegerField()
+    expiration_date = serializers.DateField(format='%Y-%m-%d', required=False)
+
+
+class OrganizationExpiringServiceSummarySerializer(serializers.Serializer):
+    channels = serializers.IntegerField()
+    systems = serializers.IntegerField()
+    expirations: serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
+
+
+class OrganizationExpiringServiceReportSerializer(serializers.Serializer):
+    systems = SystemExpiringServiceSummarySerializer(many=True)
+    summary = OrganizationExpiringServiceSummarySerializer(many=False)
+
+
+class ChannelPartnerExpiringServiceSummarySerializer(serializers.Serializer):
+    channels: serializers.IntegerField()
+    organizations: serializers.IntegerField()
+    channel_partners: serializers.IntegerField()
+
+
+class ChannelPartnerExpiringServiceEntitiesSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    type = serializers.ChoiceField(choices=('organization', 'channel_partner'))
+    name = serializers.CharField()
+    channels = serializers.IntegerField()
+    expirations: serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
+
+
+class ChannelPartnerExpiringServiceReportSerializer(serializers.Serializer):
+    sub_entities = ChannelPartnerExpiringServiceEntitiesSerializer(many=True)
+    summary = ChannelPartnerExpiringServiceSummarySerializer(many=False)
+
+
+class ExpiringUsageDetailRecordSerializer(serializers.Serializer):
+    channels = serializers.IntegerField()
+    expiration_date = ReportDateField(format='%Y-%m-%d')
