@@ -108,6 +108,9 @@ export class NxAutocompleteComponent<T> implements ControlValueAccessor, Validat
      */
     requireSelection = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    /** Sets the initial value to the first item */
+    setFirstAsInitialValue = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /** Content to display when search does not match anything.
      *
      * Currently should only used with `requireSelection = true` (content will still be displayed
@@ -155,6 +158,18 @@ export class NxAutocompleteComponent<T> implements ControlValueAccessor, Validat
         },
         { allowSignalWrites: true },
     );
+    protected _setFirstAsInitialValueEffect = effect(() => {
+        const setInitialValue = this.setFirstAsInitialValue();
+        const item = this.items()?.[0];
+        if (setInitialValue && item) {
+            untracked(() => {
+                this.selected.set(item);
+                this.select.emit(item.value());
+                this.writeValue(item.displayText(), false);
+                this.onChange(item.displayText());
+            });
+        }
+    });
 
     private overlayRef: OverlayRef;
     private get dropdownOpen(): boolean {
