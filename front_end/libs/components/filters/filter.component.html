@@ -21,7 +21,7 @@
         <div [class.filter-items-dialog-container]="showMoreDialogOpen()">
             <ng-content></ng-content>
         </div>
-        @if (!showMoreDialogOpen()) {
+        @if (!showMoreDialogOpen() && showMoreVisible()) {
             <div
                 class="show-more"
                 translate

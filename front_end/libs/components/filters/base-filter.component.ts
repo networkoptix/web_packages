@@ -5,6 +5,7 @@ import {
     Signal,
     TemplateRef,
     WritableSignal,
+    computed,
     contentChildren,
     effect,
     inject,
@@ -77,6 +78,8 @@ export abstract class BaseFilterComponent<T, M extends boolean> implements Contr
     abstract selectedValueExists: Signal<boolean>;
 
     abstract isFilterItemSelected(value: T): boolean;
+
+    showMoreVisible = computed(() => this.filterItems().length > this.displayLimit());
 
     // Search functionality
     searchInputText = signal('');

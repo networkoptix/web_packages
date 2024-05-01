@@ -90,3 +90,50 @@
         </nx-filter-container>
     </div>
 </div>
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <div class="col-4">
+        <nx-filter-container header="Exact Number of Items">
+            <nx-single-filter
+                [(ngModel)]="selectedItem"
+                [displayLimit]="5"
+            >
+                @for (item of fiveItems(); track item) {
+                    <nx-radio-filter-item [value]="item">
+                        {{ item }}
+                    </nx-radio-filter-item>
+                }
+            </nx-single-filter>
+        </nx-filter-container>
+    </div>
+    <div class="col-4">
+        <nx-filter-container header="Too many items">
+            <nx-single-filter
+                [(ngModel)]="selectedItem"
+                [displayLimit]="3"
+            >
+                @for (item of fiveItems(); track item) {
+                    <nx-radio-filter-item [value]="item">
+                        {{ item }}
+                    </nx-radio-filter-item>
+                }
+            </nx-single-filter>
+        </nx-filter-container>
+    </div>
+    <div class="col-4">
+        <nx-filter-container header="Not enough items">
+            <nx-single-filter
+                [(ngModel)]="selectedItem"
+                [displayLimit]="7"
+            >
+                @for (item of fiveItems(); track item) {
+                    <nx-radio-filter-item [value]="item">
+                        {{ item }}
+                    </nx-radio-filter-item>
+                }
+            </nx-single-filter>
+        </nx-filter-container>
+    </div>
+</div>
