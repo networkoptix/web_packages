@@ -1209,6 +1209,17 @@
                         "displayName": "Channel Partners"
                     }
                 }
+            },
+            "reports": {
+                "displayName": "Reports",
+                "nodes": {
+                    "serviceUsage": {
+                        "displayName": "Service Usage"
+                    },
+                    "serviceChanges": {
+                        "displayName": "Service Changes"
+                    }
+                }
             }
         }
     },
