@@ -143,11 +143,7 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
                                 this.currentGroupId$$(),
                             ]);
                         } else {
-                            this.orgUsersStore.removeUser(
-                                currOrgId,
-                                user.email,
-                                user.groupRoles?.map(group => group.groupId),
-                            );
+                            this.orgUsersStore.removeUser(currOrgId, user.email);
                         }
                     }
                 }

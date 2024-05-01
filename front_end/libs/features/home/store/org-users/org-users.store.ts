@@ -320,7 +320,9 @@ export const OrgUsersStore = signalStore(
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
                         iif(
-                            () => store.currentGroupUsersEntityMap()[email]!.isOrgUser,
+                            () =>
+                                store.currentGroupUsersEntityMap()[email]!.isOrgUser ||
+                                folders.length === 0,
                             chpService.deleteOrganizationUser(orgId, email),
                             chpService.deleteBulkUserGroups(
                                 orgId,
@@ -336,55 +338,45 @@ export const OrgUsersStore = signalStore(
                         });
                     },
                     removeUsers: (orgId: string, folder: string, emails: string[]) => {
-                        const users: { orgUsers: OrgUser[]; groupUsers: OrgUser[] } = store
-                            .currentGroupUsersEntities()
-                            .reduce(
-                                (deletedUsers, user) => {
-                                    if (emails.includes(user.email)) {
-                                        if (user?.groupRoles?.length) {
-                                            deletedUsers.groupUsers.push(user);
-                                        } else {
-                                            deletedUsers.orgUsers.push(user);
-                                        }
-                                    }
-                                    return deletedUsers;
-                                },
-                                { orgUsers: [], groupUsers: [] } as {
-                                    orgUsers: OrgUser[];
-                                    groupUsers: OrgUser[];
-                                },
-                            );
                         const requests: Observable<unknown>[] = [];
-                        if (users.orgUsers.length) {
-                            requests.push(
-                                chpService.deleteBulkOrganizationUsers(
-                                    orgId,
-                                    users.orgUsers.map(({ email }) => email),
-                                ),
-                            );
-                        }
-                        if (orgId !== folder) {
-                            requests.push(
-                                chpService.deleteBulkGroupUsers(
-                                    folder,
-                                    users.groupUsers.map(({ email }) => email),
-                                ),
-                            );
+                        if (!folder || folder === orgId) {
+                            requests.push(chpService.deleteBulkOrganizationUsers(orgId, emails));
                         } else {
-                            const groupMap: { [key: string]: string[] } = {};
-                            for (const user of users.groupUsers) {
-                                for (const group of user?.groupRoles || []) {
-                                    const { groupId } = group;
-                                    if (!groupMap[groupId]) {
-                                        groupMap[groupId] = [];
-                                    }
-                                    groupMap[groupId].push(user.email);
-                                }
-                            }
+                            const users: { orgUsers: OrgUser[]; groupUsers: OrgUser[] } = store
+                                .currentGroupUsersEntities()
+                                .reduce(
+                                    (deletedUsers, user) => {
+                                        if (emails.includes(user.email)) {
+                                            if (user?.groupRoles?.length) {
+                                                deletedUsers.groupUsers.push(user);
+                                            } else {
+                                                deletedUsers.orgUsers.push(user);
+                                            }
+                                        }
+                                        return deletedUsers;
+                                    },
+                                    { orgUsers: [], groupUsers: [] } as {
+                                        orgUsers: OrgUser[];
+                                        groupUsers: OrgUser[];
+                                    },
+                                );
 
-                            Object.entries(groupMap).forEach(([id, users]) =>
-                                requests.push(chpService.deleteBulkGroupUsers(id, users)),
-                            );
+                            if (users.orgUsers.length) {
+                                requests.push(
+                                    chpService.deleteBulkOrganizationUsers(
+                                        orgId,
+                                        users.orgUsers.map(({ email }) => email),
+                                    ),
+                                );
+                            }
+                            if (users.groupUsers.length) {
+                                requests.push(
+                                    chpService.deleteBulkGroupUsers(
+                                        folder,
+                                        users.groupUsers.map(({ email }) => email),
+                                    ),
+                                );
+                            }
                         }
                         zip(requests).subscribe(() =>
                             patchState(store, removeEntities(emails, currentGroupUsersEntity)),

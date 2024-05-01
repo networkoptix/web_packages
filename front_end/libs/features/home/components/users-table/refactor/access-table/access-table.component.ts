@@ -71,11 +71,12 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
         this.checkAllContainer.next(checkAllContainerRef);
     }
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
-    selectedGroups$$ = computed(() =>
-        this.checkAllContainer$$()
-            ?.otherCheckBoxInstances$$()
-            .filter(row => row.value)
-            .map(row => row.data$$()),
+    selectedGroups$$ = computed(
+        () =>
+            this.checkAllContainer$$()
+                ?.otherCheckBoxInstances$$()
+                .filter(row => row.value)
+                .map(row => row.data$$()) as UserRecord[],
     );
     selectedGroupsMap$$ = computed(() => {
         const selectedRows = new Map(
@@ -206,11 +207,14 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
             })
             .then(confirm => {
                 if (confirm) {
-                    this.selectedGroups$$()?.forEach((group: UserRecord): void => {
-                        this.orgUsersStore.removeUser(this.currentOrg$$()!.id, group.email, [
-                            this.getGroupId(group),
-                        ]);
-                    });
+                    const groupIds = this.selectedGroups$$()?.map((group: UserRecord): string =>
+                        this.getGroupId(group),
+                    );
+                    this.orgUsersStore.removeUser(
+                        this.currentOrg$$()!.id,
+                        this.email$$(),
+                        groupIds,
+                    );
                 }
             });
     }
