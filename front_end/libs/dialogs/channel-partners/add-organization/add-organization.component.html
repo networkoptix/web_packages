@@ -1,5 +1,6 @@
 <form
-    name="addPartnerForm"
+    #addOrganizationForm="ngForm"
+    name="addOrganizationForm"
     novalidate
 >
     <div class="modal-header">
@@ -29,8 +30,19 @@
                 id="partnerName"
                 name="partnerName"
                 [(ngModel)]="name"
-                required
+                #partnerName="ngModel"
+                [required]="addOrganizationForm.submitted"
             />
+            <div
+                class="warning-container"
+                *ngIf="partnerName.touched && partnerName.errors?.required"
+            >
+                <span
+                    class="input-error"
+                    translate
+                    >Organization name is required</span
+                >
+            </div>
         </div>
     </div>
     <div class="modal-footer">
