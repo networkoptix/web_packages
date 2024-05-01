@@ -247,7 +247,6 @@ export class UserWithGroupsManager extends UserManager {
         if (usersWithGroups?.[0].accessRole) {
             usersWithGroups = usersWithGroups.map(user => ({
                 ...user,
-                attributes: 'readonly',
                 groupIds: [user.userRoleId],
                 permissions: 'none',
                 resourceAccessRights: {},
