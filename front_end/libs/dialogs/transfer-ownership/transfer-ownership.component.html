@@ -63,6 +63,7 @@
                 [(ngModel)]="orgSearch"
                 (select)="selectedOrg = $event"
                 requireSelection
+                [setFirstAsInitialValue]="orgs$$().length === 1"
                 [placeholder]="'Organization' | translate"
                 [noMatchesContent]="'Organization not found' | translate"
             >
