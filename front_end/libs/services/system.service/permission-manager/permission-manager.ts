@@ -455,8 +455,12 @@ export class PermissionManager {
     /**
      * Returns an observable that emits the currentUser after permissions have been resolved.
      *
-     * Timeout is set to 10 seconds, if the permissions for a user is not resolved by then, it will emit the currentUser.
-     * This state probably isn't really possible except if the requests to get the user's permissions are failing.
+     * The timeout is set to 10 seconds for webadmin and 3 seconds for cloud portal.
+     *
+     * On cloud portal we fallback to getting the user from the cloud if the currentUser is not resolved in time.
+     *
+     * This is done because there are weird cases where /rest/v1/login/sessions could potentially take a really
+     * long time to respond.
      *
      * @param injector - The injector to use for the context. This is required to convert the signal to an observable
      * @returns currentUser - The currentUser after permissions have been resolved
@@ -464,7 +468,13 @@ export class PermissionManager {
     public permissionsInitialized = (injector: Injector): Observable<CurrentUser | undefined> =>
         runInInjectionContext(injector, () => toObservable(this.currentUser$$)).pipe(
             filter(user => !!user && Object.values(user.permissions).some(identity)),
-            timeout({ first: 10000, with: () => Promise.resolve(this.currentUser$$()) }),
+            timeout({
+                first: environment.isLocal ? 10_000 : 5_000,
+                with: () =>
+                    environment.isLocal
+                        ? Promise.resolve(this.currentUser$$())
+                        : this.getCurrentUserFromCloud().then(() => this.currentUser$$()),
+            }),
             take(1),
         );
 

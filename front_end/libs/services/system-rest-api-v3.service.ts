@@ -69,6 +69,16 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
+    /**
+     * For some reason /rest/v1/login/sessions could potentially take a really long time to respond.
+     *
+     * On PermissionManager.permissionsInitialized we fallback to getting the user to cloud if this
+     * request doesn't return after 3 seconds.
+     *
+     * Normally the response only takes a few hundred milliseconds but in cases where it takes a
+     * a long time it's unclear what the upper bound is but was seeing cases where it took over
+     * 20 seconds which is too long to block the UI.
+     */
     public override getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
         let headers: RequestOpts['headers'];
         if (forceReload) {
