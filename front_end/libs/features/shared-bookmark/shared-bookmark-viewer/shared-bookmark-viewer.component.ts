@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { ClipComponent } from '@components/clip/clip.component';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -20,17 +21,14 @@ export class SharedBookmarkViewerComponent {
     description = input<string>('');
 
     languageProvider = inject(NxLanguageProviderService);
-    dateText = computed(() =>
-        Intl.DateTimeFormat(this.languageProvider.currentLocale, { dateStyle: 'medium' }).format(
-            this.startTime(),
-        ),
-    );
+    dateTimeService = inject(NxDateTimeFormatService);
+    dateText = computed(() => this.dateTimeService.toMediumDateString(this.startTime()));
     timeText = computed(() =>
-        Intl.DateTimeFormat(this.languageProvider.currentLocale, {
+        this.startTime().toLocaleTimeString(this.dateTimeService.locale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn',
-        }).format(this.startTime()),
+        }),
     );
 
     // TODO: error handle

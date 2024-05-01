@@ -11,7 +11,7 @@ import {
 import { escapeRegExp } from 'lodash-es';
 import type { BehaviorSubject } from 'rxjs';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { MS } from '@utils/general';
 import type { NgChanges } from '@utils/ng-changes';
 import { icons } from '@variables/static-variables';
@@ -132,10 +132,10 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     lastValidValue: string | null = null;
     postPeriod: boolean = true;
 
-    constructor(private language: NxLanguageProviderService) {}
+    constructor(private dateTimeService: NxDateTimeFormatService) {}
 
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(this.language.currentLocale, {
+        const dtFormat = Intl.DateTimeFormat(this.dateTimeService.locale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers

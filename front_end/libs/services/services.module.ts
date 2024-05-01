@@ -6,6 +6,7 @@ import { NxThemeService } from '@services/theme.service';
 
 import { NxAccountService } from './account.service';
 import { NxApplyService } from './apply.service';
+import { NxDateTimeFormatService } from './datetime-format.service';
 import { NxAppSourceService } from './nx-app-source.service';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -25,6 +26,7 @@ import { NxVmsClientService } from './vms-client.service';
         NxAppStateService,
         NxApplyService,
         NxLanguageProviderService,
+        NxDateTimeFormatService,
         NxConfigService,
         NxPageService,
         NxSystemsService,
