@@ -173,6 +173,10 @@ export function msToParts(ms: number, maxUnit: Exclude<keyof typeof MS, 'ms'> = 
     ) as MsParts;
 }
 
+export function coerceDate(date: number | Date): Date {
+    return typeof date === 'number' ? new Date(date) : date;
+}
+
 /* Array */
 export function moveArrayElem<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
     while (oldIndex < 0) {

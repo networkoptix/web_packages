@@ -8,8 +8,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import type { ViewUsageDetails as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { DetailTableResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxUsageDetailsDialogTableComponent } from './usage-details-dialog-table/usage-details-dialog-table.component';
 import { UsageDetailDialogRecord } from './view-usage-details.types';
@@ -33,8 +33,6 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
     isLoading$$ = computed<boolean>(() => !this.detailTableData$$());
     formattedRecords$$ = computed<UsageDetailDialogRecord[]>(() => {
         const records = this.detailTableData$$();
-        const currentLocale = this.language.currentLocale;
-
         // previousPeriod and total are always assigned in the loop below because 'beginning' and 'total'
         // are always returned by the API, although TypeScript can't know that for certain and throws a warning below
         // without these non null assertions
@@ -62,9 +60,8 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
                 total = formattedRecord;
             } else {
                 const [year, month, day] = date.split('-').map(d => Number(d));
-                formattedRecord.changed = new Date(year, month - 1, day).toLocaleString(
-                    currentLocale,
-                    { dateStyle: 'medium' },
+                formattedRecord.changed = this.dateTimeFormat.toMediumDateString(
+                    new Date(year, month - 1, day),
                 );
                 formattedRecord.isChangeRecord = true;
                 currentPeriodChanges.push(formattedRecord);
@@ -76,7 +73,7 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { detailTableData$, entityName }: DT['data'],
-        private language: NxLanguageProviderService,
+        private dateTimeFormat: NxDateTimeFormatService,
     ) {
         super(dialogRef);
         this.entityName = entityName;

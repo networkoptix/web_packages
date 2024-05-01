@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { icons } from '@static-variables';
 import { msToParts } from '@utils/general';
 
@@ -15,7 +15,7 @@ import { Bookmark } from '../../bookmarks.types';
 })
 export class NxBookmarksCardComponent implements OnInit {
     @Input() bookmark: Bookmark;
-    DATE_FORMAT = 'mmm dd, yyyy';
+
     icons = icons;
 
     startTime: string;
@@ -26,19 +26,17 @@ export class NxBookmarksCardComponent implements OnInit {
 
     constructor(
         private dialogs: NxDialogsService,
-        private language: NxLanguageProviderService,
+        private dateTimeService: NxDateTimeFormatService,
     ) {}
 
     ngOnInit(): void {
-        const currentLocale = this.language.currentLocale;
-        const startDate = new Date(this.bookmark.startTimeMs);
-        const timeFormat = Intl.DateTimeFormat(currentLocale, {
+        const startDatetime = new Date(this.bookmark.startTimeMs);
+        this.startDate = this.dateTimeService.toMediumDateString(startDatetime);
+        this.startTime = startDatetime.toLocaleTimeString(this.dateTimeService.locale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn',
         });
-        this.startTime = timeFormat.format(startDate);
-        this.startDate = startDate.toLocaleString(currentLocale, { dateStyle: 'medium' });
 
         const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark.durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';

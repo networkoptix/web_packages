@@ -13,7 +13,7 @@ import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, timer } from 'rxjs';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { MS, offsetDate } from '@utils/general';
@@ -82,9 +82,9 @@ export class NxDateAndTimeFilterComponent {
     constructor(
         dateAdapter: DateAdapter<Date>,
         @Inject(WINDOW) private window: Window,
-        language: NxLanguageProviderService,
+        dateTimeService: NxDateTimeFormatService,
     ) {
-        dateAdapter.setLocale(language.currentLocale);
+        dateAdapter.setLocale(dateTimeService.locale);
         this.updateFixedDates();
         timer(MS.min, MS.min)
             .pipe(untilDestroyed(this))

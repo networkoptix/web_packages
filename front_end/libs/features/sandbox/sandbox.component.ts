@@ -111,6 +111,7 @@ export class NxSandboxComponent {
                             label: 'Buttons',
                             path: '/buttons',
                         },
+                        { id: 'datetime', label: 'Datetime', path: '/datetime' },
                         {
                             id: 'dropdowns',
                             label: 'Dropdowns',
