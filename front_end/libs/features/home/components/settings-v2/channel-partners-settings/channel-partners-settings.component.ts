@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, ViewChild, input } from '@angular/core';
+import { Component, OnInit, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
@@ -24,6 +24,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
+import { NxSettingsGeneralComponent } from '@pages/home/components/settings/components/general/general.component';
 import { settingsViews } from '@pages/home/home.types';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -37,8 +38,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { icons, MAX_NAME_LENGTH } from '@static-variables';
 
-import { NxSettingsGeneralComponent } from '../../settings/components/general/general.component';
-import { NxSettingsStateComponent } from '../../settings/components/state/state.component';
+import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
 interface SettingsState {
     view?: string;
@@ -53,8 +53,7 @@ interface SettingsState {
     standalone: true,
     imports: [
         CommonModule,
-        NxSettingsGeneralComponent,
-        NxSettingsStateComponent,
+        NxSettingsGeneralV2Component,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         TranslateModule,
@@ -68,6 +67,7 @@ interface SettingsState {
         NxContentBlockSectionComponent,
         NxFocusMeDirective,
         NxGenericDropdownModule,
+        NxSettingsGeneralComponent,
     ],
 })
 export class NxChannelPartnersSettingsComponent implements OnInit {
@@ -82,6 +82,7 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
     currentName$ = new BehaviorSubject<string | null>(null);
     currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
+    updateCPProcess: Process;
     // eslint-disable-next-line nx/signal-naming-convention
     subchannelSettings = input<boolean>();
 
@@ -137,8 +138,6 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
 
     State = State;
 
-    @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
-
     constructor(
         private store: Store,
         private processService: NxProcessService,
@@ -147,6 +146,35 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
 
     ngOnInit(): void {
         this.updateStateProcess = this.processService.createProcess(
+            () => {
+                const currentState = this.currentState$$();
+                switch (currentState.view) {
+                    case this.settingsViews.CHANNEL_PARTNERS:
+                        return this.updateCPState();
+                    case this.settingsViews.SUBCHANNELS:
+                        return this.updateSubchannelState(currentState);
+                    default:
+                        console.error('Invalid current view');
+                }
+                return firstValueFrom(of(true));
+            },
+            {},
+            res => {
+                const currentState = this.currentState$$();
+                switch (currentState.view) {
+                    case this.settingsViews.SUBCHANNELS:
+                        this.updateSubchannelStore(res);
+                        break;
+                    case this.settingsViews.CHANNEL_PARTNERS:
+                        this.updateChannelPartnerStore(res);
+                        break;
+                }
+
+                this.resetUpdates();
+            },
+            () => {},
+        );
+        this.updateCPProcess = this.processService.createProcess(
             () => {
                 const currentState = this.currentState$$();
                 switch (currentState.view) {
@@ -199,6 +227,14 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
         if (this.name$$() !== this.currentName$.value) {
             cpBody.name = this.currentName$.value;
         }
+        // Todo: add extId to body when API is ready
+        return firstValueFrom(
+            this.cpService.updateChannelPartner(this.currentPartnerId$$(), cpBody),
+        );
+    }
+
+    updateCPState(): Promise<ChannelPartner> {
+        const cpBody: UpdateChannelPartner = {};
         if (this.effectState$$() !== this.currentState$.value) {
             cpBody.state = this.currentState$.value;
         }
@@ -222,6 +258,13 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
         if (this.name$$() !== this.currentName$.value) {
             subchannelBody.name = this.currentName$.value;
         }
+        return firstValueFrom(
+            this.cpService.updateChannelPartner(currentState.item?.id, subchannelBody),
+        );
+    }
+
+    updateSubchannelState(currentState: SettingsState): Promise<ChannelPartner> {
+        const subchannelBody: UpdateChannelPartner = {};
         if (this.effectState$$() !== this.currentState$.value) {
             subchannelBody.state = this.currentState$.value;
         }
@@ -244,19 +287,6 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
     }
 
     onNameChange(value: string): void {
-        const { partnerName } = this.settingsGeneralForm?.controls;
-
-        if (value.length === 0) {
-            partnerName.setErrors({ required: true });
-            partnerName.markAsTouched();
-            partnerName.markAsDirty();
-        } else if (value.length > MAX_NAME_LENGTH) {
-            partnerName.setErrors({ tooLong: true });
-            partnerName.markAsTouched();
-            partnerName.markAsDirty();
-        } else {
-            partnerName.setErrors(null);
-        }
         this.currentName$.next(value);
     }
 

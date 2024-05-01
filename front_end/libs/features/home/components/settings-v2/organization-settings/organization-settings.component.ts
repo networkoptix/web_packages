@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, OnInit, computed, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     MatButtonToggle,
     MatButtonToggleGroup,
@@ -37,6 +37,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     Organization,
     OrgRoleIds,
+    PartnerRoles,
     State,
     UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -46,8 +47,7 @@ import { Process } from '@services/process.service/process';
 import { MAX_NAME_LENGTH } from '@static-variables';
 import { icons } from '@variables/static-variables';
 
-import { NxSettingsGeneralComponent } from '../../settings/components/general/general.component';
-import { NxSettingsStateComponent } from '../../settings/components/state/state.component';
+import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
 interface SettingsState {
     item?: Organization;
@@ -82,8 +82,7 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
     standalone: true,
     imports: [
         CommonModule,
-        NxSettingsGeneralComponent,
-        NxSettingsStateComponent,
+        NxSettingsGeneralV2Component,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         TranslateModule,
@@ -116,6 +115,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
     currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
     currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
+    updateOrgProcess: Process;
 
     currentState$$ = computed<SettingsState>(() => {
         const currentPartner = this.currentPartner$$();
@@ -123,6 +123,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
         return {
             canUpdateStatus: currentPartner?.effectiveState === 'active',
             item: currentOrg,
+            view: settingsViews.ORGANIZATIONS,
         };
     });
 
@@ -156,12 +157,14 @@ export class NxOrganizationSettingsComponent implements OnInit {
 
     State = State;
 
-    @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
-
     readonly partnerAccess = partnerAccess;
 
     currAccess$$ = computed<DropdownItem<string | null>>(
         () => accessMap?.[this.accessLevel$$()] || null,
+    );
+
+    canUpdateAccess = !this.currentOrg$$()?.ownPermissions.includes(
+        PartnerRoles.field_access_org_admin,
     );
 
     constructor(
@@ -174,6 +177,17 @@ export class NxOrganizationSettingsComponent implements OnInit {
 
     ngOnInit(): void {
         this.updateStateProcess = this.processService.createProcess(
+            () => {
+                return this.updateState();
+            },
+            {},
+            res => {
+                this.updateOrganizationStore(res);
+                this.resetUpdates();
+            },
+            () => {},
+        );
+        this.updateOrgProcess = this.processService.createProcess(
             () => {
                 return this.updateOrganization();
             },
@@ -238,12 +252,18 @@ export class NxOrganizationSettingsComponent implements OnInit {
         this.currentPartnerAccess$.next(this.accessLevel$$());
     };
 
-    updateOrganization(): Promise<Organization> {
+    updateState(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
         const currOrg = this.currentOrg$$();
         if (this.effectState$$() !== this.currentState$.value) {
             orgBody.state = this.currentState$.value;
         }
+        return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
+    }
+
+    updateOrganization(): Promise<Organization> {
+        const orgBody: UpdateOrganization = {};
+        const currOrg = this.currentOrg$$();
         if (this.name$$() !== this.currentName$.value) {
             orgBody.name = this.currentName$.value;
         }
@@ -273,19 +293,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
     }
 
     onNameChange(value: string): void {
-        const { orgName } = this.settingsGeneralForm?.controls;
-
-        if (value.length === 0) {
-            orgName.setErrors({ required: true });
-            orgName.markAsTouched();
-            orgName.markAsDirty();
-        } else if (value.length > MAX_NAME_LENGTH) {
-            orgName.setErrors({ tooLong: true });
-            orgName.markAsTouched();
-            orgName.markAsDirty();
-        } else {
-            orgName.setErrors(null);
-        }
         this.currentName$.next(value);
     }
 
