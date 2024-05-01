@@ -17,9 +17,14 @@ const isSameDomain = (styleSheet: CSSStyleSheet): boolean => {
 
 const isStyleRule = (rule: CSSRuleList[number]): rule is CSSStyleRule => rule.type === 1;
 
+const normalizeColor = (color: string): string => {
+    return Number.isNaN(parseInt(color[0])) ? color : `rgb(${color})`;
+};
+
 const isColor = (strColor: string): boolean => {
+    const normalizedColor = normalizeColor(strColor);
     const s = new Option().style;
-    s.color = strColor;
+    s.color = normalizedColor;
     return s.color !== '';
 };
 
@@ -62,10 +67,12 @@ const getRootProps = (): PropMap =>
                                 ? {
                                       ...props,
                                       [propName.trim()]: {
-                                          value: rule.style.getPropertyValue(propName).trim(),
+                                          value: normalizeColor(
+                                              rule.style.getPropertyValue(propName),
+                                          ),
                                           className: `generated-${uuid()}`,
                                           showColorBlock: isColor(
-                                              rule.style.getPropertyValue(propName).trim(),
+                                              rule.style.getPropertyValue(propName),
                                           ),
                                       },
                                   }
