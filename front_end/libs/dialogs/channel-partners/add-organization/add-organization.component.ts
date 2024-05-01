@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -18,10 +18,12 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
 
+const FIELDS_MISSING = 'FIELDS_MISSING';
+
 @Component({
     selector: 'nx-modal-add-organization-content',
     templateUrl: 'add-organization.component.html',
-    styleUrls: [],
+    styleUrls: ['add-organization.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -39,6 +41,8 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
 
     addOrganizationProcess: Process;
 
+    @ViewChild('addOrganizationForm') private form: NgForm;
+
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) channelPartner: DT['data'],
@@ -51,6 +55,9 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
         this.addOrganizationProcess = processService.createProcess(
             () => {
                 this.lock();
+                if (!this.name) {
+                    return Promise.reject({ status: FIELDS_MISSING });
+                }
                 return firstValueFrom(
                     this.cpService.createOrganization({
                         name: this.name,
@@ -58,7 +65,7 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
                     }),
                 );
             },
-            {},
+            { ignoreError: true },
             res => {
                 this.cpService
                     .createOrganizationUser(res.id, {
@@ -70,6 +77,10 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
             },
             err => {
                 this.unlock();
+                if (err.status === FIELDS_MISSING) {
+                    this.form.form.markAllAsTouched();
+                    return;
+                }
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
