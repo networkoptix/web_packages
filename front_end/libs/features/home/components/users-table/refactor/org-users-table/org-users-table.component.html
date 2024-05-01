@@ -44,7 +44,7 @@
                 >
                     <nx-checkbox
                         componentId="checkBox{{ row[idPropName] }}"
-                        [disabled]="!canManageUsers$$()"
+                        [disabled]="!canUpdateUserRole(row)"
                         [data]="row"
                     >
                     </nx-checkbox>
@@ -138,15 +138,7 @@
                     class="div-container-wrapper icon"
                     style="grid-area: delete"
                 >
-                    @if (
-                        canManageUsers$$() &&
-                        (!row.isOrgUser ||
-                            (!inGroup$$() &&
-                                row.isOrgUser &&
-                                hasOnlyOneAdmin$$() &&
-                                onlyAdmin$$() !== row.email) ||
-                            !hasOnlyOneAdmin$$())
-                    ) {
+                    @if (canUpdateUserRole(row)) {
                         <svg-icon
                             class="delete clickable"
                             nx-add-svg-src
