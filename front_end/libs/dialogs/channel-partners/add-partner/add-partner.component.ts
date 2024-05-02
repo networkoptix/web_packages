@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -16,6 +16,8 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
+
+const FIELDS_MISSING = 'FIELDS_MISSING';
 
 @Component({
     selector: 'nx-modal-add-partner-content',
@@ -37,6 +39,7 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
 
     name: string = '';
     firstAdminEmail: string = '';
+    @ViewChild('addPartnerForm') private form: NgForm;
 
     addPartnerProcess: Process;
 
@@ -53,6 +56,9 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
         this.addPartnerProcess = processService.createProcess(
             () => {
                 this.lock();
+                if (!this.name || !this.firstAdminEmail) {
+                    return Promise.reject({ status: FIELDS_MISSING });
+                }
                 return firstValueFrom(
                     this.cpService.createChannelPartner({
                         name: this.name,
@@ -61,10 +67,14 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
                     }),
                 );
             },
-            {},
+            { ignoreError: true },
             res => this.close(res),
             err => {
                 this.unlock();
+                if (err.status === FIELDS_MISSING) {
+                    this.form.form.markAllAsTouched();
+                    return;
+                }
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);

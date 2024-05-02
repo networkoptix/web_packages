@@ -35,7 +35,7 @@
                 name="partnerName"
                 [(ngModel)]="name"
                 #partnerName="ngModel"
-                required
+                [required]="addPartnerForm.submitted"
             />
             <div class="warning-container">
                 <span
@@ -49,7 +49,7 @@
             <label
                 for="ownerEmail"
                 translate
-                >Administrator</label
+                >Administrator email</label
             >
             <nx-email-input
                 class="fs-mask form-component"
@@ -59,15 +59,10 @@
                 [(ngModel)]="firstAdminEmail"
                 [form]="addPartnerForm"
                 #ownerEmail="ngModel"
-                placeholder="Email"
+                [required]="addPartnerForm.submitted"
+                [hideErrors]="!addPartnerForm.submitted && !ownerEmail.errors?.pattern"
             >
             </nx-email-input>
-            <p
-                class="mt-1 sub-text"
-                translate
-            >
-                Enter the email of the administrator
-            </p>
             <div
                 class="warning-container"
                 *ngIf="
@@ -80,7 +75,7 @@
                         *ngIf="ownerEmail.errors?.required"
                         class="input-error"
                         translate
-                        >Administrator is required</span
+                        >Administrator email is required</span
                     >
                     <span
                         *ngIf="ownerEmail.errors?.pattern"

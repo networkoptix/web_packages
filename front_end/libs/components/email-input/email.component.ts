@@ -45,6 +45,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() authorize = false;
     @Input() isUsername = false;
     @Input() placeholder = '';
+    @Input() required = true;
 
     LANG = staticLang;
 
@@ -61,10 +62,14 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<string>): ValidationErrors | null {
         if (!c.value) {
-            return {
-                required: true,
-                message: this.translateService.instant(this.LANG.customValidatorMsg.emailRequired),
-            };
+            return !this.required
+                ? null // valid
+                : {
+                      required: true,
+                      message: this.translateService.instant(
+                          this.LANG.customValidatorMsg.emailRequired,
+                      ),
+                  };
         }
 
         const EMAIL_REGEXP = new RegExp(credentialsValidation.emailRegex);
