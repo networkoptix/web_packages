@@ -183,9 +183,17 @@
             </ng-template>
         </nx-table>
     } @else {
-        <nx-page-placeholder-v2
-            [type]="PAGE_PLACEHOLDER.NO_USERS"
-            [clickFn]="newUserDialog"
-        ></nx-page-placeholder-v2>
+        @if (searching) {
+            <div class="nothing-found-placeholder">
+                <nx-page-placeholder-v2
+                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
+                ></nx-page-placeholder-v2>
+            </div>
+        } @else {
+            <nx-page-placeholder-v2
+                [type]="PAGE_PLACEHOLDER.NO_USERS"
+                [clickFn]="newUserDialog"
+            ></nx-page-placeholder-v2>
+        }
     }
 </div>

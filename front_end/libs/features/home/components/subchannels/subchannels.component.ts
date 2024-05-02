@@ -16,6 +16,8 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -50,12 +52,14 @@ import { NxCardComponent } from '../card/card.component';
         NxAddSvgSrcDirective,
         NxCardComponent,
         NxTagComponent,
+        NxPagePlaceholderV2Component,
     ],
 })
 export class NxSubchannelsComponent {
     permissionsStore = inject(PermissionsStore);
     buttonType = ButtonType.brand;
     icons = icons;
+    PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
     canCreatePartners$$ = this.permissionsStore.canCreateSubChannels$$;
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
     currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);

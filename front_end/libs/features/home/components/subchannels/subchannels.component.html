@@ -68,19 +68,10 @@
             </div>
         </ng-container>
         <ng-template #noPartners>
-            <div class="no-partners-placeholder">
-                <div class="placeholder-container">
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '64',
-                            'height.px': '64'
-                        }"
-                        [src]="icons.dirPageV2Placeholder + 'not_found.svg'"
-                    ></svg-icon>
-                    <h3 translate>No Results</h3>
-                    <p translate>Try changing the search string</p>
-                </div>
+            <div class="nothing-found-placeholder">
+                <nx-page-placeholder-v2
+                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
+                ></nx-page-placeholder-v2>
             </div>
             <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
             <!-- eslint-disable-next-line nx/template/no-untranslated -->
