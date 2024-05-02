@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
@@ -17,27 +18,26 @@ import { icons } from '@static-variables';
 @Component({
     selector: 'nx-page-placeholder-no-items',
     templateUrl: 'page-placeholder.component.html',
+    styleUrls: ['page-placeholder.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
         TranslateModule,
         AngularSvgIconModule,
         PipesModule,
+        NgxTranslateCutModule,
         NxAddSvgSrcDirective,
         NxButtonComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
 })
 export class NxPagePlaceholderNoItemsComponent {
-    @Input() clickFn: () => void;
+    @Output() addFolderEvent = new EventEmitter<void>();
 
     LANG = staticLang;
-
     icons = icons;
 
-    // This placeholder have no events ... for now. --TT
-    // clickHandler(event: Event): void {
-    //     event.stopPropagation();
-    //     this.clickFn();
-    // }
+    addFolder(): void {
+        this.addFolderEvent.emit();
+    }
 }
