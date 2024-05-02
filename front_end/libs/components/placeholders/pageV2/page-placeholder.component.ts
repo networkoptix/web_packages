@@ -103,6 +103,14 @@ export class NxPagePlaceholderV2Component implements OnInit {
                     this.LANG.placeholderV2Texts.noItems.message,
                 );
                 break;
+            case PAGE_PLACEHOLDER.NOTHING_FOUND:
+                this.imagePath = icons.dirPageV2Placeholder + 'not_found.svg';
+                this.title = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.nothingFound.title,
+                );
+                this.message = this.translateService.instant(
+                    this.LANG.placeholderV2Texts.nothingFound.message,
+                );
         }
     }
 

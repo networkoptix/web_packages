@@ -113,16 +113,8 @@ $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 
 }
 
 .no-search-results {
-    margin: auto;
-    text-align: center;
-
-    h3 {
-        color: var(--placehoder-v2-title-color)!important;
-    }
-
-    p {
-        color: var(--placehoder-v2-message-color)!important;
-    }
+    display: flex;
+    align-items: flex-start;
 }
 
 :host {

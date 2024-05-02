@@ -79,20 +79,7 @@ svg-icon svg .icon-with-fill {
   fill: var(--light6);
 }
 
-.no-partners-placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.nothing-found-placeholder {
   height: 100%;
-  .placeholder-container {
-    text-align: center;
-  }
-
-  h3 {
-    color: var(--placehoder-v2-title-color)!important;
-  }
-
-  p {
-    color: var(--placehoder-v2-message-color)!important;
-  }
+  max-height: 400px;
 }

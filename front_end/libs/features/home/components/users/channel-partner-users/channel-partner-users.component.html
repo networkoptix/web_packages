@@ -56,6 +56,7 @@
                 <nx-channel-partner-users-table
                     [records]="channelPartnerUsersStore.filteredRecords$$()"
                     (selectedCountEmitter)="updateSelectedCount($event)"
+                    [searching]="searchModel.query !== ''"
                 ></nx-channel-partner-users-table>
             } @else {
                 <nx-users-table

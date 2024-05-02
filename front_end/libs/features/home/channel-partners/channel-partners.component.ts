@@ -24,6 +24,8 @@ import {
     selectCurrentPartnerOrgs,
     selectArePartnerOrgsLoading,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -69,11 +71,13 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxTagComponent,
         PipesModule,
         NxResizeObserver,
+        NxPagePlaceholderV2Component,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
+    PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
     permissionStore = inject(PermissionsStore);
     routerState = inject(ChannelPartnersRouteState);

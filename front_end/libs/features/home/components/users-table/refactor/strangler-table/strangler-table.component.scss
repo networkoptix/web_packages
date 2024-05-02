@@ -3,30 +3,6 @@
 .nx-new-table-container {
   margin: 0;
   height: calc(100% - 3rem) !important;
-
-  .no-users-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
-    .placeholder-container {
-      text-align: center;
-    }
-
-    h3 {
-      color: var(--placehoder-v2-title-color) !important;
-    }
-
-    p {
-      color: var(--placehoder-v2-message-color) !important;
-      padding-bottom: 20px;
-    }
-
-    .btn.add-user {
-      display: unset !important;
-    }
-  }
 }
 
 .clickable:hover {
@@ -52,4 +28,9 @@
       margin-right: 8px;
     }
   }
+}
+
+.nothing-found-placeholder {
+  display: flex;
+  justify-content: center;
 }
