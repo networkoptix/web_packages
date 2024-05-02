@@ -2,4 +2,4 @@ Xin chào, {{message.userFullName}}
 
 {{message.sharer_name}} đã chia sẻ quyền truy cập kênh Đối tác đại lý "{{message.partner_name}}" với bạn. Để xem và quản lý, vui lòng tạo tài khoản trên %CLOUD_NAME% bằng địa chỉ email hiện tại của bạn và làm theo hướng dẫn.
 
-Create Account: {{ config.portal_url }}/authorize/register/
+Tạo tài khoản: {{ config.portal_url }}/ủy quyền/đăng ký/

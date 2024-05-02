@@ -54,7 +54,7 @@
     "emailSubject": "Trạng thái của tổ chức {{{message.organization_name}}} được thay đổi thành {{message.status_name}}"
   },
   "cps_organization_name_change": {
-    "emailSubject": "The name of organization has been changed"
+    "emailSubject": "Tên tổ chức đã được thay đổi"
   },
   "cps_partner_invite": {
     "emailSubject": "{{{message.sharer_name}}} mời bạn tham gia %CLOUD_NAME%"
@@ -63,15 +63,15 @@
     "emailSubject": "Đối tác {{{message.partner_name}}} đã được chia sẻ với bạn"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Trạng thái của đối tác {{{message.partner_name}}} được đổi thành {{message.status_name}}"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{{message.partner_name}}} to status {{message.status_name}}"
+    "emailSubject": "Xác nhận việc chuyển đối tác {{{message.partner_name}}} sang trạng thái {{message.status_name}}"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{{message.partner_name}}} is changed to {{message.status_name}}"
+    "emailSubject": "Trạng thái của đối tác {{{message.partner_name}}} được đổi thành {{message.status_name}}"
   },
   "cps_partner_name_change": {
-    "emailSubject": "The name of partner has been changed"
+    "emailSubject": "Tên đối tác đã được thay đổi"
   }
 }

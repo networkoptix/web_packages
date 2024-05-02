@@ -2,4 +2,4 @@ Xin chào, {{message.userFullName}}
 
 {{message.sharer_name}} đã chia sẻ quyền truy cập vào tổ chức "{{message.organization_name}}" với bạn.
 
-View in %CLOUD_NAME% Portal: {{ config.portal_url }}
+Xem trong Cổng thông tin %CLOUD_NAME%: {{ config.portal_url }}

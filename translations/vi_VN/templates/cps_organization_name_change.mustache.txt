@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Xin chào {{message.userFullName}}
 
-The name of organization {{message.old_organization_name}} has been changed to {{message.new_organization_name}}.
+Tên của tổ chức {{message.old_organization_name}} đã được đổi thành {{message.new_organization_name}}.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Xem trong Cổng thông tin %CLOUD_NAME% bằng liên kết này: {{ config.portal_url }}
