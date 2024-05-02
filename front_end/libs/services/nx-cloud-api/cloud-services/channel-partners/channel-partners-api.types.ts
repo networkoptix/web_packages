@@ -307,7 +307,7 @@ export interface SystemItem {
 
 export interface CreateGroup {
     name: string;
-    parentId: string;
+    parentId: string | null;
     organizationId: string;
 }
 
