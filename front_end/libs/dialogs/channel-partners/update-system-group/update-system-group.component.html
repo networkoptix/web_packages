@@ -18,24 +18,42 @@
     </div>
     <div class="modal-body">
         <label
-            for="name"
+            for="groupName"
             translate
-            >Name</label
         >
+            Folder Name
+        </label>
         <input
             class="form-control"
-            id="name"
-            name="name"
+            id="groupName"
+            name="groupName"
             [(ngModel)]="name"
+            #groupName="ngModel"
             autofocus
-            required
+            [required]="updateSystemGroupFrom.submitted"
         />
+        @if (groupName.touched && groupName.errors?.required) {
+            <span
+                class="error-label"
+                translate
+            >
+                Name is required
+            </span>
+        } @else if (groupName.value?.length > 150) {
+            <span
+                class="error-label"
+                translate
+            >
+                Folder name shouldn't be more than 150 symbols
+            </span>
+        }
     </div>
     <div class="modal-footer">
         <nx-process-button
             [form]="updateSystemGroupFrom"
             [process]="updateSystemGroupProcess"
             [buttonText]="'Save' | translate"
+            [buttonDisabled]="groupName.value?.length > 150"
         ></nx-process-button>
         <nx-cancel-button
             [process]="updateSystemGroupProcess"

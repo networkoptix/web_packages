@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,7 +12,9 @@ import { PatchGroup } from '@services/nx-cloud-api/cloud-services/channel-partne
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
-import type { UpdateSystemGroup as DT } from '../dialogs.types';
+import type { UpdateSystemGroup as DT } from '../../dialogs.types';
+
+const FIELDS_MISSING = 'FIELDS_MISSING';
 
 @Component({
     selector: 'nx-modal-update-system-group-content',
@@ -26,8 +28,10 @@ import type { UpdateSystemGroup as DT } from '../dialogs.types';
     ],
 })
 export class UpdateSystemGroupModalContent extends ModalBase<DT['return']> {
-    name: string;
+    name: string = '';
     updateSystemGroupProcess: Process;
+
+    @ViewChild('updateSystemGroupFrom') form: NgForm;
 
     constructor(
         private processService: NxProcessService,
@@ -38,13 +42,21 @@ export class UpdateSystemGroupModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         this.updateSystemGroupProcess = this.processService.createProcess(
             () => {
+                if (!this.name) {
+                    return Promise.reject({ status: FIELDS_MISSING });
+                }
                 const data: PatchGroup = {
                     name: this.name,
                 };
                 return firstValueFrom(this.cpService.patchGroup(this.groupId, data));
             },
-            {},
+            { ignoreError: true },
             res => this.close(res),
+            err => {
+                if (err.status === FIELDS_MISSING) {
+                    this.form.form.markAllAsTouched();
+                }
+            },
         );
     }
 }

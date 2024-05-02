@@ -344,7 +344,7 @@ export class NxDialogsService {
 
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
         () =>
-            import('./create-system-group/create-system-group.component').then(
+            import('./channel-partners/create-system-group/create-system-group.component').then(
                 m => m.CreateSystemGroupModalContent,
             ),
         { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
@@ -352,7 +352,7 @@ export class NxDialogsService {
 
     updateGroupName = this.dialogV2Factory<Dt.UpdateSystemGroup>(
         () =>
-            import('./update-system-group/update-system-group.component').then(
+            import('./channel-partners/update-system-group/update-system-group.component').then(
                 m => m.UpdateSystemGroupModalContent,
             ),
         {

@@ -17,7 +17,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { assignFrom } from '@utils/general';
 
-// type GroupNameOption = DropdownItem<string>;
+const FIELDS_MISSING = 'FIELDS_MISSING';
 
 @Component({
     selector: 'nx-modal-create-system-group-content',
@@ -53,6 +53,9 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
+                if (!this.name) {
+                    return Promise.reject({ status: FIELDS_MISSING });
+                }
                 const data: CreateGroup = {
                     name: this.name,
                     parentId: this.parentGroup ?? null,
@@ -60,8 +63,13 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
                 };
                 return firstValueFrom(this.cpService.createGroup(data));
             },
-            {},
+            { ignoreError: true },
             res => this.close(res),
+            err => {
+                if (err.status === FIELDS_MISSING) {
+                    this.form.form.markAllAsTouched();
+                }
+            },
         );
     }
 
