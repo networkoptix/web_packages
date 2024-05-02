@@ -1459,7 +1459,7 @@
         },
         "noItems": {
             "title": "Folder is empty",
-            "message": "You can move systems to this folder, add new system or add new folder."
+            "message": "You can move systems to this folder, add new system or | add new folder"
         },
         "nothingFound": {
             "title": "Nothing found",

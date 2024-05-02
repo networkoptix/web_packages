@@ -5,16 +5,15 @@
         [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
         [applyClass]="true"
     ></svg-icon>
-    <div
-        class="title"
-        translate
-    >
-        Folder is empty
+    <div class="title">
+        {{ LANG.placeholderV2Texts.noItems.title | translate }}
     </div>
-    <div
-        class="message"
-        translate
-    >
-        You can move systems to this folder, add new system or add new folder.
+    <div class="message">
+        {{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 0 }}
+        <span
+            (click)="addFolder()"
+            class="inline-button"
+            >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 1 }}</span
+        >
     </div>
 </nx-page-generic-placeholder-v2>
