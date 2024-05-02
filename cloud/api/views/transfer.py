@@ -113,11 +113,12 @@ class TransferSystemActions(AsyncAPIView):
         serializer = self.get_serializer()(data=request.data)
         serializer.is_valid(raise_exception=True)
         # Get the info so that we can email the previous owner after the transfer.
-        system_info_coro = sync_to_async(System.get, thread_sensitive=False)(request, system_id)
-        data_coro = OwnershipTransfer.act_on(
+        # Order matters
+        system_info = await sync_to_async(System.get, thread_sensitive=False)(request, system_id)
+        data = await OwnershipTransfer.act_on(
             request, system_id, offered_status=serializer.data["action"]
         )
-        system_info, data = await asyncio.gather(system_info_coro, data_coro)
+
         system_info = system_info.get('systems', [])[0]
         res_serializer = CloudResponseSerializer(data=data)
         res_serializer.is_valid()
