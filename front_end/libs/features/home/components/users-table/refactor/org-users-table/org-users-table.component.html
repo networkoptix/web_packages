@@ -1,13 +1,13 @@
-<div class="nx-new-table-container CP-users">
-    @if (orgUserRecords()?.length > 0) {
+<div class="nx-new-table-container org-users">
+    @if (orgUserRecords$$()?.length > 0) {
         <nx-table
             set-pagination
             set-sorting
             set-rows-auto
-            [set-arrange]="setHeaders"
+            [set-arrange]="setArrange"
             [set-multiple-selected-item-ids]="selectedOrgUsersMap$$()"
             [set-id-prop-name]="idPropName"
-            [data]="orgUserRecords()"
+            [data]="orgUserRecords$$()"
             checkAllContainer
             #containerRef="checkAllContainer"
         >
@@ -175,17 +175,17 @@
             </ng-template>
         </nx-table>
     } @else {
-        @if (searching) {
-            <div class="nothing-found-placeholder">
+        <div class="nothing-found-placeholder">
+            @if (searching()) {
                 <nx-page-placeholder-v2
                     [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
                 ></nx-page-placeholder-v2>
-            </div>
-        } @else {
-            <nx-page-placeholder-v2
-                [type]="PAGE_PLACEHOLDER.NO_USERS"
-                [clickFn]="newUserDialog"
-            ></nx-page-placeholder-v2>
-        }
+            } @else {
+                <nx-page-placeholder-v2
+                    [type]="PAGE_PLACEHOLDER.NO_USERS"
+                    [clickFn]="newUserDialog"
+                ></nx-page-placeholder-v2>
+            }
+        </div>
     }
 </div>

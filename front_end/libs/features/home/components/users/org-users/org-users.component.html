@@ -48,19 +48,17 @@
 </div>
 @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
     <nx-org-users-table
-        [headers]="headers"
-        [records]="orgUserStore.filteredRecords$$()"
         (selectedCountEmitter)="updateSelectedCount($event)"
-        [searching]="!!orgUserStore.searchQuery()"
+        [searching]="!!orgUsersStore.searchQuery()"
     ></nx-org-users-table>
 } @else {
     <nx-users-table
         [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
         [inGroup]="inGroup$$()"
         [headers]="headers"
-        [records]="orgUserStore.filteredRecords$$()"
+        [records]="orgUsersStore.filteredRecords$$()"
         [roles]="orgRoles$$() || []"
-        [searching]="!!orgUserStore.searchQuery()"
+        [searching]="!!orgUsersStore.searchQuery()"
         (selectedUsersEmitter)="updateSelectedUsers($event)"
         (onDeleteClick)="deleteUsers($event)"
         (onAdduser)="newUserDialog()"

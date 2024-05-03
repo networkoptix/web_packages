@@ -54,7 +54,6 @@
         <div [style.display]="'block'">
             @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
                 <nx-channel-partner-users-table
-                    [records]="channelPartnerUsersStore.filteredRecords$$()"
                     (selectedCountEmitter)="updateSelectedCount($event)"
                     [searching]="searchModel.query !== ''"
                 ></nx-channel-partner-users-table>

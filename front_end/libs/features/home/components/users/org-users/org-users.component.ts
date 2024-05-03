@@ -58,7 +58,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     icons = icons;
     CONFIG = nxConfig;
     UserType = UserType;
-    orgUserStore = inject(OrgUsersStore);
+    orgUsersStore = inject(OrgUsersStore);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
 
@@ -117,7 +117,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     }
 
     setQuery(model: SearchFilter): void {
-        this.orgUserStore.setSearchQuery(model.query);
+        this.orgUsersStore.setSearchQuery(model.query);
     }
 
     newUserDialog(): void {
@@ -165,13 +165,13 @@ export class NxOrganizationUsersComponent implements OnInit {
                     const orgId = this.routerState.organizationId();
                     const folderId = this.routerState.groupId() || orgId;
                     if (deleteMultiple) {
-                        this.orgUserStore.removeUsers(
+                        this.orgUsersStore.removeUsers(
                             orgId,
                             folderId,
                             Object.keys(this.selectedUsers),
                         );
                     } else {
-                        this.orgUserStore.removeUser(orgId, user.email, [folderId]);
+                        this.orgUsersStore.removeUser(orgId, user.email, [folderId]);
                     }
                 }
             });

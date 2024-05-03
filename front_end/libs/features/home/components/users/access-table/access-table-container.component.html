@@ -46,13 +46,17 @@
                 </button>
             </div>
         } @else {
-            <button
-                class="btn btn-default"
-                translate
-                (click)="addAccess()"
-            >
-                Add Access
-            </button>
+            @if (isOrgUser$$()) {
+                <div translate>This user already has access to all objects in the organization</div>
+            } @else {
+                <button
+                    class="btn btn-default"
+                    translate
+                    (click)="addAccess()"
+                >
+                    Add Access
+                </button>
+            }
         }
         <div class="input px-2">
             <span class="glyphicon web-icon-search icon-search"></span>
@@ -64,7 +68,6 @@
     </div>
     @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
         <nx-users-access-table
-            [records]="userRecords$$()"
             (selectedCountEmitter)="updateSelectedCount($event)"
         ></nx-users-access-table>
     } @else {
