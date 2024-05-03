@@ -66,7 +66,6 @@ import type {
     GetLicenses,
     HealthReport,
 } from './system-api.aggregated-types';
-import { AggregatedRoles } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
 import {
     ChangedIdReturned,
@@ -881,20 +880,17 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     @memoizeAsyncShort
     getAllRoles(): Observable<Role[]> {
-        const endpoints = ['/ec2/getPredefinedRoles', '/ec2/getUserRoles'];
-        return this.getRequestAggregator<AggregatedRoles>(endpoints).pipe(
-            map(({ reply }) =>
-                Object.values(reply).flatMap(roles =>
-                    roles.map(role => ({
-                        ...role,
-                        permissions: role.permissions.split('|').sort().join('|'),
-                    })),
-                ),
+        return this.get('/ec2/getUserRoles').pipe(
+            map(roles =>
+                [...this.CONFIG.accessRoles.predefinedRoles, ...roles].map(role => ({
+                    ...role,
+                    permissions: role.permissions.split('|').sort().join('|'),
+                })),
             ),
         );
     }
     getAggregatedUsersData(): Observable<AggregatedUsers> {
-        const routes = ['/ec2/getUsers', '/ec2/getPredefinedRoles', '/ec2/getUserRoles'] as const;
+        const routes = ['/ec2/getUsers', '/ec2/getUserRoles'] as const;
         return this.getRequestAggregator(routes);
     }
 

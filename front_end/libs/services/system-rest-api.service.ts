@@ -7,7 +7,6 @@ import {
     BehaviorSubject,
     combineLatest,
     firstValueFrom,
-    forkJoin,
     from,
     Observable,
     of,
@@ -31,7 +30,6 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { addUserRestV1 } from '@services/mediaserver-apis/endpoints/add-user';
-import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
@@ -1264,15 +1262,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         throw new Error('should only be using rest v2 version');
     }
 
-    getPredefinedRoles = getPredefinedRolesLegacy;
     getUsers = getUsersRestV1;
     getUserRoles = getUserRolesRestV1;
 
     @memoizeAsyncShort
     override getAllRoles(): Observable<Role[]> {
-        return forkJoin([this.getPredefinedRoles(), this.getUserRoles()]).pipe(
-            map(([predefinedRoles, customRoles]) =>
-                [...predefinedRoles, ...customRoles].map(role => ({
+        return this.getUserRoles().pipe(
+            map(customRoles =>
+                [...this.CONFIG.accessRoles.predefinedRoles, ...customRoles].map(role => ({
                     ...role,
                     permissions: role.permissions?.split('|').sort().join('|'),
                 })),
@@ -1281,19 +1278,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     override getAggregatedUsersData(): Observable<AggregatedUsers> {
-        return combineLatest([
-            this.getUsers(),
-            this.getPredefinedRoles(),
-            this.getUserRoles(),
-        ]).pipe(
-            map(([users, predefinedRoles, roles]) => ({
+        return combineLatest([this.getUsers(), this.getUserRoles()]).pipe(
+            map(([users, roles]) => ({
                 reply: {
                     '/ec2/getUsers': users.map(user => ({
                         ...user,
                         isCloud: user.type === 'cloud',
                         isLdap: user.type === 'ldap',
                     })),
-                    '/ec2/getPredefinedRoles': predefinedRoles,
                     '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
                 },
             })),

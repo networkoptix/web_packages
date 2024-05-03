@@ -739,6 +739,7 @@ do
         stop_mediaserver)
             PORTS=${2:-""}
             stop_mediaserver "$PORTS"
+            break
             ;;
         start_https_tunnel)
             start_https_tunnel

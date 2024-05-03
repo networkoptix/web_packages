@@ -42,7 +42,7 @@ export interface CustomRestV1Role extends BaseRole {
 
 export type RestV1Role = PredefinedLegacyRole | CustomRestV1Role;
 
-export type Role = LegacyRole | RestV1Role | BaseRole;
+export type Role = LegacyRole | RestV1Role;
 
 /* Types for dealing with groups
  * Covers: 6.0+
