@@ -1,0 +1,74 @@
+<h1>Dialogs</h1>
+
+<div class="fake-dialog-container cdk-dialog-container">
+    <div>
+        <div class="modal-header">
+            <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                (click)="close()"
+            >
+                <div class="close-content"></div>
+            </button>
+            <h1 class="modal-title">
+                <span class="ellipsis">Old modal styling</span>
+            </h1>
+        </div>
+        <div class="modal-body">
+            <p>To be, or not to be</p>
+        </div>
+        <div class="modal-footer">
+            <button
+                type="button"
+                class="btn"
+                [ngClass]="'btn-primary'"
+            >
+                Be
+            </button>
+            <button
+                type="button"
+                class="btn btn-default"
+            >
+                Not
+            </button>
+        </div>
+    </div>
+</div>
+<div class="fake-dialog-container cdk-dialog-container mt-5">
+    <div>
+        <div class="nx-modal__header">
+            <span class="nx-modal__header-title">New modal styling</span>
+            @if (closable) {
+                <button
+                    type="button"
+                    class="nx-modal__header-close-btn"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="close()"
+                ></button>
+            }
+        </div>
+        <form class="nx-modal__content">
+            <div class="nx-modal__body">
+                <p>To be, or not to be</p>
+            </div>
+            <div class="nx-modal__footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    translate
+                >
+                    Not
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                >
+                    Be
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

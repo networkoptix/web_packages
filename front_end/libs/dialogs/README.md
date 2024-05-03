@@ -83,9 +83,9 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
 - `close()` to close the dialog
 
 ```html
-<div class="modal-header">
+<div class="nx-modal__header">
     <h1
-        class="modal-title"
+        class="nx-modal__header-title"
         translate
     >
         Reset Camera
@@ -93,29 +93,22 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
     @if (closable) {
         <button
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-        >
-            <div class="close-content"></div>
-        </button>
+        ></button>
     }
 </div>
 <!-- <form> is required for the action button to fire on Enter key -->
-<form>
-    <div class="modal-body">
+<form class="nx-modal__content">
+    <div class="nx-modal__body">
         <!-- Body content here -->
     </div>
-    <div class="modal-footer">
-        <!-- If the dialog action isn't async and doesn't require validation
-        a normal <button> can be used here instead -->
-        <nx-async-action-button
-            [action]="resetCameraAction"
-            [(busy)]="busy"
-        >
-            {{ 'Reset' | translate }}
-        </nx-async-action-button>
+    <!-- Buttons should be right-aligned by default, with the action button on the right -->
+    <div class="nx-modal__footer">
+        <!-- type="button" is required on non-submit buttons to prevent
+        "Form submission canceled because the form is not connected" warnings -->
         <button
             type="button"
             class="btn btn-default"
@@ -124,10 +117,21 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
         >
             Cancel
         </button>
-        <!-- type="button" is required on non-submit buttons to prevent
-        "Form submission canceled because the form is not connected" warnings -->
+        <!-- If the dialog action isn't async and doesn't require validation
+        a normal <button> can be used here instead -->
+        <nx-async-action-button
+            [action]="resetCameraAction"
+            [(busy)]="busy"
+            translate
+        >
+            Reset
+        </nx-async-action-button>
     </div>
 </form>
+```
+
+```scss
+@use '../dialogs2.scss'; // Default styling for modals
 ```
 
 **3\. Add the method to open the dialog**

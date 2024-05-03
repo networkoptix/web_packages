@@ -1,0 +1,124 @@
+@use 'typography' as typography;
+@use 'theme_variables_common' as vars;
+
+p {
+    margin-bottom: unset; // Unset global
+}
+
+.nx-modal__header {
+    $horizontal-padding: 1rem;
+    $button-width: 32px;
+    $button-right: 6px;
+    $adjusted-padding-right: calc($button-width + $button-right + $horizontal-padding);
+
+    position: relative;
+    background-color: var(--dialog-header-bg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.75rem $adjusted-padding-right 0.75rem $horizontal-padding;
+    border-bottom: 1px solid var(--dialog-border-color);
+    // border-top-left-radius: vars.$modal-border-radius;
+    // border-top-right-radius: vars.$modal-border-radius;
+    /* Border rounding is disabled for now since the background on the
+    cdk-dialog-container colors behind it
+    https://gitlab.nxvms.dev/dev/cloud_portal/-/blob/eeabe82996569211b4e727786996c0f1dc071cf3/front_end/common/styles/common/_elements.scss#L195
+    */
+
+    &-title {
+        @include typography.medium14nocolor;
+        color: var(--card-header-text);
+        line-height: vars.$modal-title-line-height;
+
+    }
+
+    &-close-btn {
+        position: absolute;
+        right: $button-right;
+        top: 50%;
+        transform: translateY(-50%);
+
+        background-color: transparent;
+        height: $button-width !important;
+        width: $button-width;
+        padding: 0 !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* Fake X icon */
+        &:before,
+        &:after {
+            content: " ";
+            position: absolute;
+            background-color: var(--btn-close-bg);
+            height: 16px;
+            width: 1px;
+        }
+
+        &:before {
+            transform: rotate(-45deg);
+        }
+
+        &:after {
+            transform: rotate(45deg);
+        }
+
+        &:hover,
+        &:focus {
+            background-color: var(--btn-close-hover-bg);
+
+            &:before,
+            &:after {
+                background-color: var(--btn-close-hover-color)
+            }
+        }
+
+        &:active {
+            background-color: var(--btn-close-active-bg);
+
+            &:before,
+            &:after {
+                background-color: var(--btn-close-active-color);
+            }
+        }
+    }
+}
+
+.nx-modal__content {
+    // border-bottom-left-radius: vars.$modal-border-radius;
+    // border-bottom-right-radius: vars.$modal-border-radius;
+    background-color: var(--dialog-bg);
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nx-modal__body {
+    flex: 1;
+}
+
+.nx-modal__footer {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+
+    // This might be required eventually, but nudge to new standard
+    // &--justify-start {
+    //     justify-content: flex-start;
+    // }
+
+    &--justify-between {
+        justify-content: space-between;
+    }
+
+    &--justify-end {
+        justify-content: flex-end;
+    }
+
+    // Assuming footer contents is only buttons
+    & > * {
+        min-width: 80px;
+    }
+}

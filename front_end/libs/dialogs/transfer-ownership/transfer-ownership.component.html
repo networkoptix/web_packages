@@ -18,7 +18,7 @@
 </div>
 
 @if (channelPartnersEnabled ? !orgs$$ : !users$$) {
-    <nx-pre-loader></nx-pre-loader>
+    <div class="preloader-container"><nx-pre-loader></nx-pre-loader></div>
 } @else {
     <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
         <cdk-step>
