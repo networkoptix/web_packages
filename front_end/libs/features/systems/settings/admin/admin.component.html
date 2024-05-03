@@ -163,7 +163,7 @@
                     </span>
                     <div
                         class="mt-2"
-                        *ngIf="!environment.isLocal"
+                        *ngIf="!environment.isLocal && cloudSystemType$$() !== 'org'"
                     >
                         <button
                             [disabled]="settings?.disconnectDisabled"
@@ -177,7 +177,7 @@
                     </div>
                 </nx-section>
             </ng-template>
-            <nx-section *ngIf="system.permissionManager.isOwner$$(); else notMine">
+            <nx-section *ngIf="canManageSystem$$(); else notMine">
                 <div class="row m-0">
                     <div class="col-lg-6 pl-0">
                         <div class="float-left mr-2">
