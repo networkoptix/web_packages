@@ -20,7 +20,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable, Subscription, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -33,7 +33,9 @@ import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
@@ -51,6 +53,7 @@ import { WINDOW } from '@services/window-provider';
 import { icons, menus, redirect, updateInterval } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 import { isSystemMerging, isUserSystem } from '@utils/nx';
+import { pipeSignal } from '@utils/signals';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -208,6 +211,36 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         } else {
             return null;
         }
+    });
+
+    channelPartnersService = inject(NxChannelPartnersService);
+
+    manageOrgSystems$$ = pipeSignal(
+        this.system$$,
+        systems$ =>
+            systems$.pipe(
+                filter((system): system is NxSystem => system !== undefined),
+                switchMap(({ id }) => {
+                    const systemInfo = this.systemsService.systemInfoMap$$().get(id)!;
+                    const orgId = 'organizationId' in systemInfo ? systemInfo.organizationId : null;
+
+                    if (!orgId) {
+                        return Promise.resolve(false);
+                    }
+
+                    return this.channelPartnersService
+                        .getOrganizationUser(orgId, 'self')
+                        .pipe(map(user => user.rolesIds.includes(OrgRoleIds.OrgAdmin)));
+                }),
+            ),
+        false,
+    );
+
+    canManageSystem$$ = computed(() => {
+        return (
+            this.system.permissionManager.isOwner$$() &&
+            (this.cloudSystemType$$() !== 'org' || this.manageOrgSystems$$())
+        );
     });
 
     systemOfferedToUser$$ = computed<boolean>(() => {

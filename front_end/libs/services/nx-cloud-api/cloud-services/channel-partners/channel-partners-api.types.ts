@@ -225,6 +225,7 @@ export interface OrganizationUser {
     title: string;
     created: string;
     groupRoles: GroupRole[];
+    rolesIds: OrgRoleIds[];
 }
 
 export interface GroupRole {
