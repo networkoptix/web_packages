@@ -201,12 +201,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     systemOfferSentFrom$$ = computed<{ name: string; email: string } | null>(() => {
-        const [system, transferInfo] = [this.system$$(), this.transferInfo$$()];
-        if (transferInfo) {
+        const [cloudSystemInfo, transferInfo] = [this.cloudSystemInfo$$(), this.transferInfo$$()];
+        if (transferInfo && cloudSystemInfo && 'ownerFullName' in cloudSystemInfo) {
             const { fromAccount } = transferInfo;
             return {
                 email: fromAccount,
-                name: system.userManager.users.find(u => u.email === fromAccount)!.fullName,
+                name: cloudSystemInfo.ownerFullName,
             };
         } else {
             return null;
