@@ -1,6 +1,7 @@
 @use "mixins" as mixins;
 
 .async-action-button {
+    width: 100%;
     position: relative;
 
     &.invalid {

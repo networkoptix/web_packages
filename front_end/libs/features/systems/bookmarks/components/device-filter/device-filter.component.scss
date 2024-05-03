@@ -1,40 +1,5 @@
 @use '../filter.scss';
 
-$label-height: 1.75rem;
-
-@mixin search-and-list {
-    nx-simple-search {
-        margin-bottom: 1rem;
-    }
-
-    .devices {
-        display: flex;
-        flex-direction: column;
-
-        label {
-            display: flex;
-            align-items: center;
-            height: $label-height;
-            line-height: $label-height;
-            margin-bottom: 0;
-            color: var(--bookmarks-filter-button-text) !important;
-
-            cursor: pointer;
-
-            &.selected,
-            &:hover {
-                background-color: var(--bookmarks-text-highlight-bg);
-            }
-
-            span {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-        }
-    }
-}
-
 :host {
     width: 20.5rem;
 
@@ -44,11 +9,11 @@ $label-height: 1.75rem;
 
     .body {
         @include filter.body();
-        @include search-and-list();
+        @include filter.search-and-list();
 
         .devices {
             margin-bottom: 0.5rem;
-            height: $label-height * 7;
+            height: filter.$device-label-height * 7;
         }
 
         button {

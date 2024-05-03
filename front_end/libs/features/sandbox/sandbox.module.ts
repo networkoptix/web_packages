@@ -16,6 +16,7 @@ import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
 import { NxCssVariablesComponent } from './css-variables/css-variables.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import { NxDatetimeSandboxComponent } from './datetime-sandbox/datetime-sandbox.component';
+import { NxDialogsSandboxComponent } from './dialogs/dialogs-sandbox.component';
 import { SandboxFiltersComponent } from './filters/sandbox-filters.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
@@ -50,6 +51,10 @@ const appRoutes: Routes = [
             {
                 path: 'buttons',
                 component: NxButtonsExampleComponent,
+            },
+            {
+                path: 'dialogs',
+                component: NxDialogsSandboxComponent,
             },
             {
                 path: 'webgl',

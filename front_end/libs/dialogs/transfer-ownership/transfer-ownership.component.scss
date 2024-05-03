@@ -1,5 +1,14 @@
 @use 'typography';
 
+.preloader-container {
+    height: 300px; // Match stepper content height
+    background-color: var(--dialog-bg);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .radio-container {
     display: flex;
     gap: 10px;
