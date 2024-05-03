@@ -48,7 +48,7 @@ interface BindState {
     email: string;
     orgs: Org[];
     selectedOrg: Org | undefined;
-    fsmState: BindDialogStates;
+    fsmState: BindDialogStates | undefined;
 }
 
 @Component({
@@ -95,7 +95,7 @@ export class BindSystemToCloudComponent implements OnInit {
         email: '',
         orgs: [],
         selectedOrg: undefined,
-        fsmState: BindDialogStates.initial,
+        fsmState: undefined,
     });
 
     // selectors
@@ -125,15 +125,18 @@ export class BindSystemToCloudComponent implements OnInit {
         if (code) {
             if (this.channelPartnersEnabled) {
                 const orgs = await firstValueFrom(this.bindService.getOrgs(code));
-                this.state$$.update(state => ({ ...state, orgs }));
+                this.state$$.update(state => ({
+                    ...state,
+                    orgs,
+                    fsmState: BindDialogStates.initial,
+                }));
             } else {
                 await firstValueFrom(this.bindService.getTokens(code));
                 this.state$$.update(state => ({
                     ...state,
                     bindType: BindType.account,
-                    fsmState: BindDialogStates.finished,
+                    fsmState: BindDialogStates.confirmAccount,
                 }));
-                this.fsmState = BindDialogStates.confirmAccount;
             }
             this.state$$.update(state => ({
                 ...state,
@@ -143,7 +146,7 @@ export class BindSystemToCloudComponent implements OnInit {
     });
 
     back(): void {
-        if (this.fsmState$$() === BindDialogStates.initial) {
+        if (!this.channelPartnersEnabled || this.fsmState$$() === BindDialogStates.initial) {
             this.setCurrentState.emit(AuthorizeState.email);
             this.cleanup();
         }
