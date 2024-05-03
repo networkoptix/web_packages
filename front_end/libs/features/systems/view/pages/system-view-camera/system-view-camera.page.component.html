@@ -211,6 +211,12 @@
                                 [system]="system"
                                 description=""
                             ></nx-player-placeholder>
+                            <nx-player-placeholder
+                                *ngSwitchDefault
+                                svgFileName="placeholder_camera_alert"
+                                [heading]="LANG.common.cameraStates.error"
+                                [description]="state$$().error"
+                            ></nx-player-placeholder>
                         </ng-container>
                     </ng-template>
                 </div>
