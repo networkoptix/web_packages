@@ -1,15 +1,14 @@
-import { Component, Output, ViewChild, computed, inject, input } from '@angular/core';
+import { Component, Output, ViewChild, computed, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
-import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
+import { HEADER_ITEM } from '@pages/home/home.types';
+import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { InitialUserTable } from '../strangler-table/initial-user-table';
 import { StranglerImports } from '../strangler-table/strangler-imports';
@@ -27,14 +26,33 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
     ],
 })
 export class NxOrgUsersTableComponent extends InitialUserTable {
-    dialogService = inject(NxDialogsService);
-    translateService = inject(TranslateService);
-    override orgUsersStore = inject(OrgUsersStore);
+    protected headers: HEADER_ITEM[] = [
+        {
+            name: 'email',
+            value: this.LANG.channelPartners.usersTableHeaders.email,
+            sort: 'string',
+        },
+        {
+            name: 'fullName',
+            value: this.LANG.channelPartners.usersTableHeaders.fullName,
+            sort: 'string',
+        },
+        { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
+        { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+    ];
+    setArrange = ['userId', 'email', 'fullName', 'accessLevel', 'roles', 'delete', 'expand'];
+    idPropName = 'userId';
 
     roles$$ = this.cpService.organizationRoles$$;
-    orgUserRecords = input.required<UserRecord[]>({ alias: 'records' });
+    orgUserRecords$$ = this.orgUsersStore.filteredRecords$$;
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+
+    searching = input.required<boolean>();
+    currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
+    inGroup$$ = computed(() => this.currentGroupId$$() !== this.currentOrg$$().id);
+    canManageUsers$$ = computed(() => this.permissionStore.canViewOrgUsers$$());
     hasOnlyOneAdmin$$ = computed(() => {
-        const users = this.orgUserRecords();
+        const users = this.orgUserRecords$$();
         let foundAdmin = false;
         for (const user of users) {
             if (['Organization Administrator', 'Administrator'].includes(user.roles[0])) {
@@ -46,17 +64,14 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         }
         return true;
     });
-
     onlyAdmin$$ = computed(() => {
         if (!this.hasOnlyOneAdmin$$()) {
             return null;
         }
-        const a = this.orgUserRecords().find(user =>
-            ['Organization Administrator', 'Administrator'].includes(user.roles[0]),
+        return this.orgUserRecords$$()?.find(user =>
+            ['Organization Administrator', 'Administrator'].includes(user.roles![0]),
         ).email;
-        return a;
     });
-    inGroup$$ = computed(() => this.currentGroupId$$() !== this.currentOrg$$().id);
 
     checkAllContainer = new BehaviorSubject<undefined | NxCheckAllContainerDirective>(undefined);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
@@ -77,15 +92,13 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         () => new Map(this.selectedOrgUsers$$()?.map((user: UserRecord) => [user.email, user])),
     );
 
-    override canManageUsers$$ = computed(() => this.permissionStore.canViewOrgUsers$$());
-
-    override getRowRoleId(user: UserRecord): string {
+    getRowRoleId(user: UserRecord): string {
         return this.roles$$()
             .find(role => role.name === this.getDisplayRole(user))
             ?.id.toString();
     }
 
-    override getDisplayRole(user: UserRecord): string {
+    getDisplayRole(user: UserRecord): string {
         let displayRole = user.roles[0];
         if (!this.inGroup$$() && !user.isOrgUser) {
             displayRole = user.groupRoles?.length > 1 ? 'Multiple' : user.groupRoles[0].roles[0];
@@ -106,9 +119,13 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         );
     }
 
-    override updateRole(user: UserRecord, roleId: string): void {
+    updateRole(user: UserRecord, roleId: string): void {
         const folder = user?.groupRoles?.[0]?.groupId || user.accessLevel?.id || '';
         this.orgUsersStore.updateUser(this.currentOrg$$().id, folder, user.email, roleId);
+    }
+
+    newUserDialog(): void {
+        this.dialogService.addOrgUserV2({ organization: this.currentOrg$$() });
     }
 
     deleteUser(user: UserRecord): void {

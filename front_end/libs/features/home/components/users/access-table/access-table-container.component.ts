@@ -52,8 +52,24 @@ export class NxAccessTableContainerComponent {
 
     orgUsersStore = inject(OrgUsersStore);
 
+    orgRoles$$ = this.cpService.organizationRoles$$;
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
+    isOrgUser$$ = computed(
+        () => this.orgRecords$$().find(user => user.email === this.email)?.isOrgUser,
+    );
+    fullName$$ = computed(() => {
+        const fullName = this.orgRecords$$().find(
+            u => u.email === this.email && u.fullName !== 'N/A',
+        )?.fullName;
+        if (fullName) {
+            return `${fullName}, ${this.email}`;
+        }
 
+        return this.email;
+    });
+
+    // Remove once v2 ready
+    //
     userRecords$$ = computed(() => {
         const orgRecords = this.orgRecords$$();
         return orgRecords
@@ -76,62 +92,12 @@ export class NxAccessTableContainerComponent {
                 return user;
             });
     });
-
-    orgRoles$$ = this.cpService.organizationRoles$$;
-    // Remove once v2 ready
     headers: HEADER_ITEM[] = [
         { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
-
-    // Remove once v2 ready
-    fullName$$ = computed(() => {
-        const fullName = this.orgRecords$$().find(
-            u => u.email === this.email && u.fullName !== 'N/A',
-        )?.fullName;
-        if (fullName) {
-            return `${fullName}, ${this.email}`;
-        }
-
-        return this.email;
-    });
-    // Remove once v2 ready
     selectedGroups: { [key: string]: UserRecord } = {};
     selectedCount = 0;
-
-    groupsStore = inject(GroupsStore);
-    routerState = inject(ChannelPartnersRouteState);
-
-    inGroup$$ = computed(() => !this.groupsStore.currentGroupId$$().isRoot);
-    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentGroupId$$ = computed(
-        () => this.cpService.paramStateHandler.state$$().params?.groupId || '',
-    );
-    currentGroups$$ = this.groupsStore.currentGroups$$;
-    groupsPath$$ = this.groupsStore.groupsPath$$;
-    currentPath$$ = computed(() => {
-        // Todo:
-        // Add all organizations if current user is a CP user
-        const groupsPath = this.groupsPath$$();
-        const currentOrg = this.currentOrg$$()!;
-        return [currentOrg, ...groupsPath.reverse()];
-    });
-
-    constructor(
-        private cpService: NxChannelPartnersService,
-        private store: Store,
-        private dialogService: NxDialogsService,
-        private translateService: TranslateService,
-    ) {}
-
-    addAccess(): void {
-        this.dialogService.addOrgUserV2({
-            organization: this.currentOrg$$()!,
-            email: this.email,
-        });
-    }
-
-    // Remove once v2 is ready
     deleteUser(row: UserRecord): void {
         const selectedGroupsLength = Object.keys(this.selectedGroups).length;
         const deleteMultiple = selectedGroupsLength > 1;
@@ -171,6 +137,40 @@ export class NxAccessTableContainerComponent {
                     );
                 }
             });
+    }
+    //
+    // End remove
+
+    groupsStore = inject(GroupsStore);
+    routerState = inject(ChannelPartnersRouteState);
+
+    inGroup$$ = computed(() => !this.groupsStore.currentGroupId$$().isRoot);
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    currentGroupId$$ = computed(
+        () => this.cpService.paramStateHandler.state$$().params?.groupId || '',
+    );
+    currentGroups$$ = this.groupsStore.currentGroups$$;
+    groupsPath$$ = this.groupsStore.groupsPath$$;
+    currentPath$$ = computed(() => {
+        // Todo:
+        // Add all organizations if current user is a CP user
+        const groupsPath = this.groupsPath$$();
+        const currentOrg = this.currentOrg$$()!;
+        return [currentOrg, ...groupsPath.reverse()];
+    });
+
+    constructor(
+        private cpService: NxChannelPartnersService,
+        private store: Store,
+        private dialogService: NxDialogsService,
+        private translateService: TranslateService,
+    ) {}
+
+    addAccess(): void {
+        this.dialogService.addOrgUserV2({
+            organization: this.currentOrg$$()!,
+            email: this.email,
+        });
     }
 
     // temporary any typing until we rid other users table

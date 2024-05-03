@@ -1,6 +1,6 @@
 import { Component, Output, ViewChild, computed, forwardRef, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
@@ -8,13 +8,21 @@ import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-chec
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ChannelPartnerUsersStore } from '@pages/home/components/users/channel-partner-users/channel-partner-users.store';
-import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
+import {
+    UserRecord,
+    UserType,
+} from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { NxAccountService } from '@services/account.service';
+import {
+    selectCurrentPartner,
+    selectRootChannelPartners,
+} from '@store/channel-partners/channel-partners.selectors';
 
 import { InitialUserTable } from '../strangler-table/initial-user-table';
 import { StranglerImports } from '../strangler-table/strangler-imports';
+
 @Component({
     selector: 'nx-channel-partner-users-table',
     templateUrl: './channel-partner-users-table.component.html',
@@ -28,12 +36,12 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
     ],
 })
 export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
-    dialogService = inject(NxDialogsService);
-    translateService = inject(TranslateService);
-    channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
+    protected accountService = inject(NxAccountService);
+    protected router = inject(Router);
+    protected channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
 
-    channelPartnerUserRecords = input.required<UserRecord[]>({ alias: 'records' });
-    override headers: HEADER_ITEM[] = [
+    channelPartnerUserRecords = this.channelPartnerUsersStore.filteredRecords$$;
+    headers: HEADER_ITEM[] = [
         {
             name: 'email',
             value: this.LANG.channelPartners.usersTableHeaders.email,
@@ -47,7 +55,11 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
     setArrange = ['userId', 'email', 'fullName', 'roles', 'delete'];
+    idPropName = 'userId';
     roles$$ = toSignal(this.cpService.getChannelPartnerRoles());
+    channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
+    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
+    searching = input.required<boolean>();
 
     checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
@@ -69,7 +81,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
     );
     @Output() public selectedCountEmitter = toObservable<number | undefined>(this.selectedCount$$);
 
-    override canManageUsers$$ = computed(() => this.permissionStore.canViewPartnerUsers$$());
+    canManageUsers$$ = computed(() => this.permissionStore.canViewPartnerUsers$$());
 
     hasOneAdmin$$ = computed(() => {
         const users = this.channelPartnerUserRecords();
@@ -95,7 +107,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
         );
     });
 
-    override updateRole(user: UserRecord, roleId: string): void {
+    updateRole(user: UserRecord, roleId: string): void {
         const currPartner = this.currentPartner$$();
         this.cpService
             .updateChannelPartnerUser(currPartner.id, {
@@ -118,7 +130,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
                     const currPartnerIndex = channelPartners.findIndex(
                         partner => partner.id === currPartner.id,
                     );
-                    const permissions = this.roles.find(
+                    const permissions = this.roles$$()!.find(
                         role => role.name === updatedUser.roles[0],
                     )?.permissions;
                     channelPartners[currPartnerIndex] = {
@@ -132,10 +144,36 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
             });
     }
 
-    override getRowRoleId(row: UserRecord): string {
-        const displayRole = row.roles[0];
-        return this.roles$$()?.find(role => role.name === displayRole)?.id;
+    getRowRoleId(row: UserRecord): string {
+        return this.roles$$()?.find(role => role.name === this.getDisplayRole(row))?.id;
     }
+
+    showRole(row: UserRecord): boolean {
+        if (!this.canManageUsers$$()) {
+            return true;
+        }
+        const userIsOnlyAdmin = this.onlyAdmin$$() === row.userId;
+        return this.hasMultipleRoles(row) || userIsOnlyAdmin;
+    }
+
+    getDisplayRole(user: UserRecord): string {
+        return user.roles![0];
+    }
+
+    newUserDialog = (): void => {
+        this.dialogService
+            .addPartnerUser({
+                partnerId: this.currentPartner$$()?.id,
+                users: this.channelPartnerUserRecords(),
+            })
+            .then(user => {
+                this.channelPartnerUsersStore.addRecord({
+                    ...user,
+                    userId: user.email,
+                    userType: UserType.CHANNEL_PARTNER,
+                });
+            });
+    };
 
     deleteUser(user: UserRecord): void {
         this.dialogService

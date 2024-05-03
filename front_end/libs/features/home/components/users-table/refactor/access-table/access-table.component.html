@@ -1,15 +1,14 @@
 <div class="nx-access-table-container access-table">
-    @if (accessTableRecords()?.length > 0) {
+    @if (accessTableRecords$$()?.length > 0) {
         <nx-table
             [style.height]="'calc(100% - 12px)'"
             set-pagination
             set-sorting
             set-rows-auto
-            [set-arrange]="setHeaders"
-            set-id-prop-name="accessId"
+            [set-arrange]="setArrange"
+            [set-id-prop-name]="idPropName"
             [set-multiple-selected-item-ids]="selectedGroupsMap$$()"
-            [data]="accessTableRecords()"
-            (onRowClick)="onRowClickAction($event)"
+            [data]="accessTableRecords$$()"
             checkAllContainer
             #containerRef="checkAllContainer"
         >
@@ -49,15 +48,6 @@
                         [disabled]="!canManageUsers$$()"
                         [data]="row"
                     ></nx-checkbox>
-                    @if (subLevels && row.roles.length > 1) {
-                        <svg-icon
-                            nx-add-svg-src
-                            class="icon-expand"
-                            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                            [applyClass]="true"
-                            [svgStyle]="{ 'width.px': '20' }"
-                        ></svg-icon>
-                    }
                 </div>
 
                 <div
@@ -105,7 +95,7 @@
                         class="div-container-wrapper roles-container"
                         data-id="{{ row[groupPropName] }}"
                         style="grid-area: roles"
-                        [ngClass]="{ dropdown: !showRole(row) }"
+                        [ngClass]="{ dropdown: canManageUsers$$() }"
                     >
                         <div class="div-container roles">
                             <nx-select-v2

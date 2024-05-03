@@ -1,29 +1,13 @@
-import {
-    Component,
-    OnInit,
-    Output,
-    ViewChild,
-    computed,
-    forwardRef,
-    inject,
-    input,
-} from '@angular/core';
+import { Component, Output, ViewChild, computed, forwardRef } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
-import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
-import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
@@ -45,24 +29,44 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
         NxSelectV2Module,
     ],
 })
-export class NxUsersAccessTableComponent extends AbstractUserTableDirective implements OnInit {
-    override permissionStore = inject(PermissionsStore);
-    translateService = inject(TranslateService);
-    dialogService = inject(NxDialogsService);
-    orgUserStore = inject(OrgUsersStore);
-    override store = inject(Store);
-    routeState = inject(ChannelPartnersRouteState);
-    channelPartnerService = inject(NxChannelPartnersService);
+export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    email$$ = this.routerState.email;
+    orgRoles$$ = this.cpService.organizationRoles$$;
 
-    override currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    email$$ = this.routeState.email;
-    orgRoles$$ = this.channelPartnerService.organizationRoles$$;
-    accessTableRecords = input.required<UserRecord[]>({ alias: 'records' });
+    orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
+    accessTableRecords$$ = computed(() => {
+        const orgRecords = this.orgRecords$$();
+        return orgRecords
+            .filter(({ email }) => email === this.email$$())
+            .flatMap(user => {
+                if (!user.isOrgUser) {
+                    const email = this.email$$();
+                    return user.groupRoles!.map(groupRole => {
+                        return {
+                            ...user,
+                            email,
+                            userId: email,
+                            groupRoles: [groupRole],
+                            roles: groupRole.roles,
+                            rolesIds: groupRole.rolesIds,
+                            accessId: groupRole.groupId,
+                        };
+                    });
+                }
+                user.accessId = this.currentOrg$$()?.id;
+                return user;
+            });
+    });
 
-    override headers: HEADER_ITEM[] = [
+    protected idPropName = 'accessId';
+    protected groupPropName = 'groupId';
+    protected headers: HEADER_ITEM[] = [
         { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
+    protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
+
     checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
     @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
@@ -92,7 +96,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
     @Output() public selectedCountEmitter = toObservable<number | undefined>(this.selectedCount$$);
 
     fullName$$ = computed(() => {
-        const records = this.accessTableRecords();
+        const records = this.accessTableRecords$$();
         const email = this.email$$();
         const fullName = records.find(u => u.email === email && u.fullName !== 'N/A')?.fullName;
         if (fullName) {
@@ -101,11 +105,11 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
 
         return email;
     });
-    override canManageUsers$$ = computed(() => {
+    canManageUsers$$ = computed(() => {
         if (!this.permissionStore.canViewOrgUsers$$()) {
             return false;
         }
-        const users = this.orgUserStore.tableUsers$$();
+        const users = this.orgUsersStore.tableUsers$$();
         const currentUser = users.find(user => user.email === this.email$$());
         if (!currentUser?.isOrgUser) {
             return true;
@@ -133,15 +137,11 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
         return true;
     });
 
-    override ngOnInit(): void {
-        this.setHeaders = ['groupId', 'accessLevel', 'roles', 'delete'];
-    }
-
     getGroupId(row: UserRecord): string {
         return row.isOrgUser ? this.currentOrg$$().id : row.groupRoles[0].groupId;
     }
 
-    override updateRole(row: UserRecord, roleId: string): void {
+    updateRole(row: UserRecord, roleId: string): void {
         const folder = this.getGroupId(row);
         this.orgUsersStore.updateUser(
             this.currentOrg$$().id,
@@ -151,10 +151,17 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective impl
         );
     }
 
-    override getRowRoleId(user: UserRecord): string {
+    getRowRoleId(user: UserRecord): string {
         const displayRole = user.roles[0];
         return this.orgRoles$$().find(role => role.name === displayRole)?.id;
     }
+
+    newUserDialog = (): void => {
+        this.dialogService.addOrgUserV2({
+            organization: this.currentOrg$$()!,
+            email: this.email$$(),
+        });
+    };
 
     deleteUser(row: UserRecord): void {
         const groupId = row.groupRoles[0]?.groupId || this.currentOrg$$().id;
