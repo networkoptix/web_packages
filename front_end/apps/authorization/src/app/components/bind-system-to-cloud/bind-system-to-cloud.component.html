@@ -1,4 +1,4 @@
-@if (channelPartnersEnabled) {
+@if (fsmState$$()) {
     @if (fsmStates.confirmAccount !== fsmState$$() && fsmStates.error !== fsmState$$()) {
         <nx-auth-header [viewType]="viewType">{{ 'Connect system to' | translate }}</nx-auth-header>
     }
