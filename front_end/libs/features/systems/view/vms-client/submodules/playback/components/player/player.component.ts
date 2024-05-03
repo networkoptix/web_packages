@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, Output, EventEmitter, effect } from '@angular/core';
+import { AfterViewInit, Component, effect, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
+import { skip } from 'rxjs/operators';
 
 import staticLang from '@language_static';
 import { PlaybackTransport } from '@view/view.types';
@@ -10,8 +11,8 @@ import { generateClickDubleClickPair } from '@vms-client/utils/generateClickDubl
 
 import {
     ArchivePlaybackState,
-    PlaybackState,
     PLAYBACK_MODE,
+    PlaybackState,
     PlayingState,
 } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
@@ -22,7 +23,7 @@ import { PlaybackService } from '../../services/playback.service';
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, AfterViewInit {
+export class PlayerComponent implements OnDestroy, AfterViewInit {
     LANG = staticLang;
 
     // Coercing playback state to ArchivePlaybackState
@@ -35,11 +36,13 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     private transport: PlaybackTransport;
 
+    loading = false;
     showOverlay: boolean = false;
     errorEncryption: boolean = false;
     errorPlayback: boolean = false;
     errorPlaybackDescription: string;
 
+    playerErrorCount = 0;
     rotateDeg: number = 0;
 
     handleClick: (e: MouseEvent) => void;
@@ -71,16 +74,12 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         return this.sessionStorage.retrieve(`${this.vms.systemId$$()}-${this.xRuntimeGuid}`);
     }
 
-    ngOnInit(): void {
-        this.onPlaybackSubjectChange(this.playback.state);
-    }
-
     ngOnDestroy(): void {
         this.vms.playerActive = false;
     }
 
     ngAfterViewInit(): void {
-        this.playback.subject.pipe(untilDestroyed(this)).subscribe(s => {
+        this.playback.subject.pipe(skip(1), untilDestroyed(this)).subscribe(s => {
             this.onPlaybackSubjectChange(s);
         });
     }
@@ -91,7 +90,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         }
 
         this.errorEncryption = (<ArchivePlaybackState>s).encrypted;
-        this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
+        this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.loading : false;
     }
 
     onBufferingChange(s: number): void {
@@ -102,7 +101,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         s > 1 means the player fired a waiting event and we need to move the time back by that much.
          */
         setTimeout(() => {
-            this.showOverlay = s === 0;
+            this.loading = s === 0;
         }, 0);
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
@@ -110,6 +109,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                 this.playback.playArchive((this.playback.state as PlayingState).currentTime - s),
             );
         } else if (s === 1) {
+            this.playerErrorCount = 0;
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
@@ -167,6 +167,11 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                             this.errorPlayback = error.message?.length;
                             this.errorPlaybackDescription = error.message;
                             this.playBackError.emit(error.message);
+                        } else if (error.name === 'HttpErrorResponse') {
+                            this.playerErrorCount++;
+                        }
+                        if (this.playerErrorCount > 1) {
+                            this.playBackError.emit(this.LANG.common.cameraStates.errorLoading);
                         }
                     },
                 );

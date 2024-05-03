@@ -19,8 +19,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
-import { animationFrameScheduler, BehaviorSubject, interval, map, Subject, timer } from 'rxjs';
-import { filter, takeUntil, throttleTime } from 'rxjs/operators';
+import {
+    firstValueFrom,
+    animationFrameScheduler,
+    BehaviorSubject,
+    interval,
+    Subject,
+    timer,
+} from 'rxjs';
+import { filter, map, pairwise, startWith, takeUntil, throttleTime } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
@@ -64,6 +71,7 @@ enum CameraError {
     offline = 'offline',
     tooManyConnections = 'tooManyConnections',
     unauthorized = 'unauthorized',
+    custom = 'custom',
 }
 
 enum CameraErrorResponse {
@@ -260,6 +268,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             } else if (!isOffline && isUnauthorized) {
                 errorState = CameraError.unauthorized;
             }
+        } else if (error) {
+            errorState = CameraError.custom;
         }
 
         return {
@@ -276,9 +286,25 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     });
 
+    // Removes the error state when changing mode, transport or quality.
+    playbackState$$ = toSignal(
+        this.playback.subject.pipe(
+            startWith(this.playback.state),
+            pairwise(),
+            filter(
+                ([prevState, nextState]) =>
+                    prevState.mode !== nextState.mode ||
+                    prevState.quality !== nextState.quality ||
+                    prevState.transport !== nextState.transport,
+            ),
+        ),
+    );
+
     clearErrorOnCameraChange = effect(
         () => {
             this.cameraId$$();
+            this.playbackState$$();
+
             this.playerError$$.set('');
         },
         { allowSignalWrites: true },
@@ -686,7 +712,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.restorePlayback();
         } else {
             const archivePromise = this.canViewArchive$$()
-                ? this.system.mediaserver.getRecords(this.id, 0, now, 1).toPromise()
+                ? firstValueFrom(this.system.mediaserver.getRecords(this.id, 0, now, 1))
                 : Promise.reject();
             archivePromise
                 .then(async ar => {
@@ -761,7 +787,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const prepared = records
                             .map(r => {
                                 // the server has a weird habit of sending strings instead of numbers every now and then
-                                const start = Math.max(parseInt(r.startTimeMs), since);
+                                const start = Math.max(parseInt(r.startTimeMs), since || 0);
                                 const duration = parseInt(r.durationMs);
                                 return newBaseTimeRange(
                                     start,
@@ -819,7 +845,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private initSelectedCamera(): void {
         this.resetTransport();
         this.resetQuality();
-        this.playerError$$();
+        this.playerError$$.set('');
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
