@@ -139,7 +139,6 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                         isCloud: user.type === 'cloud',
                         isLdap: user.type === 'ldap',
                     })),
-                    '/ec2/getPredefinedRoles': [],
                     '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
                 },
             })),

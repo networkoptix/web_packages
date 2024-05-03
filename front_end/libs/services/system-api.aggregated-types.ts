@@ -28,7 +28,6 @@ export interface AggregatedRoles {
 
 export interface AggregatedUsers {
     reply: {
-        '/ec2/getPredefinedRoles': PredefinedLegacyRole[];
         '/ec2/getUserRoles': LegacyRole[];
         '/ec2/getUsers': SystemUser[];
     };

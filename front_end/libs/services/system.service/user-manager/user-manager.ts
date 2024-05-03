@@ -107,12 +107,14 @@ export class UserManager {
     private getUserRole(user: SystemUser): Role {
         const roles = this.accessRoles;
         let role = roles.find(role => {
+            // When a system is offline users come from cdb so we can rely on userRoleId.
+            const userRoleId = 'userRoleId' in user && user.userRoleId;
             // Owner flag has top priority and overrides everything
-            if ('isOwner' in role && role.isOwner && this.isOwner(user)) {
-                return true;
+            if ('isOwner' in role && role.isOwner) {
+                return this.isOwner(user) || role.id === userRoleId;
             }
-            if ('id' in role && role.id !== ZERO_ID) {
-                const userRoleId = 'userRoleId' in user && user.userRoleId;
+            // Handles cloud users. If userRoleId is ZERO_ID the info is coming from the mediaserver
+            if (userRoleId && userRoleId !== ZERO_ID) {
                 return role.id === userRoleId;
             }
 
@@ -142,7 +144,7 @@ export class UserManager {
                 const data = result.reply;
                 const users = data['/ec2/getUsers'];
                 const userRoles = data['/ec2/getUserRoles'];
-                const predefinedRoles = data['/ec2/getPredefinedRoles'];
+                const predefinedRoles = this.CONFIG.accessRoles.predefinedRoles;
                 return new Promise(resolve => {
                     this.updateAccessRoles(predefinedRoles, userRoles);
                     this.processUsers(users);
@@ -262,7 +264,7 @@ export class UserManager {
         const userData = {
             ...newUser,
             isEnabled: true,
-            userRoleId: ('id' in role && role.id) || ZERO_ID,
+            userRoleId: ZERO_ID,
             permissions: role?.permissions || '',
             name: user.email,
         };
@@ -302,7 +304,7 @@ export class UserManager {
             delete userData.permissions;
         } else if (userData.role) {
             userData.permissions = userData.role.permissions;
-            userData.userRoleId = ('id' in userData.role && userData.role?.id) || ZERO_ID;
+            userData.userRoleId = ZERO_ID;
         } else {
             delete userData.permissions;
         }
@@ -324,10 +326,6 @@ export class UserManager {
             // Permissions property is omitted if role has no permissions
         });
 
-        this.accessRoles = [
-            ...predefinedRoles,
-            ...userRoles,
-            this.CONFIG.accessRoles.customPermission,
-        ];
+        this.accessRoles = [...predefinedRoles, ...userRoles];
     }
 }

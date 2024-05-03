@@ -226,6 +226,7 @@ export const nxConfig: IConfig = {
         allMediaPermissionFlag: 'GlobalAccessAllMediaPermission',
         viewArchivesPermissionFlag: 'GlobalViewArchivePermission',
         customPermission: {
+            id: '',
             name: 'Custom',
             permissions: 'NoPermission',
         },

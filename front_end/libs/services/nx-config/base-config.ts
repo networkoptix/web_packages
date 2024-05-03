@@ -10,7 +10,7 @@
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchTag } from '@components/search/search.component.types';
-import { BaseRole, PredefinedLegacyRole } from '@services/system-user.types';
+import { PredefinedLegacyRole, Role } from '@services/system-user.types';
 
 import type { MenuNode } from '../menus.service.types';
 
@@ -275,7 +275,7 @@ export interface AccessRoles {
     globalViewBookmarksPermission: string;
     allMediaPermissionFlag: string;
     viewArchivesPermissionFlag: string;
-    customPermission: BaseRole;
+    customPermission: Role;
     predefinedRoles: PredefinedLegacyRole[];
     order: string[];
 }
