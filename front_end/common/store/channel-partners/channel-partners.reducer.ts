@@ -21,6 +21,7 @@ const initialState: ChannelPartnersState = {
     organizations: [],
     rootOrganizations: [],
     hasStoreLoaded: false,
+    showPermissionWarning: false,
 };
 
 export const channelPartnersReducer = createReducer(
@@ -30,6 +31,13 @@ export const channelPartnersReducer = createReducer(
         (state): ChannelPartnersState => ({
             ...state,
             arePartnerOrgsLoading: true,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setShowPermissionWarning,
+        (state, { showPermissionWarning }): ChannelPartnersState => ({
+            ...state,
+            showPermissionWarning,
         }),
     ),
     on(

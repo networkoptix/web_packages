@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     MatButtonToggle,
@@ -32,6 +32,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { settingsViews } from '@pages/home/home.types';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -45,6 +46,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { MAX_NAME_LENGTH } from '@static-variables';
+import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import { icons } from '@variables/static-variables';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
@@ -99,9 +101,10 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
         NgxTranslateCutModule,
     ],
 })
-export class NxOrganizationSettingsComponent implements OnInit {
+export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     icons = icons;
+    orgUserStore = inject(OrgUsersStore);
     readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
     permissionsStore = inject(PermissionsStore);
@@ -154,6 +157,10 @@ export class NxOrganizationSettingsComponent implements OnInit {
             canConfigure: canConfigureOrganization$$(),
         };
     });
+
+    hasAdminRole = this.orgUserStore
+        .currentGroupUsersEntities()
+        ?.some(r => r.roles?.includes('Organization Administrator'));
 
     State = State;
 
@@ -209,6 +216,12 @@ export class NxOrganizationSettingsComponent implements OnInit {
         const currLevel = this.accessLevel$$();
         if (id !== currLevel) {
             this.currentPartnerAccess$.next(null);
+            if (!this.hasAdminRole) {
+                this.store.dispatch(
+                    CPActions.setShowPermissionWarning({ showPermissionWarning: true }),
+                );
+                return;
+            }
             const { title, message, footer } =
                 this.LANG.dialogs.channelPartners.confirmAccessLevelChange;
             this.dialogsService
@@ -297,4 +310,8 @@ export class NxOrganizationSettingsComponent implements OnInit {
     }
 
     protected readonly MAX_ORG_NAME_LENGTH = MAX_NAME_LENGTH;
+
+    ngOnDestroy(): void {
+        this.store.dispatch(CPActions.setShowPermissionWarning({ showPermissionWarning: false }));
+    }
 }

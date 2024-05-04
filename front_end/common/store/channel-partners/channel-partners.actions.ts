@@ -10,6 +10,11 @@ export const loadPartnerOrgs = createAction(
     props<{ partnerId: string }>(),
 );
 
+export const setShowPermissionWarning = createAction(
+    '[Channel Partners] Set Admin permissions',
+    props<{ showPermissionWarning: boolean }>(),
+);
+
 export const loadChannelPartnersAndOrgs = createAction(
     '[Channel Partners] Load channel partners and organizations',
     props<{ includeChildOrgs: boolean }>(),
