@@ -1069,7 +1069,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = ChannelPartnerService
         fields = ['id', 'type', 'subType', 'state', 'displayName', 'description',
                   'createdByChannelPartner', 'parameters', 'created',
-                  'parentServiceId', 'duration']
+                  'parentServiceId', 'duration', 'enabled']
 
 
 class AvailableChannelPartnerServiceSerializer(serializers.ModelSerializer):

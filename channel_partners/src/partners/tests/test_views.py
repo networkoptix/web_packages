@@ -67,27 +67,87 @@ class TestCloudSystemViewSetRetrieve:
     @pytest.fixture(autouse=True)
     def setup(self, system_factory, org_user_factory, cloud_test_host,
               system_group_factory, sys_group_user_factory, jwt_token_factory, arf,
-              channel_partner_factory, cp_user_factory, organization_factory):
-        self.cp = channel_partner_factory()
+              channel_partner_factory, cp_user_factory, organization_factory,
+              cp_service_factory):
+
+        # Create channel partners
+        self.cp = channel_partner_factory()  # Main channel partner
+        ## Sub channel partner
         self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+
+        # Create organizations
+        ## Main organization
         self.organization = organization_factory(channel_partner=self.sub_cp)
+        ## Other organization
         self.other_org = organization_factory(channel_partner=self.sub_cp)
+
+        # Create system groups
+        ## Main system group
         self.group = system_group_factory(organization=self.organization)
+        ## Other system group
         self.other_group = system_group_factory(organization=self.organization)
+
+        # Create users
+        ## User for main channel partner
         self.cp_user = cp_user_factory(channel_partner=self.cp)
+        ## User for sub channel partner
         self.sub_cp_user = cp_user_factory(channel_partner=self.sub_cp)
+        ## Admin for main organization
         self.org_admin = org_user_factory(organization=self.organization)
+        #  # Admin for other organization
         self.other_org_admin = org_user_factory(organization=self.other_org)
+        ## Admin for main system group
         self.group_admin = sys_group_user_factory(organization=self.organization, group=self.group)
+        ## Admin for other system group
         self.other_group_admin = sys_group_user_factory(organization=self.organization, group=self.other_group)
+
+        # Create systems
+        ## System for main organization
         self.org_system = system_factory(organization=self.organization)
+        ## System for main system group
         self.group_system = system_factory(organization=self.organization, system_group=self.group)
+
+        # Creating Enabled & Disabled Services
+        self.enabled_service = cp_service_factory(
+            channel_partner=self.sub_cp,
+            service_type=ChannelPartnerService.ANALYTICS,
+            is_enabled=True)
+        self.disabled_service = cp_service_factory(
+            channel_partner=self.sub_cp,
+            service_type=ChannelPartnerService.ANALYTICS,
+            is_enabled=False)
+
+        # Setup API client
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
         self.token = f'{uuid4()}'
         self.auth_cred = f'Bearer {self.token}'
+
+        # Generate URL for cloud system detail
         self.url = reverse('cloudsystem-detail', kwargs={'id': self.group_system.system_id})
+
+        # Clear caches
         caches['default'].clear()
         caches['local'].clear()
+
+    def test_returned_services_count(self, cloud_test_host, mock_auth_with_user):
+
+        # Authenticating the user
+        mock_auth_with_user(self.sub_cp_user.user)
+
+        bearer_token = f'Bearer {uuid4()}'
+        api_client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        api_client.credentials(HTTP_AUTHORIZATION=bearer_token)
+
+        path = reverse(
+            'cloudsystem-services',
+            kwargs={'id': str(self.org_system.system_id)}
+        )
+        response = api_client.get(path=path)
+
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+
 
     def test_token_200_group_user(self, mock_cdb_token_introspect):
         mock_cdb_token_introspect(user=self.group_admin.user, system=self.group_system, system_role=None)
@@ -4176,6 +4236,10 @@ class TestOrganizationNestedViewSetPermissions:
         path = reverse(self.view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 403
+
+
+
+
 
 
 class TestCloudSystemViewSetPermissions:

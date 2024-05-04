@@ -439,7 +439,7 @@ class ExternalIdBase:
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
+class ChannelPartnerExternalIdViewSet(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerExternalIdSerializer
     queryset = ChannelPartnerExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -457,7 +457,7 @@ class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
+class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerServiceExternalIdSerializer
     queryset = ChannelPartnerServiceExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -475,7 +475,7 @@ class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
+class OrganizationrExternalIdViewSet(ExternalIdBase, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
     queryset = OrganizationExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -493,7 +493,7 @@ class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
+class CloudSystemExternalIdViewSet(ExternalIdBase, ModelViewSet):
     serializer_class = CloudSystemIdExternalIdSerializer
     queryset = CloudSystemExternalId.objects.all().select_related('cloud_system')
     filter_backends = [DjangoFilterBackend]
@@ -505,11 +505,13 @@ class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
     summary='Services that belong to channel partner queried',
     parameters=[OpenApiParameter('parent_lookup_created_by_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerOwnedServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = ServiceSerializer
-    queryset = ChannelPartnerService.objects.all().order_by('created_ts')
+    queryset = (ChannelPartnerService.objects.all()
+                .filter(enabled=True)
+                .order_by('created_ts'))
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
 
@@ -533,11 +535,15 @@ class ChannelPartnerOwnedServiceViewset(ParentLookUpMixin, NestedViewSetMixin, M
     summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.',
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableChannelPartnerServiceSerializer
-    queryset = ServiceToSubChannelProperties.objects.all().order_by('created_ts')
+    queryset = (
+        ServiceToSubChannelProperties.objects.all()
+        .filter(service__enabled=True)
+        .order_by('created_ts')
+    )
     lookup_field = 'service_id'
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
@@ -566,11 +572,14 @@ class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixi
         type=OpenApiTypes.UUID)
     ]
 )
-class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableOrganizationServiceSerializer
-    queryset = ServiceToOrganizationProperties.objects.all().order_by('created_ts')
+    queryset = (
+        ServiceToOrganizationProperties.objects.all()
+        .filter(service__enabled=True)
+        .order_by('created_ts'))
     lookup_field = 'service_id'
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
@@ -1129,8 +1138,10 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = (CloudSystemId.objects.exclude(system_state=CloudSystemStates.DELETED)
-                .order_by('created_ts').select_related('organization'))
+    queryset = (CloudSystemId.objects
+                .exclude(system_state=CloudSystemStates.DELETED)
+                .order_by('created_ts')
+                .select_related('organization'))
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
@@ -1142,11 +1153,13 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
         if param_serializer.validated_data.get('rootOnly'):
             return super().get_queryset().filter(
                 organization__channel_partner__cloud_host=self.request.cloud_host,
-                system_state=CloudSystemStates.ACTIVATED, system_group=None
+                system_state=CloudSystemStates.ACTIVATED,
+                system_group=None
             )
         return super().get_queryset().filter(
             organization__channel_partner__cloud_host=self.request.cloud_host,
-            system_state=CloudSystemStates.ACTIVATED
+            system_state=CloudSystemStates.ACTIVATED,
+
         )
 
     def get_permissions(self):
@@ -1507,7 +1520,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     @action(methods=['get'], detail=True)
     def services(self, request, id):
         system: CloudSystemId = self.get_object()
-        services = system.organization.all_services
+        services: QuerySet[ChannelPartnerService] = system.organization.all_services.filter(enabled=True)
         serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)
 
