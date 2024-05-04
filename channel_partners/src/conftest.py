@@ -327,6 +327,7 @@ def mock_cdb_basic_auth(httpx_mock, cloud_test_host):
 
     return mock
 
+
 @pytest.fixture()
 def cdb_introspect_url(cloud_test_host):
     return f'https://{cloud_test_host.hostname}/cdb/oauth2/introspect'
@@ -334,30 +335,46 @@ def cdb_introspect_url(cloud_test_host):
 
 @pytest.fixture()
 def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_email, mock_auth_with_user):
-    def mock(user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
-             system: CloudSystemId = None, system_id: uuid.UUID = None,
-             active: bool = True, system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR,
-             jwt_is_valid: bool = True, token_is_valid: bool = True):
+    # Define a mock function
+    def mock(
+            user: CloudUser | ChannelPartnerToUser | OrganizationToUser,
+            system: CloudSystemId = None,
+            system_id: uuid.UUID = None,
+            active: bool = True,
+            system_role: str | uuid.UUID = VmsRoles.ADMINISTRATOR,
+            jwt_is_valid: bool = True,
+            token_is_valid: bool = True
+    ) -> MagicMock:
+
+        # Raise an error if both system and system_id are provided
         if system and system_id:
             raise ValueError('Cannot specify both system and system_id.')
+
+        # Get the email of the user
         if user is None:
             email = random_email
         elif isinstance(user, CloudUser):
             email = user.email
         else:
             email = user.user.email
+
+        # Get the system roles
         if system or system_id:
             system_id = system_id or system.system_id
             system_roles = [str(system_role)] if system_role else []
             roles = {"system_role_ids": {str(system_id): system_roles}}
         else:
             roles = {}
+
+        # Prepare the data for the response
         data = {
             "username": email,
             "active": active,
             "token_type": "bearer",
             **roles
         }
+
+        # Mock the authentication functions
         mocker.patch(
             'partners.authentication.authenticate_jwt_token',
             return_value=email if jwt_is_valid else None
@@ -367,9 +384,13 @@ def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_ema
             return_value=email if jwt_is_valid else None
         )
 
+        # Add a response to the httpx mock
         httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
+
+        # Return the email
         return email
 
+    # Return the mock function
     return mock
 
 
@@ -419,19 +440,25 @@ def system_factory(cloud_test_host, default_organization):
 
 @pytest.fixture()
 def cp_service_factory(default_channel_partner):
-    def factory(channel_partner=default_channel_partner, parent_service=None,
-                service_type=ChannelPartnerService.LOCAL_RECORDING, duration=0,
-                conversion_service=None, sub_type=ChannelPartnerService.REGULAR):
-        return baker.make(ChannelPartnerService, name=f'{uuid4()}',
-                          created_by_channel_partner=channel_partner,
-                          parent_service=parent_service,
-                          state=ChannelPartnerService.ACTIVE,
-                          type=service_type,
-                          duration=duration,
-                          conversion_service=conversion_service,
-                          sub_type=sub_type
-                          )
-
+    def factory(
+            channel_partner=default_channel_partner,
+            parent_service=None,
+            service_type=ChannelPartnerService.LOCAL_RECORDING,
+            duration=0,
+            conversion_service=None,
+            sub_type=ChannelPartnerService.REGULAR,
+            is_enabled=True
+    ):
+        return baker.make(
+            ChannelPartnerService, name=f'{uuid4()}',
+            created_by_channel_partner=channel_partner,
+            parent_service=parent_service,
+            state=ChannelPartnerService.ACTIVE,
+            type=service_type,
+            duration=duration,
+            conversion_service=conversion_service,
+            sub_type=sub_type,
+            enabled=is_enabled)
     return factory
 
 

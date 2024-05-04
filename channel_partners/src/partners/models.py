@@ -976,7 +976,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return count
 
     @property
-    def all_services(self):
+    def all_services(self)->QuerySet['ChannelPartnerService']:
         services = self.services.all()
         return services
 
@@ -1627,7 +1627,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.channel_partner.can_alter_organization_state(user)
 
     @property
-    def all_services(self):
+    def all_services(self)->QuerySet['ChannelPartnerService']:
         return self.channel_partner.all_services
 
     @classmethod
@@ -2071,8 +2071,12 @@ class ChannelPartnerService(models.Model):
     created_ts = models.DateTimeField(auto_now_add=True)
     sub_type = models.IntegerField(choices=SUB_TYPES, default=REGULAR)
     duration = models.PositiveIntegerField(default=0)
-    conversion_service = models.ForeignKey('ChannelPartnerService', null=True, blank=True, on_delete=models.PROTECT,
-                                           related_name='converting_services')
+    conversion_service = models.ForeignKey(
+        'ChannelPartnerService',
+        null=True, blank=True,
+        on_delete=models.PROTECT,
+        related_name='converting_services')
+    enabled = models.BooleanField(default=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage

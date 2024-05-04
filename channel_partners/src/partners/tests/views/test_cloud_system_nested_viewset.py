@@ -245,19 +245,26 @@ class TestCloudSystemNestedViewSetRootOnlyParam:
     def setup(self, channel_partner_factory, organization_factory,
               system_group_factory, system_factory, org_user_factory,
               cloud_test_host, mock_auth_with_user):
+
         cp = channel_partner_factory()
         self.organization = organization_factory(channel_partner=cp)
         system_factory(organization=self.organization)
+
         group_0 = system_group_factory(organization=self.organization)
         system_factory(organization=self.organization, system_group=group_0)
+
         group_1 = system_group_factory(organization=self.organization, parent=group_0)
         system_factory(organization=self.organization, system_group=group_1)
+
         group_2 = system_group_factory(organization=self.organization, parent=group_1)
         system_factory(organization=self.organization, system_group=group_2)
+
         self.user = org_user_factory(organization=self.organization)
         mock_auth_with_user(self.user)
+
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+
         kwargs = {'parent_lookup_organization': str(self.organization.id)}
         self.base_url = reverse('organizations-cloudsystem-list', kwargs=kwargs)
 
