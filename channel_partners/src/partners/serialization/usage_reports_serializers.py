@@ -82,7 +82,7 @@ class ChannelPartnerSubEntityServicesSerializer(serializers.Serializer):
     last_changed = serializers.DateField(format='%Y-%m-%d', required=False)
 
 
-class ChannelPartnerServiceSummarySerializer(serializers.Serializer):
+class ChannelPartnerReportsServiceSummarySerializer(serializers.Serializer):
     channels = serializers.IntegerField()
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
@@ -92,7 +92,7 @@ class ChannelPartnerServiceSummarySerializer(serializers.Serializer):
 
 class ChannelPartnerServiceReportSerializer(serializers.Serializer):
     sub_entities = ChannelPartnerSubEntityServicesSerializer(many=True)
-    summary = ChannelPartnerServiceSummarySerializer(many=False)
+    summary = ChannelPartnerReportsServiceSummarySerializer(many=False)
 
 
 class OrganizationUsageSerializer(serializers.Serializer):

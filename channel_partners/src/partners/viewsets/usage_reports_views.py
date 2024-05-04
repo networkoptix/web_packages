@@ -6,7 +6,11 @@ from typing import (
 )
 
 from django.urls import converters
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    extend_schema,
+)
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import (
@@ -123,7 +127,11 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
 @extend_schema(
     tags=['Organization Reports'],
     summary='Organization usage reports.',
-    parameters=[ReportPeriodParamSerializer],
+    parameters=[ReportPeriodParamSerializer,
+                OpenApiParameter('parent_lookup_organization',
+                                 location='path',
+                                 type=OpenApiTypes.UUID,
+                                 description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'}
 )
 class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
@@ -154,6 +162,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization systems report.',
         responses={'200': SystemUsageSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -168,6 +181,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization regular detail table.',
         responses={'200': RegularUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -182,6 +200,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization expiring detail table.',
         responses={'200': ExpiringUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -196,6 +219,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization regular service report.',
         responses={'200': OrganizationServiceReportSerializer(many=False)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -210,6 +238,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization expiring service report.',
         responses={'200': OrganizationExpiringServiceReportSerializer(many=False)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(detail=True, methods=['get'], )
     def expiring_service_report(self, request, *args, **kwargs):
@@ -221,6 +254,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization cloud system regular report.',
         responses={'200': RegularUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -246,6 +284,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get an organization cloud system expiring report.',
         responses={'200': ExpiringUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -272,7 +315,11 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
 @extend_schema(
     tags=['Channel Partner Reports'],
     summary='Channel Partner usage reports.',
-    parameters=[ReportPeriodParamSerializer],
+    parameters=[ReportPeriodParamSerializer,
+                OpenApiParameter('parent_lookup_channel_partner',
+                                 location='path',
+                                 type=OpenApiTypes.UUID,
+                                 description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for ChannelPartner'}
 )
 class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
@@ -303,6 +350,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary="Get sub channel partners usages.",
         responses={'200': ChannelPartnerUsageSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -316,6 +368,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get usages of child organizations.',
         responses={'200': OrganizationUsageSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -329,6 +386,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get channel partner regular detail table.',
         responses={'200': RegularUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -342,6 +404,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get channel partner expiring detail table.',
         responses={'200': ExpiringUsageDetailRecordSerializer(many=True)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -356,6 +423,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get channel partner regular service report.',
         responses={'200': ChannelPartnerServiceReportSerializer(many=False)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(
         detail=True,
@@ -369,6 +441,11 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     @extend_schema(
         summary='Get channel partner expiring service report.',
         responses={'200': ChannelPartnerExpiringServiceReportSerializer(many=False)},
+        parameters=[OpenApiParameter('service_id',
+                                     location='path',
+                                     type=OpenApiTypes.UUID,
+                                     description='The primary key of the service',
+                                     required=False)],
     )
     @action(detail=True, methods=['get'])
     def expiring_service_report(self, request, *args, **kwargs):
