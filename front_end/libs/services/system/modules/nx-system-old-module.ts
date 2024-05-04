@@ -279,6 +279,12 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     },
                     error: e => {
                         console.error(e);
+                        // code 1006 means the connection was closed abnormally.
+                        if (e.code === 1006) {
+                            this.useRpcOverPolling();
+                        } else {
+                            this.stopPoll();
+                        }
                     },
                     complete: () => {
                         console.warn('Rpc connection has been closed.');
