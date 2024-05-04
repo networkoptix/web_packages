@@ -898,7 +898,7 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
 
 
 class CloudStorageUsageSerializer(serializers.Serializer):
-    class DeviceSerializer(serializers.Serializer):
+    class StorageDeviceSerializer(serializers.Serializer):
         id = serializers.CharField()
         serviceId = NullValuePKField(
             source='service', null_value=ServiceUsage.UNALLOCATED_SERVICE,
@@ -906,7 +906,7 @@ class CloudStorageUsageSerializer(serializers.Serializer):
         )
 
     cloudSystemId = serializers.UUIDField(source='cloud_system')
-    devices = DeviceSerializer(many=True)
+    devices = StorageDeviceSerializer(many=True)
 
     def validate_cloudSystemId(self, value) -> CloudSystemId:
         if system := CloudSystemId.objects.filter(system_id=value).first():
@@ -1354,14 +1354,15 @@ class ChannelPartnerRecordsParamSerializer(serializers.Serializer):
 
 
 class OrganizationServiceRecordSerializer(serializers.ModelSerializer):
-    class ServiceSerializer(serializers.ModelSerializer):
+    class OrganizationServiceSerializer(serializers.ModelSerializer):
         type = CodeChoiceField(choices=list(ChannelPartnerService.SERVICE_TYPE_CODES))
+        subType = CodeChoiceField(source='sub_type', choices=list(ChannelPartnerService.SUB_TYPES_CODES))
 
         class Meta:
             model = ChannelPartnerService
-            fields = ['id', 'name', 'type']
+            fields = ['id', 'name', 'type', 'subType']
 
-    service = ServiceSerializer()
+    service = OrganizationServiceSerializer()
     system = serializers.SlugRelatedField(source='cloud_system', slug_field='system_id', read_only=True)
     date = serializers.DateTimeField(source='created_ts')
     changedBy = serializers.SlugRelatedField(source='created_by', slug_field='email', read_only=True)

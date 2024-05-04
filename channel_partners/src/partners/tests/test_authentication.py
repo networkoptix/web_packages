@@ -107,7 +107,7 @@ def test_token_cache(mocker):
     TokenCache.set_token(token, value, expires_in='3600')
     assert TokenCache.get_token(token) == value
 
-    TokenCache.set_token(token, value, expires_in='2')
+    TokenCache.set_token(token, value, expires_in='1')
     assert TokenCache.get_token(token) == value
     sleep(2)
     assert TokenCache.get_token(token) is None
