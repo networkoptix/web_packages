@@ -251,6 +251,7 @@ export class PermissionManager {
     accessRole$$ = computed<string>(() => {
         const user = this.user$$();
         const customRole = this.customRole$$();
+        const resourceAccessRights = this.resourceAccessRights$$();
         const groups = this.groups$$();
         const roles = this.roles$$();
         const ownerEmail = this.ownerEmail$$() || '';
@@ -286,7 +287,9 @@ export class PermissionManager {
             return accessRole;
         }
 
-        return this.LANG.accessRoles.custom.label;
+        return Object.keys(resourceAccessRights).length
+            ? this.LANG.accessRoles.custom.label
+            : this.LANG.accessRoles.none.label;
     });
     permissions$$ = computed<Permissions>(() => {
         const isOwner = this.isOwner$$();
