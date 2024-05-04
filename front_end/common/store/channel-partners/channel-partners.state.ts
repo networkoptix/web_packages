@@ -20,4 +20,5 @@ export interface ChannelPartnersState {
     organizations: Organization[];
     rootOrganizations: Organization[];
     hasStoreLoaded: boolean;
+    showPermissionWarning: boolean;
 }

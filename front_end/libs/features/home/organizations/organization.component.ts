@@ -25,8 +25,10 @@ import {
     selectCurrentOrganization,
     selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
+    selectShowPermissionWarning,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
@@ -81,6 +83,7 @@ interface SidebarSettings {
         NxRibbonStandaloneComponent,
         PipesModule,
         NxHidableModule,
+        NxAlertBlockComponent,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -91,6 +94,7 @@ export class NxOrganizationsComponent implements OnInit {
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+    showPermissionWarning$$ = this.store.selectSignal(selectShowPermissionWarning);
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];

@@ -24,6 +24,11 @@ export const selectHasStoreLoaded = createSelector(
     state => state.hasStoreLoaded,
 );
 
+export const selectShowPermissionWarning = createSelector(
+    selectChannelPartnersState,
+    state => state.showPermissionWarning,
+);
+
 export const selectChannelPartners = createSelector(
     selectChannelPartnersState,
     state => state.channelPartners,
