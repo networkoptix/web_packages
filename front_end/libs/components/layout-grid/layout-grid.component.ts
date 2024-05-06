@@ -20,6 +20,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     Output,
     signal,
@@ -90,6 +91,7 @@ import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
@@ -417,22 +419,65 @@ export class NxLayoutGridComponent {
         return allCameras.filter(({ id }) => cameraIds.includes(id));
     });
 
+    selectedCameraStore = inject(SelectedCameraStore);
+
     updateSelectedCameraEffect = effect(
         () => {
-            const layoutItems = this.layout$$?.()?.items || [];
-            const cameraIds = layoutItems.map(({ resourceId }) => cleanId(resourceId));
-            const selectedCamera = untracked(() => this.layoutStateService.selectedCameraId$$());
-            if (
-                cameraIds.length &&
-                (!selectedCamera || !cameraIds.includes(cleanId(selectedCamera)))
-            ) {
-                this.layoutStateService.updateSelectedCameraId(cameraIds[0]);
+            const layout = this.layout$$();
+
+            if (!layout) {
+                return;
             }
+
+            const layoutItems = layout.items;
+
+            const layoutItemLookup = this.layoutItemLookup;
+
+            const layoutItemIds = layoutItems
+                .filter(({ resourceId }) => {
+                    const isCamera = assertResourceOfType.camera(layoutItemLookup[resourceId]);
+                    const hasPermission = this.system.permissionManager.canViewDevice(resourceId);
+                    return isCamera && hasPermission;
+                })
+                .map(({ id }) => cleanId(id));
+
+            const selectedItemState = untracked(() =>
+                this.selectedCameraStore.selectedLayoutItemState$$(),
+            );
+
+            if (selectedItemState.id !== cleanId(layout.id)) {
+                // this.layout$$ is asynchronous and this.selectedStateStore.selectedLayoutItemState$$
+                // is synchronous, this is to handle potential race conditions.
+                return;
+            }
+
+            const defaultLayoutItemId = layoutItemIds[0];
+
+            if (!layoutItemIds.length) {
+                return;
+            }
+
+            const selectedInLayout = layoutItemIds.includes(cleanId(selectedItemState.selected));
+
+            if (selectedInLayout) {
+                return;
+            }
+
+            this.selectedCameraStore.updateSelectedResource(defaultLayoutItemId, true);
         },
         {
             allowSignalWrites: true,
         },
     );
+
+    selectedCameraId$$ = computed(() => {
+        const selectedLayoutItemId = this.selectedCameraStore.selectedLayoutItemId$$();
+        const layoutItem = this.layout$$()?.items.find(
+            ({ id }) => cleanId(id) === selectedLayoutItemId,
+        );
+
+        return layoutItem ? cleanId(layoutItem.resourceId) : '';
+    });
 
     #lastWidth: number = Infinity;
 

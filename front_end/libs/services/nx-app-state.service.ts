@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, shareReplay, take } from 'rxjs/operators';
 
@@ -18,6 +19,7 @@ export class NxAppStateService {
         take(1),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
+    userInteracted$$ = toSignal(this.userInteracted$);
     appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 

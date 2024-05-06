@@ -531,8 +531,8 @@
                                                 (click)="
                                                     layoutItemLookup[item.resourceId].type ===
                                                         RESOURCE_TYPE.CAMERA &&
-                                                        layoutStateService.updateSelectedCameraId(
-                                                            item.resourceId
+                                                        selectedCameraStore.updateSelectedResource(
+                                                            item.id
                                                         )
                                                 "
                                                 [ngClass]="{
@@ -549,9 +549,9 @@
                                                         window.document.fullscreenElement,
                                                     collided: (collisions$ | async)[item.id],
                                                     'focused-item':
-                                                        layoutStateService.selectedCameraId$$() &&
-                                                        item.resourceId.includes(
-                                                            layoutStateService.selectedCameraId$$()
+                                                        selectedCameraStore.selectedLayoutItemId$$() &&
+                                                        item.id.includes(
+                                                            selectedCameraStore.selectedLayoutItemId$$()
                                                         )
                                                 }"
                                                 [ngStyle]="
@@ -631,6 +631,12 @@
                                                                                 class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
                                                                             >
                                                                                 <nx-video-player
+                                                                                    [muted]="
+                                                                                        !selectedCameraStore.selectedLayoutItemId$$() ||
+                                                                                        !item.id.includes(
+                                                                                            selectedCameraStore.selectedLayoutItemId$$()
+                                                                                        )
+                                                                                    "
                                                                                     [showFisheye]="
                                                                                         overlay.showFisheye$$()
                                                                                     "
@@ -855,7 +861,7 @@
 
                 @if (CONFIG.featureFlags.layoutsTimeline) {
                     <nx-webgl-canvas
-                        [selectedCameraId]="layoutStateService.selectedCameraId$$()"
+                        [selectedCameraId]="selectedCameraId$$()"
                         [cameras]="currentLayoutCameras$$()"
                     ></nx-webgl-canvas>
                 }

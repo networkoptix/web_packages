@@ -81,8 +81,6 @@ export class LayoutStateService {
 
     duplicatedLayouts$$ = signal<string[]>([]);
 
-    selectedCameraId$$ = signal<string>('');
-
     // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
     editedLayout$$ = signal<{ id: string; isNew?: boolean } | null>(null);
 
@@ -535,10 +533,6 @@ export class LayoutStateService {
     );
 
     activeLayoutHistory: string[] = [];
-
-    updateSelectedCameraId(cameraId: string): void {
-        this.selectedCameraId$$.set(cleanId(cameraId));
-    }
 
     constructor(
         private cloudApi: NxCloudApiService,

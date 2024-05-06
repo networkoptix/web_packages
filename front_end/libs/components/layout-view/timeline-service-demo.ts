@@ -4,13 +4,15 @@ import { uniq, isEqual } from 'lodash-es';
 import { map, distinctUntilChanged, switchMap } from 'rxjs';
 
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
+import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
 import { NxTimelineService } from '@services/timeline.service';
 
 import { NxLayoutViewComponent } from './layout-view.component';
 
 export const registerDemoLogger = (layoutViewComponent: NxLayoutViewComponent): void => {
     const timelineService = inject(NxTimelineService);
-    const selectedCamera$ = toObservable(layoutViewComponent.layoutStateService.selectedCameraId$$);
+    const selectedCameraStore = inject(SelectedCameraStore);
+    const selectedCamera$ = toObservable(selectedCameraStore.selectedLayoutItemId$$);
     layoutViewComponent.layoutAndItems$
         .pipe(
             map(([{ items }, lookup]) =>

@@ -1,12 +1,11 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, input, runInInjectionContext } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, inject, input, runInInjectionContext } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, AvailableStreams, TargetStream } from '@openLibs/webrtc-stream-manager';
 import {
-    firstValueFrom,
     of,
     shareReplay,
     Subject,
@@ -14,10 +13,7 @@ import {
     tap,
     interval,
     startWith,
-    map,
-    timeout,
-    catchError
-} from 'rxjs';
+    map} from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -64,7 +60,11 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
     imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent, NxVideoPlayingDirective],
 })
 export class NxVideoPlayerComponent {
+    private appStateService = inject(NxAppStateService);
     camera$$ = input.required<NxSystemCamera>({ alias: 'camera'})
+    muted$$ = input(true, { alias: 'muted' })
+
+    isMuted$$ = computed(() => this.muted$$() || !this.appStateService.userInteracted$$());
 
     get camera(): NxSystemCamera | null {
         return this.camera$$();
@@ -138,7 +138,6 @@ export class NxVideoPlayerComponent {
     document = document;
 
     constructor(
-        private appStateService: NxAppStateService,
         private injector: Injector,
     ) {
         this.playerId = uuid();
@@ -238,26 +237,10 @@ export class NxVideoPlayerComponent {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {
                     this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
-                    // Checks if user has interacted to unmute
-                    this.webRtcStreamRef.nativeElement.muted = await firstValueFrom(
-                        this.appStateService.userInteracted$.pipe(
-                            map(() => false),
-                            timeout(10),
-                            catchError(() => of(true)),
-                        ),
-                    );
                     this.webRtcStreamRef.nativeElement.autoplay = true;
 
                     while (this.webRtcStreamRef.nativeElement.paused) {
                         await new Promise(resolve => setTimeout(resolve, 10));
-                    }
-
-                    if (this.webRtcStreamRef.nativeElement.muted) {
-                        // Unmute and autoplay when user interacts with the page
-                        this.appStateService.userInteracted$.pipe(untilDestroyed(this)).subscribe(() => {
-                            this.webRtcStreamRef.nativeElement.muted = false;
-                            this.webRtcStreamRef.nativeElement.autoplay = true;
-                        })
                     }
 
                     while (!this.webRtcStreamRef.nativeElement.currentTime) {

@@ -26,7 +26,7 @@
     #webRtcStream
     class="web-rtc-stream"
     autoplay
-    muted
+    [muted]="isMuted$$()"
     [style.opacity]="lostConnection ? 0 : 1"
     [nxRotate]="rotation"
 ></video>

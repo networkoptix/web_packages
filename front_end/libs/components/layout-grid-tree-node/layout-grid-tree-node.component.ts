@@ -8,6 +8,7 @@ import {
     computed,
     effect,
     HostBinding,
+    inject,
     input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +38,7 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { PipesModule } from '@pipes/pipes.module';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CameraTypeId } from '@services/system.service/camera-manager/camera-manager-types';
@@ -160,9 +162,11 @@ export class NxLayoutGridTreeNode {
         }
     });
 
+    selectedStateStore = inject(SelectedCameraStore);
+
     activated$$ = computed(() => {
         const node = this.node$$();
-        const selectedCameraId = this.layoutStateService.selectedCameraId$$();
+        const selectedCameraId = this.selectedStateStore.selectedLayoutItemId$$();
 
         return !!selectedCameraId && node.details?.id === selectedCameraId;
     });
