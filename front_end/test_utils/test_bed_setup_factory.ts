@@ -30,6 +30,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { accountReducer, AccountSync } from '@store/account';
+import { channelPartnersReducer } from '@store/channel-partners/channel-partners.reducer';
 import { SystemsSync } from '@store/systems/systems.sync';
 
 /**
@@ -143,6 +144,7 @@ export const testBedSetupFactory =
             RouterTestingModule,
             DialogModule,
             StoreModule.forRoot({ account: accountReducer }),
+            StoreModule.forFeature('channelPartners', channelPartnersReducer),
             EffectsModule.forRoot([AccountSync, SystemsSync]),
             NoopAnimationsModule,
         ];

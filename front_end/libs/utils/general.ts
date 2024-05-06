@@ -234,19 +234,89 @@ function sortOrder(result: number, ascendingOrder = true): number {
     return sortOrderFactory(ascendingOrder)(result);
 }
 
-/** Generates a function for alphabetic sorting (case insensitive).
+/**
+ * @deprecated Use `alphaNumericSort` instead.
+ *
+ * Global sorting spec has been created which requires custom implementation.
+ *
+ * Generates a function for alphabetic sorting (case insensitive).
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
  * @param options - Additional options for the collator used for string comparison.
  */
-export function alphabeticalSort<P>(
-    fn: (param: P) => string,
-    ascendingOrder: boolean = true,
-    options: Intl.CollatorOptions = { numeric: true },
-): (a: P, b: P) => number {
-    return (a, b) =>
-        sortOrder(fn(a).localeCompare(fn(b), navigator.language, options), ascendingOrder);
-}
+export const alphabeticalSort = alphaNumericSort;
+
+type ProcessStep = (cur: string) => string | string[];
+
+const removeSpaces = (cur: string): string[] => cur.split(' ');
+const replaceDashesBeforeNumbers = (cur: string): string => {
+    const characters = cur.split('');
+    const mappedCharacters = characters.map((char, index) => {
+        if (char === '-') {
+            const nextNonDash = parseInt(
+                characters.slice(index + 1).find(char => char !== '-') || '0',
+            );
+            if (!Number.isNaN(nextNonDash)) {
+                return index === characters.length - 1 ? '' : '0';
+            }
+        }
+        return char;
+    });
+    return mappedCharacters.join('');
+};
+const replaceUnicode = (cur: string): string[] => {
+    const specialCharRegex = /[\p{P}\p{S}]/giu;
+    const matches = cur.match(specialCharRegex)?.map(char => char.charCodeAt(0).toString());
+    const other = cur.split(specialCharRegex);
+    const flat = zip(other, matches)
+        .flat()
+        .filter((segment): segment is string => !!segment && typeof segment === 'string');
+    return flat;
+};
+
+const initialProcessSteps: ProcessStep[] = [
+    removeSpaces,
+    replaceDashesBeforeNumbers,
+    replaceUnicode,
+];
+
+const fallbackProcessSteps: ProcessStep[] = [];
+
+const initialSortingPasses = (
+    options: Intl.CollatorOptions,
+): ((a: string, b: string) => number)[] => {
+    const ignoreCase = (a: string, b: string): number =>
+        a.toLowerCase().localeCompare(b.toLowerCase(), navigator.language, options);
+
+    const upperFirst = (a: string, b: string): number =>
+        a.localeCompare(b, navigator.language, { ...options, caseFirst: 'upper' });
+
+    return [ignoreCase, upperFirst];
+};
+
+const fallbackSortingPasses = (
+    options: Intl.CollatorOptions,
+): ((a: string, b: string) => number)[] => {
+    const shortestFirst = (a: string, b: string): number => {
+        const firstDiff = zip(a.split(''), b.split(''))
+            .map(([diffA = '', diffB = '']) => ({ diffA, diffB }))
+            .find(({ diffA, diffB }) => diffA !== diffB);
+        if (firstDiff) {
+            const { diffA, diffB } = firstDiff;
+            const diffs = [diffA, diffB];
+            const dashedLast = diffs.every(Boolean) && diffs.some(diff => diff === '-');
+
+            const result = diffA.localeCompare(diffB, navigator.language, options);
+            if (dashedLast) {
+                return -result;
+            }
+            return result;
+        }
+        return a.length - b.length;
+    };
+
+    return [shortestFirst];
+};
 
 /** Generates a function for sorting mixed alphabetic and numeric strings.
  *
@@ -254,54 +324,74 @@ export function alphabeticalSort<P>(
  *
  * This is to match the sorting behavior used within the thick client.
  *
+ * See global sorting spec for more details:
+ *
+ * https://networkoptix.atlassian.net/wiki/spaces/FS/pages/3399843892/Global+sorting
+ *
  * @param locale - Locale to use for comparison
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
  * @param caseFirst - Handle sorting by upper first, lower first, or false for no preference (default: 'upper')
  */
 export function alphaNumericSort<P>(
-    locale: string,
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
-    caseFirst: 'upper' | 'lower' | false = 'upper',
+    collationOptions: Omit<
+        Intl.CollatorOptions,
+        'numeric' | 'caseFirst' | 'ignorePunctuation'
+    > = {},
 ): (a: P, b: P) => number {
-    return (...args): number =>
-        sortOrder(
-            (() => {
-                const handleIgnoredCase = (wrappedFn: typeof fn, ignoreCase = true): typeof fn =>
-                    ignoreCase ? (param: P) => wrappedFn(param).toLocaleLowerCase(locale) : fn;
-                const [a, b] = args.map(handleIgnoredCase(fn));
-                const alphaNumericalSplit = [a, b].map(cur =>
-                    cur.match(/[\D]+|(?:\d+(?:\.\d*)?|\.\d+)/g),
-                );
-                const zipped = zip(...alphaNumericalSplit);
-                const firstVariance = zipped.find(([a, b]) => a !== b);
+    const options = {
+        ...collationOptions,
+        numeric: true,
+        ignorePunctuation: false,
+        caseFirst: 'false' as const,
+        usage: 'sort' as const,
+    };
 
-                if (!firstVariance) {
-                    const [a, b] = args.map(handleIgnoredCase(fn, !caseFirst));
-                    return a.localeCompare(b, locale, {
-                        caseFirst: !caseFirst ? 'false' : caseFirst,
-                    });
-                }
+    const processWithSteps =
+        (processSteps: ProcessStep[]) =>
+        (arg: P): string[] =>
+            processSteps.reduce((acc, process) => acc.flatMap(process), [fn(arg)]);
 
-                const numericSegments = firstVariance.map(segment => parseFloat(segment));
-                const bothStrings = numericSegments.every(isNaN);
-                const someStrings = !bothStrings && numericSegments.some(isNaN);
+    const handleSort =
+        (processSteps: ProcessStep[], handler: (a: string[], b: string[]) => number) =>
+        (a: P, b: P) =>
+            handler(processWithSteps(processSteps)(a), processWithSteps(processSteps)(b));
 
-                if (bothStrings) {
-                    const [aSegment = '', bSegment = ''] = firstVariance;
-                    return aSegment.localeCompare(bSegment, locale);
-                }
+    const getOrdering = (
+        a: string[],
+        b: string[],
+        cases: ((a: string, b: string) => number)[],
+    ): number => {
+        const zipped = zip(a, b).map(([a = '', b = '']) => ({ a, b }));
+        const runPass = (handler: (a: string, b: string) => number): number =>
+            zipped.map(({ a, b }) => handler(a, b)).find(val => val !== 0) || 0;
 
-                if (someStrings) {
-                    return isNaN(numericSegments[0]) ? 1 : -1;
-                }
+        const handler = cases.find(runPass);
+        return handler ? runPass(handler) : 0;
+    };
 
-                return numericSegments[0] - numericSegments[1];
-            })(),
-            ascendingOrder,
-        );
+    const initial = handleSort(initialProcessSteps, (a, b) =>
+        sortOrder(getOrdering(a, b, initialSortingPasses(options)), ascendingOrder),
+    );
+
+    const fallback = handleSort(fallbackProcessSteps, (a, b) =>
+        sortOrder(getOrdering(a, b, fallbackSortingPasses(options)), ascendingOrder),
+    );
+
+    return (a, b) => {
+        const initialResult = initial(a, b);
+
+        if (initialResult) {
+            return initialResult;
+        }
+
+        return fallback(a, b);
+    };
 }
+
+export const alphaNumericSortByName = alphaNumericSort<{ name: string }>(param => param.name);
 
 /* Object */
 // eslint-disable-next-line @typescript-eslint/ban-types

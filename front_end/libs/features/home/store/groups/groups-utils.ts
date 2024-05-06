@@ -4,7 +4,7 @@ import type {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxOrgSystemInfo, NxSystemInfo } from '@services/systems.service.types';
-import { alphaNumericSort } from '@utils/general';
+import { alphaNumericSortByName } from '@utils/general';
 
 import { GroupFlatItem, GroupFlatMap } from './groups.types';
 
@@ -14,7 +14,7 @@ export const sortGroups = (groups: GroupItem[]): GroupItem[] =>
             ...group,
             children: sortGroups(children),
         }))
-        .sort(alphaNumericSort(window.navigator.language, group => group.name));
+        .sort(alphaNumericSortByName);
 
 export function* generatePath(groupsMap: GroupFlatMap, groupId: string): Generator<GroupFlatItem> {
     let currentGroup = groupsMap[groupId];
@@ -69,7 +69,7 @@ export const mapToSystemItem = (
             effectiveState,
         });
     }
-    return systemItems.sort(alphaNumericSort(window.navigator.language, group => group.name));
+    return systemItems.sort(alphaNumericSortByName);
 };
 
 export const findItem = (

@@ -1,14 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { alphaNumericSort } from '@utils/general';
+import { alphaNumericSortByName } from '@utils/general';
 
 import * as ChannelPartnerActions from './channel-partners.actions';
 import { ChannelPartnersState, LoadingState } from './channel-partners.state';
 
 const sortEntityByName = <T extends { name: string }>(toBeSorted: T[]): T[] =>
-    toBeSorted
-        ? [...toBeSorted].sort(alphaNumericSort(window.navigator.language, entity => entity.name))
-        : toBeSorted;
+    toBeSorted ? [...toBeSorted].sort(alphaNumericSortByName) : toBeSorted;
 
 const initialState: ChannelPartnersState = {
     arePartnerOrgsLoading: false,
