@@ -3,9 +3,11 @@ import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
-import { OrgTreeStatuses } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.types';
+import type { OrgTreeStatusValue } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.types';
+import { NxOrgTreeSelectorV0Component } from '@dialogs/channel-partners/org-tree-selector-v0/org-tree-selector.component';
+import { OrgTreeStatuses } from '@dialogs/channel-partners/org-tree-selector-v0/org-tree-selector.types';
 import type {
-    GroupStructureItem,
+    GroupItem,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -80,27 +82,42 @@ const dummyGroups = [
         name: 'Kuiper belt',
         children: [
             { id: 'Pluto Id', name: 'Pluto', children: [] },
-            { id: 'Eris Id', name: 'Eris', children: [] as GroupStructureItem[] },
+            { id: 'Eris Id', name: 'Eris', children: [] as GroupItem[] },
             // Bad interaction with empty array type
         ],
     },
     // { id: 'Planet 9 Id', name: 'Planet 9', children: [] },
-] as GroupStructureItem[];
+] as GroupItem[];
 
-const dummyStatuses = new Map([
-    ['Mars Id', { type: 'warn', msg: 'Terraforming in progress' }],
-    ['Ganymede Id', { type: 'error', msg: 'Population limit reached' }],
-    ['Inner solar system Id', { type: 'warn', msg: 'Uh-oh! SpaghettiOs' }],
-]) as OrgTreeStatuses;
 @Component({
     selector: 'nx-offline-data',
     templateUrl: 'offline-data.component.html',
     styleUrls: ['offline-data.component.scss'],
     standalone: true,
-    imports: [CommonModule, TranslateModule, NxOrgTreeSelectorComponent],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        NxOrgTreeSelectorV0Component,
+        NxOrgTreeSelectorComponent,
+    ],
 })
 export class NxCpOfflineDataComponent {
     organization = dummyOrg;
     groups = dummyGroups;
-    statuses = dummyStatuses;
+    statuses = new Map([
+        ['Solar System Id', { type: 'warn', msg: 'Red giant transition at 50%' }],
+        ['Inner solar system Id', { type: 'warn', msg: 'Uh-oh! SpaghettiOs' }],
+        ['Mars Id', { type: 'warn', msg: 'Terraforming in progress' }],
+        ['Kuiper belt Id', { type: 'error', msg: 'Population limit reached' }],
+        ['Pluto Id', { type: 'error', msg: 'Population limit reached' }],
+        ['Eris Id', { type: 'error', msg: 'Population limit reached' }],
+    ]) as OrgTreeStatuses;
+    statuses2 = new Map<string, OrgTreeStatusValue>([
+        ['Solar System Id', { status: 'warn', msg: 'Red giant transition at 50%' }],
+        ['Inner solar system Id', { status: 'warn', msg: 'Uh-oh! SpaghettiOs' }],
+        ['Mars Id', { status: 'warn', msg: 'Terraforming in progress' }],
+        ['Kuiper belt Id', { status: 'disable', msg: 'Population limit reached' }],
+        ['Pluto Id', { status: 'disable', msg: 'Population limit reached' }],
+        ['Eris Id', { status: 'disable', msg: 'Population limit reached' }],
+    ]);
 }

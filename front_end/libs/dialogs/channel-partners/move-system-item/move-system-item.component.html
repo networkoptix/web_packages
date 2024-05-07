@@ -19,7 +19,7 @@
         }
     </div>
     <div class="modal-body">
-        <nx-org-tree-selector
+        <nx-org-tree-selector-v0
             name="targetFolder"
             #targetFolder="ngModel"
             [model]="targetFolder"
@@ -28,7 +28,7 @@
             [groups]="groups"
             [ngModel]="selectedFolder()"
             (ngModelChange)="selectedFolder.set($event)"
-        ></nx-org-tree-selector>
+        ></nx-org-tree-selector-v0>
     </div>
     <div class="modal-footer">
         <nx-async-action-button

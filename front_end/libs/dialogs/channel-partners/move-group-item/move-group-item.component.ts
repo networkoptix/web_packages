@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { AsyncAction, createAsyncAction } from '@dialogs/async-action-button/create-async-action';
-import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
 import type { MoveGroupItem as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import LANG from '@language_static';
@@ -17,14 +16,15 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import type { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
+import { NxOrgTreeSelectorV0Component } from '../org-tree-selector-v0/org-tree-selector.component';
+import type { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types';
 
 @Component({
     selector: 'nx-modal-move-group-item-content',
     templateUrl: 'move-group-item.component.html',
     standalone: true,
     imports: [
-        NxOrgTreeSelectorComponent,
+        NxOrgTreeSelectorV0Component,
         NxAsyncActionButtonComponent,
         FormsModule,
         TranslateModule,

@@ -71,7 +71,7 @@
             translate
             >Folder</label
         >
-        <nx-org-tree-selector
+        <nx-org-tree-selector-v0
             name="targetFolder"
             #targetFolder="ngModel"
             [model]="targetFolder"
@@ -81,7 +81,7 @@
             [messagesNumLines]="2"
             [ngModel]="selectedFolder$$()"
             (ngModelChange)="selectedFolder$$.set($event)"
-        ></nx-org-tree-selector>
+        ></nx-org-tree-selector-v0>
     </div>
     <div class="modal-footer">
         <nx-process-button

@@ -20,6 +20,7 @@ import {
     effect,
     input,
     signal,
+    untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { identity } from 'lodash-es';
@@ -61,6 +62,7 @@ function isTooltipPosition(
 
 const compass4Opposite = { N: 'S', E: 'W', S: 'N', W: 'E' } as const;
 
+/* See sandbox/tooltip for examples */
 @Directive({
     selector: '[nxTooltipV2]',
     standalone: true,
@@ -235,6 +237,11 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
         transform: booleanAttribute,
     });
 
+    /** Clicks on the tooltip component */
+    @Output() tooltipComponentClick = new EventEmitter<void>();
+    /** Clicks outside the overlay */
+    @Output() tooltipOutsideClick = new EventEmitter<void>();
+
     private overlayRef: OverlayRef;
     private position: FlexibleConnectedPositionStrategy;
     private portal = new ComponentPortal(NxTooltipV2Component);
@@ -262,6 +269,8 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
             .outsidePointerEvents()
             .pipe(takeUntilDestroyed())
             .subscribe(({ timeStamp }) => {
+                this.tooltipOutsideClick.emit();
+
                 if (!this._opened() || !this.triggerOnClick()) {
                     return;
                 }
@@ -361,6 +370,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
         component.setInput('withArrow', this._withArrow());
         component.setInput('theme', this._theme());
         component.instance.click.subscribe(() => {
+            this.tooltipComponentClick.emit();
             if (this.triggerOnClick()) {
                 this.close();
             }
@@ -456,18 +466,15 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
         }
     }
 
-    protected _manualOpenEffect = effect(
-        () => {
-            const state = this._manualOpenState();
-            if (state === undefined) {
-                return;
-            }
-            if (state) {
-                this.open();
-            } else if (!state) {
-                this.close();
-            }
-        },
-        { allowSignalWrites: true },
-    );
+    protected _manualOpenEffect = effect(() => {
+        const state = this._manualOpenState();
+        if (state === undefined) {
+            return;
+        }
+        if (state) {
+            untracked(() => this.open());
+        } else if (!state) {
+            untracked(() => this.close());
+        }
+    });
 }

@@ -40,8 +40,8 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
 
-import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
-import { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
+import { NxOrgTreeSelectorV0Component } from '../org-tree-selector-v0/org-tree-selector.component';
+import { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types';
 
 @Component({
     selector: 'nx-add-org-user-v2',
@@ -59,7 +59,7 @@ import { OrgTreeStatuses } from '../org-tree-selector/org-tree-selector.types';
         NxFocusMeDirective,
         NxEmailComponent,
         NxSelectV2Module,
-        NxOrgTreeSelectorComponent,
+        NxOrgTreeSelectorV0Component,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
     ],
