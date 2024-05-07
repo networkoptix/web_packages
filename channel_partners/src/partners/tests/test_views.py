@@ -147,8 +147,6 @@ class TestCloudSystemViewSetRetrieve:
         assert response.status_code == 200
         assert len(response.data) == 1
 
-
-
     def test_token_200_group_user(self, mock_cdb_token_introspect):
         mock_cdb_token_introspect(user=self.group_admin.user, system=self.group_system, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
@@ -503,6 +501,61 @@ class TestCloudSystemViewSet:
             response = view(req, id=str(system.system_id))
 
         assert response.status_code == 403
+
+    def test_service_quantity_patch_disabled_service(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            cp_user_factory,
+            system_factory,
+            cp_service_factory,
+            mock_auth_with_user,
+            arf,
+            mocker
+    ) -> None:
+        # Ensure there are ChannelPartnerRole objects in the database
+        assert ChannelPartnerRole.objects.all().count() > 0
+
+        # Clear the cache and remove throttling for the test
+        cache.clear()
+        CloudSystemViewSet.throttle_classes = []
+
+        # Create a channel partner and a user for that partner
+        channel_partner = channel_partner_factory()
+        channel_partner_user = cp_user_factory(channel_partner=channel_partner)
+
+        # Create an organization and a system for that organization
+        organization = organization_factory(channel_partner=channel_partner)
+        organization_system = system_factory(organization=organization)
+
+        # Create a disabled service
+        disabled_service = cp_service_factory(channel_partner=channel_partner, is_enabled=False)
+
+        # Mock the notify_service_change method
+        mocker.patch('partners.services.cloud_system_service.CloudSystemService.notify_service_change')
+        # Authenticate the user
+        mock_auth_with_user(channel_partner_user)
+
+        # Prepare the view and the request
+        view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
+        request = arf.patch('/', data={"services": {str(disabled_service.id): {"quantity": 15}}}, format='json')
+
+        # Execute the view and get the response
+        with transaction.atomic():
+            response = view(request, id=str(organization_system.system_id))
+
+        # Assert that the response status code is 400 (Bad Request)
+        assert response.status_code == 400
+
+        # Extract the disabled services from the response
+        disabled_services = response.data.get("services").get("disabled")
+
+        # Assert that the disabled service is in the response
+        disabled_service_id = str(disabled_service.id)
+        assert disabled_service_id  in disabled_services
+        # Assert that the error message is correct
+        assert "Service is disabled" in disabled_services[disabled_service_id]
+
 
     def test_service_quantity_patch(self, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,

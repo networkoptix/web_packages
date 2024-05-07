@@ -21,6 +21,7 @@ class TestChannelPartnerOwnedServiceViewSet:
         for typ, _ in ChannelPartnerService.SERVICE_TYPES:
             cp_service_factory(channel_partner=self.parent_partner, service_type=typ)
 
+        # Create a demo recording service for the parent partner
         self.demo_recording = cp_service_factory(
             channel_partner=self.parent_partner,
             service_type=ChannelPartnerService.LOCAL_RECORDING,
@@ -91,6 +92,18 @@ class TestChannelPartnerOwnedServiceViewSet:
             assert cast_uuid(service['id']) in queryset_service_ids
 
         assert len(response.data) == 4
+
+    def test_detail_data_expired(self, mock_auth_with_user):
+        auth_header = f'Bearer {uuid4()}'
+        self.client.credentials(HTTP_AUTHORIZATION=auth_header)
+        mock_auth_with_user(self.channel_partner_admin)
+
+        path = self.get_path(
+            partner_id=self.channel_partner.id,
+            service_id=self.disabled_services[0].id)
+        response = self.client.get(path)
+        assert response.status_code == 404
+
 
     def test_detail_data_disabled(self, mock_auth_with_user):
         auth_header = f'Bearer {uuid4()}'
@@ -174,6 +187,7 @@ class TestChannelPartnerOwnedServiceViewSet:
 
         for user in [self.parent_organization_admin, self.organization_admin,
                      self.sub_organization_admin, self.sub_partner_admin]:
+
             auth_header = f'Bearer {uuid4()}'
             self.client.credentials(HTTP_AUTHORIZATION=auth_header)
             mock_auth_with_user(user)
