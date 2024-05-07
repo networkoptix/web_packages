@@ -1,42 +1,32 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, input } from '@angular/core';
+import { Component, computed, input, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
-import { BehaviorSubject, distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
-import {
-    selectRootChannelPartners,
-    selectCurrentPartner,
-    selectCurrentPartnerId,
-    selectCurrentSubchannelPartners,
-} from '@common/store/channel-partners/channel-partners.selectors';
+import { selectCurrentSubchannelPartners } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import staticLang from '@language_static';
 import { NxSettingsGeneralComponent } from '@pages/home/components/settings/components/general/general.component';
+import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/settings-base';
 import { settingsViews } from '@pages/home/home.types';
-import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     State,
     UpdateChannelPartner,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
-import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { icons, MAX_NAME_LENGTH } from '@static-variables';
+import { MAX_NAME_LENGTH } from '@static-variables';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
@@ -70,17 +60,8 @@ interface SettingsState {
         NxSettingsGeneralComponent,
     ],
 })
-export class NxChannelPartnersSettingsComponent implements OnInit {
-    LANG = staticLang;
-    readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
-    readonly settingsViews = settingsViews;
-    permissionsStore = inject(PermissionsStore);
-    channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
-    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
-    currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
+export class NxChannelPartnersSettingsComponent extends SettingsBase implements OnInit {
     subchannelPartners$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
-    currentName$ = new BehaviorSubject<string | null>(null);
-    currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
     updateCPProcess: Process;
     // eslint-disable-next-line nx/signal-naming-convention
@@ -127,24 +108,13 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
         return name;
     });
 
-    // Think about these
-    permissions$$ = computed(() => {
-        const { canChangePartnerState$$, canViewPartnerSettings$$ } = this.permissionsStore;
-        return {
-            canAlterState: canChangePartnerState$$(),
-            canConfigure: canViewPartnerSettings$$(),
-        };
-    });
-
     State = State;
 
-    constructor(
-        private store: Store,
-        private processService: NxProcessService,
-        private cpService: NxChannelPartnersService,
-    ) {}
-
     ngOnInit(): void {
+        this.initProcesses();
+    }
+
+    initProcesses(): void {
         this.updateStateProcess = this.processService.createProcess(
             () => {
                 const currentState = this.currentState$$();
@@ -204,22 +174,6 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
             () => {},
         );
     }
-
-    handleStateUpdate = (state: State): void => {
-        this.currentState$.next(state);
-    };
-    get generalHasChange(): boolean {
-        return this.currentName$.value !== this.name$$();
-    }
-
-    get stateHasChange(): boolean {
-        return this.currentState$.value !== this.effectState$$();
-    }
-
-    resetUpdates = (): void => {
-        this.currentState$.next(this.effectState$$());
-        this.currentName$.next(this.name$$());
-    };
 
     // Process helper functions
     updateChannelPartner(): Promise<ChannelPartner> {
@@ -286,10 +240,5 @@ export class NxChannelPartnersSettingsComponent implements OnInit {
         );
     }
 
-    onNameChange(value: string): void {
-        this.currentName$.next(value);
-    }
-
     protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
-    protected readonly icons = icons;
 }

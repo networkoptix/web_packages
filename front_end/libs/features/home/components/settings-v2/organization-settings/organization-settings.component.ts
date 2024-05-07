@@ -7,19 +7,16 @@ import {
     MatButtonToggleModule,
 } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
-import { Store } from '@ngrx/store';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectRootChannelPartners,
     selectCurrentOrganization,
-    selectCurrentPartner,
-    selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
+    selectRootChannelPartners,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -28,13 +25,12 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
+import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/settings-base';
 import { settingsViews } from '@pages/home/home.types';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     Organization,
     OrgRoleIds,
@@ -43,7 +39,6 @@ import {
     UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
-import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { MAX_NAME_LENGTH } from '@static-variables';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
@@ -101,7 +96,7 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
         NgxTranslateCutModule,
     ],
 })
-export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
+export class NxOrganizationSettingsComponent extends SettingsBase implements OnInit, OnDestroy {
     LANG = staticLang;
     icons = icons;
     orgUserStore = inject(OrgUsersStore);
@@ -111,12 +106,8 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
     channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
-    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
-    currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentName$ = new BehaviorSubject<string | null>(null);
     currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
-    currentState$ = new BehaviorSubject<State | null>(null);
     updateStateProcess: Process;
     updateOrgProcess: Process;
 
@@ -149,14 +140,6 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
         this.currentPartnerAccess$.next(accessLevel);
         return accessLevel;
     });
-    // Think about these
-    permissions$$ = computed(() => {
-        const { canChangeOrganizationState$$, canConfigureOrganization$$ } = this.permissionsStore;
-        return {
-            canAlterState: canChangeOrganizationState$$(),
-            canConfigure: canConfigureOrganization$$(),
-        };
-    });
 
     hasAdminRole = this.orgUserStore
         .currentGroupUsersEntities()
@@ -174,15 +157,11 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
         PartnerRoles.field_access_org_admin,
     );
 
-    constructor(
-        private store: Store,
-        private processService: NxProcessService,
-        private cpService: NxChannelPartnersService,
-        private dialogsService: NxDialogsService,
-        private translateService: TranslateService,
-    ) {}
-
     ngOnInit(): void {
+        this.initProcesses();
+    }
+
+    initProcesses(): void {
         this.updateStateProcess = this.processService.createProcess(
             () => {
                 return this.updateState();
@@ -191,6 +170,7 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
             res => {
                 this.updateOrganizationStore(res);
                 this.resetUpdates();
+                this.currentPartnerAccess$.next(this.accessLevel$$());
             },
             () => {},
         );
@@ -202,15 +182,11 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
             res => {
                 this.updateOrganizationStore(res);
                 this.resetUpdates();
+                this.currentPartnerAccess$.next(this.accessLevel$$());
             },
             () => {},
         );
     }
-
-    // State related methods
-    handleNameUpdate = (name: string): void => {
-        this.currentName$.next(name);
-    };
 
     handleAccessUpdate = (id: string | null): void => {
         const currLevel = this.accessLevel$$();
@@ -244,26 +220,12 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
         }
     };
 
-    handleStateUpdate = (state: State): void => {
-        this.currentState$.next(state);
-    };
-
     get generalHasChange(): boolean {
         return (
             this.currentName$.value !== this.name$$() ||
             this.currentPartnerAccess$.value !== this.accessLevel$$()
         );
     }
-
-    get stateHasChange(): boolean {
-        return this.currentState$.value !== this.effectState$$();
-    }
-
-    resetUpdates = (): void => {
-        this.currentState$.next(this.effectState$$());
-        this.currentName$.next(this.name$$());
-        this.currentPartnerAccess$.next(this.accessLevel$$());
-    };
 
     updateState(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
@@ -303,10 +265,6 @@ export class NxOrganizationSettingsComponent implements OnInit, OnDestroy {
                 }),
             );
         }
-    }
-
-    onNameChange(value: string): void {
-        this.currentName$.next(value);
     }
 
     protected readonly MAX_ORG_NAME_LENGTH = MAX_NAME_LENGTH;

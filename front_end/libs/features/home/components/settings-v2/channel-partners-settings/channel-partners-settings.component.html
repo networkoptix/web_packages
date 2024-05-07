@@ -7,7 +7,7 @@
                         [currentName]="currentName$ | async"
                         [permissions]="permissions$$()"
                         [canChangeState]="canChangeStateUI"
-                        [currState]="effectState$$()"
+                        [currState]="currentState$ | async"
                         (updateName)="onNameChange($event)"
                         (updateState)="handleStateUpdate($event)"
                         [settingsState]="currentState$$()"
