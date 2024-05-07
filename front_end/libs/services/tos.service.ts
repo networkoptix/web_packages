@@ -9,7 +9,7 @@ import { accountSelectors } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { TosInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { AgreementInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 
 @Injectable({ providedIn: 'root' })
@@ -62,7 +62,7 @@ export class TosService {
             }
         }
     }
-    private async showUpdatedTos(tosInfo: TosInfo): Promise<void> {
+    private async showUpdatedTos(tosInfo: AgreementInfo): Promise<void> {
         const res = await this.dialogService.tosUpdate(tosInfo);
         if (res === 'rejected') {
             await this.showDeclinedTos(tosInfo);
@@ -74,7 +74,7 @@ export class TosService {
         this.dialogIsVisible = res !== 'rejected';
     }
 
-    private async showDeclinedTos(tosInfo: TosInfo): Promise<void> {
+    private async showDeclinedTos(tosInfo: AgreementInfo): Promise<void> {
         const res = await this.dialogService.tosRejected();
         if (res) {
             return this.showUpdatedTos(tosInfo);

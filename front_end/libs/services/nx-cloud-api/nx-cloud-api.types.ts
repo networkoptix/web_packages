@@ -506,7 +506,7 @@ export interface AuthenticateResp {
     link?: string;
 }
 
-export interface TosInfo {
+export interface AgreementInfo {
     accepted: boolean;
     body: string;
     grace_period: number;

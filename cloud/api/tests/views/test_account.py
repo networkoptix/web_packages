@@ -311,14 +311,6 @@ class TestAccountViews:
         view = async_to_sync(AccountSecurity().as_view())
         assert view(req).status_code == status.HTTP_200_OK
 
-    def test_review_cookie(self):
-        assert not self.user.cookie_reviewed
-        request = self.arf.post(f'/api/account/reviewCookie')
-        request.user = self.user
-        response = async_to_sync(review_cookie)(request)
-        assert response.status_code == status.HTTP_200_OK
-        assert self.user.cookie_reviewed
-
     @pytest.fixture()
     def mock_change_password(self):
         def change_pass(request, email, old_password, new_password, mfa_code=None, headers=None):

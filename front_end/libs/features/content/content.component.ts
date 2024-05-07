@@ -37,6 +37,7 @@ export class NxContentComponent implements OnInit {
     private staticContent;
 
     private agreement: boolean;
+    private cookiePolicy: boolean;
     private agreementDetails: any = {};
     private account: Account;
     public showAgree = false;
@@ -104,7 +105,9 @@ export class NxContentComponent implements OnInit {
 
     subscribeParams(): void {
         this.route.paramMap.subscribe(paramMap => {
-            this.agreement = this.route.snapshot.parent.routeConfig.path === 'agreement';
+            this.cookiePolicy = this.route.snapshot.parent.routeConfig.path === 'cookie-policy';
+            this.agreement =
+                this.route.snapshot.parent.routeConfig.path === 'agreement' || this.cookiePolicy;
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
             this.title = '';
@@ -137,7 +140,9 @@ export class NxContentComponent implements OnInit {
 
     getContent(): void {
         let uri;
-        if (this.agreement) {
+        if (this.cookiePolicy) {
+            uri = `${this.apiBase}/cms/agreement?type=cookie`;
+        } else if (this.agreement) {
             uri = `${this.apiBase}/cms/agreement?`;
         } else {
             uri = `${this.apiBase}/cms/article/${this.articleParam}/?`;

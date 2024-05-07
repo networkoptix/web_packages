@@ -1434,25 +1434,19 @@ class TestContributorAgreement:
         with pytest.raises(ValidationError):
             self.agm.clean()
 
-    def test_get_current(self, asset_type_factory, default_customization):
-        agreement_type = asset_type_factory(AssetType.ASSET_TYPES.agreement)
-        agreement = baker.make('Asset', asset_type=agreement_type, name='agree')
-        version = baker.make('ContentVersion', asset=agreement)
-        review = baker.make('AssetCustomizationReview', version=version, customization=default_customization,
-                            state=AssetCustomizationReview.REVIEW_STATES.accepted)
-        version2 = baker.make('ContentVersion', asset=agreement)
-        tos_agreement = baker.make('Asset', asset_type=agreement_type, name='agree tos')
-        tos_version = baker.make('ContentVersion', asset=tos_agreement)
-        tos_review = baker.make('AssetCustomizationReview', version=tos_version, customization=default_customization,
-                                state=AssetCustomizationReview.REVIEW_STATES.accepted)
-        make_tos_agreement(tos_agreement)
-        review2 = baker.make('AssetCustomizationReview', version=version2, customization=default_customization,
-                             state=AssetCustomizationReview.REVIEW_STATES.accepted)
-        assert ContributorAgreement.get_current(customization=default_customization) == review2
+    @pytest.mark.parametrize("agreement_type", [
+                (AgreementTypes.tos),
+                (AgreementTypes.contributor),
+                (AgreementTypes.cookie)
+            ])
+    def test_get_current(self, asset_type_factory, agreement_type, default_customization):
+        agreement = make_test_agreement(default_customization)
+        version = make_test_version_with_records(agreement, agreement_type=agreement_type)
+        review = make_test_review(default_customization, version)  
+        if agreement_type == AgreementTypes.contributor: # get current returns contributor on default
+            assert ContributorAgreement.get_current(customization=default_customization) == review
         assert ContributorAgreement.get_current(customization=default_customization,
-                                                agreement_type=AgreementTypes.contributor) == review2
-        assert ContributorAgreement.get_current(customization=default_customization,
-                                                agreement_type=AgreementTypes.tos) == tos_review
+                                                agreement_type=agreement_type) == review
 
 
     def test_is_valid(self, mocker, db):
@@ -2220,7 +2214,7 @@ class TestDataStructure:
         assert ds.has_file_field
 
 
-class TestGetTosReviews:
+class TestGetReviewsByType:
     @pytest.fixture(autouse=True)
     def setup(self, db, asset_type_factory, default_customization):
         self.agreement_asset_type = asset_type_factory(AssetType.ASSET_TYPES.agreement)
@@ -2229,6 +2223,10 @@ class TestGetTosReviews:
 
     def make_review(self, version):
         return make_test_review(self.customization, version)
+    
+    def get_random_agreement_type_excluding_current(self, exclude_type):
+        all_types = [value for name, value in AgreementTypes.__dict__.items() if not name.startswith('__') and name != exclude_type]
+        return choice(all_types)
 
     def set_type(self, agreement, agreement_type=AgreementTypes.contributor):
 
@@ -2241,55 +2239,65 @@ class TestGetTosReviews:
         review = self.make_review(version)
         return version, review
 
-    def test_without_any_tos(self):
-        reviews = get_tos_reviews(self.customization.name)
+    @pytest.mark.parametrize("agreement_type", [
+                (AgreementTypes.tos),
+                (AgreementTypes.contributor),
+                (AgreementTypes.cookie)
+            ])
+    def test_without_any_reviews(self, agreement_type):
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 0
 
-    def test_get_tos_reviews(self):
+    @pytest.mark.parametrize("agreement_type", [
+            (AgreementTypes.tos),
+            (AgreementTypes.contributor),
+            (AgreementTypes.cookie)
+        ])
+    def test_get_reviews_by_type(self, agreement_type):
         agreement_1 = make_test_agreement(self.customization)
         agreement_2 = make_test_agreement(self.customization)
         agreement_3 = make_test_agreement(self.customization)
 
         # test without reviews
-        reviews = get_tos_reviews(self.customization.name)
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 0
-        # test without single TOS
-        version_1, review_1 = self.set_type(agreement_1, AgreementTypes.tos)
-        reviews = get_tos_reviews(self.customization.name)
+        # test with a single review of current type
+        version_1, review_1 = self.set_type(agreement_1, agreement_type)
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 1
         assert reviews.last().id == review_1.id
         assert reviews.last().version.id == version_1.id
         assert reviews.last().version.asset.id == agreement_1.id
 
-        # test with TOS and contributor
-        version_2, review_2 = self.set_type(agreement_2, AgreementTypes.contributor)
-        reviews = get_tos_reviews(self.customization.name)
+        # test with two reviews of different types
+        version_2, review_2 = self.set_type(agreement_2, self.get_random_agreement_type_excluding_current(agreement_type))
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 1
         assert reviews.last().id == review_1.id
         assert reviews.last().version.id == version_1.id
         assert reviews.last().version.asset.id == agreement_1.id
 
-        # setting agreements 2, 3 to TOS, latest 3
-        version_2, review_2 = self.set_type(agreement_2, AgreementTypes.tos)
-        version_3, review_3 = self.set_type(agreement_3, AgreementTypes.tos)
+        # setting agreements 2, 3 to current type, latest 3
+        version_2, review_2 = self.set_type(agreement_2, agreement_type)
+        version_3, review_3 = self.set_type(agreement_3, agreement_type)
 
-        reviews = get_tos_reviews(self.customization.name)
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 4
         assert reviews.last().id == review_3.id
         assert reviews.last().version.id == version_3.id
         assert reviews.last().version.asset.id == agreement_3.id
 
-        # changing agreement_3 to contributor, latest TOS is agreement_2
-        version_3, review_3 = self.set_type(agreement_3, AgreementTypes.contributor)
-        reviews = get_tos_reviews(self.customization.name)
+        # changing agreement_3 to another type, latest TOS is agreement_2
+        version_3, review_3 = self.set_type(agreement_3, self.get_random_agreement_type_excluding_current(agreement_type))
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 3
         assert reviews.last().id == review_2.id
         assert reviews.last().version.id == version_2.id
         assert reviews.last().version.asset.id == agreement_2.id
 
-        # change grace period. latest TOS is agreement_1
+        # change grace period. latest current type is agreement_1
         version_1, review_1 = self.set_grace_period(agreement_1)
-        reviews = get_tos_reviews(self.customization.name)
+        reviews = get_reviews_by_type(agreement_type, self.customization.name)
         assert reviews.count() == 4
         assert reviews.last().id == review_1.id
         assert reviews.last().version.id == version_1.id

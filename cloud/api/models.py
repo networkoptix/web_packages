@@ -152,8 +152,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         default=False, help_text="If true then the user can view cloud admin.")
     language = models.CharField(max_length=7, blank=True)
-    cookie_reviewed = models.BooleanField(
-        default=False, help_text="If true then the user has accepted the cookie policy and the cookie banner will not appear.")
     customization = models.CharField(max_length=255, null=True)
     password = None
 

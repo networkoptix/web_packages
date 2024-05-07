@@ -181,6 +181,7 @@ DEFAULT_MANIFEST = """[
 class AgreementTypes:
     tos = "tos"
     contributor = "contributor"
+    cookie = "cookie"
 
 
 def get_name_factory(base_group_name):
@@ -1114,7 +1115,7 @@ class Asset(models.Model):
         if self.protected:
             raise FieldError('Cannot delete a protected asset')
         else:
-            PortalAssetCache(customization_name=self.customizations.first().name).cleare_value()
+            PortalAssetCache(customization_name=self.customizations.first().name).clear_value()
             return super().delete(*args, **kwargs)
 
 
@@ -2345,21 +2346,15 @@ class ContributorAgreement(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+    
+    @staticmethod
+    def get_latest_agreement_by_type(agreement_type, customization):
+        return get_reviews_by_type(agreement_type, customization).last()
 
     @staticmethod
     def get_current(*, customization=None, request=None, agreement_type=AgreementTypes.contributor):
         customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-        tos_reviews = get_tos_reviews(customization)
-        if agreement_type == AgreementTypes.tos:
-            reviews = tos_reviews
-        else:
-            # Just exclude all TOS
-            reviews = AssetCustomizationReview.objects.filter(
-                version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
-                state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-            ).exclude(id__in=[r.id for r in tos_reviews]).order_by('id')
-
-        return reviews.last()
+        return ContributorAgreement.get_latest_agreement_by_type(agreement_type, customization)
 
     def is_valid(self, *, customization=None, request=None, agreement_type=AgreementTypes.contributor):
         if not customization:
@@ -3813,7 +3808,7 @@ def get_reviews_by_value_from_db(asset_type, customization: str, ds_name: str, v
     return reviews.order_by('id')
 
 
-def get_tos_reviews(customization: str):
+def get_reviews_by_type(agreement_type, customization: str):
     qs = get_reviews_by_value_from_db(asset_type=AssetType.ASSET_TYPES.agreement, customization=customization,
-                                      ds_name='type', value=AgreementTypes.tos)
+                                      ds_name='type', value=agreement_type)
     return qs

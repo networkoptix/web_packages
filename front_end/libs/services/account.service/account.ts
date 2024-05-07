@@ -16,7 +16,6 @@ export interface CloudAccount {
     permissions: string[];
     can_publish_integration: boolean;
     is_authenticated: boolean;
-    cookie_reviewed: boolean;
     sessionVerified: boolean;
     accessToken: string;
     type: UserType;
@@ -57,7 +56,6 @@ export const DUMMY_ACCOUNT: Account = {
     permissions: [''],
     can_publish_integration: false,
     is_authenticated: false,
-    cookie_reviewed: false,
     account2faEnabled: false,
     sessionVerified: false,
     totpExistsForAccount: false,

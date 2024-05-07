@@ -16,7 +16,6 @@ export const generateAccount = (accountPartial: Partial<Account> = {}): Account 
     permissions: [],
     can_publish_integration: true,
     is_authenticated: true,
-    cookie_reviewed: true,
     sessionVerified: true,
     accessToken: uuid(),
     type: UserType.cloud,

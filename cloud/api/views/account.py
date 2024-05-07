@@ -38,7 +38,7 @@ from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from nx_drf.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 from cloud.utils import get_authenticated_session_cookie_age, method_decorator_async
-from cms.models import ContributorAgreement, get_tos_reviews
+from cms.models import AgreementTypes, ContributorAgreement, get_reviews_by_type 
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +120,7 @@ async def implicit_accept(customization, account):
 
     :returns: None
     """
-    last_review = await get_tos_reviews(customization).alast()
+    last_review = await get_reviews_by_type(AgreementTypes.tos, customization).alast()
     if last_review:
         await ContributorAgreement.objects.aget_or_create(
             accepted_agreement=last_review, user=account)
@@ -569,17 +569,6 @@ class AccountSecurity(APIView):
         request.session["has2fa"] = False
         self.invalidate_user_cache(request)
         return api_success(await sync_to_async(Auth.delete_2fa_key, thread_sensitive=False)(request))
-
-
-@swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="If true then the user has accepted the cookie policy and the cookie banner will not appear.",
-                     responses={"200": "Ok"})
-@api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
-async def review_cookie(request):
-    request.user.cookie_reviewed = True
-    await sync_to_async(request.user.save)()
-    return api_success()
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

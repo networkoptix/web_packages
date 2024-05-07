@@ -10,7 +10,7 @@ from cloud.helpers.exceptions import (
 from cms.controllers.asset_json import get_review_matching_current_version
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
-                        DataStructure, ContributorAgreement, AgreementTypes, get_tos_reviews)
+                        DataStructure, ContributorAgreement, AgreementTypes, get_reviews_by_type)
 from cms.serializers import AgreementSerializer, RequiredTosSerializer
 from util.base_cache import AgreementCache, BaseCacheV2
 from util.helpers import get_language_object_from_request, detect_language_by_request
@@ -57,14 +57,18 @@ def get_agreement(request):
             id=agreement_id, asset_type__type=AssetType.ASSET_TYPES.agreement).first()
         version = agreement.version_id(customization=customization) if agreement else 0
     else:
-        tos_reviews = get_tos_reviews(customization)
+        tos_reviews = get_reviews_by_type(AgreementTypes.tos, customization)
+        cookie_reviews = get_reviews_by_type(AgreementTypes.cookie, customization)
         if agreement_type == AgreementTypes.tos:
             agreement_review = tos_reviews
+        elif agreement_type == AgreementTypes.cookie:
+            agreement_review = cookie_reviews
         else:
+            excluded_review_ids = [r.id for r in tos_reviews] + [r.id for r in cookie_reviews]
             agreement_review = AssetCustomizationReview.objects.filter(
                 version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
                 state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-            ).exclude(id__in=[r.id for r in tos_reviews]).order_by('id')
+            ).exclude(id__in=[r.id for r in excluded_review_ids]).order_by('id')
         agreement_review = agreement_review.last()
         if not agreement_review:
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
@@ -227,7 +231,7 @@ def check_required_tos(customization, user):
                                   cache_key='agreement')
     cached_review = agreement_cache.get_cached_item()
     if cached_review is None:
-        review = get_tos_reviews(customization).last()
+        review = get_reviews_by_type(AgreementTypes.tos, customization).last()
         cached_review = RequiredTosSerializer(instance=review).data if review else {}
         agreement_cache.set_cached_item(cached_review, timeout=1800)
 

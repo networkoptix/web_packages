@@ -236,6 +236,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/content/content.module').then(m => m.ContentModule),
     },
     {
+        path: 'cookie-policy',
+        loadChildren: () => import('@pages/content/content.module').then(m => m.ContentModule),
+    },
+    {
         path: 'browser',
         loadChildren: () =>
             import('@pages/non-supported-browser/non-supported-browser.module').then(

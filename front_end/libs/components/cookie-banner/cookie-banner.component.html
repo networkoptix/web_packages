@@ -6,7 +6,7 @@
     <p *ngrxLet="LANG.cookieWarning | translate as cookieWarning">
         <span [innerText]="cookieWarning | translateCut: 0"></span
         ><a
-            routerLink="content/cookie-policy"
+            [routerLink]="cookiePolicyURL"
             [innerText]="cookieWarning | translateCut: 1"
         ></a
         ><span [innerText]="cookieWarning | translateCut: 2"></span>

@@ -27,7 +27,7 @@ import type {
 import type {
     CloudResponse,
     SystemTransferInfo,
-    TosInfo,
+    AgreementInfo,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import { BookmarkV4 } from '@services/system-api.types/devices.types';
@@ -280,7 +280,7 @@ export type RemoveUser = DialogType<
 >;
 export type DeleteCloudUser = DialogType<void, CloudResponse>;
 export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, boolean>;
-export type TosUpdate = DialogType<TosInfo, 'accepted' | 'deferred' | 'rejected'>;
+export type TosUpdate = DialogType<AgreementInfo, 'accepted' | 'deferred' | 'rejected'>;
 export type TosRejected = DialogType<void, 'goBack'>;
 
 /* Servers */

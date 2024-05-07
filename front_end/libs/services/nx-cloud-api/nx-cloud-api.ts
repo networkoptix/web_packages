@@ -40,7 +40,7 @@ import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
-import { DownloadReleases, TosInfo } from './nx-cloud-api.types';
+import { DownloadReleases, AgreementInfo } from './nx-cloud-api.types';
 
 type ResponseTypes = 'arraybuffer' | 'blob' | 'text' | 'json';
 
@@ -651,8 +651,12 @@ export class NxCloudApiService {
         );
     }
 
-    fetchTos(): Observable<TosInfo> {
-        return this.http.get<TosInfo>('/api/cms/agreement?type=tos');
+    fetchTos(): Observable<AgreementInfo> {
+        return this.http.get<AgreementInfo>('/api/cms/agreement?type=tos');
+    }
+
+    fetchCookiePolicy(): Observable<AgreementInfo> {
+        return this.http.get<AgreementInfo>('/api/cms/agreement?type=cookie');
     }
 
     private lastUpdateTime = 0;
