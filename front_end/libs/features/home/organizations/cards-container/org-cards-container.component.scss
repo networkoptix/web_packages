@@ -1,5 +1,5 @@
 @use '../../components/card/card.component' as system-card;
-@use "typography";
+@use "typography" as typography;
 
 $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
 
@@ -124,6 +124,7 @@ $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 
 .icon-with-fill {
     fill: var(--attention-yellow);
 }
+
 h3, nx-hidable {
     &.sticky-heading {
         position: sticky;
@@ -141,6 +142,10 @@ nx-hidable.sticky-heading {
 
     &:not(:first-of-type) {
         background-image: linear-gradient(to bottom, transparent, var(--body-bg) 35%, var(--body-bg) 70%, transparent 70%);
+    }
+
+    p {
+        color: var(--placehoder-v2-message-color) !important;
     }
 }
 

@@ -527,7 +527,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
 
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
-    --table-row-selected-bg : #{$light16};
+    --table-row-selected-bg : #{$dark8};
     --table-row-selected-color : #{$light1};
 
     --dynamic-table-row-hover-bg : var(--light16) !important;
