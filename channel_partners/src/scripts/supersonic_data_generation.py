@@ -6,16 +6,23 @@ from datetime import timedelta
 from time import sleep
 
 from django.db import transaction
+from django.db.models import F
 from django.utils import timezone
 
 from partners.models import (
     ChannelPartner,
+    ChannelPartnerRoles,
+    ChannelPartnerService,
     ChannelPartnerServiceExternalId,
     ChannelPartnerServiceRecord,
+    ChannelPartnerToUser,
     CloudSystemExternalId,
     CloudSystemId,
+    CloudUser,
     Organization,
     OrganizationExternalId,
+    ServiceToOrganizationProperties,
+    ServiceToSubChannelProperties,
     ServiceUsage,
     SystemGroup,
 )
@@ -36,11 +43,13 @@ def run(customization_name: str = 'default'):
 
 
 class Generator:
-    partner_depth = 3
-    group_depth = 3
-    org_dimension = 4
+    partner_depth = 1
+    group_depth = 0
+    org_dimension = 2
     system_dimension = 5
     batch_size = 200
+    top_level_price = 4
+    service_records_cnt = 12
 
     def __init__(self, customization_name: str = 'default'):
         top_partner_name = 'Network Optix' if customization_name == 'default' else customization_name
@@ -61,6 +70,7 @@ class Generator:
         self.service_usages = []
         self.sys_id_seq = 0
         self.system_ext_ids = []
+        self.top_level_depth = len(self.top_partner.path)
 
     def generate(self):
         self.make_sub_channel_partners()
@@ -88,19 +98,29 @@ class Generator:
         service_ext_ids = []
         for partner in self.partners:
             new_channel_partner_created(partner.id)
+            ServiceToSubChannelProperties.create_missing(partner.id)
             for service in partner.services.all():
                 service_ext_ids.append(ChannelPartnerServiceExternalId(
                     custom_id=uuid.uuid4(),
                     channel_partner_service=service,
                     created_by=partner
                 ))
+            (ServiceToSubChannelProperties.objects
+             .filter(channel_partner=partner, service__duration=0)
+             .update(price=self.top_level_price + 0.15 * (len(partner.path) - self.top_level_depth)))
+            (ServiceToSubChannelProperties.objects
+             .filter(channel_partner=partner, service__duration__gt=0)
+             .update(price=0))
         ChannelPartnerServiceExternalId.objects.bulk_create(service_ext_ids, batch_size=self.batch_size)
         print(f"Generated: {len(self.partners)} partners")
 
     def make_organizations(self):
         print("Generating organization...")
         organization_ext_ids = []
-        for partner in self.partners:
+        service_props = []
+        for partner in self.partners + [self.top_partner]:
+            services = partner.services.filter(duration=0)
+            trials = partner.services.filter(duration__gt=0)
             path = get_path_from_parent(partner)
             for i in range(self.org_dimension):
                 organization = Organization(
@@ -116,10 +136,22 @@ class Generator:
                 )
                 self.organizations.append(organization)
                 organization_ext_ids.append(ext_id)
+                service_props += [
+                    ServiceToOrganizationProperties(
+                        organization=organization, service=service, price=self.top_level_price + 1)
+                    for service in services
+                ]
+                service_props += [
+                    ServiceToOrganizationProperties(
+                        organization=organization, service=service, price=0)
+                    for service in trials
+                ]
         Organization.objects.bulk_create(self.organizations, batch_size=100)
         print(f"Generated: {len(self.organizations)} organizations")
         OrganizationExternalId.objects.bulk_create(organization_ext_ids, batch_size=self.batch_size)
         print(f"Generated: {len(organization_ext_ids)} organization external ids")
+        ServiceToOrganizationProperties.objects.bulk_create(service_props, batch_size=self.batch_size)
+        print(f"Generated: {len(service_props)} organization service properties")
 
     def make_groups(self):
         print("Generating system groups...")
@@ -182,8 +214,8 @@ class Generator:
             t0 = timezone.now() - timedelta(hours=2)
 
             for service in services:
-                for ti in range(6):
-                    from_ts = t0 - timedelta(days=20*ti)
+                for ti in range(self.service_records_cnt):
+                    from_ts = t0 - timedelta(days=5*ti - random.randint(0, 4))
                     to_ts = from_ts + timedelta(minutes=5)
                     service_record = ChannelPartnerServiceRecord(
                         service=service,
@@ -208,7 +240,7 @@ class Generator:
                         self.service_usages.append(service_usage)
 
     def make_services(self):
-        for channel_partner in self.partners:
+        for channel_partner in self.partners + [self.top_partner]:
             self.make_partner_services(channel_partner)
         ChannelPartnerServiceRecord.objects.bulk_create(self.service_records, batch_size=self.batch_size)
         print(f"Generated: {len(self.service_records)} service records")
@@ -216,3 +248,34 @@ class Generator:
         print(f"Generated: {len(self.service_usages)} service usage records")
         CloudSystemExternalId.objects.bulk_create(self.system_ext_ids, batch_size=self.batch_size)
         print(f"Generated: {len(self.system_ext_ids)} system external ids")
+        (ChannelPartnerServiceRecord.objects
+         .filter(organization__path__overlap=[self.top_partner.id])
+         .update(created_ts=F('effective_ts')))
+
+
+def clean_nested(top_partner_name):
+    top_partner = ChannelPartner.objects.filter(name=top_partner_name).first()
+    CloudSystemExternalId.objects.filter(cloud_system__path__overlap=[top_partner.id]).delete()
+    OrganizationExternalId.objects.filter(organization__path__overlap=[top_partner.id]).delete()
+    ChannelPartnerServiceExternalId.objects.filter(channel_partner_service__created_by_channel_partner__path__contains=[top_partner.id]).delete()
+    ServiceUsage.objects.filter(cloud_system__path__overlap=[top_partner.id]).delete()
+    ChannelPartnerServiceRecord.objects.filter(
+        cloud_system__path__overlap=[top_partner.id], negation_record__isnull=False).delete()
+    ChannelPartnerServiceRecord.objects.filter(cloud_system__path__overlap=[top_partner.id]).delete()
+    CloudSystemId.objects.filter(path__overlap=[top_partner.id]).delete()
+    for g in SystemGroup.objects.filter(path__overlap=[top_partner.id]).order_by('-path__len'):
+        g.delete()
+    Organization.objects.filter(path__overlap=[top_partner.id]).delete()
+    ServiceToOrganizationProperties.objects.filter(organization__path__overlap=[top_partner.id]).delete()
+    ServiceToSubChannelProperties.objects.filter(channel_partner__path__overlap=[top_partner.id]).delete()
+    ChannelPartnerService.objects.filter(created_by_channel_partner__path__overlap=[top_partner.id], conversion_service__isnull=False).delete()
+    ChannelPartnerService.objects.filter(created_by_channel_partner__path__overlap=[top_partner.id]).delete()
+    for cp in ChannelPartner.objects.filter(path__overlap=[top_partner.id]).order_by('-path__len'):
+        cp.delete()
+
+
+def make_users(top_partner_name, email):
+    top_partner = ChannelPartner.objects.filter(name=top_partner_name).first()
+    user = CloudUser.objects.get(email=email)
+    for cp in ChannelPartner.objects.filter(path__overlap=[top_partner.id]):
+        ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=cp, roles=[ChannelPartnerRoles.ADMINISTRATOR])

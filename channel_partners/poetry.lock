@@ -1005,6 +1005,22 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "et-xmlfile"
+version = "1.1.0"
+description = "An implementation of lxml.xmlfile for the standard library"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
+    {file = "et_xmlfile-1.1.0.tar.gz", hash = "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c"},
+]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "etils"
 version = "1.8.0"
 description = "Collection of common python utils"
@@ -1517,6 +1533,25 @@ django = ">=3.2"
 [package.extras]
 docs = ["sphinx", "sphinx-rtd-theme"]
 test = ["black", "coverage", "mypy", "pillow", "pytest", "pytest-django", "ruff"]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
+name = "openpyxl"
+version = "3.1.2"
+description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "openpyxl-3.1.2-py2.py3-none-any.whl", hash = "sha256:f91456ead12ab3c6c2e9491cf33ba6d08357d802192379bb482f1033ade496f5"},
+    {file = "openpyxl-3.1.2.tar.gz", hash = "sha256:a6f5977418eff3b2d5500d54d9db50c8277a368436f4e4f8ddb1be3422870184"},
+]
+
+[package.dependencies]
+et-xmlfile = "*"
 
 [package.source]
 type = "legacy"
@@ -2510,4 +2545,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "db871f5611ab8a14596bfd046419c93b3c1f95fd9871ca37825167081c18d1e7"
+content-hash = "7aef67448d3ea5288055dbed023a165fc4d760328c415df4b4af183ba65fd08e"

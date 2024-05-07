@@ -3,7 +3,7 @@ include:
 
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_IMAGE_VERSION: '43769'
+  CP_IMAGE_VERSION: '43782'
   CP_DJANGO_PYTHON_IMAGE_TAG: '${CP_IMAGE_VERSION}'
 
 

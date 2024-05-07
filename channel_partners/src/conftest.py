@@ -455,6 +455,9 @@ def service_record_factory():
                              created_ts=created_ts, effective_ts=effective_ts or created_ts)
         service.created_ts = created_ts
         service.save()
+        # Overwrite the created_ts
+        service.created_ts = created_ts
+        service.save()
         return service
 
     return factory
