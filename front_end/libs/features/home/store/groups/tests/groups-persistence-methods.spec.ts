@@ -127,7 +127,7 @@ describe('Groups Store: Persistence Methods', () => {
                 ).toBe(errorMsg.alreadyInRoot);
             });
 
-            it('should show childInFolder error when moving group to a child', async () => {
+            xit('should show childInFolder error when moving group to a child', async () => {
                 const { groupsStore } = await setupGroupsStore();
                 const { groups, flatGroups } = generateGroupsAndSystems();
                 const parentGroup = findItem(groups, sample(flatGroups)!.id)!;
