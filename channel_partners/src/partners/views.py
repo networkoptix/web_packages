@@ -1465,44 +1465,72 @@ class CloudSystemViewSet(NestedViewSetMixin,
                    responses=SystemServiceQuantitySerializer)
     @action(methods=['get', 'patch'], detail=True)
     def service_quantity(self, request, id):
+        # Get System object
         system: CloudSystemId = self.get_object()
+
+        # Check request type
         if request.method == 'GET':
-            if not (data := caches['default'].get(self.get_service_quantity_cache_key(system))):
+            cache_key = self.get_service_quantity_cache_key(system)
+
+            if not (data := caches['default'].get(cache_key)):
                 serializer = SystemServiceQuantitySerializer(system)
                 data = serializer.data
-                caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
+                caches['default'].set(cache_key, data, timeout=86400)
             return Response(data)
+
         elif request.method == 'PATCH':
+
             if system.activated:
                 return self.update_service_quantity(request, system=system)
+
             else:
-                error_message = ErrorMessageSerializer(data={"message": "Unable to update; system is not activated"})
+                error_message = ErrorMessageSerializer(data={
+                    "message": "Unable to update; system is not activated"})
+
                 error_message.is_valid()
                 return Response(error_message.data, status=status.HTTP_400_BAD_REQUEST)
 
     def update_service_quantity(self, request, system):
+        # Generate a unique lock value
         lock_val = f'{uuid4()}'
+
+        # Try to acquire a lock. If the lock is already acquired, wait until it's released
         if not caches['default'].add(self.get_service_quantity_lock(system), lock_val, timeout=60):
             wait = 0
             while caches['default'].get(self.get_service_quantity_lock(system)):
                 sleep(0.2)
+                # If we've waited too long, return a 429 response
                 if (wait := wait + 0.2) >= VIEW_LOCK_WAIT_TIME:
-                    return Response(data={"message": f"System {system.system_id} service "
-                                                     f"quantity was being modified during request."},
-                                    status=429, headers={'Retry-After': 2})
+                    return Response(
+                        data={"message": f"System {system.system_id} service quantity was being modified during request."},
+                        status=429,
+                        headers={'Retry-After': 2})
+
+            # Retry the function once the lock is released
             return self.update_service_quantity(request, system=system)
 
+        # Create a serializer with the request data
         serializer = SystemServiceQuantitySerializer(system, data=request.data)
+
+        # If the serializer is valid, save it and release the lock
         if serializer.is_valid(raise_exception=False):
             serializer.save(user=request.user)
             caches['default'].delete(self.get_service_quantity_lock(system))
         else:
+            # If the serializer is not valid, release the lock and raise an exception
             caches['default'].delete(self.get_service_quantity_lock(system))
             serializer.is_valid(raise_exception=True)
+
+        # Get the serialized data
         data = serializer.data
+
+        # Cache the serialized data
         caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
+
         # Notify of changes
         CloudSystemService.notify_service_change(system)
+
+        # Return the serialized data
         return Response(data)
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
