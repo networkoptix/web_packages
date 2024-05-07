@@ -6,10 +6,8 @@
         <svg-icon [src]="icons.dirTextButtons + 'arrow_right.svg'"></svg-icon>
         All Partners</a
     >
-    <div class="name">
-        <div class="pb-3">
-            <h2>{{ (currentSubchannel$ | async).name }}</h2>
-        </div>
+    <div class="header">
+        <h2>{{ (currentSubchannel$ | async).name }}</h2>
         <div
             *ngIf="
                 (currentSubchannel$ | async)?.effectiveState !== 'active' &&

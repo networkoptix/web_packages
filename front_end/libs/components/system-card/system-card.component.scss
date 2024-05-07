@@ -1,50 +1,51 @@
 @use "theme_variables_common" as theme_vars;
 @use "_mixins";
 
+.system-button {
+    height: 100%;
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 1px solid red;
 
-:host {
-    .system-button {
-        height: 100%;
-        user-select: none;
-        cursor: pointer;
-        overflow: hidden;
-        margin-bottom: 0;
+    h2 {
+        @include mixins.ellipsis;
+        color: var(--card-header-text) !important;
+    }
 
-        h2 {
-            @include mixins.ellipsis;
-            color: var(--card-header-text) !important;
-        }
+    .old-h12 {
+        color: var(--card-header-text) !important;
+    }
 
-        .old-h12 {
-            color: var(--card-header-text) !important;
-        }
+    &.card-condensed {
+        border: 1px solid transparent;
 
-        &.card-condensed {
-            .card-body {
-                display: flex;
-                flex-direction: column;
-                background-color: var(--card-body-bg);
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-body-bg);
 
-                &:hover {
-                    background-color: var(--card-hover-bg);
-                }
+            &:hover {
+                background-color: var(--card-hover-bg);
             }
-        }
-
-        .user-name {
-            font-size: theme_vars.$h6-font-size;
-            color: var(--body-text-color);
-            line-height: 16px;
-            display: block;
-            margin-bottom: 12px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
         }
     }
 
-    .system-list-bottom-bar {
-        display: flex;
+    .user-name {
+        font-size: theme_vars.$h6-font-size;
+        color: var(--body-text-color);
+        line-height: 16px;
+        display: block;
+        margin-bottom: 12px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+.system-list-bottom-bar {
+    display: flex;
 
         nx-vms-client-button {
             margin-top: 12px;
@@ -55,8 +56,7 @@
             margin-left: -3px;
         }
 
-        .margin-system-list-status {
-            margin-left: 4px;
-        }
+    .margin-system-list-status {
+        margin-left: 4px;
     }
 }

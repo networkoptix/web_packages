@@ -56,7 +56,7 @@
                     [style.width.px]="searchConfig.channelPartners.searchWidth"
                     [ngModel]="search"
                     (ngModelChange)="setSearch($event)"
-                    layout="compact"
+                    layout="search"
                     [placeholder]="'Search' | translate"
                     instant
                 ></nx-search>
@@ -67,10 +67,11 @@
                     <div
                         #cardsContainer
                         (resize)="updateHeaderSize(cardsContainer)"
-                        class="px-3 cards-container"
+                        class="cards-container"
                     >
                         <ng-container *ngFor="let organization of filteredOrganizations$ | async">
                             <nx-card
+                                tabindex="-1"
                                 class="card-content"
                                 [routerLink]="
                                     organization.id | mapWith: routerState.getOrganizationLink$$()
