@@ -63,3 +63,11 @@ frontend-tests:
       pushd "front_end"
         npm run test:ci
       popd
+
+test-system-users:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'cloud-deploy' ]
+  script: [ 'test-system-users' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules: [{if: !reference [ .enable_for_mr_branch ], changes: !reference [ .frontend_changes ]}]
