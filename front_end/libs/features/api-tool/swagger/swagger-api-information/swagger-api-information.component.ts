@@ -27,14 +27,17 @@ export class NxSwaggerAPIInformationComponent {
                 const APIFunctions = cell.innerHTML.split('<br>');
                 const newHTML = APIFunctions.map(item => {
                     let APIFunction = item.replace(/\s+/g, ''); // Trim whitespace
-                    const type = APIFunction.startsWith('~~') ? 'deprecated' : 'new';
-                    let symbolClass = 'addition';
-                    if (type === 'deprecated') {
-                        APIFunction = APIFunction.slice(3, APIFunction.length - 2);
-                        symbolClass = 'removal';
+                    if (APIFunction.length) {
+                        const type = APIFunction.startsWith('~~') ? 'deprecated' : 'new';
+                        let symbolClass = 'addition';
+                        if (type === 'deprecated') {
+                            APIFunction = APIFunction.slice(3, APIFunction.length - 2);
+                            symbolClass = 'removal';
+                        }
+                        const routeSymbol = `<span class=${symbolClass}><span></span><span></span></span>`;
+                        return '<code>' + routeSymbol + APIFunction + '</code>';
                     }
-                    const routeSymbol = `<span class=${symbolClass}><span></span><span></span></span>`;
-                    return '<code>' + routeSymbol + APIFunction + '</code>';
+                    return null;
                 });
                 cell.innerHTML = newHTML.join('<br>');
             }
