@@ -21,23 +21,32 @@
                     {
                         title: 'Search Results' | translate,
                         noResults: 'Nothing found in this directory' | translate,
-                        results: currentFolderResults$$()
+                        results: currentFolderResults$$(),
+                        breadcrumbs: false
                     },
                     {
                         title: 'Other Results' | translate,
                         noResults: null,
-                        results: currentOrganizationResults$$()
+                        results: currentOrganizationResults$$(),
+                        breadcrumbs: true
                     }
                 ];
                 track resultSection.title
             ) {
                 @if (resultSection.results.length || resultSection.noResults) {
-                    <h3 [ngClass]="{ 'sticky-heading': stickyHeading }">
+                    <h3
+                        [ngClass]="{
+                            'sticky-heading': stickyHeading,
+                            'no-breadcrumbs': !resultSection.breadcrumbs
+                        }"
+                    >
                         {{ resultSection.title }}
                     </h3>
                 }
                 @for (group of resultSection.results; track group.path) {
-                    @if (group.groups.length || group.systems.length) {
+                    @if (
+                        resultSection.breadcrumbs && (group.groups.length || group.systems.length)
+                    ) {
                         <nx-hidable [ngClass]="{ 'sticky-heading': stickyHeading }">
                             <span>{{ currentOrg$$()?.name }}</span>
                             <span nxHidableTemplate>...</span>

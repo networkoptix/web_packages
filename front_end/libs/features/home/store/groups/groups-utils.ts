@@ -25,11 +25,11 @@ export function* generatePath(groupsMap: GroupFlatMap, groupId: string): Generat
 }
 
 export function isSystemItem(item: SystemItem | GroupItem): item is SystemItem {
-    return 'systemId' in item;
+    return item && 'systemId' in item;
 }
 
 export function isGroupItem(item: GroupItem | SystemItem): item is GroupItem {
-    return 'id' in item;
+    return item && 'id' in item;
 }
 
 export const flattenGroups = (groups: GroupItem[], groupMap: GroupFlatMap = {}): GroupFlatMap => {

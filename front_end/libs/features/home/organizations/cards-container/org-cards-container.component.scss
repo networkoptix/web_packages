@@ -166,6 +166,11 @@ nx-hidable.sticky-heading {
         &:not(:first-of-type) {
             margin-top: 1.5rem;
         }
+
+        &.no-breadcrumbs {
+            padding-bottom: 1rem;
+        }
+
         margin: 0;
         padding-bottom: 0.5rem;
         z-index: 3;

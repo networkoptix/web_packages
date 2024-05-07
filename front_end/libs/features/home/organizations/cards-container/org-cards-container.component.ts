@@ -176,9 +176,7 @@ export class NxOrganizationCardContainerComponent {
         if (!search) {
             return groups;
         }
-        return Object.values(flattenGroups(groups))
-            .map(group => ({ ...group, children: [] }))
-            .filter(group => caseInsenstiveSearch(group.name, search));
+        return Object.values(groups.filter(group => caseInsenstiveSearch(group.name, search)));
     });
 
     currentOrganizationGroupsSearchResults$$ = computed(() => {
@@ -295,22 +293,15 @@ export class NxOrganizationCardContainerComponent {
         }
 
         const currentGroup = this.groupsStore.currentGroupId$$();
-        const pathMap = this.groupsStore.groupPathMap$$();
         const allOrgSystems = this.groupsStore
             .allOrgSystems$$()
             .filter(system => caseInsenstiveSearch(system.name, search));
 
-        if (currentGroup.isRoot) {
-            return {
-                current: allOrgSystems,
-                other: [],
-            };
-        }
         return allOrgSystems.reduce(
             (acc, system) => {
-                const inCurrentGroup =
-                    system.groupId &&
-                    pathMap[system.groupId].path.find(({ id }) => id === currentGroup.id);
+                const inCurrentGroup = currentGroup.isRoot
+                    ? !system.groupId
+                    : system.groupId === currentGroup.id;
                 if (inCurrentGroup) {
                     acc.current.push(system);
                 } else {
