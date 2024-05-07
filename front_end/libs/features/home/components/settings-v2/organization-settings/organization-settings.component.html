@@ -10,7 +10,7 @@
                         [canUpdateAccess]="canUpdateAccess"
                         [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
                         [canChangeState]="canChangeStateUI"
-                        [currState]="effectState$$()"
+                        [currState]="currentState$ | async"
                         [settingsState]="currentState$$()"
                         (updateState)="handleStateUpdate($event)"
                         (updateAccess)="handleAccessUpdate($event)"
@@ -23,8 +23,7 @@
                                             [buttonDisabled]="
                                                 !currentName$.getValue()?.length ||
                                                 currentName$.getValue()?.length >
-                                                    MAX_ORG_NAME_LENGTH ||
-                                                !hasAdminRole
+                                                    MAX_ORG_NAME_LENGTH
                                             "
                                             [removeMinWidth]="true"
                                             [process]="updateOrgProcess"

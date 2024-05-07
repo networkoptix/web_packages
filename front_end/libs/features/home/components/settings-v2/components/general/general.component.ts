@@ -81,7 +81,7 @@ export class NxSettingsGeneralV2Component {
     icons = icons;
     State = State;
 
-    @Input() currState: State;
+    @Input() currState: State | null;
     @Input() canUpdateAccess: boolean = false;
 
     @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
