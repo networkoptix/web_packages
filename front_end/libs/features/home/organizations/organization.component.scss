@@ -4,6 +4,7 @@
 
 :host {
     width: 100%;
+    padding: 24px 0 0 24px;
 }
 
 #groups {
@@ -60,10 +61,14 @@
         flex-direction: column;
         overflow-y: hidden;
 
-        .name {
+        .header {
             display: flex;
             gap: .75rem;
-            padding: 0 0 1rem;
+            padding: 0 24px 16px 4px; // accommodate for :focus outline - and align with sidebar
+        }
+
+        nx-tabs {
+            padding: 0 24px 0 4px; // accommodate for :focus outline - and align
         }
 
         a:hover{

@@ -1,11 +1,25 @@
 .sub-container {
   height: 100%;
-  padding: 1rem 1rem 0 1rem;
+  padding: 24px 0 0 24px;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+      //@include typography.medium24nocolor;
+      display: flex;
+      gap: 1rem;
+      padding: 0 24px 16px 4px; // accommodate for :focus outline - and align
+  }
+
+  nx-tabs {
+      padding: 0 24px 0 4px; // accommodate for :focus outline - and align
+  }
 
   a {
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding-bottom: 8px;
 
     svg {
       transform: rotate(180deg);

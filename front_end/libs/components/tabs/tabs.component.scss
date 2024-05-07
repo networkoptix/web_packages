@@ -1,13 +1,18 @@
 @use 'typography' as typography;
 
+:host {
+  padding-bottom: 16px !important;
+}
+
 .tabs-component{
+  height: 40px;
+
   .tabs-row{
     display: flex;
     flex-direction: row;
     gap: 1rem;
     border-bottom: 1px solid var(--tabs-border-color);
-    height: 50%;
-    padding-bottom: 24px;
+    height: 100%;
 
     .hidden {
       display: none;

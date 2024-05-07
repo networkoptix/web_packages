@@ -682,7 +682,9 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
+
     --system-card-bg: var(--light2);
+    --system-card-active-bg: var(--light4);
     --system-card-offline-color: var(--light16);
     --system-card-border-color: var(--light7);
     --system-card-owner-color: var(--light16);

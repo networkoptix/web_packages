@@ -1,7 +1,7 @@
 <ng-template #loading><nx-pre-loader></nx-pre-loader></ng-template>
 <ng-template #body>
     <div
-        class="name pb-3"
+        class="header"
         *ngIf="currentOrganization$$() as currentOrg"
     >
         <h2>{{ groupsStore.currentGroupName$$() || currentOrg.name }}</h2>

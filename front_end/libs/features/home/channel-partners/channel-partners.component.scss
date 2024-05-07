@@ -1,5 +1,4 @@
 @use "theme_variables_common" as *;
-$channel-partners-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
 
 :host {
     display: block;
@@ -13,21 +12,26 @@ $channel-partners-container-height: calc(100vh - var(--channel-partners-header-h
 
         &.root {
             flex-direction: column;
-            padding: 24px 24px 0;
+            padding: 24px 0 0 24px;
         }
 
         .header {
             display: flex;
             gap: 1rem;
-            padding: 0 0 1rem;
+            padding: 0 24px 1rem 4px; // accommodate for :focus outline - and align
+        }
+
+        nx-tabs {
+            padding: 0 24px 0 4px; // accommodate for :focus outline - and align
         }
 
         .cards-container {
-            max-height: $channel-partners-container-height !important;
+            padding: 4px; // accommodate for :focus outline - and align
         }
 
         .actions {
-            align-items: center;
+            padding: 0 24px 16px 4px; // accommodate for :focus outline - and align
+
         }
 
         a {
@@ -60,15 +64,15 @@ $channel-partners-container-height: calc(100vh - var(--channel-partners-header-h
                 fill: var(--placehoder-body-color) !important;
             }
 
-    p {
-      color: var(--placehoder-v2-message-color)!important;
-    }
+            p {
+              color: var(--placehoder-v2-message-color)!important;
+            }
 
-    .new-org-btn {
-      display: inline-block !important;
-      margin-top: 10px;
-    }
-  }
+            .new-org-btn {
+              display: inline-block !important;
+              margin-top: 10px;
+            }
+        }
 
         .card-content {
             h3 {

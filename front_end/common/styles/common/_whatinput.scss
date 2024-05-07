@@ -17,10 +17,12 @@
     box-shadow: 0 0 0 2px var(--btn-danger-focus-shadow) !important;
 }
 
+[data-whatintent="keyboard"] .dot-menu:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-default-clear:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-dropdown-toggle:focus:not([disabled]):not(.disabled),
 [data-whatintent="keyboard"] .btn.btn-default:focus:not([disabled]):not(.disabled),
-[data-whatintent="keyboard"] a.btn.badge:focus:not([disabled]):not(.disabled) {
+[data-whatintent="keyboard"] a.btn.badge:focus:not([disabled]):not(.disabled),
+[data-whatintent="keyboard"] div[tabindex]:focus:not([disabled]):not(.disabled) {
     outline: 2px solid var(--btn-default-focus-outline-rgb) !important;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--btn-default-focus-shadow) !important;
@@ -97,4 +99,8 @@
 
 [data-whatintent="keyboard"] .tab-list .tab-item a:focus {
     @include inset-outline;
+}
+
+[data-whatintent="keyboard"] *:focus-visible {
+    outline: none !important;
 }

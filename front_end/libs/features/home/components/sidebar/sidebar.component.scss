@@ -1,10 +1,19 @@
 @use '../sidebar-level/sidebar-level.component.scss' as *;
 @use 'bootstrap_utils' as bootstrap;
 
+:host{
+    position: relative;
+    // re-position to accommodate container padding
+    left: -24px;
+    top: -24px;
+    height: calc(100% + 24px);
+    display: block;
+}
+
 .sidebar {
     height: 100%;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 16px;
     width: 320px;
     position: relative;
     border-right: 1px solid var(--groups-sidebar-border);

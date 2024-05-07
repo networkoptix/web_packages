@@ -1,8 +1,13 @@
 :host {
     height: 100%;
+    padding: 0 24px 0 4px; // accommodate for :focus outline - and align
+
+    .actions {
+        padding: 0 0 16px 0;
+    }
 
     .table-grid {
-        height: calc(100% - 48px);
+        height: 100%;
         display: grid;
         column-gap: 1rem;
 

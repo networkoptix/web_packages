@@ -679,11 +679,13 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --org-delete-folder-warning-header: #{$yellow_main};
     --org-delete-folder-warning-bg: #{$yellow_d3};
 
-    @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
+    @include generateVarAndRgb(--system-card-bg-grad0, $dark8);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark5);
-    --system-card-bg: var(--dark5);
+
+    --system-card-bg: var(--dark6);
+    --system-card-active-bg: var(--dark4);
     --system-card-offline-color: var(--light4);
-    --system-card-border-color: var(--dark10);
+    --system-card-border-color: transparent;
     --system-card-owner-color: var(--dark16);
 
     --group-system-card-color: var(--dark15);
