@@ -1,6 +1,7 @@
 <div class="input-wrapper">
     <span class="glyphicon web-icon-search icon-search"></span>
     <input
+        #orgTreeSearch
         [(ngModel)]="folderSearch"
         (ngModelChange)="searchGroups($event)"
         type="text"
@@ -9,96 +10,114 @@
         name="orgTreeSearch"
         id="org-tree-search"
         autocomplete="off"
-        [placeholder]="'Search folders' | translate"
+        [placeholder]="'Search' | translate"
         (keydown.arrowup)="$event.preventDefault(); up()"
         (keydown.arrowdown)="$event.preventDefault(); down()"
         (keydown.arrowleft)="$event.preventDefault(); setHighlightedFolderState(false)"
         (keydown.arrowright)="$event.preventDefault(); setHighlightedFolderState(true)"
         (keydown.Enter)="onFolderSearchEnter($event)"
+        (blur)="onBlur()"
     />
 </div>
 <!-- The behavior here is sort of like an autocomplete dropdown, but always open.
 We block the default left/right/up/down behavior of an input and instead have it
 navigate the tree, so that users can search and nav at the same time.  -->
 
-<!-- The <ul> element is made focusable here instead of the arrow "buttons" so
-that the user will not be forced to Tab all the way through a very big org to get
-to the action buttons. -->
+<!-- Ignoring mousedown keeps the focus in input -->
 <ul
-    #orgTree
+    #orgTreeList
     class="org-tree"
-    [ngClass]="{
-        'org-tree--warning': statuses()?.get(selected)?.type === 'warn',
-        'org-tree--error': statuses()?.get(selected)?.type === 'error'
-    }"
-    (keydown.arrowup)="$event.preventDefault(); up()"
-    (keydown.arrowdown)="$event.preventDefault(); down()"
-    (keydown.arrowleft)="setHighlightedFolderState(false)"
-    (keydown.arrowright)="setHighlightedFolderState(true)"
-    (keydown.Enter)="onFolderSearchEnter($event)"
-    tabindex="-1"
+    (mousedown)="$event.preventDefault(); focus()"
+    (scroll)="closeTooltip()"
 >
     <!-- Org itself has index of -1 since it's separate from the folders, but
     still highlightable -->
     <li
         #orgItem
         id="org-item"
+        *ngrxLet="statuses()?.get(organization().id) as status"
         class="org-tree__item"
         [ngClass]="{
             'org-tree__item--highlight': highlightIndex === -1,
-            'org-tree__item--selected': selected === organization.id
+            'org-tree__item--selected': selected === organization().id
         }"
-        (click)="selectFolder(organization.id, -1)"
+        (click)="selectFolder(organization().id, -1)"
     >
         <svg-icon
             class="org-icon"
             [src]="icons.dirTextButtons + 'organization.svg'"
             [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
         ></svg-icon>
-        <span>{{ organization.name }}</span>
-        <ng-container
-            *ngTemplateOutlet="statusIcon; context: { status: statuses()?.get(organization.id) }"
-        >
-        </ng-container>
+        <span>{{ organization().name }}</span>
+        @if (status?.status === 'warn' && selected === organization().id) {
+            <ng-container
+                [ngTemplateOutlet]="warningIcon"
+                [ngTemplateOutletContext]="{ msg: status!.msg, id: organization().id }"
+            ></ng-container>
+        }
     </li>
     @for (group of folderSearchResults; track group.id; let i = $index) {
         @if (visibleFolders.has(group.id)) {
             <li
+                *ngrxLet="statuses()?.get(group.id) as status"
                 [ngStyle]="{
                     paddingLeft: group.level * 25 + 'px'
                 }"
                 [class]="'org-tree__item' + ' ' + 'org-tree__item--' + i"
                 [ngClass]="{
                     'org-tree__item--highlight': highlightIndex === i,
-                    'org-tree__item--selected': selected === group.id
+                    'org-tree__item--selected': selected === group.id,
+                    'org-tree__item--disabled': status?.status === 'disable'
                 }"
                 (click)="selectFolder(group.id, i)"
             >
-                <div
-                    class="org-tree__arrow-btn"
-                    [class]="{
-                        invisible: !group.hasChildren
-                    }"
-                    (click)="
-                        $event.stopPropagation(); toggleFolderOpen(group.id); highlightIndex = i
-                    "
-                >
+                @if (group.hasChildren) {
+                    <div
+                        class="org-tree__arrow-btn"
+                        (click)="
+                            $event.stopPropagation(); toggleFolderOpen(group.id); highlightIndex = i
+                        "
+                    >
+                        <svg-icon
+                            [src]="
+                                icons.dirTextButtons +
+                                (openFolders.has(group.id) ? 'arrow_down.svg' : 'arrow_right.svg')
+                            "
+                            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                        ></svg-icon>
+                    </div>
+                } @else {
+                    <div class="org-tree__no-arrow-spacer"></div>
+                }
+                @if (status?.status === 'disable') {
                     <svg-icon
+                        [nxTooltipV2]="status!.msg"
+                        [tooltipPositions]="['S', 'start']"
+                        tooltipTheme="contrast"
+                        [tooltipOpen]="(tooltipTarget$ | async) === group.id"
+                        (tooltipComponentClick)="closeTooltip(group.id)"
+                        (tooltipOutsideClick)="closeTooltip(group.id)"
                         [src]="
-                            icons.dirTextButtons +
-                            (openFolders.has(group.id) ? 'arrow_down.svg' : 'arrow_right.svg')
+                            icons.dir +
+                            (openFolders.has(group.id)
+                                ? 'ws_folder_open.svg'
+                                : 'ws_folder_close.svg')
                         "
                         [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                        svgClass="folder"
                     ></svg-icon>
-                </div>
-                <svg-icon
-                    [src]="
-                        icons.dir +
-                        (openFolders.has(group.id) ? 'ws_folder_open.svg' : 'ws_folder_close.svg')
-                    "
-                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                    svgClass="folder"
-                ></svg-icon>
+                } @else {
+                    <svg-icon
+                        [src]="
+                            icons.dir +
+                            (openFolders.has(group.id)
+                                ? 'ws_folder_open.svg'
+                                : 'ws_folder_close.svg')
+                        "
+                        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                        svgClass="folder"
+                    ></svg-icon>
+                }
                 <span
                     ><nx-search-highlight
                         [text]="group.name"
@@ -106,51 +125,31 @@ to the action buttons. -->
                     ></nx-search-highlight
                 ></span>
 
-                <ng-container
-                    *ngTemplateOutlet="statusIcon; context: { status: statuses()?.get(group.id) }"
-                >
-                </ng-container>
+                @if (status?.status === 'warn' && selected === group.id) {
+                    <ng-container
+                        [ngTemplateOutlet]="warningIcon"
+                        [ngTemplateOutletContext]="{ msg: status!.msg, id: group.id }"
+                    ></ng-container>
+                }
             </li>
         }
     }
 </ul>
-@if (statuses() && !hideStatusMessages()) {
-    <div
-        class="mt-2 error-container"
-        [ngStyle]="{
-            minHeight: 1.25 * messagesNumLines() + 'rem'
-        }"
-    >
-        @if (selected && statuses()!.get(selected); as status) {
-            @if (status.type === 'warn') {
-                <div class="warning">
-                    {{ status.msg }}
-                </div>
-            } @else if (status.type === 'error') {
-                <div class="error-label">
-                    {{ status.msg }}
-                </div>
-            }
-        }
-    </div>
-}
 
 <ng-template
-    #statusIcon
-    let-status="status"
+    #warningIcon
+    let-msg="msg"
+    let-id="id"
 >
-    @if (status?.type === 'warn') {
-        <svg-icon
-            class="status-icon"
-            [src]="icons.dirNonStandard + 'warning_diamond.svg'"
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-        ></svg-icon>
-    }
-    @if (status?.type === 'error') {
-        <svg-icon
-            class="status-icon"
-            [src]="icons.dirNonStandard + 'error.svg'"
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-        ></svg-icon>
-    }
+    <svg-icon
+        (mouseenter)="openTooltip(id)"
+        (mouseleave)="closeTooltip(id)"
+        [tooltipOpen]="(tooltipTarget$ | async) === id"
+        [nxTooltipV2]="msg"
+        [tooltipPositions]="['S', 'end']"
+        tooltipTheme="contrast"
+        class="status-icon"
+        [src]="icons.dirNonStandard + 'warning_diamond.svg'"
+        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+    ></svg-icon>
 </ng-template>

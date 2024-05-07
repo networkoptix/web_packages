@@ -35,7 +35,8 @@ export class NxTooltipV2Component implements OnDestroy {
 
     content = input<string | TemplateRef<unknown>>('');
 
-    @HostListener('mousedown') onClick(): void {
+    @HostListener('mousedown', ['$event']) onClick(event: MouseEvent): void {
+        event.preventDefault();
         this.click.next();
     }
     click = new Subject<void>();

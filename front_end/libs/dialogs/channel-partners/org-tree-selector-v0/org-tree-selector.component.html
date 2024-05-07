@@ -1,0 +1,156 @@
+<div class="input-wrapper">
+    <span class="glyphicon web-icon-search icon-search"></span>
+    <input
+        [(ngModel)]="folderSearch"
+        (ngModelChange)="searchGroups($event)"
+        type="text"
+        spellcheck="false"
+        class="form-control mb-1"
+        name="orgTreeSearch"
+        id="org-tree-search"
+        autocomplete="off"
+        [placeholder]="'Search folders' | translate"
+        (keydown.arrowup)="$event.preventDefault(); up()"
+        (keydown.arrowdown)="$event.preventDefault(); down()"
+        (keydown.arrowleft)="$event.preventDefault(); setHighlightedFolderState(false)"
+        (keydown.arrowright)="$event.preventDefault(); setHighlightedFolderState(true)"
+        (keydown.Enter)="onFolderSearchEnter($event)"
+    />
+</div>
+<!-- The behavior here is sort of like an autocomplete dropdown, but always open.
+We block the default left/right/up/down behavior of an input and instead have it
+navigate the tree, so that users can search and nav at the same time.  -->
+
+<!-- The <ul> element is made focusable here instead of the arrow "buttons" so
+that the user will not be forced to Tab all the way through a very big org to get
+to the action buttons. -->
+<ul
+    #orgTree
+    class="org-tree"
+    [ngClass]="{
+        'org-tree--warning': statuses()?.get(selected)?.type === 'warn',
+        'org-tree--error': statuses()?.get(selected)?.type === 'error'
+    }"
+    (keydown.arrowup)="$event.preventDefault(); up()"
+    (keydown.arrowdown)="$event.preventDefault(); down()"
+    (keydown.arrowleft)="setHighlightedFolderState(false)"
+    (keydown.arrowright)="setHighlightedFolderState(true)"
+    (keydown.Enter)="onFolderSearchEnter($event)"
+    tabindex="-1"
+>
+    <!-- Org itself has index of -1 since it's separate from the folders, but
+    still highlightable -->
+    <li
+        #orgItem
+        id="org-item"
+        class="org-tree__item"
+        [ngClass]="{
+            'org-tree__item--highlight': highlightIndex === -1,
+            'org-tree__item--selected': selected === organization.id
+        }"
+        (click)="selectFolder(organization.id, -1)"
+    >
+        <svg-icon
+            class="org-icon"
+            [src]="icons.dirTextButtons + 'organization.svg'"
+            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+        ></svg-icon>
+        <span>{{ organization.name }}</span>
+        <ng-container
+            *ngTemplateOutlet="statusIcon; context: { status: statuses()?.get(organization.id) }"
+        >
+        </ng-container>
+    </li>
+    @for (group of folderSearchResults; track group.id; let i = $index) {
+        @if (visibleFolders.has(group.id)) {
+            <li
+                [ngStyle]="{
+                    paddingLeft: group.level * 25 + 'px'
+                }"
+                [class]="'org-tree__item' + ' ' + 'org-tree__item--' + i"
+                [ngClass]="{
+                    'org-tree__item--highlight': highlightIndex === i,
+                    'org-tree__item--selected': selected === group.id
+                }"
+                (click)="selectFolder(group.id, i)"
+            >
+                <div
+                    class="org-tree__arrow-btn"
+                    [class]="{
+                        invisible: !group.hasChildren
+                    }"
+                    (click)="
+                        $event.stopPropagation(); toggleFolderOpen(group.id); highlightIndex = i
+                    "
+                >
+                    <svg-icon
+                        [src]="
+                            icons.dirTextButtons +
+                            (openFolders.has(group.id) ? 'arrow_down.svg' : 'arrow_right.svg')
+                        "
+                        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                    ></svg-icon>
+                </div>
+                <svg-icon
+                    [src]="
+                        icons.dir +
+                        (openFolders.has(group.id) ? 'ws_folder_open.svg' : 'ws_folder_close.svg')
+                    "
+                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                    svgClass="folder"
+                ></svg-icon>
+                <span
+                    ><nx-search-highlight
+                        [text]="group.name"
+                        [search]="searchRegex"
+                    ></nx-search-highlight
+                ></span>
+
+                <ng-container
+                    *ngTemplateOutlet="statusIcon; context: { status: statuses()?.get(group.id) }"
+                >
+                </ng-container>
+            </li>
+        }
+    }
+</ul>
+@if (statuses() && !hideStatusMessages()) {
+    <div
+        class="mt-2 error-container"
+        [ngStyle]="{
+            minHeight: 1.25 * messagesNumLines() + 'rem'
+        }"
+    >
+        @if (selected && statuses()!.get(selected); as status) {
+            @if (status.type === 'warn') {
+                <div class="warning">
+                    {{ status.msg }}
+                </div>
+            } @else if (status.type === 'error') {
+                <div class="error-label">
+                    {{ status.msg }}
+                </div>
+            }
+        }
+    </div>
+}
+
+<ng-template
+    #statusIcon
+    let-status="status"
+>
+    @if (status?.type === 'warn') {
+        <svg-icon
+            class="status-icon"
+            [src]="icons.dirNonStandard + 'warning_diamond.svg'"
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+        ></svg-icon>
+    }
+    @if (status?.type === 'error') {
+        <svg-icon
+            class="status-icon"
+            [src]="icons.dirNonStandard + 'error.svg'"
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+        ></svg-icon>
+    }
+</ng-template>

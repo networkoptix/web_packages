@@ -3,30 +3,33 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    Input,
     OnInit,
     ViewChild,
+    booleanAttribute,
+    effect,
     forwardRef,
+    inject,
     input,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ControlValueAccessor,
     FormControl,
     FormsModule,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    NgForm,
+    NgModel,
     ValidationErrors,
     Validator,
 } from '@angular/forms';
-import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
-import { BehaviorSubject, NEVER, filter, switchMap, takeUntil, timer } from 'rxjs';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { throttle } from '@decorators/throttle';
-import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
+import { environment } from '@environments/environment';
 import type {
     GroupItem,
     Organization,
@@ -34,10 +37,11 @@ import type {
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
 
-import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
+import type { OrgTreeStatuses, TreeItem } from './org-tree-selector.types';
 
+/** @deprecated */
 @Component({
-    selector: 'nx-org-tree-selector',
+    selector: 'nx-org-tree-selector-v0',
     templateUrl: 'org-tree-selector.component.html',
     styleUrls: ['org-tree-selector.component.scss'],
     standalone: true,
@@ -45,38 +49,44 @@ import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
         CommonModule,
         FormsModule,
         AngularSvgIconModule,
-        LetDirective,
         TranslateModule,
         NxSearchHighlightComponent,
-        NxTooltipV2Directive,
     ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxOrgTreeSelectorComponent),
+            useExisting: forwardRef(() => NxOrgTreeSelectorV0Component),
             multi: true,
         },
         {
             provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => NxOrgTreeSelectorComponent),
+            useExisting: forwardRef(() => NxOrgTreeSelectorV0Component),
             multi: true,
         },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validator, OnInit {
+export class NxOrgTreeSelectorV0Component implements ControlValueAccessor, Validator, OnInit {
     icons = icons;
 
-    @ViewChild('orgTreeSearch') private orgTreeSearch: ElementRef<HTMLInputElement>;
-    @ViewChild('orgTreeList') private orgTreeList: ElementRef<HTMLUListElement>;
+    @ViewChild('orgTree') private orgTreeRef: ElementRef<HTMLUListElement>;
 
-    organization = input.required<Organization>();
-    groups = input.required<GroupItem[]>();
-    statuses = input<OrgTreeStatusMap>();
+    @Input({ required: true }) organization: Organization;
+    @Input({ required: true }) groups: GroupItem[];
+    /** **This is required for form validation to work!!** */
+    @Input() model?: NgModel;
+    statuses = input<OrgTreeStatuses>();
+    hideStatusMessages = input(false, { transform: booleanAttribute });
+    /** Minimum lines of space for the messages container to avoid height pop
+     *
+     * - If the tallest message is used, there might be empty space for shorter ones
+     * - If the shortest messages is used, there might be some height pop for taller ones
+     */
+    messagesNumLines = input<number>(1);
 
     selected: string;
 
-    private flatGroups: OrgTreeItem[] = [];
+    private flatGroups: TreeItem[] = [];
     private groupInfoMap = new Map<
         string,
         { name: string; parent: string | null; children: string[] }
@@ -87,40 +97,38 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     folderSearch: string = '';
     searchRegex: RegExp | null = null;
-    folderSearchResults: OrgTreeItem[];
+    folderSearchResults: TreeItem[];
 
     highlightIndex: number = -1;
     private lastVisibleIndex: number | null = null;
 
-    /* Display for only one folder at a time */
-    tooltipTarget$ = new BehaviorSubject<string | null>(null);
-    protected _tooltipTimeout$ = this.tooltipTarget$
-        .pipe(
-            takeUntilDestroyed(),
-            filter<string>(id => id !== null),
-            switchMap(id =>
-                this.statuses()?.get(id)?.status === 'disable'
-                    ? timer(3000).pipe(takeUntil(this.tooltipTarget$.pipe(filter(v => v === null))))
-                    : NEVER,
-            ),
-        )
-        .subscribe(() => {
-            this.closeTooltip();
-        });
-
-    openTooltip(id: string): void {
-        this.tooltipTarget$.next(id);
-    }
-
-    closeTooltip(id?: string): void {
-        if (!id || this.tooltipTarget$.value === id) {
-            this.tooltipTarget$.next(null);
+    private form?: NgForm;
+    constructor() {
+        try {
+            this.form = inject(NgForm);
+        } catch (e) {
+            if (e.name !== 'NullInjectorError') {
+                throw e;
+            }
         }
     }
 
+    _statusEffect = effect(() => {
+        const statuses = this.statuses();
+        if (this.model && statuses) {
+            const status = statuses.get(this.selected);
+            if (status && status.type === 'error') {
+                this.model.control.setErrors({ invalid: true });
+            } else {
+                this.model.control.setErrors(null);
+            }
+        }
+    });
+
     validate(control: FormControl<string>): ValidationErrors | null {
-        if (!control.value) {
-            return { required: true };
+        const status = this.statuses()?.get(control.value);
+        if (status && status.type === 'error') {
+            return { invalid: true };
         }
 
         return null;
@@ -129,12 +137,14 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     initialHighlightSet = false;
     writeValue(value: string): void {
         if (value !== null && !this.initialHighlightSet) {
-            if (value !== this.organization().id) {
+            if (value !== this.organization.id) {
                 this.highlightIndex = this.flatGroups.findIndex(g => g.id === value);
             }
             this.initialHighlightSet = true;
         }
         this.selected = value;
+        this.onChange(value);
+        this.onTouched();
     }
 
     private onChange = (_: string): void => {};
@@ -147,7 +157,11 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     ngOnInit(): void {
-        this.groups().forEach(group => {
+        if (this.form && !this.model && !environment.production) {
+            console.warn('Form detected, but model has not been provided for validation');
+        }
+
+        this.groups.forEach(group => {
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
         });
@@ -174,19 +188,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     selectFolder(id: string, index: number = this.highlightIndex): void {
-        if (this.selected === id) {
-            return;
-        }
-
-        if (this.statuses()?.get(id)?.status === 'disable') {
-            this.openTooltip(id);
-            return;
-        } else {
-            this.closeTooltip();
-        }
-
         this.writeValue(id);
-        this.onChange(id);
         if (index !== this.highlightIndex) {
             this.highlightIndex = index;
         }
@@ -194,7 +196,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     selectHighlighted(): void {
         if (this.highlightIndex === -1) {
-            this.selectFolder(this.organization().id);
+            this.selectFolder(this.organization.id);
         } else {
             this.selectFolder(this.folderSearchResults[this.highlightIndex].id);
         }
@@ -203,12 +205,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     onFolderSearchEnter(event: Event): void {
         event.preventDefault();
         this.selectHighlighted();
-    }
-
-    focus(): void {
-        if (document.activeElement !== this.orgTreeSearch.nativeElement) {
-            this.orgTreeSearch.nativeElement.focus();
-        }
     }
 
     private updateChildVisibility(groupId: string, newState: boolean): void {
@@ -233,10 +229,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         }
 
         const highlightedId = this.folderSearchResults[this.highlightIndex].id;
-        if (!this.groupInfoMap.get(highlightedId)!.children.length) {
-            return;
-        }
-
         if (this.openFolders.has(highlightedId) === newState) {
             return;
         }
@@ -250,7 +242,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     private updateFolderState(groupId: string, newState: boolean): void {
-        this.closeTooltip();
         if (newState) {
             this.openFolders.add(groupId);
         } else {
@@ -273,7 +264,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     up(): void {
-        this.closeTooltip();
         if (this.highlightIndex === -1) {
             if (this.folderSearchResults.length) {
                 this.highlightLast();
@@ -290,7 +280,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     down(): void {
-        this.closeTooltip();
         if (this.highlightIndex === -1) {
             if (this.folderSearchResults.length) {
                 this.highlightFolderIndex(0);
@@ -308,11 +297,11 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     private highlightOrgItem(): void {
         this.highlightIndex = -1;
-        this.orgTreeList.nativeElement.scrollTop = 0;
+        this.orgTreeRef.nativeElement.scrollTop = 0;
     }
 
     private highlightFolderIndex(index: number): void {
-        const folder = this.orgTreeList.nativeElement.querySelector<HTMLLIElement>(
+        const folder = this.orgTreeRef.nativeElement.querySelector<HTMLLIElement>(
             '.org-tree__item--' + index.toString(),
         )!;
 
@@ -320,16 +309,16 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
         if (index === this.lastVisibleIndex) {
             // Bottom out if going to last element
-            this.orgTreeList.nativeElement.scrollTop = this.orgTreeList.nativeElement.scrollHeight;
+            this.orgTreeRef.nativeElement.scrollTop = this.orgTreeRef.nativeElement.scrollHeight;
         } else {
-            scrollItemIntoView(folder, this.orgTreeList.nativeElement);
+            scrollItemIntoView(folder, this.orgTreeRef.nativeElement);
         }
     }
 
     private highlightLast(): void {
         if (this.lastVisibleIndex !== null) {
             this.highlightIndex = this.lastVisibleIndex;
-            this.orgTreeList.nativeElement.scrollTop = this.orgTreeList.nativeElement.scrollHeight;
+            this.orgTreeRef.nativeElement.scrollTop = this.orgTreeRef.nativeElement.scrollHeight;
         } else {
             this.highlightOrgItem();
         }
@@ -337,7 +326,6 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     @throttle()
     searchGroups(search: string): void {
-        this.closeTooltip();
         this.highlightIndex = -1;
         if (!search.trim()) {
             this.folderSearchResults = this.flatGroups;
@@ -346,13 +334,17 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
             return;
         }
 
-        const searches = search.split(' ').filter(Boolean);
+        const searches = search
+            .trim()
+            .split('/')
+            .map(s => s.trim())
+            .filter(Boolean);
         this.searchRegex = new RegExp(
             `(${searches.map(s => `(?:${escapeRegExp(s)})`).join('|')})`,
             'i',
         );
 
-        const results: OrgTreeItem[] = [];
+        const results: TreeItem[] = [];
         let lastAddedIndex = -1;
         for (let i = 0; i < this.flatGroups.length; i++) {
             const group = this.flatGroups[i];
@@ -400,9 +392,5 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
         this.folderSearchResults = results;
         this.updateLastVisible();
-    }
-
-    onBlur(): void {
-        this.onTouched();
     }
 }
