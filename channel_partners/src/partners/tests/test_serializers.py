@@ -348,6 +348,8 @@ class TestChannelPartnerSerializer:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles_name
                     assert data['ownRolesIds'] == user.roles
+                    assert data['created']
+                    assert data['lastModified']
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRolesIds'] == []
@@ -388,6 +390,7 @@ class TestOrganizationSerializer:
             "id",
             "state",
             "created",
+            "lastModified",
             "effectiveState",
             "channelPartner",
             "channelPartnerAccessLevel",
@@ -703,11 +706,12 @@ class TestOrganizationUserSerializer:
             ).distinct().get(email=group_user.user.email))
         serializer = OrganizationUserSerializer(instance=user)
         assert serializer.data['email'] == group_user.user.email
-        assert serializer.data['groupRoles'][0] == {
-            'groupId': str(group_user.system_group_id), 'roles': [self.adm_name],
-            'rolesIds': [str(OrganizationRoles.ADMINISTRATOR)]
-        }
-        assert serializer.data['roles'] == []
+        assert serializer.data['groupRoles'][0]['roles'] == [self.adm_name]
+        assert serializer.data['groupRoles'][0]['rolesIds'] == [str(OrganizationRoles.ADMINISTRATOR)]
+        assert serializer.data['groupRoles'][0]['groupId'] == str(group_user.system_group_id)
+        assert serializer.data['groupRoles'][0]['created']
+        assert serializer.data['groupRoles'][0]['lastModified']
+
         httpx_mock.reset(False)
         notification_send_url = mock_post_notification()
         user = group_user.user
@@ -813,7 +817,8 @@ class TestSystemGroupUserSerializer:
         assert serializer.data['hasAccessTo']['id'] == str(self.group.id)
         assert (serializer.data['hasAccessTo']['groupsPath'] ==
                 [str(group_id) for group_id in self.group.groups_path])
-
+        assert serializer.data['created']
+        assert serializer.data['lastModified']
         serializer = SystemGroupUserSerializer(instance=self.sub_group_admin)
         assert serializer.data
         assert serializer.data['email'] == self.sub_group_admin.user.email
