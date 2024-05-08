@@ -1286,7 +1286,8 @@
             "settings": "Settings",
             "partners": "Partners",
             "systems": "Systems",
-            "users": "Users"
+            "users": "Users",
+            "support": "Support"
         },
         "usersTableHeaders": {
             "email": "Email",

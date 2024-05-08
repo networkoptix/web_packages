@@ -24,6 +24,7 @@ import * as CPActions from '@common/store/channel-partners/channel-partners.acti
 import {
     selectCurrentOrganization,
     selectCurrentPartnerId,
+    selectCurrentPartnerInfo,
     selectCurrentPartnerOrgs,
     selectShowPermissionWarning,
     selectRootOrganizations,
@@ -91,11 +92,19 @@ export class NxOrganizationsComponent implements OnInit {
     icons = icons;
     State = State;
     permissionsStore = inject(PermissionsStore);
+    currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     showPermissionWarning$$ = this.store.selectSignal(selectShowPermissionWarning);
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
+
+    hasSupportInfo$$ = computed(() => {
+        return Object.values(this.currPartnerSupportInfo$$() || []).some(
+            fieldset => fieldset?.length,
+        );
+    });
+
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
         if (this.permissionsStore.canViewSystems$$()) {
@@ -123,6 +132,13 @@ export class NxOrganizationsComponent implements OnInit {
                     route: 'settings',
                 });
             }
+        }
+
+        if (this.permissionsStore.canViewPartnerSupportUI$$() && this.hasSupportInfo$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.support,
+                route: 'support',
+            });
         }
         return tabs;
     });
