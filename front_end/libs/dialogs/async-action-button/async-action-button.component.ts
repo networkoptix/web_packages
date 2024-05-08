@@ -3,7 +3,6 @@ import {
     Component,
     DestroyRef,
     EventEmitter,
-    HostListener,
     Input,
     OnInit,
     Optional,
@@ -16,7 +15,7 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgForm } from '@angular/forms';
+import { AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { defer, distinctUntilChanged, take } from 'rxjs';
 
@@ -30,13 +29,13 @@ import { AsyncAction } from './create-async-action';
 
 /** A button to handle asynchronous actions.
  *
- * If within a form, the button will match the status of the form after all controls
- * have been touched. This is because if button was always invalid for invalid forms,
- * this would create a blind spot if the last input was invalid but untouched since
- * the error messages for an input are only displayed after if touched so there
- * would be no obvious next step.
+ * If within a form, the button will match the status of the form after the first submit.
+ * This is because if button was always invalid for invalid forms, this would create
+ * a blind spot if the last input was invalid and focused since error messages are only displayed
+ * after control touched/form submit so there would be no obvious next step.
  *
- * When executing the action, the button enters a loading state and can be focused, but not fired.
+ * When executing the action, form controls are disabled
+ * and the button enters a loading state which can be focused, but not fired.
  *
  * Similarly, when the button is in an invalid state it can be focused but not fired.
  */
@@ -50,8 +49,6 @@ import { AsyncAction } from './create-async-action';
 export class NxAsyncActionButtonComponent<T> implements OnInit {
     action = input.required<AsyncAction<T>>();
     buttonColor = input<'default' | 'primary' | 'danger'>('primary');
-    /** Fuction/element for focusing on error/initial reject */
-    onErrFocus = input<(() => void) | { focus: () => void }>();
 
     /* Replace the signal with the input if you need to manually disable the button.
     Disabled state is different from invalid state!! Use the manualInvalid input for
@@ -59,17 +56,15 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
     // disabled = input<boolean>(false);
     disabled = signal(false);
 
-    /* Manual escape hatches for disabling default validation behaviors */
+    /* Manual escape hatches for disabling default behaviors */
     /** Disable all form functionality */
-    disableFormValidation = input<boolean, unknown>(false, { transform: booleanAttribute });
-    /** Validate status before form controls have been touched/button has been clicked */
-    noInvalidUntouchedClick = input<boolean, unknown>(false, { transform: booleanAttribute });
-    /** Manual control for invalid state */
+    ignoreForm = input<boolean, unknown>(false, { transform: booleanAttribute });
+    /** Validate status before first form submit/button click */
+    noInvalidFirstSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
+    /** Manual control for invalid state. Can be used alongside form state */
     manualInvalid = input<boolean>(false, { alias: 'invalid' });
     /** If the button has been clicked */
     private clicked = signal(false);
-    /** When the first click is rejected */
-    @Output() initialReject = new EventEmitter<void>();
 
     @Input() set busy(state: boolean) {
         this.busy$$.set(state);
@@ -84,45 +79,42 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
         { allowSignalWrites: true },
     );
 
+    /** Emits on invalid submit */
+    @Output() reject = new EventEmitter<void>();
+
     CONFIG = nxConfig;
 
     private formInvalid = signal(false);
-    private allFormControlsTouched = signal(false);
-
-    private formTouched = computed<boolean>(() => this.allFormControlsTouched() || this.clicked());
     private invalid = computed<boolean>(() => this.formInvalid() || this.manualInvalid());
+    private formSubmitted = signal(false);
+    private submitted = computed<boolean>(() => this.formSubmitted() || this.clicked());
 
     buttonInvalid$$ = computed(() => {
-        const [formTouched, noInvalidUntouchedClick, invalid] = [
-            this.formTouched(),
-            this.noInvalidUntouchedClick(),
+        const [submitted, noInvalidFirstSubmit, invalid] = [
+            this.submitted(),
+            this.noInvalidFirstSubmit(),
             this.invalid(),
         ];
-        return (formTouched || noInvalidUntouchedClick) && invalid;
+        return (submitted || noInvalidFirstSubmit) && invalid;
     });
 
     buttonClass = computed<string>(() => `btn-${this.buttonColor()}`);
 
-    // The closest thing I could come up with for reactive touched updates
-    // https://hidde.blog/console-logging-the-focused-element-as-it-changes/
-    @HostListener('document:focusin', ['$event'])
-    onFocusIn(): void {
-        const controls = Object.values(this.form?.controls ?? {});
-        if (controls.length) {
-            this.allFormControlsTouched.set(controls.every(c => c.touched));
-        }
-    }
+    private form: NgForm | FormGroupDirective | null;
 
     private destroyRef = inject(DestroyRef);
     constructor(
         private translate: TranslateService,
         private toastService: NxToastService,
-        @Optional() private form?: NgForm,
-    ) {}
+        @Optional() form: NgForm | null,
+        @Optional() formGroup: FormGroupDirective | null,
+    ) {
+        this.form = form || formGroup;
+    }
 
     ngOnInit(): void {
-        if (this.disableFormValidation()) {
-            this.form = undefined;
+        if (this.ignoreForm()) {
+            this.form = null;
         } else if (this.form?.statusChanges) {
             this.formInvalid.set(!!this.form.invalid);
             this.form.statusChanges
@@ -130,6 +122,9 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
                 .subscribe(status => {
                     this.formInvalid.set(status === 'INVALID');
                 });
+            this.form.ngSubmit.pipe(take(1)).subscribe(() => {
+                this.formSubmitted.set(true);
+            });
         }
     }
 
@@ -141,40 +136,27 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
         );
     };
 
-    private errFocus(): void {
-        const onErrFocus = this.onErrFocus();
-        if (!onErrFocus) {
-            return;
-        }
-
-        if (typeof onErrFocus === 'function') {
-            onErrFocus();
-        } else {
-            onErrFocus.focus();
-        }
-    }
-
     execute(): void {
         if (this.busy$$()) {
             return;
         }
 
-        if (this.formInvalid() || this.manualInvalid()) {
-            if (!this.formTouched()) {
-                if (!this.noInvalidUntouchedClick()) {
-                    this.form?.control.markAllAsTouched();
-                    if (this.form) {
-                        this.allFormControlsTouched.set(true);
-                    }
-                    this.initialReject.emit();
-                    this.errFocus();
-                }
+        if (this.invalid()) {
+            if (!this.submitted()) {
                 this.clicked.set(true);
             }
+            this.reject.emit();
             return;
         }
         this.clicked.set(true);
 
+        const reEnable: AbstractControl[] = [];
+        Object.values(this.form?.form.controls || {}).forEach(control => {
+            if (!control.disabled) {
+                control.disable();
+                reEnable.push(control);
+            }
+        });
         this.busy$$.set(true);
         const { action, success, error = this.defaultErrorHandle } = this.action();
         const action$ = typeof action === 'function' ? defer(action) : action;
@@ -183,11 +165,12 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
             next: res => {
                 success(res);
                 this.busy$$.set(false);
+                reEnable.forEach(c => c.enable());
             },
             error: err => {
                 error(err);
                 this.busy$$.set(false);
-                this.errFocus();
+                reEnable.forEach(c => c.enable());
             },
         });
     }

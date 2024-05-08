@@ -1,9 +1,5 @@
 <div class="nx-modal__header">
-    <span
-        class="nx-modal__header-title"
-        translate
-        >Modal Title</span
-    >
+    <span class="nx-modal__header-title">Modal Title</span>
     @if (closable) {
         <button
             type="button"
@@ -22,14 +18,12 @@
         <button
             type="button"
             class="btn btn-default"
-            translate
         >
             Cancel
         </button>
         <nx-async-action-button
             [action]="asyncAction"
             [(busy)]="busy"
-            translate
         >
             Action
         </nx-async-action-button>

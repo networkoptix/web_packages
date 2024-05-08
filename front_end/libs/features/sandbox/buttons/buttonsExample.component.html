@@ -55,7 +55,7 @@
         <nx-async-action-button
             [action]="endlessAction"
             [invalid]="true"
-            noInvalidUntouchedClick
+            noInvalidFirstSubmit
             >Invalid</nx-async-action-button
         >
         <nx-async-action-button
@@ -79,16 +79,13 @@
     </div>
     <div class="horizontal-flex">
         <form
+            #fourDigitForm="ngForm"
             class="gray-border-box"
             style="width: 300px"
         >
-            <h4>Form validation after controls touched</h4>
-            <label
-                class="mr-2"
-                for="fourDigits"
-                >Enter a 4 digit number</label
-            >
+            <h4>Form validation after form submit</h4>
             <input
+                #fourDigitsInput
                 #fourDigitsModel="ngModel"
                 [(ngModel)]="fourDigits"
                 name="fourDigits"
@@ -96,14 +93,20 @@
                 type="text"
                 pattern="[0-9]{4}"
                 required
-                [disabled]="fourDigitsBusy"
+                placeholder="Enter a 4 digit number"
+            />
+            <input
+                [ngModel]="'12345'"
+                name="alreadyDisabled"
+                type="text"
+                disabled
             />
             <div>
                 <span>
-                    @if (fourDigitsModel.untouched) {
-                        Untouched
+                    @if (!fourDigitForm.submitted) {
+                        Unsubmitted
                     } @else {
-                        Touched
+                        Submitted
                     }
                 </span>
                 |
@@ -118,51 +121,7 @@
             <nx-async-action-button
                 [action]="fourDigitsAction"
                 [(busy)]="fourDigitsBusy"
-                [onErrFocus]="fourDigitsInput"
-                >Action</nx-async-action-button
-            >
-        </form>
-        <form
-            class="gray-border-box"
-            style="width: 250px"
-        >
-            <h4>Form validation always</h4>
-            <label
-                class="mr-2"
-                for="fiveDigits"
-                >Enter a 5 digit number</label
-            >
-            <input
-                #fiveDigitsModel="ngModel"
-                [(ngModel)]="fiveDigits"
-                name="fiveDigits"
-                class="five-digits-input"
-                type="text"
-                pattern="[0-9]{5}"
-                required
-                [disabled]="fiveDigitsBusy"
-            />
-            <div>
-                <span>
-                    @if (fiveDigitsModel.untouched) {
-                        Untouched
-                    } @else {
-                        Touched
-                    }
-                </span>
-                |
-                <span>
-                    @if (fiveDigitsModel.valid) {
-                        Valid
-                    } @else if (fiveDigitsModel.errors) {
-                        Errors: {{ fiveDigitsModel.errors | json }}
-                    }
-                </span>
-            </div>
-            <nx-async-action-button
-                [action]="fiveDigitsAction"
-                [(busy)]="fiveDigitsBusy"
-                noInvalidUntouchedClick
+                (reject)="fourDigitsInput.focus()"
                 >Action</nx-async-action-button
             >
         </form>

@@ -41,17 +41,10 @@ export class NxButtonsExampleComponent implements AfterViewInit {
     });
 
     fourDigits = '';
-    fourDigitsInput: HTMLInputElement;
     fourDigitsBusy = false;
     fourDigitsAction = createAsyncAction({
         action: () => timer(1000),
         success: () => this.toastService.notify(this.fourDigits, ToastType.Info),
-    });
-    fiveDigits = '';
-    fiveDigitsBusy = false;
-    fiveDigitsAction = createAsyncAction({
-        action: () => timer(1000),
-        success: () => this.toastService.notify(this.fiveDigits, ToastType.Info),
     });
 
     onClick(): void {
@@ -62,8 +55,5 @@ export class NxButtonsExampleComponent implements AfterViewInit {
         this.hostElement
             .querySelectorAll<HTMLButtonElement>('.endless-action-button button')
             .forEach(elem => elem.click());
-
-        this.fourDigitsInput =
-            this.hostElement.querySelector<HTMLInputElement>('.four-digits-input')!;
     }
 }
