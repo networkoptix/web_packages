@@ -228,6 +228,17 @@
   "66777": {
     "name": "cryptography",
     "note": "CVE-2023-6237 addresses a vulnerability in RSA public key verification where checking a large, incorrect RSA key with EVP_PKEY_public_check() could take an excessive amount of time. This is due to no size limit on the RSA public key and an unnecessarily high number of Miller-Rabin rounds for modulus non-primality checks. The fix sets a maximum key size of 16384 bits and reduces Miller-Rabin rounds to 5, enhancing security and performance by preventing the RSA_R_MODULUS_TOO_LARGE error."
-
+  },
+  "66969": {
+    "name": "jwcrypto",
+    "note": "JWCrypto implements JWK, JWS, and JWE specifications using python-cryptography. Prior to version 1.5.6, an attacker can cause a denial of service attack by passing in a malicious JWE Token with a high compression ratio. When the server processes this token, it will consume a lot of memory and processing time. Version 1.5.6 fixes this vulnerability by limiting the maximum token length. See CVE-2024-28102."
+  },
+  "67136": {
+    "name": "pillow",
+    "note": "Pillow 10.3.0 introduces a security update addressing CVE-2024-28219 by replacing certain functions with strncpy to prevent buffer overflow issues. CVE-2024-28219 For more information, please visit https://data.safetycli.com/v/67136/f17"
+  },
+  "67137": {
+    "name": "pillow",
+    "note": "pillow 9.1.1 addresses the CVE-2022-30595: libImaging/TgaRleDecode.c in Pillow 9.1.0 has a heap buffer overflow in the processing of invalid TGA image files. CVE-2022-30595 For more information, please visit https://data.safetycli.com/v/67137/f17"
   }
 }

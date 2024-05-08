@@ -196,6 +196,7 @@ const FeatureFlagKeys = [
     'channelPartnersCreatePartnerUI',
     'channelPartnersChangeServicesUI',
     'channelPartnersReportsUI',
+    'channelPartnersSupportUI',
     'channelPartnersUpdatedUserTable',
     // Layouts Feature
     'layouts',

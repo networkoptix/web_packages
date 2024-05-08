@@ -73,6 +73,7 @@ export const PermissionsStore = signalStore(
                 nxConfig.featureFlags.channelPartnersReportsUI &&
                 partnerPermissions().view_service_reports,
         ),
+        canViewPartnerSupportUI$$: computed(() => nxConfig.featureFlags.channelPartnersSupportUI),
         canViewPartnerSettings$$: computed(() => partnerPermissions().configure_channel_partner),
         canViewSubChannels$$: computed(
             () =>

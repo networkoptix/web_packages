@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -57,6 +57,11 @@ import { icons } from '@static-variables';
     ],
 })
 export class NxChannelPartnerInformationComponent {
+    // eslint-disable-next-line nx/signal-naming-convention
+    readonlyInfo = input<boolean>(false, {
+        alias: 'readonlyInfo',
+    });
+
     protected readonly CPInfoType = CPInfoType;
 
     icons = icons;
@@ -273,7 +278,6 @@ export class NxChannelPartnerInformationComponent {
         this.hasChanges = true;
         this.hasNoItems = false;
         this.allValid = false;
-        this.hasNoItems = false;
         this.validForms[type] = false;
     }
 

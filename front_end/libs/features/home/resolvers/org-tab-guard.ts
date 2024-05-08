@@ -42,6 +42,8 @@ export const orgTabGuard: CanActivateFn = (
                     return true;
                 }
                 break;
+            case 'support':
+                return true;
             case 'users':
             case 'users/:email':
             case 'group/:groupId/users':

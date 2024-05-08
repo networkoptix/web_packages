@@ -24,7 +24,7 @@
             [update]="editMode"
         >
             <header>
-                @if (!(hasNoItems || editMode)) {
+                @if (!(hasNoItems || editMode) && !readonlyInfo()) {
                     <h4
                         class="float-left"
                         translate
