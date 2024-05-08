@@ -441,7 +441,7 @@ class TestCloudSystemViewSet:
                               service_usage_factory, cloud_storage_usage_factory, mock_cdb_token_introspect):
         quantity = 10
         usage_storage = 9
-        usage_recording = 330
+        usage_recording = int(ServiceUsage.get_usage_from_quantity(ChannelPartnerService.LOCAL_RECORDING, 1.1))
         now = timezone.now()
         root = channel_partner_factory(parent_channel_partner=None)
         child = channel_partner_factory(parent_channel_partner=root)
@@ -485,7 +485,7 @@ class TestCloudSystemViewSet:
         assert response.status_code == 200
         assert response.data['services']
         assert response.data['services'][str(local_recording_service.id)]
-        # 660 / (5*60) = 2.2 -> rounded to 3
+        # Usage to quantity = 2 * 1.1 -> rounded to 3
         assert response.data['services'][str(local_recording_service.id)]['used'] == 3
         assert response.data['services'][str(local_recording_service.id)]['quantity'] == quantity
         # storage usage metric is unchanged
