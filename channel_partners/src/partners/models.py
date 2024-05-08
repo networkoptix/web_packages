@@ -2250,11 +2250,10 @@ class ChannelPartnerServiceRecord(models.Model):
 
 class ServiceUsage(models.Model):
     # Seconds a license is allowed to be used before it must check in
-    # CHECK_PERIOD = 24 * 60 * 60  # 1 day
     STATUS_OK = "ok"
     STATUS_OVER_USE = "overUse"
     UNALLOCATED_SERVICE = "00000000-0000-0000-0000-000000000000"
-    CHECK_PERIOD = 5 * 60  # 5 minutes
+    CHECK_PERIOD = 86400 # 1 day
 
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE)
     cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.CASCADE, related_name='service_usages')

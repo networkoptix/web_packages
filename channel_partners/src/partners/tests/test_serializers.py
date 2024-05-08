@@ -1321,30 +1321,34 @@ class TestSystemUsageReportSerializer:
         self.organization = organization_factory(channel_partner=self.cp)
         self.system = system_factory(organization=self.organization)
         self.service_quantity = 10
+        self.fromTs = datetime.datetime(year=2024, month=1, day=10, hour=0, tzinfo=pytz.UTC)
+        self.toTs = self.fromTs + timedelta(days=1)
         self.local_recording_service = cp_service_factory(
             channel_partner=self.cp, service_type=ChannelPartnerService.LOCAL_RECORDING)
         self.local_recording_service_record = service_record_factory(self.local_recording_service,
                                                                      cloud_system=self.system,
                                                                      organization=self.organization,
-                                                                     quantity=self.service_quantity)
+                                                                     quantity=self.service_quantity,
+                                                                     created_ts=self.fromTs - timedelta(days=1))
         self.cloud_storage_service = cp_service_factory(
             channel_partner=self.cp, service_type=ChannelPartnerService.CLOUD_STORAGE)
         self.cloud_storage_service_record = service_record_factory(self.cloud_storage_service,
                                                                    cloud_system=self.system,
                                                                    organization=self.organization,
-                                                                   quantity=self.service_quantity)
+                                                                   quantity=self.service_quantity,
+                                                                   created_ts=self.fromTs - timedelta(days=1))
         self.analytics_service = cp_service_factory(
             channel_partner=self.cp, service_type=ChannelPartnerService.ANALYTICS)
         self.analytics_service_record = service_record_factory(self.analytics_service,
                                                                cloud_system=self.system,
                                                                organization=self.organization,
-                                                               quantity=self.service_quantity)
+                                                               quantity=self.service_quantity,
+                                                               created_ts=self.fromTs - timedelta(days=1))
         self.services = [
             self.local_recording_service,
             self.analytics_service
         ]
-        self.fromTs = datetime.datetime(year=2024, month=1, day=10, hour=10, tzinfo=pytz.UTC)
-        self.toTs = self.fromTs + timedelta(minutes=5)
+
         self.usage_data_base = {
             "from": self.fromTs.isoformat(),
             "to": self.toTs.isoformat(),
