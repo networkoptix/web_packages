@@ -70,7 +70,7 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         }
         return this.orgUserRecords$$()?.find(user =>
             ['Organization Administrator', 'Administrator'].includes(user.roles![0]),
-        ).email;
+        )?.email;
     });
 
     checkAllContainer = new BehaviorSubject<undefined | NxCheckAllContainerDirective>(undefined);
@@ -106,6 +106,14 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         return displayRole;
     }
 
+    canDeleteUser(user: UserRecord): boolean {
+        if (user.isOrgUser) {
+            const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
+            return !this.inGroup$$() && !userIsOnlyAdmin;
+        }
+        return true;
+    }
+
     canUpdateUserRole(user: UserRecord): boolean {
         if (!this.canManageUsers$$()) {
             return false;
@@ -124,9 +132,9 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         this.orgUsersStore.updateUser(this.currentOrg$$().id, folder, user.email, roleId);
     }
 
-    newUserDialog(): void {
+    newUserDialog = (): void => {
         this.dialogService.addOrgUserV2({ organization: this.currentOrg$$() });
-    }
+    };
 
     deleteUser(user: UserRecord): void {
         this.dialogService
