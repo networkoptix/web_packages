@@ -443,8 +443,10 @@ jenkins-build-webadmin:
       set -ex
       if [[ "$CI_COMMIT_REF_PROTECTED" == true ]]; then
         PUBLISH=ON
+        export REFSPEC="$CI_COMMIT_SHA"
       else
         PUBLISH=OFF
+        export REFSPEC="+refs/merge-requests/${CI_MERGE_REQUEST_IID}/head:refs/remotes/origin/merge-requests/${CI_MERGE_REQUEST_IID}"
       fi
     - mkdir logs
     - echo "Running webadmin build"
@@ -452,7 +454,8 @@ jenkins-build-webadmin:
       "PUBLISH=$PUBLISH"
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_REFSPEC=$$REFSPEC"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
@@ -468,12 +471,12 @@ jenkins-build-frontend:
       "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
+      "REVISION=$CI_COMMIT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
     - wait
 
 create-vms-mr:
