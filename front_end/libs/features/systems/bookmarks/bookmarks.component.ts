@@ -207,8 +207,9 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     buildSearch(): Pick<BookmarksParams, 'text' | 'startTimeMs' | 'endTimeMs'> {
-        const search = this.queryParams.search || '';
-        const tags = this.queryParams.tags || '';
+        const useAdvancedSearch = this.systemService.getCurrentSystem().version >= 6.0;
+        const search = this.queryParams.search?.toLocaleLowerCase() || '';
+        const tags = this.queryParams.tags?.toLocaleLowerCase() || '';
         let startDatetime = 0;
         let endDatetime = 0;
         if (this.queryParams.startDate) {
@@ -227,11 +228,18 @@ export class NxBookmarksComponent implements OnInit {
         const searchParams: ReturnType<NxBookmarksComponent['buildSearch']> = {};
 
         if (search || tags) {
-            const tagArray = tags
-                .split(',')
-                .map(tag => `"${tag}"`)
-                .join(' ');
-            searchParams.text = tags && search ? `"${search}" ${tagArray}` : search || tagArray;
+            // In 6.0 and above we can use advanced search: search_input AND (tag1 OR tag2)
+            if (useAdvancedSearch) {
+                const tagString = tags.split(',').join(' OR ');
+                searchParams.text =
+                    tags && search ? `${search} AND (${tagString})` : search || tagString;
+            } else {
+                const tagArray = tags
+                    .split(',')
+                    .map(tag => `"${tag}"`)
+                    .join(' ');
+                searchParams.text = tags && search ? `"${search}" ${tagArray}` : search || tagArray;
+            }
         }
         if (startDatetime) {
             searchParams.startTimeMs = startDatetime;
