@@ -204,6 +204,7 @@ export abstract class BaseAccount {
 
     redirectAfterLogout(doNotRedirect, skipReload): void {
         if (!doNotRedirect) {
+            this.store.dispatch(accountActions.setCurrentUser({ currentUser: undefined }));
             this.router.navigate([redirect.unauthorised]).finally(() => {
                 setTimeout(() => {
                     this.account = undefined;
