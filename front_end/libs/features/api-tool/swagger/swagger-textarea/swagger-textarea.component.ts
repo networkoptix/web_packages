@@ -171,14 +171,21 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    removeSpacesNotInQuotes = (textContent: string): string => {
-        return textContent.replace(/([^"]+)|("[^"]+")/g, function (_, notInQuotes, wholeString) {
-            if (notInQuotes) {
-                return notInQuotes.replace(/\s/g, '');
-            } else {
-                return wholeString;
+    removeSpacesNotInQuotes = (textContent: string) => {
+        let inQuotes = false;
+        let result = '';
+
+        for (let i = 0; i < textContent.length; i++) {
+            if (textContent[i] === '"' && (i === 0 || textContent[i - 1] !== '\\')) {
+                inQuotes = !inQuotes;
             }
-        });
+            if (!inQuotes && textContent[i] === ' ') {
+                continue;
+            }
+            result += textContent[i];
+        }
+
+        return result;
     };
 
     ngOnDestroy(): void {
