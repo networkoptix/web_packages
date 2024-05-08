@@ -343,4 +343,15 @@ class TestChannelPartnerUserViewSet:
             response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
         assert response.status_code == 200
 
-
+    def test_retrieve(self, mock_auth_with_user, arf, cp_user_factory):
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'retrieve'})
+        manager = cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.MANAGER)
+        request = arf.get('/')
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 200
+        assert response.data['email'] == manager.user.email
+        assert response.data['rolesIds'] == [str(ChannelPartnerRoles.MANAGER)]
+        assert response.data['created']
+        assert response.data['lastModified']

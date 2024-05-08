@@ -770,6 +770,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     attributes = models.JSONField(blank=True, default=dict)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
@@ -1197,6 +1198,7 @@ class ChannelPartnerToUser(models.Model):
     roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
     attributes = models.JSONField(blank=True, default=dict)
+    last_modified = models.DateTimeField(auto_now=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -1347,6 +1349,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      limit_choices_to={'id__in': OrganizationRoles.CPAL_ROLES},
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
     attributes = models.JSONField(default=dict, blank=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
@@ -1956,6 +1959,7 @@ class OrganizationToUser(models.Model):
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
     roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
+    last_modified = models.DateTimeField(auto_now=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
     membership_type = 'organization'

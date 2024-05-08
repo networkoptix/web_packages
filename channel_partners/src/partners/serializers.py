@@ -239,6 +239,7 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
     partnerCount = serializers.IntegerField(source='partner_count', read_only=True)
+    lastModified = serializers.DateTimeField(source='last_modified', read_only=True)
     organizationCount = serializers.IntegerField(source='organization_count', read_only=True)
 
     class Meta:
@@ -252,6 +253,7 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "attributes",
             "supportInformation",
             "created",
+            "lastModified",
             "ownPermissions",
             "ownRolesIds",
             "ownRoles",
@@ -358,6 +360,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     # cloudSystems = CloudSystemsField(source='*', read_only=True)
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    lastModified = serializers.DateTimeField(source='last_modified', read_only=True)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', read_only=True)
     channelPartnerAccessLevel = serializers.ChoiceField(
@@ -378,6 +381,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "id",
             "state",
             "created",
+            "lastModified",
             "effectiveState",
             "channelPartner",
             "channelPartnerAccessLevel",
@@ -537,6 +541,7 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
     roleId = serializers.PrimaryKeyRelatedField(
         queryset=OrganizationRole.objects.all(), write_only=True, required=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    lastModified = serializers.DateTimeField(source='last_modified', read_only=True)
     title = serializers.CharField(required=False, default='', allow_blank=True)
     attributes = serializers.DictField(
         allow_empty=True, allow_null=True, required=False,
@@ -544,7 +549,18 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartnerToUser
-        fields = ['email', 'fullName', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId', 'attributes']
+        fields = [
+            'email',
+            'fullName',
+            'roles',
+            'role',
+            'title',
+            'created',
+            'lastModified',
+            'rolesIds',
+            'roleId',
+            'attributes'
+        ]
 
     def validate_email(self, value: str):
         user, created = CloudUser.objects.get_or_create(email=value)
@@ -654,6 +670,8 @@ class GroupRolesSerializer(serializers.Serializer):
     groupId = serializers.UUIDField(source='system_group_id')
     roles = serializers.ListField(source='roles_name', child=serializers.CharField())
     rolesIds = serializers.ListField(source='roles', child=serializers.UUIDField())
+    created = serializers.DateTimeField(source='created_ts')
+    lastModified = serializers.DateTimeField(source='last_modified')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -680,7 +698,17 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CloudUser
-        fields = ['email', 'fullName', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
+        fields = [
+            'email',
+            'fullName',
+            'roles',
+            'role',
+            'rolesIds',
+            'roleId',
+            'title',
+            'created',
+            'groupRoles'
+        ]
 
     def get_roles(self, obj: CloudUser) -> List[str]:
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
@@ -1740,12 +1768,16 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR),
         write_only=True, required=False)
     hasAccessTo = MembershipSerializer(source='has_access_to', read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
+    lastModified = serializers.DateTimeField(source='last_modified', read_only=True)
 
     class Meta:
         model = OrganizationToUser
         fields = [
             'email',
             'fullName',
+            'created',
+            'lastModified',
             'roles',
             'role',
             'roleId',
