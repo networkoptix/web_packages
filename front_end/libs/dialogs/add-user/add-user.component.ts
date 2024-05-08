@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostBinding, Inject, ViewChild } from '@angular/core';
+import { Component, HostBinding, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -100,16 +100,11 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         },
     });
 
-    onErrFocus = (): void => {
-        this.self.nativeElement.querySelector('input')?.focus();
-    };
-
     constructor(
         configService: NxConfigService,
         private toastService: NxToastService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
-        private self: ElementRef<HTMLElement>,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
