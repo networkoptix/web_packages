@@ -80,6 +80,13 @@ TRAFFIC_RELAY_DOMAIN = env.str('TRAFFIC_RELAY_DOMAIN')
 DEFAULT_HOST_NAME = get_default_host(INSTANCE_NAME, DOMAIN_NAME)
 APPEND_SLASH = env.bool('APPEND_SLASH', False)
 
+## AWS S3
+if BUILD or MIGRATING or IS_DJANGO_SHELL:
+    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET', '')
+else:
+    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET')
+AWS_S3_CUSTOM_DOMAIN = env.str('AWS_S3_CUSTOM_DOMAIN', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
+AWS_S3_REGION_NAME = env.str('AWS_REGION', 'us-east-1')
 ## Database
 DB_HOST = env.str('DB_HOST')
 DB_NAME = env.str('DB_NAME')
@@ -147,6 +154,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'storages',
     'django_extensions',
     'corsheaders',
     'accounts',
@@ -360,11 +368,12 @@ CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
 if not LOCAL_ENV:
     CELERY_BROKER_TRANSPORT_OPTIONS = {
         'queue_name_prefix': QUEUE_PREFIX,
-        'region': env.str('AWS_REGION', 'us-east-1')
+        'region': AWS_S3_REGION_NAME
     }
 
 CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_EXTENDED = True
 CELERY_WORKER_SEND_TASK_EVENTS = False
 # Allows worker to consume as many messages as it wants
 CELERY_WORKER_PREFETCH_MULTIPLIER = 0
@@ -395,3 +404,10 @@ JWK_CLIENT = get_jwk_client(DEFAULT_HOST_NAME, lifespan=JWK_LIFESPAN, init_keys=
 from channel_partners.logging.logging_signals import (
     bind_additional_request_metadata,
 )
+
+
+# AWS S3 Storage
+AWS_S3_OBJECT_PARAMETERS = {
+    'ContentDisposition': 'attachment',
+}
+AWS_S3_SIGNATURE_VERSION = 's3v4'

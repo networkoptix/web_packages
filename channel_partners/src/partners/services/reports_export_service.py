@@ -944,6 +944,12 @@ class ChannelPartnerReportGenerator:
         buf.seek(0)
         return buf
 
+    def stream_csv(self) -> BytesIO:
+        """
+        Stream the report in CSV format.
+        """
+        raise NotImplemented("This method must be implemented in the subclass.")
+
 
 class OrganizationReportGenerator:
     """
@@ -1015,4 +1021,10 @@ class OrganizationReportGenerator:
         self.wb.save(buf)
         buf.seek(0)
         return buf
+
+    def stream_csv(self) -> BytesIO:
+        """
+        Stream the report in CSV format.
+        """
+        raise NotImplemented("This method must be implemented in the subclass.")
 
