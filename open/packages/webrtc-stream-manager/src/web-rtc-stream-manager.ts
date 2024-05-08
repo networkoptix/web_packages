@@ -265,12 +265,19 @@ export class WebRTCStreamManager {
                 if (typeof stats === 'object') {
                     const noBytes = 'bytesReceived' in stats && !stats.bytesReceived;
                     const noFps = 'fps' in stats && stats.fps === 0;
+                    const connection = WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier];
                     if (noBytes && noFps) {
-                        const connection = WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier];
-                        if(connection?.peerConnection?.connectionState === 'connected') {
+                        connection.noFrames++;
+                        // If no frames are received for 6 seconds for high quality stream or 15 seconds for low quality stream
+                        // then we close the connection and reconnect.
+                        const threshold = connection.stream$.value ? 5 : 2;
+                        if(connection.noFrames > threshold && connection?.peerConnection?.connectionState === 'connected') {
+                            connection.noFrames = 0;
                             console.info(`No bytes received for ${indentifier}. Reconnecting`);
                             WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier].close(1);
                         }
+                    } else {
+                        connection.noFrames = 0;
                     }
                 }
             })
@@ -759,7 +766,7 @@ export class WebRTCStreamManager {
                 if (!this.sourceBuffer) {
                     this.sourceBuffer = this.mediaSource.addSourceBuffer(mimeType);
                     this.sourceBuffer.onupdateend = () => {
-                        if (!this.sourceBuffer.buffered.length) {
+                        if (!this.sourceBuffer.buffered?.length) {
                             return;
                         }
 
@@ -1114,6 +1121,8 @@ export class WebRTCStreamManager {
 
         return this.generateWebRtcUrl(this.webRtcUrlFactoryOrConfig)(params);
     }
+
+    public noFrames = 0;
 
     /**
      * Do not use directly use factory WebRTCStreamManager.connect(webRtcUrlFactory) instead.
