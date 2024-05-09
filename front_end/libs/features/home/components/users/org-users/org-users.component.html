@@ -1,51 +1,53 @@
-<div class="actions">
-    @if (selectedCount) {
-        <div class="selected-users">
-            <div class="text">
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'close.svg'"
-                    [svgStyle]="{ 'width.px': '12' }"
-                ></svg-icon>
-                {{ selectedCount }}
-                <span translate> selected: </span>
-            </div>
-            <button
-                class="btn"
-                translate
-                (click)="orgUsersTable.bulkDeleteUsers()"
-            >
-                <svg-icon
-                    class="delete"
-                    nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'delete.svg'"
-                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                ></svg-icon>
+@if (orgUsersStore.currentGroupUsersEntity().length) {
+    <div class="actions">
+        @if (selectedCount) {
+            <div class="selected-users">
+                <div class="text">
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'close.svg'"
+                        [svgStyle]="{ 'width.px': '12' }"
+                    ></svg-icon>
+                    {{ selectedCount }}
+                    <span translate> selected: </span>
+                </div>
+                <button
+                    class="btn"
+                    translate
+                    (click)="orgUsersTable.bulkDeleteUsers()"
+                >
+                    <svg-icon
+                        class="delete"
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'delete.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
 
-                Delete
+                    Delete
+                </button>
+            </div>
+        } @else {
+            <button
+                class="btn btn-default"
+                translate
+                (click)="newUserDialog()"
+            >
+                Add User
             </button>
+        }
+        <div class="filter">
+            <nx-search
+                [(ngModel)]="searchModel"
+                (ngModelChange)="setQuery($event)"
+                layout="search"
+                instant
+            ></nx-search>
+            <!--            <button (click)="sortRecords()">-->
+            <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
+            <!--            </button>-->
         </div>
-    } @else {
-        <button
-            class="btn btn-default"
-            translate
-            (click)="newUserDialog()"
-        >
-            Add User
-        </button>
-    }
-    <div class="filter">
-        <nx-search
-            [(ngModel)]="searchModel"
-            (ngModelChange)="setQuery($event)"
-            layout="search"
-            instant
-        ></nx-search>
-        <!--            <button (click)="sortRecords()">-->
-        <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
-        <!--            </button>-->
     </div>
-</div>
+}
 @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
     <nx-org-users-table
         (selectedCountEmitter)="updateSelectedCount($event)"
