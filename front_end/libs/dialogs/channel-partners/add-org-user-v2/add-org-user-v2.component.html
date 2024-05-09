@@ -1,100 +1,176 @@
-<form #addOrgUserForm="ngForm">
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            Add User
-        </h1>
+<div class="nx-modal__header">
+    <span class="nx-modal__header-title">{{
+        !emailLocked() ? ('Add User' | translate) : ('Add Access' | translate)
+    }}</span>
+    @if (closable) {
         <button
-            *ngIf="closable"
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
+        ></button>
+    }
+</div>
+<nx-add-org-user-stepper #stepper>
+    <cdk-step>
+        <form
+            #orgUserForm="ngForm"
+            class="nx-modal__content"
+            [formGroup]="formGroup"
         >
-            <span class="close-content"></span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <label
-            for="userEmail"
-            translate
-            >Login</label
-        >
-        <nx-email-input
-            class="fs-mask form-component"
-            id="userEmail"
-            name="userEmail"
-            componentId="userEmail"
-            [ngModel]="userEmail$$()"
-            (ngModelChange)="userEmail$$.set($event)"
-            [form]="addOrgUserForm"
-            #userEmail="ngModel"
-            [setFocus]="true"
-        >
-        </nx-email-input>
-        <p
-            *ngIf="userEmail.touched && (userEmail.errors?.pattern || userEmail.errors?.required)"
-            class="error-label"
-        >
-            {{ userEmail.errors?.message }}
-        </p>
-        <div
-            class="mb-3"
-            [ngStyle]="{ display: 'hidden' }"
-        ></div>
+            <div
+                class="nx-modal__body"
+                #mainStepBody
+            >
+                <div class="control-container">
+                    <label
+                        translate
+                        for="email"
+                        >Email</label
+                    >
+                    <input
+                        #emailInput
+                        class="email-input fs-mask"
+                        [ngClass]="{
+                            'email-input--error':
+                                emailControl.errors?.selfAdd ||
+                                (emailControl.touched && emailControl.errors?.pattern) ||
+                                (orgUserForm.submitted && emailControl.errors?.required)
+                        }"
+                        formControlName="email"
+                        name="email"
+                        type="email"
+                        [readOnly]="emailLocked()"
+                        autocomplete="email"
+                        [spellcheck]="false"
+                        data-escape-global-style
+                    />
+                    <p class="control-message">
+                        @if (emailControl.errors?.selfAdd) {
+                            <span class="control-message__error">{{
+                                LANG.dialogs.channelPartners.selfAdd | translate
+                            }}</span>
+                        } @else if (emailControl.touched && emailControl.errors?.pattern) {
+                            <span
+                                class="control-message__error"
+                                translate
+                                >Invalid email</span
+                            >
+                        } @else if (orgUserForm.submitted && emailControl.errors?.required) {
+                            <span
+                                class="control-message__error"
+                                translate
+                                >Email is required</span
+                            >
+                        }
+                    </p>
+                </div>
+                <div class="control-container">
+                    <label
+                        translate
+                        for="permission-group"
+                        >Permission Group</label
+                    >
+                    <nx-select-v2
+                        name="permission-group"
+                        formControlName="roleId"
+                    >
+                        @for (role of orgRoles(); track role.id) {
+                            <nx-select-item
+                                [value]="role.id"
+                                [selected]="roleIdControl.value === role.id"
+                                >{{ role.name }}</nx-select-item
+                            >
+                        }
+                    </nx-select-v2>
+                    <p class="role-description">{{ roleDescription() }}</p>
+                </div>
+                <div class="control-container">
+                    <label
+                        translate
+                        for="folder"
+                        >Folder</label
+                    >
+                    <nx-org-step-select
+                        #stepSelect
+                        [ngClass]="{
+                            'warning-outline': selectedFolderWarn() && !busy$$(),
+                            'error-outline': selectedFolderError(),
+                            'hide-outline': emailControl.errors?.selfAdd
+                        }"
+                        formControlName="folder"
+                        name="folder"
+                        (click)="gotoFolderSelect()"
+                        [readOnly]="folderLocked()"
+                    ></nx-org-step-select>
 
-        <label
-            translate
-            for="permission-group"
-            >Permission Group</label
-        >
-        <nx-select-v2
-            [ngModel]="selectedRole$$()"
-            (ngModelChange)="selectedRole$$.set($event!)"
-            name="permission-group"
-            class="d-block mb-3"
-        >
-            <ng-container *ngFor="let role of roles">
-                <nx-select-item
-                    [value]="role.id"
-                    [selected]="selectedRole$$() === role.id"
-                    >{{ role.name }}</nx-select-item
+                    <p class="control-message">
+                        @if (!emailControl.errors?.selfAdd && selectedFolderStatus(); as status) {
+                            @if (status.status === 'warn' && !busy$$()) {
+                                <span class="control-message__warning">{{ status.msg }}</span>
+                            } @else if (status.status === 'disable') {
+                                <span class="control-message__error">{{ status.msg }}</span>
+                            }
+                        }
+                    </p>
+                </div>
+            </div>
+            <div class="nx-modal__footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    [disabled]="busy$$()"
+                    translate
+                    (click)="close()"
                 >
-            </ng-container>
-        </nx-select-v2>
-
-        <label
-            for="orgTreeSearch"
-            translate
-            >Folder</label
-        >
-        <nx-org-tree-selector-v0
-            name="targetFolder"
-            #targetFolder="ngModel"
-            [model]="targetFolder"
-            [organization]="organization"
-            [groups]="groupsStore.sortedGroups$$()"
-            [statuses]="orgTreeStatuses$$()"
-            [messagesNumLines]="2"
-            [ngModel]="selectedFolder$$()"
-            (ngModelChange)="selectedFolder$$.set($event)"
-        ></nx-org-tree-selector-v0>
-    </div>
-    <div class="modal-footer">
-        <nx-process-button
-            [process]="addOrgUserProcess"
-            [buttonText]="'Confirm' | translate"
-            [buttonDisabled]="targetFolder.errors?.invalid || !userEmail$$() || userEmail.errors"
-            [form]="addOrgUserForm"
-        ></nx-process-button>
-        <!-- Role and folder are defined on construct -->
-        <nx-cancel-button
-            [process]="addOrgUserProcess"
-            [cancelFn]="unlock"
-            [discardFn]="close"
-        ></nx-cancel-button>
-    </div>
-</form>
+                    Cancel
+                </button>
+                <nx-async-action-button
+                    [action]="addOrgUserAction"
+                    [invalid]="selectedFolderStatus()?.status === 'disable'"
+                    (reject)="emailControl.invalid ? emailInput.focus() : stepSelect.focus()"
+                    [(busy)]="busy"
+                    translate
+                >
+                    Add
+                </nx-async-action-button>
+            </div>
+        </form>
+    </cdk-step>
+    <cdk-step>
+        <form class="nx-modal__content">
+            <div
+                class="nx-modal__body"
+                [ngStyle]="{ 'height.px': bodyHeight(), 'flex-basis': 'auto' }"
+            >
+                <nx-org-tree-selector
+                    #orgTree
+                    name="targetFolder"
+                    [organization]="organization"
+                    [groups]="groups()"
+                    [statuses]="orgTreeStatuses()"
+                    [ngModel]="treeValue()"
+                    (ngModelChange)="treeValue.set($event)"
+                ></nx-org-tree-selector>
+            </div>
+            <div class="nx-modal__footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    translate
+                    (click)="cancelFolderSelect()"
+                >
+                    Cancel
+                </button>
+                <nx-async-action-button
+                    [action]="confirmFolderSelectAction"
+                    (reject)="orgTree.focus()"
+                    translate
+                >
+                    Select
+                </nx-async-action-button>
+            </div>
+        </form>
+    </cdk-step>
+</nx-add-org-user-stepper>

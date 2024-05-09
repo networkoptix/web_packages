@@ -9,6 +9,9 @@ import type {
     OverlayConnectionPosition,
     VerticalConnectionPos,
 } from '@angular/cdk/overlay';
+import type { Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import type { FormControl } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
 import { zip } from 'lodash-es';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
@@ -530,4 +533,8 @@ export function connectedPosition(
         ...cdkOverlayPosition(overlayPoint),
         ...other,
     };
+}
+
+export function formControlValueSignal<C>(control: FormControl<C>): Signal<C> {
+    return toSignal(control.valueChanges, { initialValue: control.value });
 }

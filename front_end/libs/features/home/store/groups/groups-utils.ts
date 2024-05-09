@@ -35,7 +35,7 @@ export function isGroupItem(item: GroupItem | SystemItem): item is GroupItem {
 export const flattenGroups = (groups: GroupItem[], groupMap: GroupFlatMap = {}): GroupFlatMap => {
     for (const group of groups) {
         const { children, ...withoutChild } = group;
-        groupMap[group.id] = withoutChild;
+        groupMap[group.id] = { ...withoutChild, children: children.map(c => c.id) };
         if (children?.length) {
             flattenGroups(group.children, groupMap);
         }

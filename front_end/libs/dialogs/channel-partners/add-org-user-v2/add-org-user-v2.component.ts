@@ -1,47 +1,61 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CdkStepper, CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import {
     Component,
     Inject,
-    WritableSignal,
-    computed,
-    signal,
+    forwardRef,
     inject,
+    computed,
+    ViewChild,
     effect,
-    EffectRef,
-    Signal,
+    untracked,
+    signal,
+    AfterViewInit,
+    ElementRef,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+    FormControl,
+    FormGroup,
+} from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
+import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
-import { NxEmailComponent } from '@components/email-input/email.component';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import staticLang from '@language_static';
-import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
+import LANG from '@language_static';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
-import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    OrgRoleIds,
-    type GroupItem,
-    type Organization,
-    type OrganizationRole,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxProcessService } from '@services/process.service';
-import type { Process } from '@services/process.service/process';
-import { icons } from '@static-variables';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { simpleEmailRegex } from '@static-variables';
+import { accountSelectors } from '@store/account';
+import { formControlValueSignal } from '@utils/nx';
 
-import { NxOrgTreeSelectorV0Component } from '../org-tree-selector-v0/org-tree-selector.component';
-import { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types';
+import { NxOrgStepSelectComponent } from '../org-step-select/org-step-select.component';
+import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
+import type {
+    OrgTreeStatus,
+    OrgTreeStatusMap,
+    OrgTreeStatusValue,
+} from '../org-tree-selector/org-tree-selector.types';
+
+import { NxAddOrgUserStepperComponent } from './add-org-user-stepper.component';
+
+/* Key  : User email
+ * Value: Key  : Org/group id
+ *        Value: Role name
+ */
+type UserRoles = Map<string, Map<string, string>>;
 
 @Component({
     selector: 'nx-add-org-user-v2',
@@ -51,190 +65,316 @@ import { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types
     imports: [
         CommonModule,
         FormsModule,
-
-        TranslateModule,
-        AngularSvgIconModule,
+        ReactiveFormsModule,
+        CdkStepperModule,
+        forwardRef(() => NxAddOrgUserStepperComponent),
         LetDirective,
+        TranslateModule,
 
-        NxFocusMeDirective,
-        NxEmailComponent,
-        NxSelectV2Module,
-        NxOrgTreeSelectorV0Component,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
+        NxOrgStepSelectComponent,
+        NxOrgTreeSelectorComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
-export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
-    groupsStore = inject(GroupsStore);
-    orgUserStore = inject(OrgUsersStore);
-    cpService = inject(NxChannelPartnersService);
-    icons = icons;
-    emailDisabled = false;
+export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implements AfterViewInit {
+    LANG = LANG;
 
-    userEmail$$ = signal('');
-    roles: OrganizationRole[];
-    /* Key  : User email
-     * Value: Key  : Org/group id
-     *        Value: Role name
-     */
+    private accountEmail = inject(Store).selectSignal(accountSelectors.selectCurrentUserName);
+    private groupsStore = inject(GroupsStore);
+    private orgUserStore = inject(OrgUsersStore);
+    private cpService = inject(NxChannelPartnersService);
+    orgRoles = this.cpService.organizationRoles$$;
+    organization = inject<DT['data']>(DIALOG_DATA).organization;
+    groups = this.groupsStore.sortedGroups$$;
+    private groupFlatMap = this.groupsStore.groupFlatMap$$;
+
+    @ViewChild('stepper') private stepper: CdkStepper;
+    @ViewChild(NxOrgTreeSelectorComponent) private treeComponent: NxOrgTreeSelectorComponent;
+
     /** Roles existing users have, not roles for users */
-    userRoles = new Map<string, Map<string, { role: string; roleId: string }>>();
-    selectedRole$$: WritableSignal<string>;
+    private userRoles = computed<UserRoles>(() => {
+        const users = this.orgUserStore.usersByGroupSignalFactory(this.organization.id)();
+        const userRoles: UserRoles = new Map();
+        users.forEach(user => {
+            if (user.groupRoles?.length) {
+                // Otherwise, group user
+                userRoles.set(
+                    user.email,
+                    new Map(user.groupRoles.map(r => [r.groupId, r.roles[0]])),
+                );
+            } else if (user.roles?.length) {
+                // Has org role, is org user
+                userRoles.set(user.email, new Map([[this.organization.id, user.roles[0]]]));
+            }
+        });
+        return userRoles;
+    });
 
-    addOrgUserProcess: Process;
+    emailControl = new FormControl('', {
+        nonNullable: true,
+        validators: [
+            Validators.required,
+            Validators.pattern(simpleEmailRegex),
+            (control: FormControl<string>) => {
+                return this.accountEmail() === control.value ? { selfAdd: true } : null;
+            },
+        ],
+    });
+    roleIdControl = new FormControl(this.orgRoles()[0].id, {
+        nonNullable: true,
+        validators: [Validators.required],
+    });
+    folderControl = new FormControl<string[]>([this.organization.name], {
+        nonNullable: true,
+    });
+    formGroup = new FormGroup({
+        email: this.emailControl,
+        roleId: this.roleIdControl,
+        folder: this.folderControl,
+    });
 
-    organization: Organization;
+    private email = formControlValueSignal(this.emailControl);
+    emailLocked = signal(false);
 
-    selectedFolder$$: WritableSignal<string>;
+    private roleId = formControlValueSignal(this.roleIdControl);
+    roleDescription = computed<string>(() => {
+        const [orgRoles, roleId] = [this.orgRoles(), this.roleId()];
+        const roleName = orgRoles.find(role => role.id === roleId)!.name;
+        return LANG.channelPartners.orgs.permissionDescription[roleName];
+    });
 
-    private selfAddMsg = this.translate.instant(staticLang.dialogs.channelPartners.selfAdd);
-    private parentAccessMsg = this.translate.instant(
-        staticLang.dialogs.channelPartners.parentAccess,
+    folder = signal<string>(this.organization.id);
+    treeValue = signal<string | null>(null);
+    folderLocked = signal(false);
+
+    protected _selfAddEffect = effect(
+        () => {
+            const [email, accountEmail] = [this.email(), this.accountEmail()];
+            untracked(() => {
+                if (email === accountEmail) {
+                    this.roleIdControl.disable();
+                    this.folderControl.disable();
+                } else {
+                    this.roleIdControl.enable();
+                    this.folderControl.enable();
+                }
+            });
+        },
+        { allowSignalWrites: true },
     );
-    private restrictedRoleMsg: string;
 
-    orgTreeStatuses$$ = computed<OrgTreeStatuses>(() => {
-        const [email, role] = [this.userEmail$$(), this.selectedRole$$()];
-        const groups = this.groupsStore.sortedGroups$$();
+    protected _orgAdminEffect = effect(
+        () => {
+            const roleId = this.roleId();
+            if (roleId === OrgRoleIds.OrgAdmin) {
+                this.folder.set(this.organization.id);
+                this.folderControl.setValue([this.organization.name]);
+                this.folderLocked.set(true);
+            } else {
+                this.folderLocked.set(false);
+            }
+        },
+        { allowSignalWrites: true },
+    );
+    private parentAccessMsg = this.translate.instant(LANG.dialogs.channelPartners.parentAccess);
+    private directOverwriteMsg = this.translate.instant(
+        LANG.dialogs.channelPartners.directOverwrite,
+    );
 
-        const statuses: OrgTreeStatuses = new Map();
+    private statusMessages = computed<[OrgTreeStatusMap, OrgTreeStatusMap]>(() => {
+        const [email, groups, userRoles] = [this.email(), this.groups(), this.userRoles()];
 
-        function cascadeGroupErrors(group: GroupItem, msg: string): void {
-            statuses.set(group.id, {
-                type: 'error',
+        const treeStatuses: OrgTreeStatusMap = new Map();
+        const stepSelectStatuses: OrgTreeStatusMap = new Map();
+
+        const groupFlatMap = untracked(this.groupFlatMap);
+        function cascadeGroupStatus(groupId: string, status: OrgTreeStatus, msg: string): void {
+            treeStatuses.set(groupId, {
+                status,
                 msg,
             });
-            group.children.forEach(group => cascadeGroupErrors(group, msg));
-        }
-
-        if (this.account.email === email) {
-            statuses.set(this.organization.id, {
-                type: 'error',
-                msg: this.selfAddMsg,
+            stepSelectStatuses.set(groupId, {
+                status,
+                msg,
             });
-
-            groups.forEach(group => cascadeGroupErrors(group, this.selfAddMsg));
-            return statuses;
+            groupFlatMap[groupId].children.forEach(childId =>
+                cascadeGroupStatus(childId, status, msg),
+            );
         }
 
-        const existingUserRoles = this.userRoles.get(email);
+        const existingUserRoles = userRoles.get(email);
+        const dialogMessages = LANG.dialogs.channelPartners;
+
         if (existingUserRoles) {
             if (existingUserRoles.has(this.organization.id)) {
-                statuses.set(this.organization.id, {
-                    type: 'warn',
-                    msg: this.translate.instant(staticLang.dialogs.channelPartners.directAccess, {
-                        role: existingUserRoles.get(this.organization.id)?.role,
+                treeStatuses.set(this.organization.id, {
+                    status: 'warn',
+                    msg: this.translate.instant(dialogMessages.directAccess2, {
+                        folder: this.organization.name,
+                        role: existingUserRoles.get(this.organization.id)!,
                     }),
                 });
-                groups.forEach(group => cascadeGroupErrors(group, this.parentAccessMsg));
-            } else if (role !== OrgRoleIds.OrgAdmin) {
-                const findDirectAccessGroups = (groups: GroupItem[]): void => {
-                    for (const group of groups) {
-                        if (existingUserRoles.has(group.id)) {
-                            statuses.set(group.id, {
-                                type: 'warn',
-                                msg: this.translate.instant(
-                                    staticLang.dialogs.channelPartners.directAccess,
-                                    {
-                                        role: existingUserRoles.get(group.id)?.role,
-                                    },
-                                ),
-                            });
-                            group.children.forEach(group =>
-                                cascadeGroupErrors(group, this.parentAccessMsg),
-                            );
-                        } else {
-                            findDirectAccessGroups(group.children);
-                        }
+                stepSelectStatuses.set(this.organization.id, {
+                    status: 'warn',
+                    msg: this.directOverwriteMsg,
+                });
+                groups.forEach(group =>
+                    cascadeGroupStatus(group.id, 'disable', this.parentAccessMsg),
+                );
+            } else if (existingUserRoles.size) {
+                const overwriteCount = new Map<string, string[]>();
+                const userRoleKeys = [...existingUserRoles.keys()];
+                for (const groupId of userRoleKeys) {
+                    treeStatuses.set(groupId, {
+                        status: 'warn',
+                        msg: this.translate.instant(dialogMessages.directAccess2, {
+                            folder: groupFlatMap[groupId].name,
+                            role: existingUserRoles.get(groupId)!,
+                        }),
+                    });
+                    stepSelectStatuses.set(groupId, {
+                        status: 'warn',
+                        msg: this.directOverwriteMsg,
+                    });
+
+                    groupFlatMap[groupId].children.forEach(childId =>
+                        cascadeGroupStatus(childId, 'disable', this.parentAccessMsg),
+                    );
+
+                    let parentId = groupFlatMap[groupId].parentId;
+                    while (parentId) {
+                        const overwrites = overwriteCount.get(parentId) ?? [];
+                        overwrites.push(groupId);
+                        overwriteCount.set(parentId, overwrites);
+                        parentId = groupFlatMap[parentId].parentId;
                     }
-                };
-                findDirectAccessGroups(groups);
+                }
+                for (const [groupId, overwrites] of overwriteCount.entries()) {
+                    const msg =
+                        overwrites.length === 1
+                            ? this.translate.instant(dialogMessages.parentOverwriteSingle, {
+                                  email,
+                                  folder: groupFlatMap[overwrites[0]].name,
+                              })
+                            : this.translate.instant(dialogMessages.parentOverwriteMultiple, {
+                                  email,
+                                  count: overwrites.length,
+                              });
+                    treeStatuses.set(groupId, { status: 'warn', msg });
+                    stepSelectStatuses.set(groupId, {
+                        status: 'warn',
+                        msg: this.translate.instant(dialogMessages.indirectOverwrite, {
+                            count: overwrites.length,
+                        }),
+                    });
+                }
+                const orgMsg =
+                    userRoleKeys.length === 1
+                        ? this.translate.instant(dialogMessages.parentOverwriteSingle, {
+                              email,
+                              folder: groupFlatMap[userRoleKeys[0]].name,
+                          })
+                        : this.translate.instant(dialogMessages.parentOverwriteMultiple, {
+                              email,
+                              count: userRoleKeys.length,
+                          });
+                treeStatuses.set(this.organization.id, {
+                    status: 'warn',
+                    msg: orgMsg,
+                });
+                stepSelectStatuses.set(this.organization.id, {
+                    status: 'warn',
+                    msg: this.translate.instant(dialogMessages.indirectOverwrite, {
+                        count: userRoleKeys.length,
+                    }),
+                });
             }
         }
 
-        if (role === OrgRoleIds.OrgAdmin) {
-            groups.forEach(group => cascadeGroupErrors(group, this.restrictedRoleMsg));
-        }
-
-        return statuses;
+        return [treeStatuses, stepSelectStatuses];
     });
 
-    updateUsersEffect = (usersSignal: Signal<UserRecord[]>): EffectRef =>
-        effect(() => {
-            const users = usersSignal();
-            users.forEach(user => {
-                if (user.groupRoles?.length) {
-                    // Otherwise, group user
-                    this.userRoles.set(
-                        user.email,
-                        new Map(
-                            user.groupRoles.map(r => [
-                                r.groupId,
-                                { role: r.roles[0], roleId: r.rolesIds[0] },
-                            ]),
-                        ),
-                    );
-                } else if (user.roles?.length) {
-                    // Has org role, is org user
-                    this.userRoles.set(
-                        user.email,
-                        new Map([
-                            [
-                                this.organization.id,
-                                { role: user.roles[0], roleId: user.rolesIds[0] },
-                            ],
-                        ]),
-                    );
-                }
-            });
-        });
+    orgTreeStatuses = computed<OrgTreeStatusMap>(() => this.statusMessages()[0]);
+    stepSelectStatuses = computed<OrgTreeStatusMap>(() => this.statusMessages()[1]);
+
+    selectedFolderStatus = computed<OrgTreeStatusValue | undefined>(() => {
+        const [stepSelectStatuses, folder] = [this.stepSelectStatuses(), this.folder()];
+        return stepSelectStatuses.get(folder);
+    });
+    selectedFolderWarn = computed<boolean>(() => this.selectedFolderStatus()?.status === 'warn');
+    selectedFolderError = computed<boolean>(
+        () => this.selectedFolderStatus()?.status === 'disable',
+    );
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { organization, email }: DT['data'],
-        processService: NxProcessService,
+        @Inject(DIALOG_DATA) { email }: DT['data'],
         private translate: TranslateService,
-        private account: NxAccountService,
     ) {
         super(dialogRef);
-        this.organization = organization;
-        this.updateUsersEffect(this.orgUserStore.usersByGroupSignalFactory(organization.id));
-        this.roles = this.cpService.organizationRoles$$();
-        this.selectedRole$$ = signal(this.roles[0].id);
         if (email) {
-            this.userEmail$$.set(email);
-            this.emailDisabled = true;
+            this.formGroup.patchValue({ email });
+            this.emailLocked.set(true);
         }
-
-        this.restrictedRoleMsg = translate.instant(
-            staticLang.dialogs.channelPartners.restrictedRole,
-            {
-                roleName: 'Organization Administrator',
-                orgName: organization.name,
-            },
-        );
-
-        this.selectedFolder$$ = signal(organization.id);
-
-        this.addOrgUserProcess = processService.createProcess(
-            () => {
-                const newUser = {
-                    email: this.userEmail$$(),
-                    roleId: this.selectedRole$$(),
-                };
-                const folder = this.selectedFolder$$();
-                return firstValueFrom(
-                    this.orgUserStore.addUser(this.organization, folder, newUser),
-                );
-            },
-            {},
-            user => {
-                if (user) {
-                    this.orgUserStore.updateGroupCache(organization.id);
-                }
-                this.close(user);
-            },
-            () => {},
-        );
     }
+
+    @ViewChild('mainStepBody') private mainStepBody: ElementRef<HTMLFormElement>;
+    bodyHeight = signal(0);
+    ngAfterViewInit(): void {
+        this.bodyHeight.set(this.mainStepBody.nativeElement.offsetHeight);
+    }
+
+    gotoFolderSelect(): void {
+        this.treeValue.set(
+            this.selectedFolderStatus()?.status === 'disable' ? null : this.folder(),
+        );
+        this.stepper.next();
+        setTimeout(() => {
+            this.treeComponent.focus();
+        });
+    }
+
+    cancelFolderSelect(): void {
+        this.stepper.previous();
+    }
+
+    confirmFolderSelectAction = createAsyncAction({
+        action: () => {
+            const value = this.treeValue()!;
+            this.folder.set(value);
+            const groupFlatMap = this.groupFlatMap();
+
+            const path = [this.organization.name];
+            if (value !== this.organization.id) {
+                const parentId = groupFlatMap[value].parentId;
+                if (parentId) {
+                    path.push(groupFlatMap[parentId].name);
+                }
+                // For the select, any in between folders are reduced to an ellipses
+                path.push(groupFlatMap[value].name);
+            }
+            this.folderControl.setValue(path);
+            this.stepper.previous();
+            return Promise.resolve();
+        },
+        success: () => {},
+    });
+
+    addOrgUserAction = createAsyncAction({
+        action: () => {
+            const { email, roleId } = this.formGroup.getRawValue();
+            return firstValueFrom(
+                this.orgUserStore.addUser(this.organization, this.folder(), { email, roleId }),
+            );
+        },
+        success: user => {
+            // TODO: Check network errors
+            if (user) {
+                this.orgUserStore.updateGroupCache(this.organization.id);
+            }
+            this.close(user);
+        },
+    });
 }
