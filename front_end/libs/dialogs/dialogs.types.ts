@@ -3,6 +3,7 @@ import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { OrgUser } from '@pages/home/store/org-users/org-users.types';
 import type { Bookmark, BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import type { Row } from '@pages/systems/services/services.types';
 import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
@@ -15,7 +16,6 @@ import type {
     DetailTableResponse,
     Group,
     GroupItem,
-    GroupUser,
     Organization,
     OrganizationUser,
     ServiceQuantities,
@@ -202,7 +202,7 @@ export type AddOrgUserV2 = DialogType<
         organization: Organization;
         email?: string;
     },
-    OrganizationUser | GroupUser
+    OrgUser
 >;
 
 export type ChangeService = DialogType<

@@ -17,6 +17,7 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
+import { accountSelectors } from '@store/account';
 
 import { NxUsersAccessTableComponent } from '../../users-table/refactor/access-table/access-table.component';
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
@@ -51,6 +52,7 @@ export class NxAccessTableContainerComponent {
     @ViewChild(NxUsersAccessTableComponent) accessTable!: NxUsersAccessTableComponent;
 
     orgUsersStore = inject(OrgUsersStore);
+    accountEmail$$ = this.store.selectSignal(accountSelectors.selectCurrentUserName);
 
     orgRoles$$ = this.cpService.organizationRoles$$;
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
@@ -98,6 +100,7 @@ export class NxAccessTableContainerComponent {
     ];
     selectedGroups: { [key: string]: UserRecord } = {};
     selectedCount = 0;
+
     deleteUser(row: UserRecord): void {
         const selectedGroupsLength = Object.keys(this.selectedGroups).length;
         const deleteMultiple = selectedGroupsLength > 1;

@@ -38,8 +38,8 @@
     }
 }
 
-[data-whatinput="keyboard"] input:focus,
-[data-whatinput="keyboard"] input:active {
+[data-whatinput="keyboard"] input:not([data-escape-global-style]):focus,
+[data-whatinput="keyboard"] input:not([data-escape-global-style]):active {
     border-color: var(--input-focus-border-color) !important;
     outline: 1px solid var(--input-focus-border-color) !important;
     outline-offset: 0;
@@ -101,6 +101,6 @@
     @include inset-outline;
 }
 
-[data-whatintent="keyboard"] *:focus-visible {
+[data-whatintent="keyboard"] *:not([data-escape-global-style]):focus-visible {
     outline: none !important;
 }

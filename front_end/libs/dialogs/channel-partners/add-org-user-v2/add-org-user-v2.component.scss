@@ -1,0 +1,127 @@
+@use "sass-rem/rem" as sass_rem;
+
+@use 'typography';
+@use 'mixins';
+@use "theme_variables_common" as vars;
+@use '../../dialogs2.scss';
+
+.control-container:not(:first-child) {
+    margin-top: 0.75rem;
+}
+
+.control-container>*:not(:first-child) {
+    margin-top: 0.25rem;
+}
+
+.control-message {
+    min-height: 1.25rem;
+
+    span {
+        @include typography.regular13nocolor;
+        line-height: 1rem;
+
+    }
+
+    &__warning {
+        color: var(--yellow-d1);
+    }
+
+    &__error {
+        color: var(--error-label);
+    }
+}
+
+// Copy paste of .form-control global style, fix later
+.email-input {
+    display: block;
+    width: 100%;
+    height: 32px;
+    font-size: sass_rem.rem(14px);
+    line-height: 1.428571429;
+    color: var(--input-color);
+    background-color: var(--input-bg);
+    background-image: none;
+    border: 1px solid var(--input-border-color);
+    border-radius: 1px;
+    transition: none;
+    box-shadow: none;
+    padding: vars.$padding-base-vertical vars.$padding-input-horizontal;
+    caret-color: var(--input-color);
+
+    @include mixins.placeholder();
+
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-text-fill-color: var(--input-color) !important;
+        -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
+    }
+    &:-internal-autofill-selected {
+        background-color: var(--input-bg) !important;
+        color: var(--input-color) !important;
+    }
+
+    &:disabled,
+    &:read-only {
+        opacity: .4;
+        color: var(--input-disabled-color);
+        border-color: var(--input-disabled-border-color);
+        pointer-events: none;
+
+        &:hover,
+        &:focus {
+            border-color: var(--input-border-color);
+        }
+    }
+
+    // Currently always overridden in .form-control
+    // &:hover {
+    //     border-color: var(--input-hover-border-color);
+    // }
+
+    &:focus,
+    &:active {
+        border-color: var(--input-focus-border-color);
+        outline: 1px solid var(--input-focus-border-color);
+        outline-offset: 0;
+    }
+
+    &.email-input--error {
+        border-color: var(--input-error-border-color);
+        outline: none;
+    }
+}
+
+nx-select-v2 {
+    display: block;
+}
+
+.role-description {
+    min-height: 5rem;
+}
+
+nx-org-step-select {
+    width: 100%;
+
+    border: 1px solid transparent;
+
+    &.warning-outline {
+        border-color: var(--yellow-d1);
+    }
+
+    &.error-outline {
+        border-color: var(--input-error-border-color);
+    }
+
+    &.hide-outline {
+        border-color: transparent;
+    }
+}
+
+nx-org-tree-selector {
+    height: 100%;
+}

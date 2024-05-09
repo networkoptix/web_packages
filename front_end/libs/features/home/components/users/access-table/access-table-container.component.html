@@ -48,7 +48,7 @@
         } @else {
             @if (isOrgUser$$()) {
                 <div translate>This user already has access to all objects in the organization</div>
-            } @else {
+            } @else if (email !== accountEmail$$()) {
                 <button
                     class="btn btn-default"
                     translate

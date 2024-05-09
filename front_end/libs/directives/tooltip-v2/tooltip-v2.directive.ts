@@ -240,7 +240,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     /** Clicks on the tooltip component */
     @Output() tooltipComponentClick = new EventEmitter<void>();
     /** Clicks outside the overlay */
-    @Output() tooltipOutsideClick = new EventEmitter<void>();
+    @Output() tooltipOutsideClick = new EventEmitter<unknown>();
 
     private overlayRef: OverlayRef;
     private position: FlexibleConnectedPositionStrategy;
@@ -268,17 +268,18 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
         this.overlayRef
             .outsidePointerEvents()
             .pipe(takeUntilDestroyed())
-            .subscribe(({ timeStamp }) => {
-                this.tooltipOutsideClick.emit();
-
-                if (!this._opened() || !this.triggerOnClick()) {
+            .subscribe(({ timeStamp, target }) => {
+                if (!this._opened()) {
                     return;
                 }
+
+                this.tooltipOutsideClick.emit(target);
 
                 setTimeout(() => {
                     /* Hack to check if the click is on the origin element, compensate for fuzzing
                     https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#reduced_time_precision */
-                    if (Math.abs(timeStamp - this.lastHostClick) > 5) {
+                    const clickedHost = Math.abs(timeStamp - this.lastHostClick) < 5;
+                    if (this.triggerOnClick() && !clickedHost) {
                         this.close();
                     }
                 });

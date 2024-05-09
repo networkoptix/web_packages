@@ -1,0 +1,14 @@
+:host {
+    display: block;
+}
+
+.org-step-select {
+    max-width: unset;
+    width: 100%;
+
+    justify-content: space-between !important;
+
+    &__arrow {
+        rotate: -90deg;
+    }
+}

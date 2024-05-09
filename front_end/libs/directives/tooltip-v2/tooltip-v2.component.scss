@@ -20,6 +20,7 @@
         background-color: var(--tooltip-bg);
         border-radius: var(--border-radius);
         max-width: 14rem; // About 40 characters
+        overflow-wrap: break-word;
         min-height: calc(2 * (var(--arrow-height) + var(--arrow-offset)));
         // The minimum height for the start/end arrows to not cross the center
         user-select: none;

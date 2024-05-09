@@ -40,6 +40,7 @@ export const generateGroups = (
         name: uuid(),
         parentId: !index ? null : arr[index - 1],
         systemCount: 0,
+        children: arr[index + 1] ? [arr[index + 1]] : [],
     }));
     const groups: GroupItem[] = flatGroups.map(group => ({ ...group, children: [] }) as GroupItem);
 

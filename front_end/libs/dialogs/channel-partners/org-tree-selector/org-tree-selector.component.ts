@@ -1,9 +1,11 @@
+import { CdkStepper } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     OnInit,
+    Optional,
     ViewChild,
     forwardRef,
     input,
@@ -144,6 +146,12 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
     registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
+    }
+
+    constructor(@Optional() stepper: CdkStepper | null) {
+        stepper?.selectionChange.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.closeTooltip();
+        });
     }
 
     ngOnInit(): void {

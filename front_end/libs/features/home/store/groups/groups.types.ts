@@ -23,7 +23,7 @@ export interface SystemsByOrgOrGroup {
     cloudSystems: CloudSystemLight[];
 }
 
-export type GroupFlatItem = Omit<GroupItem, 'children'>;
+export type GroupFlatItem = Omit<GroupItem, 'children'> & { children: string[] };
 
 export type GroupFlatMap = Record<string, GroupFlatItem>;
 
