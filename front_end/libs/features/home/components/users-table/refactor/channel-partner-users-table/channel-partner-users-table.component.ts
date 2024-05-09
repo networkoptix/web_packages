@@ -74,7 +74,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
             this.checkAllContainer$$()
                 ?.otherCheckBoxesData$$()
                 ?.filter(row => row.selected)
-                .map(row => row.data) || [],
+                .map(row => row.data as UserRecord) || [],
     );
     selectedChannelPartnerUsersMap$$ = computed(
         () => new Map(this.selectedUsers$$()?.map((row: UserRecord) => [row.email, true]) || []),
@@ -210,13 +210,25 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
     }
 
     bulkDeleteUsers(): void {
+        const selectedUsers = this.selectedCount$$();
+        const message =
+            selectedUsers > 1
+                ? this.translateService.instant(
+                      this.LANG.channelPartners.usersTable.deleteDialog.multipleMessage,
+                      { count: selectedUsers },
+                  )
+                : this.translateService.instant(
+                      this.LANG.channelPartners.usersTable.deleteDialog.channelPartner
+                          .singleMessage,
+                      {
+                          email: this.selectedUsers$$()[0].email,
+                          permission: this.selectedUsers$$()[0].roles[0],
+                      },
+                  );
         this.dialogService
             .confirm(
                 {
-                    message: this.translateService.instant(
-                        this.LANG.channelPartners.usersTable.deleteDialog.multipleMessage,
-                        { count: this.selectedCount$$() },
-                    ),
+                    message,
                     title: this.LANG.channelPartners.usersTable.deleteDialog.title,
                     footer: {
                         actionLabel:
