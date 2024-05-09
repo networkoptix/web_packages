@@ -1,0 +1,11 @@
+.positive {
+    color:  var(--success-label);
+    
+    &::before {
+        content: '+';
+    }
+};
+
+.negative {
+    color:  var(--error-label);
+};

@@ -29,8 +29,8 @@
         <div>
             {{ row.serviceName }}
         </div>
-        <div [ngClass]="{ 'amount-row': true, positive: row.amount > 0, negative: row.amount < 0 }">
-            {{ row.amount > 0 ? '+' : '' }}{{ row.amount }}
+        <div class="amount-row">
+            <nx-quantity-change [number]="row.amount"></nx-quantity-change>
         </div>
         <div>
             {{ row.addedToName }}
