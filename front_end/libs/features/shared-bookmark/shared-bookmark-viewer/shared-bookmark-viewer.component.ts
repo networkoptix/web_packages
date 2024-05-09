@@ -22,7 +22,7 @@ export class SharedBookmarkViewerComponent {
 
     languageProvider = inject(NxLanguageProviderService);
     dateTimeService = inject(NxDateTimeFormatService);
-    dateText = computed(() => this.dateTimeService.toMediumDateString(this.startTime()));
+    dateText = computed(() => this.dateTimeService.mediumDateString(this.startTime()));
     timeText = computed(() =>
         this.startTime().toLocaleTimeString(this.dateTimeService.locale, {
             hour: 'numeric',

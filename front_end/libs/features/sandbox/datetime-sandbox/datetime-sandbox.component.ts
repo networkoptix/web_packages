@@ -15,13 +15,16 @@ export class NxDatetimeSandboxComponent {
     dateTimeService = inject(NxDateTimeFormatService);
     now$ = timer(0, 1000).pipe(map(_ => Date.now()));
 
-    shortDate$ = this.now$.pipe(map(n => this.dateTimeService.toShortDateString(n)));
-    mediumDate$ = this.now$.pipe(map(n => this.dateTimeService.toMediumDateString(n)));
-    longDate$ = this.now$.pipe(map(n => this.dateTimeService.toLongDateString(n)));
-    fullDate$ = this.now$.pipe(map(n => this.dateTimeService.toFullDateString(n)));
+    shortDate$ = this.now$.pipe(map(n => this.dateTimeService.shortDateString(n)));
+    mediumDate$ = this.now$.pipe(map(n => this.dateTimeService.mediumDateString(n)));
+    longDate$ = this.now$.pipe(map(n => this.dateTimeService.longDateString(n)));
+    fullDate$ = this.now$.pipe(map(n => this.dateTimeService.fullDateString(n)));
 
-    shortTime$ = this.now$.pipe(map(n => this.dateTimeService.toShortTimeString(n)));
-    mediumTime$ = this.now$.pipe(map(n => this.dateTimeService.toMediumTimeString(n)));
-    longTime$ = this.now$.pipe(map(n => this.dateTimeService.toLongTimeString(n)));
-    fullTime$ = this.now$.pipe(map(n => this.dateTimeService.toFullTimeString(n)));
+    shortTime$ = this.now$.pipe(map(n => this.dateTimeService.shortTimeString(n)));
+    mediumTime$ = this.now$.pipe(map(n => this.dateTimeService.mediumTimeString(n)));
+    longTime$ = this.now$.pipe(map(n => this.dateTimeService.longTimeString(n)));
+    fullTime$ = this.now$.pipe(map(n => this.dateTimeService.fullTimeString(n)));
+
+    shortDateTime$ = this.now$.pipe(map(n => this.dateTimeService.shortDateShortTimeString(n)));
+    medDateShortTime$ = this.now$.pipe(map(n => this.dateTimeService.mediumDateShortTimeString(n)));
 }

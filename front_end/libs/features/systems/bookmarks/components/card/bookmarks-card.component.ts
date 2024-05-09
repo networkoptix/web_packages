@@ -34,7 +34,7 @@ export class NxBookmarksCardComponent implements OnInit {
 
     ngOnInit(): void {
         const startDatetime = new Date(this.bookmark$$().startTimeMs);
-        this.startDate = this.dateTimeService.toMediumDateString(startDatetime);
+        this.startDate = this.dateTimeService.mediumDateString(startDatetime);
         this.startTime = startDatetime.toLocaleTimeString(this.dateTimeService.locale, {
             hour: 'numeric',
             minute: 'numeric',
