@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="folder">
+<path id="blue part" style="fill:var(--brand-core, #2FA2DB)" d="M10 15C10 12.7909 11.7909 11 14 11H28.9284C30.4421 11 31.9068 11.5365 33.0624 12.5143L36 15H10Z"/>
+<path id="Union" style="fill:var(--light10, #A5B7C0)" fill-rule="evenodd" clip-rule="evenodd" d="M4 11C1.79086 11 0 12.7909 0 15V42.6C0 46.1346 2.86538 49 6.4 49H41.6C45.1346 49 48 46.1346 48 42.6V21.4C48 17.8654 45.1346 15 41.6 15H26L23.0624 12.5143C21.9068 11.5365 20.4421 11 18.9284 11H4Z"/>
+<path id="front" style="fill: var(--light6, #CDD7DC)" d="M0 15H50C53.3137 15 56 17.6863 56 21V47C56 50.3137 53.3137 53 50 53H6C2.68629 53 0 50.3137 0 47V15Z"/>
+</g>
+</svg>

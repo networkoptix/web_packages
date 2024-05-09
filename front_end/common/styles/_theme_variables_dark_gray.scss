@@ -633,7 +633,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --inactive-license-text: var(--yellow_d2);
 
     /* Tabs component */
-    --tabs-border-color: var(--dark_gray_11);
+    --tabs-border-color: var(--dark_gray_5);
     --tabs-active-color: var(--brand-core);
     --tabs-color: var(--light_gray_16);
 
@@ -654,6 +654,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --group-card-bg: var(--dark_gray_6);
     --group-card-bg-hover: var(--dark_gray_7);
     --group-card-border-color: var(--dark_gray_10);
+
+    --no-systems-number-icon-color: var(--dark_gray_16);
+    --no-systems-description-color: var(--dark_gray_17);
 
     --channel-partner-card-status-background: var(--dark_gray_11);
     --channel-partner-card-status-dark: var(--dark1);
@@ -695,10 +698,12 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --CP-state-color: var(--light16);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
-    --change-state-dialog-btn-bg: var(--dark5);
-    --change-state-dialog-color: var(--light16);
-    --change-state-dialog-btn-checked-bg: var(--dark10);
+    --change-state-dialog-btn-bg: var(--dark_gray_5);
+    --change-state-dialog-color: var(--light_gray_16);
+    --change-state-dialog-btn-checked-bg: var(--dark_gray_10);
     --change-state-dialog-btn-checked-color: var(--light4);
+    --change-state-dialog-btn-hover-bg: var(--dark_gray_6);
+    --change-state-dialog-btn-border: var(--dark_gray_4);
     --change-state-dialog-shutdown-btn-bg: var(--red_main);
     --change-state-dialog-shutdown-btn-color: var(--light1);
 
@@ -818,8 +823,6 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --other-sites-title: var(--light10);
     --other-sites-heading-background: var(--dark6);
     --other-sites-expand-stroke: var(--light16);
-
-    --no-systems-description-color: var(--dark17);
 
 	/* Merge */
     --merge-unmerged-error-text: var(--light10);

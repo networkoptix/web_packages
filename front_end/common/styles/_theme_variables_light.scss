@@ -663,7 +663,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --groups-sidebar-bg: var(--light2);
     --groups-sidebar-border: var(--light5);
     @include generateVarAndRgb(--groups-sidebar-highlight, $light5);
-    --groups-sidebar-highlight-color: var(--light1);
+    --groups-sidebar-highlight-color: var(--light7);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--light4);
     --groups-sidebar-folder-icon-body-fill: var(--light10);
@@ -676,6 +676,9 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --group-card-bg: var(--light4);
     --group-card-bg-hover: var(--light6);
     --group-card-border-color: var(--light5);
+
+    --no-systems-number-icon-color: var(--light16);
+    --no-systems-description-color: var(--light17);
 
     --channel-partner-card-status-background: var(--light10);
     --channel-partner-card-status-dark: var(--dark1);
@@ -717,10 +720,12 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --CP-state-color: var(--dark9);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
-    --change-state-dialog-btn-bg: initial;
+    --change-state-dialog-btn-bg: var(--light5);
     --change-state-dialog-color: var(--dark9);
-    --change-state-dialog-btn-checked-bg: #e0e0e0;
+    --change-state-dialog-btn-checked-bg: var(--light10);
     --change-state-dialog-btn-checked-color: var(--dark9);
+    --change-state-dialog-btn-hover-bg: var(--light6);
+    --change-state-dialog-btn-border: var(--light4);
     --change-state-dialog-shutdown-btn-bg: var(--red_main);
     --change-state-dialog-shutdown-btn-color: var(--light1);
 
@@ -841,8 +846,6 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --other-sites-title: var(--dark12);
     --other-sites-heading-background: var(--light6);
     --other-sites-expand-stroke: var(--dark16);
-
-    --no-systems-description-color: var(--dark17);
 
 	/* Merge */
     --merge-unmerged-error-text: unset;

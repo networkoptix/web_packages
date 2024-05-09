@@ -9,7 +9,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
         color: #404040;
     }
 
-    --body-bg: #{$additional_gray_light2};
+    --body-bg: #{$light_gray_2};
     --alt-body-bg: #{$light_gray_1};
     --body-text-color: #{$dark_gray_9};
 
@@ -616,15 +616,15 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --inactive-license-text: var(--yellow_d2);
 
     /* Tabs component */
-    --tabs-border-color: var(--light_gray_3);
+    --tabs-border-color: var(--light_gray_5);
     --tabs-active-color: var(--brand-core);
-    --tabs-color: var(--dark_gray_4);
+    --tabs-color: var(--dark_gray_16);
 
     // System groups
     --groups-sidebar-bg: var(--light_gray_2);
     --groups-sidebar-border: var(--light_gray_5);
     @include generateVarAndRgb(--groups-sidebar-highlight, $light_gray_5);
-    --groups-sidebar-highlight-color: var(--light_gray_1);
+    --groups-sidebar-highlight-color: var(--light_gray_7);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--light_gray_4);
     --groups-sidebar-folder-icon-body-fill: var(--light_gray_10);
@@ -637,6 +637,9 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --group-card-bg: var(--light_gray_4);
     --group-card-bg-hover: var(--light_gray_6);
     --group-card-border-color: var(--light_gray_5);
+
+    --no-systems-number-icon-color: var(--light_gray_16);
+    --no-systems-description-color: var(--light_gray_17);
 
     --channel-partner-card-status-background: var(--light_gray_10);
     --channel-partner-card-status-dark: var(--dark1);
@@ -672,21 +675,23 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --CP-pane-border: var(--light_gray_3);
     --CP-pane-header-background: var(--light_gray_1);
     --CP-pane-header-border: var(--light_gray_4);
-    --CP-pane-input: var(--light10);
+    --CP-pane-input: var(--light_gray_10);
     --CP-state-button: var(--light_gray_3);
     --CP-state-button-selected: var(--light_gray_7);
     --CP-state-color: var(--dark9);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
-    --change-state-dialog-btn-bg: initial;
-    --change-state-dialog-color: var(--dark9);
-    --change-state-dialog-btn-checked-bg: #e0e0e0;
+    --change-state-dialog-btn-bg: var(--light_gray_5);
+    --change-state-dialog-color: var(--dark_gray_9);
+    --change-state-dialog-btn-checked-bg: var(--light_gray_10);
     --change-state-dialog-btn-checked-color: var(--dark9);
+    --change-state-dialog-btn-hover-bg: var(--light_gray_6);
+    --change-state-dialog-btn-border: var(--light_gray_4);
     --change-state-dialog-shutdown-btn-bg: var(--red_main);
-    --change-state-dialog-shutdown-btn-color: var(--light1);
+    --change-state-dialog-shutdown-btn-color: var(--light_gray_1);
 
     --add-user-dialog-color: #{$light16};
-    --add-partner-dialog-color: var(--light16);
+    --add-partner-dialog-color: var(--light_gray_16);
 
     /* Bookmarks */
     --bookmarks-background-color: #{$additional_light2};
@@ -798,8 +803,6 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --other-sites-title: var(--dark12);
     --other-sites-heading-background: var(--light6);
     --other-sites-expand-stroke: var(--dark16);
-
-    --no-systems-description-color: var(--dark17);
 
 	/* Merge */
     --merge-unmerged-error-text: unset;
