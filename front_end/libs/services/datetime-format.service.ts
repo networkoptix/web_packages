@@ -2,7 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 type Style = NonNullable<Intl.DateTimeFormatOptions['dateStyle']>;
-type FormatKey = `${Style}${'Date' | 'Time'}`;
+type FormatKey = `${Style}${'Date' | 'Time'}` | `${Style}Date,${Style}Time`;
+
+const styles: Style[] = ['short', 'medium', 'long', 'full'];
 
 /** Thin wrapper around Intl.DateTimeFormat formatting method
  *
@@ -19,9 +21,13 @@ export class NxDateTimeFormatService {
     }
 
     private formatMap = Object.fromEntries(
-        (['short', 'medium', 'long', 'full'] as Style[]).flatMap(s => [
-            [`${s}Date`, new Intl.DateTimeFormat(this.locale, { dateStyle: s })],
-            [`${s}Time`, new Intl.DateTimeFormat(this.locale, { timeStyle: s })],
+        styles.flatMap(style => [
+            [`${style}Date`, new Intl.DateTimeFormat(this.locale, { dateStyle: style })],
+            [`${style}Time`, new Intl.DateTimeFormat(this.locale, { timeStyle: style })],
+            ...styles.map(s2 => [
+                `${style}Date,${s2}Time`,
+                new Intl.DateTimeFormat(this.locale, { dateStyle: style, timeStyle: s2 }),
+            ]),
         ]),
     ) as Record<FormatKey, Intl.DateTimeFormat>;
 
@@ -32,20 +38,26 @@ export class NxDateTimeFormatService {
     /* All examples are in en-US */
 
     /** Example: 4/24/24 */
-    toShortDateString = this.methodPassthrough('shortDate');
+    shortDateString = this.methodPassthrough('shortDate');
     /** Example: Apr 24, 2024 */
-    toMediumDateString = this.methodPassthrough('mediumDate');
+    mediumDateString = this.methodPassthrough('mediumDate');
     /** Example: April 24, 2024 */
-    toLongDateString = this.methodPassthrough('longDate');
+    longDateString = this.methodPassthrough('longDate');
     /** Example: Wednesday, April 24, 2024 */
-    toFullDateString = this.methodPassthrough('fullDate');
+    fullDateString = this.methodPassthrough('fullDate');
 
     /** Example: 3:14 PM */
-    toShortTimeString = this.methodPassthrough('shortTime');
+    shortTimeString = this.methodPassthrough('shortTime');
     /** Example: 3:14:37 PM */
-    toMediumTimeString = this.methodPassthrough('mediumTime');
+    mediumTimeString = this.methodPassthrough('mediumTime');
     /** Example: 3:14:41 PM PDT */
-    toLongTimeString = this.methodPassthrough('longTime');
+    longTimeString = this.methodPassthrough('longTime');
     /** Example: 3:14:47 PM Pacific Daylight Time */
-    toFullTimeString = this.methodPassthrough('fullTime');
+    fullTimeString = this.methodPassthrough('fullTime');
+
+    /** Example: 5/8/24, 2:06 PM */
+    shortDateShortTimeString = this.methodPassthrough('shortDate,shortTime');
+    /** Example: May 8, 2024, 2:06 PM */
+    mediumDateShortTimeString = this.methodPassthrough('mediumDate,shortTime');
+    // Add as needed
 }

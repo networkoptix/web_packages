@@ -60,7 +60,7 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
                 total = formattedRecord;
             } else {
                 const [year, month, day] = date.split('-').map(d => Number(d));
-                formattedRecord.changed = this.dateTimeFormat.toMediumDateString(
+                formattedRecord.changed = this.dateTimeFormat.mediumDateString(
                     new Date(year, month - 1, day),
                 );
                 formattedRecord.isChangeRecord = true;
