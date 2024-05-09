@@ -228,6 +228,8 @@ export class NxVideoPlayerComponent {
             return;
         }
 
+        this.originalStream.nativeElement.onblur = event => event.preventDefault();
+
         const availableStreams: AvailableStreams[] = this.camera.parameters.mediaStreams?.streams?.map(({ encoderIndex }) => encoderIndex).filter(stream => stream !== -1) ?? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY];
         const hasSecondary = availableStreams.includes(AvailableStreams.SECONDARY);
         const targetStream = availableStreams.length ? TargetStream.AUTO : hasSecondary ? TargetStream.LOW : TargetStream.HIGH
