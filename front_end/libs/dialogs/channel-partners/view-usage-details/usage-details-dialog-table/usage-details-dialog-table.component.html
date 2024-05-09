@@ -30,32 +30,26 @@
         <div>
             {{ row.changed }}
         </div>
-        <div
-            class="numeric-column"
-            [ngClass]="{
-                positive: row.isChangeRecord && row.channels > 0,
-                negative: row.isChangeRecord && row.channels < 0
-            }"
-        >
-            {{ row.isChangeRecord && row.channels > 0 ? '+' : '' }}{{ row.channels }}
+        <div class="numeric-column">
+            @if (row.isChangeRecord) {
+                <nx-quantity-change [number]="row.channels"></nx-quantity-change>
+            } @else {
+                {{ row.channels }}
+            }
         </div>
-        <div
-            class="numeric-column"
-            [ngClass]="{
-                positive: row.isChangeRecord && row.monthlyRate > 0,
-                negative: row.isChangeRecord && row.monthlyRate < 0
-            }"
-        >
-            {{ row.isChangeRecord && row.monthlyRate > 0 ? '+' : '' }}{{ row.monthlyRate }}
+        <div class="numeric-column">
+            @if (row.isChangeRecord) {
+                <nx-quantity-change [number]="row.monthlyRate"></nx-quantity-change>
+            } @else {
+                {{ row.monthlyRate }}
+            }
         </div>
-        <div
-            class="numeric-column"
-            [ngClass]="{
-                positive: row.isChangeRecord && row.fractionalUsage > 0,
-                negative: row.isChangeRecord && row.fractionalUsage < 0
-            }"
-        >
-            {{ row.isChangeRecord && row.fractionalUsage > 0 ? '+' : '' }}{{ row.fractionalUsage }}
+        <div class="numeric-column">
+            @if (row.isChangeRecord) {
+                <nx-quantity-change [number]="row.fractionalUsage"></nx-quantity-change>
+            } @else {
+                {{ row.fractionalUsage }}
+            }
         </div>
     </ng-template>
 </nx-table>

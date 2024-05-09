@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 
 import type { FormattedServiceChangeRecord } from '../service-changes.types';
@@ -16,7 +17,7 @@ interface HEADER_ITEM {
     selector: 'nx-service-changes-table',
     templateUrl: './service-changes-table.component.html',
     styleUrl: './service-changes-table.component.scss',
-    imports: [TranslateModule, NxBaseTableComponent, CommonModule],
+    imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxQuantityChangeComponent],
     standalone: true,
 })
 export class NxServiceChangesTableComponent {

@@ -3,6 +3,7 @@ import { Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxHintComponent } from '@components/hint/hint.component';
+import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
 
@@ -19,7 +20,13 @@ interface HEADER_ITEM {
     selector: 'nx-usage-details-dialog-table',
     templateUrl: './usage-details-dialog-table.component.html',
     styleUrls: ['./usage-details-dialog-table.component.scss'],
-    imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
+    imports: [
+        TranslateModule,
+        NxBaseTableComponent,
+        CommonModule,
+        NxHintComponent,
+        NxQuantityChangeComponent,
+    ],
     standalone: true,
 })
 export class NxUsageDetailsDialogTableComponent {
