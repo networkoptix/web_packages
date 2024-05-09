@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 import { icons } from '@static-variables';
 
@@ -20,6 +20,8 @@ type Service = {
     imports: [NgFor, NxCardComponent],
 })
 export class NxOrganizationReportsComponent {
+    @HostBinding('style.--channel-partners-header-height') headerHeight = '324px';
+
     services = [
         {
             name: 'Health Monitoring',
