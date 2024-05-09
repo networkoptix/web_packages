@@ -470,10 +470,14 @@ export class PermissionManager {
             filter(user => !!user && Object.values(user.permissions).some(identity)),
             timeout({
                 first: environment.isLocal ? 10_000 : 5_000,
-                with: () =>
-                    environment.isLocal
-                        ? Promise.resolve(this.currentUser$$())
-                        : this.getCurrentUserFromCloud().then(() => this.currentUser$$()),
+                with: async () => {
+                    const currentUser = this.currentUser$$();
+                    if (environment.isLocal || currentUser) {
+                        return currentUser;
+                    }
+                    await this.getCurrentUserFromCloud();
+                    return this.currentUser$$();
+                },
             }),
             take(1),
         );
