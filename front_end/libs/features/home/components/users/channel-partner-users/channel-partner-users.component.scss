@@ -7,7 +7,7 @@
     }
 
     .table-grid {
-        height: 100%;
+        height: calc(100% - 3rem);
         display: grid;
         column-gap: 1rem;
 
