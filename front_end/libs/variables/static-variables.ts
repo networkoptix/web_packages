@@ -21,7 +21,8 @@ export const simpleEmailRegex: string =
     "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$";
 export const simpleURLRegex: string =
     '^(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_\\+.~#?&\\/\\/=]*)$';
-export const reportsRegex: string = '\\/reports\\/([^\\/]+)\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})';
+export const reportsRegex: string =
+    '\\/reports\\/([^\\/]+)\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})';
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string =
@@ -199,6 +200,7 @@ export const icons: configTypes.Icons = {
     dir: `/${staticBase}/images/icons/standard/`,
     dirAuth: `/${staticBase}/images/icons/authorization/`,
     dirButtons: `/${staticBase}/images/icons/buttons/`,
+    dirChannelPartners: `/${staticBase}/images/icons/channel_partners/`,
     dirTextButtons: `/${staticBase}/images/icons/text_buttons/`,
     dirHeader: `/${staticBase}/images/icons/header/`,
     dirLayouts: `/${staticBase}/images/icons/layouts/`,

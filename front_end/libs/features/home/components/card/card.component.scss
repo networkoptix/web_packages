@@ -30,64 +30,34 @@ $card-border-radius: 12px;
         box-shadow: 0 1px 3px 0 #1018281A;
     }
   
-  &.card-condensed {
-      .card-body {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          padding: $card-vertical-padding 1rem;
-
-          .info {
+    &.card-condensed {
+        .card-body {
             display: flex;
-            margin-top: auto;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-          }
+            flex-direction: column;
+            height: 100%;
+            padding: $card-vertical-padding 1rem;
 
-          &.not-online {
-              h2 {
-                  color: var(--system-card-offline-color) !important;
-              }
-              background-color: linear-gradient(
-                  180deg,
-                  rgba(var(--system-card-bg-grad0--rgb), 0.3) 0%,
-                  rgba(var(--system-card-bg-grad100--rgb), 0.3) 100%
-              );
-
-              &:hover {
-                  background-color: rgba(var(--system-card-bg-grad0--rgb), 0.3);
-              }
-          }
-
-      }
-  }
+            .info {
+                display: flex;
+                margin-top: auto;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+        }
+    }
 }
 
 .dropdown {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
 
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 0.25rem;
 
-  cursor: initial;
+    cursor: initial;
   
-}
-
-:host ::ng-deep {
-    .dot-menu {
-        width      : 20px !important;
-        height     : 30px !important;
-        background : transparent;
-    
-        &:after {
-            content   : "\22EE";
-            font-size : 25px;
-            color     : var(--light4) !important;
-        }
-    }
 }

@@ -484,6 +484,7 @@ strong {
     color: var(--text-contrast);
 
     &-bold {
+        color: var(--text-contrast);
         font-family: $font-family-bold !important;
     }
 }

@@ -508,6 +508,7 @@ export interface Icons {
     dir: string;
     dirAuth: string;
     dirButtons: string;
+    dirChannelPartners: string;
     dirTextButtons: string;
     dirHeader: string;
     dirLayouts: string;

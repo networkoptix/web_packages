@@ -5,202 +5,197 @@
 }
 
 .settings{
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
-  width: 70%;
-
-  @include bootstrap.media-breakpoint-down(lg){
-    width: 100%;
-  }
-
-  .footer {
     display: flex;
-    gap: .5rem;
-  }
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    width: 70%;
+
+    @include bootstrap.media-breakpoint-down(lg){
+        width: 100%;
+    }
+
+    .footer {
+        display: flex;
+        gap: .5rem;
+    }
 }
 
 .pane{
-  display: flex;
-  flex-direction: column;
-  background-color: var(--CP-pane-background);
-  border: 1px solid var(--CP-pane-border);
-  border-radius: 4px;
-
-  h4{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: .75rem 1rem .75rem 1rem;
-    background-color: var(--CP-pane-header-background);
-    border: 1px solid var(--CP-pane-header-border);
-    margin: 0;
-  }
-
-  .body {
-    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    background-color: var(--CP-pane-background);
+    border: 1px solid var(--CP-pane-border);
+    border-radius: 4px;
+
+    h4{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: .75rem 1rem .75rem 1rem;
+        background-color: var(--CP-pane-header-background);
+        border: 1px solid var(--CP-pane-header-border);
+        margin: 0;
+    }
+
+    .body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
     .input {
-      height: 2rem;
-      gap: .5rem;
+        height: 2rem;
+        gap: .5rem;
 
-      label {
-        text-align: right;
-        width: 20%;
-        color: var(--tabs-color) !important;
-      }
-
-      input {
-        height: 100%;
-        width: 45%;
-        background-color: var(--CP-pane-background);
-        border: 1px solid var(--CP-pane-input);
-        border-radius: .15rem;
-        text-indent: .5rem;
-        color: var(--input-color);
-
-        &::placeholder {
-          color: var(--input-color);
+        label {
+            text-align: right;
+            width: 20%;
+            color: var(--tabs-color) !important;
         }
-      }
+
+        input {
+            height: 100%;
+            width: 45%;
+            background-color: var(--CP-pane-background);
+            border: 1px solid var(--CP-pane-input);
+            border-radius: .15rem;
+            text-indent: .5rem;
+            color: var(--input-color);
+
+            &::placeholder {
+                color: var(--input-color);
+            }
+        }
 
     }
 
-    .buttons {
-      display: flex;
+        .buttons {
+            display: flex;
 
-      .content {
+            .content {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                gap: .3rem;
+            }
+
+            .selected {
+                background-color: var(--CP-state-button-selected);
+                color: var(--h1);
+            }
+
+            .shutdown {
+                background-color: var(--error);
+                color: var(--h1);
+            }
+
+            button {
+                background-color: var(--CP-state-button);
+                color: var(--CP-state-color);
+                padding: .5rem !important;
+            }
+        }
+
+        .description {
+            color: var(--CP-state-color);
+
+            .bullet {
+                display: flex;
+            }
+
+            span{
+                color: red;
+            }
+        }
+
+    }
+
+    .data-row {
         display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: .3rem;
-      }
-
-      .selected {
-        background-color: var(--CP-state-button-selected);
-        color: var(--h1);
-      }
-
-      .shutdown {
-        background-color: var(--error);
-        color: var(--h1);
-      }
-
-      button {
-        background-color: var(--CP-state-button);
-        color: var(--CP-state-color);
-        padding: .5rem !important;
-      }
+        justify-content: space-between;
     }
-
-    .description {
-      color: var(--CP-state-color);
-
-      .bullet {
-        display: flex;
-      }
-
-      span{
-        color: red;
-      }
-    }
-
-  }
-
-  .data-row {
-    display: flex;
-    justify-content: space-between;
-  }
 }
 
 .state-body {
-  padding: .5rem 1rem;
-  // https://github.com/angular/components/blob/main/src/material/button-toggle
-  mat-button-toggle-group {
-      border-radius: 0;
-      border: none;
+    padding: .5rem 1rem;
+    // https://github.com/angular/components/blob/main/src/material/button-toggle
+    mat-button-toggle-group {
+        border-radius: 0;
+        border: none;
 
-      mat-button-toggle {
-          border: none !important;
-          background: var(--dialog-bg);
+        mat-button-toggle {
+            background: var(--change-state-dialog-btn-bg);
 
-          button {
-              padding: 2px 8px !important;
-              height: initial !important;
-              border-radius: 0 !important;
+            &:hover {
+                background: var(--change-state-dialog-btn-hover-bg);
+            }
 
-              background: var(--change-state-dialog-btn-bg);
-              color: var(--change-state-dialog-color);
+            button {
+                padding: 2px 8px !important;
+                height: initial !important;
+                //border-radius: 0 !important;
 
-              span {
-                display: flex;
-                gap: 0.5rem;
-              }
+                background: var(--change-state-dialog-btn-bg);
+                color: var(--change-state-dialog-color);
 
-              & > span {
-                  padding: 0 !important;
-                  font-size: 14px;
-                  line-height: 20px !important;
-
-                  display: flex;
-                  align-items: center;
-              }
-
-          }
-
-          &:first-child button {
-              border-top-left-radius: 2px !important;
-              border-bottom-left-radius: 2px !important;
-          }
-
-          &:last-child button {
-              border-top-right-radius: 2px !important;
-              border-bottom-right-radius: 2px !important;
-          }
-
-          &.mat-button-toggle-checked {
-              background: var(--change-state-dialog-btn-checked-bg);
-              color: var(--change-state-dialog-btn-checked-color);
-
-                button svg {
-                    path, rect {
-                        fill: var(--change-state-dialog-btn-checked-color);
-                    }
+                span {
+                    display: flex;
+                    gap: 0.5rem;
                 }
 
-              &#shutdown-btn {
-                  button {
-                      background: var(--change-state-dialog-shutdown-btn-bg);
-                      color: var(--change-state-dialog-shutdown-btn-color);
+                & > span {
+                    padding: 0 !important;
+                    font-size: 14px;
+                    line-height: 20px !important;
 
-                      svg rect {
-                          fill: var(--change-state-dialog-shutdown-btn-color);
-                      }
-                  }
-              }
-          }
-      }
-  }
+                    display: flex;
+                    align-items: center;
+                }
 
-  .status-info {
-      padding-left: 0.25rem;
-      margin-top: 0.5rem;
+            }
 
-      li {
-          list-style-type: '-';
-          padding-left: 0.25rem;
-          font-size: 14px;
-          line-height: 18px;
+            &:nth-child(1) {
+                border-radius: 4px 0 0 4px !important;
+                border-right: 1px solid var(--change-state-dialog-btn-border);
+            }
 
-          .error {
-              color: var(--change-state-dialog-error-txt-color);
-          }
-      }
-  }
+            &:nth-child(2) {
+                border-left: 1px solid var(--change-state-dialog-btn-border);
+                border-right: 1px solid var(--change-state-dialog-btn-border);
+            }
+
+            &:nth-child(3) {
+                border-radius: 0 4px 4px 0 !important;
+                border-left: 1px solid var(--change-state-dialog-btn-border);
+            }
+
+            &.mat-button-toggle-checked {
+                background: var(--change-state-dialog-btn-checked-bg);
+                color: var(--change-state-dialog-btn-checked-color);
+
+                svg > path, svg > rect {
+                    --change-state-dialog-color: var(--change-state-dialog-btn-checked-color);
+                }
+            }
+        }
+    }
+
+    .status-info {
+        padding-left: 0.25rem;
+        margin-top: 0.5rem;
+
+        li {
+            list-style-type: '-';
+            padding-left: 0.25rem;
+            font-size: 14px;
+            line-height: 18px;
+
+            .error {
+                color: var(--change-state-dialog-error-txt-color);
+            }
+        }
+    }
 }
 
 .change-unavailable {
@@ -209,10 +204,10 @@
 }
 
 .label {
-  width: 13%;
-  max-width: 13%;
+    width: 13%;
+    max-width: 13%;
 }
 
-   nx-select {
-        width: 45% !important;
-      }
+nx-select {
+    width: 45% !important;
+}
