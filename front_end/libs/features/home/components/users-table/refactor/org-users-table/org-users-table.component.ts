@@ -111,7 +111,7 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
             const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
             return !this.inGroup$$() && !userIsOnlyAdmin;
         }
-        return true;
+        return !this.inGroup$$() || user.accessLevel?.id === this.currentGroupId$$();
     }
 
     canUpdateUserRole(user: UserRecord): boolean {
