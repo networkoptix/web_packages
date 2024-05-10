@@ -452,8 +452,7 @@ jenkins-build-webadmin:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 2>&1 | tee logs/webadmin.log & WEBADMIN_EXIT="$?"
-    - wait
+      "GITLAB_JOB_URL=$CI_JOB_URL"
 
 jenkins-build-frontend:
   extends: .jenkins-builds
@@ -469,8 +468,7 @@ jenkins-build-frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
-    - wait
+      "REVISION=$CI_COMMIT_SHA"
 
 create-vms-mr:
   stage: create mr
