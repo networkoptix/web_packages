@@ -1093,7 +1093,7 @@
     "Port": "Port",
     "Port is busy": "Port meşgul",
     "Port numbers less than 1024 are restricted. Server may become inaccessible.": "1024'ten küçük port numaraları kısıtlanmıştır. Sunucu erişilemez hale gelebilir.",
-    "Power User": "İleri Düzey Kullanıcı",
+    "Power User": "Uzman Kullanıcı",
     "Press \"Connect System to %CLOUD_NAME%\"": "Sistem %CLOUD_NAME% e bağlan\"",
     "Previous": "Önceki",
     "Previously generated codes are no longer valid.": "Daha önce oluşturulan kodlar artık geçerli değil.",
