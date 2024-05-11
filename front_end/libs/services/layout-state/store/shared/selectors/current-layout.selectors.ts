@@ -1,4 +1,4 @@
-import { createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { memoize, uniq } from 'lodash-es';
 
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
@@ -7,9 +7,10 @@ import { dirtyId } from '@utils/general';
 import { selectActiveLayoutState } from '../../active-layout/active-layout.selectors';
 import { selectCrossSystemLayoutsState } from '../../cross-system-layouts/cross-system-layouts.selectors';
 import { selectLocalLayoutsState } from '../../local-layouts/local-layouts.selectors';
-import { selectUnsavedLayoutsState } from '../../unsaved-layouts/unsaved-layouts.selectors';
-import { LayoutState, LayoutTypes } from '../types/layout-state.types';
+import { LayoutState, LayoutTypes, UnsavedLayoutState } from '../types/layout-state.types';
 import { toCrossSystemLayoutState, toLocalLayoutState } from '../utils';
+
+const selectUnsavedLayoutsState = createFeatureSelector<UnsavedLayoutState[]>('unsavedLayouts');
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const findLayoutFactory =
