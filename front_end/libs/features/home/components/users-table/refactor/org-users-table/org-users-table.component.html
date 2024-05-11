@@ -167,6 +167,7 @@
                     style="grid-area: expand"
                 >
                     <svg-icon
+                        class="arrow-right"
                         [src]="icons.dirTextButtons + 'arrow_right.svg'"
                         [routerLink]="row.email | mapWith: routerState.getUserAccessLink$$()"
                     >
@@ -174,18 +175,12 @@
                 </div>
             </ng-template>
         </nx-table>
+    } @else if (searching()) {
+        <nx-page-placeholder-v2 [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"></nx-page-placeholder-v2>
     } @else {
-        <div class="nothing-found-placeholder">
-            @if (searching()) {
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                ></nx-page-placeholder-v2>
-            } @else {
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NO_USERS"
-                    [clickFn]="newUserDialog"
-                ></nx-page-placeholder-v2>
-            }
-        </div>
+        <nx-page-placeholder-v2
+            [type]="PAGE_PLACEHOLDER.NO_USERS"
+            [clickFn]="newUserDialog"
+        ></nx-page-placeholder-v2>
     }
 </div>

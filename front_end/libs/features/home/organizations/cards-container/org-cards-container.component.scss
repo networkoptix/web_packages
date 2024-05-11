@@ -2,6 +2,7 @@
 @use "typography" as typography;
 
 $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
+$org-cards-hidden-spacing: 4px;
 
 .cards-container {
     display: flex;
@@ -9,7 +10,10 @@ $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 
     gap: 1rem;
     overflow-y: auto;
     max-height: $org-cards-container-height;
-    padding: 4px; // accommodate for :focus outline - and align
+
+    // Special code that makes the cards container have space for tab highlighting
+    margin: calc(-1 * $org-cards-hidden-spacing);
+    padding: $org-cards-hidden-spacing;
 
     .cdk-drop-list {
         width: system-card.$card-width;
@@ -87,7 +91,7 @@ $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 
 .actions {
     display: flex;
     justify-content: space-between;
-    padding: 0 24px 16px 4px; // accommodate for :focus outline - and align
+    padding-bottom: 16px;
 
     .input {
         display: flex;

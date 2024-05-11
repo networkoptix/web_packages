@@ -45,10 +45,12 @@
 
 .placeholder-heading {
     @include typography.medium15dark17;
+    color: var(--placehoder-v2-title-color) !important;
 }
 
 .placeholder-body {
     @include typography.regular13dark17;
+    color: var(--placehoder-v2-message-color) !important;
     margin-bottom: 15px;
 }
 

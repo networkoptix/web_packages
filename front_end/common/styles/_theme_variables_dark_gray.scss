@@ -507,7 +507,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     --table-alt-row-bg: #202020; //$dark_gray_5;
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
-    --table-row-selected-bg : #{$light_gray_16};
+    --table-row-selected-bg : #{$dark_gray_16};
     --table-row-selected-color : #{$light_gray_1};
 
     --dynamic-table-row-hover-bg : var(--light_gray_16) !important;

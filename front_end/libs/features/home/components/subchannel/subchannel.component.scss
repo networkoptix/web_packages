@@ -1,6 +1,6 @@
 .sub-container {
   height: 100%;
-  padding: 24px 0 0 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 
@@ -8,11 +8,7 @@
       //@include typography.medium24nocolor;
       display: flex;
       gap: 1rem;
-      padding: 0 24px 16px 4px; // accommodate for :focus outline - and align
-  }
-
-  nx-tabs {
-      padding: 0 24px 0 4px; // accommodate for :focus outline - and align
+      padding-bottom: 16px;
   }
 
   a {

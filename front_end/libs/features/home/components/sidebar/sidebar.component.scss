@@ -1,15 +1,6 @@
 @use '../sidebar-level/sidebar-level.component.scss' as *;
 @use 'bootstrap_utils' as bootstrap;
 
-:host{
-    position: relative;
-    // re-position to accommodate container padding
-    left: -24px;
-    top: -24px;
-    height: calc(100% + 24px);
-    display: block;
-}
-
 .sidebar {
     height: 100%;
     overflow-y: auto;
