@@ -282,6 +282,7 @@
                     *ngIf="userType !== UserType.CHANNEL_PARTNER && !accessTable"
                 >
                     <svg-icon
+                        class="right-arrow"
                         [src]="icons.dirTextButtons + 'arrow_right.svg'"
                         [routerLink]="row.email | mapWith: routerState.getUserAccessLink$$()"
                     >
@@ -292,11 +293,9 @@
     </ng-container>
     <ng-template #noUsers>
         @if (searching) {
-            <div class="nothing-found-placeholder">
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                ></nx-page-placeholder-v2>
-            </div>
+            <nx-page-placeholder-v2
+                [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
+            ></nx-page-placeholder-v2>
         } @else {
             <nx-page-placeholder-v2
                 [type]="PAGE_PLACEHOLDER.NO_USERS"

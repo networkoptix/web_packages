@@ -2,7 +2,7 @@
 
 .nx-new-table-container {
   margin: 0;
-  height: calc(100% - 3rem) !important;
+  display: grid;
 }
 
 .clickable:hover {

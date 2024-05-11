@@ -12,7 +12,7 @@
 
         &.root {
             flex-direction: column;
-            padding: 24px 0 0 24px;
+            padding: 24px;
         }
 
         .header {
@@ -21,16 +21,12 @@
             padding: 0 24px 1rem 4px; // accommodate for :focus outline - and align
         }
 
-        nx-tabs {
-            padding: 0 24px 0 4px; // accommodate for :focus outline - and align
-        }
-
         .cards-container {
             padding: 4px; // accommodate for :focus outline - and align
         }
 
         .actions {
-            padding: 0 24px 16px 4px; // accommodate for :focus outline - and align
+            padding-bottom: 16px;
 
         }
 

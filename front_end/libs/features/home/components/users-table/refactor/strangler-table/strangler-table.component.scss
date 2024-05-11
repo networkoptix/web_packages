@@ -3,6 +3,11 @@
 .nx-new-table-container {
   margin: 0;
   height: calc(100% - 3rem) !important;
+  display: grid;
+}
+
+new-table-wrapper {
+    height: auto !important;
 }
 
 .clickable:hover {
@@ -30,7 +35,8 @@
   }
 }
 
-.nothing-found-placeholder {
-  display: flex;
-  justify-content: center;
+.arrow-right {
+    path {
+        stroke: var(--brand-core);
+    }
 }
