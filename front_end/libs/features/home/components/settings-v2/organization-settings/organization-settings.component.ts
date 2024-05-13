@@ -110,6 +110,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
     updateStateProcess: Process;
     updateOrgProcess: Process;
+    disableSave: boolean;
 
     currentState$$ = computed<SettingsState>(() => {
         const currentPartner = this.currentPartner$$();
@@ -141,10 +142,6 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         return accessLevel;
     });
 
-    hasAdminRole = this.orgUserStore
-        .currentGroupUsersEntities()
-        ?.some(r => r.roles?.includes('Organization Administrator'));
-
     State = State;
 
     readonly partnerAccess = partnerAccess;
@@ -153,7 +150,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         () => accessMap?.[this.accessLevel$$()] || null,
     );
 
-    canUpdateAccess = !this.currentOrg$$()?.ownPermissions.includes(
+    canUpdateAccess = this.currentOrg$$()?.ownPermissions.includes(
         PartnerRoles.field_access_org_admin,
     );
 
@@ -190,9 +187,14 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
 
     handleAccessUpdate = (id: string | null): void => {
         const currLevel = this.accessLevel$$();
+        const hasAdminRole = this.orgUserStore
+            .currentGroupUsersEntities()
+            ?.some(r => r.roles?.includes('Organization Administrator'));
+        this.disableSave = !hasAdminRole;
+
         if (id !== currLevel) {
             this.currentPartnerAccess$.next(null);
-            if (!this.hasAdminRole) {
+            if (!hasAdminRole) {
                 this.store.dispatch(
                     CPActions.setShowPermissionWarning({ showPermissionWarning: true }),
                 );
@@ -218,6 +220,14 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         } else {
             this.currentPartnerAccess$.next(id);
         }
+    };
+
+    override resetUpdates = (): void => {
+        this.store.dispatch(CPActions.setShowPermissionWarning({ showPermissionWarning: false }));
+        this.currentState$.next(this.effectState$$());
+        this.currentName$.next(this.name$$());
+        this.currentPartnerAccess$.next(this.accessLevel$$());
+        this.disableSave = false;
     };
 
     override get generalHasChange(): boolean {
