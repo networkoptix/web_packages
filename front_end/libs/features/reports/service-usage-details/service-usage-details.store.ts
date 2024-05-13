@@ -1,10 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import dateFormat from 'dateformat';
 import { firstValueFrom } from 'rxjs';
 
 import { FormattedServiceDetailRecord } from '@pages/reports/service-usage-details/service-usage-details.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
     EntityServiceChangeEntry,
     Service,
@@ -25,11 +25,16 @@ const initialState: ServiceUsageDetailsState = {
     selectedService: undefined,
 };
 
-const getChangedColumnText = (changesCount: number, lastChanged: string): string => {
+const getChangedColumnText = (
+    changesCount: number,
+    lastChanged: string,
+    dateTimeFormat: NxDateTimeFormatService,
+): string => {
     if (changesCount === 0) {
         return 'Previous periods';
     } else if (changesCount === 1) {
-        return dateFormat(lastChanged, 'd mmm yyyy');
+        const [year, month, day] = lastChanged.split('-').map(d => Number(d));
+        return dateTimeFormat.mediumDateString(new Date(year, month - 1, day));
     } else {
         return 'Multiple dates';
     }
@@ -37,7 +42,7 @@ const getChangedColumnText = (changesCount: number, lastChanged: string): string
 
 export const ServiceUsageDetailsStore = signalStore(
     withState(initialState),
-    withComputed(store => ({
+    withComputed((store, dateTimeFormat = inject(NxDateTimeFormatService)) => ({
         entityServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
             store
                 .entityServiceChanges()
@@ -55,7 +60,7 @@ export const ServiceUsageDetailsStore = signalStore(
                         id,
                         type,
                         usedBy: name,
-                        changed: getChangedColumnText(changes_count, last_changed),
+                        changed: getChangedColumnText(changes_count, last_changed, dateTimeFormat),
                         channels,
                         monthlyRate: monthly_rate,
                         fractionalUsage: daily_rate,
@@ -78,7 +83,7 @@ export const ServiceUsageDetailsStore = signalStore(
                         id: system_id,
                         type: 'system',
                         usedBy: system_name,
-                        changed: getChangedColumnText(changes_count, last_changed),
+                        changed: getChangedColumnText(changes_count, last_changed, dateTimeFormat),
                         channels,
                         monthlyRate: monthly_rate,
                         fractionalUsage: daily_rate,
