@@ -23,7 +23,8 @@
                                             [buttonDisabled]="
                                                 !currentName$.getValue()?.length ||
                                                 currentName$.getValue()?.length >
-                                                    MAX_ORG_NAME_LENGTH
+                                                    MAX_ORG_NAME_LENGTH ||
+                                                disableSave
                                             "
                                             [removeMinWidth]="true"
                                             [process]="updateOrgProcess"
