@@ -3,6 +3,10 @@
     gap: 5px;
 }
 
+.horizontal-flex + .horizontal-flex {
+    margin-top: 5px;
+}
+
 .gray-border-box {
     border: 1px solid lightgray;
     padding: 10px;

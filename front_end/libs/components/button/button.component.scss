@@ -1,0 +1,17 @@
+@use './buttons.scss';
+
+.nx-button {
+    @include buttons.nx-button;
+
+    &--brand {
+        @include buttons.nx-button--brand;
+    }
+
+    &--secondary {
+        @include buttons.nx-button--secondary;
+    }
+
+    &--danger {
+        @include buttons.nx-button--danger;
+    }
+}

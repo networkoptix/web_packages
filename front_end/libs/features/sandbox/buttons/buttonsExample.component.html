@@ -1,35 +1,69 @@
-<div>
-    <span>Primary/Brand button</span>
+<h1>Buttons</h1>
+
+<h3>Old button styling</h3>
+<div class="horizontal-flex">
+    <button class="btn btn-primary">Primary</button>
+    <button class="btn btn-default">Default</button>
+    <button class="btn btn-danger">Danger</button>
+</div>
+<div class="horizontal-flex">
+    <button
+        class="btn btn-primary"
+        disabled
+    >
+        Primary
+    </button>
+    <button
+        class="btn btn-default"
+        disabled
+    >
+        Default
+    </button>
+    <button
+        class="btn btn-danger"
+        disabled
+    >
+        Danger
+    </button>
+</div>
+
+<h3>NxButtonComponent</h3>
+<div class="horizontal-flex">
     <nx-button
         [type]="ButtonType.brand"
         text="Primary"
         [disabled]="false"
         (click)="onClick()"
     />
-</div>
-<div>
-    <span>Secondary button</span>
     <nx-button
         [type]="ButtonType.secondary"
         text="Secondary"
         [disabled]="false"
         (click)="onClick()"
     />
+    <nx-button
+        [type]="ButtonType.danger"
+        text="Danger"
+        [disabled]="false"
+        (click)="onClick()"
+    />
 </div>
-<div>
-    <span>Primary/Brand button disabled</span>
+<div class="horizontal-flex">
     <nx-button
         [type]="ButtonType.brand"
         text="Primary"
         [disabled]="true"
         (click)="onClick()"
     />
-</div>
-<div>
-    <span>Secondary button disabled</span>
     <nx-button
         [type]="ButtonType.secondary"
         text="Secondary"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+    <nx-button
+        [type]="ButtonType.danger"
+        text="Danger"
         [disabled]="true"
         (click)="onClick()"
     />
@@ -39,10 +73,7 @@
 <div
     [ngStyle]="{
         border: '1px solid lightgray',
-        padding: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '5px'
+        padding: '10px'
     }"
 >
     <div class="horizontal-flex">

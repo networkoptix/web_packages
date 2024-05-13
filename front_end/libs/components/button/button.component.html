@@ -1,8 +1,10 @@
 <button
-    class="btn"
+    data-escape-global-style
+    class="nx-button"
     [ngClass]="{
-        'btn-primary': type === ButtonType.brand,
-        'btn-default': type === ButtonType.secondary
+        'nx-button--brand': type === ButtonType.brand,
+        'nx-button--secondary': type === ButtonType.secondary,
+        'nx-button--danger': type === ButtonType.danger
     }"
     [innerText]="text"
     (click)="handleClick()"
