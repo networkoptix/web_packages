@@ -83,6 +83,11 @@
                                 "
                             ></ng-container>
                         </div>
+                        @if (summaryRow) {
+                            <div class="big-row summary-row">
+                                <ng-container *ngTemplateOutlet="summaryRow"></ng-container>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

@@ -10,7 +10,10 @@ import staticLang from '@language/language_i18n_static.json';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { DetailTableResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import type { FormattedServiceDetailRecord } from '../service-usage-details.types';
+import {
+    ServiceDetailTotals,
+    type FormattedServiceDetailRecord,
+} from '../service-usage-details.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -52,6 +55,7 @@ export class NxServiceDetailsTableComponent {
     ];
     selectedRecordId = '';
     records = input.required<FormattedServiceDetailRecord[]>();
+    totals = input.required<ServiceDetailTotals>();
     serviceId = input.required<string>();
     entityId = input.required<string>();
 

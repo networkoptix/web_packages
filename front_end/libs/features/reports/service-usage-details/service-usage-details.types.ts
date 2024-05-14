@@ -7,3 +7,9 @@ export interface FormattedServiceDetailRecord {
     monthlyRate: number;
     fractionalUsage: number;
 }
+
+export interface ServiceDetailTotals {
+    channels: number;
+    monthlyRate: number;
+    fractionalUsage: number;
+}
