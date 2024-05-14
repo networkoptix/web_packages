@@ -51,6 +51,10 @@
                             <span class="control-message__error">{{
                                 LANG.dialogs.channelPartners.selfAdd | translate
                             }}</span>
+                        } @else if (emailControl.errors?.backendError) {
+                            <span class="control-message__error">{{
+                                emailControl.errors.backendErrorMessage
+                            }}</span>
                         } @else if (emailControl.touched && emailControl.errors?.pattern) {
                             <span
                                 class="control-message__error"

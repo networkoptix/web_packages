@@ -1,6 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CdkStepper, CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     Component,
     Inject,
@@ -93,9 +94,11 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     @ViewChild('stepper') private stepper: CdkStepper;
     @ViewChild(NxOrgTreeSelectorComponent) private treeComponent: NxOrgTreeSelectorComponent;
 
+    private usersByGroups = this.orgUserStore.usersByGroupSignalFactory(this.organization.id);
+
     /** Roles existing users have, not roles for users */
     private userRoles = computed<UserRoles>(() => {
-        const users = this.orgUserStore.usersByGroupSignalFactory(this.organization.id)();
+        const users = this.usersByGroups();
         const userRoles: UserRoles = new Map();
         users.forEach(user => {
             if (user.groupRoles?.length) {
@@ -375,6 +378,17 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
                 this.orgUserStore.updateGroupCache(this.organization.id);
             }
             this.close(user);
+        },
+        error: (e: HttpErrorResponse) => {
+            const backendErrorMessage =
+                e.error?.email?.[0] || this.translate.instant(LANG.errorCodes.unexpectedError);
+            const errorEmail = this.emailControl.value;
+            this.emailControl.addValidators([
+                (control: FormControl<string>) =>
+                    control.value === errorEmail
+                        ? { backendError: true, backendErrorMessage }
+                        : null,
+            ]);
         },
     });
 }
