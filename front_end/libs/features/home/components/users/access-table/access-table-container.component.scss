@@ -3,19 +3,30 @@
     padding: 1rem;
     padding-top: 0.5rem;
     height: 85%;
+}
 
-    .selected-users {
-        display: flex;
-        align-items: center;
+.selected-users {
+    display: flex;
+    align-items: center;
+    color: var(--btn-close-bg);
 
-        button {
-            .icon-with-fill {
-                fill: #698796;
+    .text {
+        svg {
+            .st0 {
+                stroke: var(--btn-close-bg);
             }
-            color: #698796;
+        }
+    }
+
+    button {
+        color: var(--svg-std-icon-fill);
+
+        .icon-with-fill {
+            fill: var(--svg-std-icon-fill);
         }
     }
 }
+
 .header {
     padding: 1rem;
     padding-bottom: 0;

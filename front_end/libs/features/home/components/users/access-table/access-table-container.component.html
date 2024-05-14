@@ -58,12 +58,16 @@
                 </button>
             }
         }
-        <div class="input px-2">
-            <span class="glyphicon web-icon-search icon-search"></span>
-            <input
-                class="pl-2"
-                [placeholder]="'Search' | translate"
-            />
+        <div class="filter">
+            <nx-search
+                [(ngModel)]="searchModel"
+                (ngModelChange)="setQuery($event)"
+                layout="search"
+                instant
+            ></nx-search>
+            <!--            <button (click)="sortRecords()">-->
+            <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
+            <!--            </button>-->
         </div>
     </div>
     @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
