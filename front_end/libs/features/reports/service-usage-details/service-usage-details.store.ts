@@ -2,7 +2,10 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
-import { FormattedServiceDetailRecord } from '@pages/reports/service-usage-details/service-usage-details.types';
+import {
+    FormattedServiceDetailRecord,
+    ServiceDetailTotals,
+} from '@pages/reports/service-usage-details/service-usage-details.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
@@ -67,6 +70,20 @@ export const ServiceUsageDetailsStore = signalStore(
                     }),
                 ),
         ),
+        entityServiceChangeTotals$$: computed<ServiceDetailTotals>(() =>
+            store.entityServiceChanges().reduce(
+                ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
+                    channels: channels + serviceChangeEntry.channels,
+                    monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
+                    fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
+                }),
+                {
+                    channels: 0,
+                    monthlyRate: 0,
+                    fractionalUsage: 0,
+                },
+            ),
+        ),
         systemServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
             store
                 .systemServiceChanges()
@@ -89,6 +106,20 @@ export const ServiceUsageDetailsStore = signalStore(
                         fractionalUsage: daily_rate,
                     }),
                 ),
+        ),
+        systemServiceChangeTotals$$: computed<ServiceDetailTotals>(() =>
+            store.systemServiceChanges().reduce(
+                ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
+                    channels: channels + serviceChangeEntry.channels,
+                    monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
+                    fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
+                }),
+                {
+                    channels: 0,
+                    monthlyRate: 0,
+                    fractionalUsage: 0,
+                },
+            ),
         ),
     })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({

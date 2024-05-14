@@ -12,7 +12,7 @@ import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { DetailTableResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxUsageDetailsDialogTableComponent } from './usage-details-dialog-table/usage-details-dialog-table.component';
-import { UsageDetailDialogRecord } from './view-usage-details.types';
+import { UsageDetailDialogRecord, UsageDetailDialogTotals } from './view-usage-details.types';
 
 @Component({
     selector: 'nx-usage-details-content',
@@ -33,11 +33,9 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
     isLoading$$ = computed<boolean>(() => !this.detailTableData$$());
     formattedRecords$$ = computed<UsageDetailDialogRecord[]>(() => {
         const records = this.detailTableData$$();
-        // previousPeriod and total are always assigned in the loop below because 'beginning' and 'total'
-        // are always returned by the API, although TypeScript can't know that for certain and throws a warning below
-        // without these non null assertions
+        // previousPeriod is always assigned in the loop below because 'beginning' is always returned by the API
+        // TypeScript however can't know that for certain and throws a warning below without the non null assertion
         let previousPeriod!: UsageDetailDialogRecord;
-        let total!: UsageDetailDialogRecord;
         const currentPeriodChanges: UsageDetailDialogRecord[] = [];
 
         if (!records) {
@@ -55,10 +53,8 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
             if (date === 'beginning') {
                 formattedRecord.changed = 'Previous periods';
                 previousPeriod = formattedRecord;
-            } else if (date === 'total') {
-                formattedRecord.changed = 'Total';
-                total = formattedRecord;
-            } else {
+            } else if (date !== 'total') {
+                // Totals are handled in a different computed signal below
                 const [year, month, day] = date.split('-').map(d => Number(d));
                 formattedRecord.changed = this.dateTimeFormat.mediumDateString(
                     new Date(year, month - 1, day),
@@ -67,7 +63,24 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
                 currentPeriodChanges.push(formattedRecord);
             }
         });
-        return [...currentPeriodChanges, previousPeriod, total];
+        return [...currentPeriodChanges, previousPeriod];
+    });
+    totals$$ = computed<UsageDetailDialogTotals>(() => {
+        const records = this.detailTableData$$();
+        const totalsRecord = records?.find(record => record.date === 'total');
+        if (!totalsRecord) {
+            return {
+                channels: 0,
+                monthlyRate: 0,
+                fractionalUsage: 0,
+            };
+        } else {
+            return {
+                channels: totalsRecord.channels,
+                monthlyRate: totalsRecord.monthly_rate,
+                fractionalUsage: totalsRecord.daily_rate,
+            };
+        }
     });
 
     constructor(

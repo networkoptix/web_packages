@@ -270,6 +270,12 @@
             }
         }
     }
+
+    .summary-row {
+        & > div {
+            border-right: none;
+        }
+    }
 }
 
 .cameras {

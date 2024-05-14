@@ -9,7 +9,7 @@ import { NxServiceUsageTableComponent } from '../service-usage/service-usage-tab
 
 import { NxServiceDetailsTableComponent } from './service-details-table/service-details-table.component';
 import { ServiceUsageDetailsStore } from './service-usage-details.store';
-import { FormattedServiceDetailRecord } from './service-usage-details.types';
+import { FormattedServiceDetailRecord, ServiceDetailTotals } from './service-usage-details.types';
 
 @Component({
     selector: 'nx-service-usage-details',
@@ -39,6 +39,15 @@ export class NxServiceUsageDetailsComponent {
             return this.serviceUsageDetailsStore.entityServiceChangesForTable$$();
         } else {
             return this.serviceUsageDetailsStore.systemServiceChangesForTable$$();
+        }
+    });
+
+    serviceDetailTotals$$ = computed<ServiceDetailTotals>(() => {
+        const entityType = this.entityType$$();
+        if (entityType === EntityType.channelPartner) {
+            return this.serviceUsageDetailsStore.entityServiceChangeTotals$$();
+        } else {
+            return this.serviceUsageDetailsStore.systemServiceChangeTotals$$();
         }
     });
 

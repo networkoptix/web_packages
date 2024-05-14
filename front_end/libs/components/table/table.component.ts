@@ -103,6 +103,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     @ContentChild('header') header: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
+    @ContentChild('summaryRow') summaryRow: TemplateRef<never>;
 
     @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<
         ElementRef<HTMLDivElement>

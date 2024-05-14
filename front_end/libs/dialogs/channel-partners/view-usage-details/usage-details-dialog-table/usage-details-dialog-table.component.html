@@ -52,4 +52,10 @@
             }
         </div>
     </ng-template>
+    <ng-template #summaryRow
+        ><div></div>
+        <div class="numeric-column">{{ totals().channels }}</div>
+        <div class="numeric-column">{{ totals().monthlyRate }}</div>
+        <div class="numeric-column">{{ totals().fractionalUsage }}</div></ng-template
+    >
 </nx-table>

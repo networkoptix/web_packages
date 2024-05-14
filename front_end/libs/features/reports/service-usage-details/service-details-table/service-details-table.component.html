@@ -46,4 +46,11 @@
             {{ row.fractionalUsage }}
         </div>
     </ng-template>
+    <ng-template #summaryRow
+        ><div></div>
+        <div></div>
+        <div>{{ totals().channels }}</div>
+        <div>{{ totals().monthlyRate }}</div>
+        <div>{{ totals().fractionalUsage }}</div></ng-template
+    >
 </nx-table>

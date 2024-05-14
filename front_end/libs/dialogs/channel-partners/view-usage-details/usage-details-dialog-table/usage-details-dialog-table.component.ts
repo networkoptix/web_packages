@@ -7,7 +7,7 @@ import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-
 import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
 
-import type { UsageDetailDialogRecord } from '../view-usage-details.types';
+import type { UsageDetailDialogRecord, UsageDetailDialogTotals } from '../view-usage-details.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -55,4 +55,5 @@ export class NxUsageDetailsDialogTableComponent {
     ];
     selectedRecordId = '';
     records = input.required<UsageDetailDialogRecord[]>();
+    totals = input.required<UsageDetailDialogTotals>();
 }
