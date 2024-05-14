@@ -88,7 +88,9 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
                     }),
                 );
             },
-            {},
+            {
+                ignoreError: true,
+            },
             res => this.close(res),
             err => {
                 this.unlock();
