@@ -33,7 +33,7 @@
                                         name="name"
                                         id="name"
                                         #name="ngModel"
-                                        [disabled]="disableNameInput$$()"
+                                        [disabled]="!canConfigure$$()"
                                         [ngModel]="currentName()"
                                         (ngModelChange)="onNameChange($event)"
                                         nxFocusMe
@@ -88,7 +88,7 @@
     </div>
 </div>
 <!--We'll replace settingsViews check with calAlterState check once we have the ability to check parent partner's permissions-->
-@if (settingsState().view !== settingsViews.CHANNEL_PARTNERS) {
+@if (showStateChangeBlock && settingsState().view !== settingsViews.CHANNEL_PARTNERS) {
     <div class="row pt-3">
         <div class="col-10">
             @if (!canChangeState()) {

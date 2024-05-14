@@ -38,7 +38,6 @@ import {
     State,
     UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
 import { Process } from '@services/process.service/process';
 import { MAX_NAME_LENGTH } from '@static-variables';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
@@ -100,7 +99,6 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     override LANG = staticLang;
     override icons = icons;
     orgUserStore = inject(OrgUsersStore);
-    override readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     override readonly settingsViews = settingsViews;
     override permissionsStore = inject(PermissionsStore);
     override channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);

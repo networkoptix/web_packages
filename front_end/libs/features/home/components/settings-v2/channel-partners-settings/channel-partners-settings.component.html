@@ -6,7 +6,7 @@
                     <nx-settings-general-v2
                         [currentName]="currentName$ | async"
                         [permissions]="permissions$$()"
-                        [canChangeState]="canChangeStateUI"
+                        [canChangeState]="permissionsStore.canChangePartnerState$$()"
                         [currState]="currentState$ | async"
                         (updateName)="onNameChange($event)"
                         (updateState)="handleStateUpdate($event)"

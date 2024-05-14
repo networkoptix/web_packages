@@ -9,7 +9,7 @@
                         (updateName)="onNameChange($event)"
                         [canUpdateAccess]="canUpdateAccess"
                         [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
-                        [canChangeState]="canChangeStateUI"
+                        [canChangeState]="permissionsStore.canChangeOrganizationState$$()"
                         [currState]="currentState$ | async"
                         [settingsState]="currentState$$()"
                         (updateState)="handleStateUpdate($event)"
