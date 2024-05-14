@@ -72,7 +72,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     --elements-disabled : #585858; //$dark_gray_12;
 
-    --svg-std-icon-fill : #888888; //$dark_gray_18;
+    --svg-std-icon-fill : var(--dark_gray_16);
     --svg-path-light-color : #404040; //$dark_gray_9;
     --svg-path-dark-color  : #E8E8E8; //$light_gray_4;
     --svg-path-accent-color : var(--svg-path-dark-color);
@@ -507,7 +507,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     --table-alt-row-bg: #202020; //$dark_gray_5;
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
-    --table-row-selected-bg : #{$dark_gray_16};
+    --table-row-selected-bg : #{$dark_gray_8};
     --table-row-selected-color : #{$light_gray_1};
 
     --dynamic-table-row-hover-bg : var(--light_gray_16) !important;
@@ -696,6 +696,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --CP-state-button: var(--dark_gray_5);
     --CP-state-button-selected: var(--dark_gray_10);
     --CP-state-color: var(--light16);
+    --CP-state-help-color: var(--light_gray_16);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: var(--dark_gray_5);

@@ -8,7 +8,6 @@ import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import type { DraggableItem } from '@pages/home/home.types';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
@@ -31,7 +30,6 @@ import { selectCurrentOrganization } from '@store/channel-partners/channel-partn
         AngularSvgIconModule,
         DragDropModule,
         NxAddSvgSrcDirective,
-        NxTooltipDirective,
         RouterModule,
         PipesModule,
     ],

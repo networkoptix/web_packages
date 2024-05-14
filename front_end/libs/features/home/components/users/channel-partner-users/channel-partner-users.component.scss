@@ -36,7 +36,7 @@
 .selected-users {
     display: flex;
     align-items: center;
-    color: var(--light4);
+    color: var(--btn-close-bg);
 
     .text {
         display: flex;
@@ -45,7 +45,7 @@
 
         svg {
             .st0 {
-                stroke: var(--light4);
+                stroke: var(--btn-close-bg);
             }
         }
     }
@@ -54,10 +54,10 @@
         gap: .2rem;
         font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background: none;
-        color: var(--light16);
+        color: var(--svg-std-icon-fill);
 
         .icon-with-fill {
-            fill: var(--light16);
+            fill: var(--svg-std-icon-fill);
         }
     }
 }

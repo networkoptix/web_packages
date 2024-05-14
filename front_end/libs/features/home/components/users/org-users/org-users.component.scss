@@ -3,16 +3,26 @@
 }
 
 .actions {
-  .selected-users {
-    display: flex;
-    align-items: center;
-  
-    button {
-        .icon-with-fill {
-            fill: var(--light16);
+    .selected-users {
+        display: flex;
+        align-items: center;
+        color: var(--btn-close-bg);
+
+        .text {
+            svg {
+                .st0 {
+                    stroke: var(--btn-close-bg);
+                }
+            }
         }
-        color: var(--light16);
+  
+        button {
+            color: var(--svg-std-icon-fill);
+
+            .icon-with-fill {
+                fill: var(--svg-std-icon-fill);
+            }
+        }
     }
-  }
 
 }

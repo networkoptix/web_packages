@@ -82,7 +82,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --svg-warning-fill: #C26626;
     --svg-warning-elm-fill: #{$warning_icon_dark_elm};
 
-    --svg-std-icon-fill : #587785; //$dark18;
+    --svg-std-icon-fill : var(--dark16);
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;
     --svg-path-accent-color : var(--svg-path-dark-color);
@@ -527,7 +527,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
 
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
-    --table-row-selected-bg : #{$dark16};
+    --table-row-selected-bg : #{$dark8};
     --table-row-selected-color : #{$light1};
 
     --dynamic-table-row-hover-bg : var(--light16) !important;
@@ -717,6 +717,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --CP-state-button: var(--dark5);
     --CP-state-button-selected: var(--dark10);
     --CP-state-color: var(--light16);
+    --CP-state-help-color: var(--light16);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: var(--dark5);

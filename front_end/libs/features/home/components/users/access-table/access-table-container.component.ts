@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, ViewChild, computed, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxSearchComponent } from '@components/search/search.component';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -39,6 +42,8 @@ import { UserRecord, UserType } from '../channel-partner-users/channel-partner-u
         NxAddSvgSrcDirective,
         RouterModule,
         PipesModule,
+        FormsModule,
+        NxSearchComponent,
     ],
     standalone: true,
 })
@@ -50,6 +55,7 @@ export class NxAccessTableContainerComponent {
 
     @Input() email: string = '';
     @ViewChild(NxUsersAccessTableComponent) accessTable!: NxUsersAccessTableComponent;
+    searchModel: SearchFilter = { query: '' };
 
     orgUsersStore = inject(OrgUsersStore);
     accountEmail$$ = this.store.selectSignal(accountSelectors.selectCurrentUserName);
@@ -168,6 +174,10 @@ export class NxAccessTableContainerComponent {
         private dialogService: NxDialogsService,
         private translateService: TranslateService,
     ) {}
+
+    setQuery(model: SearchFilter): void {
+        this.orgUsersStore.setSearchQuery(model.query);
+    }
 
     addAccess(): void {
         this.dialogService.addOrgUserV2({
