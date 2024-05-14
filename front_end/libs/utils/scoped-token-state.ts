@@ -56,11 +56,12 @@ export class ScopedTokenState {
         const expiresAt = await this.expiresAt;
         const now = Date.now();
 
-        const expired = expiresAt < now;
+        const expired = expiresAt - 30_000 <= now; // try to refresh 30s before expiration.
 
         if (expired) {
             this.accessToken = this.refreshAccessToken();
-            this.expiresAt ||= this.getExpiresAt(token);
+            const newToken = await this.accessToken;
+            this.expiresAt ||= this.getExpiresAt(newToken);
             this.emitState();
         }
 

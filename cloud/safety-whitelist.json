@@ -240,5 +240,9 @@
   "67137": {
     "name": "pillow",
     "note": "pillow 9.1.1 addresses the CVE-2022-30595: libImaging/TgaRleDecode.c in Pillow 9.1.0 has a heap buffer overflow in the processing of invalid TGA image files. CVE-2022-30595 For more information, please visit https://data.safetycli.com/v/67137/f17"
+  },
+  "67599": {
+    "name": "pip",
+    "note": "** DISPUTED ** An issue was discovered in pip (all versions) because it installs the version with the highest version number, even if the user had intended to obtain a private package from a private index. This only affects use of the --extra-index-url option, and exploitation requires that the package does not already exist in the public index (and thus the attacker can put the package there with an arbitrary version number). NOTE: it has been reported that this is intended functionality and the user is responsible for using --extra-index-url securely. CVE-2018-20225 For more information, please visit https://data.safetycli.com/v/67599/f17"
   }
 }

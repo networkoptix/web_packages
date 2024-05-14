@@ -442,8 +442,8 @@ async def refresh_access_token(request):
     except APINotAuthorisedException:
         old_token_info = {'expires_in': 0}
 
-    if int(old_token_info['expires_in']) > 0:
-        # Token lifetime is now 10 minutes so we should return it until it hits 0.
+    if int(old_token_info['expires_in']) > 30:
+        # Token lifetime is now 5 minutes. So we should return it until it there's less than 30 seconds left.
         return api_success(old_token_info)
 
     tokens = await sync_to_async(Auth.get_refresh_token)(refresh_token, get_ip(request))
