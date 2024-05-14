@@ -24,6 +24,7 @@ import {
     OrgRoleIds,
     State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { icons, MAX_NAME_LENGTH } from '@static-variables';
 
 const partnerAccess: DropdownItem<string | null>[] = [
@@ -81,6 +82,8 @@ export class NxSettingsGeneralV2Component {
     icons = icons;
     State = State;
 
+    showStateChangeBlock = nxConfig.featureFlags.channelPartnersChangeStateUI;
+
     @Input() currState: State | null;
     @Input() canUpdateAccess: boolean = false;
 
@@ -90,9 +93,7 @@ export class NxSettingsGeneralV2Component {
     channelPartnerAccessLevel = input<string>('');
     canChangeState = input.required<boolean>();
     permissions = input.required<{ canAlterState: boolean; canConfigure: boolean }>();
-    canAlter$$ = computed<boolean>(() => this.permissions().canAlterState);
     canConfigure$$ = computed<boolean>(() => this.permissions().canConfigure);
-    disableNameInput$$ = computed<boolean>(() => !this.permissions().canAlterState);
     settingsState = input.required<SettingsState>();
     currAccess$$ = computed<DropdownItem<string | null>>(
         () => accessMap?.[this.channelPartnerAccessLevel()] || null,
