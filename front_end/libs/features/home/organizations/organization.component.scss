@@ -84,13 +84,16 @@
 nx-hidable {
     a {
         @include typography.light14light16;
-        color: var(--body-text-color);
+        color: var(--channel-partner-back-button-bg-color) !important;
         position: relative;
         margin-right: 1em;
         align-items: center;
         display: inline-flex;
         text-decoration: none;
         padding-bottom: .5rem;
+        svg > path {
+            stroke: var(--channel-partner-back-button-bg-color);
+        }
 
         &:not(:first-of-type) {
             &::after {
