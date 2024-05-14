@@ -355,3 +355,16 @@ class TestChannelPartnerUserViewSet:
         assert response.data['rolesIds'] == [str(ChannelPartnerRoles.MANAGER)]
         assert response.data['created']
         assert response.data['lastModified']
+
+    def test_paginated_list(self, mock_auth_with_user, arf, cp_user_factory):
+        init_users = self.cp.users.count()
+        for _ in range(150):
+            cp_user_factory(channel_partner=self.cp)
+        mock_auth_with_user(self.cp_user)
+        request = arf.get('/')
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'paginated_list'})
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert response.data['count'] == 150 + init_users
+        assert response.data['next']

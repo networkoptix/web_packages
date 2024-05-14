@@ -249,6 +249,7 @@ class ParentLookUpMixin:
         return m2m_key, val
 
 
+
 @extend_schema(
     tags=['Channel Partner Users'],
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID, description='The primary key of the channel partner')]
@@ -281,7 +282,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
-        if self.action in ('create', 'list', 'bulk_delete'):
+        if self.action in ('create', 'list', 'bulk_delete', 'paginated_list'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage_users))
         if self.action in ('retrieve',):
             perms.append(CanPerformChannelPartnerAction(ChannelPartnerToUser.can_manage))
@@ -363,6 +364,14 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         deleted_emails_serializer.is_valid(raise_exception=True)
 
         return Response(deleted_emails_serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(summary='Return paginated user list.',
+                   responses=ChannelPartnerUserSerializer(many=True))
+    @action(methods=['get'], detail=False, url_path='paginated', pagination_class=DefaultPagination)
+    def paginated_list(self, request, *args, **kwargs):
+        self._paginator = DefaultPagination()
+        return self.list(request, *args, **kwargs)
+
 
 @extend_schema(
     tags=['Channel Partners'],
@@ -1016,7 +1025,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
-        if self.action in ('create', 'list', 'destroy', 'retrieve', 'bulk_delete'):
+        if self.action in ('create', 'list', 'destroy', 'retrieve', 'bulk_delete', 'paginated_list'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_users))
         return perms
 
@@ -1123,6 +1132,13 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
         OrganizationToUser.objects.filter(
             organization=organization, system_group_id__in=serializer.validated_data, user=user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(summary='Return paginated user list.',
+                   responses=OrganizationUserSerializer(many=True))
+    @action(methods=['get'], detail=False, url_path='paginated', pagination_class=DefaultPagination)
+    def paginated_list(self, request, *args, **kwargs):
+        self._paginator = DefaultPagination()
+        return self.list(request, *args, **kwargs)
 
 
 @extend_schema(
@@ -1325,6 +1341,13 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
         serializer = self.get_serializer(queryset, many=True)
         # serializer = SystemGroupUserSerializer(queryset, many=True, context=self.get_serializer_context())
         return Response(serializer.data)
+
+    @extend_schema(summary='Return paginated user list.',
+                   responses=SystemGroupUserSerializer(many=True))
+    @action(methods=['get'], detail=False, url_path='paginated', pagination_class=DefaultPagination)
+    def paginated_list(self, request, *args, **kwargs):
+        self._paginator = DefaultPagination()
+        return self.list(request, *args, **kwargs)
 
 
 @extend_schema_view(

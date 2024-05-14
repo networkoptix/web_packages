@@ -227,6 +227,15 @@ class TestSystemGroupUserViewSet:
             assert data['hasAccessTo']['name'] == instance.name
             assert data['hasAccessTo']['membershipType'] == instance._meta.model_name
 
+    def test_paginated_list(self, mock_auth_with_user, arf):
+        view = SystemGroupUserViewSet.as_view(actions={'get': 'paginated_list'})
+        request = arf.get('/')
+        mock_auth_with_user(self.org_user)
+        response = view(request, parent_lookup_system_group=str(self.group.id))
+        assert response.status_code == 200
+        assert response.data['count'] == len(self.users)
+        assert response.data['next'] is None
+
 
 class TestSystemGroupUserViewSetRetrieve:
 

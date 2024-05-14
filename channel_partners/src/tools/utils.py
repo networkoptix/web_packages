@@ -6,9 +6,9 @@ import typing
 
 import httpx
 import structlog
-from httpx import Response
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from nx_cloud_api_client.client import NxCloudAPISyncClient
+from rest_framework.response import Response
 
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
@@ -27,7 +27,7 @@ def bind_system_to_cdb_organization(
 ) -> typing.Tuple[typing.Any, int]:
     client: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
 
-    response: Response = client.system.bind(
+    response = client.system.bind(
         id=system_id,
         name=name,
         customization=customization,
