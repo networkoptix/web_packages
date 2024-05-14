@@ -375,6 +375,18 @@ class TestOrganizationUserViewSetList:
                                  parent_lookup_organization=self.organization.id)
         assert response.status_code == 403
 
+    def test_paginated_response(self, mock_auth_with_user, org_user_factory):
+        mock_auth_with_user(self.org_admin)
+        view = OrganizationUserViewSet.as_view(actions={'get': 'paginated_list'}, detail=True)
+        init_users = self.organization.users.count()
+        for _ in range(150):
+            org_user_factory(organization=self.organization)
+        response = view(self.request, parent_lookup_organization=self.organization.id)
+        assert response.status_code == 200
+        assert response.data['count'] == 150 + init_users
+        assert len(response.data['results']) == 100
+        assert response.data['next']
+
 
 class TestOrganizationUserViewSetRetrieve:
 
