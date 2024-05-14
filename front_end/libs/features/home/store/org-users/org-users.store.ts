@@ -314,6 +314,7 @@ export const OrgUsersStore = signalStore(
                                 },
                                 error: e => {
                                     console.error(e);
+                                    throw e;
                                 },
                             }),
                         );

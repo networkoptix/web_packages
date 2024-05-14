@@ -7,8 +7,9 @@ import {
     FormsModule,
     ReactiveFormsModule,
     AbstractControl,
+    FormControl,
 } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -57,6 +58,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         toastService: NxToastService,
         private formBuilder: FormBuilder,
         private nxValidators: NxValidators,
+        private translate: TranslateService,
     ) {
         super(dialogRef);
         // There's probably a smarter place to put this so we only have
@@ -91,8 +93,20 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
             err => {
                 this.unlock();
                 console.error(err);
-                const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                toastService.notify(msg, ToastType.Danger);
+                const msg =
+                    err.email[0] || this.translate.instant(staticLang.errorCodes.unexpectedError);
+                const emailControl = this.form.get('email');
+                if (!emailControl) {
+                    const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
+                    toastService.notify(msg, ToastType.Danger);
+                    return;
+                }
+                const errorEmail = emailControl.value;
+                emailControl.addValidators([
+                    (control: FormControl<string>) =>
+                        control.value === errorEmail ? { backendError: true, msg } : null,
+                ]);
+                emailControl.updateValueAndValidity();
             },
         );
     }

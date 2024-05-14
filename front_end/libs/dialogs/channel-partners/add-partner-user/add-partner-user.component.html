@@ -45,7 +45,8 @@
                         *ngIf="
                             emailInput?.errors['requiredEmail'] ||
                             emailInput?.errors['emailInvalid'] ||
-                            emailInput?.errors['existingEmail']
+                            emailInput?.errors['existingEmail'] ||
+                            emailInput?.errors['backendError']
                         "
                         class="input-error"
                         >{{ emailInput?.errors?.msg }}</span
