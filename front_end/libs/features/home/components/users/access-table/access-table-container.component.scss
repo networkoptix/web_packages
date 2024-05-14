@@ -33,15 +33,19 @@
     padding-top: 1.25rem;
 
     .back {
-        color: var(--light16);
 
         a {
             display: flex;
             align-items: center;
             gap: 2px;
             text-decoration: none;
-            color: var(--light16);
+            color: var(--channel-partner-back-button-bg-color);
+            padding-bottom: .5rem;
             height: 20px;
+
+            svg > path {
+                stroke: var(--channel-partner-back-button-bg-color);
+            }
 
             .back-icon {
                 display: flex;
