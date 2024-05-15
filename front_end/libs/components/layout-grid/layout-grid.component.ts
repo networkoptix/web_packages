@@ -50,6 +50,7 @@ import {
 } from 'rxjs';
 import {
     catchError,
+    debounceTime,
     delay,
     delayWhen,
     distinctUntilChanged,
@@ -73,8 +74,10 @@ import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-g
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxLinesLoaderComponent } from '@components/skeleton-loader/variants/lines-loader/lines-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
@@ -86,6 +89,7 @@ import {
     WebRTCStreamManager,
 } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { GroupsCacheStore } from '@pages/home/store/groups/groups-cache.store';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
@@ -106,14 +110,18 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
+import { SystemResourcesTypeMap } from '@store/system-resources/system-resources.types';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanId, cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
+import { paramModel } from '@utils/signals';
 import { ExtractObservable } from '@utils/type-helpers';
 
+import { filterOtherSites } from './filter-other-sites';
+import { findOtherSite } from './find-other-site';
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
     LayoutRenderConfig,
@@ -132,6 +140,7 @@ import {
     Setting,
     Size,
 } from './layout-grid.types';
+import { removeSystemChildren } from './remove-system-children';
 
 const SETTINGS_CONFIG: Setting[] = [
     { label: 'Layout', type: 'heading' },
@@ -340,6 +349,8 @@ const calculateResize = (
         CdkContextMenuTrigger,
         NxWebGLCanvasComponent,
         NxPagePlaceholderComponent,
+        NxLinesLoaderComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class NxLayoutGridComponent {
@@ -368,6 +379,8 @@ export class NxLayoutGridComponent {
     @ViewChild('otherSystems') set otherSystems(element: ElementRef<HTMLDetailsElement>) {
         this.detailsRef$$.set(element?.nativeElement);
     }
+
+    groupsCacheStore = inject(GroupsCacheStore);
 
     detailsRef$$ = signal<HTMLDetailsElement | null>(null);
     otherSystemsOpen$$ = computed(() => {
@@ -1049,31 +1062,71 @@ export class NxLayoutGridComponent {
 
     otherSystems$$ = signal<LayoutResourceTree['otherSystems']>([]);
 
-    otherSystemsFilter$$ = computed(() => {
-        const params = this.layoutStateService.paramStateHandler.state$$();
-        return (params.queryParams?.otherSitesFilter || []).map(name => name.toLocaleLowerCase());
+    currentSite$$ = paramModel('currentSite');
+
+    search$$ = paramModel('search');
+
+    currentActiveSite$$ = computed(() => {
+        const currentSite = this.currentSite$$();
+        const otherSystems = this.otherSystems$$();
+        if (!currentSite || !otherSystems) {
+            return null;
+        }
+
+        return findOtherSite(currentSite, otherSystems);
     });
 
+    currentSiteId$$ = computed(() => this.currentActiveSite$$()?.details.id);
+
+    loadSiteEffect = effect(
+        () => {
+            const currentSiteId = this.currentSiteId$$();
+            if (currentSiteId) {
+                this.layoutStateService.loadSite(currentSiteId);
+            }
+        },
+        { allowSignalWrites: true },
+    );
+
+    allSitesSearchResults$$ = computed(() => {
+        const otherSystemsFull: ResourceNode[] = this.otherSystems$$() || [];
+        const otherSystems = removeSystemChildren(otherSystemsFull);
+        const otherSystemsFilter = this.search$$();
+
+        if (!otherSystemsFilter) {
+            return { results: otherSystems, matches: 0 };
+        }
+
+        return filterOtherSites(otherSystems, otherSystemsFilter);
+    });
+
+    currentSiteSearchResults$$ = computed(() => {
+        const currentSiteFull: ResourceNode[] = this.currentActiveSite$$()?.children || [];
+        const siteCameras = removeSystemChildren(currentSiteFull);
+        const currentSiteFilter = this.search$$();
+
+        if (!currentSiteFilter) {
+            return { results: siteCameras, matches: 0 };
+        }
+
+        return filterOtherSites(siteCameras, currentSiteFilter);
+    });
+
+    searchMatches$$ = computed(() =>
+        this.currentActiveSite$$()
+            ? this.currentSiteSearchResults$$().matches
+            : this.allSitesSearchResults$$().matches,
+    );
+
     filteredOtherSystems$$ = computed(() => {
-        const otherSystems: ResourceNode[] = this.otherSystems$$() || [];
-        const otherSystemsFilter = this.otherSystemsFilter$$();
+        const currentSite = this.currentActiveSite$$();
 
-        if (!otherSystemsFilter.length) {
-            return otherSystems;
+        if (currentSite) {
+            return this.currentSiteSearchResults$$().results;
         }
 
-        const exactMatch = otherSystems
-            .filter(({ name }) => otherSystemsFilter.includes(name.toLocaleLowerCase()))
-            .flatMap(({ children }) => children);
-
-        if (exactMatch.length) {
-            return exactMatch;
-        }
-
-        return otherSystems.filter(({ name }) =>
-            otherSystemsFilter.find(filterName =>
-                name.toLocaleLowerCase().includes(filterName.toLocaleLowerCase()),
-            ),
+        return this.allSitesSearchResults$$().results.sort(({ type: a }, { type: b }) =>
+            a === b ? 0 : a === ResourceType.SYSTEMS_ORGANIZATION ? -1 : 1,
         );
     });
 
@@ -2081,4 +2134,13 @@ export class NxLayoutGridComponent {
             resolution: Resolution.AUTO,
         });
     }
+
+    loadSiteAction = {
+        action: (): Observable<SystemResourcesTypeMap> =>
+            this.layoutStateService
+                .loadSite(this.currentSiteId$$()!)
+                .pipe(debounceTime(1_000), delay(new Date(Date.now() + 2_500))),
+        success: () => {},
+        error: () => {},
+    };
 }

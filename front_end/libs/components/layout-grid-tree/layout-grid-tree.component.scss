@@ -46,7 +46,7 @@
 }
 
 $sel: '.cdk-tree';
-@for $i from 1 through 10 {
+@for $i from 1 through 20 {
     $sel: selector-nest($sel, '> .tree-node > .expanded-tree') !global;
     #{$sel} {
         --offset-tree-node: #{24px * $i};

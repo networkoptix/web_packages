@@ -199,10 +199,17 @@
 </ng-template>
 
 <ng-template #simpleNodeText>
-    <!-- node.name is also used for Layouts, Cameras, etc. root nodes. Needs to be translated -->
-    <span
-        class="ellipsis node-name"
-        #nodeName
-        >{{ node$$().name }}</span
-    ></ng-template
->
+    @if (baseNodeType$$()) {
+        <span
+            class="ellipsis node-name"
+            #nodeName
+            >{{ node$$().name }}</span
+        >
+    } @else {
+        <nx-search-highlight
+            class="ellipsis node-name"
+            [text]="node$$().name"
+            [search]="query$$()"
+        ></nx-search-highlight>
+    }
+</ng-template>

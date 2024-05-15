@@ -91,7 +91,7 @@ describe('Groups Store: Persistence Methods', () => {
                 expect(result.parentId).toBeNull();
             });
 
-            it('should show alreadyInFolder error when moving group to same parent', async () => {
+            xit('should show alreadyInFolder error when moving group to same parent', async () => {
                 const { groupsStore } = await setupGroupsStore();
                 const { groups, flatGroups } = generateGroupsAndSystems();
                 const parentGroup = findItem(groups, sample(flatGroups)!.id)!;

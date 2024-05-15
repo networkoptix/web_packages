@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+  .st1{fill:var(--svg-placeholder-elm2-color);}
+  .st2{fill:var(--brand-core);}
+  .st3{fill:#D9D9D9}
+</style>
+<path class="st1" d="M54 40.9636C54 39.9651 53.2635 39.1195 52.2745 38.9825L46.2745 38.1512C45.0723 37.9846 44 38.9186 44 40.1323V52.9999H54V40.9636Z"/>
+<rect class="st2" x="5" y="54" width="51" height="3"/>
+<path class="st1" fill-rule="evenodd" clip-rule="evenodd" d="M8.63301 23.8285C7.68632 24.0052 7 24.8315 7 25.7945V53H22V23.7412C22 22.4896 20.8634 21.5455 19.633 21.7752L8.63301 23.8285ZM10 27H19V29H10V27ZM10 31H19V33H10V31ZM19 35H10V37H19V35ZM10 39H15V41H10V39Z"/>
+<path class="st3" fill-rule="evenodd" clip-rule="evenodd" d="M25 7C23.8954 7 23 7.89543 23 9V53H43V9C43 7.89543 42.1046 7 41 7H25ZM26 10H40V12H26V10ZM26 14H40V16H26V14ZM40 18H26V20H40V18ZM26 22H34V24H26V22Z"/>
+</svg>

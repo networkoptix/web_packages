@@ -21,6 +21,7 @@ import {
     map,
     of,
     shareReplay,
+    skip,
     startWith,
     switchMap,
     take,
@@ -48,6 +49,11 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types/layouts.types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { SystemResourcesActions, SystemResourcesSelectors } from '@store/system-resources';
+import {
+    RefreshSystemResources,
+    SystemResourcesTypeMap,
+} from '@store/system-resources/system-resources.types';
 import { cleanId, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 
@@ -533,6 +539,22 @@ export class LayoutStateService {
     );
 
     activeLayoutHistory: string[] = [];
+
+    loadSite(
+        siteId: string,
+        refreshSystemResources: RefreshSystemResources = { cameras: true },
+    ): Observable<SystemResourcesTypeMap> {
+        this.store.dispatch(
+            SystemResourcesActions.refreshSystemResources({
+                systems: {
+                    [siteId]: refreshSystemResources,
+                },
+            }),
+        );
+        return this.store
+            .select(SystemResourcesSelectors.selectResourcesValuesBySystemId(siteId))
+            .pipe(skip(1));
+    }
 
     constructor(
         private cloudApi: NxCloudApiService,

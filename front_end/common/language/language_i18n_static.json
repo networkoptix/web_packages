@@ -237,7 +237,21 @@
             "searchCameras": "Search cameras from site",
             "connectingToSystem": "Connecting to \"{name}\"...",
             "systemUnavailable": "System \"{name}\" is unavailable...",
-            "unknownSystem": "Unknown system \"{id}\". Please make sure that you've been given access to this system."
+            "unknownSystem": "Unknown system \"{id}\". Please make sure that you've been given access to this system.",
+            "found": "{count, plural, other{# found}}",
+            "placeholders": {
+                "nothingFound": {
+                    "title": "Nothing Found",
+                    "description": "No devices have been added to this site yet"
+                },
+                "cantConnectToSite": {
+                    "title": "Couldn't connect to the site",
+                    "description": "Try connecting again"
+                },
+                "noMatches": {
+                    "title": "No Matches Found"
+                }
+            }
         },
         "removeItem": {
             "title": "Remove item from layout",

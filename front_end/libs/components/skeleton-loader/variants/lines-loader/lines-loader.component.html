@@ -1,0 +1,12 @@
+<nx-skeleton-loader>
+    @if (randomWidths$$(); as randomWidths) {
+        @for (width of randomWidths; track $index) {
+            <ngx-skeleton-loader
+                [theme]="{ 'width.%': width }"
+                count="1"
+            ></ngx-skeleton-loader>
+        }
+    } @else {
+        <ngx-skeleton-loader [count]="count$$()"></ngx-skeleton-loader>
+    }
+</nx-skeleton-loader>

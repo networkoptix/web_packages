@@ -22,7 +22,6 @@ import {
     catchError,
     distinctUntilChanged,
     filter,
-    repeat,
     map,
     switchMap,
     tap,
@@ -47,6 +46,7 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 
+import { GroupsCacheStore } from './groups-cache.store';
 import {
     findItem,
     flattenGroups,
@@ -358,6 +358,7 @@ export const GroupsStore = signalStore(
             store,
             channelPartnerService = inject(NxChannelPartnersService),
             injector = inject(Injector),
+            groupsCacheStore = inject(GroupsCacheStore),
         ) => ({
             toggleOpenState: (id: string) => {
                 const openGroups = store.openGroupsEntityMap();
@@ -424,7 +425,7 @@ export const GroupsStore = signalStore(
              */
             initializeGroups: (orgId: string) => {
                 const undo = store.initializeGroupsWithUndo();
-                return channelPartnerService.getGroupsStructure(orgId).pipe(
+                return groupsCacheStore.getGroupsStructure(orgId).pipe(
                     tap(groups =>
                         patchState(
                             store,
@@ -435,9 +436,6 @@ export const GroupsStore = signalStore(
                     catchError((_, caught) => {
                         undo();
                         return caught;
-                    }),
-                    repeat({
-                        delay: 30 * 1000,
                     }),
                 );
             },
@@ -454,7 +452,7 @@ export const GroupsStore = signalStore(
                                   },
                               ]),
                           )
-                        : channelPartnerService.getUserSystems(orgId, !!orgSystems).pipe(
+                        : groupsCacheStore.getUserSystems(orgId, !!orgSystems).pipe(
                               map(cloudSystems => {
                                   const grouped = groupBy(cloudSystems, 'groupId');
                                   const mapped = Object.entries(grouped).map(

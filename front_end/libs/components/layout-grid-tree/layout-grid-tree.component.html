@@ -1,8 +1,10 @@
 <ng-template #currentItemContext>
-    <nx-context-menu
-        [context]="currentNode"
-        [menuItems]="sceneMenuItems[currentNode.type]"
-    />
+    @if (currentNode) {
+        <nx-context-menu
+            [context]="currentNode"
+            [menuItems]="sceneMenuItems[currentNode.type]"
+        />
+    }
 </ng-template>
 
 <div class="resource-tree-wrapper">
@@ -12,22 +14,7 @@
                 @case ('query') {
                     <nx-search
                         layout="search"
-                        instant
-                    >
-                    </nx-search>
-                }
-                @case ('filter') {
-                    <div
-                        class="sites-heading"
-                        translate
-                    >
-                        Sites
-                    </div>
-                    <nx-search
-                        [suggestedSearch]="suggestedSearch"
-                        paramBinding="otherSitesFilter"
-                        [placeholder]="'Filter by site' | translate"
-                        layout="search"
+                        mergeParams
                         instant
                     >
                     </nx-search>
@@ -93,146 +80,151 @@
             let-node="node"
             let-parent="parent"
         >
-            <!-- This is the tree node template for leaf nodes -->
-            <div
-                #currentItem
-                cdkDropList
-                [cdkDropListEnterPredicate]="preventDrop"
-                [nxForceVisibility]="node.details.id === this.layout?.id"
-                forceVisibilityOnce
-                visibilityMargin="32px"
-                scrollBehavior="instant"
-                class="tree-node"
-                [ngClass]="{
-                    'hidden-node': node.hidden
-                }"
-            >
+            @if (!hideNoResults$$() || node.details.id !== 'noResults') {
+                <!-- This is the tree node template for leaf nodes -->
                 <div
-                    cdkDrag
-                    [cdkDragDisabled]="
-                        !node.details ||
-                        layout.locked ||
-                        !node.type ||
-                        node.details?.id === layout.id
-                    "
-                    (click)="handleSingleClick(node, parent)"
-                    (dblclick)="handleDoubleClick(node)"
-                    (cdkDragMoved)="
-                        layoutGridService.moveAddedItem.next({
-                            event: $event,
-                            itemParent: currentItem,
-                            type: node.type
-                        })
-                    "
-                    (cdkDragReleased)="layoutGridService.addItem.next(node)"
-                    [alternativeTargetRef]="tooltipOffsetTarget"
-                    [nxTooltip]="
-                        showTooltip &&
-                        ({
-                            node,
-                            tooltips: { camera: cameraTooltip, server: serverTooltip }
-                        } | mapWith: pickTooltip)
-                    "
-                    (mouseenter)="updateTooltipTarget(node.details.id)"
-                    (mouseleave)="unsubTooltips()"
-                    horizontal
-                    alternateStyle
-                    [tourAnchor]="
-                        layout?.id &&
-                        cleanIdLegacy(changingLayout || layout?.id) ===
-                            cleanIdLegacy(node?.details?.id)
-                            ? 'cloud-layouts_selected-' +
-                              (node.type === RESOURCE_TYPE.LAYOUT ? RESOURCE_TYPE.LAYOUT : 'focus')
-                            : ''
-                    "
-                    class="tooltip-offset-parent"
+                    #currentItem
+                    cdkDropList
+                    [cdkDropListEnterPredicate]="preventDrop"
+                    [nxForceVisibility]="node.details.id === this.layout?.id"
+                    forceVisibilityOnce
+                    visibilityMargin="32px"
+                    scrollBehavior="instant"
+                    class="tree-node"
+                    [ngClass]="{
+                        'hidden-node': node.hidden
+                    }"
                 >
                     <div
-                        #tooltipOffsetTarget
-                        class="tooltip-offset-target"
-                    ></div>
-                    <div *cdkDragPreview>
-                        @if (node.type !== RESOURCE_TYPE.CAMERA) {
-                            <div class="add-preview">
-                                <nx-layout-grid-tree-node
-                                    [node]="node"
-                                    [preview]="true"
-                                    [menuItems]="[]"
-                                    [treeMenuItems]="[]"
-                                    [query]="query$ | async"
-                                >
-                                </nx-layout-grid-tree-node>
-                            </div>
-                        }
-                        @if (node.type == RESOURCE_TYPE.CAMERA) {
-                            <ng-container [ngTemplateOutlet]="cameraTooltip"></ng-container>
-                        }
-                    </div>
-
-                    <nx-layout-grid-tree-node
-                        [node]="node"
-                        [expanded]="!treeControl.isExpanded(node) && !tourService.currentStep"
-                        [menuItems]="menuItemsByType[node.type]"
-                        [treeMenuItems]="treeMenuItems[node.type]"
-                        [selected]="
-                            layout?.id
-                                ? cleanIdLegacy(changingLayout || layout?.id) ===
-                                  cleanIdLegacy(node?.details?.id)
-                                : node?.details?.id === 'noLayouts'
+                        cdkDrag
+                        [cdkDragDisabled]="
+                            dragDisabled[node.type] ||
+                            !node.details ||
+                            layout.locked ||
+                            !node.type ||
+                            node.details?.id === layout.id
                         "
-                        [query]="query$ | async"
+                        (click)="handleSingleClick(node, parent)"
+                        (dblclick)="handleDoubleClick(node)"
+                        (cdkDragMoved)="
+                            layoutGridService.moveAddedItem.next({
+                                event: $event,
+                                itemParent: currentItem,
+                                type: node.type
+                            })
+                        "
+                        (cdkDragReleased)="layoutGridService.addItem.next(node)"
+                        [alternativeTargetRef]="tooltipOffsetTarget"
+                        [nxTooltip]="
+                            showTooltip &&
+                            ({
+                                node,
+                                tooltips: { camera: cameraTooltip, server: serverTooltip }
+                            } | mapWith: pickTooltip)
+                        "
+                        (mouseenter)="updateTooltipTarget(node.details.id)"
+                        (mouseleave)="unsubTooltips()"
+                        horizontal
+                        alternateStyle
+                        [tourAnchor]="
+                            layout?.id &&
+                            cleanIdLegacy(changingLayout || layout?.id) ===
+                                cleanIdLegacy(node?.details?.id)
+                                ? 'cloud-layouts_selected-' +
+                                  (node.type === RESOURCE_TYPE.LAYOUT
+                                      ? RESOURCE_TYPE.LAYOUT
+                                      : 'focus')
+                                : ''
+                        "
+                        class="tooltip-offset-parent"
                     >
-                    </nx-layout-grid-tree-node>
+                        <div
+                            #tooltipOffsetTarget
+                            class="tooltip-offset-target"
+                        ></div>
+                        <div *cdkDragPreview>
+                            @if (node.type !== RESOURCE_TYPE.CAMERA) {
+                                <div class="add-preview">
+                                    <nx-layout-grid-tree-node
+                                        [node]="node"
+                                        [preview]="true"
+                                        [menuItems]="[]"
+                                        [treeMenuItems]="[]"
+                                        [query]="query$ | async"
+                                    >
+                                    </nx-layout-grid-tree-node>
+                                </div>
+                            }
+                            @if (node.type == RESOURCE_TYPE.CAMERA) {
+                                <ng-container [ngTemplateOutlet]="cameraTooltip"></ng-container>
+                            }
+                        </div>
+
+                        <nx-layout-grid-tree-node
+                            [node]="node"
+                            [expanded]="!treeControl.isExpanded(node) && !tourService.currentStep"
+                            [menuItems]="menuItemsByType[node.type]"
+                            [treeMenuItems]="treeMenuItems[node.type]"
+                            [selected]="
+                                layout?.id
+                                    ? cleanIdLegacy(changingLayout || layout?.id) ===
+                                      cleanIdLegacy(node?.details?.id)
+                                    : node?.details?.id === 'noLayouts'
+                            "
+                            [query]="query$ | async"
+                        >
+                        </nx-layout-grid-tree-node>
+                    </div>
+
+                    <ng-template #cameraTooltip>
+                        <div class="camera-tooltip-wrapper">
+                            <nx-health-image
+                                [isPrimary]="true"
+                                aspect="override"
+                                [preloader]="true"
+                                [state]="node.details.status"
+                                [unavailableMessage]="'Cannot load preview' | translate"
+                                [url]="node?.details?.previewUrl | async"
+                                class="generic"
+                            ></nx-health-image>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #serverTooltip>
+                        <div class="server-tooltip-wrapper">
+                            <h4>
+                                {{
+                                    { value: LANG.layouts.statistics, params: node.details }
+                                        | nxTranslate
+                                }}
+                            </h4>
+                            @if (serverStats$ | async; as res) {
+                                @if (res.statistics | as: ServerStats; as stats) {
+                                    <div class="stats-grid">
+                                        <div translate>Description</div>
+                                        <div translate>Usage</div>
+                                        @for (type of stats; track type.description) {
+                                            <div>
+                                                {{ type.description }}
+                                            </div>
+                                            <div>
+                                                {{ type.value }}
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                @if (res.error; as error) {
+                                    <div class="error-label">
+                                        {{ error | translate }}
+                                    </div>
+                                }
+                            } @else {
+                                <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                            }
+                        </div>
+                    </ng-template>
                 </div>
-
-                <ng-template #cameraTooltip>
-                    <div class="camera-tooltip-wrapper">
-                        <nx-health-image
-                            [isPrimary]="true"
-                            aspect="override"
-                            [preloader]="true"
-                            [state]="node.details.status"
-                            [unavailableMessage]="'Cannot load preview' | translate"
-                            [url]="node?.details?.previewUrl | async"
-                            class="generic"
-                        ></nx-health-image>
-                    </div>
-                </ng-template>
-
-                <ng-template #serverTooltip>
-                    <div class="server-tooltip-wrapper">
-                        <h4>
-                            {{
-                                { value: LANG.layouts.statistics, params: node.details }
-                                    | nxTranslate
-                            }}
-                        </h4>
-                        @if (serverStats$ | async; as res) {
-                            @if (res.statistics | as: ServerStats; as stats) {
-                                <div class="stats-grid">
-                                    <div translate>Description</div>
-                                    <div translate>Usage</div>
-                                    @for (type of stats; track type.description) {
-                                        <div>
-                                            {{ type.description }}
-                                        </div>
-                                        <div>
-                                            {{ type.value }}
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            @if (res.error; as error) {
-                                <div class="error-label">
-                                    {{ error | translate }}
-                                </div>
-                            }
-                        } @else {
-                            <nx-pre-loader [minHeight]="108"></nx-pre-loader>
-                        }
-                    </div>
-                </ng-template>
-            </div>
+            }
         </ng-template>
         <ng-template
             #renderChildren
@@ -240,12 +232,16 @@
             let-parent="parent"
         >
             @for (node of nodes; track nodeId($index, node)) {
-                <ng-container
-                    *ngTemplateOutlet="
-                        node?.children?.length ? expandableNode : leafNode;
-                        context: { node: node, parent: parent }
-                    "
-                ></ng-container>
+                @if (node.details.id === 'loading') {
+                    <nx-lines-loader randomWidth></nx-lines-loader>
+                } @else {
+                    <ng-container
+                        *ngTemplateOutlet="
+                            node?.children?.length ? expandableNode : leafNode;
+                            context: { node: node, parent: parent }
+                        "
+                    ></ng-container>
+                }
             }
         </ng-template>
         <ng-container

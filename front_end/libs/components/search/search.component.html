@@ -22,7 +22,7 @@
                     }
                     <input
                         #inputElement
-                        [ngModel]="localFilter.query"
+                        [ngModel]="localFilter.query || ''"
                         (ngModelChange)="onSearchType($event)"
                         [ngClass]="{ 'non-empty': localFilter.query }"
                         [maxLength]="search.maxLength"
@@ -37,7 +37,7 @@
                         [attr.value]="searchUpdated | async"
                         [attr.list]="toggleSuggestions$ | async"
                         autocomplete="off"
-                        [placeholder]="placeholder | translate"
+                        [placeholder]="placeholder || LANG.search.Search | translate"
                     />
                     <span class="glyphicon web-icon-search icon-search"></span>
                     <button

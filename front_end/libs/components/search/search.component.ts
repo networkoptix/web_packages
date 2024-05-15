@@ -9,6 +9,7 @@ import {
     EventEmitter,
     Output,
     booleanAttribute,
+    input,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -96,6 +97,8 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     @Output() onFocus = new EventEmitter<void>();
     @Output() onFocusOut = new EventEmitter<void>();
     @Output() onExpand = new EventEmitter<boolean>();
+
+    mergeParams$$ = input(false, { alias: 'mergeParams', transform: booleanAttribute });
 
     public numberFilters: number = 0;
     public filtersSelected: string = '';
@@ -387,7 +390,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             }
         }
 
-        queryParams[this.paramBinding] = undefined;
+        queryParams[this.paramBinding] = '';
         if (this.localFilter.query !== '') {
             queryParams[this.paramBinding] = this.localFilter.query;
         }
@@ -415,7 +418,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             return this.router.navigate([], {
                 relativeTo: this.route,
                 queryParams,
-                queryParamsHandling: replaceUrl ? '' : 'merge',
+                queryParamsHandling: !this.mergeParams$$() && replaceUrl ? '' : 'merge',
             });
         } else {
             return Promise.resolve(null);

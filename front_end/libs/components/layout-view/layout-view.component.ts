@@ -1,5 +1,5 @@
 // import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -27,6 +27,7 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import { GroupsCacheStore } from '@pages/home/store/groups/groups-cache.store';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
@@ -34,6 +35,7 @@ import { LayoutStateService } from '@services/layout-state/layout-state.service'
 import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layout';
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { Layout } from '@services/system-api.types/layouts.types';
@@ -73,6 +75,8 @@ const cloudLayoutTours = {
     ],
 };
 
+const onlyActiveOrgs = (org: Organization): boolean => org.effectiveState === 'active';
+
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-view',
@@ -88,6 +92,8 @@ export class NxLayoutViewComponent {
 
     selectedSystem$ = this.systemService.currentSystem$;
     editedLayout$ = toObservable(this.layoutStateService.editedLayout$$).pipe(untilDestroyed(this));
+
+    groupsCacheStore = inject(GroupsCacheStore);
 
     // Temporary version refrence. To prevent conflicts with Parti's open MR.
     useV2api = false;
@@ -126,6 +132,7 @@ export class NxLayoutViewComponent {
                 nxConfig.featureFlags.layoutsCrossSystemEditing
                     ? this.systemsService.systemsSubject
                     : Promise.resolve([] as NxSystemInfo[]),
+                this.groupsCacheStore.getAllOrgStructures(onlyActiveOrgs),
             ]);
         }),
         filter(([resources]) => Object.values(resources).every(Boolean)),

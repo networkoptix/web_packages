@@ -5,6 +5,7 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { generateCamerasForTree } from '@components/layout-view/utils/generate-cameras-for-tree';
 import staticLang from '@language_static';
+import { OrganizationAndStructure } from '@pages/home/store/groups/groups-cache.store';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CurrentUser } from '@services/system-user.types';
@@ -33,6 +34,7 @@ export const generateResourceTree = ([
     currentUser,
     editedLayout,
     otherSystemsInfo,
+    orgStructures,
     queryInfo,
     useV2api,
 ]: [
@@ -43,6 +45,7 @@ export const generateResourceTree = ([
     CurrentUser,
     { id: string; isNew?: boolean } | null,
     NxSystemInfo[],
+    OrganizationAndStructure[],
     {
         hasQuery: boolean;
         openNodes: string[];
@@ -94,6 +97,7 @@ export const generateResourceTree = ([
         loadedSystems,
         queryInfo.hasQuery,
         queryInfo.openNodes,
+        orgStructures,
     );
 
     const byName = alphaNumericSort<Pick<Resource, 'name'>>(r => r.name || '');

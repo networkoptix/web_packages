@@ -21,7 +21,10 @@ import { NxContextMenu } from '@components/context-menu/context-menu';
 import { MenuItemsOrMenuItemsFactory } from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
-import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
+import {
+    assertResourceOfType,
+    assertResourceBaseNode,
+} from '@components/layout-grid/layout-grid.type-guards';
 import {
     BaseResourceNode,
     MergedResourceNode,
@@ -97,6 +100,11 @@ export class NxLayoutGridTreeNode {
     value: string;
 
     @HostBinding('class') class: Record<string, boolean> = {};
+
+    baseNodeType$$ = computed(() => {
+        const node = this.node$$();
+        return assertResourceBaseNode(node);
+    });
 
     class$$ = computed(() => ({
         offline: this.offline$$(),

@@ -141,6 +141,7 @@
         "ngx-markdown": "14.0.1",
         "ngx-mask": "13.1.15",
         "ngx-quicklink": "0.3.0",
+        "ngx-skeleton-loader": "^9.0.0",
         "ngx-translate-cut": "2.0.0",
         "ngx-translate-messageformat-compiler": "5.0.1",
         "ngx-ui-tour-md-menu": "^9.3.1",

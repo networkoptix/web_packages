@@ -1,0 +1,19 @@
+:host {
+    html[data-theme="light"] &, html[data-theme="light-gray"] & {
+        --skeleton-background: var(--light6);
+        --skeleton-progress-color: var(--light5);
+    }
+
+    html[data-theme="dark"] &, html[data-theme="dark-gray"] & {
+        --skeleton-background: var(--dark6);
+        --skeleton-progress-color: var(--dark5);
+    }
+
+    --progress-background: linear-gradient(90deg, transparent, var(--skeleton-progress-color), transparent);
+    --skeleton-border-radius: 6px;
+    --skeleton-margin-bottom: 8px;
+}
+
+::ng-deep ngx-skeleton-loader > .skeleton-loader.progress::before {
+    background-image: var(--progress-background) !important;
+}

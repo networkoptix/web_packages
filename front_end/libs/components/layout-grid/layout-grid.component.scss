@@ -52,10 +52,10 @@ nx-webgl-canvas {
 
 .other-systems {
     min-height: 0px;
-    margin-top: 16px;
     margin-left: -16px;
     margin-bottom: -16px;
     padding-left: 16px;
+    padding-top: 16px;
     padding-bottom: 0;
     overflow: hidden;
 
@@ -73,17 +73,69 @@ nx-webgl-canvas {
         list-style: none;
         line-height: 16px;
         position: relative;
+        display: flex;
+        justify-content: space-between;
+        cursor: initial;
 
         & > span {
             white-space: nowrap;
             overflow: hidden;
+            & span {
+                &:first-of-type:not(:last-of-type) {
+                    margin-right: 0.5em;
+                    position: relative;
+                    &::after {
+                        content: '-';
+                        position: absolute;
+                        right: -0.5em;
+                    }
+                }
+                &:last-of-type:not(:first-of-type) {
+                    color: var(--brand-core);
+                }
+            }
         }
 
-        & > .arrow-flip > svg-icon {
-            bottom : 12px;
-            .st0 {
-                stroke: var(--other-sites-expand-stroke);
+        & > div, & > button {
+            cursor: pointer;
+            border-radius: 2px 2px 0 0;
+            &.arrow-flip > svg-icon {
+                position: relative;
+                right: 0;
+                bottom: 0;
+                height: 14px !important;
+                width: 32px !important;
+                transform-origin: center center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
+        }
+
+        & > .right-button > svg-icon {
+            bottom : 12px;
+
+            .refresh-icon {
+                fill: var(--other-sites-title);
+            }
+
+            .close-icon {
+                fill: var(--other-sites-expand-stroke);
+            }
+        }
+
+        & > .other-sites-toggle {
+            background-color: var(--other-sites-heading-background);
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 32px;
+            height: 16px;
+            transform: translate(-50%, -100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 
@@ -963,4 +1015,57 @@ iframe {
 .full-screen-wrapper {
     padding: 0 !important;
     background: var(--body-bg);
+}
+
+.animate-rotation svg {
+    animation-name: rotate;
+    animation-duration: 1.8s;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 50%;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+nx-lines-loader {
+    padding: 2em 1em 1em 0;
+}
+
+.site-placeholder-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-height: 360px;
+    width: calc(100% - 1em);
+    gap: 12px;
+
+    .warning-icon, .no-results-icon {
+        fill: var(--other-sites-expand-stroke);
+    }
+
+    h3 {
+        @include typography.medium16nocolor;
+        font-size: rem(16px) !important;
+        color: var(--other-sites-title) !important;
+    }
+
+    h4 {
+        @include typography.regular14nocolor;
+        font-size: rem(14px) !important;
+        color: var(--other-sites-expand-stroke) !important;
+    }
+
+    & > div {
+        display: flex;
+        gap: 8px;
+    }
 }

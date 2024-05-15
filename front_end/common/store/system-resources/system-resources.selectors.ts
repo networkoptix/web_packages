@@ -62,7 +62,7 @@ export const selectValue = memoize(
         ) => MemoizedSelector<Record<string, unknown>, T, (s1: unknown) => T>,
     ) =>
         memoize((systemId: string) =>
-            createSelector(selector(systemId), (resourceState): T['value'] => resourceState.value),
+            createSelector(selector(systemId), (resourceState): T['value'] => resourceState?.value),
         ),
 );
 
@@ -75,7 +75,7 @@ export const selectByResourceId = memoize(
         memoize(
             (systemId: string, resourceId: string) =>
                 createSelector(selector(systemId), (resources): T[number] =>
-                    resources.find(r => r.id === resourceId),
+                    resources?.find(r => r.id === resourceId),
                 ),
             (...args) => args.join('-'),
         ),

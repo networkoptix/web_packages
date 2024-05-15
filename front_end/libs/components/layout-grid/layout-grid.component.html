@@ -115,33 +115,173 @@
                 [ngClass]="{ 'details-expanded': otherSystemsOpen$$() }"
                 class="other-systems"
             >
-                <summary [ngClass]="{ 'dropdown-show': !otherSystemsOpen$$() }">
-                    @if (otherSystemsOpen$$()) {
-                        <span translate>Hide All Sites</span>
-                    } @else {
-                        <span translate>Show All Sites</span>
-                    }
-                    <div class="arrow-flip">
+                <summary
+                    (click)="$event.preventDefault()"
+                    [ngClass]="{ 'dropdown-show': !otherSystemsOpen$$() }"
+                >
+                    <button
+                        (click)="otherSystems.open = !otherSystems.open"
+                        class="other-sites-toggle arrow-flip"
+                    >
                         <svg-icon
                             nx-add-svg-src
                             [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                        ></svg-icon>
-                    </div>
+                        >
+                        </svg-icon>
+                    </button>
+                    <ng-template
+                        #siteName
+                        let-name="name"
+                    >
+                        <span>
+                            <span>{{ name }}</span>
+                            @if (searchMatches$$(); as matches) {
+                                <span>
+                                    {{
+                                        {
+                                            value: LANG.layouts.otherSystems.found,
+                                            params: { count: matches.toString() }
+                                        } | nxTranslate
+                                    }}
+                                </span>
+                            }
+                        </span>
+                    </ng-template>
+                    @if (currentActiveSite$$(); as site) {
+                        <ng-container
+                            *ngTemplateOutlet="siteName; context: { name: site.name }"
+                        ></ng-container>
+                        <div
+                            (click)="currentSite$$.set('')"
+                            class="right-button"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirLayouts + 'close.svg'"
+                            ></svg-icon>
+                        </div>
+                    } @else {
+                        <ng-container
+                            *ngTemplateOutlet="
+                                siteName;
+                                context: { name: ('Other Sites' | translate) }
+                            "
+                        ></ng-container>
+                        <div
+                            (click)="groupsCacheStore.refreshObservedCaches()"
+                            class="right-button"
+                            [ngClass]="{
+                                'animate-rotation': !groupsCacheStore.orgStructuresLoaded$$()
+                            }"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirLayouts + 'refresh.svg'"
+                            ></svg-icon>
+                        </div>
+                    }
                 </summary>
                 <div>
-                    <nx-layout-grid-tree
-                        [searchType]="
-                            CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu ? 'filter' : undefined
-                        "
-                        [layout]="layout"
-                        [system]="system"
-                        [layoutItemLookup]="layoutItemLookup"
-                        [dataSource]="filteredOtherSystems$$()"
-                        [treeControl]="treeControl"
-                        [errorIcons]="layoutItemsStore.icons$$()"
-                        [showTooltip]="showTooltip$ | async"
-                        [changingLayout]="changingLayout"
-                    ></nx-layout-grid-tree>
+                    @defer (when groupsCacheStore.orgStructuresLoaded$$()) {
+                        <ng-template
+                            #sitePlaceholder
+                            let-svg="svg"
+                            let-content="content"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="{
+                                    'width.px': '64',
+                                    'height.px': '64'
+                                }"
+                                [src]="icons.dirLayouts + svg + '.svg'"
+                            ></svg-icon>
+                            <h3>{{ content.title | translate }}</h3>
+                            @if (content.description) {
+                                <h4>{{ content.description | translate }}</h4>
+                            }
+                        </ng-template>
+                        @if (filteredOtherSystems$$(); as otherSystems) {
+                            @if (
+                                !otherSystems[0]
+                                    ? 'noResults'
+                                    : otherSystems[0].details?.id === 'noResults'
+                                      ? otherSystems[0].name
+                                      : '';
+                                as placeholderName
+                            ) {
+                                <div class="site-placeholder-wrapper">
+                                    @switch (placeholderName) {
+                                        @case (LANG.layouts.otherSystems.systemOffline) {
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    sitePlaceholder;
+                                                    context: {
+                                                        svg: 'warning',
+                                                        content:
+                                                            LANG.layouts.otherSystems.placeholders
+                                                                .cantConnectToSite
+                                                    }
+                                                "
+                                            ></ng-container>
+                                            <div>
+                                                <nx-async-action-button
+                                                    [action]="loadSiteAction"
+                                                    translate
+                                                >
+                                                    Retry
+                                                </nx-async-action-button>
+                                                <button
+                                                    class="btn btn-secondary"
+                                                    type="button"
+                                                    (click)="currentSite$$.set('')"
+                                                    translate
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        }
+
+                                        @default {
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    sitePlaceholder;
+                                                    context: {
+                                                        svg: 'no_results',
+                                                        content: search$$()
+                                                            ? LANG.layouts.otherSystems.placeholders
+                                                                  .noMatches
+                                                            : LANG.layouts.otherSystems.placeholders
+                                                                  .nothingFound
+                                                    }
+                                                "
+                                            ></ng-container>
+                                        }
+                                    }
+                                </div>
+                            } @else if (otherSystems.length) {
+                                <nx-layout-grid-tree
+                                    [searchType]="
+                                        CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu
+                                            ? 'filter'
+                                            : undefined
+                                    "
+                                    [layout]="layout"
+                                    [system]="system"
+                                    [layoutItemLookup]="layoutItemLookup"
+                                    [dataSource]="otherSystems"
+                                    [treeControl]="treeControl"
+                                    [errorIcons]="layoutItemsStore.icons$$()"
+                                    [showTooltip]="showTooltip$ | async"
+                                    [changingLayout]="changingLayout"
+                                    [expandAll]="!!searchMatches$$()"
+                                    hideNoResults
+                                ></nx-layout-grid-tree>
+                            }
+                        }
+                    } @placeholder (minimum 1s) {
+                        <nx-lines-loader randomWidth></nx-lines-loader>
+                    }
                 </div>
             </details>
         }

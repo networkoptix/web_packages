@@ -11,6 +11,7 @@ import {
     Input,
     TemplateRef,
     ViewChild,
+    booleanAttribute,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -53,8 +54,8 @@ import { NxLayoutGridTreeNode } from '@components/layout-grid-tree-node/layout-g
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
-import { SearchParamBindings } from '@components/search/search.component.types';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
+import { NxLinesLoaderComponent } from '@components/skeleton-loader/variants/lines-loader/lines-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
@@ -115,6 +116,7 @@ import { queryChangeSideEffects } from './utils/query-change-side-effects';
         CdkConnectedOverlay,
         CdkOverlayOrigin,
         NxLayoutGridTreeNode,
+        NxLinesLoaderComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './layout-grid-tree.component.html',
@@ -133,6 +135,21 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     @Input() showTooltip: boolean;
     @Input() changingLayout: string | boolean = true;
     @Input() suggestedSearch: string[] = [];
+
+    hideNoResults$$ = input(false, { alias: 'hideNoResults', transform: booleanAttribute });
+
+    expandAll$$ = input(false, { alias: 'expandAll' });
+
+    expandAll$ = toObservable(this.expandAll$$);
+
+    expandAllEffect = effect(() => {
+        if (this.expandAll$$()) {
+            const source = this.dataSourceInput$$();
+            source.forEach(node => this.treeControl.expandDescendants(node));
+        } else {
+            this.expandNodesFromParams();
+        }
+    });
 
     @ViewChild('currentItemContext') set currentItemContext(value: TemplateRef<unknown>) {
         this.layoutStateService.contextMenu = value;
@@ -180,8 +197,11 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
                 ? Promise.resolve(dataSource)
                 : this.layoutStateService.paramStateHandler.state$.pipe(
                       map(({ queryParams }) => queryParams.search?.[0]),
-                      map(query => {
-                          if (query) {
+                      switchMap(query =>
+                          this.expandAll$.pipe(map(expandAll => ({ query, expandAll }))),
+                      ),
+                      map(({ expandAll, query }) => {
+                          if (query && !expandAll) {
                               return filterSearch(
                                   dataSource,
                                   query,
@@ -207,7 +227,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         ResourceType.SERVERS,
         ResourceType.WEB_PAGES,
         ResourceType.SYSTEM,
-        ResourceType.OTHER_SYSTEMS,
+        ResourceType.SYSTEMS_GROUP,
         // Disable group drag for now.
         // In general, it should be possible to drop all cameras from a group to the layout.
         // It should also be possible to drag and drop a camera into a group
@@ -276,6 +296,19 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     handleSingleClick = (node: ResourceNode, parent: ResourceNode): void => {
         const parentId = parent?.details?.id;
         if (node.type) {
+            if (node.type === ResourceType.SYSTEM && node.details?.id) {
+                const currentSite = {
+                    value: [node.details.id],
+                    mutationType: MutationType.SET,
+                };
+
+                this.layoutStateService.paramStateHandler.updater(() => ({
+                    queryParams: {
+                        currentSite,
+                    },
+                }));
+                return;
+            }
             of(node)
                 .pipe(delay(250), takeUntil(this.doubleClick$))
                 .subscribe(node => this.layoutGridService.changeView.next(node));
@@ -352,25 +385,12 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
             return;
         }
 
-        const element = event.target as HTMLElement;
-        const parent = element.parentElement;
-
-        const nameClicked = [element?.textContent, parent?.textContent].includes(node.name);
-
         this.layoutStateService.paramStateHandler.updater(() => {
             this.treeControl.toggle(node);
             const nodeOpened = this.treeControl.isExpanded(node);
 
-            const otherSitesFilter =
-                node.type === ResourceType.SYSTEM && nameClicked
-                    ? {
-                          [SearchParamBindings.OTHER_SITES_FILTER]: node.name,
-                      }
-                    : {};
-
             return {
                 queryParams: {
-                    ...otherSitesFilter,
                     openNodes: {
                         value: [nodeId],
                         mutationType: nodeOpened ? MutationType.APPEND : MutationType.REMOVE,

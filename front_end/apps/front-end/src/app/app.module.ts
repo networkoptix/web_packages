@@ -20,6 +20,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 // import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
@@ -128,6 +129,17 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         TourMatMenuModule.forRoot(),
         NxResizeObserver,
         NxScrollHelperDirective,
+        NgxSkeletonLoaderModule.forRoot({
+            appearance: 'line',
+            count: 1,
+            animation: 'progress',
+            theme: {
+                extendsFromRoot: true,
+                background: 'var(--skeleton-background)',
+                borderRadius: 'var(--skeleton-border-radius)',
+                marginBottom: 'var(--skeleton-margin-bottom)',
+            },
+        }),
         // LoginWebadminModule
     ],
     providers: [

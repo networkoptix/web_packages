@@ -4,6 +4,7 @@ import { Observable, ObservedValueOf } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { Translatable } from '@pipes/nx-translate.types';
+import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
 import {
     NxSystemCamera,
@@ -105,7 +106,8 @@ export enum ResourceType {
     WEB_PAGES = 'webpages',
     IO_DEVICE = 'iodevice',
     SYSTEM = 'system_cloud',
-    OTHER_SYSTEMS = 'other_systems',
+    SYSTEMS_ORGANIZATION = 'organization',
+    SYSTEMS_GROUP = 'systems_group',
     CAMERAS_GROUP = 'cameras_group',
 }
 
@@ -157,7 +159,8 @@ export interface ResourceParentNodeMap {
     [ResourceType.CAMERAS]: ResourceParentNode<NxSystemCameraWithMappedFields>;
     [ResourceType.SERVERS]: ResourceParentNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGES]: ResourceParentNode<WebPage>;
-    [ResourceType.OTHER_SYSTEMS]: ResourceParentNode<NxSystemInfo>;
+    [ResourceType.SYSTEMS_ORGANIZATION]: ResourceParentNode<NxSystemInfo | GroupItem>;
+    [ResourceType.SYSTEMS_GROUP]: ResourceParentNode<NxSystemInfo>;
     [ResourceType.CAMERAS_GROUP]: ResourceParentNode<NxSystemCameraWithMappedFields>;
 }
 

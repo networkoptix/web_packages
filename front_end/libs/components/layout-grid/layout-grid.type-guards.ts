@@ -58,11 +58,17 @@ export const assertResourceOfType: ResourceTypeAssertMap = Object.values(Resourc
     {} as ResourceTypeAssertMap,
 );
 
-const parentNodeTypes = [
+const baseNodeTypes = [
     ResourceType.LAYOUTS,
     ResourceType.CAMERAS,
     ResourceType.SERVERS,
     ResourceType.WEB_PAGES,
+] as const;
+
+const parentNodeTypes = [
+    ...baseNodeTypes,
+    ResourceType.SYSTEMS_ORGANIZATION,
+    ResourceType.SYSTEMS_GROUP,
     ResourceType.CAMERAS_GROUP,
 ] as const;
 
@@ -71,7 +77,13 @@ const leafNodeTypes = [
     ResourceType.SERVER,
     ResourceType.WEB_PAGE,
     ResourceType.IO_DEVICE,
+    ResourceType.SYSTEM,
 ] as const;
+
+export const assertResourceBaseNode = (
+    node: BaseResourceNode,
+): node is ResourceNodeMap[(typeof baseNodeTypes)[number]] =>
+    (baseNodeTypes as unknown as ResourceType[]).includes(node.type);
 
 export const assertResourceParentNode = (
     node: BaseResourceNode,
@@ -81,4 +93,4 @@ export const assertResourceParentNode = (
 export const assertResourceLeafNode = (
     node: BaseResourceNode,
 ): node is ResourceLeafNodeMap[(typeof leafNodeTypes)[number]] =>
-    (parentNodeTypes as unknown as ResourceType[]).includes(node.type);
+    (leafNodeTypes as unknown as ResourceType[]).includes(node.type);
