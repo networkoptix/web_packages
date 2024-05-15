@@ -56,4 +56,4 @@ const routes: Routes = [
     imports: [NxReportsComponent, RouterModule.forChild(routes)],
     exports: [NxReportsComponent],
 })
-export class NxOrgReportsModule {}
+export class NxReportsModule {}
