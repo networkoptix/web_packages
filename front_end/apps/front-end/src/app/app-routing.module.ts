@@ -294,7 +294,11 @@ const lazyRoutes: Routes = [
     // },
     {
         path: 'reports',
-        loadChildren: () => import('@pages/reports/reports.module').then(m => m.NxOrgReportsModule),
+        canMatch: [FeatureGuardActivate],
+        data: {
+            flag: FeatureFlagStrings.channelPartnersReportsUI,
+        },
+        loadChildren: () => import('@pages/reports/reports.module').then(m => m.NxReportsModule),
     },
     {
         path: '**',
