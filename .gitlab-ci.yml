@@ -16,9 +16,9 @@ default:
     - us-service
 
 variables:
-  JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
-  JENKINS_URL: "https://jenkins.us.nxteam.dev"
+  # These variables are required for deploy cloud
+  K8S_PRODUCT_RELEASE: cp-mr-${CI_MERGE_REQUEST_IID}
 
 workflow:
   rules:
@@ -35,8 +35,9 @@ stages:
   - docker image
   - check
   - build
-  - create mr
+  - deploy
   - test
+  - ft (#ask-ft)
 
 no-changes:
 #  extends: .retries

@@ -34,6 +34,9 @@ include:
 .enable_for_protected_branch: '( $CI_PIPELINE_SOURCE == "push" &&
   ( $CI_COMMIT_REF_NAME =~ /^vms_/ || $CI_COMMIT_REF_NAME == "develop" ) )'
 
+.functional_tests_required: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "releases_23.3.2" )'
+
 .jenkins-builds:
   stage: build
   image: nx/ci

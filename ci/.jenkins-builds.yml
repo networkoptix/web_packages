@@ -82,3 +82,74 @@ jenkins-build-channel-partners:
   rules:
   - if: !reference [ .enable_for_mr ]
     changes: !reference [ .channel_partners_changes ]
+
+cloud-deploy:
+  extends: .jenkins-builds
+  stage: deploy
+  variables:
+    CLOUD_BACKEND_IMAGE_TAG: latest
+  script:
+    - set -ex
+    - runJenkinsJob.sh gitlab.cloud.deploy
+        "CLOUD_PORTAL_IMAGE_TAG=${CI_PIPELINE_ID}.gitlab"
+        "CLOUD_BACKEND_IMAGE_TAG=${CLOUD_BACKEND_IMAGE_TAG}"
+        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}"
+        "CUSTOMIZATIONS=default" 2>&1 | tee "deploy.log"
+    - |
+      JENKINS_JOB_URL="$(grep 'Job Url:' "deploy.log" | \
+        head -1 | \
+        sed 's/\x1b\[[0-9;]*m//g' | \
+        awk -F ': ' '{print $2}')"
+    - curl
+        --fail
+        --silent
+        --show-error
+        -X GET
+        --user "jenkins:$(cat "${JENKINS_API_TOKEN_FILE}")"
+        "${JENKINS_JOB_URL}artifact/CLOUD_HOST.envvar" > cloud_host.env
+  artifacts:
+    reports:
+      dotenv: cloud_host.env
+  environment:
+    name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
+    url: https://${CLOUD_HOST}
+    on_stop: cloud-remove-deployment:no-bot-start
+  rules:
+  - if: !reference [ .functional_tests_required ]
+    changes: !reference [ .frontend_changes ]
+
+# stop deployment and clean all data, manual UI action. may be used to verify clean deployment
+# may be invoked using manual UI action to verify clean deployment
+# also triggered when MR branch deleted (MR merged)
+# ref: https://docs.gitlab.com/ee/ci/environments/#stop-an-environment-when-a-branch-is-deleted
+#
+# The job's name should have `no-bot-start` to prevent triggering by robocat bots
+# https://networkoptix.atlassian.net/browse/INFRA-273
+cloud-remove-deployment:no-bot-start:
+  extends: .jenkins-builds
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  secrets:
+    GITLAB_API_TOKEN: !reference [.tokens, secrets, GITLAB_API_TOKEN]
+  script:
+  - |
+    GL_ENV_ID="$(curl --silent --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN}" \
+      "${CI_SERVER_URL}/api/v4/projects/${CI_PROJECT_ID}/environments?name=${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}" |
+      jq ".[0].id")"
+    CLOUD_URL="$(curl --silent --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN}" \
+      "${CI_SERVER_URL}/api/v4/projects/${CI_PROJECT_ID}/environments/${GL_ENV_ID}" |
+      jq -r ".external_url")"
+  - runJenkinsJob.sh gitlab.cloud.remove-deployment
+    "CLOUD_HOST=${CLOUD_URL}"
+  environment:
+    name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
+    action: stop
+  rules:
+  - if: !reference [ .functional_tests_required ]
+    changes: !reference [ .frontend_changes ]
+    when: manual
+    # ref: https://docs.gitlab.com/ee/ci/yaml/#rulesallow_failure
+    # the directive also impacts pipeline stage representation on top level
+    # without it, the stage status shown unclear (as a cog) even if deploy successful
+    allow_failure: true
