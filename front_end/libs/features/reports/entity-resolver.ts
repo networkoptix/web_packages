@@ -16,7 +16,7 @@ import type {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { LoadingState } from '@store/channel-partners/channel-partners.state';
 
-export const channelPartnersResolver: ResolveFn<void> = async (
+export const entityResolver: ResolveFn<void> = async (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
@@ -44,28 +44,27 @@ export const channelPartnersResolver: ResolveFn<void> = async (
 
     const urlSegments = state.url.split('/');
     const entityTypeFromUrl = urlSegments[2];
-    const entityTypeFromUrlIsValid = ['channel-partner', 'organization'].includes(
-        entityTypeFromUrl,
-    );
+    const urlHasValidEntityType = ['channel-partner', 'organization'].includes(entityTypeFromUrl);
 
     const entityIdFromUrl = urlSegments[3];
-    const urlHasPartnerId = channelPartners.some(
+    const urlHasValidPartner = channelPartners.some(
         channelPartner => channelPartner.id === entityIdFromUrl,
     );
-    const urlHasOrgId = organizations.some(org => org.id === entityIdFromUrl);
+    const urlHasValidOrg = organizations.some(org => org.id === entityIdFromUrl);
 
     const tab = urlSegments[4];
 
-    if (!entityTypeFromUrlIsValid || (!urlHasPartnerId && !urlHasOrgId)) {
-        await router.navigate([
-            'reports',
-            'channel-partner',
-            channelPartners[0].id,
-            'service-usage',
-        ]);
-    } else if (urlHasPartnerId && !tab) {
+    if (!entityTypeFromUrl) {
+        const defaultEntityType = channelPartners.length ? 'channel-partner' : 'organization';
+        const defaultEntityId = channelPartners.length
+            ? channelPartners[0].id
+            : organizations[0].id;
+        await router.navigate(['reports', defaultEntityType, defaultEntityId, 'service-usage']);
+    } else if (!urlHasValidEntityType || (!urlHasValidPartner && !urlHasValidOrg)) {
+        await router.navigate(['404']);
+    } else if (urlHasValidPartner && !tab) {
         await router.navigate(['reports', 'channel-partner', entityIdFromUrl, 'service-usage']);
-    } else if (urlHasOrgId && !tab) {
+    } else if (urlHasValidOrg && !tab) {
         await router.navigate(['reports', 'organization', entityIdFromUrl, 'service-usage']);
     }
 };

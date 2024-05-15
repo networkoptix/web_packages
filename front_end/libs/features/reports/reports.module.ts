@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { channelPartnersResolver } from './channel-partners-resolver';
 import { entityNameResolver } from './entity-name-resolver';
+import { entityResolver } from './entity-resolver';
 import { NxReportsComponent } from './reports.component';
 import { NxServiceChangesComponent } from './service-changes/service-changes.component';
 import { NxServiceUsageComponent } from './service-usage/service-usage.component';
@@ -12,7 +12,7 @@ const routes: Routes = [
     {
         path: '',
         component: NxReportsComponent,
-        resolve: { isLoading: channelPartnersResolver },
+        resolve: { isLoading: entityResolver },
         children: [
             {
                 path: ':entityType',
@@ -39,10 +39,6 @@ const routes: Routes = [
                                 path: 'service-changes',
                                 component: NxServiceChangesComponent,
                                 resolve: { entityName: entityNameResolver },
-                            },
-                            {
-                                path: '**',
-                                redirectTo: '',
                             },
                         ],
                     },
