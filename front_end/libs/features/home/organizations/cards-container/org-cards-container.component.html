@@ -142,8 +142,7 @@
                 : ['/systems', system.systemId]
         "
         [ngClass]="{
-            'offline-system':
-                system.effectiveState !== 'active' || system.stateOfHealth === 'offline'
+            'offline-system': system.stateOfHealth === 'offline'
         }"
         [dropdownItems]="systemActions$$()[system.systemId]"
     >
