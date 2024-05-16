@@ -413,7 +413,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         own_roles = self.user_access_matrix.get_user_instance_roles(instance)
         if instance.channel_partner_access_level_id:
             if rel := self.user_access_matrix.get_cp_to_user_rel(instance.channel_partner_id):
-                if rel.roles:
+                if set(rel.roles).intersection({ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER}):
                     own_roles |= {instance.channel_partner_access_level_id}
         return list(own_roles)
 
