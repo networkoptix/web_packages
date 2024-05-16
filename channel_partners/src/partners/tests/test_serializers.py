@@ -17,6 +17,7 @@ from django.utils import timezone
 from partners.models import (
     ActionConfirmation,
     ChannelPartnerRole,
+    ChannelPartnerRoles,
     ChannelPartnerService,
     ChannelPartnerStates,
     ChannelPartnerToUser,
@@ -469,6 +470,13 @@ class TestOrganizationSerializer:
         serializer = OrganizationSerializer(organization, context=self.context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRolesIds'] == [org_admin_role.id]
+        # Check if CPAN is not applied for Reports Viewer
+        reports_viewer = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        organization.channel_partner_access_level_id = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        organization.save()
+        serializer = OrganizationSerializer(organization, context=self.context(reports_viewer.user))
+        assert serializer.data['ownPermissions'] == []
+        assert serializer.data['ownRolesIds'] == []
 
     def test_channelPartnerAccessLevel(self, channel_partner_factory, organization_factory,
                                        org_user_factory, arf):
