@@ -189,3 +189,9 @@ button:focus {
 .first-letter {
     font-size: 1.25rem;
 }
+
+.custom-tooltip-example {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}

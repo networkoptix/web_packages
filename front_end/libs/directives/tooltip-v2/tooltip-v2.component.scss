@@ -15,6 +15,8 @@
     }
 
     &__body {
+        position: relative;
+        z-index: 10; // Place over arrow overlap
         padding: 0.25rem 0.5rem;
         color: var(--tooltip-color);
         background-color: var(--tooltip-bg);

@@ -91,7 +91,8 @@ navigate the tree, so that users can search and nav at the same time.  -->
                 }
                 @if (status?.status === 'disable') {
                     <svg-icon
-                        [nxTooltipV2]="status!.msg"
+                        nxTooltipV2
+                        [tooltipContent]="status!.msg"
                         [tooltipPositions]="['S', 'start']"
                         tooltipTheme="contrast"
                         [tooltipOpen]="(tooltipTarget$ | async) === group.id"
@@ -144,8 +145,9 @@ navigate the tree, so that users can search and nav at the same time.  -->
     <svg-icon
         (mouseenter)="openTooltip(id)"
         (mouseleave)="closeTooltip(id)"
+        nxTooltipV2
         [tooltipOpen]="(tooltipTarget$ | async) === id"
-        [nxTooltipV2]="msg"
+        [tooltipContent]="msg"
         [tooltipPositions]="['S', 'end']"
         tooltipTheme="contrast"
         class="status-icon"

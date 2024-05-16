@@ -69,7 +69,7 @@ const compass4Opposite = { N: 'S', E: 'W', S: 'N', W: 'E' } as const;
     exportAs: 'nxTooltipV2',
 })
 export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
-    _content = input.required<string | TemplateRef<unknown>>({ alias: 'nxTooltipV2' });
+    _content = input.required<string | TemplateRef<unknown>>({ alias: 'tooltipContent' });
     /** The element to attach the tooltip to */
     _attachTarget = input<HTMLElement>(this.self.nativeElement, { alias: 'tooltipOrigin' });
 
@@ -244,7 +244,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
 
     private overlayRef: OverlayRef;
     private position: FlexibleConnectedPositionStrategy;
-    private portal = new ComponentPortal(NxTooltipV2Component);
+    protected portal = new ComponentPortal(NxTooltipV2Component);
 
     private open$ = new BehaviorSubject<[number, number] | null>(null);
     private close$ = new BehaviorSubject<number | null>(null);
