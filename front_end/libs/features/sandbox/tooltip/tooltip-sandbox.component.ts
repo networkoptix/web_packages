@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
 import { Observable, finalize, map, noop, of, take, timer } from 'rxjs';
 
+import { ExampleCustomTooltipDirective } from '@directives/tooltip-v2/custom/example-custom-tooltip/example-custom-tooltip.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { TooltipPosition } from '@directives/tooltip-v2/tooltip-v2.types';
 import { MS } from '@utils/general';
@@ -11,7 +12,7 @@ import { MS } from '@utils/general';
     templateUrl: 'tooltip-sandbox.component.html',
     styleUrls: ['tooltip-sandbox.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxTooltipV2Directive],
+    imports: [CommonModule, NxTooltipV2Directive, ExampleCustomTooltipDirective],
 })
 export class NxTooltipSandboxComponent implements OnInit, AfterViewInit {
     onLoadManualOpen = false;

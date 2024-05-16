@@ -9,7 +9,8 @@
                     <div class="pair">
                         <div
                             class="direction-box"
-                            [nxTooltipV2]="hamlet.vertical[2 * i]"
+                            nxTooltipV2
+                            [tooltipContent]="hamlet.vertical[2 * i]"
                             [tooltipPositions]="[verticalPositions[2 * i]]"
                             [(tooltipOpen)]="onLoadManualOpen"
                         >
@@ -17,7 +18,8 @@
                         </div>
                         <div
                             class="direction-box"
-                            [nxTooltipV2]="hamlet.vertical[1 + 2 * i]"
+                            nxTooltipV2
+                            [tooltipContent]="hamlet.vertical[1 + 2 * i]"
                             [tooltipPositions]="[verticalPositions[1 + 2 * i]]"
                             [(tooltipOpen)]="onLoadManualOpen"
                         >
@@ -28,7 +30,8 @@
                 <div class="pair">
                     <div
                         class="direction-box"
-                        [nxTooltipV2]="hamlet.vertical[5]"
+                        nxTooltipV2
+                        [tooltipContent]="hamlet.vertical[5]"
                         [tooltipPositions]="[verticalPositions[4]]"
                         [(tooltipOpen)]="onLoadManualOpen"
                     >
@@ -36,7 +39,8 @@
                     </div>
                     <div
                         class="direction-box"
-                        [nxTooltipV2]="hamlet.vertical[4]"
+                        nxTooltipV2
+                        [tooltipContent]="hamlet.vertical[4]"
                         [tooltipPositions]="[verticalPositions[5]]"
                         [(tooltipOpen)]="onLoadManualOpen"
                     >
@@ -49,7 +53,8 @@
                     @for (position of leftPositions; track position) {
                         <div
                             class="direction-box"
-                            [nxTooltipV2]="hamlet.left[$index]"
+                            nxTooltipV2
+                            [tooltipContent]="hamlet.left[$index]"
                             [tooltipPositions]="[position]"
                             [(tooltipOpen)]="onLoadManualOpen"
                         >
@@ -61,7 +66,8 @@
                     @for (position of rightPositions; track position) {
                         <div
                             class="direction-box"
-                            [nxTooltipV2]="hamlet.right[$index]"
+                            nxTooltipV2
+                            [tooltipContent]="hamlet.right[$index]"
                             [tooltipPositions]="[position]"
                             [(tooltipOpen)]="onLoadManualOpen"
                         >
@@ -79,7 +85,8 @@
                 @for (color of ['red', 'green', 'blue']; track color) {
                     <div
                         class="gray-square"
-                        [nxTooltipV2]="content"
+                        nxTooltipV2
+                        [tooltipContent]="content"
                         [tooltipPositions]="leftPositions[$index]"
                         [tooltipOpen]="onLoadManualOpen"
                     ></div>
@@ -96,17 +103,28 @@
             <div class="tooltip-elem-examples">
                 <div
                     class="gray-square"
-                    nxTooltipV2="But that the dread of something after death,"
+                    nxTooltipV2
+                    tooltipContent="But that the dread of something after death,"
                     [tooltipPositions]="['W', 'center']"
                     [tooltipOpen]="onLoadManualOpen"
                     tooltipTheme="contrast"
                 ></div>
                 <div
                     class="gray-square"
-                    nxTooltipV2="The undiscovered country, from whose bourn"
+                    nxTooltipV2
+                    tooltipContent="The undiscovered country, from whose bourn"
                     [tooltipPositions]="['W', 'center']"
                     [tooltipArrow]="false"
                     [tooltipOpen]="onLoadManualOpen"
+                ></div>
+            </div>
+            <div class="custom-tooltip-example">
+                <div
+                    class="gray-square"
+                    exampleCustomTooltip
+                    tooltipContent="No traveller returns"
+                    [tooltipOpen]="onLoadManualOpen"
+                    [tooltipPositions]="['W', 'center']"
                 ></div>
             </div>
         </div>
@@ -126,7 +144,8 @@
     <div
         class="gray-square"
         #pushed="nxTooltipV2"
-        nxTooltipV2="When we have shuffled off this mortal coil,"
+        nxTooltipV2
+        tooltipContent="When we have shuffled off this mortal coil,"
         [tooltipOpen]="onLoadManualOpen && !!pushBuffer"
     ></div>
 </div>
@@ -135,20 +154,23 @@
 <div class="triggers-container">
     <div
         class="hover-example"
-        nxTooltipV2="Must give us pause. There's the respect"
+        nxTooltipV2
+        tooltipContent="Must give us pause. There's the respect"
         [tooltipPositions]="['S', 'start']"
     >
         Hover
     </div>
     <button
+        nxTooltipV2
+        tooltipContent="That makes Calamity of so long life:"
         tooltipTrigger="focus"
-        nxTooltipV2="That makes Calamity of so long life:"
         [tooltipPositions]="['N', 'start']"
     >
         Focus
     </button>
     <button
-        nxTooltipV2="For who would bear the Whips and Scorns of time,"
+        nxTooltipV2
+        tooltipContent="For who would bear the Whips and Scorns of time,"
         tooltipTrigger="click"
         [tooltipPositions]="['S', 'start']"
     >
@@ -156,7 +178,8 @@
     </button>
 
     <button
-        nxTooltipV2="The Oppressor's wrong, the proud man's Contumely,"
+        nxTooltipV2
+        tooltipContent="The Oppressor's wrong, the proud man's Contumely,"
         tooltipTrigger="none"
         #byMethod="nxTooltipV2"
         (click)="byMethod.toggle()"
@@ -176,7 +199,8 @@
 <h2>Timing</h2>
 <div class="delays-container">
     <button
-        nxTooltipV2="The pangs of despised Love, the Law’s delay,"
+        nxTooltipV2
+        tooltipContent="The pangs of despised Love, the Law’s delay,"
         tooltipTrigger="none"
         [tooltipPositions]="['S', 'start']"
         #delayed="nxTooltipV2"
@@ -189,7 +213,8 @@
 
     <div class="speedup">
         <button
-            nxTooltipV2="The insolence of Office, and the spurns"
+            nxTooltipV2
+            tooltipContent="The insolence of Office, and the spurns"
             #slowTooltip="nxTooltipV2"
             [tooltipPositions]="['N', 'start']"
             (click)="slowTooltip.toggle(); slowTransition = true"
@@ -224,7 +249,8 @@
     <div class="autohide-example">
         <button
             style="width: 96px"
-            nxTooltipV2="That patient merit of th'unworthy takes,"
+            nxTooltipV2
+            tooltipContent="That patient merit of th'unworthy takes,"
             #autohide="nxTooltipV2"
             tooltipTrigger="hover"
             (click)="autohide.open(); autohideUpdate(true)"
