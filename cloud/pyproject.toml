@@ -17,7 +17,7 @@ asgiref = "^3.5.2" #BSD 3-Clause "New" or "Revised" License|https://github.com/d
 boto3 = "~1.9.132" #Apache-2.0 License|https://github.com/boto/boto3|https://github.com/boto/boto3/blob/develop/LICENSE
 botocore = "1.12.253" #Apache-2.0 License|https://github.com/boto/botocore|https://github.com/boto/botocore/blob/develop/LICENSE.txt
 cssutils = "1.0.2" # GNU Lesser General Public License v3.0|https://github.com/jaraco/cssutils|https://github.com/jaraco/cssutils/blob/main/COPYING
-Django = "4.1.11" #BSD 3-Clause "New" or "Revised" License|https://github.com/django/django|https://github.com/django/django/blob/main/LICENSE
+Django = "~4.1.11" #BSD 3-Clause "New" or "Revised" License|https://github.com/django/django|https://github.com/django/django/blob/main/LICENSE
 django-admin-tools = "0.9.2" #MIT License|https://github.com/django-admin-tools/django-admin-tools|https://github.com/django-admin-tools/django-admin-tools/blob/master/LICENSE
 django_autocomplete_light = "~3.9.7" #MIT License|https://github.com/yourlabs/django-autocomplete-light|https://github.com/yourlabs/django-autocomplete-light/blob/master/LICENSE
 django-celery-beat = "~2.5.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/celery/django-celery-beat|https://github.com/celery/django-celery-beat/blob/main/LICENSE
@@ -51,6 +51,7 @@ importlib_metadata = "1.6.0" #Apache 2.0 License|https://github.com/python/impor
 inlinestyler = "0.2.1" #BSD 3-Clause "New" or "Revised" License|https://github.com/dlanger/inlinestyler|https://github.com/dlanger/inlinestyler/blob/master/LICENSE
 jsonfield = "3.1.0" #MIT License|https://github.com/rpkilby/jsonfield|https://github.com/rpkilby/jsonfield/blob/master/LICENSE
 libsass = "0.20.1" #Copyright (C) 2012-2016 by the Sass Open Source Foundation|https://github.com/sass/libsass|https://github.com/sass/libsass/blob/master/LICENSE
+lxml = { version = "~5.2.0", extras = ["html_clean"] } # BSD license |https://github.com/lxml/lxml|https://github.com/lxml/lxml/blob/master/LICENSES.txt; BSD 3-Clause "New" or "Revised" License|https://github.com/fedora-python/lxml_html_clean|https://github.com/fedora-python/lxml_html_clean/blob/main/LICENSE.txt
 meilisearch = "0.17.0" #MIT License|https://github.com/meilisearch/meilisearch|https://github.com/meilisearch/meilisearch/blob/main/LICENSE
 mistletoe = "0.7.2" #MIT License|https://github.com/miyuchina/mistletoe|https://github.com/miyuchina/mistletoe/blob/master/LICENSE
 mysqlclient = "2.2.4" #GNU General Public License v2.0|https://github.com/PyMySQL/mysqlclient|https://github.com/PyMySQL/mysqlclient/blob/main/LICENSE
@@ -78,7 +79,7 @@ optional = true
 
 [tool.poetry.group.test.dependencies]
 mock = "^4.0.3"
-model_bakery = "^1.12.0"
+model_bakery = "~1.17.0"
 pyfakefs = "^4.5.1"
 pytest = "~6.2.4"
 pytest-asyncio = "~0.20.3"
