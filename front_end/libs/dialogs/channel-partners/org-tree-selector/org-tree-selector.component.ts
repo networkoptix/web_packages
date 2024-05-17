@@ -128,13 +128,24 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         return null;
     }
 
-    initialHighlightSet = false;
+    initialized = false;
     writeValue(value: string): void {
-        if (value !== null && !this.initialHighlightSet) {
+        if (value !== null && !this.initialized) {
             if (value !== this.organization().id) {
                 this.highlightIndex = this.flatGroups.findIndex(g => g.id === value);
+                let parent = this.groupInfoMap.get(value)!.parent;
+                while (parent) {
+                    this.updateFolderState(parent, true);
+                    parent = this.groupInfoMap.get(parent)!.parent;
+                }
+                setTimeout(() => {
+                    const folderElem = this.orgTreeList.nativeElement.querySelector<HTMLLIElement>(
+                        '.org-tree__item--' + this.highlightIndex.toString(),
+                    )!;
+                    scrollItemIntoView(folderElem, this.orgTreeList.nativeElement);
+                });
             }
-            this.initialHighlightSet = true;
+            this.initialized = true;
         }
         this.selected = value;
     }

@@ -126,19 +126,6 @@ export class NxOrganizationComponent {
         });
     }
 
-    newOrgUserV2(): void {
-        this.dialogs
-            .addOrgUserV2({
-                organization: this.organization$$(),
-            })
-            .then(res => {
-                if (res) {
-                    this.refresh$.next();
-                    this.toastService.notify(`Added new org user ${res.email}`);
-                }
-            });
-    }
-
     updateOrgUser(user: OrganizationUser): void {
         this.dialogs.editOrgUser({ orgId: this.id$$(), user }).then(res => {
             if (res) {

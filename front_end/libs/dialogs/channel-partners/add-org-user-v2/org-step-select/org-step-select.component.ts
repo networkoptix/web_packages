@@ -1,3 +1,4 @@
+import { DomPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -6,7 +7,9 @@ import {
     Input,
     OnInit,
     Output,
+    QueryList,
     ViewChild,
+    ViewChildren,
     booleanAttribute,
     effect,
     forwardRef,
@@ -18,13 +21,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@static-variables';
+import { paramSortFunc } from '@utils/general';
 
 @Component({
     selector: 'nx-org-step-select',
     templateUrl: 'org-step-select.component.html',
     styleUrls: ['org-step-select.component.scss'],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
+    imports: [CommonModule, PortalModule, AngularSvgIconModule, TranslateModule],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -34,6 +38,43 @@ import { icons } from '@static-variables';
     ],
 })
 export class NxOrgStepSelectComponent implements OnInit, ControlValueAccessor {
+    @ViewChild('pathContainer') private pathContainer: ElementRef<HTMLDivElement>;
+    @ViewChildren('path') protected set _paths(value: QueryList<ElementRef<HTMLSpanElement>>) {
+        this.paths.set(value.map(p => p.nativeElement));
+    }
+    private paths = signal<HTMLSpanElement[]>([]);
+    protected _pathsEffect = effect(() => {
+        const paths = this.paths()
+            .slice()
+            .sort(paramSortFunc(p => p.scrollWidth, false));
+        if (paths.length === 1) {
+            this.selectedPath = new DomPortal(paths[0]);
+            return;
+        }
+
+        // Folder names might be shorter than ellipses, try full path first
+        const [fullPath] = paths.splice(
+            paths.findIndex(p => p.hasAttribute('data-full-path')),
+            1,
+        );
+        if (fullPath.clientWidth < this.pathContainer.nativeElement.clientWidth) {
+            this.selectedPath = new DomPortal(fullPath);
+            return;
+        }
+
+        for (let i = 0; i < paths.length; i++) {
+            const path = paths[i];
+            if (path.clientWidth < this.pathContainer.nativeElement.clientWidth) {
+                this.selectedPath = new DomPortal(paths[i]);
+                return;
+            }
+        }
+
+        this.selectedPath = new DomPortal(paths.pop()!);
+    });
+
+    selectedPath?: DomPortal<HTMLSpanElement>;
+
     icons = icons;
 
     @ViewChild('selectButton') private selectButton: ElementRef<HTMLButtonElement>;

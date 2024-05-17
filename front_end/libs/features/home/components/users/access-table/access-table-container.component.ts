@@ -180,9 +180,12 @@ export class NxAccessTableContainerComponent {
     }
 
     addAccess(): void {
+        const currentGroupId = this.currentGroupId$$();
+        const organization = this.currentOrg$$()!;
         this.dialogService.addOrgUserV2({
-            organization: this.currentOrg$$()!,
+            organization,
             email: this.email,
+            initialFolder: currentGroupId || organization.id,
         });
     }
 

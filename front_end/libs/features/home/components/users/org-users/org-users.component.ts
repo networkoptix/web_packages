@@ -121,12 +121,12 @@ export class NxOrganizationUsersComponent implements OnInit {
     }
 
     newUserDialog(): void {
-        const org = this.currentOrg$$();
-        if (org) {
-            this.dialogsService.addOrgUserV2({
-                organization: org,
-            });
-        }
+        const organization = this.currentOrg$$()!;
+
+        this.dialogsService.addOrgUserV2({
+            organization,
+            initialFolder: this.routerState.state$$().groupId || organization.id,
+        });
     }
 
     deleteUsers(user: UserRecord): void {

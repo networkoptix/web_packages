@@ -98,28 +98,28 @@
 
 nx-select-v2 {
     display: block;
+    border: 1px solid transparent;
 }
 
-.role-description {
+.role-message {
     min-height: 5rem;
 }
 
 nx-org-step-select {
     width: 100%;
-
     border: 1px solid transparent;
+}
 
-    &.warning-outline {
-        border-color: var(--yellow-d1);
-    }
+.warning-outline {
+    border-color: var(--yellow-d1);
+}
 
-    &.error-outline {
-        border-color: var(--input-error-border-color);
-    }
+.error-outline {
+    border-color: var(--input-error-border-color);
+}
 
-    &.hide-outline {
-        border-color: transparent;
-    }
+.hide-outline {
+    border-color: transparent;
 }
 
 nx-org-tree-selector {
