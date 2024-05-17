@@ -5,7 +5,7 @@ import './style.css';
 import { description } from '../package.json';
 import { Subject, takeUntil } from 'rxjs';
 import { WebRTCStreamManager, generateWebRtcUrlFactory } from './open_check_excluded';
-import { TargetStream } from '@networkoptix/webrtc-stream-manager';
+import { ApiVersions, TargetStream } from '@networkoptix/webrtc-stream-manager';
 
 const newStream$ = new Subject<void>();
 
@@ -127,24 +127,45 @@ const systemSelect = document.querySelector<HTMLSelectElement>(
 const cameraSelect = document.querySelector<HTMLSelectElement>(
   '[name="selectedCamera"]'
 );
+
+const positionSelect = document.querySelector<HTMLInputElement>(
+  '[name="selectedPosition"]'
+);
+
+const playbackSpeedSelect = document.querySelector<HTMLSelectElement>(
+  '[name="selectedSpeed"]'
+);
+
 const videoElement = document.querySelector('video');
 
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
+
+let currentInstance: WebRTCStreamManager;
 
 const startStream = (systemId: string, cameraId: string, serverId: string, allowTranscoding = false) => {
   newStream$.next();
   WebRTCStreamManager.closeAll();
   const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
-  const webRtcUrlConfig = { accessToken: systemToken.access_token, allowTranscoding, systemId, cameraId, targetStream: TargetStream.AUTO };
+  const webRtcUrlConfig = {
+    accessToken: systemToken.access_token,
+    allowTranscoding,
+    systemId,
+    cameraId,
+    targetStream: TargetStream.AUTO,
+    position: parseFloat(positionSelect.value),
+    speed: playbackSpeedSelect.value === 'unlimited' ?  (version >= 6 ? 'unlimited' as const : 100) : parseFloat(playbackSpeedSelect.value),
+  };
+  currentInstance = null;
   WebRTCStreamManager.connect(webRtcUrlConfig, videoElement)
     .pipe(takeUntil(newStream$))
-    .subscribe(([stream, error]) => {
+    .subscribe(([stream, error, instance]) => {
+      currentInstance = instance;
       if (stream) {
         videoElement.srcObject = stream;
         videoElement.muted = true;
         videoElement.autoplay = true;
 
-        document.querySelector('h2').style.display = WebRTCStreamManager.getInstance(cameraId).allowTranscoding ? 'block' : 'none';
+        document.querySelector('h2').style.display = WebRTCStreamManager.getInstance(cameraId)?.allowTranscoding ? 'block' : 'none';
       }
 
       if (error) {
@@ -161,8 +182,8 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
     });
 }
 
-const startStreamHandler = async (event: SubmitEvent) => {
-  event.preventDefault();
+const startStreamHandler = async (event?: SubmitEvent) => {
+  event?.preventDefault();
   newStream$.next();
 
   const data = new FormData(endpointForm);
@@ -222,7 +243,7 @@ const systemSelected = async () => {
 
   cameras = await fetch(`https://${systemRelay}/rest/v2/devices`, { credentials: 'include' }).then((res) => res.json());
 
-  const cameraAvailable = (camera: BasicCameraInfo) => ['online', 'recording'].includes(camera.status?.toLowerCase())
+  const cameraAvailable = (camera: BasicCameraInfo) => true;
   const camerasOptions = cameras.sort((a, b) => a.name.localeCompare(b.name)).map(
     (camera) =>
       `<option value="${camera.id}" ${
@@ -244,8 +265,25 @@ const cameraSelected = () => {
   ).disabled = false;
 };
 
+const toggleSpeedSelectorDisabled = () => {
+  if (positionSelect.value === '0') {
+    playbackSpeedSelect.disabled = true;
+  } else {
+    playbackSpeedSelect.disabled = false;
+  }
+};
+
+const changeSpeedHandler = () => {
+  if (currentInstance?.apiVersion === ApiVersions.v2) {
+    return currentInstance.updateSpeed(playbackSpeedSelect.value === 'unlimited' ? Infinity : parseFloat(playbackSpeedSelect.value))
+  }
+  return startStreamHandler()
+}
+
 instanceForm.addEventListener('submit', redirectOauth);
 systemSelect.addEventListener('change', systemSelected);
 cameraSelect.addEventListener('change', cameraSelected);
+positionSelect.addEventListener('change', toggleSpeedSelectorDisabled);
 
 endpointForm.addEventListener('submit', startStreamHandler);
+playbackSpeedSelect.addEventListener('change', changeSpeedHandler);

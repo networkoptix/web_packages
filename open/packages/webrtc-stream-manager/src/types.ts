@@ -160,7 +160,8 @@ export interface WebRtcUrlConfigUnknown {
     cameraId: string;
     accessToken: string;
     targetStream: TargetStream;
-    position?: never;
+    position?:  number;
+    speed?: 'unlimited' | number;
 }
 
 export interface WebRtcUrlConfigV1 extends WebRtcUrlConfigUnknown {
@@ -176,3 +177,24 @@ export interface WebRtcUrlConfigV2 extends WebRtcUrlConfigUnknown {
 export type WebRtcUrlConfig = WebRtcUrlConfigV1 | WebRtcUrlConfigV2 | WebRtcUrlConfigUnknown
 
 export type WebRtcUrlFactoryOrConfig = WebRtcUrlFactory | WebRtcUrlConfig
+
+export interface TimeStampMessage {
+    timestamp: number;
+    rtpTimestamp: number;
+}
+
+export interface StreamChangeMessage {
+    timestamp: -1;
+    status: 301
+}
+
+export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => typeof message === 'object' && ['timestamp', 'rtpTimestamp'].every(key => key in message && typeof (message as Record<string, unknown>)[key] === 'number');
+
+const timeStampMessage = {
+    timestamp: -1,
+    status: 301
+}
+
+export const isStreamChangeMessage = (message: unknown): message is StreamChangeMessage => typeof message === 'object' &&  'status' in message && message.status === 301;
+
+export type DataChannelMessage = TimeStampMessage

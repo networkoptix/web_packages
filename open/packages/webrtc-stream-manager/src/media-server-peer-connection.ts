@@ -37,10 +37,12 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         private reconnectionHandler: (lostConnection: true) => void,
         trackHandler: StreamHandler,
         bufferHandler: BufferHandler,
-        private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number}
+        private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number, speed: number | 'unlimited' },
+        private handleDataChannelMessage: (message: string) => void,
     ) {
         super({
             iceServers,
+            iceCandidatePoolSize: 10,
         });
 
         this.ontrack = (event: RTCTrackEvent): unknown => event.track.kind === 'video' && trackHandler(event.streams[0]);
@@ -49,7 +51,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             channel.binaryType = 'arraybuffer';
             channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
                 if (typeof(data) === 'string') {
-                    console.log('dc message: ' + data);
+                    this.handleDataChannelMessage(data)
                 } else if ('status' in data) {
                     console.log('dc status: ' + data.status);
                     // if (webrtc.deliveryMethod != null && webrtc.deliveryMethod == 'mse') {
