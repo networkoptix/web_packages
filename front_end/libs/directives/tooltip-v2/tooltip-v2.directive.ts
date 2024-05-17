@@ -109,7 +109,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     private defaultDelay = [0, 0] as [number, number];
     /** How long to wait after a trigger to open/close the tooltip in ms.
      *
-     * Use a single number for for open and close to use the same value,
+     * Use a single number for open and close to use the same value,
      * or a two number tuple for separate values.
      *
      * Default value of `0` (no delay).

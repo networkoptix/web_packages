@@ -991,13 +991,13 @@ export class NxLayoutGridComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
         private store: Store,
-        public layoutItemsStore: LayoutItemsErrorsStore,
+        public layoutItemsErrorsStore: LayoutItemsErrorsStore,
     ) {
         if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
 
-        this.layoutItemsStore.reset();
+        this.layoutItemsErrorsStore.reset();
 
         // TODO - start - following should be moved to layout-greed-tree
         layoutGridService.changeView
@@ -1036,7 +1036,7 @@ export class NxLayoutGridComponent {
             for (const { id, primary, secondary } of transcodingDisabled) {
                 if (
                     ![ConnectionError.mjpegDisabled, ConnectionError.transcodingDisabled].includes(
-                        this.layoutItemsStore.errors$$()[id] as ConnectionError,
+                        this.layoutItemsErrorsStore.statuses$$()[id] as ConnectionError,
                     )
                 ) {
                     continue;
@@ -1046,11 +1046,7 @@ export class NxLayoutGridComponent {
                 const usePrimary = currentResolution === Resolution.HIGH && !primary;
 
                 if (usePrimary || useSecondary || ![primary, secondary].some(Boolean)) {
-                    this.layoutItemsStore.remove({
-                        errorId: id,
-                        iconId: id,
-                        messageId: id,
-                    });
+                    this.layoutItemsErrorsStore.remove(id, true);
                 }
             }
         });
@@ -1238,11 +1234,7 @@ export class NxLayoutGridComponent {
 
                 if (assertResourceOfType.camera(camera)) {
                     camera.details.status = CameraStatus.Online;
-                    this.layoutItemsStore.remove({
-                        errorId: cameraId,
-                        iconId: cameraId,
-                        messageId: cameraId,
-                    });
+                    this.layoutItemsErrorsStore.remove(cameraId, true);
                 }
             });
 
@@ -1276,20 +1268,18 @@ export class NxLayoutGridComponent {
                 return;
             }
         } catch ({ message }) {
-            this.layoutItemsStore.set({
-                id,
+            this.layoutItemsErrorsStore.set(id, {
                 message,
             });
         }
 
         if (!loaded) {
-            this.layoutItemsStore.set({
-                id,
-                error: `${ResourceType.WEB_PAGE}_error`,
+            this.layoutItemsErrorsStore.set(id, {
+                status: `${ResourceType.WEB_PAGE}_error`,
             });
-        } else if (id in this.layoutItemsStore.messages$$()) {
-            this.layoutItemsStore.remove({
-                messageId: id,
+        } else if (id in this.layoutItemsErrorsStore.messages$$()) {
+            this.layoutItemsErrorsStore.remove(id, {
+                message: true,
             });
         }
 
@@ -1348,7 +1338,9 @@ export class NxLayoutGridComponent {
         status: string,
     ): void => {
         const hasAdditionalMessage = Boolean(
-            this.layoutItemsStore.messages$$?.()[this.layoutItemLookup[id]?.details.id || status],
+            this.layoutItemsErrorsStore.messages$$?.()[
+                this.layoutItemLookup[id]?.details.id || status
+            ],
         );
         const iconSizeConfigs: {
             minWidth: number;
@@ -1765,16 +1757,16 @@ export class NxLayoutGridComponent {
 
         if (id && id !== cleanIdLegacy(this.layout.id)) {
             this.changingLayout = id;
-            this.layoutItemsStore.reset();
+            this.layoutItemsErrorsStore.reset();
             if (
                 !this.system.permissionManager.permissions$$().editCameras ||
                 !this.CONFIG.featureFlags.layoutsAuthorizeCamera
             ) {
-                this.layoutItemsStore.remove({
-                    messageId: 'defaultPassword',
+                this.layoutItemsErrorsStore.remove('defaultPassword', {
+                    message: true,
                 });
-                this.layoutItemsStore.remove({
-                    messageId: 'unauthorized',
+                this.layoutItemsErrorsStore.remove('unauthorized', {
+                    message: true,
                 });
             }
             this.layoutStateService.portal = null;
@@ -1801,26 +1793,23 @@ export class NxLayoutGridComponent {
         const itemId = itemDetail.details.id;
         const showOfflineError = (): void => {
             itemDetail.details.online = false;
-            this.layoutItemsStore.set({
-                id: itemId,
-                error: staticLang.common.cameraStates.unavailable,
+            this.layoutItemsErrorsStore.set(itemId, {
+                status: staticLang.common.cameraStates.unavailable,
                 icon: 'offline',
-                message: staticLang.layouts.additionalErrorMessages.UNAVAILABLE,
+                message: staticLang.layouts.itemPlaceholders.additionalErrorMessages.UNAVAILABLE,
             });
         };
 
-        const showTranscodingDisabledError = (error: ConnectionError): void => {
-            this.layoutItemsStore.set({
-                id: itemId,
-                error,
+        const showTranscodingDisabledError = (status: ConnectionError): void => {
+            this.layoutItemsErrorsStore.set(itemId, {
+                status,
                 icon: 'warning',
             });
         };
 
         const showDefaultPasswordError = (): void => {
-            this.layoutItemsStore.set({
-                id: itemId,
-                error: 'defaultPassword',
+            this.layoutItemsErrorsStore.set(itemId, {
+                status: 'defaultPassword',
                 icon: 'warning',
             });
         };
@@ -1910,18 +1899,22 @@ export class NxLayoutGridComponent {
                     ({ id }) => id === camera.id,
                 );
 
+                if (!selectedCamera) {
+                    return;
+                }
+
                 if (selectedCamera.status === CameraStatus.Unauthorized && !defaultPassword) {
                     this.toastService.notify(
                         {
-                            value: staticLang.layouts.errors.unableToAuthorizeCamera,
+                            value: staticLang.layouts.toasts.unableToAuthorizeCamera,
                             params: pick(camera, 'name'),
                         },
                         ToastType.Warning,
                     );
                 } else {
-                    this.layoutItemsStore.remove({
-                        errorId: selectedCamera.id,
-                        iconId: selectedCamera.id,
+                    this.layoutItemsErrorsStore.remove(selectedCamera.id, {
+                        status: true,
+                        icon: true,
                     });
                     if (defaultPassword) {
                         this.skipDefaultCredentialsCheck[selectedCamera.id] = true;

@@ -1,11 +1,82 @@
-<div>
-    <svg-icon
-        nx-add-svg-src
-        [src]="placeholderIcon"
-    >
-    </svg-icon>
-    <h3>{{ placeholderMessage | nxTranslate }}</h3>
-    @if (placeholderAdditionalMessage) {
-        <h4>{{ placeholderAdditionalMessage | nxTranslate }}</h4>
-    }
+<div class="halo"></div>
+<div class="container">
+    <div class="info">
+        <svg-icon
+            nx-add-svg-src
+            [svgStyle]="{ 'width.px': '48', 'height.px': '48' }"
+            [src]="icon()"
+        >
+        </svg-icon>
+        @if (hasTooltip()) {
+            <div
+                class="message has-tooltip"
+                nxTooltipV2
+                [tooltipContent]="tooltipTemplate"
+                [tooltipTrigger]="'hover'"
+                [tooltipPositions]="[['S', 'center']]"
+                [tooltipTheme]="'contrast'"
+            >
+                {{ message() | nxTranslate }}
+            </div>
+        } @else {
+            <div class="message">
+                {{ message() | nxTranslate }}
+            </div>
+        }
+    </div>
+
+    <div class="action">
+        <ng-container [ngTemplateOutlet]="actionTemplate"></ng-container>
+    </div>
+    <div class="description">
+        <ng-container
+            *ngTemplateOutlet="messageTemplate; context: { message: description() }"
+        ></ng-container>
+    </div>
+
+    <ng-template #tooltipTemplate>
+        <div
+            class="msg-tooltip"
+            style="width: max-content; height: max-content"
+        >
+            <ng-container
+                *ngTemplateOutlet="messageTemplate; context: { message: hint() }"
+            ></ng-container>
+            <ng-container
+                *ngTemplateOutlet="messageTemplate; context: { message: description() }"
+            ></ng-container>
+            <ng-container
+                *ngTemplateOutlet="
+                    messageTemplate;
+                    context: {
+                        hide: !hasActionButton(),
+                        message: LANG.layouts.itemPlaceholders.descriptions.fullScreenAction
+                    }
+                "
+            ></ng-container>
+        </div>
+    </ng-template>
 </div>
+
+<ng-template #actionTemplate>
+    @if (hasActionButton()) {
+        <nx-button
+            [type]="ButtonType.outline"
+            (click)="action()"
+        >
+            {{ actionName() | nxTranslate }}
+        </nx-button>
+    }
+</ng-template>
+
+<ng-template
+    #messageTemplate
+    let-message="message"
+    let-hide="hide"
+>
+    @if (message && !hide) {
+        <p class="message">
+            {{ message | nxTranslate }}
+        </p>
+    }
+</ng-template>

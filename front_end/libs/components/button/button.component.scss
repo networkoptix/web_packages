@@ -1,0 +1,5 @@
+.btn.btn-outline-primary:not(:hover) {
+  // fix broken bootstrap button outline in a passive state state
+  // the bug is that outline button does not have an outline...
+  border: 1px solid;
+}

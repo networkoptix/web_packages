@@ -940,8 +940,10 @@ html[data-theme="hsl"] {
     --no-systems-description-color: var(--dark17);
 
     /* Layouts */
-    --placeholder-error-color: var(--new-attention-red_dark);
-    --placeholder-info-color: var(--new-dark11);
+    --placeholder-error-color: var(--new-attention-red);
+    --placeholder-info-color: var(--new-light10);
+    --placeholder-error-color-old: var(--new-attention-red_dark);
+    --placeholder-info-color-old: var(--new-dark11);
 
     --tree-locked-icon: var(--new-light4);
     --tree-node-editable-color-override: var(--new-dark9);

@@ -1,5 +1,6 @@
 export enum ButtonType {
     brand = 'Brand',
+    outline = 'Outline',
     secondary = 'Secondary',
     text = 'Text',
     // Other

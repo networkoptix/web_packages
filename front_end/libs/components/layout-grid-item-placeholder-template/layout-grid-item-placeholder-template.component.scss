@@ -1,1 +1,86 @@
 @use 'typography';
+
+:host {
+    --main-color: var(--placeholder-info-color);
+
+    &.error {
+        --main-color: var(--placeholder-error-color);
+    }
+
+    .container {
+        color: var(--main-color);
+
+        svg path {
+            fill: var(--main-color);
+        }
+    }
+}
+
+.halo {
+    container-type: inline-size;
+
+    position: absolute;
+    color: transparent;
+    top: 50%;
+    left: 15%;
+    width: 70%;
+    height: 0;
+    box-shadow: 0 0 25cqi calc(min(4cqi, 40px)) var(--main-color);
+}
+
+.container {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 32px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    container: container / size;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+
+    .message {
+        display: inline-block;
+        text-align: center;
+        font-size: 40px;
+        &.has-tooltip {
+            cursor: pointer;
+        }
+
+        @container container (width < 250px) or (height < 70px) {
+            font-size: 16cqi;
+        }
+    }
+}
+
+.action,
+.description,
+svg-icon {
+    @container container (width < 230px) or (height < 250px) {
+        display: none;
+    }
+}
+
+.description {
+    font-size: 14px;
+}
+
+.msg-tooltip {
+    padding: 6px;
+    max-width: 200px;
+
+    .message {
+        margin-bottom: 6px;
+    }
+}

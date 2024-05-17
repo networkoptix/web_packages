@@ -104,7 +104,6 @@
             [dataSource]="layoutItemLookup.tree"
             [linkedDataSource]="layoutItemLookup.otherSystems"
             [treeControl]="treeControl"
-            [errorIcons]="layoutItemsStore.icons$$()"
             [showTooltip]="showTooltip$ | async"
             [changingLayout]="changingLayout"
         ></nx-layout-grid-tree>
@@ -271,7 +270,6 @@
                                     [layoutItemLookup]="layoutItemLookup"
                                     [dataSource]="otherSystems"
                                     [treeControl]="treeControl"
-                                    [errorIcons]="layoutItemsStore.icons$$()"
                                     [showTooltip]="showTooltip$ | async"
                                     [changingLayout]="changingLayout"
                                     [expandAll]="!!searchMatches$$()"
@@ -756,7 +754,7 @@
                                                         @if (
                                                             {
                                                                 itemDetail: itemDetail,
-                                                                errors: layoutItemsStore.errors$$()
+                                                                errors: layoutItemsErrorsStore.statuses$$()
                                                             } | mapWith: itemHasNoErrors
                                                         ) {
                                                             <div class="content-container">

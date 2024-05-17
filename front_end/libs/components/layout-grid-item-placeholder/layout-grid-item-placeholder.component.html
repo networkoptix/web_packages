@@ -1,4 +1,4 @@
-@if (!adjustedStatus$$()) {
+@if (!adjustedStatus()) {
     <div
         class="not-supported"
         translate
@@ -7,20 +7,26 @@
     </div>
 } @else if (!layoutsItemNewPlaceholder) {
     <nx-layout-grid-item-placeholder-template-legacy
-        [placeholderIcon]="placeholderIcon$$()"
-        [placeholderMessage]="placeholderMessage$$()"
-        [placeholderAdditionalMessage]="placeholderAdditionalMessage$$()"
-        [action]="action$$()"
-        [hasAction]="hasAction$$()"
-        [notSupported]="notSupported$$()"
-        [renderConfig]="renderConfig$$()"
+        [placeholderIcon]="placeholderIcon()"
+        [placeholderMessage]="placeholderMessage()"
+        [placeholderAdditionalMessage]="placeholderAdditionalMessage()"
+        [action]="action()"
+        [hasAction]="hasAction()"
+        [notSupported]="notSupported()"
+        [renderConfig]="renderConfig()"
     >
     </nx-layout-grid-item-placeholder-template-legacy>
 } @else {
     <nx-layout-grid-item-placeholder-template
-        [placeholderIcon]="placeholderIcon$$()"
-        [placeholderMessage]="placeholderMessage$$()"
-        [placeholderAdditionalMessage]="placeholderAdditionalMessage$$()"
+        *ngrxLet="placeholder() as placeholder"
+        [icon]="placeholder.icon"
+        [message]="placeholder.message"
+        [hint]="placeholder.hint"
+        [description]="placeholder.description"
+        [action]="action()"
+        [actionName]="placeholder.actionName"
+        [isError]="placeholder.isError"
+        [hasAction]="hasAction()"
     >
     </nx-layout-grid-item-placeholder-template>
 }

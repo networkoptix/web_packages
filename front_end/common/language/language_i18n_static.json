@@ -192,15 +192,6 @@
             "save": "Save",
             "error": "Repeat"
         },
-        "additionalErrorMessages": {
-            "UNAVAILABLE": "can't connect to the camera",
-            "webpage": "expect in future versions",
-            "iodevice": "expect in future versions",
-            "defaultPassword": "click to set up",
-            "unauthorized": "click to set credentials",
-            "transcodingDisabled": "transcoding for H265 streams not supported",
-            "mjpegDisabled": "transcoding for MJPEG streams not supported"
-        },
         "titles": {
             "resourceTypes": {
                 "layouts": "Layouts",
@@ -214,7 +205,8 @@
         },
         "toasts": {
             "reconnected": "Connection to \"{name}\" camera re-established.",
-            "connectionLost": "Lost connection to \"{name}\" camera. Attempting to reconnect..."
+            "connectionLost": "Lost connection to \"{name}\" camera. Attempting to reconnect...",
+            "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         },
         "helpMessages": {
             "unsaved": {
@@ -317,12 +309,6 @@
                 "required": "'This field is required'"
             }
         },
-        "errors": {
-            "webpage": "NOT SUPPORTED",
-            "iodevice": "NOT SUPPORTED",
-            "webpage_error": "Error loading webpage",
-            "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
-        },
         "overlay": {
             "info": {
                 "resolution": {
@@ -418,6 +404,55 @@
                     "name": "Open in New Window",
                     "tooltip": "Open in a new window"
                 }
+            }
+        },
+        "itemPlaceholders": {
+            "errors": {
+                "webpage": "NOT SUPPORTED",
+                "iodevice": "NOT SUPPORTED",
+                "webpage_error": "Error loading webpage",
+                "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
+            },
+            "additionalErrorMessages": {
+                "UNAVAILABLE": "can't connect to the camera",
+                "webpage": "expect in future versions",
+                "iodevice": "expect in future versions",
+                "defaultPassword": "click to set up",
+                "unauthorized": "click to set credentials",
+                "transcodingDisabled": "transcoding for H265 streams not supported",
+                "mjpegDisabled": "transcoding for MJPEG streams not supported"
+            },
+            "messages": {
+                "notSupported": "NOT SUPPORTED",
+                "unavailable": "UNAVAILABLE",
+                "unauthorized": "UNAUTHORIZED",
+                "passwordRequired": "PASSWORD REQUIRED",
+                "offline": "OFFLINE",
+                "incompatible": "INCOMPATIBLE",
+                "noLiveStream": "NO LIVE STREAM",
+                "noAccess": "NO ACCESS",
+                "noAccessToSystem": "NO ACCESS TO SYSTEM",
+                "systemIsOffline": "SYSTEM IS OFFLINE"
+            },
+            "hints": {
+                "offlineCamera": "This camera cannot be accessed. Perform camera diagnostics within the Nx Witness Desktop Client for additional information.",
+                "defaultPassword": "Administrator password for this camera must be set using the Nx Witness Desktop Client or camera interface.",
+                "unauthorizedCamera": "This camera requires authorized credentials to be set in the device settings in Cloud portal or Nx Witness Desktop client.",
+                "unavailableCamera": "Connected camera is not providing a media stream. Check device and network settings.",
+                "ioDevice": "I/O modules are not currently supported in the Web client.",
+                "webPage": "Web pages cannot be viewed within the Web Client.",
+                "intercom": "Intercom devices are not currently supported in the Web client.",
+                "virtualCamera": "Intercom devices are not currently supported in the Web client.",
+                "noAccess": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
+                "noAccessToSystem": "You do not have permission to \"{System_name}\" system. Please contact your system administrator to arrange access to the system."
+            },
+            "actions": {
+                "defaultPassword": "Setup",
+                "unauthorizedCamera": "Set Credentials"
+            },
+            "descriptions": {
+                "expectInFutureVersions": "expect in future versions",
+                "fullScreenAction": "Maximize Item to use available action"
             }
         }
     },

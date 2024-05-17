@@ -33,69 +33,64 @@ const entitiesToObject = (entities: Entity[]): Record<string, string> =>
     providedIn: 'root',
 })
 export class LayoutItemsErrorsStore extends signalStore(
-    withEntities({ entity: type<Entity>(), collection: 'error' }),
-    withEntities({ entity: type<Entity>(), collection: 'errorIcon' }),
+    withEntities({ entity: type<Entity>(), collection: 'status' }),
+    withEntities({ entity: type<Entity>(), collection: 'icon' }),
     withEntities({ entity: type<Entity>(), collection: 'message' }),
     withComputed(store => ({
-        errors$$: computed(() => entitiesToObject(store.errorEntities())),
-        icons$$: computed(() => entitiesToObject(store.errorIconEntities())),
+        statuses$$: computed(() => entitiesToObject(store.statusEntities())),
+        icons$$: computed(() => entitiesToObject(store.iconEntities())),
         messages$$: computed(() => entitiesToObject(store.messageEntities())),
     })),
     withMethods(store => ({
-        set: ({
-            id,
-            error,
-            icon,
-            message,
-        }: {
-            id: string;
-            error?: string;
-            icon?: string;
-            message?: Translatable;
-        }) => {
+        set: (
+            id: string,
+            error: {
+                status?: string;
+                icon?: string;
+                message?: Translatable;
+            },
+        ) => {
             const updates: PartialStateUpdater<NamedEntityState<Entity, never>>[] = [];
 
-            if (error) {
-                updates.push(setEntity({ id, value: error }, { collection: 'error' }));
+            if (!error || !id) {
+                return;
             }
-            if (icon) {
-                updates.push(setEntity({ id, value: icon }, { collection: 'errorIcon' }));
-            }
-            if (message) {
-                updates.push(
-                    setEntity(
-                        { id, value: message },
-                        {
-                            collection: 'message',
-                        },
-                    ),
-                );
-            }
+
+            Object.keys(error).forEach(key => {
+                if (error?.[key]) {
+                    updates.push(setEntity({ id, value: error[key] }, { collection: key }));
+                }
+            });
 
             return patchState(store, ...updates);
         },
-        remove: ({
-            errorId,
-            iconId,
-            messageId,
-        }: {
-            errorId?: string;
-            iconId?: string;
-            messageId?: string;
-        }) => {
+        remove: (
+            id: string,
+            clear:
+                | true
+                | {
+                      status?: boolean;
+                      icon?: boolean;
+                      message?: boolean;
+                  },
+        ) => {
             const updates: PartialStateUpdater<NamedEntityState<Entity, never>>[] = [];
 
-            if (errorId) {
-                updates.push(removeEntity(errorId, { collection: 'error' }));
-            }
-            if (iconId) {
-                updates.push(removeEntity(iconId, { collection: 'errorIcon' }));
-            }
-            if (messageId) {
-                updates.push(removeEntity(messageId, { collection: 'message' }));
+            if (!id || !clear) {
+                return;
             }
 
-            Object.entries(staticLang.layouts.additionalErrorMessages).map(
+            if (clear === true) {
+                clear = { status: true, icon: true, message: true };
+            }
+
+            Object.keys(clear).forEach(key => {
+                if (clear?.[key]) {
+                    updates.push(removeEntity(id, { collection: key }));
+                }
+            });
+
+            Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).map(
                 ([id, value]: [string, Translatable]) => ({ id, value }),
             );
 
@@ -104,10 +99,10 @@ export class LayoutItemsErrorsStore extends signalStore(
         reset: () =>
             patchState(
                 store,
-                removeAllEntities({ collection: 'error' }),
-                removeAllEntities({ collection: 'errorIcon' }),
+                removeAllEntities({ collection: 'status' }),
+                removeAllEntities({ collection: 'icon' }),
                 setAllEntities(
-                    Object.entries(staticLang.layouts.additionalErrorMessages).map(
+                    Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).map(
                         ([id, value]: [string, string]) => ({
                             id,
                             value,

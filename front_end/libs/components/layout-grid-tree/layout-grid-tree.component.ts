@@ -130,7 +130,6 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     @Input() linkedDataSource?: BaseResourceNode[];
     layoutItemLookup$$ = input<LayoutResourceTree | null>(null, { alias: 'layoutItemLookup' });
     @Input() treeControl: NestedTreeControl<ResourceNode, string>;
-    @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
     @Input() showTooltip: boolean;
     @Input() changingLayout: string | boolean = true;

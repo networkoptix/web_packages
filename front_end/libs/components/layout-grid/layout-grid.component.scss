@@ -592,22 +592,22 @@ h2.auto-save-overlay {
 
         h3 {
             text-align: center;
-            color: var(--placeholder-error-color) !important;
+            color: var(--placeholder-error-color-old) !important;
         }
 
         h4 {
             text-align: center;
             width: 100%;
-            color: var(--placeholder-error-color) !important;
+            color: var(--placeholder-error-color-old) !important;
         }
 
         &.not-supported {
             h3,
             h4 {
-                color: var(--placeholder-info-color) !important;
+                color: var(--placeholder-info-color-old) !important;
             }
             svg path {
-                fill: var(--placeholder-info-color);
+                fill: var(--placeholder-info-color-old);
             }
         }
     }
@@ -653,17 +653,13 @@ h2.auto-save-overlay {
     align-items: center;
     margin: 0;
     overflow: hidden;
-    background: var(--header-bg);
+    background: var(--placeholder-background);
 
     &.wide {
         width: unset;
     }
     &.narrow {
         height: unset;
-    }
-
-    &.server-layout-item {
-        background: var(--placeholder-background);
     }
 
     &:hover {

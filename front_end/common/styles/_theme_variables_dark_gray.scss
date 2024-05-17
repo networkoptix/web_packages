@@ -226,43 +226,43 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --left-menu-disabled-item-color             : #606060; //$dark_gray_13;
     --left-menu-disabled-item-addtitional-color : #686868; //$dark_gray_14;
 
-   // New header ******************************
-   --header-level-one-color              : #{$light_gray_13};
-   --header-level-one-bg                 : #{$dark_gray_4};
-   --header-level-one-active-bg          : #{$dark_gray_5};
-   --header-level-one-active-color       : #{$light_gray_4};
-   --header-level-one-hover-color        : #{$light_gray_10};
-   --header-level-two-bg                 : #{$dark_gray_6};
-   --header-item-disabled                : #{$dark_gray_13};
-   --header-level-two-hover-border-color : #{$dark_gray_11};
-   --header-arrow-hover                  : #{$dark_gray_8};
-   --header-nav-arrow-bg                 : #{$dark_gray_7};
-   --header-logout-action-color          : #{$light_gray_16};
-   --header-active-border-bg             : var(--brand-core);
+     // New header ******************************
+     --header-level-one-color              : #{$light_gray_13};
+     --header-level-one-bg                 : #{$dark_gray_4};
+     --header-level-one-active-bg          : #{$dark_gray_5};
+     --header-level-one-active-color       : #{$light_gray_4};
+     --header-level-one-hover-color        : #{$light_gray_10};
+     --header-level-two-bg                 : #{$dark_gray_6};
+     --header-item-disabled                : #{$dark_gray_13};
+     --header-level-two-hover-border-color : #{$dark_gray_11};
+     --header-arrow-hover                  : #{$dark_gray_8};
+     --header-nav-arrow-bg                 : #{$dark_gray_7};
+     --header-logout-action-color          : #{$light_gray_16};
+     --header-active-border-bg             : var(--brand-core);
 
     // Logo;
     --header-logo-text-color              : #{$light_gray_4};
     --header-logo-border                  : #{$dark_gray_11};
 
-   // Mobile header
-   --mobile-header-bg                    : #{$dark_gray_4};
-   --mobile-level-one-color              : #{$dark_gray_15};
-   --mobile-level-two-color              : #{$light_gray_6};
-   --mobile-header-svg-color             : #{$light_gray_1};
-   --mobile-header-border-one            : #{$dark_gray_2};
-   --mobile-header-border-two            : #{$dark_gray_5};
-   --mobile-header-border-three          : #{$dark_gray_3};
-   --mobile-header-item-nav-arrow        : #{$dark_gray_13};
-   --mobile-header-logout-btn-bg         : #{$dark_gray_12};
-   --mobile-header-logout-btn-color      : #{$light_gray_2};
+    // Mobile header
+    --mobile-header-bg                    : #{$dark_gray_4};
+    --mobile-level-one-color              : #{$dark_gray_15};
+    --mobile-level-two-color              : #{$light_gray_6};
+    --mobile-header-svg-color             : #{$light_gray_1};
+    --mobile-header-border-one            : #{$dark_gray_2};
+    --mobile-header-border-two            : #{$dark_gray_5};
+    --mobile-header-border-three          : #{$dark_gray_3};
+    --mobile-header-item-nav-arrow        : #{$dark_gray_13};
+    --mobile-header-logout-btn-bg         : #{$dark_gray_12};
+    --mobile-header-logout-btn-color      : #{$light_gray_2};
 
-   // Header profile dropdown
-   --header-profile-bg                   : #{$dark_gray_7};
-   --header-profile-color                : #{$light_gray_13};
-   --header-profile-hover-bg             : #{$dark_gray_9};
-   --header-profile-hover-color          : #{$light_gray_10};
-   --header-profile-active-color         : #{$light_gray_4};
-   --header-profile-active-bg            : #{$dark_gray_9};
+    // Header profile dropdown
+    --header-profile-bg                   : #{$dark_gray_7};
+    --header-profile-color                : #{$light_gray_13};
+    --header-profile-hover-bg             : #{$dark_gray_9};
+    --header-profile-hover-color          : #{$light_gray_10};
+    --header-profile-active-color         : #{$light_gray_4};
+    --header-profile-active-bg            : #{$dark_gray_9};
 
     // Header lang
     --header-lang-bg   : #{$dark_gray_4};
@@ -772,14 +772,17 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     /* Layouts */
     --svg-toggle-arrow-color: var(--light17);
     --svg-tab-arrow-color: var(--light5);
-    --placeholder-background: var(--dark5);
-    --placeholder-error-color: var(--attention-red_dark);
-    --placeholder-info-color: var(--dark11);
-    --no-camera-placeholder-color: var(--light10);
-    --no-layouts-body-color: var(--light17);
     --sidebar-background: var(--dark5);
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
+
+    --placeholder-background: var(--dark4);
+    --placeholder-error-color: var(--attention-red);
+    --placeholder-info-color: var(--light10);
+    --placeholder-error-color-old: var(--attention-red_dark);
+    --placeholder-info-color-old: var(--dark11);
+    --no-camera-placeholder-color: var(--light10);
+    --no-layouts-body-color: var(--light17);
 
     --tree-locked-icon: var(--light4);
     --tree-node-editable-color-override: var(--dark9);
@@ -826,7 +829,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --other-sites-heading-background: var(--dark6);
     --other-sites-expand-stroke: var(--light16);
 
-	/* Merge */
+    /* Merge */
     --merge-unmerged-error-text: var(--light10);
     --merge-unmerged-system-message: var(--light10);
 }
