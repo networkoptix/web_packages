@@ -12,7 +12,7 @@ import { ButtonType } from './button.component.types';
 })
 export class NxButtonComponent {
     @Input() text: string = '';
-    @Input() type: ButtonType = ButtonType.secondary;
+    @Input() type: `${ButtonType}` = ButtonType.secondary;
     @Input() asyncClick: boolean = false;
     @Input() disabled: boolean = false;
     @Output() onClick = new EventEmitter<void>();

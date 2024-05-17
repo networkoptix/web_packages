@@ -3,7 +3,6 @@ import { Component, Input, booleanAttribute } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxButtonComponent } from '../button/button.component';
-import { ButtonType } from '../button/button.component.types';
 
 @Component({
     selector: 'nx-apply',
@@ -21,6 +20,4 @@ export class NxApplyComponent {
     @Input({ transform: booleanAttribute }) visible: boolean = false;
     @Input({ transform: booleanAttribute }) saveDisabled: boolean = false;
     @Input({ transform: booleanAttribute }) isSynchronousSave: boolean = true;
-
-    ButtonType = ButtonType;
 }

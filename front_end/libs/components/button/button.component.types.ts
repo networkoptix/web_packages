@@ -1,5 +1,6 @@
 export enum ButtonType {
-    brand = 'Brand',
-    secondary = 'Secondary',
-    danger = 'Danger',
+    brand = 'brand',
+    secondary = 'secondary',
+    danger = 'danger',
+    text = 'text',
 }

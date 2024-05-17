@@ -10,14 +10,14 @@
     </div>
     <div class="d-flex">
         <nx-button
-            [type]="ButtonType.brand"
+            type="brand"
             [disabled]="saveDisabled"
             (onClick)="save()"
             text="{{ 'Save' | translate }}"
         ></nx-button>
         <nx-button
             class="ml-2"
-            [type]="ButtonType.secondary"
+            type="secondary"
             (onClick)="discard()"
             text="{{ 'Cancel' | translate }}"
         ></nx-button>

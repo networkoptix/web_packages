@@ -1,11 +1,7 @@
 <button
     data-escape-global-style
     class="nx-button"
-    [ngClass]="{
-        'nx-button--brand': type === ButtonType.brand,
-        'nx-button--secondary': type === ButtonType.secondary,
-        'nx-button--danger': type === ButtonType.danger
-    }"
+    [ngClass]="'nx-button--' + type"
     [innerText]="text"
     (click)="handleClick()"
     [disabled]="disabled"
