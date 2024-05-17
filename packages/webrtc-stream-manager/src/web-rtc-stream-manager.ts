@@ -5,7 +5,7 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, disti
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
 import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
 
@@ -447,7 +447,21 @@ export class WebRTCStreamManager {
         });
     }
 
+        /**
+     * Updates the speed for stream for all WebRtcStreamManager instances.
+     *
+     * @param speed - number or unlimited
+     */
+    static updateSpeed(speed = 1): void {
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => {
+            if (connection.getPlayerCount()) {
+                connection.updateSpeed(speed);
+            }
+        });
+    }
+
     private position$ = new BehaviorSubject(new WithSkip(0));
+    private speed$ = new BehaviorSubject(new WithSkip(0));
     private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
     public apiVersion: ApiVersions;
     private initialPositionSent = false;
@@ -455,11 +469,28 @@ export class WebRTCStreamManager {
     private getStatic = () => WebRTCStreamManager;
 
     /**
+     * Updates the speed for stream for WebRtcStreamManager instance.
+     * @param speed - number or unlimited
+     * @param clearStream - stop current stream immediately
+     */
+    updateSpeed(speed: number, clearStream = false): void {
+        if (clearStream) {
+            this.stopCurrentStream();
+            this.mediaStream$.next([null, null, this]);
+        }
+
+        this.speed$.next(new WithSkip(speed));
+    }
+
+     /**
      * Updates the position for stream for WebRtcStreamManager instance.
      * @param position - position in ms
      * @param clearStream - stop current stream immediately
      */
     updatePosition(position: number, clearStream = false): void {
+        if (position < 1_000_000_000_000_000) {
+            position *= 1_000;
+        }
         if (clearStream) {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
@@ -624,6 +655,7 @@ export class WebRTCStreamManager {
         });
         observer.observe(root, { childList: true, subtree: true });
         this.updatePosition(this.position$.value.value);
+        this.updateSpeed(this.speed$.value.value);
     };
 
     /** Subject ot trigger closing open websocket observables */
@@ -654,7 +686,10 @@ export class WebRTCStreamManager {
     /**
      * Handles cleaning up connections when no longer in use.
      */
-    public close = (retryAfterSeconds: false | number = false): void => {
+    public close = (retryAfterSeconds: false | number = false, checkCodec = false): void => {
+        if (checkCodec) {
+            this.codecChanged++;
+        }
         this.stopCurrentStream();
         this.closeWsConnection();
         this.peerConnection?.close();
@@ -710,6 +745,11 @@ export class WebRTCStreamManager {
     private sourceBuffer: SourceBuffer = null;
 
     private appendBuffer = (buffer: BufferSource) => {
+        if (!this.sourceBuffer) {
+            this.initializeMse();
+            return;
+        }
+
         if (this.sourceBuffer.updating) {
             return;
         }
@@ -748,7 +788,14 @@ export class WebRTCStreamManager {
         }
     }
 
-    private initializeMse = async (mimeType: string): Promise<void> => {
+    private mimeType: string;
+
+    private initializeMse = async (mimeType?: string): Promise<void> => {
+        if (mimeType) {
+            this.mimeType = mimeType;
+        } else {
+            mimeType = this.mimeType;
+        }
         if (!MediaSource || !MediaSource.isTypeSupported(mimeType)) {
             this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
             return;
@@ -761,27 +808,29 @@ export class WebRTCStreamManager {
 
             const newStream = this.video.captureStream();
             this.mediaStream$.next([newStream, null, this]);
-            this.mediaSource.onsourceopen = () => {
+            const webRtcStreamManager = this;
+            this.mediaSource.onsourceopen = function () {
+                const mediaSource = this;
                 console.log(`ms is opened: ${mimeType}`);
-                if (!this.sourceBuffer) {
-                    this.sourceBuffer = this.mediaSource.addSourceBuffer(mimeType);
-                    this.sourceBuffer.onupdateend = () => {
-                        if (!this.sourceBuffer.buffered?.length) {
+                if (!webRtcStreamManager.sourceBuffer) {
+                    webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
+                    webRtcStreamManager.sourceBuffer.onupdateend = function() {
+                        if (!this.buffered?.length || this.updating) {
                             return;
                         }
 
-                        const bufferEnd = this.sourceBuffer.buffered.end(0);
-                        const bufferStart = this.sourceBuffer.buffered.start(0);
-                        const currentTime = this.video.currentTime;
+                        const bufferEnd = this.buffered.end(0);
+                        const bufferStart = this.buffered.start(0);
+                        const currentTime = webRtcStreamManager.video.currentTime;
 
                         const start = Math.min(bufferStart, currentTime);
                         const end = Math.max(bufferEnd - 5, bufferStart);
                         if (end > start) {
                             try {
-                                this.sourceBuffer.remove(start, end);
-                                this.mediaSource.setLiveSeekableRange(start, end);
+                                this.remove(start, end);
+                                mediaSource.setLiveSeekableRange(start, end);
                             } catch(e) {
-                                this.close(1)
+                                webRtcStreamManager.close(1)
                             }
                         }
                     }
@@ -893,6 +942,8 @@ export class WebRTCStreamManager {
 
     private serverId: string;
 
+    private codecChanged = 0;
+
     /** Initialization helpers */
     /**
      * Initializes websocket connection for negotating peer connection.
@@ -919,12 +970,13 @@ export class WebRTCStreamManager {
             if (lostConnection) {
                 this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
                 complete();
-                return this.close(3);
+                return this.close(3, this.apiVersion === ApiVersions.v1);
             }
 
-            const position = this.getStatic().position;
+            const position = this.position$.value.value;
+            const speed = this.speed$.value.value;
             const stream = this.currentStream();
-            let webRtcUrl = this.webRtcUrlFactory({ position });
+            let webRtcUrl = this.webRtcUrlFactory({ position, speed: speed === Infinity ? 'unlimited' : speed });
 
             if (!webRtcUrl.endsWith('&')) {
                 webRtcUrl += '&';
@@ -953,12 +1005,12 @@ export class WebRTCStreamManager {
             const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
                 streamInfoEndpoint,
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
-                ), `${this.cameraId}-streams`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
+                ), `${this.cameraId}-streams-${this.codecChanged}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
 
             const fetchStreams = fetchAllStreams.then(devices => {
                 const device = devices.find(({ id }) => cleanId(id) === this.cameraId);
 
-                if (device) {
+                if (!this.codecChanged && device) {
                     return device;
                 }
 
@@ -1016,10 +1068,12 @@ export class WebRTCStreamManager {
             const targetStream = streams.find(({ encoderIndex }) => encoderIndex === stream);
             const requiresTranscoding = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
+            const srtp = 'deliveryMethod=srtp';
+
             if (targetStream?.codec && requiresTranscoding.includes(targetStream.codec) && this.apiVersion !== ApiVersions.v1) {
                 const mse = 'deliveryMethod=mse';
-                if (webRtcUrl.includes('deliveryMethod=srtp')) {
-                    webRtcUrl = webRtcUrl.replace('deliveryMethod=srtp', mse)
+                if (webRtcUrl.includes(srtp)) {
+                    webRtcUrl = webRtcUrl.replace(srtp, mse)
                 } else {
                     webRtcUrl += `${mse}&`
                 }
@@ -1041,7 +1095,7 @@ export class WebRTCStreamManager {
             this.closeWsConnection();
 
             this.wsConnection = webSocket(
-                webRtcUrl
+                webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl
             );
 
             this.wsConnection.pipe(takeUntil(this.closeWsConnectionNotifier$)).subscribe({
@@ -1072,6 +1126,36 @@ export class WebRTCStreamManager {
             .subscribe(() => this.close());
     };
 
+    get isLive() {
+        return !this.position$.value.value;
+    }
+
+    handleDataChannelMessage = (message: string): void => {
+        try {
+            const data = JSON.parse(message) as DataChannelMessage;
+            console.info('Data channel message', data);
+
+            if(isTimeStampMessage(data)) {
+                if (this.isLive) {
+                    console.info('skip updating position from timestamp since live', data.timestamp)
+                } else {
+                    console.info('updating position from timestamp', data.timestamp)
+                    this.position$.next(new WithSkip(data.timestamp, true));
+                }
+                return;
+            }
+
+            if (isStreamChangeMessage(data)) {
+                console.info('stream codec changed, reconnecting')
+                this.close(0.1, true);
+                return;
+            }
+
+        } catch(e) {
+            console.error('Error parsing data channel message', e);
+        }
+    }
+
     /**
      * Ensures that peer connection to mediaserver has been initialized.
      */
@@ -1088,8 +1172,10 @@ export class WebRTCStreamManager {
             this.appendBuffer,
             () => ({
                 stream: this.currentStream(),
-                position: this.position$.value.value
-            })
+                position: this.position$.value.value,
+                speed: this.speed$.value.value
+            }),
+            this.handleDataChannelMessage,
         );
 
         this.updateTrackerConnections();
@@ -1100,18 +1186,34 @@ export class WebRTCStreamManager {
         const cameraId = cleanId(config.cameraId);
 
         const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', systemId);
-        const endpoint = this.apiVersion === ApiVersions.v2 ? `/rest/v3/devices/${cameraId}/webrtc?` : `/webrtc-tracker/?camera_id=${cameraId}&`
+        const useV2 = this.apiVersion === ApiVersions.v2;
+        const endpoint = useV2 ? `/rest/v3/devices/${cameraId}/webrtc?` : `/webrtc-tracker/?camera_id=${cameraId}&`
 
         const positionParam = (position: unknown): string => {
+            position ||= 0;
+
             if (typeof position !== 'string' && typeof position !== 'number') {
                 return ''
             }
 
-            const parsedPosition = typeof position === 'string' ? parseFloat(position) : position;
-            return `position=${parsedPosition && !isNaN(parsedPosition) ? position : 0}`
+            const parsedPosition = parseInt(typeof position === 'number' ? position.toString() : position);
+
+            if (!parsedPosition) {
+                return ''
+            }
+
+            return `${useV2 ? 'positionUs' : 'position'}=${position || 0}&`
         };
 
-        return (params) => `wss://${host}${endpoint}${positionParam(params?.position)}`
+        const speedParam = (position: unknown): string => {
+            if (typeof position !== 'string' && typeof position !== 'number') {
+                return ''
+            }
+
+            return `speed=${position || 0}&`
+        };
+
+        return (params) => `wss://${host}${endpoint}${positionParam(params?.position)}${speedParam(params?.speed)}`
     }
 
     private webRtcUrlFactory: WebRtcUrlFactory = (params: Record<string, unknown>) => {
@@ -1139,12 +1241,23 @@ export class WebRTCStreamManager {
     ) {
         this.updateStream(availableStreams.length === 1 ? availableStreams[0] : WebRTCStreamManager.getInitialStream(videoElement));
 
+        if (typeof webRtcUrlFactoryOrConfig !== 'function') {
+            if ('position' in webRtcUrlFactoryOrConfig) {
+                this.updatePosition(webRtcUrlFactoryOrConfig.position);
+            }
+
+            if ('speed' in webRtcUrlFactoryOrConfig) {
+                this.updateSpeed(typeof webRtcUrlFactoryOrConfig.speed === 'number' ? webRtcUrlFactoryOrConfig.speed : Infinity);
+            }
+        }
+
         if('apiVersion' in webRtcUrlFactoryOrConfig && webRtcUrlFactoryOrConfig.apiVersion) {
             this.apiVersion = webRtcUrlFactoryOrConfig.apiVersion;
         }
 
         from(this.getApiVersion()).pipe(switchMap(() => combineLatest([
             this.position$.pipe(filter(({ skip }) => !skip), map(({ value }) => value)),
+            this.speed$.pipe(filter(({ skip }) => !skip), map(({ value }) => value)),
             this.stream$.pipe(filter(({ skip }) => !skip), map(({ value }) => value))
         ])),
             distinctUntilChanged((prev, cur) => prev.every((val, i) => val === cur[i])),

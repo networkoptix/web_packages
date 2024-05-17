@@ -42,6 +42,21 @@
                 <option value="loading">Loading Cameras...</option>
               </select>
             </div>
+            <div id="selectedPosition">
+              <label for="selectedPosition">Select playback start position (Use 0 for Live)</label>
+              <input type="number" name="selectedPosition" step="1" value="0" />
+            </div>
+            <div id="selectedSpeed">
+              <label for="selectedSpeed">Select playback speed</label>
+              <select name="selectedSpeed" disabled>
+                <option value="0.25">0.25</option>
+                <option value="0.5">0.5</option>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="unlimited">Max</option>
+              </select>
+            </div>
           </fieldset>
           <button type="submit" disabled>Start WebRTC Connection</button>
         </form>
