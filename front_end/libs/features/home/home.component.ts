@@ -152,8 +152,11 @@ export class NxHomeComponent implements OnInit {
             redirectPath = `organization/${orgId}`;
         }
         if (channelPartners?.length) {
-            const CPid = channelPartners[0].id;
-            redirectPath = `channelPartners/${CPid}`;
+            for (const partner of channelPartners) {
+                if (!partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant)) {
+                    redirectPath = `channelPartners/${partner.id}`;
+                }
+            }
         }
         homeNode.nodes = nodes;
         if (redirect && redirectPath && this.isPageLoading) {
