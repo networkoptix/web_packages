@@ -1,0 +1,37 @@
+<button
+    #selectButton
+    type="button"
+    (click)="onClick()"
+    [disabled]="disabled$$() || readOnly()"
+    class="org-step-select btn btn-default"
+    [ngClass]="{ 'org-step-select--readonly': readOnly() }"
+>
+    <div
+        class="path-container"
+        #pathContainer
+    >
+        <ng-template [cdkPortalOutlet]="selectedPath"></ng-template>
+        <div class="hidden-paths">
+            <!-- Using control flow adds whitespace between path parts -->
+            <!-- eslint-disable @angular-eslint/template/prefer-control-flow -->
+            <span
+                #path
+                data-full-path
+                ><ng-container *ngFor="let part of value; last as last"
+                    >{{ part }}{{ !last ? '/' : '' }}</ng-container
+                ></span
+            >
+            <!-- eslint-enable @angular-eslint/template/prefer-control-flow -->
+            @if (value.length > 1) {
+                <span #path>.../{{ value[1] }}</span>
+            }
+            @if (value.length > 2) {
+                <span #path>{{ value[0] }}/.../{{ value[value.length - 1] }}</span>
+            }
+        </div>
+    </div>
+    <svg-icon
+        class="org-step-select__arrow"
+        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+    ></svg-icon>
+</button>

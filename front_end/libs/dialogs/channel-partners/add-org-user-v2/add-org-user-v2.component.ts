@@ -42,7 +42,6 @@ import { simpleEmailRegex } from '@static-variables';
 import { accountSelectors } from '@store/account';
 import { formControlValueSignal } from '@utils/nx';
 
-import { NxOrgStepSelectComponent } from '../org-step-select/org-step-select.component';
 import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
 import type {
     OrgTreeStatus,
@@ -51,6 +50,7 @@ import type {
 } from '../org-tree-selector/org-tree-selector.types';
 
 import { NxAddOrgUserStepperComponent } from './add-org-user-stepper.component';
+import { NxOrgStepSelectComponent } from './org-step-select/org-step-select.component';
 
 /* Key  : User email
  * Value: Key  : Org/group id
@@ -94,6 +94,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     @ViewChild('stepper') private stepper: CdkStepper;
     @ViewChild(NxOrgTreeSelectorComponent) private treeComponent: NxOrgTreeSelectorComponent;
 
+    // This signal needs to stay outside of the computed to avoid a fetch loop
     private usersByGroups = this.orgUserStore.usersByGroupSignalFactory(this.organization.id);
 
     /** Roles existing users have, not roles for users */
@@ -125,8 +126,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             },
         ],
     });
-    roleIdControl = new FormControl(this.orgRoles()[0].id, {
-        nonNullable: true,
+    roleIdControl = new FormControl(null, {
         validators: [Validators.required],
     });
     folderControl = new FormControl<string[]>([this.organization.name], {
@@ -144,6 +144,9 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     private roleId = formControlValueSignal(this.roleIdControl);
     roleDescription = computed<string>(() => {
         const [orgRoles, roleId] = [this.orgRoles(), this.roleId()];
+        if (!roleId) {
+            return '';
+        }
         const roleName = orgRoles.find(role => role.id === roleId)!.name;
         return LANG.channelPartners.orgs.permissionDescription[roleName];
     });
@@ -181,6 +184,29 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
         },
         { allowSignalWrites: true },
     );
+
+    protected _folderPathEffect = effect(() => {
+        const folder = this.folder();
+        untracked(() => {
+            const groupFlatMap = this.groupFlatMap();
+
+            const path: string[] = [];
+            if (folder !== this.organization.id) {
+                const group = groupFlatMap[folder];
+                path.push(group.name);
+                let parentId = group.parentId;
+                while (parentId) {
+                    const parentGroup = groupFlatMap[parentId];
+                    path.push(parentGroup.name);
+                    parentId = parentGroup.parentId;
+                }
+            }
+            path.push(this.organization.name);
+            path.reverse();
+            this.folderControl.setValue(path);
+        });
+    });
+
     private parentAccessMsg = this.translate.instant(LANG.dialogs.channelPartners.parentAccess);
     private directOverwriteMsg = this.translate.instant(
         LANG.dialogs.channelPartners.directOverwrite,
@@ -313,7 +339,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { email }: DT['data'],
+        @Inject(DIALOG_DATA) { organization, email, initialFolder }: DT['data'],
         private translate: TranslateService,
     ) {
         super(dialogRef);
@@ -321,6 +347,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             this.formGroup.patchValue({ email });
             this.emailLocked.set(true);
         }
+        this.folder.set(initialFolder);
     }
 
     @ViewChild('mainStepBody') private mainStepBody: ElementRef<HTMLFormElement>;
@@ -345,20 +372,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     confirmFolderSelectAction = createAsyncAction({
         action: () => {
-            const value = this.treeValue()!;
-            this.folder.set(value);
-            const groupFlatMap = this.groupFlatMap();
-
-            const path = [this.organization.name];
-            if (value !== this.organization.id) {
-                const parentId = groupFlatMap[value].parentId;
-                if (parentId) {
-                    path.push(groupFlatMap[parentId].name);
-                }
-                // For the select, any in between folders are reduced to an ellipses
-                path.push(groupFlatMap[value].name);
-            }
-            this.folderControl.setValue(path);
+            this.folder.set(this.treeValue()!);
             this.stepper.previous();
             return Promise.resolve();
         },
@@ -367,7 +381,8 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     addOrgUserAction = createAsyncAction({
         action: () => {
-            const { email, roleId } = this.formGroup.getRawValue();
+            const { email, roleId: _roleId } = this.formGroup.getRawValue();
+            const roleId = _roleId!; // Required
             return firstValueFrom(
                 this.orgUserStore.addUser(this.organization, this.folder(), { email, roleId }),
             );

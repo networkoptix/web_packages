@@ -58,12 +58,6 @@
                 >
                     New User
                 </button>
-                <button
-                    class="btn-primary"
-                    (click)="newOrgUserV2()"
-                >
-                    New User v2
-                </button>
             </div>
             <div *ngFor="let user of users$ | ngrxPush">
                 <h4>{{ user.email }}</h4>

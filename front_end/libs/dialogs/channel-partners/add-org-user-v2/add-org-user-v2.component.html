@@ -78,7 +78,12 @@
                     >
                     <nx-select-v2
                         name="permission-group"
+                        [placeholder]="'Select' | translate"
                         formControlName="roleId"
+                        [ngClass]="{
+                            'error-outline': orgUserForm.submitted && roleIdControl.invalid,
+                            'hide-outline': emailControl.errors?.selfAdd
+                        }"
                     >
                         @for (role of orgRoles(); track role.id) {
                             <nx-select-item
@@ -88,13 +93,23 @@
                             >
                         }
                     </nx-select-v2>
-                    <p class="role-description">{{ roleDescription() }}</p>
+                    <p class="role-message">
+                        @if (orgUserForm.submitted && roleIdControl.errors?.required) {
+                            <span
+                                class="control-message__error"
+                                translate
+                                >Role is required</span
+                            >
+                        } @else {
+                            {{ roleDescription() }}
+                        }
+                    </p>
                 </div>
                 <div class="control-container">
                     <label
                         translate
                         for="folder"
-                        >Folder</label
+                        >Access to</label
                     >
                     <nx-org-step-select
                         #stepSelect
@@ -133,7 +148,6 @@
                 <nx-async-action-button
                     [action]="addOrgUserAction"
                     [invalid]="selectedFolderStatus()?.status === 'disable'"
-                    (reject)="emailControl.invalid ? emailInput.focus() : stepSelect.focus()"
                     [(busy)]="busy"
                     translate
                 >

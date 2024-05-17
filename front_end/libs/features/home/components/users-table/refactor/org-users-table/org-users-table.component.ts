@@ -133,7 +133,11 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
     }
 
     newUserDialog = (): void => {
-        this.dialogService.addOrgUserV2({ organization: this.currentOrg$$() });
+        const organization = this.currentOrg$$()!;
+        this.dialogService.addOrgUserV2({
+            organization,
+            initialFolder: this.routerState.state$$().groupId || organization.id,
+        });
     };
 
     deleteUser(user: UserRecord): void {
