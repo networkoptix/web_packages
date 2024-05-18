@@ -194,6 +194,7 @@
                 cdkDropList
                 cdkDropListSortingDisabled
                 [cdkDropListData]="group"
+                [cdkDropListDisabled]="isMobile"
                 (cdkDropListDropped)="onDrop($event)"
             >
                 <div
@@ -214,6 +215,7 @@
                 cdkDropList
                 cdkDropListSortingDisabled
                 [cdkDropListData]="system"
+                [cdkDropListDisabled]="isMobile"
             >
                 <!-- Update to check if system requests ownership transfer -->
                 <div

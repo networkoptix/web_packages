@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { DraggableItem } from '@pages/home/home.types';
@@ -48,7 +49,13 @@ export class NxGroupsSidebarLevelComponent {
     canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
     icons = icons;
-    constructor(private store: Store) {}
+    isMobile = false;
+    constructor(
+        private store: Store,
+        deviceService: DeviceDetectorService,
+    ) {
+        this.isMobile = deviceService.isMobile() || deviceService.isTablet();
+    }
 
     trackItem(_index: number, item: GroupItem): string {
         return item.id;
@@ -64,6 +71,9 @@ export class NxGroupsSidebarLevelComponent {
     }
 
     moveToRoot(event: CdkDragDrop<undefined, DraggableItem, DraggableItem>): void {
+        if (!event.isPointerOverContainer) {
+            return;
+        }
         const dragged = event.item.data;
         this.groupsStore.moveItem(dragged).subscribe();
     }

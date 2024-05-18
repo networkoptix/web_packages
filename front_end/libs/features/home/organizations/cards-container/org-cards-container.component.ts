@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { groupBy, identity, zip } from 'lodash-es';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { firstValueFrom, map, switchMap } from 'rxjs';
 
 import {
@@ -112,6 +113,7 @@ export class NxOrganizationCardContainerComponent {
         );
     });
     groupName: string = '';
+    isMobile = false;
 
     constructor(
         private store: Store,
@@ -121,7 +123,10 @@ export class NxOrganizationCardContainerComponent {
         private cpService: NxChannelPartnersService,
         private translateService: TranslateService,
         private urlProtocol: NxUrlProtocolService,
-    ) {}
+        deviceService: DeviceDetectorService,
+    ) {
+        this.isMobile = deviceService.isMobile() || deviceService.isTablet();
+    }
 
     trackGroup(_index: number, item: GroupItem): string {
         return item.id;
