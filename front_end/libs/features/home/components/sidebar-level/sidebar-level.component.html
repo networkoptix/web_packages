@@ -9,6 +9,7 @@
             class="group-drop-list"
             [ngClass]="{ selected: this.isRoot$$() }"
             cdkDropList
+            [cdkDropListDisabled]="isMobile"
             (cdkDropListDropped)="moveToRoot($event)"
         >
             <svg-icon
@@ -52,6 +53,7 @@
                 cdkDropList
                 cdkDropListSortingDisabled
                 [cdkDropListData]="group"
+                [cdkDropListDisabled]="isMobile"
                 (cdkDropListDropped)="onDrop($event)"
             >
                 <svg-icon
