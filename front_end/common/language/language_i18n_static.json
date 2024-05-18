@@ -995,8 +995,10 @@
         "channelPartners": {
             "usersAccess": "All users have access to the cloud",
             "usersNoAccess": "Cloud users \u200B | will lose access | \u200B to the systems",
-            "systemsAccess": "Systems will be accessible over local network for local users",
-            "recordingEnabled": "Recording will continue",
+            "systemsAccess": "All systems have access to services",
+            "systemsLocalAccess": "Systems will be accessible over local network for local users",
+            "recordingEnabled": "Recording is enabled for cameras",
+            "recordingSuspended": "Recording will continue",
             "recordingDisabled": "Recording \u200B | will be stopped | \u200B immediately",
             "directAccess": "User has access as { role }. Permissions for the selected folder will be overwritten",
             "directAccess2": "User has access to { folder } as { role }. Permissions for the folder will be overwritten",
