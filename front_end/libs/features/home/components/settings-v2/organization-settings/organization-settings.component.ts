@@ -148,8 +148,8 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         () => accessMap?.[this.accessLevel$$()] || null,
     );
 
-    canUpdateAccess = this.currentOrg$$()?.ownPermissions.includes(
-        PartnerRoles.field_access_org_admin,
+    canUpdateAccess$$ = computed(() =>
+        this.currentOrg$$()?.ownPermissions.includes(PartnerRoles.field_access_org_admin),
     );
 
     ngOnInit(): void {
@@ -171,9 +171,23 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         );
         this.updateOrgProcess = this.processService.createProcess(
             () => {
-                return this.updateOrganization();
+                const isPartnerUser = !!this.currentPartner$$();
+                if (!isPartnerUser) {
+                    return this.updateOrganization();
+                }
+                const { title, message, footer } =
+                    this.LANG.dialogs.channelPartners.confirmAccessLevelChange;
+                return this.dialogsService
+                    .confirm({
+                        title: this.translateService.instant(title),
+                        message: {
+                            value: this.translateService.instant(message),
+                        },
+                        footer,
+                    })
+                    .then(confirm => (confirm ? this.updateOrganization() : Promise.reject()));
             },
-            {},
+            { ignoreError: true },
             res => {
                 this.updateOrganizationStore(res);
                 this.resetUpdates();
@@ -192,29 +206,13 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
 
         if (id !== currLevel) {
             this.currentPartnerAccess$.next(null);
-            if (!hasAdminRole) {
+            if (id !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
                 this.store.dispatch(
                     CPActions.setShowPermissionWarning({ showPermissionWarning: true }),
                 );
                 return;
             }
-            const { title, message, footer } =
-                this.LANG.dialogs.channelPartners.confirmAccessLevelChange;
-            this.dialogsService
-                .confirm({
-                    title: this.translateService.instant(title),
-                    message: {
-                        value: this.translateService.instant(message),
-                    },
-                    footer,
-                })
-                .then(confirm => {
-                    if (confirm) {
-                        this.currentPartnerAccess$.next(id);
-                    } else {
-                        this.currentPartnerAccess$.next(currLevel);
-                    }
-                });
+            this.currentPartnerAccess$.next(id);
         } else {
             this.currentPartnerAccess$.next(id);
         }
