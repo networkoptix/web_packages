@@ -301,7 +301,7 @@ export class NxDialogsService {
             import('./channel-partners/add-partner-user/add-partner-user.component').then(
                 m => m.AddPartnerUserModalContent,
             ),
-        { width: '360px' },
+        { width: DIALOG_SIZE.EXTRA_SMALL },
     );
 
     updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(() =>
