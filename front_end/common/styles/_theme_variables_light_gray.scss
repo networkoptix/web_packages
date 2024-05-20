@@ -681,6 +681,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --CP-state-button-selected: var(--light_gray_7);
     --CP-state-color: var(--dark9);
     --CP-state-help-color: var(--dark_gray_16);
+    --CP-error-ribbon-bg: #{$red2_dim};
+    --CP-error-ribbon-border: #{$red2_dimmer};
 
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: var(--light_gray_5);
