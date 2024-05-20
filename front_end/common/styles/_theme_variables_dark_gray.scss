@@ -690,6 +690,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --CP-state-button-selected: var(--dark_gray_10);
     --CP-state-color: var(--light_gray_16);
     --CP-state-help-color: var(--light_gray_16);
+    --CP-error-ribbon-bg: var(--red_d1_lighter);
+    --CP-error-ribbon-border: var(--red_d1_lighter);
 
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: var(--dark_gray_5);

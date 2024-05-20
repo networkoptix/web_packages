@@ -96,8 +96,8 @@
 
 .groups-error-ribbon {
     @include typography.regular12nocolor;
-    border-bottom: 1px solid var(--red_d1_lighter);
-    background-color: var(--red_d1_lighter) !important;
+    border-bottom: 1px solid var(--CP-error-ribbon-border);
+    background-color: var(--CP-error-ribbon-bg) !important;
     min-height: 40px;
 
     .message-content-wrapper > svg-icon {
