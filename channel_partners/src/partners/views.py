@@ -14,6 +14,7 @@ from django.core.exceptions import (
     PermissionDenied,
 )
 from django.db.models import (
+    Max,
     Prefetch,
     Q,
     QuerySet,
@@ -277,7 +278,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     lookup_url_kwarg = 'email'
     queryset = ChannelPartnerToUser.objects.all().select_related('user').order_by('created_ts')
     filter_backends = [DjangoFilterBackend]
-    filterset_class = filters.UserFilter
+    filterset_class = filters.ChannelParrtnerUserFilter
     _channel_partner = None
 
     def get_permissions(self):
@@ -992,7 +993,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     lookup_field = 'email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = CloudUser.objects.all()
+    queryset = CloudUser.objects.all().annotate(last_modified=Max('organizationtouser__last_modified'))
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.UserFilter
     _organization = None
