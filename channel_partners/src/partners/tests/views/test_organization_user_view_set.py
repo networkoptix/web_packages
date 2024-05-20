@@ -1,7 +1,10 @@
+import datetime
 from uuid import uuid4
 
 import pytest
 from django.db import transaction
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
 from partners.models import (
     ChannelPartnerRoles,
@@ -1137,3 +1140,71 @@ class TestOrganizationUserViewSetCreateUpdate:
         with transaction.atomic():
             response = self.view(request, parent_lookup_organization=self.organization.id)
         assert response.status_code == 403
+
+
+
+class TestOrganizationUserViewSetFilter:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, sys_group_user_factory,
+              org_user_factory, cloud_test_host, mock_auth_with_user, system_group_factory):
+        self.channel_partner = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=self.channel_partner)
+        self.january = datetime.datetime(2024, 1, 1, 0, 0, 0,
+                                         tzinfo=datetime.timezone.utc)
+        self.february = datetime.datetime(2024, 2, 1, 0, 0, 0,
+                                            tzinfo=datetime.timezone.utc)
+        self.march = datetime.datetime(2024, 3, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.april = datetime.datetime(2024, 4, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.may = datetime.datetime(2024, 5, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+
+        self.user_january = org_user_factory(organization=self.organization)
+        self.user_january.last_modified = self.january
+
+        self.group_user_march = sys_group_user_factory(organization=self.organization,
+                                                       group=system_group_factory(organization=self.organization))
+        self.group_user_march.last_modified = self.march
+
+        self.user_may = org_user_factory(organization=self.organization)
+        self.user_may.last_modified = self.may
+        self.group_user_may = sys_group_user_factory(organization=self.organization,
+                                                     group=system_group_factory(organization=self.organization),
+                                                     cloud_user=self.group_user_march.user)
+        self.group_user_may.last_modified = self.may
+
+        OrganizationToUser.objects.bulk_update(
+            [self.user_january, self.group_user_march, self.user_may, self.group_user_may],
+            ['last_modified'])
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path = reverse('organizations-user-list',
+                            kwargs={'parent_lookup_organizations': self.organization.id})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {uuid4()}')
+        mock_auth_with_user(self.user_january)
+
+    def test_no_filters(self):
+        response = self.client.get(self.path)
+        assert response.status_code == 200
+        assert len(response.data) == 3
+
+    def test_last_modified_gte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        response = self.client.get(self.path, {'lastModified__gte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+
+    def test_last_modified_lte(self):
+        response = self.client.get(self.path, {'lastModified__lte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        response = self.client.get(self.path, {'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+    def test_last_modified_gte_lte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february, 'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 0

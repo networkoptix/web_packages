@@ -1,7 +1,12 @@
+import datetime
 import json
+from uuid import uuid4
 
 import pytest
+from dateutil import parser
 from django.db import transaction
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
 from partners.models import (
     ChannelPartnerRoles,
@@ -368,3 +373,66 @@ class TestChannelPartnerUserViewSet:
         assert isinstance(response.data, dict)
         assert response.data['count'] == 150 + init_users
         assert response.data['next']
+
+
+class TestChannelPartnerUserViewSetFilter:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory, cloud_test_host, mock_auth_with_user):
+        self.channel_partner = channel_partner_factory()
+
+        self.january = datetime.datetime(2024, 1, 1, 0, 0, 0,
+                                            tzinfo=datetime.timezone.utc)
+        self.february = datetime.datetime(2024, 2, 1, 0, 0, 0,
+                                            tzinfo=datetime.timezone.utc)
+        self.march = datetime.datetime(2024, 3, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.april = datetime.datetime(2024, 4, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.may = datetime.datetime(2024, 5, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+
+        self.user_january = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_january.last_modified = self.january
+
+        self.user_march = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_march.last_modified = self.march
+
+        self.user_may = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_may.last_modified = self.may
+        ChannelPartnerToUser.objects.bulk_update([self.user_january, self.user_march, self.user_may], ['last_modified'])
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path = reverse('channelpartners-user-list',
+                            kwargs={'parent_lookup_channel_partner': self.channel_partner.id})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {uuid4()}')
+        mock_auth_with_user(self.user_january)
+
+    def test_no_filters(self):
+        response = self.client.get(self.path)
+        assert response.status_code == 200
+        assert len(response.data) == 3
+
+    def test_last_modified_gte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert all(parser.parse(user['lastModified']) >= self.february for user in response.data)
+        response = self.client.get(self.path, {'lastModified__gte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(parser.parse(user['lastModified']) >= self.april for user in response.data)
+
+    def test_last_modified_lte(self):
+        response = self.client.get(self.path, {'lastModified__lte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(parser.parse(user['lastModified']) <= self.february for user in response.data)
+        response = self.client.get(self.path, {'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert all(parser.parse(user['lastModified']) <= self.april for user in response.data)
+
+    def test_last_modified_gte_lte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february, 'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(self.february <= parser.parse(user['lastModified']) <= self.april for user in response.data)
