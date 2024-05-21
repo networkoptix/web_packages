@@ -1,15 +1,13 @@
 <button
-    class="btn"
-    [ngClass]="{
-        'btn-primary': type === ButtonType.brand,
-        'btn-outline-primary': type === ButtonType.outline,
-        'btn-default': type === ButtonType.secondary,
-        'btn-text': type === ButtonType.text,
-        'btn-action': type === ButtonType.action,
-        active: active
-    }"
+    data-escape-global-style
+    class="nx-button"
+    [ngClass]="'nx-button--' + type"
     (click)="handleClick()"
     [disabled]="disabled"
 >
-    <ng-content></ng-content>
+    @if (text) {
+        {{ text }}
+    } @else {
+        <ng-content></ng-content>
+    }
 </button>

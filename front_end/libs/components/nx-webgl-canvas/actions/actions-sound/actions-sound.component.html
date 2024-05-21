@@ -1,8 +1,8 @@
 <div>
-    <nx-button
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionBookmarks)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionBookmarks)"
     >
         <svg-icon
             nx-add-svg-src
@@ -13,11 +13,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionChunkMode)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionChunkMode)"
     >
         <svg-icon
             nx-add-svg-src
@@ -28,11 +28,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionSync)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionSync)"
     >
         <svg-icon
             nx-add-svg-src
@@ -43,11 +43,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular padded"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionLive)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionLive)"
     >
         <svg-icon
             nx-add-svg-src
@@ -58,11 +58,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionVolume)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionVolume)"
     >
         <svg-icon
             nx-add-svg-src
@@ -73,5 +73,5 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
+    </nx-timeline-button>
 </div>

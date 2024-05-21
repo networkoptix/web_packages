@@ -5,8 +5,11 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxButtonComponent } from '@components/button/button.component';
-import { ButtonAction, ButtonType } from '@components/button/button.component.types';
+import { NxTimelineButtonComponent } from '@components/nx-webgl-canvas/button/button.component';
+import {
+    TimelineButtonAction,
+    TimelineButtonType,
+} from '@components/nx-webgl-canvas/button/button.component.types';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { icons } from '@static-variables';
@@ -19,7 +22,7 @@ import { icons } from '@static-variables';
     standalone: true,
     imports: [
         CommonModule,
-        NxButtonComponent,
+        NxTimelineButtonComponent,
         AngularSvgIconModule,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
@@ -31,7 +34,7 @@ import { icons } from '@static-variables';
 export class WebGlTimelineTimeNavComponent {
     @Output() onChange = new EventEmitter<Record<string, unknown>>();
 
-    protected readonly ButtonType = ButtonType;
+    protected readonly TimelineButtonType = TimelineButtonType;
     protected readonly icons = icons;
 
     selectedJumpTarget: number;
@@ -47,7 +50,7 @@ export class WebGlTimelineTimeNavComponent {
     handleJumpTargetChange(jumpTarget: number | undefined): void {
         this.selectedJumpTarget = jumpTarget as number;
         this.handleActionClick({
-            action: ButtonAction.actionJumpTo,
+            action: TimelineButtonAction.actionJumpTo,
             param: this.selectedJumpTarget,
         });
     }

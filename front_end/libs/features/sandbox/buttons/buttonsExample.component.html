@@ -1,41 +1,157 @@
-<div>
-    <span>Primary/Brand button</span>
+<h1>Buttons</h1>
+
+<h3>Old button styling</h3>
+<div class="horizontal-flex">
+    <button class="btn btn-primary">Primary</button>
+    <button class="btn btn-default">Default</button>
+    <button class="btn btn-danger">Danger</button>
+</div>
+<div class="horizontal-flex">
+    <button
+        class="btn btn-primary"
+        disabled
+    >
+        Primary
+    </button>
+    <button
+        class="btn btn-default"
+        disabled
+    >
+        Default
+    </button>
+    <button
+        class="btn btn-danger"
+        disabled
+    >
+        Danger
+    </button>
+</div>
+<div class="horizontal-flex">
+    <button class="btn btn-default-clear">Default clear</button>
+    <button class="btn btn-dropdown-toggle">Dropdown toggle</button>
+    <button class="btn btn-toggle">Toggle</button>
+    <button class="btn btn-menu">Menu</button>
+    <button class="btn btn-clear">Clear</button>
+    <button class="btn btn-tag">Tag</button>
+    <button class="btn btn-arrow">Arrow</button>
+    <button class="btn btn-text"><span>Text</span></button>
+</div>
+<div class="horizontal-flex">
+    <button
+        class="btn btn-default-clear"
+        disabled
+    >
+        Default clear
+    </button>
+    <button
+        class="btn btn-dropdown-toggle"
+        disabled
+    >
+        Dropdown toggle
+    </button>
+    <button
+        class="btn btn-toggle"
+        disabled
+    >
+        Toggle
+    </button>
+    <button
+        class="btn btn-menu"
+        disabled
+    >
+        Menu
+    </button>
+    <button
+        class="btn btn-clear"
+        disabled
+    >
+        Clear
+    </button>
+    <button
+        class="btn btn-tag"
+        disabled
+    >
+        Tag
+    </button>
+    <button
+        class="btn btn-arrow"
+        disabled
+    >
+        Arrow
+    </button>
+    <button
+        class="btn btn-text"
+        disabled
+    >
+        <span>Text</span>
+    </button>
+</div>
+
+<h3>NxButtonComponent</h3>
+<div class="horizontal-flex">
     <nx-button
-        [type]="ButtonType.brand"
+        type="brand"
+        text="Primary"
         [disabled]="false"
         (click)="onClick()"
-    >
-        <span [innerText]="'Primary' | translate"></span>
-    </nx-button>
-</div>
-<div class="mt-3">
-    <span>Secondary button</span>
+    />
     <nx-button
-        [type]="ButtonType.secondary"
+        type="secondary"
+        text="Secondary"
         [disabled]="false"
         (click)="onClick()"
+    />
+    <nx-button
+        type="danger"
+        text="Danger"
+        [disabled]="false"
+        (click)="onClick()"
+    />
+    <nx-button
+        type="text"
+        text="Text"
+        (click)="onClick()"
     >
-        <span [innerText]="'Secondary' | translate"></span>
+    </nx-button>
+    <nx-button
+        type="brand-outline"
+        text="Brand outline"
+        (click)="onClick()"
+    >
     </nx-button>
 </div>
-<div class="mt-3">
-    <span>Primary/Brand button disabled</span>
+<div class="horizontal-flex">
     <nx-button
-        [type]="ButtonType.brand"
+        type="brand"
+        text="Primary"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+    <nx-button
+        type="secondary"
+        text="Secondary"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+    <nx-button
+        type="danger"
+        text="Danger"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+    <nx-button
+        type="text"
+        text="Text"
         [disabled]="true"
         (click)="onClick()"
     >
-        <span [innerText]="'Primary' | translate"></span>
     </nx-button>
-</div>
-<div class="mt-3">
-    <span>Secondary button disabled</span>
     <nx-button
-        [type]="ButtonType.secondary"
+        type="brand-outline"
+        text="Brand outline"
         [disabled]="true"
         (click)="onClick()"
     >
-        <span [innerText]="'Secondary' | translate"></span>
     </nx-button>
 </div>
 
@@ -43,10 +159,7 @@
 <div
     [ngStyle]="{
         border: '1px solid lightgray',
-        padding: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '5px'
+        padding: '10px'
     }"
 >
     <div class="horizontal-flex">
@@ -130,21 +243,4 @@
             >
         </form>
     </div>
-</div>
-<div class="mt-3">
-    <span>Action button (timeline)</span>
-    <nx-button
-        [type]="ButtonType.action"
-        (click)="onClick()"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dirActions + 'selection.svg'"
-            [svgStyle]="{
-                'width.px': '20',
-                'height.px': '20'
-            }"
-            [applyClass]="true"
-        ></svg-icon>
-    </nx-button>
 </div>

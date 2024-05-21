@@ -1,0 +1,14 @@
+<button
+    class="btn"
+    [ngClass]="{
+        'btn-primary': type === TimelineButtonType.brand,
+        'btn-default': type === TimelineButtonType.secondary,
+        'btn-text': type === TimelineButtonType.text,
+        'btn-action': type === TimelineButtonType.action,
+        active: active
+    }"
+    (click)="handleClick()"
+    [disabled]="disabled"
+>
+    <ng-content></ng-content>
+</button>

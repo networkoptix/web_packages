@@ -1,8 +1,8 @@
 <div>
-    <nx-button
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionSkipPrev)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionSkipPrev)"
     >
         <svg-icon
             nx-add-svg-src
@@ -13,11 +13,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionRewindBackward)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionRewindBackward)"
     >
         <svg-icon
             nx-add-svg-src
@@ -28,10 +28,10 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionPlay)"
+    </nx-timeline-button>
+    <nx-timeline-button
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionPlay)"
     >
         <svg-icon
             nx-add-svg-src
@@ -42,11 +42,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular stacked"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionSpeed)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionSpeed)"
     >
         <svg-icon
             nx-add-svg-src
@@ -57,11 +57,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionSRewindForward)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionSRewindForward)"
     >
         <svg-icon
             nx-add-svg-src
@@ -72,11 +72,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
+    </nx-timeline-button>
+    <nx-timeline-button
         class="regular"
-        [type]="ButtonType.action"
-        (click)="handleActionClick(ButtonAction.actionSkipNext)"
+        [type]="TimelineButtonType.action"
+        (click)="handleActionClick(TimelineButtonAction.actionSkipNext)"
     >
         <svg-icon
             nx-add-svg-src
@@ -87,11 +87,11 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
-    <nx-button
-        [type]="ButtonType.action"
+    </nx-timeline-button>
+    <nx-timeline-button
+        [type]="TimelineButtonType.action"
         [active]="mode === MODE.SELECTION"
-        (click)="handleActionClick(ButtonAction.actionMode)"
+        (click)="handleActionClick(TimelineButtonAction.actionMode)"
     >
         <svg-icon
             nx-add-svg-src
@@ -102,5 +102,5 @@
             }"
             [applyClass]="true"
         ></svg-icon>
-    </nx-button>
+    </nx-timeline-button>
 </div>

@@ -1,16 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { delay, mergeMap, of, throwError, timer } from 'rxjs';
 
 import { NxButtonComponent } from '@components/button/button.component';
-import { ButtonType } from '@components/button/button.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 
@@ -19,18 +15,9 @@ import { icons } from '@static-variables';
     templateUrl: 'buttonsExample.component.html',
     styleUrls: ['buttonsExample.component.scss'],
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        AngularSvgIconModule,
-        NxAddSvgSrcDirective,
-        TranslateModule,
-        NxButtonComponent,
-        NxAsyncActionButtonComponent,
-    ],
+    imports: [CommonModule, FormsModule, NxButtonComponent, NxAsyncActionButtonComponent],
 })
 export class NxButtonsExampleComponent implements AfterViewInit {
-    ButtonType = ButtonType;
     toastService = inject(NxToastService);
     hostElement = inject(ElementRef).nativeElement as HTMLElement;
     protected readonly icons = icons;

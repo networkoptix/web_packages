@@ -8,7 +8,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
 import { NxButtonComponent } from '@components/button/button.component';
-import { ButtonType } from '@components/button/button.component.types';
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
@@ -73,5 +72,4 @@ export class NxLayoutGridItemPlaceholderTemplateComponent {
     hasTooltip = computed(() => {
         return !!this.hint() || this.hasActionButton();
     });
-    protected readonly ButtonType = ButtonType;
 }

@@ -43,7 +43,7 @@
 }
 
 // Overwrite Boostrap section ************
-button,
+button:not([data-escape-global-style]),
 .btn {
     @include button;
 }
@@ -226,11 +226,11 @@ button,
 .btn.btn-danger {
     color: var(--btn-danger-color) !important;
     background-color: var(--btn-danger-bg) !important;
-    box-shadow: inset 0 -1px 0 0 var(--btn-danger-shadow) !important;
+    box-shadow: var(--btn-danger-shadow) !important;
 
     &:hover:not([disabled]):not(.disabled) {
         background-color: var(--btn-danger-hover-bg) !important;
-        box-shadow: inset 0 -1px 0 0 var(--btn-danger-hover-shadow);
+        box-shadow: var(--btn-danger-hover-shadow) !important;
     }
 
     &:focus,
@@ -239,7 +239,7 @@ button,
     &:active:not([disabled]):not(.disabled),
     &.active:not([disabled]):not(.disabled) {
         background-color: var(--btn-danger-active-bg) !important;
-        box-shadow: inset 0 1px 0 0 var(--btn-danger-active-shadow) !important;
+        box-shadow: var(--btn-danger-active-shadow) !important;
     }
 }
 

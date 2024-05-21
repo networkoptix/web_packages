@@ -15,7 +15,7 @@ import {
     switchMap,
 } from 'rxjs';
 
-import { ButtonAction } from '@components/button/button.component.types';
+import { TimelineButtonAction } from '@components/nx-webgl-canvas/button/button.component.types';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
     SCROLL_DIRECTION,
@@ -82,7 +82,7 @@ export class RenderStateModel {
     public onActions(actionParam: Record<string, unknown>): void {
         const { action, param } = actionParam;
         switch (action) {
-            case ButtonAction.actionJumpTo:
+            case TimelineButtonAction.actionJumpTo:
                 let intervalZoomK: number;
 
                 if (param === 0) {

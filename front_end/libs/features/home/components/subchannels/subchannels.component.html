@@ -82,7 +82,7 @@
             </div>
             <div *ngIf="canCreatePartners$$()">
                 <nx-button
-                    [type]="buttonType"
+                    type="brand"
                     (onClick)="newPartnerDialog()"
                 >
                     <span translate>New Partner</span>
@@ -122,10 +122,10 @@
         </div>
         <div *ngIf="canCreatePartners$$()">
             <nx-button
-                [type]="buttonType"
+                [text]="'New Partner' | translate"
+                type="brand"
                 (onClick)="newPartnerDialog()"
             >
-                <span translate>New Partner</span>
             </nx-button>
         </div>
     </div>

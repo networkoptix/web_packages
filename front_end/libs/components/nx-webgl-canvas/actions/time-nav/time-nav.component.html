@@ -2,8 +2,8 @@
     <!--    <nx-time></nx-time>-->
 
     <div id="calendar-nav">
-        <nx-button
-            [type]="ButtonType.action"
+        <nx-timeline-button
+            [type]="TimelineButtonType.action"
             (click)="handleCalendarClick()"
         >
             <svg-icon
@@ -15,7 +15,7 @@
                 }"
                 [applyClass]="true"
             ></svg-icon>
-        </nx-button>
+        </nx-timeline-button>
     </div>
     <div id="jump-to-nav">
         <nx-select-v2
