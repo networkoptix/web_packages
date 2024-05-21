@@ -212,7 +212,7 @@ class CloudUser(models.Model):
         group_queryset = CloudSystemId.objects.filter(group_sys_q).annotate(
             org_id=F('organization_id'),
             sys_id=F('system_id'),
-            membership_type=Value('group'),
+            membership_type=Value('organization'),
             org_roles=F('organization__organizationtouser__roles'),
         ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
 

@@ -29,10 +29,11 @@ def cloud_host_middleware(get_response):
         request.x_request_id = x_request_id
 
         # Handle X-Original-Host header
-        x_original_host = request.headers.get('X-Original-Host')
+        if x_original_host := request.headers.get('X-Original-Host'):
+            cloud_host_name = x_original_host.split(':')[0]
+        else:
+            cloud_host_name = request.get_host().split(':')[0]
 
-        # Determine cloud host
-        cloud_host_name = x_original_host or request.get_host().split(':')[0]
         # Assuming get_cloud_host is a function you've defined elsewhere
         request.cloud_host = get_cloud_host(cloud_host_name)
 
