@@ -36,31 +36,34 @@
             </nx-base-tab>
         </nx-tabs>
         <ng-container *ngIf="showOrganizations; else tabOutlet">
-            <div class="actions">
-                <button
-                    *ngIf="
-                        permissionStore.canCreateOrgs$$() && (organizations$ | async)?.length > 0
-                    "
-                    class="btn btn-default"
-                    translate
-                    (click)="newOrgDialog()"
-                >
-                    New Organization
-                </button>
-                <nx-search
-                    *ngIf="
-                        (organizations$ | async).length >
-                        searchConfig.channelPartners.searchMinimumCards
-                    "
-                    class="input-overlay"
-                    [style.width.px]="searchConfig.channelPartners.searchWidth"
-                    [ngModel]="search"
-                    (ngModelChange)="setSearch($event)"
-                    layout="search"
-                    [placeholder]="'Search' | translate"
-                    instant
-                ></nx-search>
-            </div>
+            @if ((filteredOrganizations$ | async)?.length || search.value) {
+                <div class="actions">
+                    <button
+                        *ngIf="
+                            permissionStore.canCreateOrgs$$() &&
+                            (organizations$ | async)?.length > 0
+                        "
+                        class="btn btn-default"
+                        translate
+                        (click)="newOrgDialog()"
+                    >
+                        New Organization
+                    </button>
+                    <nx-search
+                        *ngIf="
+                            (organizations$ | async).length >
+                            searchConfig.channelPartners.searchMinimumCards
+                        "
+                        class="input-overlay"
+                        [style.width.px]="searchConfig.channelPartners.searchWidth"
+                        [ngModel]="search"
+                        (ngModelChange)="setSearch($event)"
+                        layout="compact"
+                        [placeholder]="'Search' | translate"
+                        instant
+                    ></nx-search>
+                </div>
+            }
             <nx-pre-loader *ngIf="isLoading$$(); else cards"></nx-pre-loader>
             <ng-template #cards>
                 <ng-container *ngIf="(filteredOrganizations$ | async)?.length > 0; else noOrgs">
@@ -113,28 +116,32 @@
                         ></nx-page-placeholder-v2>
                     </ng-container>
                     <ng-template #addOrg>
-                        <div class="no-orgs-placeholder">
-                            <div class="placeholder-container">
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [svgStyle]="{
-                                        'width.px': '64',
-                                        'height.px': '64'
-                                    }"
-                                    [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
-                                ></svg-icon>
-                                <h3 translate>No Organizations</h3>
-                                <p translate>You have not yet created any organizations</p>
-                            </div>
-                            <button
-                                *ngIf="permissionStore.canCreateOrgs$$()"
-                                class="btn btn-primary new-org-btn"
+                        <nx-page-generic-placeholder-v2>
+                            <svg-icon
+                                [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
+                                [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+                            ></svg-icon>
+                            <div
+                                class="title"
                                 translate
-                                (click)="newOrgDialog()"
                             >
-                                New Organization
-                            </button>
-                        </div>
+                                No Organization
+                            </div>
+                            <div
+                                class="message"
+                                translate
+                            >
+                                You have not yet created any organizations
+                            </div>
+                            @if (permissionStore.canCreateOrgs$$()) {
+                                <nx-button
+                                    class="button"
+                                    [type]="buttonType.secondary"
+                                    [text]="'New Organization' | translate"
+                                    (click)="newOrgDialog()"
+                                ></nx-button>
+                            }
+                        </nx-page-generic-placeholder-v2>
                     </ng-template>
                 </ng-template>
             </ng-template>
