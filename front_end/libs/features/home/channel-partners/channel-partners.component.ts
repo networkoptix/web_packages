@@ -24,9 +24,12 @@ import {
     selectCurrentPartnerOrgs,
     selectArePartnerOrgsLoading,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxButtonComponent } from '@components/button/button.component';
+import { ButtonType } from '@components/button/button.component.types';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
@@ -72,12 +75,15 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         PipesModule,
         NxResizeObserver,
         NxPagePlaceholderV2Component,
+        NxPagePlaceholderGenericNewV2Component,
+        NxButtonComponent,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
     PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
+    buttonType = ButtonType;
 
     permissionStore = inject(PermissionsStore);
     routerState = inject(ChannelPartnersRouteState);
@@ -178,7 +184,7 @@ export class NxChannelPartnersComponent implements OnInit {
         return !this.tabs$$()[this.currentTabIndex$$()]?.route;
     }
 
-    newOrgDialog(): void {
+    newOrgDialog = (): void => {
         this.dialogsService
             .createOrganization(this.currentPartner$$().id)
             .then((org: Organization) => {
@@ -190,7 +196,7 @@ export class NxChannelPartnersComponent implements OnInit {
                     );
                 }
             });
-    }
+    };
 
     handleOrgClick(id: string): void {
         this.router.navigate(['organization', id], { relativeTo: this.route });

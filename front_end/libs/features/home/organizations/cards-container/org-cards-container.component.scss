@@ -126,8 +126,11 @@ $org-cards-hidden-spacing: 4px;
     height: 100%;
 }
 
-.icon-with-fill {
-    fill: var(--attention-yellow);
+
+.card-content {
+    .icon-with-fill {
+        fill: var(--attention-yellow);
+    }
 }
 
 h3, nx-hidable {

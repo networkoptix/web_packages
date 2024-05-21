@@ -85,7 +85,7 @@
                     [type]="buttonType"
                     (onClick)="newPartnerDialog()"
                 >
-                    <span [innerText]="'New Partner' | translate"></span>
+                    <span translate>New Partner</span>
                 </nx-button>
             </div>
         </ng-template>
@@ -122,10 +122,10 @@
         </div>
         <div *ngIf="canCreatePartners$$()">
             <nx-button
-                [textContent]="'New Partner' | translate"
                 [type]="buttonType"
                 (onClick)="newPartnerDialog()"
             >
+                <span translate>New Partner</span>
             </nx-button>
         </div>
     </div>
