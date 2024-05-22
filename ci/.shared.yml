@@ -35,7 +35,7 @@ include:
   ( $CI_COMMIT_REF_NAME =~ /^vms_/ || $CI_COMMIT_REF_NAME == "develop" ) )'
 
 .functional_tests_required: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "releases_23.3.2" )'
+  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^releases_23\.3\./ )'
 
 .jenkins-builds:
   stage: build
