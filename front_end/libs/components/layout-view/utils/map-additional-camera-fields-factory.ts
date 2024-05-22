@@ -10,10 +10,11 @@ import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { isIoOnly } from './is-io-only';
 
 export const mapAdditionalCameraFieldsFactory =
-    (servers: Pick<NxSystemServer, 'id' | 'status'>[], useV2api: boolean) =>
+    (servers: Pick<NxSystemServer, 'id' | 'status' | 'version'>[]) =>
     (camera: NxSystemCamera): NxSystemCameraWithMappedFields => {
-        const parentServerOnline =
-            servers.find(({ id }) => id === camera.parentId)?.status === 'Online';
+        const parentServer = servers.find(({ id }) => id === camera.parentId);
+        const useV2api = parseFloat(parentServer?.version || '0') >= 6;
+        const parentServerOnline = parentServer?.status === 'Online';
         const online =
             isIoOnly(camera) || (camera.status === CameraStatus.Online && parentServerOnline);
         const unauthorized = camera.status === CameraStatus.Unauthorized && parentServerOnline;

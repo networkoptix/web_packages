@@ -101,7 +101,7 @@
             [layout]="layout"
             [system]="system"
             [layoutItemLookup]="layoutItemLookup"
-            [dataSource]="layoutItemLookup.tree"
+            [dataSource]="activeSystemSearchResults$$()"
             [linkedDataSource]="layoutItemLookup.otherSystems"
             [treeControl]="treeControl"
             [showTooltip]="showTooltip$ | async"
@@ -134,7 +134,7 @@
                     >
                         <span>
                             <span>{{ name }}</span>
-                            @if (searchMatches$$(); as matches) {
+                            @if (otherSystemsOpen$$() ? 0 : searchMatches$$(); as matches) {
                                 <span>
                                     {{
                                         {
@@ -260,6 +260,8 @@
                                 </div>
                             } @else if (otherSystems.length) {
                                 <nx-layout-grid-tree
+                                    #otherSitesMenu
+                                    (scrollChange)="updateOtherSitesScroll($event)"
                                     [searchType]="
                                         CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu
                                             ? 'filter'
@@ -272,7 +274,6 @@
                                     [treeControl]="treeControl"
                                     [showTooltip]="showTooltip$ | async"
                                     [changingLayout]="changingLayout"
-                                    [expandAll]="!!searchMatches$$()"
                                     hideNoResults
                                 ></nx-layout-grid-tree>
                             }

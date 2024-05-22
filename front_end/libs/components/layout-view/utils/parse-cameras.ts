@@ -10,8 +10,7 @@ import { mapCameraResourceNode } from './map-camera-resource-node';
 
 export const parseCameras = (
     cameras: NxSystemCamera[],
-    servers: Pick<NxSystemServer, 'id' | 'status'>[],
-    useV2api: boolean,
+    servers: Pick<NxSystemServer, 'id' | 'status' | 'version'>[],
     aspectRatio: number,
 ): { [id: string]: ResourceNode<NxSystemCameraWithMappedFields> } =>
     cameras.reduce(
@@ -20,7 +19,7 @@ export const parseCameras = (
             [camera.id]: mapCameraResourceNode(
                 camera,
                 aspectRatio,
-                mapAdditionalCameraFieldsFactory(servers, useV2api),
+                mapAdditionalCameraFieldsFactory(servers),
             ),
         }),
         {},

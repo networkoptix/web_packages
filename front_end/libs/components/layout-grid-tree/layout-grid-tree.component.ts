@@ -12,6 +12,9 @@ import {
     TemplateRef,
     ViewChild,
     booleanAttribute,
+    Output,
+    viewChild,
+    ElementRef,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -21,19 +24,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { isEqual } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Subject, combineLatest, of, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, timer } from 'rxjs';
 import {
+    debounceTime,
     delay,
     distinctUntilChanged,
     filter,
     map,
-    shareReplay,
     startWith,
     switchMap,
     takeUntil,
-    tap,
 } from 'rxjs/operators';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
@@ -75,12 +76,12 @@ import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
+import { paramSignal } from '@utils/signals';
 
 import { WithMenuItemsByType } from './menu-items/with-menu-items-by-type';
 import { createLayoutItem } from './utils/create-layout-item';
-import { filterSearch } from './utils/filter-search';
 import { findNode } from './utils/find-node';
-import { queryChangeSideEffects } from './utils/query-change-side-effects';
+import { queryChangeSideEffectsFactory } from './utils/query-change-side-effects';
 
 @UntilDestroy()
 @Component({
@@ -135,20 +136,50 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     @Input() changingLayout: string | boolean = true;
     @Input() suggestedSearch: string[] = [];
 
-    hideNoResults$$ = input(false, { alias: 'hideNoResults', transform: booleanAttribute });
+    lastQuery = '';
 
-    expandAll$$ = input(false, { alias: 'expandAll' });
+    search$$ = paramSignal('search');
 
-    expandAll$ = toObservable(this.expandAll$$);
+    queryChangeSideEffect = queryChangeSideEffectsFactory(() => this.treeControl);
 
-    expandAllEffect = effect(() => {
-        if (this.expandAll$$()) {
-            const source = this.dataSourceInput$$();
-            source.forEach(node => this.treeControl.expandDescendants(node));
-        } else {
-            this.expandNodesFromParams();
+    queryChangeEffect = effect(() =>
+        this.queryChangeSideEffect(this.search$$(), this.dataSourceInput$$()),
+    );
+
+    dataSource$ = toObservable(this.dataSourceInput$$);
+
+    protected resourceTreeWrapper$$ = viewChild<ElementRef<HTMLDivElement>>('resourceTreeWrapper');
+
+    public async setScrollPosition(scrollTop: number): Promise<void> {
+        const resourceTreeWrapper = this.resourceTreeWrapper$$();
+        if (resourceTreeWrapper) {
+            let timeout: ReturnType<typeof setTimeout>;
+            await new Promise<void>(resolve => {
+                const observer = new ResizeObserver(
+                    ([
+                        {
+                            contentRect: { height },
+                        },
+                    ]) => {
+                        if (height > scrollTop) {
+                            resolve();
+                            clearTimeout(timeout);
+                            observer.disconnect();
+                        }
+                    },
+                );
+                timeout = setTimeout(resolve, 1000);
+                observer.observe(resourceTreeWrapper.nativeElement);
+            });
+            resourceTreeWrapper.nativeElement.scrollTo({ top: scrollTop });
         }
-    });
+    }
+
+    private scrollPosition$ = new BehaviorSubject(0);
+
+    @Output() scrollChange: Observable<number> = this.scrollPosition$.pipe(debounceTime(100));
+
+    hideNoResults$$ = input(false, { alias: 'hideNoResults', transform: booleanAttribute });
 
     @ViewChild('currentItemContext') set currentItemContext(value: TemplateRef<unknown>) {
         this.layoutStateService.contextMenu = value;
@@ -157,64 +188,6 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     CONFIG = nxConfig;
 
     currentNode: ResourceNode;
-
-    query$ = this.layoutStateService.paramStateHandler.state$.pipe(
-        map(({ queryParams }) => {
-            const query = queryParams?.search?.[0] || '';
-            if (this.searchType === 'filter' && queryParams.otherSitesFilter?.length) {
-                // TODO: Update search highlight component to handle array of string
-                // return [query, ...queryParams.otherSitesFilter];
-                return queryParams.otherSitesFilter[0];
-            }
-
-            return query;
-        }),
-        distinctUntilChanged((a, b) => isEqual(a, b)),
-        shareReplay({ bufferSize: 1, refCount: false }),
-        untilDestroyed(this),
-    );
-
-    initialDataSource$ = toObservable(this.dataSourceInput$$);
-
-    lastQuery = '';
-
-    dataSource$ = combineLatest([this.query$, this.initialDataSource$]).pipe(
-        // Filter here
-        tap(([query, nodes]) => queryChangeSideEffects(this, query, nodes)),
-        map(([query, dataSource]) =>
-            filterSearch(
-                dataSource as ResourceNode[],
-                query,
-                node => node.name,
-                node => node.children || [],
-                (node, matched) => matched || !!node.children?.length,
-                this.searchType === 'filter',
-            ),
-        ),
-        switchMap(dataSource =>
-            this.searchType !== 'filter'
-                ? Promise.resolve(dataSource)
-                : this.layoutStateService.paramStateHandler.state$.pipe(
-                      map(({ queryParams }) => queryParams.search?.[0]),
-                      switchMap(query =>
-                          this.expandAll$.pipe(map(expandAll => ({ query, expandAll }))),
-                      ),
-                      map(({ expandAll, query }) => {
-                          if (query && !expandAll) {
-                              return filterSearch(
-                                  dataSource,
-                                  query,
-                                  node => node.name,
-                                  node => node.children || [],
-                                  (node, matched) => matched || !!node.children?.length,
-                              );
-                          }
-                          return dataSource;
-                      }),
-                  ),
-        ),
-        untilDestroyed(this),
-    );
 
     icons = icons;
     positions: ConnectedPosition[] = NxContextMenu.POSITIONS.default;
@@ -266,6 +239,11 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     }
 
     preventDrop = (): boolean => false;
+
+    updateScroll = (scrollEvent: Event): void => {
+        const target = scrollEvent.target as HTMLElement;
+        this.scrollPosition$.next(target.scrollTop || 0);
+    };
 
     expandNodesFromParams = (): void => {
         const { queryParams: { openNodes = [] } = { openNodes: [] } } =
@@ -384,15 +362,26 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
             return;
         }
 
-        this.layoutStateService.paramStateHandler.updater(() => {
+        this.layoutStateService.paramStateHandler.updater(state => {
+            if (!state) {
+                return {};
+            }
+
+            const openNodes = state.queryParams?.openNodes || [];
+
+            const isOpen = openNodes.includes(nodeId);
+            const nodeOpen = this.treeControl.isExpanded(node);
+
             this.treeControl.toggle(node);
-            const nodeOpened = this.treeControl.isExpanded(node);
+            if (isOpen !== nodeOpen) {
+                return {};
+            }
 
             return {
                 queryParams: {
                     openNodes: {
                         value: [nodeId],
-                        mutationType: nodeOpened ? MutationType.APPEND : MutationType.REMOVE,
+                        mutationType: !nodeOpen ? MutationType.APPEND : MutationType.REMOVE,
                     },
                 },
             };

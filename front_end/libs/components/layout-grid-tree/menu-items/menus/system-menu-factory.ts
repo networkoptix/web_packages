@@ -31,6 +31,7 @@ export const systemMenuFactory =
                             systemId: node.details.id,
                             layoutId: isSystemLayout || !params ? 'default' : params.layoutId,
                         },
+                        queryParams: { search: [''] },
                     }));
                 },
             },

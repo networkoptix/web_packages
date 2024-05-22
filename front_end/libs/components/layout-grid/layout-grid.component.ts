@@ -26,6 +26,7 @@ import {
     signal,
     Signal,
     untracked,
+    viewChild,
     ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -124,6 +125,7 @@ import { filterOtherSites } from './filter-other-sites';
 import { findOtherSite } from './find-other-site';
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
+    isResourceParentNode,
     LayoutRenderConfig,
     LayoutResourceTree,
     NxSystemCameraWithMappedFields,
@@ -356,6 +358,7 @@ const calculateResize = (
 export class NxLayoutGridComponent {
     @Input() layout: Layout;
     @Input() layoutItemLookup: LayoutResourceTree;
+    layoutItemLookup$$ = signal<LayoutResourceTree>({ tree: [] } as unknown as LayoutResourceTree);
     @Input() system: NxSystem;
 
     @Output() layoutChanged = new EventEmitter<string>();
@@ -379,6 +382,8 @@ export class NxLayoutGridComponent {
     @ViewChild('otherSystems') set otherSystems(element: ElementRef<HTMLDetailsElement>) {
         this.detailsRef$$.set(element?.nativeElement);
     }
+
+    otherSitesMenu$$ = viewChild<NxLayoutGridTreeComponent>('otherSitesMenu');
 
     groupsCacheStore = inject(GroupsCacheStore);
 
@@ -1074,6 +1079,28 @@ export class NxLayoutGridComponent {
 
     currentSiteId$$ = computed(() => this.currentActiveSite$$()?.details.id);
 
+    previousOtherSitesScroll$$ = signal(0);
+
+    updateOtherSitesScroll = (scrollTop: number): void => {
+        if (this.currentSite$$()) {
+            return;
+        }
+        this.previousOtherSitesScroll$$.set(scrollTop);
+    };
+
+    preserveScrollEffect = effect(() => {
+        if (this.currentSiteId$$()) {
+            return;
+        }
+
+        const otherSitesMenu = this.otherSitesMenu$$();
+        const scrollTop = untracked(this.previousOtherSitesScroll$$);
+
+        if (otherSitesMenu && scrollTop) {
+            otherSitesMenu.setScrollPosition(scrollTop);
+        }
+    });
+
     loadSiteEffect = effect(
         () => {
             const currentSiteId = this.currentSiteId$$();
@@ -1083,6 +1110,36 @@ export class NxLayoutGridComponent {
         },
         { allowSignalWrites: true },
     );
+
+    activeSystemSearchResults$$ = computed(() => {
+        const activeSystemResources = this.layoutItemLookup$$().tree;
+
+        const filter = this.search$$();
+
+        if (!filter) {
+            return activeSystemResources;
+        }
+
+        return activeSystemResources.map(rootResourceNode => {
+            if (isResourceParentNode(rootResourceNode)) {
+                const filtered = filterOtherSites(rootResourceNode.children, filter);
+                return {
+                    ...rootResourceNode,
+                    children: filtered.matches
+                        ? filtered.results
+                        : [
+                              {
+                                  type: ResourceType.PLACEHOLDER,
+                                  name: staticLang.search.noMatches,
+                                  details: { id: 'noResults' },
+                              },
+                          ],
+                };
+            }
+
+            return rootResourceNode;
+        });
+    });
 
     allSitesSearchResults$$ = computed(() => {
         const otherSystemsFull: ResourceNode[] = this.otherSystems$$() || [];
@@ -1097,7 +1154,11 @@ export class NxLayoutGridComponent {
     });
 
     currentSiteSearchResults$$ = computed(() => {
-        const currentSiteFull: ResourceNode[] = this.currentActiveSite$$()?.children || [];
+        const currentActiveSite = this.currentActiveSite$$();
+        if (!isResourceParentNode(currentActiveSite)) {
+            return;
+        }
+        const currentSiteFull: ResourceNode[] = currentActiveSite.children || [];
         const siteCameras = removeSystemChildren(currentSiteFull);
         const currentSiteFilter = this.search$$();
 
@@ -1140,6 +1201,11 @@ export class NxLayoutGridComponent {
         const itemsChanged =
             layoutItemLookup?.currentValue &&
             !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue);
+
+        if (itemsChanged || layoutItemLookup?.firstChange) {
+            this.layoutItemLookup$$.set(layoutItemLookup!.currentValue);
+        }
+
         if (layout && (layoutChanged || itemsChanged)) {
             // this.openMenu = false;
             this.initialLayout$.next(layout.currentValue);
@@ -1469,10 +1535,6 @@ export class NxLayoutGridComponent {
             };
 
             const node = this.layoutItemLookup?.[item.resourceId];
-
-            if (!node) {
-                console.info('why');
-            }
 
             const updatedItem = { ...item, renderConfig };
 

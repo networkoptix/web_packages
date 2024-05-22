@@ -9,6 +9,7 @@ import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { isOrgSystem } from '@utils/nx';
 
+import { generateCamerasForTree } from './generate-cameras-for-tree';
 import { normalizeSystemForLayout } from './normalize-system-for-layout';
 import { parseCameras } from './parse-cameras';
 
@@ -26,11 +27,10 @@ export const parseOtherSystems = (
     const allSystems = otherSystems
         .filter(({ version }) => version >= 5.1)
         .map(system => {
-            const parsedCameras = Object.values(
+            const parsedCameras = generateCamerasForTree(
                 parseCameras(
                     otherSystemsCameras.filter(({ systemId }) => systemId === system.id),
                     otherSystemsServers,
-                    false,
                     aspectRatio,
                 ),
             );

@@ -109,6 +109,7 @@ export enum ResourceType {
     SYSTEMS_ORGANIZATION = 'organization',
     SYSTEMS_GROUP = 'systems_group',
     CAMERAS_GROUP = 'cameras_group',
+    PLACEHOLDER = 'placeholder',
 }
 
 export interface BaseResourceNode {
@@ -128,6 +129,9 @@ export interface ResourceLeafNode<T = { id: string }> extends BaseResourceNode {
     hidden?: boolean;
     details: T;
 }
+
+export interface OtherSystemsBaseNode
+    extends ResourceParentNode<{ children: NxSystemInfo[]; id: 'mySystems' | 'sharedSystems' }> {}
 
 export interface SharableResourceLeafNode<T = { id: string }>
     extends Omit<ResourceLeafNode<T>, 'aspectRatio'> {
@@ -170,7 +174,10 @@ export interface ResourceLeafNodeMap {
     [ResourceType.SERVER]: ResourceLeafNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGE]: ResourceLeafNode<WebPage>;
     [ResourceType.IO_DEVICE]: ResourceLeafNode<NxSystemCameraWithMappedFields>;
-    [ResourceType.SYSTEM]: ResourceParentNode<NxSystemCameraWithMappedFields>;
+    [ResourceType.SYSTEM]:
+        | ResourceParentNode<NxSystemCameraWithMappedFields>
+        | ResourceLeafNode<NxSystemInfo>;
+    [ResourceType.PLACEHOLDER]: ResourceLeafNode<{ id: 'noResults'; name: string }>;
 }
 
 export interface ResourceNodeMap extends ResourceParentNodeMap, ResourceLeafNodeMap {}
@@ -232,3 +239,6 @@ export const placeholderNameLookup = {
     [LayoutPlaceholder.NO_LAYOUTS]: uuid(),
     [LayoutPlaceholder.SHOW_404]: uuid(),
 } as const;
+
+export const isResourceParentNode = (node: BaseResourceNode | null): node is ResourceParentNode =>
+    !!node && 'children' in node;

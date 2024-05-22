@@ -6,9 +6,19 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
-import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
+import {
+    asyncScheduler,
+    combineLatest,
+    firstValueFrom,
+    forkJoin,
+    merge,
+    Observable,
+    Subject,
+    timer,
+} from 'rxjs';
 import {
     catchError,
+    throttleTime,
     distinctUntilChanged,
     filter,
     map,
@@ -120,11 +130,13 @@ export class NxLayoutViewComponent {
                 this.layoutStateService.loadCrossSystemLayouts(),
             ]).pipe(map(() => system)),
         ),
-        switchMap(({ permissionManager, id }) => {
+        switchMap(({ permissionManager }) => {
             return combineLatest([
                 // Update this to fetch system resources for all systems
                 this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
-                Promise.resolve(id),
+                this.layoutStateService.paramStateHandler.state$.pipe(
+                    map(({ params: { systemId } }) => systemId),
+                ),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.store.select(SharedLayoutsSelectors.selectLayouts),
                 new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser$$())),
@@ -133,9 +145,9 @@ export class NxLayoutViewComponent {
                     ? this.systemsService.systemsSubject
                     : Promise.resolve([] as NxSystemInfo[]),
                 this.groupsCacheStore.getAllOrgStructures(onlyActiveOrgs),
-            ]);
+            ]).pipe(throttleTime(1000, asyncScheduler, { leading: true, trailing: true }));
         }),
-        filter(([resources]) => Object.values(resources).every(Boolean)),
+        filter(res => Object.values(res[0]).every(Boolean) && !res[5]),
         map(cloneDeep),
         filter(([allSystemResources, currentSystemId]) => !!allSystemResources[currentSystemId]),
         switchMap(lookupState =>

@@ -3,10 +3,12 @@ import { memoize } from 'lodash-es';
 import {
     ResourceType,
     BaseResourceNode,
+    OtherSystemsBaseNode,
     ResourceNodeMap,
     ResourceTypeAssertMap,
     ResourceParentNodeMap,
     ResourceLeafNodeMap,
+    ResourceLeafNode,
 } from './layout-grid.types';
 
 /**
@@ -78,7 +80,10 @@ const leafNodeTypes = [
     ResourceType.WEB_PAGE,
     ResourceType.IO_DEVICE,
     ResourceType.SYSTEM,
+    ResourceType.PLACEHOLDER,
 ] as const;
+
+const baseOtherSystemsIds = ['mySystems', 'sharedSystems'];
 
 export const assertResourceBaseNode = (
     node: BaseResourceNode,
@@ -94,3 +99,11 @@ export const assertResourceLeafNode = (
     node: BaseResourceNode,
 ): node is ResourceLeafNodeMap[(typeof leafNodeTypes)[number]] =>
     (leafNodeTypes as unknown as ResourceType[]).includes(node.type);
+
+export const assertOtherSystemsBaseNode = (node: BaseResourceNode): node is OtherSystemsBaseNode =>
+    assertResourceParentNode(node) && baseOtherSystemsIds.includes(node.details.id);
+
+export const assertIsNoResultsNode = (
+    node: BaseResourceNode,
+): node is ResourceLeafNode<{ id: 'noResults' }> =>
+    assertResourceLeafNode(node) && node.details.id === 'noResults';

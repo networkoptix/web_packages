@@ -16,10 +16,12 @@ describe('mapAdditionalCameraFieldsFactory', () => {
         {
             id: 'server1',
             status: 'Online',
+            version: '6',
         },
         {
             id: 'server2',
             status: 'Offline',
+            version: '5.1',
         },
     ];
     const camera = {
@@ -32,19 +34,19 @@ describe('mapAdditionalCameraFieldsFactory', () => {
                 streams: [
                     {
                         encoderIndex: 0,
-                        codec: '',
+                        codec: 173,
                     },
                     {
                         encoderIndex: -1,
-                        codec: '',
+                        codec: 173,
                     },
                 ],
             },
         },
     } as unknown as NxSystemCamera;
 
-    const mapAdditionalCameraFieldsV1System = mapAdditionalCameraFieldsFactory(servers, false);
-    const mapAdditionalCameraFieldsV2System = mapAdditionalCameraFieldsFactory(servers, true);
+    const mapAdditionalCameraFieldsV1System = mapAdditionalCameraFieldsFactory(servers);
+    const mapAdditionalCameraFieldsV2System = mapAdditionalCameraFieldsFactory(servers);
 
     it('should return a camera with the correct fields', () => {
         requiresTranscoding = false;
@@ -58,11 +60,11 @@ describe('mapAdditionalCameraFieldsFactory', () => {
                     streams: [
                         {
                             encoderIndex: 0,
-                            codec: '',
+                            codec: 173,
                         },
                         {
                             encoderIndex: -1,
-                            codec: '',
+                            codec: 173,
                         },
                     ],
                 },
@@ -75,7 +77,10 @@ describe('mapAdditionalCameraFieldsFactory', () => {
 
     it('should return a camera with requiresTranscoding set to true if not v2 system', () => {
         requiresTranscoding = true;
-        expect(mapAdditionalCameraFieldsV1System(camera).requiresTranscoding).toBe(true);
+        expect(
+            mapAdditionalCameraFieldsV1System({ ...camera, parentId: 'server2' })
+                .requiresTranscoding,
+        ).toBe(true);
     });
 
     it('should return a camera with requiresTranscoding set to false if v2 system', () => {

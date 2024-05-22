@@ -24,6 +24,8 @@ import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import {
     assertResourceOfType,
     assertResourceBaseNode,
+    assertOtherSystemsBaseNode,
+    assertIsNoResultsNode,
 } from '@components/layout-grid/layout-grid.type-guards';
 import {
     BaseResourceNode,
@@ -103,7 +105,9 @@ export class NxLayoutGridTreeNode {
 
     baseNodeType$$ = computed(() => {
         const node = this.node$$();
-        return assertResourceBaseNode(node);
+        return [assertResourceBaseNode, assertOtherSystemsBaseNode, assertIsNoResultsNode].some(
+            assertion => assertion(node),
+        );
     });
 
     class$$ = computed(() => ({
@@ -129,11 +133,19 @@ export class NxLayoutGridTreeNode {
 
     offline$$ = computed(() => {
         const node = this.node$$();
-        return (
-            assertResourceOfType.camera(node) &&
-            !node.details?.unauthorized &&
-            !node.details?.online
-        );
+
+        if (assertResourceOfType.camera(node)) {
+            return !node.details?.unauthorized && !node.details?.online;
+        }
+
+        if (assertResourceOfType.server(node)) {
+            return !node.details.online;
+        }
+
+        if (assertResourceOfType.system_cloud(node)) {
+            return !!node.details.status;
+        }
+        return false;
     });
 
     expandable$$ = computed(() => {

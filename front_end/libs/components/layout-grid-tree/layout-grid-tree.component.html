@@ -7,7 +7,11 @@
     }
 </ng-template>
 
-<div class="resource-tree-wrapper">
+<div
+    #resourceTreeWrapper
+    class="resource-tree-wrapper"
+    (scroll)="updateScroll($event)"
+>
     @if (layoutGridService.isLeftMenuOpen$$() && searchType; as showSearchType) {
         <div class="search-wrapper">
             @switch (showSearchType) {
@@ -56,7 +60,7 @@
                         [isRoot]="true"
                         [menuItems]="menuItemsByType[node.type]"
                         [treeMenuItems]="treeMenuItems[node.type]"
-                        [query]="query$ | async"
+                        [query]="search$$()"
                     >
                     </nx-layout-grid-tree-node>
                 </div>
@@ -150,7 +154,7 @@
                                         [preview]="true"
                                         [menuItems]="[]"
                                         [treeMenuItems]="[]"
-                                        [query]="query$ | async"
+                                        [query]="search$$()"
                                     >
                                     </nx-layout-grid-tree-node>
                                 </div>
@@ -171,7 +175,7 @@
                                       cleanIdLegacy(node?.details?.id)
                                     : node?.details?.id === 'noLayouts'
                             "
-                            [query]="query$ | async"
+                            [query]="search$$()"
                         >
                         </nx-layout-grid-tree-node>
                     </div>
@@ -245,7 +249,7 @@
             }
         </ng-template>
         <ng-container
-            *ngTemplateOutlet="renderChildren; context: { nodes: (dataSource$ | async) }"
+            *ngTemplateOutlet="renderChildren; context: { nodes: dataSourceInput$$() }"
         ></ng-container>
     </div>
 </div>

@@ -542,7 +542,7 @@ export class LayoutStateService {
 
     loadSite(
         siteId: string,
-        refreshSystemResources: RefreshSystemResources = { cameras: true },
+        refreshSystemResources: RefreshSystemResources = { cameras: true, servers: true },
     ): Observable<SystemResourcesTypeMap> {
         this.store.dispatch(
             SystemResourcesActions.refreshSystemResources({

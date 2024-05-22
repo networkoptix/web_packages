@@ -73,7 +73,7 @@ export const generateResourceTree = ([
     );
     const aspectRatio = currentLayout?.cellAspectRatio || 0;
 
-    const parsedCameras = parseCameras(cameras, servers, useV2api, aspectRatio);
+    const parsedCameras = parseCameras(cameras, servers, aspectRatio);
 
     const parsedServers = parseServers(servers, aspectRatio);
 
@@ -82,7 +82,6 @@ export const generateResourceTree = ([
     const parsedOtherSystemsCameras = parseCameras(
         otherSystemsCameras,
         otherSystemsServers,
-        false,
         aspectRatio,
     );
 
