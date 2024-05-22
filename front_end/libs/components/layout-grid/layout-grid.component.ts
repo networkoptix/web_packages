@@ -394,6 +394,11 @@ export class NxLayoutGridComponent {
         return !!otherSitesMenuOpen?.includes('true');
     });
 
+    showFirst$$ = computed(() => {
+        const edited = this.layoutStateService.editedLayout$$();
+        return edited?.isNew ? edited.id : null;
+    });
+
     toggleOtherSystemsOpen = (open: boolean): void =>
         this.layoutStateService.paramStateHandler.state$$.set({
             queryParams: { otherSitesMenuOpen: [open.toString()] },
@@ -442,14 +447,13 @@ export class NxLayoutGridComponent {
     updateSelectedCameraEffect = effect(
         () => {
             const layout = this.layout$$();
+            const layoutItemLookup = this.layoutItemLookup$$();
 
-            if (!layout) {
+            if (!layout || !layoutItemLookup) {
                 return;
             }
 
             const layoutItems = layout.items;
-
-            const layoutItemLookup = this.layoutItemLookup;
 
             const layoutItemIds = layoutItems
                 .filter(({ resourceId }) => {
@@ -1762,7 +1766,7 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                const swappedItems = this.layout.items.map(item => structuredClone(item));
+                const swappedItems = this.layout.items.map(item => ({ ...item }));
 
                 if (swapTarget) {
                     const movedItem = swappedItems.find(({ id: itemId }) => itemId === id);
@@ -2075,7 +2079,9 @@ export class NxLayoutGridComponent {
                 }
 
                 const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
-                const notMoved = [x, y, resize.x, resize.y].every(change => !change);
+                const notMoved =
+                    !!this.layout.items.length &&
+                    [x, y, resize.x, resize.y].every(change => !change);
                 this.addingItem$$.set(false);
                 if (unresolvedCollisions || notMoved) {
                     return this.updateLayout();
@@ -2193,7 +2199,7 @@ export class NxLayoutGridComponent {
     loadSiteAction = {
         action: (): Observable<SystemResourcesTypeMap> =>
             this.layoutStateService
-                .loadSite(this.currentSiteId$$()!)
+                .loadSite(this.currentSiteId$$()!, { cameras: true, servers: true })
                 .pipe(debounceTime(1_000), delay(new Date(Date.now() + 2_500))),
         success: () => {},
         error: () => {},

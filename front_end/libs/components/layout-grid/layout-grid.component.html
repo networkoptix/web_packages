@@ -106,6 +106,7 @@
             [treeControl]="treeControl"
             [showTooltip]="showTooltip$ | async"
             [changingLayout]="changingLayout"
+            [showFirst]="showFirst$$()"
         ></nx-layout-grid-tree>
         @if (layoutItemLookup.otherSystems?.length && layoutGridService.isLeftMenuOpen$$()) {
             <details

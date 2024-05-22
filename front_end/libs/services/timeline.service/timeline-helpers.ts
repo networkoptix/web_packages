@@ -34,8 +34,9 @@ export const separatePeriodsByMainAndOtherCameras = (
 ): PeriodDetailByMainAndOther => {
     const mainCameraIndex = timeDetail.findIndex(
         ({ guid }) =>
+            focusCameraId &&
             cleanId(guid) ===
-            cleanId(typeof focusCameraId === 'string' ? focusCameraId : focusCameraId.id),
+                cleanId(typeof focusCameraId === 'string' ? focusCameraId : focusCameraId.id),
     );
 
     const main = mainCameraIndex === -1 ? [] : timeDetail.splice(mainCameraIndex, 1)[0].periods;

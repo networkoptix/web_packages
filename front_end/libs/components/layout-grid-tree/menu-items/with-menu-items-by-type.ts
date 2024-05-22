@@ -15,7 +15,6 @@ import { NxCamerasComponent } from '@pages/systems/settings/cameras/cameras.comp
 import { NxSystemServersComponent } from '@pages/systems/settings/servers/servers.component';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
-import { LocalLayoutsSelectors } from '@services/layout-state/store/local-layouts';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
@@ -139,10 +138,9 @@ export abstract class WithMenuItemsByType {
             this.OPEN_WINDOW_ACTIONS,
         ),
         [ResourceType.SYSTEM]: systemMenuFactory(
-            () =>
-                !!this.store
-                    .selectSignal(LocalLayoutsSelectors.selectLocalLayoutsState)()
-                    .find(({ id }) => id === this.layout.id),
+            () => {
+                return !!this.layout.systemId;
+            },
             () => this.systemsService.systems$$() || [],
             params => this.layoutStateService.paramStateHandler.state$$.update(params),
         ),

@@ -40,7 +40,6 @@ import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { GroupsCacheStore } from '@pages/home/store/groups/groups-cache.store';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
-import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layout';
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
@@ -93,7 +92,6 @@ const onlyActiveOrgs = (org: Organization): boolean => org.effectiveState === 'a
     templateUrl: 'layout-view.component.html',
     styleUrls: ['layout-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [NxLayoutGridService],
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;
@@ -310,7 +308,7 @@ export class NxLayoutViewComponent {
     }
 
     createNewLayout = createNewLayoutFactory(
-        () => this.systemService.currentSystem$$()?.userManager.currentUser.id,
+        () => this.systemService.currentSystem$$()?.userManager.currentUser?.id || '',
     );
 
     createPlaceholder = (id: LayoutPlaceholder): Layout =>

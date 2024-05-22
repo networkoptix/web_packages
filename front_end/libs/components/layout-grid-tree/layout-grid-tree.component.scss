@@ -37,12 +37,20 @@
 .cdk-tree {
     .expanded-tree {
         --offset-tree-node: 0px;
+        &:not(.tree-invisible) {
+            display: flex;
+            flex-direction: column;
+        }
 
         .root-node,
         .leaf-node {
             padding-left: var(--offset-tree-node);
         }
     }
+}
+
+.show-first {
+    order: -1;
 }
 
 $sel: '.cdk-tree';

@@ -41,6 +41,7 @@
             <!-- This is the tree node template for expandable nodes -->
             <div
                 class="tree-node"
+                [ngClass]="{ 'show-first': showFirst$$() === node.id }"
                 [tourAnchor]="'cloud-layouts_' + node.details.id"
             >
                 <div
@@ -96,6 +97,7 @@
                     scrollBehavior="instant"
                     class="tree-node"
                     [ngClass]="{
+                        'show-first': showFirst$$() === node.id,
                         'hidden-node': node.hidden
                     }"
                 >

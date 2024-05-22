@@ -136,6 +136,8 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     @Input() changingLayout: string | boolean = true;
     @Input() suggestedSearch: string[] = [];
 
+    showFirst$$ = input<string | null | undefined>(null, { alias: 'showFirst' });
+
     lastQuery = '';
 
     search$$ = paramSignal('search');
