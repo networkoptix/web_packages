@@ -443,10 +443,8 @@ jenkins-build-webadmin:
       set -ex
       if [[ "$CI_COMMIT_REF_PROTECTED" == true ]]; then
         PUBLISH=ON
-        export REFSPEC="$CI_COMMIT_SHA"
       else
         PUBLISH=OFF
-        export REFSPEC="+refs/merge-requests/${CI_MERGE_REQUEST_IID}/head:refs/remotes/origin/merge-requests/${CI_MERGE_REQUEST_IID}"
       fi
     - mkdir logs
     - echo "Running webadmin build"
@@ -455,7 +453,6 @@ jenkins-build-webadmin:
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHA"
-      "GITLAB_REFSPEC=$$REFSPEC"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
