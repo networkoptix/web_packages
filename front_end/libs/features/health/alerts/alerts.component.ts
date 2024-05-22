@@ -21,7 +21,6 @@ import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { icons } from '@static-variables';
@@ -84,7 +83,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(
-        pageService: NxPageService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
         private route: ActivatedRoute,
@@ -95,8 +93,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        pageService.pageTitle(this.LANG.pageTitles.information);
-
         effect(() => {
             if (this.metricId === this.menuService.selectedSection()) {
                 this.resetActiveEntity();

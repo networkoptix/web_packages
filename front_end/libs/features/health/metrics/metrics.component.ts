@@ -16,7 +16,6 @@ import { delay } from 'rxjs/operators';
 import type { SearchFilter } from '@components/search/search.component.types';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { icons } from '@static-variables';
@@ -79,7 +78,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(
-        private pageService: NxPageService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
         private route: ActivatedRoute,
@@ -89,12 +87,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService,
     ) {
-        this.pageService.pageTitle(this.LANG.pageTitles.information);
-
         effect(() => {
-            setTimeout(() => {
-                this.pageService.pageTitle(this.LANG.pageTitles.information);
-            });
             // when user click same section in the menu - we need to reset table and entity
             if (this.metricId === this.menuService.selectedSection()) {
                 this.filterModel.query = '';
