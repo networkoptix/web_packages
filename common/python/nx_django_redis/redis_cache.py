@@ -646,6 +646,9 @@ class RedisSyncCommandsMixin:
     def client_list(self):
         return self.get_client(None).client_list()
 
+    def time(self):
+        return self.get_client(None).time()
+
 
 class CustomRedisClient(RedisSyncCommandsMixin, RedisCacheClient):
     def __init__(
@@ -892,6 +895,9 @@ class BackendSyncCommandsMixin:
     def hscan_iter(self, key, match='*', version=None):
         key = self.make_and_validate_key(key, version=version)
         return self._cache.hscan_iter(key, match)
+
+    def time(self):
+        return self._cache.time()
 
 
 class SyncAsyncRedisBackend(BackendAsyncCommandsMixin, BackendSyncCommandsMixin, RedisCache):
