@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
+import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -69,7 +70,7 @@ export class NxPageTitleStrategy extends TitleStrategy {
                     title = this.translateService.instant(lang.metaDefaults.default.title);
                 }
             }
-        } else {
+        } else if (!environment.isLocal) {
             title = this.translateService.instant(lang.metaDefaults.default.title);
         }
 

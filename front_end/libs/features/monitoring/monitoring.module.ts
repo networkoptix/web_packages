@@ -22,7 +22,6 @@ import { NxMonitoringComponent } from './monitoring.component';
 const appRoutes: Routes = [
     {
         path: '',
-        title: 'monitoring',
         component: NxMonitoringComponent,
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         resolve: { system: currentSystemResolver },

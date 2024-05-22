@@ -12,7 +12,6 @@ import type { Content } from '@menu/menu.types';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
@@ -55,7 +54,6 @@ export class NxReportViewerComponent implements OnInit {
     @ViewChild('loadReportMain') loadReportMain;
 
     constructor(
-        pageService: NxPageService,
         private translateService: TranslateService,
         private appStateService: NxAppStateService,
         private router: Router,
@@ -65,8 +63,6 @@ export class NxReportViewerComponent implements OnInit {
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
     ) {
-        pageService.pageTitle(this.LANG.pageTitles.information);
-
         effect(() => {
             const selection = this.menuService.selectedSection$$();
             if (this.menu && this.menu.selectedSection !== selection) {

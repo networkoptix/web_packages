@@ -61,6 +61,7 @@ const appRoutes: Routes = [
     {
         path: '',
         component: NxHealthComponent,
+        title: SystemTitleResolver,
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         resolve: { system: currentSystemResolver },
         children: [
@@ -71,12 +72,10 @@ const appRoutes: Routes = [
             },
             {
                 path: 'alerts',
-                title: SystemTitleResolver,
                 component: NxSystemAlertsComponent,
             },
             {
                 path: ':metric',
-                title: SystemTitleResolver,
                 component: NxSystemMetricsComponent,
             },
         ],

@@ -18,7 +18,6 @@ import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -61,7 +60,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        pageService: NxPageService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
         private serverApi: NxSystemAPIService,
@@ -74,8 +72,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         public healthService: NxHealthService,
     ) {
         this.CONFIG = configService.getConfig();
-
-        pageService.pageTitle(this.LANG.pageTitles.information);
 
         effect(() => {
             const selection = this.menuService.selectedSection$$();
