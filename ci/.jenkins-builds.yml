@@ -115,7 +115,7 @@ cloud-deploy:
     url: https://${CLOUD_HOST}
     on_stop: cloud-remove-deployment:no-bot-start
   rules:
-  - if: !reference [ .enable_for_mr_branch ]
+  - if: !reference [ .functional_tests_required ]
     changes: !reference [ .frontend_changes ]
 
 # stop deployment and clean all data, manual UI action. may be used to verify clean deployment
@@ -146,7 +146,7 @@ cloud-remove-deployment:no-bot-start:
     name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
     action: stop
   rules:
-  - if: !reference [ .enable_for_mr_branch ]
+  - if: !reference [ .functional_tests_required ]
     changes: !reference [ .frontend_changes ]
     when: manual
     # ref: https://docs.gitlab.com/ee/ci/yaml/#rulesallow_failure

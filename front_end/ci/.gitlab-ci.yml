@@ -70,4 +70,6 @@ test-system-users:
   script: [ 'test-system-users' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
-  rules: [{if: !reference [ .enable_for_mr_branch ], changes: !reference [ .frontend_changes ]}]
+  rules:
+  - if: !reference [ .functional_tests_required ]
+    changes: !reference [ .frontend_changes ]
