@@ -37,7 +37,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --search-link-hover-color         : #CDD7DC; // $light6;
             --search-link-visited-color       : #CDD7DC; // $light6;
             --search-link-visited-hover-color : #B9C7CE; // $light8;
-            --search-highlight-color          : rgba(var(--brand_d1--rgb), 0.8);
+            --search-highlight-bg          : rgba(var(--brand_d1--rgb), 0.8);
 
             --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
 

@@ -13,6 +13,8 @@ import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomple
 import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
+import { highlightRegex } from '@components/search-highlight/highlight-regex';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
@@ -56,6 +58,7 @@ import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.
         NxRadioComponent,
         NxPreLoaderComponent,
         NxAddSvgSrcDirective,
+        NxSearchHighlightComponent,
         NxAutocompleteComponent,
         NxAutoCompleteItemComponent,
         NxAsyncActionButtonComponent,
@@ -72,10 +75,16 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
     currentOwnerType: 'user' | 'org' = 'user'; // Transferring from orgs not supported in V1
     transferInfo?: SystemTransferInfo | CloudSystem;
 
-    userSearch: string = '';
+    userSearch$$ = signal('');
+    userSearchRegex$$ = computed<ReturnType<typeof highlightRegex>>(() =>
+        highlightRegex(this.userSearch$$()),
+    );
     users$$: WritableSignal<NxUser[]>;
 
-    orgSearch: string = '';
+    orgSearch$$ = signal('');
+    orgSearchRegex$$ = computed<ReturnType<typeof highlightRegex>>(() =>
+        highlightRegex(this.orgSearch$$()),
+    );
     orgs$$: WritableSignal<Organization[]>;
     selectedOrg: Organization;
 
@@ -128,7 +137,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
 
     advanceToConfirmAction = createAsyncAction<void>({
         action: () => {
-            this.newOwner = this.toUser$$() ? this.userSearch : this.selectedOrg.name;
+            this.newOwner = this.toUser$$() ? this.userSearch$$() : this.selectedOrg.name;
             this.selectedIndex += 1;
             return Promise.resolve();
         },
@@ -138,7 +147,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
     transferSystemAction = createAsyncAction<SystemTransferInfo | CloudSystem>({
         action: () =>
             this.toUser$$()
-                ? this.cloudService.startTransfer(this.system.id, this.userSearch)
+                ? this.cloudService.startTransfer(this.system.id, this.userSearch$$())
                 : this.partnersService.transferSystemToOrg(this.selectedOrg.id, this.system.id),
         success: res => {
             this.transferInfo = res;

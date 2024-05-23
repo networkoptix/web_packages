@@ -60,7 +60,8 @@
                 class="fs-mask"
                 #orgAutocomplete="ngModel"
                 name="orgAutocomplete"
-                [(ngModel)]="orgSearch"
+                [ngModel]="orgSearch$$()"
+                (ngModelChange)="orgSearch$$.set($event)"
                 (select)="selectedOrg = $event"
                 requireSelection
                 [setFirstAsInitialValue]="orgs$$().length === 1"
@@ -74,7 +75,12 @@
                         [disabled]="org.effectiveState !== 'active'"
                     >
                         <div class="org-item">
-                            <span class="org-item__name">{{ org.name }}</span>
+                            <span class="org-item__name"
+                                ><nx-search-highlight
+                                    [text]="org.name"
+                                    [search]="orgSearchRegex$$()"
+                                ></nx-search-highlight
+                            ></span>
                             @if (org.effectiveState !== 'active') {
                                 <div
                                     class="org-item__state"
@@ -113,7 +119,8 @@
                     class="fs-mask"
                     #emailAutocomplete="ngModel"
                     name="emailAutocomplete"
-                    [(ngModel)]="userSearch"
+                    [ngModel]="userSearch$$()"
+                    (ngModelChange)="userSearch$$.set($event)"
                     requireSelection
                     [placeholder]="'Email' | translate"
                     [noMatchesContent]="'User not found' | translate"
@@ -122,8 +129,11 @@
                         <nx-autocomplete-item
                             [value]="user.email"
                             [disabled]="!user.isEnabled"
-                            >{{ user.email }}</nx-autocomplete-item
-                        >
+                            ><nx-search-highlight
+                                [text]="user.email"
+                                [search]="userSearchRegex$$()"
+                            ></nx-search-highlight
+                        ></nx-autocomplete-item>
                     }
                 </nx-autocomplete>
                 <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
@@ -162,7 +172,8 @@
                 class="fs-mask"
                 #emailAutocomplete="ngModel"
                 name="emailAutocomplete"
-                [(ngModel)]="userSearch"
+                [ngModel]="userSearch$$()"
+                (ngModelChange)="userSearch$$.set($event)"
                 requireSelection
                 [placeholder]="'Email' | translate"
                 [noMatchesContent]="'User not found' | translate"
@@ -171,8 +182,11 @@
                     <nx-autocomplete-item
                         [value]="user.email"
                         [disabled]="!user.isEnabled"
-                        >{{ user.email }}</nx-autocomplete-item
-                    >
+                        ><nx-search-highlight
+                            [text]="user.email"
+                            [search]="userSearchRegex$$()"
+                        ></nx-search-highlight
+                    ></nx-autocomplete-item>
                 }
             </nx-autocomplete>
             <div *ngIf="emailAutocomplete.touched && emailAutocomplete.errors">
