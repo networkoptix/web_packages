@@ -34,7 +34,7 @@ RUN set -ex \
     && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
 
 FROM requirements AS runtime
-ENV VERSION=$VERSION
+
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh
 
@@ -57,6 +57,7 @@ ARG REVISION
 ARG BUILD_DATE
 ARG BUILD_HOST
 ARG BUILD_USER
+ENV VERSION $VERSION
 LABEL maintainer="Roman Barsegian <rbarsegian@networkoptix.com>" \
       version="$VERSION" \
       revision="$REVISION" \

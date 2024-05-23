@@ -10,15 +10,24 @@ class ReportsStorage(S3Boto3Storage):
     location = 'usage_reports'
     file_overwrite = True
 
-    def generate_presigned_url(self, filename, expires_in):
+    def generate_presigned_url(self,
+                               filename,
+                               download_filename: str = None,
+                               expires_in=300):
         """
         Generate a presigned Amazon S3 URL for GET.
         """
+        params = {
+            'Bucket': self.bucket.name,
+            'Key': self._normalize_name(filename),
+        }
+        if download_filename:
+            params['ResponseContentDisposition'] = f'attachment; filename="{download_filename}"'
         try:
             url = self.bucket.meta.client.generate_presigned_url(
                 'get_object',
-                Params={'Bucket': self.bucket.name, 'Key': self._normalize_name(filename)},
-                ExpiresIn=300
+                Params=params,
+                ExpiresIn=expires_in,
             )
         except ClientError:
             logger.exception(

@@ -1,10 +1,14 @@
 import datetime
+import uuid
 from typing import (
     Any,
     Callable,
     List,
 )
 
+import structlog
+from celery.result import AsyncResult
+from django.core.cache import caches
 from django.urls import converters
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
@@ -33,15 +37,18 @@ from partners.models import (
 )
 from partners.serialization.usage_reports_serializers import (
     ChannelPartnerExpiringServiceReportSerializer,
+    ChannelPartnerReportExportSerializer,
     ChannelPartnerServiceReportSerializer,
     ChannelPartnerUsageReportRecordSerializer,
     ChannelPartnerUsageSerializer,
     ExpiringUsageDetailRecordSerializer,
     OrganizationExpiringServiceReportSerializer,
+    OrganizationReportExportSerializer,
     OrganizationServiceReportSerializer,
     OrganizationUsageReportRecordSerializer,
     OrganizationUsageSerializer,
     RegularUsageDetailRecordSerializer,
+    ReportExportParamSerializer,
     ReportPeriodParamSerializer,
     SystemUsageSerializer,
 )
@@ -57,14 +64,23 @@ from partners.services.usage_reports_service import (
     ReportSnapshotDoesNotExists,
     SystemRegularUsage,
 )
+from partners.tasks.service_reports_export import (
+    ReportTaskState,
+    generate_report,
+    get_cached_report_key,
+    get_report_result,
+)
 from partners.views import (
     DefaultPagination,
     ParentLookUpMixin,
 )
 
 
+logger = structlog.get_logger(__name__)
+DAILY_REPORTS_LIMIT = 100
+
 class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericViewSet):
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     pagination_class = DefaultPagination
     permission_classes = (IsAuthenticated,)
@@ -122,6 +138,20 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
             raise PermissionDenied(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         return report
+
+    @staticmethod
+    def get_report_result(report_id: str | uuid.UUID, user_id: int):
+        result = get_report_result(
+            report_id=str(report_id),
+            user_id=user_id,
+        )
+        if result.get('status') != ReportTaskState.success:
+            logger.info("Report generation is not yet completed or failed.",
+                        report_id=result['id'],
+                        status=result['status'],
+                        reason=result['reason'])
+        return result
+
 
 
 @extend_schema(
@@ -311,6 +341,59 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
         serializer = ExpiringUsageDetailRecordSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        summary='Get an organization usage report generation result.',
+        responses={'200': OrganizationReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path=rf'usage_report/export/(?P<report_id>{converters.UUIDConverter.regex})',
+    )
+    def export_report(self, request, report_id=None, **kwargs):
+        organization = self.get_entity()
+        result = self.get_report_result(report_id, request.user.id)
+        result['organization_id'] = organization.id
+        serializer = OrganizationReportExportSerializer(result)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        summary='Generate an organization usage report file.',
+        parameters=[ReportExportParamSerializer],
+        responses={'200': OrganizationReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path=r'usage_report/export',
+    )
+    def generate_report(self, request, *args, **kwargs):
+        param_serializer = ReportExportParamSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        period_start = param_serializer.validated_data['periodStartDate']
+        report_format = param_serializer.validated_data['reportFormat']
+        organization = self.get_entity()
+        cache_key = get_cached_report_key(
+            entity_id=organization.id,
+            period_start=period_start,
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        requests = caches['default'].get(cache_key) or []
+        now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        requests = list(filter(lambda r: r > now - 86400, requests))
+        if len(requests) >= DAILY_REPORTS_LIMIT:
+            raise PermissionDenied(detail='Daily report generation limit exceeded.')
+        task: AsyncResult = generate_report.delay(
+            organization_id=str(organization.id),
+            period_start=period_start.isoformat(),
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        requests.append(now)
+        caches['default'].set(cache_key, requests, timeout=86400)
+        return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
+                        status=status.HTTP_200_OK)
 
 @extend_schema(
     tags=['Channel Partner Reports'],
@@ -453,3 +536,57 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
             ChannelPartnerReportsService.get_expiring_service_report)
         serializer = ChannelPartnerExpiringServiceReportSerializer(instance=report, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        summary='Get an channel partner usage report generation result.',
+        responses={'200': ChannelPartnerReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path=rf'usage_report/export/(?P<report_id>{converters.UUIDConverter.regex})',
+    )
+    def export_report(self, request, report_id=None, **kwargs):
+        channel_partner = self.get_entity()
+        result = self.get_report_result(report_id, request.user.id)
+        result['channel_partner_id'] = channel_partner.id
+        serializer = ChannelPartnerReportExportSerializer(result)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        summary='Generate an channel partner usage report file.',
+        parameters=[ReportExportParamSerializer],
+        responses={'200': ChannelPartnerReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path=r'usage_report/export',
+    )
+    def generate_report(self, request, *args, **kwargs):
+        param_serializer = ReportExportParamSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        period_start = param_serializer.validated_data['periodStartDate']
+        report_format = param_serializer.validated_data['reportFormat']
+        channel_partner = self.get_entity()
+        cache_key = get_cached_report_key(
+            entity_id=channel_partner.id,
+            period_start=period_start,
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        requests = caches['default'].get(cache_key) or []
+        now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        requests = list(filter(lambda r: r > now - 86400, requests))
+        if len(requests) >= DAILY_REPORTS_LIMIT:
+            raise PermissionDenied(detail='Daily report generation limit exceeded.')
+        task: AsyncResult = generate_report.delay(
+            channel_partner_id=str(channel_partner.id),
+            period_start=period_start.isoformat(),
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        requests.append(now)
+        caches['default'].set(cache_key, requests, timeout=86400)
+        return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
+                        status=status.HTTP_200_OK)
