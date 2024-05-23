@@ -527,7 +527,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --card-shadow : none;
     --card-active-shadow : 0 2px 5px 0 #282828; //$dark_gray_6;
     --card-header-bg : #282828; //$dark_gray_6;
-    --card-header-text : #E8E8E8; //$light_gray_4;
+    --card-header-text : #{$light_gray_4};
     --card-header-disabled : #{$dark_gray_12};
     --card-body-bg   : #181818; //$dark_gray_4;
     --card-hover-bg : #383838; //$dark_gray_8;

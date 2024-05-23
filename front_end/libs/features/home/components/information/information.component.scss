@@ -11,7 +11,7 @@
         grid-template-columns: 60% 1fr;
         grid-template-areas: 'description' 'contact';
         min-height: 20rem;
-        padding: .5rem 0 82px;
+        padding: 0 0 82px;
         gap: 1rem;
 
         @include bootstrap.media-breakpoint-down(md) {
@@ -23,6 +23,8 @@
         }
 
         .section-header {
+            @include typography.regular14nocolor;
+            line-height: 1;
             display: flex;
             align-items: center;
             justify-content: space-between;
