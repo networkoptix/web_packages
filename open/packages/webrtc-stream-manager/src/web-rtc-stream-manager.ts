@@ -466,6 +466,24 @@ export class WebRTCStreamManager {
     public apiVersion: ApiVersions;
     private initialPositionSent = false;
 
+    private currentPositionTracker$ = new BehaviorSubject(-1);
+
+    /**
+     * Observable of current video position reported by mediaserver.
+     *
+     * Only supported on 6.0+
+     */
+    public currentPosition$ = this.currentPositionTracker$.asObservable();
+
+    /**
+     * Current video position reported by mediaserver.
+     *
+     * Only supported on 6.0+
+     */
+    public get currentPosition(): number {
+        return this.currentPositionTracker$.value;
+    }
+
     private getStatic = () => WebRTCStreamManager;
 
     /**
@@ -949,6 +967,7 @@ export class WebRTCStreamManager {
      * Initializes websocket connection for negotating peer connection.
      */
     start = async (lostConnection = false): Promise<void> => {
+        this.currentPositionTracker$.next(-1);
         const mediaStreamIdle = async (): Promise<boolean> => firstValueFrom(
             interval(100).pipe(
                 switchMap(
@@ -1142,6 +1161,8 @@ export class WebRTCStreamManager {
                     console.info('updating position from timestamp', data.timestamp)
                     this.position$.next(new WithSkip(data.timestamp, true));
                 }
+
+                this.currentPositionTracker$.next(data.timestamp)
                 return;
             }
 

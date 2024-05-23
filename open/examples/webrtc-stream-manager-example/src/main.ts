@@ -3,7 +3,7 @@
 import './style.css';
 
 import { description } from '../package.json';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { WebRTCStreamManager, generateWebRtcUrlFactory } from './open_check_excluded';
 import { ApiVersions, TargetStream } from '@networkoptix/webrtc-stream-manager';
 
@@ -141,6 +141,19 @@ const videoElement = document.querySelector('video');
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
 
 let currentInstance: WebRTCStreamManager;
+let currentPositionSubscription: Subscription;
+
+const setTimestamp = (timestamp = -1) => {
+  const timestampElement = document.getElementById('timestamp');
+  if (timestamp > 0) {
+    timestampElement.parentElement.style.display = 'inline';
+    timestampElement.innerText = `${timestamp} - ${new Date(timestamp / 1000)}`
+  } else {
+    timestampElement.parentElement.style.display = 'none';
+  }
+}
+
+setTimestamp();
 
 const startStream = (systemId: string, cameraId: string, serverId: string, allowTranscoding = false) => {
   newStream$.next();
@@ -156,10 +169,15 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
     speed: playbackSpeedSelect.value === 'unlimited' ?  (version >= 6 ? 'unlimited' as const : 100) : parseFloat(playbackSpeedSelect.value),
   };
   currentInstance = null;
+  setTimestamp();
   WebRTCStreamManager.connect(webRtcUrlConfig, videoElement)
     .pipe(takeUntil(newStream$))
     .subscribe(([stream, error, instance]) => {
-      currentInstance = instance;
+      if (!currentInstance) {
+        currentInstance = instance
+        currentPositionSubscription?.unsubscribe();
+        currentPositionSubscription = instance.currentPosition$.pipe(takeUntil(newStream$)).subscribe(setTimestamp)
+      }
       if (stream) {
         videoElement.srcObject = stream;
         videoElement.muted = true;
