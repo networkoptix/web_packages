@@ -555,7 +555,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --card-shadow : none;
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
     --card-header-bg : #1C2327; //$dark6;
-    --card-header-text : #E1E7EA; //$light4;
+    --card-header-text :  #{$light10};
     --card-header-disabled : #{$dark12};
     --card-body-bg   : #121517; //$dark4;
     --card-hover-bg : #263137; //$dark8;

@@ -310,8 +310,7 @@
 
     &.tile {
         background-color: var(--CP-pane-header-background);
-        border: 1px solid transparent;
-        border-bottom: none;
+        border-width: 0;
 
         .card--header {
             background-color: var(--CP-pane-header-background);

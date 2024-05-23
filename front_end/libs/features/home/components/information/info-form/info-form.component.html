@@ -2,7 +2,7 @@
     @if (!mode$$()) {
         <div
             *ngFor="let item of data$$()"
-            class="mb-1 d-flex flex-row"
+            class="mb-1 d-flex flex-row info-data"
         >
             <a
                 *ngIf="linkPredicate; else nonLink"
