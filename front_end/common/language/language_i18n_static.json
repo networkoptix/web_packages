@@ -1359,10 +1359,11 @@
             "infoToolTip": "Users with access based on access to higher-level folders",
             "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
             "deleteDialog": {
-                "title": "Delete Access",
+                "delete": "Delete",
+                "deleteAccess": "Delete Access",
                 "singleAccessRole": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{name}</span> to <span class=\"text-contrast-bold\">{folder}</span>?",
                 "multipleAccessRole": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{name}</span> to <span class=\"text-contrast-bold\">{count} folders</span>?",
-                "singleMessage": "Are you sure you want to delete <span class=\"text-contrast-bold\">{name}</span>?",
+                "singleMessage": "Are you sure you want to delete user <span class=\"text-contrast-bold\">{name}</span> with access to <span class=\"text-contrast-bold\">{folder}</span>?",
                 "multipleMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{count} users</span>",
                 "channelPartner": {
                     "singleMessage": "Are you sure you want to delete user <span class=\"text-contrast-bold\">{email}</span> with permission <span class=\"text-contrast-bold\">{permission}</span>?"

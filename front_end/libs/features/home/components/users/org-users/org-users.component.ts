@@ -143,13 +143,14 @@ export class NxOrganizationUsersComponent implements OnInit {
                   this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
                   {
                       name: user.fullName || user.email,
+                      folder: this.currentOrg$$().name,
                   },
               );
         this.dialogsService
             .confirm(
                 {
                     message,
-                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                     footer: {
                         actionLabel:
                             this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,

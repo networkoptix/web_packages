@@ -128,7 +128,7 @@ export class NxAccessTableContainerComponent {
         this.dialogService
             .confirm({
                 message,
-                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                 footer: {
                     actionLabel:
                         this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
