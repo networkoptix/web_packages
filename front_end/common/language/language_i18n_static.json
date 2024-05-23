@@ -2163,6 +2163,6 @@
         "emailInvalid": "Email is invalid",
         "emailNotUnique": "This email has already been registered",
         "phoneInvalid": "Phone number is invalid",
-        "phoneNotUnique": "Phone number is already added"
+        "phoneNotUnique": "Phone already in use"
     }
 }
