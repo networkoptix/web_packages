@@ -28,7 +28,7 @@ class TestGenerateReport:
         self.user_id = user_rel.user.id
         self.organization_id = organization_factory().id
         self.report_date = datetime.date.today()
-        self.period_start = self.report_date.replace()
+        self.period_start = self.report_date.replace(day=1)
         self.report_format = 'xlsx'
         self.ret_val = io.BytesIO(b'Hello World!')
         self.mock_partner_generator = mocker.patch(
@@ -43,8 +43,8 @@ class TestGenerateReport:
     def test_channel_partner_report_generation(self, ):
         boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
         result = generate_report(channel_partner_id=self.channel_partner_id,
-                                 report_date=self.report_date,
-                                 period_start=self.period_start,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
                                  report_format=self.report_format)
         pattern = name_pattern.format(self.channel_partner_id, 'xlsx')
@@ -52,13 +52,15 @@ class TestGenerateReport:
         self.spy_storage_save.assert_called_once()
         assert result in self.spy_storage_save.mock_calls[0].args
         assert self.ret_val in self.spy_storage_save.mock_calls[0].args
+        file = ReportsStorage().open(result)
+        assert file.read() == b'Hello World!'
 
     @mock_aws
     def test_organization_report_generation(self):
         boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
         result = generate_report(organization_id=self.organization_id,
-                                 report_date=self.report_date,
-                                 period_start=self.period_start,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
                                  report_format=self.report_format)
         pattern = name_pattern.format(self.organization_id, 'xlsx')
@@ -67,15 +69,15 @@ class TestGenerateReport:
     def test_unsupported_format(self):
         with pytest.raises(ValueError):
             generate_report(channel_partner_id=self.channel_partner_id,
-                            report_date=self.report_date,
-                            period_start=self.period_start,
+                            report_date=self.report_date.isoformat(),
+                            period_start=self.period_start.isoformat(),
                             user_id=self.user_id,
                             report_format='pdf')
 
     def test_missing_ids(self):
         with pytest.raises(ValueError):
-            generate_report(report_date=self.report_date,
-                            period_start=self.period_start,
+            generate_report(report_date=self.report_date.isoformat(),
+                            period_start=self.period_start.isoformat(),
                             user_id=self.user_id,
                             report_format=self.report_format)
 
@@ -83,8 +85,8 @@ class TestGenerateReport:
         self.mock_partner_generator.side_effect = Exception('Test exception')
         with pytest.raises(TaskRetry):
             generate_report(channel_partner_id=self.channel_partner_id,
-                            report_date=self.report_date,
-                            period_start=self.period_start,
+                            report_date=self.report_date.isoformat(),
+                            period_start=self.period_start.isoformat(),
                             user_id=self.user_id,
                             report_format=self.report_format)
 
@@ -92,7 +94,7 @@ class TestGenerateReport:
     def test_report_saving_failure(self):
         with pytest.raises(TaskRetry, match='Failed to save report. Retrying...'):
             generate_report(channel_partner_id=self.channel_partner_id,
-                            report_date=self.report_date,
-                            period_start=self.period_start,
+                            report_date=self.report_date.isoformat(),
+                            period_start=self.period_start.isoformat(),
                             user_id=self.user_id,
                             report_format=self.report_format)

@@ -1,5 +1,6 @@
 import datetime
 import os
+from enum import StrEnum
 from io import BytesIO
 from typing import (
     Any,
@@ -43,6 +44,11 @@ from partners.services.usage_reports_service import (
 
 
 logger = structlog.getLogger(__name__)
+
+
+class ReportFormat(StrEnum):
+    xlsx = 'xlsx'
+    csv = 'csv'
 
 
 class Styling:
@@ -244,11 +250,13 @@ class SummaryRowBase:
     Instead, use one of the subclasses that implements the required methods.
     """
 
-    def __init__(self, usage: ChannelPartnerUsageReportRecord | OrganizationUsageReportRecord,
-                 row_num: int, excel: bool = True):
+    def __init__(self,
+                 usage: ChannelPartnerUsageReportRecord | OrganizationUsageReportRecord,
+                 row_num: int,
+                 report_format: ReportFormat = ReportFormat.xlsx):
         self.usage = usage
         self.row_num = row_num
-        self.excel = excel
+        self.report_format = report_format
 
     @property
     def used_by(self):
@@ -262,7 +270,7 @@ class SummaryRowBase:
         """
         Formulae for the total price column.
         """
-        if self.excel:
+        if self.report_format == ReportFormat.xlsx:
             return f'=E{self.row_num}*F{self.row_num}+G{self.row_num}*H{self.row_num}'
         else:
             return 0
@@ -394,11 +402,11 @@ class RegularServiceChangesRow:
     def __init__(self,
                  usage: RegularUsageDetailRecord,
                  row_num: int,
-                 excel: bool = True,
+                 report_format: ReportFormat = ReportFormat.xlsx,
                  used_by: str = ''):
         self.usage = usage
         self.row_num = row_num
-        self.excel = excel
+        self.report_format = report_format
         self.last = self.usage['date'] == TotalUsageDate
         self.used_by = used_by
 
@@ -505,11 +513,11 @@ class ExpiringServiceChangesRow:
     def __init__(self,
                  usage: ExpiringUsageDetailRecord,
                  row_num: int,
-                 excel: bool = True,
+                 report_format: ReportFormat = ReportFormat.xlsx,
                  used_by: str = ''):
         self.usage = usage
         self.row_num = row_num
-        self.excel = excel
+        self.report_format = report_format
         # If the expiration date is TotalUsageDate this is the last row in the report.
         self.last = self.usage['expiration_date'] == TotalUsageDate
         self.used_by = used_by
@@ -884,10 +892,7 @@ class ChannelPartnerReportGenerator:
         self.report_date = report_date if report_date else datetime.date.today()
         self.wb = openpyxl.Workbook()
         self.period_start = period_start or self.report_date.replace(day=1)
-        # Loading workbook from template
-        template_path = os.path.join(
-            settings.BASE_DIR, 'partners/templates/reports/partner_service_usage_report.xlsx')
-        self.wb = load_workbook(template_path)
+        self.wb = None
 
     def generate_summary_sheet(self):
         sheet = self.wb['Summary']
@@ -924,6 +929,9 @@ class ChannelPartnerReportGenerator:
             service_sheet.generate_report_sheet()
 
     def generate_report(self):
+        template_path = os.path.join(
+            settings.BASE_DIR, 'partners/templates/reports/partner_service_usage_report.xlsx')
+        self.wb = load_workbook(template_path)
         self.generate_summary_sheet()
         self.generate_regular_services_sheets()
         self.generate_expiring_services_sheets()
@@ -955,17 +963,17 @@ class OrganizationReportGenerator:
     """
     Organization report generator.
     """
+
     def __init__(self,
                  organization: Organization,
+                 period_start: datetime.date = None,
                  report_date: datetime.date = None,
-                 period_start: datetime.date = None):
+                 report_format: ReportFormat = ReportFormat.xlsx):
         self.organization = organization
-        self.report_date = report_date if report_date else datetime.date.today()
-        self.wb = openpyxl.Workbook()
+        self.report_date = report_date or datetime.datetime.now(tz=datetime.timezone.utc).date()
+        self.report_format = report_format
         self.period_start = period_start or self.report_date.replace(day=1)
-        template_path = os.path.join(
-            settings.BASE_DIR, 'partners/templates/reports/partner_service_usage_report.xlsx')
-        self.wb = load_workbook(template_path)
+        self.wb = None
 
     def generate_summary_sheet(self):
         sheet = self.wb['Summary']
@@ -1002,6 +1010,9 @@ class OrganizationReportGenerator:
             service_sheet.generate_report_sheet()
 
     def generate_report(self):
+        template_path = os.path.join(
+            settings.BASE_DIR, 'partners/templates/reports/partner_service_usage_report.xlsx')
+        self.wb = load_workbook(template_path)
         self.generate_summary_sheet()
         self.generate_regular_services_sheets()
         self.generate_expiring_services_sheets()
@@ -1015,7 +1026,7 @@ class OrganizationReportGenerator:
         self.generate_report()
         self.wb.save(f'{self.organization.name} Service Usage Report.xlsx')
 
-    def stream(self) -> BytesIO:
+    def stream_xlsx(self) -> BytesIO:
         self.generate_report()
         buf = BytesIO()
         self.wb.save(buf)
@@ -1028,3 +1039,10 @@ class OrganizationReportGenerator:
         """
         raise NotImplemented("This method must be implemented in the subclass.")
 
+    def stream(self) -> BytesIO:
+        """
+        Stream the report in the specified format.
+        """
+        if self.report_format == ReportFormat.xlsx:
+            return self.stream_xlsx()
+        raise ValueError("Unsupported format. Only 'xlsx' is supported.")

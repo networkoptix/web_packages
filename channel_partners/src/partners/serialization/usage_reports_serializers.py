@@ -6,6 +6,7 @@ from partners.services.usage_reports_service import (
     BeginningOfPeriodDate,
     TotalUsageDate,
 )
+from partners.tasks.service_reports_export import ReportTaskState
 from tools.helpers import get_today
 
 
@@ -161,3 +162,24 @@ class ChannelPartnerExpiringServiceReportSerializer(serializers.Serializer):
 class ExpiringUsageDetailRecordSerializer(serializers.Serializer):
     channels = serializers.IntegerField()
     expiration_date = ReportDateField(format='%Y-%m-%d')
+
+
+class ReportExportSerializer(serializers.Serializer):
+    id = serializers.UUIDField(required=True)
+    status = serializers.ChoiceField(choices=ReportTaskState.states(),
+                                     required=False,
+                                     default=ReportTaskState.pending)
+    downloadUrl = serializers.URLField(required=False, source='download_url')
+    
+    
+class ChannelPartnerReportExportSerializer(ReportExportSerializer):
+    channelPartnerId = serializers.UUIDField(required=True, source='channel_partner_id')
+    
+    
+class OrganizationReportExportSerializer(ReportExportSerializer):
+    organizationId = serializers.UUIDField(required=True, source='organization_id')
+
+
+class ReportExportParamSerializer(ReportPeriodParamSerializer):
+    reportFormat = serializers.ChoiceField(choices=['csv', 'xlsx'], required=True)
+    

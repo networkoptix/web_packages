@@ -1,9 +1,16 @@
 import datetime
+import json
+from typing import Any
+from urllib.parse import urlencode
 from uuid import uuid4
 
 import pytest
 from dateutil.relativedelta import relativedelta
+from django.core.cache import caches
 from django.utils import timezone
+from django_celery_results.models import TaskResult
+from mock.mock import MagicMock
+from moto import mock_aws
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -16,6 +23,10 @@ from partners.services.usage_reports_service import (
     ChannelPartnerReportsService,
     CloudSystemReportsService,
     OrganizationReportsService,
+)
+from partners.tasks.service_reports_export import (
+    ReportTaskState,
+    get_cached_report_key,
 )
 from partners.tasks.services import new_channel_partner_created
 from partners.tasks.usage_reports import calculate_all_reports
@@ -567,3 +578,321 @@ class TestChannelPartnerServiceReportsViewSet:
         assert response.status_code == 403
         report_spy.assert_called_once_with(
             channel_partner=self.channel_partner, period_start=datetime.date(2020, 6, 26))
+
+
+class TestOrganizationGenerateReport:
+    @pytest.fixture(autouse=True)
+    def setup_method(self, organization_factory, org_user_factory, system_factory,
+                     cp_service_factory, cloud_test_host, mock_auth_with_user, mocker,
+                     service_record_factory):
+        last_month = timezone.now() - relativedelta(months=1)
+        self.period_start = last_month.replace(day=1).date()
+        self.organization = organization_factory()
+        self.organization_admin = org_user_factory(organization=self.organization)
+        self.view_name = 'organizations-reports-generate-report'
+        self.kwargs = {'parent_lookup_organization': self.organization.pk}
+        self.path = reverse(self.view_name, kwargs=self.kwargs)
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(self.organization_admin)
+        self.task_id = f'{uuid4()}'
+        self.task_result = MagicMock()
+        self.task_result.task_id = self.task_id
+        self.export_path = f'{self.path}{self.task_id}/'
+        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.delay',
+                                                  return_value=self.task_result)
+        self.mock_task = MagicMock()
+        self.mock_task_result_get = mocker.patch('django_celery_results.models.TaskResult.objects.get',
+                                                  return_value=self.mock_task)
+        self.mock_storage_exists = mocker.patch('storages.backends.s3.S3Storage.exists', return_value=True)
+        self.mock_generate_presigned_url = mocker.patch(
+            'channel_partners.storages.ReportsStorage.generate_presigned_url',
+            return_value=f'http://{self.task_id}.com'
+        )
+
+    def set_task_kwargs(self, task_kwargs: Any):
+        self.mock_task.task_kwargs = json.dumps(task_kwargs)
+
+    @mock_aws
+    def test_success_generate_report(self, mocker):
+        self.mock_task.status = 'PENDING'
+        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': 'xlsx'}, doseq=True)
+        response = self.client.post(self.path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        self.mock_generate_report.assert_called_once_with(
+            organization_id=str(self.organization.pk),
+            period_start=self.period_start.isoformat(),
+            user_id=self.organization_admin.user_id,
+            report_format='xlsx'
+        )
+        # check cache
+        cache_key = get_cached_report_key(
+            entity_id=self.organization.pk,
+            period_start=self.period_start,
+            user_id=self.organization_admin.user_id,
+            report_format='xlsx'
+        )
+        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+        # check cached requests
+        response = self.client.post(self.path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        assert self.mock_generate_report.call_count == 2
+        assert len(caches['default'].get(cache_key)) == 2
+
+    def test_failed_export_report_task_not_found(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.mock_task_result_get.side_effect = TaskResult.DoesNotExist('Not found')
+        response = self.client.get(self.export_path)
+        assert response.status_code == 404
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_empty_kwargs(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.failed.value,
+                                 'organizationId': str(self.organization.id)}
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_wrong_user(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({'user_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 403
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_export_report_pending(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.pending.value,
+                                 'organizationId': str(self.organization.id)}
+
+    def test_failed_export_report_wrong_org(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.failed.value,
+                                 'organizationId': str(self.organization.id)}
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_task_empty_result(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.mock_task.result = None
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(self.organization.id)})
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.failed.value,
+                                 'organizationId': str(self.organization.pk)}
+
+
+    def test_failed_export_report_task_null_result(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.mock_task.result = 'null'
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(self.organization.id)})
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.failed.value,
+                                 'organizationId': str(self.organization.pk)}
+
+    def test_failed_export_report_task_file_not_found(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(self.organization.id)})
+        self.mock_task.result = f'"{self.organization.id}/{self.task_id}.xlsx"'
+        self.mock_storage_exists.return_value = False
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.failed.value,
+                                 'organizationId': str(self.organization.pk)}
+
+    @mock_aws
+    def test_success_export_report_task(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.organization_admin.user.id,
+                              'organization_id': str(self.organization.id),
+                              'report_format': 'xlsx',
+                              'period_start': self.period_start.isoformat()})
+        self.mock_task.result = f'"{self.organization.id}/{self.task_id}.xlsx"'
+        self.mock_storage_exists.return_value = True
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data['downloadUrl'] == f'http://{self.task_id}.com'
+        assert response.data['id'] == self.task_id
+        assert response.data['status'] == ReportTaskState.success.value
+        assert response.data['organizationId'] == str(self.organization.pk)
+
+        
+class TestChannelPartnerGenerateReport:
+    @pytest.fixture(autouse=True)
+    def setup_method(self, organization_factory, cp_user_factory, system_factory,
+                     cp_service_factory, cloud_test_host, mock_auth_with_user, mocker,
+                     service_record_factory, channel_partner_factory):
+        last_month = timezone.now() - relativedelta(months=1)
+        self.period_start = last_month.replace(day=1).date()
+        self.channel_partner = channel_partner_factory()
+
+        self.admin = cp_user_factory(channel_partner=self.channel_partner)
+        self.view_name = 'channelpartners-reports-generate-report'
+        self.kwargs = {'parent_lookup_channel_partner': self.channel_partner.pk}
+        self.path = reverse(self.view_name, kwargs=self.kwargs)
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(self.admin)
+        self.task_id = f'{uuid4()}'
+        self.export_path = f'{self.path}{self.task_id}/'
+        self.task_result = MagicMock()
+        self.task_result.task_id = self.task_id
+        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.delay',
+                                                  return_value=self.task_result)
+        self.mock_task = MagicMock()
+        self.mock_task_result_get = mocker.patch('django_celery_results.models.TaskResult.objects.get',
+                                                  return_value=self.mock_task)
+        self.mock_storage_exists = mocker.patch('storages.backends.s3.S3Storage.exists', return_value=True)
+        self.mock_generate_presigned_url = mocker.patch(
+            'channel_partners.storages.ReportsStorage.generate_presigned_url',
+            return_value=f'http://{self.task_id}.com'
+        )
+
+    def set_task_kwargs(self, task_kwargs: Any):
+        self.mock_task.task_kwargs = json.dumps(task_kwargs)
+
+    @mock_aws
+    def test_success_generate_report(self, mocker):
+        self.mock_task.status = 'PENDING'
+        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': 'xlsx'}, doseq=True)
+        response = self.client.post(self.path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        self.mock_generate_report.assert_called_once_with(
+            channel_partner_id=str(self.channel_partner.pk),
+            period_start=self.period_start.isoformat(),
+            user_id=self.admin.user_id,
+            report_format='xlsx'
+        )
+        # check cache
+        cache_key = get_cached_report_key(
+            entity_id=self.channel_partner.pk,
+            period_start=self.period_start,
+            user_id=self.admin.user_id,
+            report_format='xlsx'
+        )
+        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+        # check cached requests
+        response = self.client.post(self.path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        assert self.mock_generate_report.call_count == 2
+        assert len(caches['default'].get(cache_key)) == 2
+
+    def test_failed_export_report_task_not_found(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.mock_task_result_get.side_effect = TaskResult.DoesNotExist('Not found')
+        response = self.client.get(self.export_path)
+        assert response.status_code == 404
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_empty_kwargs(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.failed.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_wrong_user(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({'user_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 403
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_export_report_pending(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.pending.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+
+    def test_failed_export_report_wrong_org(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(uuid4())})
+        self.mock_task_result_get.return_value = self.mock_task
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.failed.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_failed_export_report_task_empty_result(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.mock_task.result = None
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(self.channel_partner.id)})
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.failed.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+
+    def test_failed_export_report_task_null_result(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.mock_task.result = 'null'
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(self.channel_partner.id)})
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.failed.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+
+    def test_failed_export_report_task_file_not_found(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(self.channel_partner.id)})
+        self.mock_task.result = f'"{self.channel_partner.id}/{self.task_id}.xlsx"'
+        self.mock_storage_exists.return_value = False
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.failed.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
+
+    def test_success_export_report_task(self, mocker):
+        self.mock_task.status = 'SUCCESS'
+        self.set_task_kwargs({'user_id': self.admin.user.id,
+                              'channel_partner_id': str(self.channel_partner.id),
+                              'report_format': 'xlsx',
+                              'period_start': self.period_start.isoformat()})
+        self.mock_task.result = f'"{self.channel_partner.id}/{self.task_id}.xlsx"'
+        self.mock_storage_exists.return_value = True
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        assert response.data['downloadUrl'] == f'http://{self.task_id}.com'
+        assert response.data['id'] == self.task_id
+        assert response.data['status'] == ReportTaskState.success.value
+        assert response.data['channelPartnerId'] == str(self.channel_partner.pk)
