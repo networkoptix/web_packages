@@ -148,9 +148,10 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
                         this.LANG.channelPartners.usersTable.deleteDialog.singleMessage,
                         {
                             name: user.email,
+                            folder: this.currentOrg$$().name,
                         },
                     ),
-                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                     footer: {
                         actionLabel:
                             this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
@@ -189,7 +190,7 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
                             count: this.selectedCount$$(),
                         },
                     ),
-                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                     footer: {
                         actionLabel:
                             this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,

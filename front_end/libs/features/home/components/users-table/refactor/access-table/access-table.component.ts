@@ -177,7 +177,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         this.dialogService
             .confirm({
                 message,
-                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                 footer: {
                     actionLabel:
                         this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
@@ -205,7 +205,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                         count: this.selectedCount$$(),
                     },
                 ),
-                title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                title: this.LANG.channelPartners.usersTable.deleteDialog.deleteAccess,
                 footer: {
                     actionLabel:
                         this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,

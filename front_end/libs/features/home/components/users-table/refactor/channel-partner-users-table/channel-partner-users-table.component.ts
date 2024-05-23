@@ -187,7 +187,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
                             permission: user.roles[0],
                         },
                     ),
-                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.delete,
                     footer: {
                         actionLabel:
                             this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
@@ -229,7 +229,7 @@ export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
             .confirm(
                 {
                     message,
-                    title: this.LANG.channelPartners.usersTable.deleteDialog.title,
+                    title: this.LANG.channelPartners.usersTable.deleteDialog.delete,
                     footer: {
                         actionLabel:
                             this.LANG.channelPartners.usersTable.deleteDialog.footer.actionLabel,
