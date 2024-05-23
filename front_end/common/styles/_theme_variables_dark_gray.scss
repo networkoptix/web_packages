@@ -44,7 +44,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --search-link-color               : #F8F8F8; // $light_gray_2;
     --search-link-visited-color       : #D8D8D8; // $light_gray_6;
     --search-link-visited-hover-color : #C8C8C8; // $light8;
-    --search-highlight-color          : rgba(var(--brand-d1--rgb), 0.8);
+    --search-highlight-bg          : rgba(var(--brand-d1--rgb), 0.8);
+    --search-highlight-color: #E8E8E8; //$light_gray_4;
 
     --user-selected-highlight-color : rgba(var(--brand-d1--rgb), 0.5);
 

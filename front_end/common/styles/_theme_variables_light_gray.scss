@@ -46,7 +46,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --search-link-hover-color: #{$dark_gray_15};
     --search-link-visited-color: #{$dark19};
     --search-link-visited-hover-color: #{$light_gray_14};
-    --search-highlight-color: rgba(var(--yellow_main--rgb), 0.5);
+    --search-highlight-bg: rgba(var(--yellow_main--rgb), 0.5);
+    --search-highlight-color: #{$dark_gray_9};
 
     --user-selected-highlight-color: rgba(var(--brand-d1--rgb), 0.5);
 
