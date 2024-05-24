@@ -855,7 +855,7 @@
     "Log Out": "Log Out",
     "Log in": "Log in",
     "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
-    "Log in to the system in %CLOUD_NAME%": "Log in to the system in %CLOUD_NAME%",
+    "Log in to the system in %VMS_NAME%": "Log in to the system in %VMS_NAME%",
     "Log in to your System using %VMS_NAME%": "Log in to your System using %VMS_NAME%",
     "Log in with %CLOUD_NAME% to access this system as cloud user": "Log in with %CLOUD_NAME% to access this system as cloud user",
     "Log level(s) saved.": "Log level(s) saved.",

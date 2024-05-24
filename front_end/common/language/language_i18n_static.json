@@ -1513,7 +1513,7 @@
         "noSystems": {
             "connected": "If the system is <span class=\"text-contrast-bold\">connected</span> to the Cloud",
             "notConnected": "If the system is <span class=\"text-contrast-bold\">not connected</span> to the Cloud",
-            "login": "Log in to the system in %CLOUD_NAME%"
+            "login": "Log in to the system in %VMS_NAME%"
         }
     },
     "pleaseSelect": "Please select...",
