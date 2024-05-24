@@ -5,7 +5,6 @@ import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
-import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 // import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 
@@ -119,10 +118,6 @@ const appRoutes: Routes = [
             {
                 path: 'validation',
                 component: ValidationComponent,
-            },
-            {
-                path: 'table',
-                component: SandboxTableComponent,
             },
             {
                 path: 'tags',

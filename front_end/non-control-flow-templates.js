@@ -316,5 +316,4 @@ module.exports = [
     "libs/components/dropdowns/generic/item-icon/item-icon.component.ts",
     "libs/components/mat-like-components/mat-like-generic-select/item-icon/item-icon.component.ts",
     "libs/menu/menu-button/button.component.ts",
-    "libs/features/home/components/users-table/refactor/strangler-table/strangler-table.component.html",
 ]

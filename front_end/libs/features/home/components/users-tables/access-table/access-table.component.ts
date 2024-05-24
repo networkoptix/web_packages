@@ -10,15 +10,15 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
-import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
-import { StranglerImports } from '../strangler-table/strangler-imports';
+import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
+import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
 
 @Component({
     selector: 'nx-users-access-table',
     templateUrl: './access-table.component.html',
     styleUrls: [
         './access-table.component.scss',
-        '../strangler-table/strangler-table.component.scss',
+        '../abstract-user-table/abstract-user-table.component.scss',
     ],
     standalone: true,
     imports: [

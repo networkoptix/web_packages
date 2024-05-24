@@ -20,13 +20,13 @@ import {
     selectRootChannelPartners,
 } from '@store/channel-partners/channel-partners.selectors';
 
-import { InitialUserTable } from '../strangler-table/initial-user-table';
-import { StranglerImports } from '../strangler-table/strangler-imports';
+import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
+import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
 
 @Component({
     selector: 'nx-channel-partner-users-table',
     templateUrl: './channel-partner-users-table.component.html',
-    styleUrls: ['../strangler-table/strangler-table.component.scss'],
+    styleUrls: ['../abstract-user-table/abstract-user-table.component.scss'],
     standalone: true,
     imports: [
         StranglerImports,
@@ -35,7 +35,7 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
         NxCheckAllDirective,
     ],
 })
-export class NxChannelPartnersUsersTableComponent extends InitialUserTable {
+export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirective {
     protected accountService = inject(NxAccountService);
     protected router = inject(Router);
     protected channelPartnerUsersStore = inject(ChannelPartnerUsersStore);

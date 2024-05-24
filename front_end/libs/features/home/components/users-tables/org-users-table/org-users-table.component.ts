@@ -10,13 +10,13 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
-import { InitialUserTable } from '../strangler-table/initial-user-table';
-import { StranglerImports } from '../strangler-table/strangler-imports';
+import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
+import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
 
 @Component({
     selector: 'nx-org-users-table',
     templateUrl: './org-users-table.component.html',
-    styleUrls: ['../strangler-table/strangler-table.component.scss'],
+    styleUrls: ['../abstract-user-table/abstract-user-table.component.scss'],
     standalone: true,
     imports: [
         StranglerImports,
@@ -25,7 +25,7 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
         NxSelectV2Module,
     ],
 })
-export class NxOrgUsersTableComponent extends InitialUserTable {
+export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     protected headers: HEADER_ITEM[] = [
         {
             name: 'email',
@@ -99,11 +99,9 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
     }
 
     getDisplayRole(user: UserRecord): string {
-        let displayRole = user.roles[0];
-        if (!this.inGroup$$() && !user.isOrgUser) {
-            displayRole = user.groupRoles?.length > 1 ? 'Multiple' : user.groupRoles[0].roles[0];
-        }
-        return displayRole;
+        return user.groupRoles?.length > 1
+            ? 'Multiple'
+            : user.groupRoles?.[0]?.roles?.[0] || user.roles[0];
     }
 
     canDeleteUser(user: UserRecord): boolean {
