@@ -653,34 +653,6 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --tabs-color: var(--dark16);
 
     // System groups
-    --groups-sidebar-bg: var(--light2);
-    --groups-sidebar-border: var(--light5);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $light5);
-    --groups-sidebar-highlight-color: var(--light7);
-    --groups-sidebar-triangle-icon-fill: var(--dark17);
-    --groups-sidebar-triangle-icon-highlight-fill: var(--light4);
-    --groups-sidebar-folder-icon-body-fill: var(--light10);
-    --groups-sidebar-folder-icon-tab-fill: var(--light16);
-    --groups-sidebar-folder-icon-highlight-fill: var(--light1);
-    --groups-sidebar-intro-text-color: var(--light16);
-
-    --group-card-folder-icon-body-fill: var(--light10);
-    --group-card-folder-icon-tab-fill: var(--light13);
-    --group-card-bg: var(--light4);
-    --group-card-bg-hover: var(--light6);
-    --group-card-border-color: var(--light5);
-
-    --no-systems-number-icon-color: var(--light16);
-    --no-systems-description-color: var(--light17);
-
-    --channel-partner-back-button-bg-color: var(--dark16);
-    --channel-partner-card-status-background: var(--light10);
-    --channel-partner-card-status-dark: var(--dark1);
-
-    --subchannel-partner-card-id-background: var(--light16);
-    --subchannel-partner-card-id-color: var(--light2);
-    --subchannel-partner-card-org-fill: var(--light16);
-    --subchannel-partner-card-color: var(--light16);
 
     --org-delete-folder-warning-header: #{$yellow_main};
     --org-delete-folder-warning-bg: #{$yellow_l3};
@@ -688,46 +660,18 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
 
-    --system-card-bg: var(--light2);
-    --system-card-active-bg: var(--light4);
-    --system-card-offline-color: var(--light16);
     --system-card-border-color: var(--light7);
-    --system-card-owner-color: var(--light16);
 
-    --group-system-card-color: var(--dark15);
-
-    --card-subtext-color: var(--light16);
-    --card-menu-dots-fill: var(--light16);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark15--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.2);
-    --card-border-color: var(--light6);
-    --card-context-bg: var(--light4);
-    --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
 
-    --CP-pane-background: var(--light2);
-    --CP-pane-border: var(--light3);
     --CP-pane-header-background: var(--light1);
-    --CP-pane-header-border: var(--light4);
-    --CP-pane-input: var(--light10);
-    --CP-state-button: var(--light3);
-    --CP-state-button-selected: var(--light7);
-    --CP-state-color: var(--dark9);
-    --CP-state-help-color: var(--dark16);
     --CP-error-ribbon-bg: #{$red2_dim};
     --CP-error-ribbon-border: #{$red2_dimmer};
 
-    --change-state-dialog-error-txt-color: var(--red_l1);
-    --change-state-dialog-btn-bg: var(--light5);
     --change-state-dialog-color: var(--dark9);
-    --change-state-dialog-btn-checked-bg: var(--light10);
-    --change-state-dialog-btn-checked-color: var(--dark9);
-    --change-state-dialog-btn-hover-bg: var(--light6);
-    --change-state-dialog-btn-border: var(--light4);
-    --change-state-dialog-shutdown-btn-bg: var(--red_main);
-    --change-state-dialog-shutdown-btn-color: var(--light1);
 
     --add-user-dialog-color: #{$light16};
-    --add-partner-dialog-color: var(--light16);
 
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--light2) 0.43%, var(--brand-l4) 122.68%);

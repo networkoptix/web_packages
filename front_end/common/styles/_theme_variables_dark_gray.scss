@@ -631,34 +631,6 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --tabs-color: var(--light_gray_16);
 
     // System groups
-    --groups-sidebar-bg: var(--dark_gray_4);
-    --groups-sidebar-border: var(--dark_gray_7);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $dark_gray_7);
-    --groups-sidebar-highlight-color: var(--light_gray_4);
-    --groups-sidebar-triangle-icon-fill: var(--dark17);
-    --groups-sidebar-triangle-icon-highlight-fill: var(--dark_gray_6);
-    --groups-sidebar-folder-icon-body-fill: var(--light_gray_10);
-    --groups-sidebar-folder-icon-tab-fill: var(--light_gray_16);
-    --groups-sidebar-folder-icon-highlight-fill: var(--dark_gray_1);
-    --groups-sidebar-intro-text-color: var(--dark_gray_1);
-
-    --group-card-folder-icon-body-fill: var(--dark_gray_11);
-    --group-card-folder-icon-tab-fill: var(--dark_gray_13);
-    --group-card-bg: var(--dark_gray_6);
-    --group-card-bg-hover: var(--dark_gray_7);
-    --group-card-border-color: var(--dark_gray_10);
-
-    --no-systems-number-icon-color: var(--dark_gray_16);
-    --no-systems-description-color: var(--dark_gray_17);
-
-    --channel-partner-back-button-bg-color: var(--light_gray_16);
-    --channel-partner-card-status-background: var(--dark_gray_11);
-    --channel-partner-card-status-dark: var(--dark1);
-
-    --subchannel-partner-card-id-background: var(--light_gray_16);
-    --subchannel-partner-card-id-color: var(--dark_gray_4);
-    --subchannel-partner-card-org-fill: var(--dark_gray_16);
-    --subchannel-partner-card-color: var(--dark_gray_16);
 
     --org-delete-folder-warning-header: #{$yellow_main};
     --org-delete-folder-warning-bg: #{$yellow_d3};
@@ -666,46 +638,18 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_8);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_5);
 
-    --system-card-bg: var(--dark_gray_6);
-    --system-card-active-bg: var(--dark_gray_4);
-    --system-card-offline-color: var(--light_gray_4);
     --system-card-border-color: transparent;
-    --system-card-owner-color: var(--dark_gray_16);
 
-    --group-system-card-color: var(---dark_gray_15);
-
-    --card-subtext-color: var(--dark_gray_4);
-    --card-menu-dots-fill: var(--dark_gray_4);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--light_gray_6--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--light_gray_6--rgb), 0.2);
-    --card-border-color: var(--dark_gray_7);
-    --card-context-bg: var(--dark_gray_9);
-    --card-context-shadow: 0 1rem 2rem rgba(var(--light_gray_6--rgb), 0.4);
 
-    --CP-pane-background: var(--dark_gray_3);
-    --CP-pane-border: var(--dark_gray_5);
     --CP-pane-header-background: var(--dark_gray_4);
-    --CP-pane-header-border: var(--dark7);
-    --CP-pane-input: var(--dark11);
-    --CP-state-button: var(--dark_gray_5);
-    --CP-state-button-selected: var(--dark_gray_10);
-    --CP-state-color: var(--light_gray_16);
-    --CP-state-help-color: var(--light_gray_16);
     --CP-error-ribbon-bg: var(--red_d1_lighter);
     --CP-error-ribbon-border: var(--red_d1_lighter);
 
-    --change-state-dialog-error-txt-color: var(--red_l1);
-    --change-state-dialog-btn-bg: var(--dark_gray_5);
     --change-state-dialog-color: var(--light_gray_16);
-    --change-state-dialog-btn-checked-bg: var(--dark_gray_10);
-    --change-state-dialog-btn-checked-color: var(--light4);
-    --change-state-dialog-btn-hover-bg: var(--dark_gray_6);
-    --change-state-dialog-btn-border: var(--dark_gray_4);
-    --change-state-dialog-shutdown-btn-bg: var(--red_main);
-    --change-state-dialog-shutdown-btn-color: var(--light1);
 
     --add-user-dialog-color: #{$light18};
-    --add-partner-dialog-color: var(--light16);
 
     /* Bookmarks */
     --bookmarks-background-color: inherit;
