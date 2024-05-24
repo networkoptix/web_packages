@@ -10,6 +10,7 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
+import { alphaNumericSort } from '@utils/general';
 
 import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
 import { StranglerImports } from '../strangler-table/strangler-imports';
@@ -42,18 +43,25 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
             .filter(({ email }) => email === this.email$$())
             .flatMap(user => {
                 if (!user.isOrgUser) {
+                    const groups = this.groupsStore.groupPathMap$$();
                     const email = this.email$$();
-                    return user.groupRoles!.map(groupRole => {
-                        return {
-                            ...user,
-                            email,
-                            userId: email,
-                            groupRoles: [groupRole],
-                            roles: groupRole.roles,
-                            rolesIds: groupRole.rolesIds,
-                            accessId: groupRole.groupId,
-                        };
-                    });
+                    return user
+                        .groupRoles!.map(groupRole => {
+                            return {
+                                ...user,
+                                email,
+                                userId: email,
+                                groupRoles: [groupRole],
+                                roles: groupRole.roles,
+                                rolesIds: groupRole.rolesIds,
+                                accessId: groupRole.groupId,
+                            };
+                        })
+                        .sort(
+                            alphaNumericSort(
+                                ({ groupRoles }) => groups[groupRoles[0]?.groupId].pathString,
+                            ),
+                        );
                 }
                 user.accessId = this.currentOrg$$()?.id;
                 return user;
