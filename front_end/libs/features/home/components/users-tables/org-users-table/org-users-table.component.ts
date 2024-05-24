@@ -8,6 +8,7 @@ import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
@@ -55,7 +56,7 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         const users = this.orgUserRecords$$();
         let foundAdmin = false;
         for (const user of users) {
-            if (['Organization Administrator', 'Administrator'].includes(user.roles[0])) {
+            if (user.rolesIds?.includes(OrgRoleIds.OrgAdmin)) {
                 if (foundAdmin) {
                     return false;
                 }
@@ -68,9 +69,8 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         if (!this.hasOnlyOneAdmin$$()) {
             return null;
         }
-        return this.orgUserRecords$$()?.find(user =>
-            ['Organization Administrator', 'Administrator'].includes(user.roles![0]),
-        )?.email;
+        return this.orgUserRecords$$()?.find(user => user.rolesIds?.includes(OrgRoleIds.OrgAdmin))
+            ?.email;
     });
 
     checkAllContainer = new BehaviorSubject<undefined | NxCheckAllContainerDirective>(undefined);

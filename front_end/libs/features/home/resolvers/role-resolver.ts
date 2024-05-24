@@ -4,6 +4,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export const RoleResolver: ResolveFn<boolean> = (
     route: ActivatedRouteSnapshot,
@@ -15,7 +16,7 @@ export const RoleResolver: ResolveFn<boolean> = (
         params: { organizationId, partnerId },
     } = CPService.paramStateHandler.getInstantState(route);
     const userEmail = accountService.email;
-    const adminRoles = ['Administrator', 'Organization Administrator'];
+    const adminRoles = [OrgRoleIds.OrgAdmin];
     const adminCheck = (roles: string[]): boolean => {
         const isAdmin = roles.some(role => adminRoles.includes(role));
         // Need to assign here as router data wont be available to child guards

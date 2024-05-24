@@ -8,6 +8,7 @@ import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/pa
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
@@ -117,7 +118,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         const checkForOneAdmin = (): boolean => {
             let admins = 0;
             for (const user of users) {
-                if (['Organization Administrator', 'Administrator'].includes(user.roles[0])) {
+                if (user.rolesIds?.includes(OrgRoleIds.OrgAdmin)) {
                     admins += 1;
                     if (admins > 1) {
                         return false;
@@ -130,7 +131,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         if (
             currentUser?.isOrgUser &&
             hasOnlyOneAdmin &&
-            ['Organization Administrator', 'Administrator'].includes(currentUser.roles[0])
+            currentUser.rolesIds?.includes(OrgRoleIds.OrgAdmin)
         ) {
             return false;
         }
