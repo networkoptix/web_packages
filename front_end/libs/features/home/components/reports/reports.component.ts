@@ -14,7 +14,6 @@ type Service = {
     styleUrls: [
         'reports.component.scss',
         '../../organizations/cards-container/org-cards-container.component.scss',
-        '../system-card/system-card.component.scss',
     ],
     standalone: true,
     imports: [NgFor, NxCardComponent],

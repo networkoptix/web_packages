@@ -1,4 +1,3 @@
-@use '../sidebar-level/sidebar-level.component.scss' as *;
 @use 'bootstrap_utils' as bootstrap;
 
 .sidebar {
@@ -21,89 +20,5 @@
 
     @include bootstrap.media-breakpoint-down(xs) {
         height: calc(100% - 60px);
-    }
-
-    .root {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        button {
-            background: none;
-            padding: 0 !important;
-            display: inline !important;
-        }
-    }
-
-    .no-groups {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: 100%;
-        width: 100%;
-        gap: 20%;
-
-        padding: 6vh 20px 32px 20px;
-
-        .intro-container{
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            .image-placeholder {
-                height: 150px;
-                width: 150px;
-                background-color: #d9d9d9;
-            }
-            button {
-                background: transparent;
-                justify-content: space-between !important;
-                height: 30px !important;
-                width: 56%;
-                white-space: nowrap;
-  
-                p {
-                    margin-bottom: 0;
-                    font-family: 'robotoregular';
-                }
-            }
-        }
-        
-        .intro-footer {
-            display: flex;
-            justify-content: center;
-
-            button {
-                background: transparent;
-                color: var(--groups-sidebar-intro-text-color);
-
-                p {
-                    font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                }
-            }
-        }
-
-        h2 {
-                width: 75%;
-        }
-    }
-
-    .root {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        align-self: center;
-
-        .close-button {
-            background-color: transparent;
-            padding: 0 10px 0 0 !important;
-        }
     }
 }

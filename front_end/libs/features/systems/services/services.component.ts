@@ -49,7 +49,7 @@ function barBackground({ quantity, used }: ServiceQuantity): string {
     standalone: true,
     imports: [CommonModule, OverlayModule, AngularSvgIconModule, NxPreLoaderComponent],
     templateUrl: './services.component.html',
-    styleUrl: './services.component.scss',
+    styleUrls: ['./services.component.scss'],
 })
 export class NxServicesComponent {
     icons = icons;

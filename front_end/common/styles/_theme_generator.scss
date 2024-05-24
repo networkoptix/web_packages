@@ -1,0 +1,118 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+
+/* Helper functions for generating theme vars */
+@mixin _generate-theme-vars($vars, $themes) {
+    @if meta.type-of($vars) != map {
+        @error 'The argument must be a map.';
+    }
+    @each $theme_name, $theme_color in $themes {
+        html[data-theme="#{$theme_name}"] {
+            @each $var_name, $color_value in $vars {
+                @if meta.type-of($var_name) != string {
+                    @error '$var_name in the map must be a string.';
+                }
+                @if string.index($var_name, '--') > 1 {
+                    @error '$var_name in the map must start with --.';
+                }
+                @if meta.type-of($color_value) != number {
+                    @error '$color_value in the map must be a number.';
+                }
+                #{$var_name}: var(--#{$theme_color}#{$color_value});
+            }
+        }
+    }
+}
+
+@mixin _generate-theme-vars-split($vars, $dark_themes, $light_themes) {
+    $dark_vars: ();
+    $light_vars: ();
+    @each $var_name, $color_values in $vars {
+        @if meta.type-of($color_values) != list {
+            @error '$color_values in the map must be a list.';
+        }
+
+        $dark_vars: map.merge($dark_vars, ($var_name: list.nth($color_values, 1)));
+        $light_vars: map.merge($light_vars, ($var_name: list.nth($color_values, 2)));
+    }
+    @include _generate-theme-vars($dark_vars, $dark_themes);
+    @include _generate-theme-vars($light_vars, $light_themes);
+}
+
+
+/* Vars that follow the basic rules */
+//Mapping d -> l1, l -> d1, dg -> lg1, lg -> dg1
+@mixin generate-theme-vars-contrast($vars) {
+    $themes: (
+            'dark': 'light',
+            'dark-gray': 'light_gray_',
+            'light': 'dark',
+            'light-gray': 'dark_gray_'
+    );
+    @include _generate-theme-vars($vars, $themes);
+}
+
+//Mapping d -> d1, l -> l1, dg -> dg1, lg -> lg1
+@mixin generate-theme-vars-matching($vars) {
+    $themes: (
+        'dark': 'dark',
+        'dark-gray': 'dark_gray_',
+        'light': 'light',
+        'light-gray': 'light_gray_'
+    );
+    @include _generate-theme-vars($vars, $themes);
+}
+
+
+/* Vars where all d and all l are the same */
+//Mapping d -> l1, l -> d2, dg -> lg1, lg -> dg2
+@mixin generate-theme-vars-split-contrast($vars) {
+    $dark_themes: (
+            'dark': 'light',
+            'dark-gray': 'light_gray_',
+    );
+    $light_themes: (
+            'light': 'dark',
+            'light-gray': 'dark_gray_'
+    );
+    @include _generate-theme-vars-split($vars, $dark_themes, $light_themes);
+}
+
+//Mapping d -> d1, l -> l2, dg -> dg1, lg -> lg2
+@mixin generate-theme-vars-split-matching($vars) {
+    $dark_themes: (
+            'dark': 'dark',
+            'dark-gray': 'dark_gray_',
+    );
+    $light_themes: (
+            'light': 'light',
+            'light-gray': 'light_gray_'
+    );
+    @include _generate-theme-vars-split($vars, $dark_themes, $light_themes);
+}
+
+
+/* Vars are the same across all themes */
+//Mapping d -> d1, l -> d1, dg -> dg1, lg -> dg1
+@mixin generate-theme-vars-all-dark($vars) {
+    $themes: (
+            'dark': 'dark',
+            'dark-gray': 'dark_gray_',
+            'light': 'dark',
+            'light-gray': 'dark_gray_'
+    );
+    @include _generate-theme-vars($vars, $themes);
+}
+
+//Mapping d -> l1, l -> l1, dg -> lg1, lg -> lg1
+@mixin generate-theme-vars-all-light($vars) {
+    $themes: (
+            'dark': 'light',
+            'dark-gray': 'light_gray_',
+            'light': 'light',
+            'light-gray': 'light_gray_'
+    );
+    @include _generate-theme-vars($vars, $themes);
+}

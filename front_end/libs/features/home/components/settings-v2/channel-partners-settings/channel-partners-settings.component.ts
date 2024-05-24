@@ -17,7 +17,6 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import { NxSettingsGeneralComponent } from '@pages/home/components/settings/components/general/general.component';
 import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/settings-base';
 import { settingsViews } from '@pages/home/home.types';
 import {
@@ -57,7 +56,6 @@ interface SettingsState {
         NxContentBlockSectionComponent,
         NxFocusMeDirective,
         NxGenericDropdownModule,
-        NxSettingsGeneralComponent,
     ],
 })
 export class NxChannelPartnersSettingsComponent extends SettingsBase implements OnInit {
