@@ -320,22 +320,36 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
+                        const user = store.currentGroupUsersEntityMap()[email];
                         iif(
-                            () =>
-                                store.currentGroupUsersEntityMap()[email]!.isOrgUser ||
-                                folders.length === 0,
+                            () => user!.isOrgUser || folders.length === 0,
                             chpService.deleteOrganizationUser(orgId, email),
                             chpService.deleteBulkUserGroups(
                                 orgId,
                                 email,
                                 folders.length
                                     ? folders
-                                    : store
-                                          .currentGroupUsersEntityMap()
-                                          [email]!.groupRoles.map(group => group.groupId),
+                                    : user!.groupRoles.map(group => group.groupId),
                             ),
                         ).subscribe(() => {
-                            patchState(store, removeEntity(email, currentGroupUsersEntity));
+                            if (user.isOrgUser || folders.length === user.groupRoles.length) {
+                                patchState(store, removeEntity(email, currentGroupUsersEntity));
+                            } else {
+                                patchState(
+                                    store,
+                                    updateEntity(
+                                        {
+                                            id: user.email,
+                                            changes: {
+                                                groupRoles: user.groupRoles.filter(
+                                                    group => !folders.includes(group.groupId),
+                                                ),
+                                            },
+                                        },
+                                        currentGroupUsersEntity,
+                                    ),
+                                );
+                            }
                         });
                     },
                     removeUsers: (orgId: string, folder: string, emails: string[]) => {
