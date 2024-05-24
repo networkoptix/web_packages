@@ -359,6 +359,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                             DeviceType.Camera.valueOf(),
                                             DeviceType.MultisensorCamera.valueOf(),
                                             DeviceType.Encoder.valueOf(),
+                                            DeviceType.Nvr.valueOf(),
                                         ].includes(c.deviceType),
                                 ),
                             }));
