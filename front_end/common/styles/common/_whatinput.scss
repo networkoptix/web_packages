@@ -43,7 +43,9 @@
     border-color: var(--input-focus-border-color) !important;
     outline: 1px solid var(--input-focus-border-color) !important;
     outline-offset: 0;
-    box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
+    // This interfere with autofill bg-color (-webkit-box-shadow)
+    // keep background-color and box-shadow defined in _input.scss
+    // box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
 
     &.inset {
         @include inset-outline;

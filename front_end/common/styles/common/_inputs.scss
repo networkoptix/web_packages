@@ -38,12 +38,19 @@ input.hide-errors {
     border: 1px solid var(--input-border-color) !important;
     border-radius: 1px !important;
     transition: none !important;
-    box-shadow: none !important;
+    box-shadow: none;
     padding: $padding-base-vertical $padding-input-horizontal  !important;
     caret-color: var(--input-color) !important;
 
     @include mixins.placeholder();
 
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active,
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
@@ -80,7 +87,7 @@ input.hide-errors {
         border-color: var(--input-focus-border-color) !important;
         outline: 1px solid var(--input-focus-border-color) !important;
         outline-offset: 0;
-        box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
+        box-shadow: 0 0 0 2px var(--input-focus-shadow-color);
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
@@ -103,6 +110,13 @@ input.hide-errors {
 .form-component {
     caret-color: var(--input-color) !important;
 
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active,
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
@@ -115,6 +129,13 @@ input.hide-errors {
         border: 1px solid var(--input-border-color);
         caret-color: var(--input-color) !important;
 
+        // Override browser stylesheets
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+        // https://stackoverflow.com/a/63589498
+        &:autofill,
+        &:autofill:hover,
+        &:autofill:focus,
+        &:autofill:active,
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
@@ -128,7 +149,7 @@ input.hide-errors {
             border-color: var(--input-focus-border-color) !important;
             outline: 1px solid var(--input-focus-border-color) !important;
             outline-offset: 0;
-            box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
+            box-shadow: 0 0 0 2px var(--input-focus-shadow-color);
         }
     }
 
@@ -216,6 +237,13 @@ select.form-control {
 
     @include mixins.placeholder();
 
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active,
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,

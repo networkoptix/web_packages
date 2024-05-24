@@ -53,6 +53,10 @@
     // Override browser stylesheets
     // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
     // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active,
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
