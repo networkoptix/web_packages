@@ -123,7 +123,9 @@ export class NxOrgUsersTableComponent extends InitialUserTable {
         const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
         return (
             (user.isOrgUser && !userIsOnlyAdmin && currentGroupId === orgId) ||
-            (!user.isOrgUser && !this.hasMultipleRoles(user))
+            (!user.isOrgUser &&
+                !this.hasMultipleRoles(user) &&
+                user.accessLevel?.id === currentGroupId)
         );
     }
 
