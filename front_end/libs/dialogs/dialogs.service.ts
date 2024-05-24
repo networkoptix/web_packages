@@ -447,7 +447,7 @@ export class NxDialogsService {
             import('./transfer-ownership/transfer-ownership.component').then(
                 m => m.TransferOwnershipModalContent,
             ),
-        { width: '420px' },
+        { width: '420px', autoFocus: 'dialog' },
     );
 
     /* Cloud storage */

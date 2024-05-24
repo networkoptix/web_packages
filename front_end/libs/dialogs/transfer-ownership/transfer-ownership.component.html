@@ -1,20 +1,19 @@
-<div class="modal-header">
-    <h1
-        class="modal-title"
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
         translate
     >
         Transfer Ownership
-    </h1>
-    <button
-        *ngIf="closable"
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-        (click)="close(transferInfo)"
-    >
-        <div class="close-content"></div>
-    </button>
+    </span>
+    @if (closable) {
+        <button
+            type="button"
+            class="nx-modal__header-close-btn"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close(transferInfo)"
+        ></button>
+    }
 </div>
 
 @if (channelPartnersEnabled ? !orgs$$ : !users$$) {
@@ -27,12 +26,17 @@
             ></ng-container>
         </cdk-step>
         <cdk-step><ng-container [ngTemplateOutlet]="confirmationStep"></ng-container></cdk-step>
-        <cdk-step><ng-container [ngTemplateOutlet]="successStep"></ng-container></cdk-step>
+        <cdk-step
+            ><ng-container
+                [ngTemplateOutlet]="toUser$$() ? userSuccessStep : orgSuccessStep"
+            ></ng-container
+        ></cdk-step>
+        <cdk-step><ng-container [ngTemplateOutlet]="errorStep"></ng-container></cdk-step>
     </nx-transfer-stepper>
 }
 
 <ng-template #selectOrgOrUserStep>
-    <div class="modal-body modal-body--org-and-user-select">
+    <div class="nx-modal__body nx-modal__body--org-and-user-select">
         <div class="radio-container">
             <nx-radio
                 name="transfertarget"
@@ -101,7 +105,7 @@
                     >Select an organization</span
                 >
             </div>
-            <div class="footer modal-footer__justify-right">
+            <div class="nx-modal__footer">
                 <nx-async-action-button
                     [action]="advanceToConfirmAction"
                     [(busy)]="busy"
@@ -122,6 +126,7 @@
                     [ngModel]="userSearch$$()"
                     (ngModelChange)="userSearch$$.set($event)"
                     requireSelection
+                    [setFirstAsInitialValue]="users$$().length === 1"
                     [placeholder]="'Email' | translate"
                     [noMatchesContent]="'User not found' | translate"
                 >
@@ -144,7 +149,7 @@
                         >Select a user</span
                     >
                 </div>
-                <div class="footer modal-footer__justify-right">
+                <div class="nx-modal__footer">
                     <nx-async-action-button
                         [action]="advanceToConfirmAction"
                         [(busy)]="busy"
@@ -161,7 +166,7 @@
     </div>
 </ng-template>
 <ng-template #selectUserStep>
-    <form class="modal-body modal-body--user-select">
+    <form class="nx-modal__body nx-modal__body--user-select">
         @if (users$$().length) {
             <label
                 for="emailAutocomplete"
@@ -175,6 +180,7 @@
                 [ngModel]="userSearch$$()"
                 (ngModelChange)="userSearch$$.set($event)"
                 requireSelection
+                [setFirstAsInitialValue]="users$$().length === 1"
                 [placeholder]="'Email' | translate"
                 [noMatchesContent]="'User not found' | translate"
             >
@@ -197,7 +203,7 @@
                     >Select a user</span
                 >
             </div>
-            <div class="footer modal-footer__justify-right">
+            <div class="nx-modal__footer">
                 <nx-async-action-button
                     [action]="advanceToConfirmAction"
                     [(busy)]="busy"
@@ -244,7 +250,7 @@
 </ng-template>
 
 <ng-template #confirmationStep>
-    <div class="modal-body">
+    <div class="nx-modal__body nx-modal__body--confirm">
         <p
             class="about-to-transfer"
             *ngrxLet="
@@ -253,8 +259,7 @@
             "
         >
             <span>{{ aboutToTransfer | translateCut: 0 }}</span
-            ><span
-                ><strong>{{ aboutToTransfer | translateCut: 1 }}</strong></span
+            ><span class="no-wrap-bold">{{ aboutToTransfer | translateCut: 1 }}</span
             ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
         </p>
         <div
@@ -276,7 +281,7 @@
             </p>
         </div>
     </div>
-    <div class="modal-footer modal-footer__justify-between">
+    <div class="nx-modal__footer nx-modal__footer--justify-between">
         <button
             class="btn btn-default"
             (click)="selectedIndex = selectedIndex - 1"
@@ -298,41 +303,95 @@
     </div>
 </ng-template>
 
-<ng-template #successStep>
-    <div class="modal-body d-flex flex-column align-items-center mb-4">
+<ng-template #userSuccessStep>
+    <div class="nx-modal__body nx-modal__body--user-transfer-success">
         <svg-icon
-            nx-add-svg-src
-            class="mt-1 mb-2"
-            [svgStyle]="{ 'height.px': '79' }"
+            [svgStyle]="{ 'height.px': 64 }"
             [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
         ></svg-icon>
         <p
-            *ngIf="toOrg$$(); else normalResult"
-            id="request-sent"
-            class="mt-1"
+            class="transfer-result-main-text"
             translate
         >
-            System ownership was successfully changed
+            Request has been sent
         </p>
-        <ng-template #normalResult>
-            <p
-                id="request-sent"
-                class="mt-1"
-                translate
-            >
-                Request has been sent
-            </p>
-            <p
-                class="subtext mt-1"
-                translate
-            >
-                Ownership transfer will occur as soon as the new owner accepts the request.
-            </p>
-        </ng-template>
+        <p
+            class="subtext"
+            translate
+        >
+            Ownership transfer will occur as soon as the new owner accepts the request.
+        </p>
     </div>
-    <div class="modal-footer modal-footer__justify-right">
+    <div class="nx-modal__footer">
         <button
-            class="btn btn-primary min-w-100 mt-4 mb-4"
+            class="btn btn-primary"
+            (click)="close(transferInfo)"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #orgSuccessStep>
+    <div class="nx-modal__body nx-modal__body--org-transfer-success">
+        <svg-icon
+            [svgStyle]="{ 'height.px': 64 }"
+            [src]="images.dir + 'placeholders/cloud2.0/success.svg'"
+        ></svg-icon>
+        <p
+            class="transfer-result-main-text"
+            translate
+        >
+            Transfer complete
+        </p>
+        <p class="subtext">
+            <!-- Translate fires on init -->
+            <ng-container
+                *ngrxLet="
+                    LANG.dialogs.transferOwnership.systemNowConnected
+                        | translate: { organization: selectedOrg?.name } as nowConnected
+                "
+            >
+                <span>{{ nowConnected | translateCut: 0 }}</span
+                ><span class="no-wrap-bold">{{ nowConnected | translateCut: 1 }}</span
+                ><span>{{ nowConnected | translateCut: 2 }}</span>
+            </ng-container>
+        </p>
+    </div>
+    <div class="nx-modal__footer">
+        <button
+            class="btn btn-primary"
+            (click)="close(transferInfo)"
+            translate
+        >
+            OK
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #errorStep>
+    <div class="nx-modal__body nx-modal__body--transfer-fail">
+        <svg-icon
+            [svgStyle]="{ 'height.px': 64 }"
+            [src]="images.dir + 'placeholders/cloud2.0/warning.svg'"
+        ></svg-icon>
+        <p
+            class="transfer-result-main-text"
+            translate
+        >
+            Failed to transfer ownership
+        </p>
+        <p
+            class="subtext"
+            translate
+        >
+            Try again later
+        </p>
+    </div>
+    <div class="nx-modal__footer">
+        <button
+            class="btn btn-primary"
             (click)="close(transferInfo)"
             translate
         >

@@ -991,7 +991,8 @@
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system",
-            "aboutToTransfer": "You are about to transfer ownership to \u200B | { newOwner } |"
+            "aboutToTransfer": "You are about to transfer ownership to \u200B | { newOwner } |",
+            "systemNowConnected": "System now connected to \u200B | { organization } |"
         },
         "titles": {
             "error": "Error",

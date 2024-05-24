@@ -1,5 +1,21 @@
 @use 'typography';
 
+@use '../dialogs2.scss';
+
+.subtext {
+    @include typography.regular13nocolor;
+    color: var(--light-text-color); // light16
+    max-width: 20rem;
+    text-align: center;
+}
+
+.no-wrap-bold {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
 .preloader-container {
     height: 300px; // Match stepper content height
     background-color: var(--dialog-bg);
@@ -9,32 +25,50 @@
     align-items: center;
 }
 
-.radio-container {
+.nx-modal__body {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
 }
 
-.modal-body {
-    &--org-and-user-select,
-    &--user-select {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 1rem !important;
+.nx-modal__footer {
+    .btn-default svg path {
+        fill: var(--btn-default-color);
+        stroke: none;
     }
+}
 
-    &--org-and-user-select {
-        .org-select-container,
-        .user-select-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+.next-with-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg-icon {
+        display: flex;
+
+        path {
+            fill: var(--btn-primary-color);
+            stroke: none;
         }
     }
+}
 
-    .footer {
+.nx-modal__body--org-and-user-select {
+    .radio-container {
         display: flex;
-        justify-content: flex-end;
-        margin-top: auto;
+        gap: 10px;
+        margin-bottom: 0.5rem;
+    }
+
+    .org-select-container,
+    .user-select-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .nx-modal__footer {
+            margin-top: auto;
+        }
     }
 }
 
@@ -58,10 +92,22 @@
             background-color: var(--badge-warning-bg);
             color: var(--channel-partner-card-status-dark);
         }
+
         &--shutdown {
             background-color: var(--badge-danger-bg);
             color: var(--badge-color);
         }
+    }
+}
+
+
+.nx-modal__body--user-select {
+    & > label {
+        margin-bottom: 0.5rem;
+    }
+
+    .nx-modal__footer {
+        margin-top: auto;
     }
 }
 
@@ -75,10 +121,12 @@
 
     text-align: center;
     font-size: 16px;
+
     h3 {
         color: var(--dialog-header-color) !important; //dark17
         margin: 0;
     }
+
     p {
         font-size: 14px;
         color: var(--light-text-color); // light16
@@ -86,82 +134,68 @@
 
     .msg-wrapper {
         margin-bottom: 5px;
+
         p {
             margin-bottom: 0;
         }
     }
 
-    .modal-body--org-and-user-select & {
+    .nx-modal__body--org-and-user-select & {
         border: 1px solid gray;
     }
 }
 
-.next-with-arrow {
-    display: flex;
+.nx-modal__body--confirm {
+    .about-to-transfer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .warning-block {
+        margin-top: 0.5rem;
+
+        color: var(--card-simple-warning-color);
+        background-color: var(--card-simple-warning-bg);
+        border: 1px solid var(--card-simple-warning-border-color);
+
+        padding: 5px 10px;
+
+        &__header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            // gap: 2px;
+
+            height: 20px;
+            line-height: 20px;
+
+            font-size: 14px;
+            font-family: var(--font-family-medium);
+
+            svg-icon {
+                display: flex;
+            }
+        }
+    }
+}
+
+.nx-modal__body--user-transfer-success,
+.nx-modal__body--org-transfer-success,
+.nx-modal__body--transfer-fail {
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
-    svg-icon {
-        display: flex;
-        path {
-            fill: var(--btn-text-color);
-            stroke: none;
-        }
-    }
-}
-
-.about-to-transfer {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.warning-block {
-    color: var(--card-simple-warning-color);
-    background-color: var(--card-simple-warning-bg);
-    border: 1px solid var(--card-simple-warning-border-color);
-
-    padding: 5px 10px;
-
-    &__header {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-
-        // gap: 2px;
-
-        height: 20px;
-        line-height: 20px;
-
-        font-size: 14px;
-        font-family: var(--font-family-medium);
-
-        svg-icon {
-            display: flex;
-        }
-    }
 
 }
 
-.subtext {
-    @include typography.regular13nocolor;
-    color: var(--light-text-color); // light16
-    max-width: 20rem;
-    text-align: center;
+.nx-modal__body--org-transfer-success .subtext {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-#request-sent {
+.transfer-result-main-text {
     @include typography.medium16nocolor;
     color: var(--body-text-color); // dark9
-}
-
-.modal-footer {
-    &__justify-between {
-        justify-content: space-between !important;
-    }
-
-    svg path {
-        fill: var(--btn-text-color);
-        stroke: none;
-    }
-
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
