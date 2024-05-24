@@ -34,12 +34,12 @@ import { NxUser, UserType } from '@services/system-user.types';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxUserSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
-import { icons, servers } from '@static-variables';
+import { icons, images, servers } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
 import type { TransferOwnership as DT } from '../dialogs.types';
 
-import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.component';
+import { NxTransferStepperComponent } from './transfer-stepper.component';
 
 @Component({
     selector: 'nx-modal-transfer-ownership-content',
@@ -69,6 +69,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
 
     LANG = staticLang;
     icons = icons;
+    images = images;
 
     channelPartnersEnabled = this.system.version > 5.1 && !!nxConfig.featureFlags.channelPartners;
 
@@ -162,6 +163,9 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
                     this.LANG.dialogs.updateSession.transferOnwership,
                     ToastType.Warning,
                 );
+            } else if (error?.status === 403) {
+                // Current user was demoted/removed from org while dialog was open
+                this.selectedIndex += 2;
             }
         },
     });
