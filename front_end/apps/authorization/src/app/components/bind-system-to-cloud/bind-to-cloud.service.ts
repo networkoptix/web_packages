@@ -10,6 +10,7 @@ import {
     DeleteResponse,
 } from '@authorization/src/app/types/bind-service.types';
 import { environment } from '@environments/environment';
+import { OrgPermissions } from '@pages/home/store/permissions/permissions.types';
 import { nxConfig } from '@services/nx-config/config';
 
 import { Org } from '../../types/cloud-bind.types';
@@ -90,7 +91,7 @@ export class BindToCloudService {
             ),
             map(res =>
                 res.results.filter(({ ownPermissions }) =>
-                    ownPermissions.includes('manage_systems'),
+                    ownPermissions.includes(OrgPermissions.manage_systems),
                 ),
             ),
         );

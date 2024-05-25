@@ -29,13 +29,13 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { OrgPermissions } from '@pages/home/store/permissions/permissions.types';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
@@ -229,19 +229,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     }
 
                     return this.channelPartnersService
-                        .getOrganizationUser(orgId, 'self')
-                        .pipe(map(user => user.rolesIds.includes(OrgRoleIds.OrgAdmin)));
+                        .getOrganization(orgId)
+                        .pipe(
+                            map(org => org.ownPermissions.includes(OrgPermissions.manage_systems)),
+                        );
                 }),
             ),
         false,
     );
 
-    canManageSystem$$ = computed(() => {
-        return (
+    canManageSystem$$ = computed(
+        () =>
             this.system.permissionManager.isOwner$$() &&
-            (this.cloudSystemType$$() !== 'org' || this.manageOrgSystems$$())
-        );
-    });
+            (this.cloudSystemType$$() !== 'org' || this.manageOrgSystems$$()),
+    );
 
     systemOfferedToUser$$ = computed<boolean>(() => {
         const [transferInfo, currentUser] = [
