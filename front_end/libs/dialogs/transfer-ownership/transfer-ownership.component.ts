@@ -22,6 +22,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { OrgPermissions } from '@pages/home/store/permissions/permissions.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type {
@@ -125,7 +126,9 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
 
         if (this.channelPartnersEnabled) {
             this.partnersService.getOrganizations(true).subscribe(res => {
-                const orgs = res.filter(org => org.ownPermissions.includes('manage_systems'));
+                const orgs = res.filter(org =>
+                    org.ownPermissions.includes(OrgPermissions.manage_systems),
+                );
                 if (orgs.length) {
                     this.transferTargetType$$.set('org');
                 }
