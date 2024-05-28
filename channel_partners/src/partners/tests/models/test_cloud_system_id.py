@@ -4,6 +4,7 @@ from partners.models import (
     CloudSystemHistory,
     CloudSystemId,
     OrganizationRoles,
+    SystemServiceCurrentQuantity,
     VmsRoles,
 )
 
@@ -146,4 +147,32 @@ class TestCloudSystemId:
         assert new_record.to_ts is None
         assert new_record.from_ts
 
+    def test_services(self, channel_partner_factory, cp_service_factory, organization_factory, system_factory,
+                      service_record_factory):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        cp_service_1 = cp_service_factory(channel_partner=cp)
+        cp_service_2 = cp_service_factory(channel_partner=cp)
+        cp_service_3 = cp_service_factory(channel_partner=cp)
+        service_record_factory(service=cp_service_1, cloud_system=system, quantity=10)
+        service_record_factory(service=cp_service_2, cloud_system=system, quantity=20)
+        service_record_factory(service=cp_service_3, cloud_system=system, quantity=30)
+        SystemServiceCurrentQuantity.objects.create(
+            cloud_system=system,
+            organization=org,
+            service=cp_service_1,
+            quantity=9)
+        SystemServiceCurrentQuantity.objects.create(
+            cloud_system=system,
+            organization=org,
+            service=cp_service_2,
+            quantity=19)
+        assert len(system.services) == 3
+        assert system.services[str(cp_service_1.id)]['used'] == 9
+        assert system.services[str(cp_service_1.id)]['quantity'] == 10
+        assert system.services[str(cp_service_2.id)]['used'] == 19
+        assert system.services[str(cp_service_2.id)]['quantity'] == 20
+        assert system.services[str(cp_service_3.id)]['used'] == 0
+        assert system.services[str(cp_service_3.id)]['quantity'] == 30
 

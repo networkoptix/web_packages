@@ -48,6 +48,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
     ServiceUsage,
+    SystemServiceCurrentQuantity,
     VmsRoles,
 )
 from partners.views import (
@@ -462,18 +463,18 @@ class TestCloudSystemViewSet:
         service_record_factory(cloud_storage_service, cloud_system=system, quantity=quantity)
         service_record_factory(analytics_service, cloud_system=system, quantity=quantity)
 
-        service_usage_factory(system,
-                              service=local_recording_service,
-                              usage=usage_recording,
-                              to_ts=now)
-        service_usage_factory(system,
-                              service=local_recording_service,
-                              usage=usage_recording,
-                              to_ts=now)
-        service_usage_factory(system,
-                              service=cloud_storage_service,
-                              usage=usage_storage,
-                              to_ts=now)
+        SystemServiceCurrentQuantity.objects.create(
+            cloud_system=system,
+            organization=root_org,
+            service=local_recording_service,
+            quantity=quantity
+        )
+        SystemServiceCurrentQuantity.objects.create(
+            cloud_system=system,
+            organization=root_org,
+            service=cloud_storage_service,
+            quantity=quantity * 2
+        )
         req = arf.get(f'/partners/cloud_systems/{system.system_id}/service_quantity/')
         CloudSystemViewSet.detail = True
         view = CloudSystemViewSet.as_view({'get': 'service_quantity'}, detail=True)
@@ -486,10 +487,10 @@ class TestCloudSystemViewSet:
         assert response.data['services']
         assert response.data['services'][str(local_recording_service.id)]
         # Usage to quantity = 2 * 1.1 -> rounded to 3
-        assert response.data['services'][str(local_recording_service.id)]['used'] == 3
+        assert response.data['services'][str(local_recording_service.id)]['used'] == quantity
         assert response.data['services'][str(local_recording_service.id)]['quantity'] == quantity
         # storage usage metric is unchanged
-        assert response.data['services'][str(cloud_storage_service.id)]['used'] == usage_storage
+        assert response.data['services'][str(cloud_storage_service.id)]['used'] == quantity * 2
         assert response.data['services'][str(cloud_storage_service.id)]['quantity'] == quantity
         # analytics is not used but allocated
         assert response.data['services'][str(analytics_service.id)]['used'] == 0
@@ -771,6 +772,110 @@ class TestCloudSystemViewSet:
         response = view(request, id=system.system_id)
         assert response.status_code == 404
         assert response.data == {'detail': f'System {system_id} not found.'}
+
+
+class TestCloudSystemViewSetSystemCurrentUsage:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, system_factory,
+              cp_service_factory, service_record_factory, cloud_test_host, mock_auth_with_system):
+        self.channel_partner = channel_partner_factory()
+        self.other_channel_partner = channel_partner_factory()
+        self.organization = organization_factory(channel_partner=self.channel_partner)
+        self.system = system_factory(organization=self.organization)
+        self.cp_service_1 = cp_service_factory(
+            channel_partner=self.channel_partner,
+        )
+        self.cp_service_2 = cp_service_factory(
+            channel_partner=self.channel_partner,
+        )
+        self.cp_service_3 = cp_service_factory(
+            channel_partner=self.channel_partner,
+        )
+        self.other_service = cp_service_factory(
+            channel_partner=self.other_channel_partner,
+        )
+        service_record_factory(
+            service=self.cp_service_1,
+            cloud_system=self.system,
+            quantity=10,
+        )
+        service_record_factory(
+            service=self.cp_service_2,
+            cloud_system=self.system,
+            quantity=20,
+        )
+        service_record_factory(
+            service=self.cp_service_3,
+            cloud_system=self.system,
+            quantity=30,
+        )
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path = reverse('cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {uuid4()}')
+        mock_auth_with_system(self.system)
+
+    def test_invalid_data(self):
+        data = {
+            'currentUsages': [
+                {
+                    'service': f'{uuid4()}',
+                    'quantity': 10,
+                },
+                {
+                    'service': self.other_service.id,
+                    'quantity': 10,
+                }
+            ]
+        }
+        response = self.client.post(self.path, data=data, format='json')
+        assert response.status_code == 400
+        assert len(response.data['currentUsages']) == 2
+        assert 'object does not exist' in response.data['currentUsages'][0]['service'][0]
+        assert 'is not available for organization' in response.data['currentUsages'][1]['service'][0]
+
+    def test_success(self):
+        data = {
+            'currentUsages': [
+                {
+                    'service': str(self.cp_service_1.id),
+                    'quantity': 10,
+                },
+                {
+                    'service': str(self.cp_service_2.id),
+                    'quantity': 20,
+                },
+                {
+                    'service': str(self.cp_service_2.id),
+                    'quantity': 20,
+                },
+                {
+                    'service': str(self.cp_service_3.id),
+                    'quantity': 30,
+                },
+                {
+                    'service': str(self.cp_service_3.id),
+                    'quantity': 30,
+                }
+            ]
+        }
+        response = self.client.post(self.path, data=data, format='json')
+        assert response.status_code == 200
+        assert response.data['services'][str(self.cp_service_1.id)]['quantity'] == 10
+        assert response.data['services'][str(self.cp_service_1.id)]['used'] == 10
+        assert response.data['services'][str(self.cp_service_2.id)]['quantity'] == 20
+        assert response.data['services'][str(self.cp_service_2.id)]['used'] == 40
+        assert response.data['services'][str(self.cp_service_3.id)]['quantity'] == 30
+        assert response.data['services'][str(self.cp_service_3.id)]['used'] == 60
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_1).quantity == 10
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_1).cloud_system == self.system
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_1).organization == self.organization
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_2).quantity == 40
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_2).cloud_system == self.system
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_2).organization == self.organization
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).quantity == 60
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).cloud_system == self.system
+        assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).organization == self.organization
+        assert SystemServiceCurrentQuantity.objects.count() == 3
 
 
 class TestChannelPartnerNestedViewSet:

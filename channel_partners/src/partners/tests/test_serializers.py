@@ -4,7 +4,6 @@ import random
 import re
 import uuid
 from datetime import timedelta
-from math import ceil
 from uuid import uuid4
 
 import pytest
@@ -27,6 +26,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
     ServiceUsage,
+    SystemServiceCurrentQuantity,
 )
 from partners.serializers import (
     ChannelPartnerAggDataSerializer,
@@ -287,14 +287,17 @@ class TestSystemServiceQuantitySerializer:
         from_ts = timezone.now() - timedelta(hours=2)
         to_ts = timezone.now() - timedelta(hours=1)
         for idx, service in enumerate(cp_services):
-            ServiceUsage.objects.create(
-                usage=idx, cloud_system=systems[0],
-                service_id=service.id, from_ts=from_ts, to_ts=to_ts)
+            SystemServiceCurrentQuantity.objects.create(
+                cloud_system=systems[0],
+                organization=systems[0].organization,
+                service=service,
+                quantity=1 + idx,
+            )
 
         serializer = SystemServiceQuantitySerializer(instance=systems[0])
         for idx, service in enumerate(cp_services):
             assert serializer.data['services'][str(service.id)]['quantity'] == 20
-            assert serializer.data['services'][str(service.id)]['used'] == ceil(idx / ServiceUsage.CHECK_PERIOD)
+            assert serializer.data['services'][str(service.id)]['used'] == 1 + idx
 
 
 class TestChannelPartnerSerializer:

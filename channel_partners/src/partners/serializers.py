@@ -68,6 +68,7 @@ from partners.models import (
     ServiceToSubChannelProperties,
     ServiceUsage,
     SystemGroup,
+    SystemServiceCurrentQuantity,
     get_channel_partner_roles,
     get_organization_roles,
 )
@@ -2147,3 +2148,37 @@ class LicensesMigrationResultSerializer(serializers.Serializer):
 
 class OrganizationSystemsQueryParamsSerializer(serializers.Serializer):
     rootOnly = serializers.BooleanField(default=False, required=False)
+
+
+class ServiceCurrentQuantitySerializer(serializers.Serializer):
+    service = serializers.PrimaryKeyRelatedField(queryset=ChannelPartnerService.objects.all())
+    quantity = serializers.IntegerField(min_value=0)
+
+    def validate_service(self, value):
+        if not value.created_by_channel_partner_id == self.parent.parent.instance.organization.channel_partner_id:
+            raise exceptions.ValidationError(
+                detail=f"Service {value.id} is not available for organization {self.parent.parent.instance.organization.id}",
+                code='serviceNotAvailable'
+            )
+        return value
+
+
+class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
+    currentUsages = ServiceCurrentQuantitySerializer(many=True)
+
+    class Meta:
+        model = CloudSystemId
+        fields = ['currentUsages']
+
+    def update(self, instance, validated_data):
+        services = defaultdict(int)
+        for item in validated_data['currentUsages']:
+            services[item['service'].id] += item['quantity']
+        for service, quantity in services.items():
+            SystemServiceCurrentQuantity.objects.update_or_create(
+                cloud_system=instance,
+                organization=instance.organization,
+                service_id=service,
+                defaults={'quantity': quantity}
+            )
+        return instance
