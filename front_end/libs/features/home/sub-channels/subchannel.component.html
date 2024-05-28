@@ -8,12 +8,11 @@
     >
     <div class="header">
         <h2>{{ (currentSubchannel$ | async).name }}</h2>
-        <div
-            *ngIf="
-                (currentSubchannel$ | async)?.effectiveState !== 'active' &&
-                (currentSubchannel$ | async)?.effectiveState as state
-            "
-        >
+        @if (
+            (currentSubchannel$ | async)?.effectiveState !== 'active' &&
+                (currentSubchannel$ | async)?.effectiveState;
+            as state
+        ) {
             <nx-tag
                 [type]="state === 'suspended' ? 'warning' : 'danger'"
                 [size]="'large'"
@@ -22,16 +21,17 @@
             >
                 {{ state | translate | uppercase }}
             </nx-tag>
-        </div>
+        }
     </div>
     <nx-tabs animated>
-        <nx-base-tab
-            *ngFor="let tab of tabs"
-            [displayName]="tab.displayName"
-            [route]="tab.route"
-        >
-            {{ tab.displayName }}
-        </nx-base-tab>
+        @for (tab of tabs; track $index) {
+            <nx-base-tab
+                [displayName]="tab.displayName"
+                [route]="tab.route"
+            >
+                {{ tab.displayName }}
+            </nx-base-tab>
+        }
     </nx-tabs>
     <router-outlet></router-outlet>
 </div>

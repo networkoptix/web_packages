@@ -1,27 +1,21 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, DestroyRef, inject, computed, input, HostBinding } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import {
-    Observable,
-    Subject,
-    combineLatestWith,
-    debounceTime,
-    distinctUntilChanged,
-    map,
-    throwError,
-} from 'rxjs';
+import { Observable, Subject, combineLatestWith } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectRootChannelPartners,
+    selectChannelPartners,
     selectCurrentPartner,
     selectCurrentPartnerOrgs,
+    selectCurrentPartnerParent,
     selectArePartnerOrgsLoading,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxButtonComponent } from '@components/button/button.component';
@@ -39,6 +33,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -90,8 +85,10 @@ export class NxChannelPartnersComponent implements OnInit {
 
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
-    channelPartners$ = this.store.select<ChannelPartner[]>(selectRootChannelPartners);
+    channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
+    channelPartners$$ = toSignal(this.channelPartners$);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
+    parentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartnerParent);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
@@ -111,7 +108,7 @@ export class NxChannelPartnersComponent implements OnInit {
                 route: 'subchannels',
             });
         }
-        if (this.permissionStore.canViewPartnerSettings$$()) {
+        if (this.permissionStore.canViewInfo$$()) {
             tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.information,
                 route: 'information',
@@ -141,7 +138,12 @@ export class NxChannelPartnersComponent implements OnInit {
         }
         return -1;
     });
-    processedTabs = false;
+    returnToParentLink$$ = computed(() => {
+        const parentChannelPartner = this.parentPartner$$();
+        return parentChannelPartner
+            ? PartnerRedirect.toPartnerSubChannels(parentChannelPartner.id)
+            : '';
+    });
     searchConfig = searchConfig;
 
     search = { value: '' };
@@ -149,7 +151,6 @@ export class NxChannelPartnersComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private router: Router,
         private route: ActivatedRoute,
         private CPService: NxChannelPartnersService,
         private dialogsService: NxDialogsService,
@@ -166,9 +167,15 @@ export class NxChannelPartnersComponent implements OnInit {
             .subscribe(([currentPartnerId, partners]) => {
                 const currPartner = partners.find(partner => partner.id === currentPartnerId);
                 if (partners.length && !currPartner) {
-                    return throwError(() => 'Partner not found');
+                    console.error('Partner not found');
+                    return;
                 }
-                this.store.dispatch(CPActions.loadPartnerOrgs({ partnerId: currentPartnerId }));
+                this.store.dispatch(
+                    CPActions.loadPartner({
+                        partnerId: currentPartnerId,
+                        currentParentPartnerId: currPartner?.parentChannelPartner || '',
+                    }),
+                );
             });
         this.searchChanged
             .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
@@ -197,10 +204,6 @@ export class NxChannelPartnersComponent implements OnInit {
                 }
             });
     };
-
-    handleOrgClick(id: string): void {
-        this.router.navigate(['organization', id], { relativeTo: this.route });
-    }
 
     searchSystems(): void {
         const search = this.search.value;

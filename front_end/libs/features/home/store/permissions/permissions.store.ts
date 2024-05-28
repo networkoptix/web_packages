@@ -12,6 +12,7 @@ import { nxConfig } from '@services/nx-config/config';
 import {
     selectCurrentOrganization,
     selectCurrentPartner,
+    selectCurrentPartnerParent,
 } from '@store/channel-partners/channel-partners.selectors';
 
 const createPermissionState = <P extends Record<string, string>>(
@@ -34,6 +35,8 @@ const buildPermissions = (
 interface PermissionState {
     selectedOrgId: string;
     selectedPartnerId: string;
+    selectedParentPartnerId: string;
+    parentPartnerPermissions: Record<keyof typeof ChannelPartnerPermissions, boolean>;
     partnerPermissions: Record<keyof typeof ChannelPartnerPermissions, boolean>;
     orgPermissions: Record<keyof typeof OrgPermissions, boolean>;
 }
@@ -41,6 +44,8 @@ interface PermissionState {
 const initialState: PermissionState = {
     selectedOrgId: '',
     selectedPartnerId: '',
+    selectedParentPartnerId: '',
+    parentPartnerPermissions: createPermissionState(ChannelPartnerPermissions),
     partnerPermissions: createPermissionState(ChannelPartnerPermissions),
     orgPermissions: createPermissionState(OrgPermissions),
 };
@@ -52,7 +57,7 @@ const PERMISSION_STATE = new InjectionToken<PermissionState>('PermissionState', 
 export const PermissionsStore = signalStore(
     { providedIn: 'root' },
     withState(() => inject(PERMISSION_STATE)),
-    withComputed(({ orgPermissions, partnerPermissions }) => ({
+    withComputed(({ orgPermissions, partnerPermissions, parentPartnerPermissions }) => ({
         // Channel Partner Action Signals
         canCreateOrgs$$: computed(() => partnerPermissions().add_remove_organizations),
         canCreateSubChannels$$: computed(
@@ -84,7 +89,7 @@ export const PermissionsStore = signalStore(
         canChangePartnerState$$: computed(
             () =>
                 nxConfig.featureFlags.channelPartnersChangeStateUI &&
-                partnerPermissions().alter_state_sub_channel_partners,
+                parentPartnerPermissions().alter_state_sub_channel_partners,
         ),
         // Organization Action Signals
         canChangeOrganizationState$$: computed(
@@ -117,6 +122,19 @@ export const PermissionsStore = signalStore(
     withHooks({
         onInit(store) {
             const globalStore = inject(Store);
+            globalStore
+                .select(selectCurrentPartnerParent)
+                .pipe(filter(Boolean))
+                .subscribe(parentPartner => {
+                    patchState(store, {
+                        selectedParentPartnerId: parentPartner?.id,
+                        parentPartnerPermissions: buildPermissions(
+                            parentPartner.ownPermissions || [],
+                            createPermissionState(ChannelPartnerPermissions),
+                        ),
+                    });
+                });
+
             globalStore
                 .select(selectCurrentPartner)
                 .pipe(filter(Boolean))

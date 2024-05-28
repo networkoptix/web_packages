@@ -5,6 +5,11 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+export const loadPartner = createAction(
+    '[Channel Partners] Load partner',
+    props<{ partnerId: string; currentParentPartnerId: string }>(),
+);
+
 export const loadPartnerOrgs = createAction(
     '[Channel Partners] Load partner organizations',
     props<{ partnerId: string }>(),
@@ -48,6 +53,11 @@ export const setCurrentPartnerId = createAction(
 export const setCurrentOrgId = createAction(
     '[Channel Partners] Set current org id',
     props<{ currentOrgId: string }>(),
+);
+
+export const setCurrentParentPartnerId = createAction(
+    '[Channel Partners] Set current parent channel partner id',
+    props<{ currentParentPartnerId: string }>(),
 );
 
 export const setCurrentPartner = createAction(

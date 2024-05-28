@@ -1,3 +1,4 @@
+@use "typography";
 @use "theme_variables_common" as *;
 
 :host {
@@ -28,18 +29,6 @@
         .actions {
             padding-bottom: 16px;
 
-        }
-
-        a {
-            padding-left: 1rem;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        .hidden {
-            visibility: none;
         }
 
         .no-orgs-placeholder {
@@ -82,5 +71,18 @@
         nx-page-placeholder-no-orgs {
             height: 100%;
         }
+    }
+}
+
+.back-link {
+    @include typography.light14light16;
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: 8px;
+    color: var(--channel-partner-back-button-bg-color) !important;
+    text-decoration: none;
+
+    svg > path {
+        stroke: var(--channel-partner-back-button-bg-color);
     }
 }

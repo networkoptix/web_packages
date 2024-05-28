@@ -67,6 +67,11 @@ export const selectCurrentOrgId = createSelector(
     state => state.currentOrgId,
 );
 
+export const selectCurrentParentChannelPartnerId = createSelector(
+    selectChannelPartnersState,
+    state => state.currentParentPartnerId,
+);
+
 export const selectCurrentSubchannelPartners = createSelector(
     selectChannelPartnersState,
     state => state.currentSubchannels,
@@ -105,3 +110,9 @@ export const selectSubchannelPartner = (
     createSelector(selectCurrentSubchannelPartners, (partners: ChannelPartner[]) =>
         partners.find(partner => partner.id === id),
     );
+
+export const selectCurrentPartnerParent = createSelector(
+    selectCurrentParentChannelPartnerId,
+    selectChannelPartners,
+    (parentId: string, partners: ChannelPartner[]) => partners.find(({ id }) => id === parentId),
+);

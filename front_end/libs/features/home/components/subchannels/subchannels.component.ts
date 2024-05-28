@@ -1,6 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -11,6 +12,7 @@ import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
+    selectChannelPartners,
     selectCurrentPartnerId,
     selectCurrentSubchannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
@@ -22,7 +24,9 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -60,7 +64,8 @@ export class NxSubchannelsComponent {
     PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
     canCreatePartners$$ = this.permissionsStore.canCreateSubChannels$$;
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
-    currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
+    currentPartnerId$$ = toSignal(this.currentPartnerId$);
+    channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
     filteredSubchannels$$ = computed(() => {
         const search = this.search$$();
@@ -118,7 +123,10 @@ export class NxSubchannelsComponent {
         });
     }
 
-    handleChannelClick(id: string): void {
-        this.router.navigate([id, 'settings'], { relativeTo: this.route });
+    handleChannelClick(id: string): Promise<boolean> {
+        const redirectUrl = this.channelPartners$$().find(partner => partner.id === id)
+            ? PartnerRedirect.toPartner(id)
+            : PartnerRedirect.toSubChannelPartner(id);
+        return this.router.navigate([redirectUrl]);
     }
 }
