@@ -12,6 +12,7 @@ export const enum LoadingState {
 export interface ChannelPartnersState {
     arePartnerOrgsLoading: boolean;
     channelPartnersAndOrgsLoadState: LoadingState;
+    currentParentPartnerId: string;
     currentPartnerId: string;
     currentOrgId: string;
     currentSubchannels: ChannelPartner[];

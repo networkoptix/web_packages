@@ -1,14 +1,15 @@
 import { inject, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { filter, of, switchMap } from 'rxjs';
+import { of } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
+import { updateParentPartnerId } from '@pages/home/resolvers/update-parent-partner-guard';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxChannelPartnersSettingsComponent } from '../components/settings-v2/channel-partners-settings/channel-partners-settings.component';
-import { NxSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { cpTabGuard } from '../resolvers/CP-tab-guard';
@@ -42,6 +43,7 @@ const CPRoutes: Routes = withTabReporterResolver([
             parentData: WithParentDataResolver,
         },
         canActivate: [setPartnerId],
+        canDeactivate: [updateParentPartnerId],
         runGuardsAndResolvers: 'always',
         children: [
             {
@@ -65,34 +67,6 @@ const CPRoutes: Routes = withTabReporterResolver([
                 path: 'subchannels',
                 component: NxSubchannelsComponent,
                 canActivate: [cpTabGuard],
-                children: [
-                    {
-                        path: ':subchannelId',
-                        component: NxSubchannelComponent,
-                        children: [
-                            {
-                                path: '',
-                                component: NxChannelPartnerInformationComponent,
-                            },
-                            {
-                                path: 'settings',
-                                canActivate: [cpTabGuard],
-                                data: {
-                                    subchannelSettings: true,
-                                },
-                                component: NxChannelPartnersSettingsComponent,
-                            },
-                            {
-                                path: 'users',
-                                data: {
-                                    inSubchannel: true,
-                                },
-                                canActivate: [cpTabGuard],
-                                component: NxChannelPartnerUsersComponent,
-                            },
-                        ],
-                    },
-                ],
             },
             {
                 path: 'information',
@@ -104,6 +78,7 @@ const CPRoutes: Routes = withTabReporterResolver([
                 canActivate: [cpTabGuard],
                 component: NxChannelPartnerUsersComponent,
             },
+            { path: '**', redirectTo: '' },
         ],
     },
     {

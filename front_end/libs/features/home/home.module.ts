@@ -68,6 +68,13 @@ const homeRoutes: Routes = withTabReporterResolver([
                         m => m.NxChannelPartnersModule,
                     ),
             },
+            {
+                path: 'subChannel',
+                loadChildren: () =>
+                    import('@pages/home/sub-channels/sub-channel.module').then(
+                        m => m.NxSubChannelPartnersModule,
+                    ),
+            },
         ],
     },
 ]);

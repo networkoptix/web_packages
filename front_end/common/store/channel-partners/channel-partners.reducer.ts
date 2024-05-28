@@ -11,6 +11,7 @@ const sortEntityByName = <T extends { name: string }>(toBeSorted: T[]): T[] =>
 const initialState: ChannelPartnersState = {
     arePartnerOrgsLoading: false,
     channelPartnersAndOrgsLoadState: LoadingState.INIT,
+    currentParentPartnerId: null,
     currentPartnerId: null,
     currentOrgId: null,
     currentSubchannels: [],
@@ -24,6 +25,14 @@ const initialState: ChannelPartnersState = {
 
 export const channelPartnersReducer = createReducer(
     initialState,
+    on(
+        ChannelPartnerActions.loadPartner,
+        (state, { partnerId, currentParentPartnerId }): ChannelPartnersState => ({
+            ...state,
+            currentPartnerId: partnerId,
+            currentParentPartnerId,
+        }),
+    ),
     on(
         ChannelPartnerActions.loadPartnerOrgs,
         (state): ChannelPartnersState => ({
@@ -77,6 +86,13 @@ export const channelPartnersReducer = createReducer(
             channelPartnersAndOrgsLoadState: LoadingState.LOADED,
             channelPartners: sortEntityByName(channelPartners),
             rootOrganizations: sortEntityByName(rootOrganizations),
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setCurrentParentPartnerId,
+        (state, { currentParentPartnerId }): ChannelPartnersState => ({
+            ...state,
+            currentParentPartnerId,
         }),
     ),
     on(
