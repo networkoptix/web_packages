@@ -2,7 +2,10 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { selectCurrentPartner } from '@store/channel-partners/channel-partners.selectors';
+import {
+    selectChannelPartners,
+    selectCurrentPartner,
+} from '@store/channel-partners/channel-partners.selectors';
 
 import { PermissionsStore } from '../store/permissions/permissions.store';
 
@@ -17,7 +20,13 @@ export const ChannelPartnerGuard: CanActivateFn = async () => {
     ].some(Boolean);
 
     if (!canViewChannelPartner) {
-        const currentPartnerId = inject(Store).selectSignal(selectCurrentPartner)()?.id;
+        const store = inject(Store);
+        const currentPartnerId = store.selectSignal(selectCurrentPartner)()?.id;
+        const partners = store.selectSignal(selectChannelPartners)();
+        const isValidPartner = partners.find(partner => partner.id === currentPartnerId);
+        if (!isValidPartner) {
+            return true;
+        }
         await inject(Router).navigate(
             permissionsStore.canViewPartnerReports$$()
                 ? ['reports', currentPartnerId]
