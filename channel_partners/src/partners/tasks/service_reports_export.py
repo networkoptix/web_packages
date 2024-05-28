@@ -64,7 +64,7 @@ def generate_report(channel_partner_id: str = None,
                     report_date: str = None,
                     period_start: str = None,
                     user_id: int = None,
-                    report_format: str = ReportFormat.xlsx):
+                    report_format: ReportFormat = ReportFormat.xlsx):
     organization_id = cast_uuid(organization_id)
     channel_partner_id = cast_uuid(channel_partner_id)
     period_start = datetime.datetime.strptime(period_start, '%Y-%m-%d').date() if period_start else None
@@ -72,7 +72,7 @@ def generate_report(channel_partner_id: str = None,
     task_id = current_task.request.id
     retry_count = current_task.request.retries
     max_retries = current_task.max_retries
-    if report_format != 'xlsx':
+    if report_format not in (ReportFormat.xlsx, ReportFormat.csv):
         logger.warning('Unsupported format', format=report_format, task_id=current_task.request.id)
         raise ValueError(f'Unsupported format format={report_format}')
     if not channel_partner_id and not organization_id:
@@ -87,15 +87,22 @@ def generate_report(channel_partner_id: str = None,
         period_start = report_date.replace(day=1)
     if channel_partner_id:
         channel_partner = ChannelPartner.objects.get(id=channel_partner_id)
-        generator = ChannelPartnerReportGenerator(channel_partner, report_date=report_date, period_start=period_start)
+        generator = ChannelPartnerReportGenerator(
+            channel_partner,
+            report_date=report_date,
+            period_start=period_start,
+            report_format=report_format,
+        )
     else:
         organization = Organization.objects.get(id=organization_id)
-        generator = OrganizationReportGenerator(organization, report_date=report_date, period_start=period_start)
+        generator = OrganizationReportGenerator(
+            organization,
+            report_date=report_date,
+            period_start=period_start,
+            report_format=report_format,
+        )
     try:
-        if report_format == 'csv':
-            fp = generator.stream_csv()
-        else:
-            fp = generator.stream()
+        fp = generator.stream()
     except Exception as e:
         logger.error('Failed to generate report', exc_info=e)
         if retry_count >= max_retries:

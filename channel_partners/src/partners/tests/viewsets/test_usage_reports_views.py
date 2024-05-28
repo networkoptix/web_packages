@@ -615,31 +615,33 @@ class TestOrganizationGenerateReport:
 
     @mock_aws
     def test_success_generate_report(self, mocker):
-        self.mock_task.status = 'PENDING'
-        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': 'xlsx'}, doseq=True)
-        response = self.client.post(self.path, QUERY_STRING=query_string)
-        assert response.status_code == 200
-        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-        self.mock_generate_report.assert_called_once_with(
-            organization_id=str(self.organization.pk),
-            period_start=self.period_start.isoformat(),
-            user_id=self.organization_admin.user_id,
-            report_format='xlsx'
-        )
-        # check cache
-        cache_key = get_cached_report_key(
-            entity_id=self.organization.pk,
-            period_start=self.period_start,
-            user_id=self.organization_admin.user_id,
-            report_format='xlsx'
-        )
-        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
-        # check cached requests
-        response = self.client.post(self.path, QUERY_STRING=query_string)
-        assert response.status_code == 200
-        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-        assert self.mock_generate_report.call_count == 2
-        assert len(caches['default'].get(cache_key)) == 2
+        for format in ('xlsx', 'csv'):
+            self.mock_task.status = 'PENDING'
+            query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': format}, doseq=True)
+            response = self.client.post(self.path, QUERY_STRING=query_string)
+            assert response.status_code == 200
+            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+            self.mock_generate_report.assert_called_once_with(
+                organization_id=str(self.organization.pk),
+                period_start=self.period_start.isoformat(),
+                user_id=self.organization_admin.user_id,
+                report_format=format
+            )
+            # check cache
+            cache_key = get_cached_report_key(
+                entity_id=self.organization.pk,
+                period_start=self.period_start,
+                user_id=self.organization_admin.user_id,
+                report_format=format
+            )
+            assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+            # check cached requests
+            response = self.client.post(self.path, QUERY_STRING=query_string)
+            assert response.status_code == 200
+            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+            assert self.mock_generate_report.call_count == 2
+            assert len(caches['default'].get(cache_key)) == 2
+            self.mock_generate_report.reset_mock()
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
@@ -775,31 +777,33 @@ class TestChannelPartnerGenerateReport:
 
     @mock_aws
     def test_success_generate_report(self, mocker):
-        self.mock_task.status = 'PENDING'
-        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': 'xlsx'}, doseq=True)
-        response = self.client.post(self.path, QUERY_STRING=query_string)
-        assert response.status_code == 200
-        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-        self.mock_generate_report.assert_called_once_with(
-            channel_partner_id=str(self.channel_partner.pk),
-            period_start=self.period_start.isoformat(),
-            user_id=self.admin.user_id,
-            report_format='xlsx'
-        )
-        # check cache
-        cache_key = get_cached_report_key(
-            entity_id=self.channel_partner.pk,
-            period_start=self.period_start,
-            user_id=self.admin.user_id,
-            report_format='xlsx'
-        )
-        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
-        # check cached requests
-        response = self.client.post(self.path, QUERY_STRING=query_string)
-        assert response.status_code == 200
-        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-        assert self.mock_generate_report.call_count == 2
-        assert len(caches['default'].get(cache_key)) == 2
+        for format in ('xlsx', 'csv'):
+            self.mock_task.status = 'PENDING'
+            query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': format}, doseq=True)
+            response = self.client.post(self.path, QUERY_STRING=query_string)
+            assert response.status_code == 200
+            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+            self.mock_generate_report.assert_called_once_with(
+                channel_partner_id=str(self.channel_partner.pk),
+                period_start=self.period_start.isoformat(),
+                user_id=self.admin.user_id,
+                report_format=format
+            )
+            # check cache
+            cache_key = get_cached_report_key(
+                entity_id=self.channel_partner.pk,
+                period_start=self.period_start,
+                user_id=self.admin.user_id,
+                report_format=format
+            )
+            assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+            # check cached requests
+            response = self.client.post(self.path, QUERY_STRING=query_string)
+            assert response.status_code == 200
+            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+            assert self.mock_generate_report.call_count == 2
+            assert len(caches['default'].get(cache_key)) == 2
+            self.mock_generate_report.reset_mock()
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
