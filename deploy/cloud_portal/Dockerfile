@@ -10,8 +10,9 @@ ENV PIP_TRUSTED_HOST $ARTIFACTORY_HOST
 
 WORKDIR /app
 RUN set -ex \
+    && apt clean -y \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y  \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
         gettext-base mariadb-client-core-10.5 pkg-config \
     && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
@@ -37,7 +38,7 @@ COPY --from=requirements /app/requirements.txt /app/requirements.txt
 
 COPY stage/cloud/allowed_licenses.txt /app/allowed_licenses.txt
 RUN set -ex \
-    && apt update && apt install --no-install-suggests --no-install-recommends -y gcc \
+    && apt update && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gcc \
     && pip install --no-cache-dir -r /app/requirements.txt \
     && pip-licenses --format=json --with-urls --allow-only="$(cloud/allowed_licenses.txt | tr -d '\n')" > /app/requirements-license.json \
     && apt remove gcc -y && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*

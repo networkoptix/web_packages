@@ -8,11 +8,12 @@ ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
 
 WORKDIR /app
 RUN set -ex \
+    && apt clean -y \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y  \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl  libcurl4-openssl-dev tini pkg-config libpq5 libssl-dev \
     # TODO: !! REMOVE AFTER llutil published
-    && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
     && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
     && poetry config virtualenvs.create false --local \
@@ -28,7 +29,7 @@ COPY stage/llutil-0.6.tar.gz /app/llutil-0.6.tar.gz
 
 RUN set -ex \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y gettext-base \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gettext-base \
     && poetry lock --check \
     && poetry install --no-root --without test \
     && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*

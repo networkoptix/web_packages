@@ -8,11 +8,12 @@ ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
 
 WORKDIR /app
 RUN set -ex \
+    && apt clean -y \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y  \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl tini pkg-config libpq5  libcurl4-openssl-dev \
     # TODO: !! REMOVE AFTER llutil published
-    && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
     && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/* \
     && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3
@@ -26,9 +27,9 @@ RUN set -ex \
     && poetry lock --check \
     && poetry export --without-hashes --without-urls -o /app/requirements.txt \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y gettext-base \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gettext-base \
     # TODO: !! REMOVE AFTER llutil published
-    && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
     && pip install --no-cache-dir -r /app/requirements.txt
 
 
