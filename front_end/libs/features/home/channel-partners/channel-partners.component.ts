@@ -7,7 +7,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, Subject, combineLatestWith } from 'rxjs';
+import { Observable, Subject, combineLatestWith, throwError } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
@@ -25,6 +25,7 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoAccessComponent } from '@components/placeholdersV2/page/no-access/page-placeholder.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
@@ -72,6 +73,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         PipesModule,
         NxResizeObserver,
         NxPagePlaceholderV2Component,
+        NxPagePlaceholderNoAccessComponent,
         NxPagePlaceholderGenericNewV2Component,
         NxButtonComponent,
         NxAlertBlockComponent,
@@ -148,6 +150,8 @@ export class NxChannelPartnersComponent implements OnInit {
             ? PartnerRedirect.toPartnerSubChannels(parentChannelPartner.id)
             : '';
     });
+    processedTabs = false;
+    isValidPartner = true;
     searchConfig = searchConfig;
 
     search = { value: '' };
@@ -171,8 +175,8 @@ export class NxChannelPartnersComponent implements OnInit {
             .subscribe(([currentPartnerId, partners]) => {
                 const currPartner = partners.find(partner => partner.id === currentPartnerId);
                 if (partners.length && !currPartner) {
-                    console.error('Partner not found');
-                    return;
+                    this.isValidPartner = false;
+                    return throwError(() => 'Partner not found');
                 }
                 this.store.dispatch(
                     CPActions.loadPartner({

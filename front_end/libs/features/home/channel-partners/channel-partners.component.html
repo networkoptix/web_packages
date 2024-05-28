@@ -26,7 +26,9 @@
     }
     <ng-container
         *ngIf="
-            !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel;
+            isValidPartner &&
+                !routeData.parentData.inOrganization &&
+                !routeData.parentData.inSubchanne;
             else outlet
         "
     >
@@ -173,9 +175,14 @@
     </ng-container>
 
     <ng-template #outlet>
-        <nx-pre-loader *ngIf="isLoading$$(); else router"></nx-pre-loader>
-        <ng-template #router>
-            <router-outlet></router-outlet>
-        </ng-template>
+        @if (isValidPartner) {
+            @if (isLoading$$()) {
+                <nx-pre-loader></nx-pre-loader>
+            } @else {
+                <router-outlet></router-outlet>
+            }
+        } @else {
+            <nx-page-placeholder-no-access></nx-page-placeholder-no-access>
+        }
     </ng-template>
 </div>

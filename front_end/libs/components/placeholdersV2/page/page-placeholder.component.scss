@@ -29,7 +29,6 @@
 
 
     svg-icon {
-        height: 64px;
         display: block;
         margin-bottom: 16px;
     }
@@ -54,5 +53,10 @@
         justify-content: center;
         margin-top: 24px;
         max-width: 560px;
+    }
+
+    .text-contrast {
+        color: var(--text-contrast) !important;
+        opacity: 1 !important;
     }
 }

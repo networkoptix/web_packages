@@ -68,8 +68,10 @@
             }
         }
 
-        nx-page-placeholder-no-orgs {
+        nx-page-placeholder-no-access{
             height: 100%;
+            width: 500px;
+            align-self: center;
         }
     }
 }

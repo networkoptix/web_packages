@@ -1,0 +1,22 @@
+<nx-page-generic-placeholder-v2>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dirPageV2Placeholder + 'no_access.svg'"
+        [svgStyle]="{ 'width.px': '400', 'height.px': '200' }"
+    ></svg-icon>
+    <div
+        class="title text-contrast"
+        style="font-size: 1.5rem !important"
+        translate
+    >
+        Failed to access channel partner
+    </div>
+    <div
+        class="message text-contrast"
+        translate
+    >
+        No channel partner can be accessed by this link. This may happen when access to this channel
+        partner has been revoked, the channel partner from the link does not exist, or if you are
+        logged into the incorrect account
+    </div>
+</nx-page-generic-placeholder-v2>
