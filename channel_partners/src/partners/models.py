@@ -620,23 +620,21 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     @property
     def services(self) -> Dict[str, ServiceUsageDict]:
-        last_usages = ServiceUsage.get_latest_usages(self)
+        current_quantities = self.system_service_current_quantities.filter(organization=self.organization)
         used_services: Dict[str, dict[str, int]] = {
             service: {'used': 0, **quantity}
             for service, quantity in
             self.get_current_services().items()
         }
-        for usage in last_usages:
-            service_id: str = str(usage['service']) if usage['service'] else None
-            used = ServiceUsage.get_quantity_from_usage(usage['service__type'], usage['usage'])
+        for current_usage in current_quantities:
+            service_id: str = str(current_usage.service.id)
             if not used_services.get(service_id):
                 logger.warning(f"Used service not in allocated services",
                                current_services=list(used_services.keys()),
-                               service_id=service_id,
-                               service_type=usage['service__type'])
-                used_services[service_id] = {'used': used, 'quantity': 0}
+                               service_id=service_id)
+                used_services[service_id] = {'used': current_usage.quantity, 'quantity': 0}
             else:
-                used_services[service_id]['used'] = used
+                used_services[service_id]['used'] = current_usage.quantity
         return used_services
 
     @staticmethod
@@ -2817,3 +2815,14 @@ class CloudSystemHistory(models.Model):
         )
 
 
+class SystemServiceCurrentQuantity(models.Model):
+
+    cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.PROTECT,
+                                     related_name='system_service_current_quantities')
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
+    service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField(default=0)
+    updated_ts = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('cloud_system', 'organization', 'service')

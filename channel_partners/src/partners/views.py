@@ -145,6 +145,7 @@ from partners.serializers import (
     SystemGroupUserSerializer,
     SystemMembershipSerializer,
     SystemSerializer,
+    SystemServiceCurrentQuantitySerializer,
     SystemServiceQuantitySerializer,
     SystemToOrgTransferSerializer,
     SystemUsageReportSerializer,
@@ -1389,7 +1390,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
             return CloudSystemSerializer
 
     def get_permissions(self):
-        if self.action == 'system_usage_report':
+        if self.action in ('system_usage_report', 'system_current_usage'):
             return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_url_kwarg)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action in ('retrieve', 'services') or (self.action == 'service_quantity' and self.request.method == 'GET'):
@@ -1601,6 +1602,19 @@ class CloudSystemViewSet(NestedViewSetMixin,
         ser.is_valid(raise_exception=True)
         migration_result = ser.save(system=system)
         return Response(LicensesMigrationResultSerializer(instance=migration_result).data)
+
+    @extend_schema(
+        summary='Submit current system usage quantity.',
+        request=SystemServiceCurrentQuantitySerializer(many=False),
+        responses=SystemServiceQuantitySerializer(many=False))
+    @action(methods=['post'], detail=True)
+    def system_current_usage(self, request, id):
+        system = self.get_object()
+        ser = SystemServiceCurrentQuantitySerializer(
+            instance=system, data=request.data, context=self.get_serializer_context())
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response(SystemServiceQuantitySerializer(instance=system).data)
 
 
 @extend_schema(
