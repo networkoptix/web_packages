@@ -26,7 +26,6 @@ import {
     selectCurrentPartnerId,
     selectCurrentPartnerInfo,
     selectCurrentPartnerOrgs,
-    selectShowPermissionWarning,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
@@ -96,7 +95,6 @@ export class NxOrganizationsComponent implements OnInit {
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
-    showPermissionWarning$$ = this.store.selectSignal(selectShowPermissionWarning);
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
 
     hasSupportInfo$$ = computed(() => {

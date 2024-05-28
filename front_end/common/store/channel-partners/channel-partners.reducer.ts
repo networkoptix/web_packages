@@ -20,7 +20,7 @@ const initialState: ChannelPartnersState = {
     organizations: [],
     rootOrganizations: [],
     hasStoreLoaded: false,
-    showPermissionWarning: false,
+    banner: null,
 };
 
 export const channelPartnersReducer = createReducer(
@@ -41,12 +41,16 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
-        ChannelPartnerActions.setShowPermissionWarning,
-        (state, { showPermissionWarning }): ChannelPartnersState => ({
+        ChannelPartnerActions.showBannerAction,
+        (state, { banner }): ChannelPartnersState => ({
             ...state,
-            showPermissionWarning,
+            banner,
         }),
     ),
+    on(ChannelPartnerActions.hideBannerAction, state => ({
+        ...state,
+        banner: null,
+    })),
     on(
         ChannelPartnerActions.loadChannelPartnersAndOrgs,
         (state): ChannelPartnersState => ({

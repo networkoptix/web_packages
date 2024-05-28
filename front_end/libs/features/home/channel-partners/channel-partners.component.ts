@@ -17,9 +17,11 @@ import {
     selectCurrentPartnerOrgs,
     selectCurrentPartnerParent,
     selectArePartnerOrgsLoading,
+    selectBanner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -72,6 +74,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxPagePlaceholderV2Component,
         NxPagePlaceholderGenericNewV2Component,
         NxButtonComponent,
+        NxAlertBlockComponent,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -93,6 +96,7 @@ export class NxChannelPartnersComponent implements OnInit {
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+    warningBanner$$ = this.store.selectSignal(selectBanner);
 
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];

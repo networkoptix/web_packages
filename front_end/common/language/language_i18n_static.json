@@ -1311,6 +1311,7 @@
             },
             "infoToolTip": "Users with access based on access to higher-level folders",
             "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
+            "adminWarning": "There should be at least one user in the channel partner with Administrator permission",
             "deleteDialog": {
                 "delete": "Delete",
                 "deleteAccess": "Delete Access",
@@ -1348,7 +1349,8 @@
                 "Viewer": "Permitted to view live video, browse the archive, create bookmarks, and export video",
                 "Live Viewer": "Permitted to view live video ",
                 "System Health Viewer": "Permitted to view all alerts and access system health monitors."
-            }
+            },
+            "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
         }
     },
     "channelPartnerReports": {

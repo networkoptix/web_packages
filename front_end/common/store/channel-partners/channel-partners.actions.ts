@@ -4,6 +4,7 @@ import {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { Banner } from '@store/channel-partners/channel-partners.state';
 
 export const loadPartner = createAction(
     '[Channel Partners] Load partner',
@@ -15,10 +16,12 @@ export const loadPartnerOrgs = createAction(
     props<{ partnerId: string }>(),
 );
 
-export const setShowPermissionWarning = createAction(
-    '[Channel Partners] Set Admin permissions',
-    props<{ showPermissionWarning: boolean }>(),
+export const showBannerAction = createAction(
+    '[Channel Partners] Set Banner',
+    props<{ banner: Banner }>(),
 );
+
+export const hideBannerAction = createAction('[Channel Partners] Hide Banner');
 
 export const loadChannelPartnersAndOrgs = createAction(
     '[Channel Partners] Load channel partners and organizations',

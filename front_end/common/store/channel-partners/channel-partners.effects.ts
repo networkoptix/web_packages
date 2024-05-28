@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, mergeMap, of } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 
@@ -47,6 +47,13 @@ export class ChannelPartnersEffects {
                     ),
                 ),
             ),
+        );
+    });
+
+    showBannerEffect$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(ChannelPartnerActions.showBannerAction),
+            mergeMap(action => of(ChannelPartnerActions.hideBannerAction()).pipe(delay(3000))),
         );
     });
 
