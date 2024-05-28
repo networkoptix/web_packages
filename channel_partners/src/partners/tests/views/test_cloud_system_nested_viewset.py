@@ -55,11 +55,12 @@ class TestCloudSystemNestedViewSet:
     def test_initial(self):
         assert CloudSystemId.objects.filter(organization=self.organization).count() == 5
 
-    def test_parent_cp_user_403(self, mock_auth_with_user):
+    def test_parent_cp_user_200(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {uuid4()}")
         mock_auth_with_user(self.parent_cp_admin)
         response = self.client.get(self.path)
-        assert response.status_code == 403
+        assert response.status_code == 200
+        assert response.data['results'].__len__() == 5
 
     def test_cp_user_200(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {uuid4()}")

@@ -76,9 +76,9 @@ class TestOrganizationUserSystems:
     def test_initial(self):
         assert CloudSystemId.objects.filter(organization=self.organization).count() == 5
 
-    def test_parent_cp_user_none(self):
+    def test_parent_cp_user(self):
         queryset = self.organization.user_systems(self.parent_cp_admin.user)
-        assert queryset is None
+        assert queryset.count() == 5
 
     def test_parent_other_organization_user_none(self):
         queryset = self.organization.user_systems(self.other_organization_admin.user)

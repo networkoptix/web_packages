@@ -1609,7 +1609,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         )
 
     def user_systems(self, user: CloudUser):
-        if self.can_access_systems(user):
+        if self.can_access_organization_systems(user):
             return CloudSystemId.objects.filter(
                 organization=self,
                 system_state=CloudSystemStates.ACTIVATED
