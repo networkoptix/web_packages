@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     MatButtonToggle,
@@ -95,7 +95,7 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
         NgxTranslateCutModule,
     ],
 })
-export class NxOrganizationSettingsComponent extends SettingsBase implements OnInit, OnDestroy {
+export class NxOrganizationSettingsComponent extends SettingsBase implements OnInit {
     override LANG = staticLang;
     override icons = icons;
     orgUserStore = inject(OrgUsersStore);
@@ -211,7 +211,13 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
             this.currentPartnerAccess$.next(null);
             if (id !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
                 this.store.dispatch(
-                    CPActions.setShowPermissionWarning({ showPermissionWarning: true }),
+                    CPActions.showBannerAction({
+                        banner: {
+                            message: this.LANG.channelPartners.orgs.adminWarning,
+                            icon: 'error.svg',
+                            type: 'error',
+                        },
+                    }),
                 );
                 return;
             }
@@ -222,7 +228,6 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     };
 
     override resetUpdates = (): void => {
-        this.store.dispatch(CPActions.setShowPermissionWarning({ showPermissionWarning: false }));
         this.currentState$.next(this.effectState$$());
         this.currentName$.next(this.name$$());
         this.currentPartnerAccess$.next(this.accessLevel$$());
@@ -277,8 +282,4 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     }
 
     protected readonly MAX_ORG_NAME_LENGTH = MAX_NAME_LENGTH;
-
-    ngOnDestroy(): void {
-        this.store.dispatch(CPActions.setShowPermissionWarning({ showPermissionWarning: false }));
-    }
 }

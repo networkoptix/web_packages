@@ -108,6 +108,13 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         );
     });
 
+    adminCount$$ = computed(() => {
+        const adminUsers = this.channelPartnerUserRecords$$()?.filter(
+            user => user.roles[0] === 'Administrator',
+        );
+        return adminUsers?.length || 0;
+    });
+
     updateRole(user: UserRecord, roleId: string): void {
         const currPartner = this.currentPartner$$();
         this.cpService
@@ -211,6 +218,22 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     }
 
     bulkDeleteUsers(): void {
+        const adminUsers = this.selectedUsers$$()?.filter(
+            user => user.roles[0] === 'Administrator',
+        );
+
+        if (adminUsers?.length === this.adminCount$$()) {
+            this.store.dispatch(
+                cpActions.showBannerAction({
+                    banner: {
+                        message: this.LANG.channelPartners.usersTable.adminWarning,
+                        icon: 'error.svg',
+                        type: 'error',
+                    },
+                }),
+            );
+            return;
+        }
         const selectedUsers = this.selectedCount$$();
         const message =
             selectedUsers > 1

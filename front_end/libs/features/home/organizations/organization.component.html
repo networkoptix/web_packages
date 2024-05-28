@@ -64,82 +64,66 @@
             <nx-ribbon-standalone
                 [context]="groupsStore.currentRibbonContext$$()"
             ></nx-ribbon-standalone>
-            <div
-                class="content"
-                [ngClass]="{ 'back-button': inChannelPartner }"
-            >
-                <nx-pre-loader
-                    *ngIf="isLoading && !currentOrganization$$(); else cards"
-                ></nx-pre-loader>
-                <ng-template #cards>
-                    @if (showPermissionWarning$$()) {
-                        <nx-alert-block
-                            type="error"
-                            id="error"
-                            [iconSrc]="icons.dirNonStandard + 'error.svg'"
-                            [line1]="
-                                'There should be at least one user in the organization with Organization Administrator permissions'
-                                    | translate
-                            "
+
+            <nx-pre-loader
+                *ngIf="isLoading && !currentOrganization$$(); else cards"
+            ></nx-pre-loader>
+            <ng-template #cards>
+                <nx-hidable>
+                    @if (inChannelPartner) {
+                        <a
+                            [routerLink]="routerState.partnersRoot$$()"
+                            queryParamsHandling="preserve"
                         >
-                        </nx-alert-block>
+                            @if (!groupsStore.groupsPath$$().length) {
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                ></svg-icon>
+                            }
+                            <span translate> All Organizations </span></a
+                        >
                     }
-                    <nx-hidable>
-                        @if (inChannelPartner) {
-                            <a
-                                [routerLink]="routerState.partnersRoot$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                @if (!groupsStore.groupsPath$$().length) {
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [src]="icons.dirTextButtons + 'arrow_left.svg'"
-                                    ></svg-icon>
-                                }
-                                <span translate> All Organizations </span></a
-                            >
-                        }
-                        @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
-                            <a
-                                [nxHidableItem]="inChannelPartner"
-                                [routerLink]="routerState.rootGroupLink$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [svgStyle]="breadcrumbIconStyle"
-                                    [src]="icons.dir + 'organization.svg'"
-                                ></svg-icon>
-                                {{ currentOrganization$$()!.name }}</a
-                            >
-                        }
+                    @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
+                        <a
+                            [nxHidableItem]="inChannelPartner"
+                            [routerLink]="routerState.rootGroupLink$$()"
+                            queryParamsHandling="preserve"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="breadcrumbIconStyle"
+                                [src]="icons.dir + 'organization.svg'"
+                            ></svg-icon>
+                            {{ currentOrganization$$()!.name }}</a
+                        >
+                    }
 
-                        <a nxHidableTemplate>...</a>
+                    <a nxHidableTemplate>...</a>
 
-                        @for (
-                            breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
-                            track breadcrumb.id;
-                            let last = $last
-                        ) {
-                            <a
-                                [nxHidableItem]="!last"
-                                [ngStyle]="{ display: 'inline' }"
-                                [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [svgStyle]="breadcrumbIconStyle"
-                                    [src]="icons.dir + 'folder2.svg'"
-                                ></svg-icon>
-                                {{ breadcrumb.name }}</a
-                            >
-                        }
-                    </nx-hidable>
-                    <ng-template [ngTemplateOutlet]="body"></ng-template>
-                    <router-outlet></router-outlet>
-                </ng-template>
-            </div>
+                    @for (
+                        breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
+                        track breadcrumb.id;
+                        let last = $last
+                    ) {
+                        <a
+                            [nxHidableItem]="!last"
+                            [ngStyle]="{ display: 'inline' }"
+                            [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                            queryParamsHandling="preserve"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="breadcrumbIconStyle"
+                                [src]="icons.dir + 'folder2.svg'"
+                            ></svg-icon>
+                            {{ breadcrumb.name }}</a
+                        >
+                    }
+                </nx-hidable>
+                <ng-template [ngTemplateOutlet]="body"></ng-template>
+                <router-outlet></router-outlet>
+            </ng-template>
         </div>
     </div>
 </ng-container>

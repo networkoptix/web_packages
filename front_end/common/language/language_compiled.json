@@ -1607,6 +1607,7 @@
     "There are unsaved changes on the layout": "There are unsaved changes on the layout",
     "There is a another layout with the same name. Overwrite existing layout?": "There is a another layout with the same name. Overwrite existing layout?",
     "There must be at least one administrator. To change the role, add another user with the administrator role.": "There must be at least one administrator. To change the role, add another user with the administrator role.",
+    "There should be at least one user in the channel partner with Administrator permission": "There should be at least one user in the channel partner with Administrator permission",
     "There should be at least one user in the organization with Organization Administrator permissions": "There should be at least one user in the organization with Organization Administrator permissions",
     "There was a problem restarting the server.": "There was a problem restarting the server.",
     "There will be more than <strong>{maxServers}</strong> servers in the merged System.": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",

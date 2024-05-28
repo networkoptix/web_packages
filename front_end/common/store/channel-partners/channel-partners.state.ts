@@ -10,6 +10,12 @@ export const enum LoadingState {
     LOADED = 'LOADED',
 }
 
+export interface Banner {
+    message: string;
+    icon: string;
+    type: 'error';
+}
+
 export interface ChannelPartnersState {
     arePartnerOrgsLoading: boolean;
     channelPartnersAndOrgsLoadState: LoadingState;
@@ -23,5 +29,5 @@ export interface ChannelPartnersState {
     rootOrganizations: Organization[];
     channelStructure: ChannelPartnersStructure | undefined;
     hasStoreLoaded: boolean;
-    showPermissionWarning: boolean;
+    banner: Banner | null;
 }

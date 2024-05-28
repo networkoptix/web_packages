@@ -1,3 +1,12 @@
+@if (warningBanner$$()) {
+    <nx-alert-block
+        [type]="warningBanner$$().type"
+        id="error"
+        [iconSrc]="icons.dirNonStandard + warningBanner$$().icon"
+        [line1]="warningBanner$$().message | translate"
+    >
+    </nx-alert-block>
+}
 <div
     class="channel-partner"
     *ngIf="routeData$ | async as routeData"
