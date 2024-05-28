@@ -12,8 +12,9 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 RUN set -ex \
+    && apt clean -y \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y  \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
         gettext-base mariadb-client-core-10.5 pkg-config gcc \
     && curl -sSL https://install.python-poetry.org | python3 - \

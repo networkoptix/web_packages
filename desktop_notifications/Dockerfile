@@ -10,8 +10,9 @@ ENV PIP_INDEX_URL "$ARTIFACTORY_URL/api/pypi/pypi-remote/simple"
 ENV PIP_TRUSTED_HOST $ARTIFACTORY_HOST
 
 RUN set -ex \
+    && apt clean -y \
     && apt-get update \
-    && apt-get install --no-install-suggests --no-install-recommends -y  bash netcat jq curl tini \
+    && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y  bash netcat jq curl tini \
     && python -m pip install --upgrade pip==23.2.1 \
     && pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/* && rm -rf /root/.cache/pip
