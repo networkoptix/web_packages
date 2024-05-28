@@ -14,6 +14,7 @@ import staticLang from '@language_static';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { CurrentUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
+import { canViewLayouts } from '@utils/can-view-layouts';
 
 import { apiBase } from '../variables/static-variables';
 
@@ -390,15 +391,7 @@ export class NxMenusService {
             nodes.splice(1, 0, bookmarksNode); // Right after view
         }
 
-        // Layouts only usable with webRTC and rest cookie login
-        const layoutsEnabled =
-            activeSystem.version >= 5.1 &&
-            nxConfig.featureFlags.layouts &&
-            (nxConfig.featureFlags.restCookieLogin || !activeSystem.system2faEnabled);
-        const layoutsEnabledForBrowser =
-            // @ts-expect-error window.chrome only in Chromium browsers
-            nxConfig.featureFlags.layoutsNonChrome || !!window.chrome;
-        if (activeSystem.canViewADevice() && layoutsEnabled && layoutsEnabledForBrowser) {
+        if (activeSystem.canViewADevice() && canViewLayouts(activeSystem)) {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),

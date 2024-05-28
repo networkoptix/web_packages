@@ -48,6 +48,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CloudUserCompat, CurrentUser, SystemUser } from '@services/system-user.types';
 import { PermissionManager } from '@services/system.service/permission-manager/permission-manager';
 import { updateInterval } from '@static-variables';
+import { canViewLayouts } from '@utils/can-view-layouts';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 
 import { NxSystemAPI } from '../../system-legacy-api.service';
@@ -449,14 +450,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     };
 
     canViewLayouts() {
-        return (
-            this.version >= 5.1 &&
-            nxConfig.featureFlags.layouts &&
-            (nxConfig.featureFlags.restCookieLogin || !this.info.system2faEnabled) &&
-            (nxConfig.featureFlags.layoutsNonChrome ||
-                // @ts-expect-error chrome property only exist on chromium browsers
-                !!window.chrome)
-        );
+        return canViewLayouts(this);
     }
 
     canUserViewCloudStorage() {

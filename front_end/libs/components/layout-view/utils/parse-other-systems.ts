@@ -7,6 +7,7 @@ import { CloudSystemLight } from '@services/nx-cloud-api/cloud-services/channel-
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { canViewLayouts } from '@utils/can-view-layouts';
 import { isOrgSystem } from '@utils/nx';
 
 import { generateCamerasForTree } from './generate-cameras-for-tree';
@@ -25,7 +26,7 @@ export const parseOtherSystems = (
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
     const allSystems = otherSystems
-        .filter(({ version }) => version >= 5.1)
+        .filter(({ version }) => canViewLayouts(version))
         .map(system => {
             const parsedCameras = generateCamerasForTree(
                 parseCameras(

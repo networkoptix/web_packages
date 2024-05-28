@@ -92,6 +92,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_camera_groups = ('Layouts - Tree Camera Groups', 'layoutsCameraGroups')
     layouts_item_new_placeholder = ('Layouts - New Items Placeholders', 'layoutsItemNewPlaceholder')
     layouts_fisheye = ('Layouts - Fisheye De-warping', 'layoutsFisheye')
+    layouts_51_enabled = ('Layouts - Enabled for 5.1 Systems', 'layouts51Enabled')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 
