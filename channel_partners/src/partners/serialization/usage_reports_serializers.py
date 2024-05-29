@@ -29,9 +29,15 @@ class RegularUsageDetailRecordSerializer(serializers.Serializer):
     transactions = serializers.IntegerField(required=False)
 
 
+class SystemGroupDetailSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    name = serializers.CharField()
+
+
 class SystemServiceSummarySerializer(serializers.Serializer):
     system_id = serializers.UUIDField()
     system_name = serializers.CharField()
+    groups_path = SystemGroupDetailSerializer(many=True, allow_empty=True)
     channels = serializers.IntegerField()
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
@@ -54,6 +60,7 @@ class OrganizationServiceReportSerializer(serializers.Serializer):
 class SystemUsageSerializer(serializers.Serializer):
     system_id = serializers.UUIDField()
     system_name = serializers.CharField()
+    groups_path = SystemGroupDetailSerializer(many=True, allow_empty=True)
     report = RegularUsageDetailRecordSerializer(many=True)
 
 
@@ -125,6 +132,7 @@ class ChannelPartnerUsageReportRecordSerializer(serializers.Serializer):
 class SystemExpiringServiceSummarySerializer(serializers.Serializer):
     system_id = serializers.UUIDField()
     system_name = serializers.CharField()
+    groups_path = SystemGroupDetailSerializer(many=True, allow_empty=True)
     channels = serializers.IntegerField()
     expiration_date = serializers.DateField(format='%Y-%m-%d', required=False)
 

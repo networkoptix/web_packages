@@ -378,8 +378,8 @@ class TestExpiringUsageCalculator:
 
 
 class TestOrganizationReportsService:
-    def test_get_regular_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
-                                cp_service_factory):
+    def test_get_regular_system_reports(self, mocker, system_factory, organization_factory,
+                                        channel_partner_factory, cp_service_factory, system_group_factory):
         system_regular_report_mock = mocker.patch(
             'partners.services.usage_reports_service.CloudSystemReportsService.get_regular_report',
             side_effect=['report_1', 'report_2', 'report_3']
@@ -387,7 +387,9 @@ class TestOrganizationReportsService:
         cp = channel_partner_factory()
         organization = organization_factory(channel_partner=cp)
         service = cp_service_factory(channel_partner=cp)
-        systems = [system_factory(organization=organization) for i in range(3)]
+        group_0 = system_group_factory(organization=organization)
+        group_1 = system_group_factory(organization=organization, parent=group_0)
+        systems = [system_factory(organization=organization, system_group=group_1) for i in range(3)]
         for system in systems:
             system.created_ts = parser.parse('01-01-2023')
             system.save()
@@ -401,8 +403,13 @@ class TestOrganizationReportsService:
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
         )
         assert system_reports == [
-            {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i + 1}'} for i in
-            range(3)
+            {
+                'system_id': systems[i].system_id,
+                'system_name': systems[i].name,
+                'report': f'report_{i + 1}',
+                'groups_path': [{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}]
+            }
+            for i in range(3)
         ]
         assert save_snapshot_spy.call_count == 1
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
@@ -416,7 +423,7 @@ class TestOrganizationReportsService:
         assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
 
     def test_get_expiring_system_reports(self, mocker, system_factory, organization_factory, channel_partner_factory,
-                                cp_service_factory):
+                                         cp_service_factory, system_group_factory):
         system_expiring_report_mock = mocker.patch(
             'partners.services.usage_reports_service.CloudSystemReportsService.get_expiring_report',
             side_effect=['report_1', 'report_2', 'report_3']
@@ -424,7 +431,10 @@ class TestOrganizationReportsService:
         cp = channel_partner_factory()
         organization = organization_factory(channel_partner=cp)
         service = cp_service_factory(channel_partner=cp, sub_type=ChannelPartnerService.DEMO)
-        systems = [system_factory(organization=organization) for i in range(3)]
+        group_0 = system_group_factory(organization=organization)
+        group_1 = system_group_factory(organization=organization, parent=group_0)
+        systems = [system_factory(organization=organization, system_group=group_1) for i in range(3)]
+
         for system in systems:
             system.created_ts = parser.parse('01-01-2023')
             system.save()
@@ -438,8 +448,13 @@ class TestOrganizationReportsService:
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
         )
         assert system_reports == [
-            {'system_id': systems[i].system_id, 'system_name': systems[i].name, 'report': f'report_{i + 1}'} for i in
-            range(3)
+            {
+                'system_id': systems[i].system_id,
+                'system_name': systems[i].name,
+                'report': f'report_{i + 1}',
+                'groups_path': [{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}]
+            }
+            for i in range(3)
         ]
         assert save_snapshot_spy.call_count == 1
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
@@ -454,34 +469,53 @@ class TestOrganizationReportsService:
 
     def test_build_regular_summary_from_reports(self):
         systems = [(uuid.uuid4(), f'sys_{i}') for i in range(1, 4)]
+        groups_path = [{'id': uuid.uuid4(), 'name': 'group_1'}, {'id': uuid.uuid4(), 'name': 'group_2'}]
         reports = [
-            SystemRegularUsage(system_id=systems[0][0], system_name=systems[0][1], report=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=100, monthly_rate=100, daily_rate=0)
-            ]),
-            SystemRegularUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
-                                         transactions=1),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
-            ]),
-            SystemRegularUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
-                RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
-                RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0, daily_rate=200,
-                                         transactions=1),
-                RegularUsageDetailRecord(date=parser.parse('01-26-2024'), channels=20, monthly_rate=0, daily_rate=100,
-                                         transactions=1),
-                RegularUsageDetailRecord(date=TotalUsageDate, channels=140, monthly_rate=100, daily_rate=300)
-            ]),
+            SystemRegularUsage(
+                system_id=systems[0][0],
+                system_name=systems[0][1],
+                groups_path=groups_path,
+                report=[
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=100, monthly_rate=100, daily_rate=0)
+                ]
+            ),
+            SystemRegularUsage(
+                system_id=systems[1][0],
+                system_name=systems[1][1],
+                groups_path=groups_path,
+                report=[
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
+                    RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0,
+                                             daily_rate=200, transactions=1),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=120, monthly_rate=100, daily_rate=200)
+                ]
+            ),
+            SystemRegularUsage(
+                system_id=systems[2][0],
+                system_name=systems[2][1],
+                groups_path=groups_path,
+                report=[
+                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=100, monthly_rate=100, daily_rate=0),
+                    RegularUsageDetailRecord(date=parser.parse('01-21-2024'), channels=20, monthly_rate=0,
+                                             daily_rate=200, transactions=1),
+                    RegularUsageDetailRecord(date=parser.parse('01-26-2024'), channels=20, monthly_rate=0,
+                                             daily_rate=100, transactions=1),
+                    RegularUsageDetailRecord(date=TotalUsageDate, channels=140, monthly_rate=100, daily_rate=300)
+                ]
+            ),
         ]
 
         assert OrganizationReportsService.build_regular_service_summary_from_system_reports(
             reports) == OrganizationRegularServiceReport(systems=[
-            SystemRegularServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=100, monthly_rate=100,
+            SystemRegularServiceSummary(system_id=systems[0][0], system_name=systems[0][1],
+                                        groups_path=groups_path, channels=100, monthly_rate=100,
                                         daily_rate=0, changes_count=0, last_changed=None),
-            SystemRegularServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120, monthly_rate=100,
+            SystemRegularServiceSummary(system_id=systems[1][0], system_name=systems[1][1],
+                                        groups_path=groups_path, channels=120, monthly_rate=100,
                                         daily_rate=200, changes_count=1, last_changed=parser.parse('01-21-2024')),
-            SystemRegularServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140, monthly_rate=100,
+            SystemRegularServiceSummary(system_id=systems[2][0], system_name=systems[2][1],
+                                        groups_path=groups_path, channels=140, monthly_rate=100,
                                         daily_rate=300, changes_count=2, last_changed=parser.parse('01-26-2024'))
         ],
             summary=OrganizationRegularServiceSummary(channels=360, monthly_rate=300, daily_rate=500, systems=3)
@@ -489,29 +523,36 @@ class TestOrganizationReportsService:
 
     def test_build_expiring_summary_from_reports(self):
         systems = [(uuid.uuid4(), f'sys_{i}') for i in range(1, 4)]
+        groups_path = [{'id': uuid.uuid4(), 'name': 'group_1'}, {'id': uuid.uuid4(), 'name': 'group_2'}]
         reports = [
-            SystemExpiringUsage(system_id=systems[0][0], system_name=systems[0][1], report=[
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-10-2024'), channels=20),
-                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20)
-            ]),
-            SystemExpiringUsage(system_id=systems[1][0], system_name=systems[1][1], report=[
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('02-21-2024'), channels=120),
-                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=120)
-            ]),
-            SystemExpiringUsage(system_id=systems[2][0], system_name=systems[2][1], report=[
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=140),
-                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=140)
-            ]),
+            SystemExpiringUsage(system_id=systems[0][0], system_name=systems[0][1], groups_path=groups_path,
+                                report=[
+                                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-10-2024'), channels=20),
+                                    ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=20),
+                                ]),
+            SystemExpiringUsage(system_id=systems[1][0], system_name=systems[1][1], groups_path=groups_path,
+                                report=[
+                                    ExpiringUsageDetailRecord(expiration_date=parser.parse('02-21-2024'), channels=120),
+                                    ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=120)
+                                ]),
+            SystemExpiringUsage(system_id=systems[2][0], system_name=systems[2][1], groups_path=groups_path,
+                                report=[
+                                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=140),
+                                    ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=140)
+                                ]),
         ]
 
         expiring_service_report = OrganizationReportsService.build_expiring_service_summary_from_system_reports(reports)
 
         assert expiring_service_report['systems'] == [
-            SystemExpiringServiceSummary(system_id=systems[0][0], system_name=systems[0][1], channels=20,
+            SystemExpiringServiceSummary(system_id=systems[0][0], system_name=systems[0][1],
+                                         channels=20, groups_path=groups_path,
                                          expiration_date=parser.parse('01-10-2024')),
-            SystemExpiringServiceSummary(system_id=systems[1][0], system_name=systems[1][1], channels=120,
+            SystemExpiringServiceSummary(system_id=systems[1][0], system_name=systems[1][1],
+                                         channels=120, groups_path=groups_path,
                                          expiration_date=parser.parse('02-21-2024')),
-            SystemExpiringServiceSummary(system_id=systems[2][0], system_name=systems[2][1], channels=140,
+            SystemExpiringServiceSummary(system_id=systems[2][0], system_name=systems[2][1],
+                                         channels=140, groups_path=groups_path,
                                          expiration_date=parser.parse('01-15-2024')),
         ]
         assert expiring_service_report['summary']['channels'] == 280

@@ -7,3 +7,4 @@ src/notebooks
 *.iml
 **/.env
 **/.env.local
+usr/
