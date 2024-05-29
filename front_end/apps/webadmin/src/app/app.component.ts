@@ -92,7 +92,7 @@ export class AppComponent implements AfterViewInit {
     @ViewChild('ribbon', { read: ViewContainerRef }) ribbon: ViewContainerRef;
 
     lazyLoadHeader = async (): Promise<void> => {
-        await import('@components/header/header.module').then(m => m.HeaderModule);
+        await import('@components/header/header.component').then(m => m.NxHeaderComponent);
         const { NxHeaderComponent } = await import('@components/header/header.component');
         this.header.createComponent(NxHeaderComponent);
     };

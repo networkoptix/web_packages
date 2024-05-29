@@ -203,6 +203,34 @@
                     "outputHashing": "all",
                     "extractLicenses": true,
                     "vendorChunk": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "common/bootstrap/zone.ts",
+                            "with": "common/bootstrap/zoneless.ts"
+                        }
+                    ],
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "3mb",
+                            "maximumError": "4mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "200kb",
+                            "maximumError": "300kb"
+                        },
+                        {
+                            "type": "anyScript",
+                            "maximumWarning": "3mb",
+                            "maximumError": "4mb"
+                        }
+                    ]
+                },
+                "zoneless": {
+                    "outputHashing": "all",
+                    "extractLicenses": true,
+                    "vendorChunk": false,
                     "budgets": [
                         {
                             "type": "initial",
@@ -239,6 +267,9 @@
             "configurations": {
                 "development": {
                     "buildTarget": "authorization:build:development"
+                },
+                "zoneless": {
+                    "buildTarget": "authorization:build:zoneless"
                 },
                 "production": {
                     "buildTarget": "authorization:build:production"

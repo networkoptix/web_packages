@@ -26,8 +26,8 @@ import { FormattedUsageReportRecord } from './service-usage.types';
 export class NxServiceUsageComponent {
     readonly serviceUsageStore = inject(ServiceUsageStore);
 
-    private entityType$$ = input.required<EntityType>({ alias: 'entityType' });
-    private entityId$$ = input.required<string>({ alias: 'entityId' });
+    protected entityType$$ = input.required<EntityType>({ alias: 'entityType' });
+    protected entityId$$ = input.required<string>({ alias: 'entityId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
 
     formattedServiceUsageRecords$$ = computed<FormattedUsageReportRecord[]>(() => {

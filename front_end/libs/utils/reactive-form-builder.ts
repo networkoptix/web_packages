@@ -6,8 +6,7 @@ import {
     ɵFormGroupValue,
     ɵTypedOrUntyped,
 } from '@angular/forms';
-import { cloneDeep } from 'lodash';
-import { isEqual } from 'lodash-es';
+import { isEqual, cloneDeep } from 'lodash-es';
 
 export class NxFormControl<T> extends FormControl {
     initialValue: T;

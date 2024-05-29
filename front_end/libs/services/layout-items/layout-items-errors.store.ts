@@ -50,7 +50,7 @@ export class LayoutItemsErrorsStore extends signalStore(
                 message?: Translatable;
             },
         ) => {
-            const updates: PartialStateUpdater<NamedEntityState<Entity, never>>[] = [];
+            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
 
             if (!error || !id) {
                 return;
@@ -74,7 +74,7 @@ export class LayoutItemsErrorsStore extends signalStore(
                       message?: boolean;
                   },
         ) => {
-            const updates: PartialStateUpdater<NamedEntityState<Entity, never>>[] = [];
+            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
 
             if (!id || !clear) {
                 return;

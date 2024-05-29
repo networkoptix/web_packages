@@ -2,7 +2,12 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { Location, PathLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
-import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+    HTTP_INTERCEPTORS,
+    provideHttpClient,
+    withInterceptorsFromDi,
+    withXsrfConfiguration,
+} from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
@@ -29,6 +34,7 @@ import {
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { cdProviders } from '@common/bootstrap';
 import { accountReducer, AccountSync } from '@common/store/account';
 import { SystemResourcesSync } from '@common/store/system-resources/system-resources.sync';
 import { SystemsSync } from '@common/store/systems/systems.sync';
@@ -72,6 +78,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 }
 
 @NgModule({
+    declarations: [AppComponent],
+    exports: [],
+    bootstrap: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule.withConfig({
@@ -95,11 +104,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         ...(!environment.production
             ? [StoreDevtoolsModule.instrument({ connectInZone: true })]
             : []),
-        HttpClientModule,
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken',
-        }),
         PopoverModule,
         RouterModule,
         ServiceModule,
@@ -140,9 +144,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 marginBottom: 'var(--skeleton-margin-bottom)',
             },
         }),
-        // LoginWebadminModule
     ],
     providers: [
+        ...cdProviders,
         Location,
         Title,
         CookieService,
@@ -218,10 +222,14 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
         { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
+        provideHttpClient(
+            withInterceptorsFromDi(),
+            withXsrfConfiguration({
+                cookieName: 'csrftoken',
+                headerName: 'X-CSRFToken',
+            }),
+        ),
     ],
-    declarations: [AppComponent],
-    exports: [],
-    bootstrap: [AppComponent],
 })
 export class AppModule {
     constructor(

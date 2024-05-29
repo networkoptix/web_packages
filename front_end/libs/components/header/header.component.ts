@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -15,9 +16,11 @@ import {
     Event as RouterEvent,
     Router,
     RoutesRecognized,
+    RouterModule,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
@@ -25,6 +28,15 @@ import { firstValueFrom, BehaviorSubject, combineLatest, fromEvent } from 'rxjs'
 import { map, startWith } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
+import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';
+import { NxAdditionalSystemsTileComponent } from '@components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
+import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
@@ -42,6 +54,10 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+
+import { NxHeaderMainButtonComponent } from './main-button/main-button.component';
+import { NxNavDropdownComponent } from './nav-dropdown/nav-dropdown.component';
+import { NxTabsComponent } from './tabs/tabs.component';
 
 class CombinedWidths {
     constructor(
@@ -66,6 +82,24 @@ enum sizes {
     selector: 'nx-header',
     templateUrl: 'header.component.html',
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        NxAccountSettingsDropdown,
+        LanguageModule,
+        NxHeaderMainButtonComponent,
+        NxNavDropdownComponent,
+        NxTabsComponent,
+        NxDropMenu,
+        NxAdditionalSystemsTileComponent,
+        NxNavigationTileComponent,
+        NxSystemTileComponent,
+        NxResizeObserver,
+        NxClickElsewhereDirective,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxHeaderComponent implements OnInit {
     CONFIG = nxConfig;
@@ -353,7 +387,7 @@ export class NxHeaderComponent implements OnInit {
     }
 
     private async lazyLoadNewHeader() {
-        await import('./new-header/new-header.module').then(m => m.NewHeaderModule);
+        await import('./new-header/new-header.component').then(m => m.NxNewHeaderComponent);
         const { NxNewHeaderComponent } = await import('./new-header/new-header.component');
         const compRef = this.newHeaderRef.createComponent(NxNewHeaderComponent);
         compRef.instance.width = this.windowWidth$;

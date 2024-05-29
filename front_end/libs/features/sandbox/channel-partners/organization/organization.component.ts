@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ import { NxToastService } from '@services/toast.service';
     templateUrl: 'organization.component.html',
     styleUrls: ['organization.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, HttpClientModule, RouterModule, LetDirective, PushPipe],
+    imports: [CommonModule, FormsModule, RouterModule, LetDirective, PushPipe],
 })
 export class NxOrganizationComponent {
     private id$ = this.route.params.pipe(map<Params, string>(p => p.orgId));

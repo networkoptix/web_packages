@@ -49,8 +49,8 @@ function brew_install() {
     pip install virtualenv
     echo "installing poetry"
     pip install poetry==1.5.1
-    echo 'Installing node v18.15.0'
-    n 18.15.0
+    echo 'Installing node v18.19.1'
+    n 18.19.1
     echo "Installing python: $(cat .python-version)"
     pyenv install $(cat .python-version)
     virtualenv -p "$(pyenv which python)" env

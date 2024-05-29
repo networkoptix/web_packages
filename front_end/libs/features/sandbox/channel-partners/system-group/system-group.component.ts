@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { LetDirective, PushPipe } from '@ngrx/component';
@@ -14,14 +14,7 @@ import { GroupUser } from '@services/nx-cloud-api/cloud-services/channel-partner
     templateUrl: 'system-group.component.html',
     styleUrls: ['system-group.component.scss'],
     standalone: true,
-    imports: [
-        CommonModule,
-        RouterModule,
-        TranslateModule,
-        HttpClientModule,
-        LetDirective,
-        PushPipe,
-    ],
+    imports: [CommonModule, RouterModule, TranslateModule, LetDirective, PushPipe],
 })
 export class NxSystemGroupComponent {
     private id$ = this.route.params.pipe(map<Params, string>(p => p.groupId));

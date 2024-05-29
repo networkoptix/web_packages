@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -64,26 +64,6 @@ export const authorizedRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HttpClientModule,
-        RouterModule.forChild(authorizedRoutes),
-        AngularSvgIconModule,
-        NxAddSvgSrcDirective,
-        PipesModule,
-        NxFooterComponent,
-        NxNavFooterComponent,
-        NxProcessButtonComponent,
-        ToastContainerModule,
-        NxAuthorizeCreateAccountComponent,
-        NxAuthorizeResetPasswordComponent,
-        NxFocusMeDirective,
-        BindSystemToCloudComponent,
-    ],
-    providers: [],
     declarations: [
         NxAuthorizeComponent,
         NxAuthorizeEmailComponent,
@@ -98,5 +78,24 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeShow404Component,
     ],
     exports: [],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        ReactiveFormsModule,
+        FormsModule,
+        RouterModule.forChild(authorizedRoutes),
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        PipesModule,
+        NxFooterComponent,
+        NxNavFooterComponent,
+        NxProcessButtonComponent,
+        ToastContainerModule,
+        NxAuthorizeCreateAccountComponent,
+        NxAuthorizeResetPasswordComponent,
+        NxFocusMeDirective,
+        BindSystemToCloudComponent,
+    ],
+    providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class NxAuthorizeModule {}

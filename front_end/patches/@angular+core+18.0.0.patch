@@ -1,29 +1,29 @@
 diff --git a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
-index 8430939..111cfb8 100755
+index a7c1b14..1d394a0 100755
 --- a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
 +++ b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
 @@ -6,6 +6,7 @@
   * found in the LICENSE file at https://angular.io/license
   */
- import { assertInInjectionContext, assertNotInReactiveContext, computed, DestroyRef, inject, signal, ɵRuntimeError } from '@angular/core';
+ import { assertInInjectionContext, assertNotInReactiveContext, computed, DestroyRef, inject, signal, ɵRuntimeError, } from '@angular/core';
 +import { map } from 'rxjs/operators';
  /**
   * Get the current value of an `Observable` as a reactive `Signal`.
   *
-@@ -54,7 +55,7 @@ export function toSignal(source, options) {
+@@ -56,7 +57,7 @@ export function toSignal(source, options) {
      // consumer only needs to be notified when the `state` signal changes through the observable
      // subscription. Additional context (related to async pipe):
      // https://github.com/angular/angular/pull/50522.
 -    const sub = source.subscribe({
 +    const sub = source.pipe(map(value => value instanceof Object ? new Proxy(value, {}): value)).subscribe({
-         next: value => state.set({ kind: 1 /* StateKind.Value */, value }),
-         error: error => {
+         next: (value) => state.set({ kind: 1 /* StateKind.Value */, value }),
+         error: (error) => {
              if (options?.rejectErrors) {
 diff --git a/node_modules/@angular/core/index.d.ts b/node_modules/@angular/core/index.d.ts
-index 866a9f0..5481795 100755
+index 9722216..9c79d00 100755
 --- a/node_modules/@angular/core/index.d.ts
 +++ b/node_modules/@angular/core/index.d.ts
-@@ -13,6 +13,7 @@ import { SignalNode } from '@angular/core/primitives/signals';
+@@ -14,6 +14,7 @@ import { SignalNode } from '@angular/core/primitives/signals';
  import { Subject } from 'rxjs';
  import { Subscribable } from 'rxjs';
  import { Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ index 866a9f0..5481795 100755
  
  /**
   * @description
-@@ -11367,8 +11368,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
+@@ -11797,8 +11798,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
      /**
       * Update the value of the signal based on its current value, and
       * notify any dependents.

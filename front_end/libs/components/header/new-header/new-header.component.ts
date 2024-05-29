@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -7,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
+import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -15,11 +17,23 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
+import { NxHeaderLevelOneComponent } from './header-level-one/header-level-one.component';
+import { NxHeaderLevelTwoComponent } from './header-level-two/header-level-two.component';
+import { NxHeaderMobileComponent } from './mobile/mobile.component';
+
 @UntilDestroy()
 @Component({
     selector: 'nx-new-header',
     templateUrl: './new-header.component.html',
     styleUrls: ['./new-header.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        NxHeaderLevelOneComponent,
+        NxHeaderLevelTwoComponent,
+        NxHeaderMobileComponent,
+        NxThemeGeneratorComponent,
+    ],
 })
 export class NxNewHeaderComponent {
     @Input() nodes: MenuNode[];
@@ -111,4 +125,6 @@ export class NxNewHeaderComponent {
             this.selectedNode
         );
     }
+
+    themeGeneratorLayout = 'test';
 }

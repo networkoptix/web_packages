@@ -66,7 +66,11 @@
                 @for (service of availableServices$$(); track service.id) {
                     <nx-select-item [value]="service.id">{{ service.displayName }}</nx-select-item>
                 } @empty {
-                    <nx-select-item [disabled]="true">No Services Available</nx-select-item>
+                    <nx-select-item
+                        [disabled]="true"
+                        translate
+                        >No Services Available</nx-select-item
+                    >
                 }
             </nx-select-v2>
         </div>

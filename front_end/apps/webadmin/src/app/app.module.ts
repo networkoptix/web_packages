@@ -1,7 +1,7 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { Location, HashLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import {
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { cdProviders } from '@common/bootstrap';
 import { accountReducer } from '@common/store/account';
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
@@ -51,6 +52,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 }
 
 @NgModule({
+    declarations: [AppComponent],
+    exports: [],
+    bootstrap: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule.withConfig({
@@ -63,7 +67,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         ...(!environment.production
             ? [StoreDevtoolsModule.instrument({ connectInZone: true })]
             : []),
-        HttpClientModule,
         PopoverModule,
         RouterModule,
         ServiceModule,
@@ -89,6 +92,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxScrollHelperDirective,
     ],
     providers: [
+        ...cdProviders,
         NxApplyComponent,
         Location,
         Title,
@@ -140,9 +144,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             multi: true,
         },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        provideHttpClient(withInterceptorsFromDi()),
     ],
-    declarations: [AppComponent],
-    exports: [],
-    bootstrap: [AppComponent],
 })
 export class AppModule {}

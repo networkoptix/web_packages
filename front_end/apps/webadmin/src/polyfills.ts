@@ -1,6 +1,6 @@
 import { environment } from '@environments/environment';
 
-import 'zone.js';
+import '@common/bootstrap';
 
 // Required for: Safari MacOS 12-16.3, Safari iOS all
 // @ts-expect-error: https://caniuse.com/mdn-api_element_requestfullscreen

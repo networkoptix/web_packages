@@ -1,9 +1,9 @@
 {
     "extends": "./tsconfig.editor-overrides.json",
     "compilerOptions": {
-        "target": "es2020",
-        "module": "es2020",
-        "lib": ["es2020", "dom", "DOM.Iterable"],
+        "target": "ES2022",
+        "module": "ES2022",
+        "lib": ["ESNext", "dom", "DOM.Iterable"],
         "useDefineForClassFields": false,
         "moduleResolution": "node",
         "resolveJsonModule": true,
@@ -17,6 +17,7 @@
         "removeComments": true,
         "noUnusedLocals": true,
         "baseUrl": "",
+        "skipLibCheck": true,
         "paths": {
             "//": ["NOTE: The path order is important. Paths should be ordered from specific to general for autocomplete"],
             "@authorization/*": ["apps/authorization/*"],

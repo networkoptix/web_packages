@@ -112,6 +112,19 @@
                         }
                     ]
                 },
+                "zoneless": {
+                    "tsConfig": "apps/front-end/tsconfig.dev.json",
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.dev.ts"
+                        },
+                        {
+                            "replace": "common/bootstrap/zone.ts",
+                            "with": "common/bootstrap/zoneless.ts"
+                        }
+                    ]
+                },
                 "local": {
                     "tsConfig": "apps/front-end/tsconfig.dev.json",
                     "fileReplacements": [
@@ -181,6 +194,9 @@
             "configurations": {
                 "development": {
                     "buildTarget": "front-end:build:dev"
+                },
+                "zoneless": {
+                    "buildTarget": "front-end:build:zoneless"
                 },
                 "production": {
                     "buildTarget": "front-end:build:production"

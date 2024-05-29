@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { combineLatest, distinctUntilChanged } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 

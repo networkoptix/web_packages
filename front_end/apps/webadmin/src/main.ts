@@ -1,6 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+import { bootstrapProviders, bootstrapConfig } from '@common/bootstrap';
 import { environment } from '@common/environments/environment';
 import { DynamicConfig } from '@services/nx-config/dynamic-config';
 
@@ -10,19 +11,8 @@ if (environment.production) {
     enableProdMode();
 }
 
-interface Bootstrapable {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    bootstrap(): Promise<any>;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const bootstrapProviders = (...providers: Bootstrapable[]): Promise<any> =>
-    Promise.allSettled(providers.map(provider => provider.bootstrap())).then(providerResults =>
-        providerResults.map(res => res.status === 'fulfilled' && res.value).filter(val => !!val),
-    );
-
 bootstrapProviders(DynamicConfig).then(providers =>
     platformBrowserDynamic(providers)
-        .bootstrapModule(AppModule)
+        .bootstrapModule(AppModule, bootstrapConfig)
         .catch(err => console.error(err)),
 );

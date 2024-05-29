@@ -111,6 +111,23 @@
                         }
                     ]
                 },
+                "zoneless": {
+                    "tsConfig": "apps/webadmin/tsconfig.dev.json",
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.webadmin.ts"
+                        },
+                        {
+                            "replace": "libs/services/account.service/index.ts",
+                            "with": "libs/services/account.service/index.webadmin.ts"
+                        },
+                        {
+                            "replace": "common/bootstrap/zone.ts",
+                            "with": "common/bootstrap/zoneless.ts"
+                        }
+                    ]
+                },
                 "production": {
                     "tsConfig": "apps/webadmin/tsconfig.prod.json",
                     "deployUrl": "static/",
@@ -176,6 +193,9 @@
                 },
                 "development": {
                     "buildTarget": "webadmin:build:development"
+                },
+                "zoneless": {
+                    "buildTarget": "webadmin:build:zoneless"
                 }
             }
         },

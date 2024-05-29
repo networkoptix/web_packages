@@ -139,6 +139,37 @@
                             "maximumError": "28kb"
                         }
                     ]
+                },
+                "zoneless": {
+                    "tsConfig": "apps/setup-wizard/tsconfig.dev.json",
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.wizard-dev.ts"
+                        },
+                        {
+                            "replace": "common/bootstrap/zone.ts",
+                            "with": "common/bootstrap/zoneless.ts"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "namedChunks": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": false,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "1mb",
+                            "maximumError": "3mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "20kb",
+                            "maximumError": "28kb"
+                        }
+                    ]
                 }
             }
         },
@@ -158,6 +189,9 @@
                 },
                 "development": {
                     "buildTarget": "setup-wizard:build:development"
+                },
+                "zoneless": {
+                    "buildTarget": "setup-wizard:build:zoneless"
                 }
             }
         },

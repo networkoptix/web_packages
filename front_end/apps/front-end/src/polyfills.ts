@@ -1,7 +1,7 @@
 import { environment } from '@environments/environment';
 // import { InterceptorManager } from '@utils/interceptor-manager';
 
-import 'zone.js';
+import '@common/bootstrap';
 
 import 'rvfc-polyfill';
 

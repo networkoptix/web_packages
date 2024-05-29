@@ -1,5 +1,9 @@
 // import { isPlatformBrowser } from '@angular/common';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import {
+    provideHttpClient,
+    withInterceptorsFromDi,
+    withXsrfConfiguration,
+} from '@angular/common/http';
 import { APP_INITIALIZER, NgModule /* , Inject, APP_ID, PLATFORM_ID */ } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
@@ -11,6 +15,7 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { cdProviders } from '@common/bootstrap';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
@@ -26,15 +31,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 
 @NgModule({
     declarations: [AppComponent],
+    bootstrap: [AppComponent],
     imports: [
         BrowserModule.withServerTransition({ appId: 'authorization' }),
         StoreModule.forRoot({ account: accountReducer }),
         AppRoutingModule,
-        HttpClientModule,
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken',
-        }),
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
@@ -45,6 +46,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NgxWebstorageModule.forRoot(),
     ],
     providers: [
+        ...cdProviders,
         NxUriCacheService,
         WINDOWS_PROVIDERS,
         {
@@ -54,8 +56,14 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             multi: true,
         },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        provideHttpClient(
+            withInterceptorsFromDi(),
+            withXsrfConfiguration({
+                cookieName: 'csrftoken',
+                headerName: 'X-CSRFToken',
+            }),
+        ),
     ],
-    bootstrap: [AppComponent],
 })
 export class AppModule {
     // constructor(

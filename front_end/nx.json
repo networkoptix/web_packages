@@ -1,7 +1,4 @@
 {
-    "affected": {
-        "defaultBase": "develop"
-    },
     "tasksRunnerOptions": {
         "default": {
             "runner": "nx/tasks-runners/default",
@@ -114,5 +111,6 @@
             "!{projectRoot}/jest.config.[jt]s",
             "!{projectRoot}/src/test-setup.[jt]s"
         ]
-    }
+    },
+    "defaultBase": "develop"
 }
