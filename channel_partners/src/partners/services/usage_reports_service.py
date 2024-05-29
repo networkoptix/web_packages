@@ -32,6 +32,7 @@ from partners.models import (
     CloudSystemId,
     Organization,
     ReportSnapshot,
+    SystemGroup,
 )
 from tools.helpers import get_today
 
@@ -44,6 +45,14 @@ BeginningOfPeriodDateType = Literal['beginning']
 BeginningOfPeriodDate: BeginningOfPeriodDateType = 'beginning'
 TotalUsageDateType = Literal['total']
 TotalUsageDate: TotalUsageDateType = 'total'
+
+
+class SystemGroupDetail(TypedDict):
+    id: uuid.UUID
+    name: str
+
+
+SystemGroupsPath = List[SystemGroupDetail]
 
 
 class RegularUsageDetailRecord(TypedDict):
@@ -66,7 +75,7 @@ ExpiringUsageDetailList = List[ExpiringUsageDetailRecord]
 class SystemRegularUsage(TypedDict):
     system_id: uuid.UUID
     system_name: str
-
+    groups_path: SystemGroupsPath
     report: RegularUsageDetailList
 
 
@@ -76,6 +85,7 @@ SystemRegularUsages = List[SystemRegularUsage]
 class SystemExpiringUsage(TypedDict):
     system_id: uuid.UUID
     system_name: str
+    groups_path: SystemGroupsPath
     report: ExpiringUsageDetailList
 
 
@@ -85,6 +95,7 @@ SystemExpiringUsages = List[SystemExpiringUsage]
 class SystemRegularServiceSummary(TypedDict):
     system_id: uuid.UUID
     system_name: str
+    groups_path: SystemGroupsPath
     channels: int
     monthly_rate: int
     daily_rate: int
@@ -113,6 +124,7 @@ OrganizationRegularServiceReports = Dict[Union[uuid.UUID, str], OrganizationRegu
 class SystemExpiringServiceSummary(TypedDict):
     system_id: uuid.UUID
     system_name: str
+    groups_path: SystemGroupsPath
     channels: int
     expiration_date: Optional[datetime.date]
 
@@ -277,6 +289,24 @@ ReportsTypes = Union[
     ChannelPartnerExpiringServiceReport,
     ChannelPartnerUsageReport,
 ]
+
+
+def get_groups_path(system: CloudSystemId, groups: Optional[QuerySet[ChannelPartner]]) -> SystemGroupsPath:
+    if not system.system_group:
+        return []
+    if groups is None:
+        groups = SystemGroup.objects.filter(id__in=system.groups_path)
+    groups = list(groups)
+    ret = []
+    for group_id in system.groups_path:
+        group = next((group for group in groups if group.id == group_id), None)
+        if group:
+            ret.append({'id': group.id, 'name': group.name})
+        else:
+            # Highly unlikely, but just in case
+            ret.append({'id': group_id, 'name': 'Unknown Folder'})
+            logger.error("Group not found", group_id=group_id, system_id=system.system_id)
+    return ret
 
 
 class ReportSnapshotDoesNotExists(Exception):
@@ -873,13 +903,14 @@ class OrganizationReportsService:
         period_start, period_end = get_period_boundaries(period_start)
         system_reports: SystemRegularUsages = []
         # TODO: Report should only include systems that are bound and not shutdown during the period.
-
+        groups = organization.groups.all()
         systems = organization.cloud_systems.filter(created_ts__lte=period_end)
         for system in systems:
             system_reports.append(
                 SystemRegularUsage(
                     system_id=system.system_id,
                     system_name=system.name,
+                    groups_path=get_groups_path(system, groups),
                     report=CloudSystemReportsService.get_regular_report(
                                 cloud_system=system,
                                 organization=organization,
@@ -910,13 +941,14 @@ class OrganizationReportsService:
         period_start, period_end = get_period_boundaries(period_start)
         system_reports: SystemExpiringUsages = []
         # TODO: Report should only include systems that are bound and not shutdown during the period.
-
+        groups = organization.groups.all()
         systems = organization.cloud_systems.filter(created_ts__lte=period_end)
         for system in systems:
             system_reports.append(
                 SystemExpiringUsage(
                     system_id=system.system_id,
                     system_name=system.name,
+                    groups_path=get_groups_path(system, groups),
                     report=CloudSystemReportsService.get_expiring_report(
                         cloud_system=system,
                         organization=organization,
@@ -957,7 +989,8 @@ class OrganizationReportsService:
                 system_id=system_id,
                 changes_count=changes_count,
                 last_changed=last_changed,
-                system_name=report_dict['system_name']
+                system_name=report_dict['system_name'],
+                groups_path=report_dict['groups_path'],
             )
             summary['channels'] += system_service_dict['channels']
             summary['monthly_rate'] += system_service_dict['monthly_rate']
@@ -986,6 +1019,7 @@ class OrganizationReportsService:
                 channels=report['channels'],
                 system_id=system_id,
                 system_name=report_dict['system_name'],
+                groups_path=report_dict['groups_path'],
                 expiration_date=report['expiration_date']
             )
             summary['channels'] += system_service_dict['channels']

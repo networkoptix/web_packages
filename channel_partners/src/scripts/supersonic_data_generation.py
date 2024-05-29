@@ -43,10 +43,10 @@ def run(customization_name: str = 'default'):
 
 
 class Generator:
-    partner_depth = 1
-    group_depth = 0
+    partner_depth = 2
+    group_depth = 2
     org_dimension = 2
-    system_dimension = 5
+    system_dimension = 2
     batch_size = 200
     top_level_price = 4
     service_records_cnt = 12
