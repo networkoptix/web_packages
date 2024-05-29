@@ -62,6 +62,7 @@ export class CurrentStorageState {
     storageInfoLoaded: boolean;
     storageStatsLoaded: boolean;
     analyticsLoaded: boolean;
+    systemVersion: number;
 
     #serverManager: ServerManager;
     #hasAnalyticsData = false;
@@ -140,6 +141,8 @@ export class CurrentStorageState {
 
     constructor(state: Partial<CurrentStorageState>, analytics: any, serverManager: ServerManager) {
         this.#serverManager = serverManager;
+        this.systemVersion = serverManager.mediaserver.version;
+
         state.locations.forEach(location => {
             location.currentStorageState = this;
         });
@@ -284,21 +287,51 @@ export class Storage extends StorageDataStructure {
             return STORAGE_STATUS.INACCESSIBLE;
         }
 
-        const isStorageReserved = (storage: Storage, recursive = true): boolean =>
-            (!storage.isWritable && !storage.usedForWriting) ||
-            storage.totalSpace < 0 ||
-            storage.storageStatus.includes('tooSmall') ||
-            (storage.storageId.startsWith('/') &&
-                !storage.storageStatus.includes('removable') &&
-                storage.storageStatus !== 'none') ||
-            (storage.totalSpace < storage.currentStorageState.freeSpace / 6 &&
-                (storage.storageStatus.includes('system') ||
-                    (recursive &&
-                        storage.currentStorageState.locations.some(
-                            storage =>
-                                storage.storageId !== this.storageId &&
-                                isStorageReserved(storage, false),
-                        ))));
+        const isStorageReserved = (storage: Storage, recursive = true): boolean => {
+            if (this.isSystemV60) {
+                // Avoid issues with systems below v6.0
+                const nonWritable = !storage.isWritable;
+                const invalidSpace = storage.totalSpace < 0;
+                const tooSmall = storage.storageStatus.includes('tooSmall');
+                const availableAndNotRemovable =
+                    !storage.storageStatus.includes('removable') &&
+                    storage.storageStatus !== 'none';
+                const enoughSpace = storage.totalSpace > storage.currentStorageState.freeSpace / 6;
+                const isSystem = storage.storageStatus.includes('system');
+
+                return (
+                    nonWritable ||
+                    invalidSpace ||
+                    tooSmall ||
+                    !availableAndNotRemovable ||
+                    (!enoughSpace &&
+                        (isSystem ||
+                            (recursive &&
+                                storage.currentStorageState.locations.some(
+                                    storage =>
+                                        storage.storageId !== this.storageId &&
+                                        isStorageReserved(storage, false),
+                                ))))
+                );
+            } else {
+                return (
+                    (!storage.isWritable && !storage.usedForWriting) ||
+                    storage.totalSpace < 0 ||
+                    storage.storageStatus.includes('tooSmall') ||
+                    (storage.storageId.startsWith('/') &&
+                        !storage.storageStatus.includes('removable') &&
+                        storage.storageStatus !== 'none') ||
+                    (storage.totalSpace < storage.currentStorageState.freeSpace / 6 &&
+                        (storage.storageStatus.includes('system') ||
+                            (recursive &&
+                                storage.currentStorageState.locations.some(
+                                    storage =>
+                                        storage.storageId !== this.storageId &&
+                                        isStorageReserved(storage, false),
+                                ))))
+                );
+            }
+        };
 
         if (isStorageReserved(this)) {
             return STORAGE_STATUS.RESERVED;
@@ -328,6 +361,10 @@ export class Storage extends StorageDataStructure {
 
     get isSystem() {
         return this.storageStatus.includes('system');
+    }
+
+    get isSystemV60() {
+        return this.currentStorageState.systemVersion >= 6;
     }
 
     // Helpers

@@ -82,6 +82,7 @@ export class NxSystemStorageComponent implements OnInit {
     saveSettings: Process;
     resetWatchers: () => void;
 
+    systemVersion: boolean;
     canSeeDetailInfo: boolean;
     loading: boolean;
     waitingForStorages = true;
