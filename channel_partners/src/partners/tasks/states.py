@@ -7,5 +7,5 @@ from celery import shared_task
 def expire_confirmation(confirmation_id: uuid.UUID | str):
     from partners.models import ActionConfirmation
     (ActionConfirmation.objects
-     .filter(confirmation_id=confirmation_id)
+     .filter(id=confirmation_id)
      .update(state=ActionConfirmation.ConfirmationState.EXPIRED))
