@@ -94,6 +94,5 @@ class TestBindAdditionalRequestMetadata:
         mock_bind_contextvars.assert_called_once_with(
             path='/test/path',
             normalized_path=expected_normalized_path,
-            method='GET',
-            group_tag='test-path'
+            method='GET'
         )

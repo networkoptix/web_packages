@@ -1,5 +1,4 @@
 import structlog
-from django.core.cache import caches
 from django.dispatch import receiver
 from django.http import HttpRequest
 from django_structlog import signals
@@ -32,11 +31,9 @@ def bind_additional_request_metadata(request: HttpRequest, logger, **kwargs):
     :param kwargs: Additional keyword arguments (unused).
     """
     normalized_path: str = standardize_path(request.path)
-    group_tag = caches['local'].get(normalized_path, None)
 
     structlog.contextvars.bind_contextvars(
         path=request.path,
         normalized_path=normalized_path,
-        method=request.method,
-        group_tag=group_tag
+        method=request.method
     )
