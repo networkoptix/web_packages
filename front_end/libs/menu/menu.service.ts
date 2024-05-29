@@ -16,7 +16,8 @@ export class NxMenuService implements OnDestroy {
     selectedDetailsSection = new BehaviorSubject<string>('');
     contentSubject = new BehaviorSubject<Level1Item[]>([]);
     navItemSubject = new BehaviorSubject<string>('');
-    searchRegexSubject = new BehaviorSubject<RegExp>(null);
+    // Default value needs to be undefined to avoid highlighting on empty search. null was cast to string.
+    searchRegexSubject = new BehaviorSubject<RegExp>(undefined);
 
     private _hoverItemId: string;
 
@@ -131,7 +132,7 @@ export class NxMenuService implements OnDestroy {
                 }
             });
         } else {
-            this.searchRegexSubject.next(null);
+            this.searchRegexSubject.next(undefined);
             filteredContent = [...this.content];
         }
 
