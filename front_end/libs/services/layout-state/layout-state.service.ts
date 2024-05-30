@@ -54,6 +54,7 @@ import {
     RefreshSystemResources,
     SystemResourcesTypeMap,
 } from '@store/system-resources/system-resources.types';
+import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { cleanId, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 
@@ -90,14 +91,29 @@ export class LayoutStateService {
     // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
     editedLayout$$ = signal<{ id: string; isNew?: boolean } | null>(null);
 
-    activeLayoutItemsIds$$ = this.store.selectSignal(
+    activeLayoutItemsResourceIdAndPath$$ = this.store.selectSignal(
         createSelector(
             selectLayouts,
             selectActiveLayoutState,
-            (layouts, activeLayoutId): string[] =>
-                layouts
-                    .find(({ id }) => cleanId(id) === activeLayoutId)
-                    ?.items.map(({ resourceId }) => cleanId(resourceId)) || [],
+            (layouts, activeLayoutId): { resourceId: string; resourcePath: string }[] => {
+                const layout = layouts?.find(({ id }) => cleanId(id) === activeLayoutId);
+
+                if (!layout) {
+                    return [];
+                }
+                return (
+                    layout.items
+                        .map(
+                            ensureLayoutItemResourcePath(
+                                layout.systemId || this.systemService.currentSystem$$()?.id || '',
+                            ),
+                        )
+                        .map(({ resourcePath, resourceId }) => ({
+                            resourcePath,
+                            resourceId: cleanId(resourceId),
+                        })) || []
+                );
+            },
         ),
     );
 
@@ -224,7 +240,11 @@ export class LayoutStateService {
         );
     }
 
-    #showCloudLayoutsDialog = true;
+    /**
+     * Replace with a feature flag if we ever add either a dialog to introduce the cloud layouts feature
+     * or if we start adding dialogs to introduce new features since last visit.
+     */
+    #showCloudLayoutsDialog = false;
 
     duplicateAsNewLayout(layout: Layout, layoutType = LayoutTypes.LOCAL): string {
         const id = uuid();

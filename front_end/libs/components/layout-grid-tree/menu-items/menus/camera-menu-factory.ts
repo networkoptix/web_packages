@@ -12,17 +12,17 @@ export const cameraMenuFactory = (
 ): MenuItem<ResourceNodeMap[ResourceType.CAMERA]>[] =>
     [
         ...openWindowActions,
-        ...([] ||
-            (nxConfig.featureFlags.layoutsEditable &&
-                nxConfig.featureFlags.layoutsDeviceSettings && [
-                    {
-                        id: 'divider',
-                        name: 'divider',
-                    },
-                    {
-                        id: 'settings',
-                        name: staticLang.layouts.treeActions.cameraSettings.name,
-                        action: ($event, node) => createPortal(node.details),
-                    },
-                ])),
+        ...((nxConfig.featureFlags.layoutsEditable &&
+            nxConfig.featureFlags.layoutsDeviceSettings && [
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                {
+                    id: 'settings',
+                    name: staticLang.layouts.treeActions.cameraSettings.name,
+                    action: ($event, node) => createPortal(node.details),
+                },
+            ]) ||
+            []),
     ].filter(Boolean);

@@ -11,8 +11,6 @@ import {
     ResourceNodeMap,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
-import { NxCamerasComponent } from '@pages/systems/settings/cameras/cameras.component';
-import { NxSystemServersComponent } from '@pages/systems/settings/servers/servers.component';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
 import { Layout } from '@services/system-api.types/layouts.types';
@@ -123,17 +121,21 @@ export abstract class WithMenuItemsByType {
         }),
         [ResourceType.CAMERA]: cameraMenuFactory(
             camera =>
-                this.layoutStateService.createPortal(NxCamerasComponent, {
-                    system: this.system,
-                    camera,
+                import('@pages/systems/settings/cameras/cameras.component').then(m => {
+                    this.layoutStateService.createPortal(m.NxCamerasComponent, {
+                        system: this.system,
+                        camera,
+                    });
                 }),
             this.OPEN_WINDOW_ACTIONS,
         ),
         [ResourceType.SERVER]: serverMenuFactory(
             server =>
-                this.layoutStateService.createPortal(NxSystemServersComponent, {
-                    system: this.system,
-                    server,
+                import('@pages/systems/settings/servers/servers.component').then(m => {
+                    this.layoutStateService.createPortal(m.NxSystemServersComponent, {
+                        system: this.system,
+                        server,
+                    });
                 }),
             this.OPEN_WINDOW_ACTIONS,
         ),

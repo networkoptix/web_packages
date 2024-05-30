@@ -1,24 +1,15 @@
 // import { Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
-import { TourService } from 'ngx-ui-tour-md-menu';
-import {
-    asyncScheduler,
-    combineLatest,
-    firstValueFrom,
-    forkJoin,
-    merge,
-    Observable,
-    Subject,
-    timer,
-} from 'rxjs';
+import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
+import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
 import {
     catchError,
-    throttleTime,
     distinctUntilChanged,
     filter,
     map,
@@ -29,17 +20,21 @@ import {
 } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxLayoutGridComponent } from '@components/layout-grid/layout-grid.component';
 import {
     LayoutPlaceholder,
     placeholderNameLookup,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
+import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { GroupsCacheStore } from '@pages/home/store/groups/groups-cache.store';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
+import { LayoutStateModule } from '@services/layout-state/layout-state.module';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layout';
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
@@ -92,6 +87,16 @@ const onlyActiveOrgs = (org: Organization): boolean => org.effectiveState === 'a
     templateUrl: 'layout-view.component.html',
     styleUrls: ['layout-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        CommonModule,
+        NxLayoutGridComponent,
+        // NxLayoutTimelineComponent,
+        NxLayoutPtzComponent,
+        TourMatMenuModule,
+        NxPagePlaceholderComponent,
+        LayoutStateModule,
+    ],
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;
@@ -143,7 +148,7 @@ export class NxLayoutViewComponent {
                     ? this.systemsService.systemsSubject
                     : Promise.resolve([] as NxSystemInfo[]),
                 this.groupsCacheStore.getAllOrgStructures(onlyActiveOrgs),
-            ]).pipe(throttleTime(1000, asyncScheduler, { leading: true, trailing: true }));
+            ]);
         }),
         filter(res => Object.values(res[0]).every(Boolean) && !res[5]),
         map(cloneDeep),

@@ -2,15 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    HostBinding,
-    inject,
-    input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,14 +23,12 @@ import {
     BaseResourceNode,
     MergedResourceNode,
     ResourceNode,
-    ResourceType,
 } from '@components/layout-grid/layout-grid.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
-import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
@@ -47,8 +37,8 @@ import { SelectedCameraStore } from '@services/layout-state/store/selected-camer
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CameraTypeId } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { cleanId } from '@utils/general';
 
 @UntilDestroy()
 @Component({
@@ -80,6 +70,10 @@ import { cleanId } from '@utils/general';
         FormsModule,
     ],
     hostDirectives: [NxResizeObserver],
+    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
+    host: {
+        '[class]': 'this.class$$()',
+    },
 })
 export class NxLayoutGridTreeNode {
     expanded$$ = input<boolean>(false, { alias: 'expanded' });
@@ -97,11 +91,6 @@ export class NxLayoutGridTreeNode {
 
     readonly CONFIG = nxConfig;
     readonly icons = icons;
-    readonly LANG = staticLang;
-    protected readonly RESOURCE_TYPE = ResourceType;
-    value: string;
-
-    @HostBinding('class') class: Record<string, boolean> = {};
 
     baseNodeType$$ = computed(() => {
         const node = this.node$$();
@@ -124,12 +113,7 @@ export class NxLayoutGridTreeNode {
     constructor(
         public layoutItemsStore: LayoutItemsErrorsStore,
         public layoutStateService: LayoutStateService,
-    ) {
-        effect(() => {
-            this.value = this.node$$().name;
-            this.class = this.class$$();
-        });
-    }
+    ) {}
 
     offline$$ = computed(() => {
         const node = this.node$$();
@@ -184,19 +168,40 @@ export class NxLayoutGridTreeNode {
 
     selectedStateStore = inject(SelectedCameraStore);
 
+    systemService = inject(NxSystemService);
+
     activated$$ = computed(() => {
         const node = this.node$$();
-        const selectedCameraId = this.selectedStateStore.selectedLayoutItemId$$();
+        const selectedCamera = this.selectedStateStore.selectedLayoutItem$$();
 
-        return !!selectedCameraId && node.details?.id === selectedCameraId;
+        const currentSystem = this.systemService.currentSystem$$();
+
+        if (!node.details || !currentSystem || !selectedCamera) {
+            return false;
+        }
+
+        const id = node.details.id;
+
+        const resourcePath = `cloud://${
+            'systemId' in node.details ? node.details.systemId : currentSystem.id
+        }.${id}`;
+        return resourcePath === selectedCamera.resourcePath;
     });
 
     checked$$ = computed(() => {
-        const id = this.node$$().details?.id;
-        if (!id) {
+        const node = this.node$$();
+        if (!node.details?.id) {
             return false;
         }
-        return this.layoutStateService.activeLayoutItemsIds$$().includes(cleanId(id));
+        const activeResourcePaths = this.layoutStateService.activeLayoutItemsResourceIdAndPath$$();
+
+        if (assertResourceOfType.camera(node)) {
+            const { id, systemId } = node.details;
+            return activeResourcePaths
+                .map(({ resourcePath }) => resourcePath)
+                .includes(`cloud://${systemId}.${id}`);
+        }
+        return activeResourcePaths.map(({ resourceId }) => resourceId).includes(node.details.id);
     });
 
     unsavedLayoutString$$ = computed(() => {

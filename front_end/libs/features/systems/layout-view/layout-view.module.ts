@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxLayoutViewComponent } from '@components/layout-view/layout-view.component';
-import { LayoutViewModule } from '@components/layout-view/layout-view.module';
 import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@pipes/pipes.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
@@ -36,7 +35,6 @@ const appRoutes: Routes = [
         AngularSvgIconModule,
         DragDropModule,
         PipesModule,
-        LayoutViewModule,
     ],
     providers: [],
     declarations: [],

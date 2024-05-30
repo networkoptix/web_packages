@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 import { LayoutResourceTree, ResourceType } from '@components/layout-grid/layout-grid.types';
-import { dirtyId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 
 import { createLayoutItem } from './create-layout-item';
 
@@ -49,7 +49,7 @@ describe('createLayoutItem', () => {
             id: expect.any(String),
             left: 0,
             resourceId,
-            resourcePath: `cloud://${systemId}.${resourceId}`,
+            resourcePath: `cloud://${cleanId(systemId)}.${cleanId(resourceId)}`,
             right: 0,
             rotation,
             top: 0,

@@ -4,6 +4,7 @@ import { setEntity, withEntities } from '@ngrx/signals/entities';
 import { isEqual } from 'lodash-es';
 
 import { NxParamStateService } from '@services/param-state/param-state.service';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { cleanId } from '@utils/general';
 
 export interface SelectedState {
@@ -12,9 +13,12 @@ export interface SelectedState {
      */
     id: string;
     /**
-     * Layout item id
+     * Layout item id and resourcePath
      */
-    selected: string;
+    selected: {
+        id: string;
+        resourcePath: string;
+    };
     /**
      * Is initial or user selected
      */
@@ -34,10 +38,16 @@ export const SelectedCameraStore = signalStore(
 
         const selectedLayoutItemState$$ = computed(() => {
             const id = currentLayoutId$$();
-            return store.selectedStateEntityMap()[id] || { id, selected: '', initial: true };
+            return (
+                store.selectedStateEntityMap()[id] || {
+                    id,
+                    selected: { id: '', resourcePath: '' },
+                    initial: true,
+                }
+            );
         });
 
-        const selectedLayoutItemId$$ = computed(() => {
+        const selectedLayoutItem$$ = computed(() => {
             const layoutId = currentLayoutId$$();
             const selectedStateMap = store.selectedStateEntityMap()[layoutId];
             return selectedStateMap?.selected;
@@ -53,14 +63,20 @@ export const SelectedCameraStore = signalStore(
         return {
             currentLayoutId$$,
             selectedLayoutItemState$$,
-            selectedLayoutItemId$$,
+            selectedLayoutItem$$,
             manuallySelectedEntities$$,
         };
     }),
     withMethods(store => {
-        const updateSelectedResource = (layoutItemId: string, initial = false): void => {
+        const updateSelectedResource = (
+            layoutItem: Pick<LayoutItem, 'id' | 'resourcePath'>,
+            initial = false,
+        ): void => {
             const id = store.currentLayoutId$$();
-            const selected = cleanId(layoutItemId);
+            const selected = {
+                id: cleanId(layoutItem.id),
+                resourcePath: layoutItem.resourcePath,
+            };
             patchState(store, setEntity({ id, selected, initial }, selectedStateEntity));
         };
 

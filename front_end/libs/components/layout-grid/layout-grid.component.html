@@ -1,6 +1,7 @@
 @if (layoutItemLookup && system.permissionManager.currentUser$$() && (layout$ | async); as layout) {
     <div
         class="sidebar-wrapper left"
+        tourAnchor="cloud-layouts_left-menu"
         [ngStyle]="{
             width:
                 layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
@@ -84,7 +85,7 @@
         >
             <svg-icon
                 #resources
-                (click)="layoutGridService.toggleMenu('left', true)"
+                (click)="layoutGridService.toggleMenu('left', true); $event.stopPropagation()"
                 nx-add-svg-src
                 [src]="icons.dirTextButtons + 'arrow_left.svg'"
             >
@@ -97,17 +98,20 @@
             (cdkDragReleased)="resizeMenuComplete($event)"
             (cdkDragMoved)="resizeMenu($event)"
         ></div>
-        <nx-layout-grid-tree
-            [layout]="layout"
-            [system]="system"
-            [layoutItemLookup]="layoutItemLookup"
-            [dataSource]="activeSystemSearchResults$$()"
-            [linkedDataSource]="layoutItemLookup.otherSystems"
-            [treeControl]="treeControl"
-            [showTooltip]="showTooltip$ | async"
-            [changingLayout]="changingLayout"
-            [showFirst]="showFirst$$()"
-        ></nx-layout-grid-tree>
+
+        @defer {
+            <nx-layout-grid-tree
+                [layout]="layout"
+                [system]="system"
+                [layoutItemLookup]="layoutItemLookup"
+                [dataSource]="activeSystemSearchResults$$()"
+                [linkedDataSource]="layoutItemLookup.otherSystems"
+                [treeControl]="treeControl"
+                [showTooltip]="showTooltip$ | async"
+                [changingLayout]="changingLayout"
+                [showFirst]="showFirst$$()"
+            ></nx-layout-grid-tree>
+        }
         @if (layoutItemLookup.otherSystems?.length && layoutGridService.isLeftMenuOpen$$()) {
             <details
                 #otherSystems
@@ -120,7 +124,7 @@
                     [ngClass]="{ 'dropdown-show': !otherSystemsOpen$$() }"
                 >
                     <button
-                        (click)="otherSystems.open = !otherSystems.open"
+                        (click)="otherSystems.open = !otherSystems.open; $event.stopPropagation()"
                         class="other-sites-toggle arrow-flip"
                     >
                         <svg-icon
@@ -260,23 +264,25 @@
                                     }
                                 </div>
                             } @else if (otherSystems.length) {
-                                <nx-layout-grid-tree
-                                    #otherSitesMenu
-                                    (scrollChange)="updateOtherSitesScroll($event)"
-                                    [searchType]="
-                                        CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu
-                                            ? 'filter'
-                                            : undefined
-                                    "
-                                    [layout]="layout"
-                                    [system]="system"
-                                    [layoutItemLookup]="layoutItemLookup"
-                                    [dataSource]="otherSystems"
-                                    [treeControl]="treeControl"
-                                    [showTooltip]="showTooltip$ | async"
-                                    [changingLayout]="changingLayout"
-                                    hideNoResults
-                                ></nx-layout-grid-tree>
+                                @defer {
+                                    <nx-layout-grid-tree
+                                        #otherSitesMenu
+                                        (scrollChange)="updateOtherSitesScroll($event)"
+                                        [searchType]="
+                                            CONFIG.featureFlags.layoutsUpdatedCrossSystemMenu
+                                                ? 'filter'
+                                                : undefined
+                                        "
+                                        [layout]="layout"
+                                        [system]="system"
+                                        [layoutItemLookup]="layoutItemLookup"
+                                        [dataSource]="otherSystems"
+                                        [treeControl]="treeControl"
+                                        [showTooltip]="showTooltip$ | async"
+                                        [changingLayout]="changingLayout"
+                                        hideNoResults
+                                    ></nx-layout-grid-tree>
+                                }
                             }
                         }
                     } @placeholder (minimum 1s) {
@@ -669,29 +675,30 @@
                                                 "
                                                 class="layout-item"
                                                 (click)="
-                                                    layoutItemLookup[item.resourceId].type ===
+                                                    layoutItemLookup[item.resourceId]?.type ===
                                                         RESOURCE_TYPE.CAMERA &&
                                                         selectedCameraStore.updateSelectedResource(
-                                                            item.id
+                                                            item
                                                         )
                                                 "
                                                 [ngClass]="{
                                                     'camera-layout-item':
                                                         layoutItemLookup[item.resourceId] &&
-                                                        layoutItemLookup[item.resourceId].type ===
+                                                        layoutItemLookup[item.resourceId]?.type ===
                                                             RESOURCE_TYPE.CAMERA,
                                                     'server-layout-item':
                                                         layoutItemLookup[item.resourceId] &&
-                                                        layoutItemLookup[item.resourceId].type ===
+                                                        layoutItemLookup[item.resourceId]?.type ===
                                                             RESOURCE_TYPE.SERVER,
                                                     'full-screen-override':
                                                         layoutItemWrapper ===
                                                         window.document.fullscreenElement,
                                                     collided: (collisions$ | async)[item.id],
                                                     'focused-item':
-                                                        selectedCameraStore.selectedLayoutItemId$$() &&
+                                                        selectedCameraStore.selectedLayoutItem$$() &&
                                                         item.id.includes(
-                                                            selectedCameraStore.selectedLayoutItemId$$()
+                                                            selectedCameraStore.selectedLayoutItem$$()
+                                                                .id
                                                         )
                                                 }"
                                                 [ngStyle]="
@@ -772,9 +779,10 @@
                                                                             >
                                                                                 <nx-video-player
                                                                                     [muted]="
-                                                                                        !selectedCameraStore.selectedLayoutItemId$$() ||
+                                                                                        !selectedCameraStore.selectedLayoutItem$$() ||
                                                                                         !item.id.includes(
-                                                                                            selectedCameraStore.selectedLayoutItemId$$()
+                                                                                            selectedCameraStore.selectedLayoutItem$$()
+                                                                                                .id
                                                                                         )
                                                                                     "
                                                                                     [showFisheye]="
@@ -828,21 +836,24 @@
                                                                                 | narrowWith
                                                                                     : assertResourceOfType.server
                                                                         ) {
-                                                                            <nx-monitoring-graph
-                                                                                [systemIdOrResourcePath]="
-                                                                                    item.resourcePath
-                                                                                "
-                                                                                [selectedServerId]="
-                                                                                    itemDetail
-                                                                                        .details.id
-                                                                                "
-                                                                                [lostConnectionPlaceholder]="
-                                                                                    offlinePlaceholder
-                                                                                "
-                                                                                noFrame
-                                                                                class="theme-override"
-                                                                                data-theme="dark"
-                                                                            ></nx-monitoring-graph>
+                                                                            @defer {
+                                                                                <nx-monitoring-graph
+                                                                                    [systemIdOrResourcePath]="
+                                                                                        item.resourcePath
+                                                                                    "
+                                                                                    [selectedServerId]="
+                                                                                        itemDetail
+                                                                                            .details
+                                                                                            .id
+                                                                                    "
+                                                                                    [lostConnectionPlaceholder]="
+                                                                                        offlinePlaceholder
+                                                                                    "
+                                                                                    noFrame
+                                                                                    class="theme-override"
+                                                                                    data-theme="dark"
+                                                                                ></nx-monitoring-graph>
+                                                                            }
                                                                         }
                                                                     }
                                                                     @case (RESOURCE_TYPE.WEB_PAGE) {
@@ -1000,10 +1011,12 @@
                 }
 
                 @if (CONFIG.featureFlags.layoutsTimeline) {
-                    <nx-webgl-canvas
-                        [selectedCameraId]="selectedCameraId$$()"
-                        [cameras]="currentLayoutCameras$$()"
-                    ></nx-webgl-canvas>
+                    @defer (when selectedCameraId$$() && currentLayoutCameras$$().length) {
+                        <nx-webgl-canvas
+                            [selectedCameraId]="selectedCameraId$$()"
+                            [cameras]="currentLayoutCameras$$()"
+                        ></nx-webgl-canvas>
+                    }
                 }
             </div>
         } @else {

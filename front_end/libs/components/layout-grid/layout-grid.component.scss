@@ -136,6 +136,9 @@ nx-webgl-canvas {
             display: flex;
             justify-content: center;
             align-items: center;
+            & > svg-icon {
+                position: absolute;
+            }
         }
     }
 
@@ -163,6 +166,12 @@ nx-webgl-canvas {
     flex-direction: column;
     justify-content: space-between;
     transition-property: width, background;
+
+    & > nx-layout-grid-tree {
+        min-height: min(25%, 144px);
+        flex-shrink: 1;
+        flex-grow: 1;
+    }
 
     &.resizing {
         transition-property: background;

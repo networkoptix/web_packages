@@ -28,7 +28,6 @@
     }
     <div
         cdkDropList
-        tourAnchor="cloud-layouts_left-menu"
         [cdkDropListDisabled]="layout.locked"
         [cdkDropListEnterPredicate]="preventDrop"
         [ngClass]="{ 'tree-invisible': !layoutGridService.isLeftMenuOpen$$() }"
@@ -110,8 +109,8 @@
                             !node.type ||
                             node.details?.id === layout.id
                         "
-                        (click)="handleSingleClick(node, parent)"
-                        (dblclick)="handleDoubleClick(node)"
+                        (click)="handleSingleClick(node, parent, $event)"
+                        (dblclick)="handleDoubleClick(node, $event)"
                         (cdkDragMoved)="
                             layoutGridService.moveAddedItem.next({
                                 event: $event,

@@ -444,30 +444,64 @@ export class NxLayoutGridComponent {
 
     selectedCameraStore = inject(SelectedCameraStore);
 
-    updateSelectedCameraEffect = effect(
+    layoutItemsWithDefaultOrder$$ = computed(
         () => {
             const layout = this.layout$$();
             const layoutItemLookup = this.layoutItemLookup$$();
 
             if (!layout || !layoutItemLookup) {
-                return;
+                return null;
             }
 
-            const layoutItems = layout.items;
-
-            const layoutItemIds = layoutItems
+            const items = layout.items
                 .filter(({ resourceId }) => {
                     const isCamera = assertResourceOfType.camera(layoutItemLookup[resourceId]);
                     const hasPermission = this.system.permissionManager.canViewDevice(resourceId);
                     return isCamera && hasPermission;
                 })
-                .map(({ id }) => cleanId(id));
+                .sort((a, b) => {
+                    const top = a.top - b.top;
+                    const left = a.left - b.left;
+                    return top || left;
+                })
+                .map(({ id, resourcePath }) => ({ id, resourcePath }));
+
+            return {
+                id: layout.id,
+                items,
+            };
+        },
+        {
+            equal: (a, b) => {
+                if (!a || !b) {
+                    return false;
+                }
+
+                if (a.id !== b.id) {
+                    return false;
+                }
+
+                const previousDefault = a.items[0];
+                return previousDefault && !!b.items.find(({ id }) => previousDefault.id === id);
+            },
+        },
+    );
+
+    updateSelectedCameraEffect = effect(
+        () => {
+            const layout = this.layoutItemsWithDefaultOrder$$();
+
+            if (!layout) {
+                return;
+            }
+
+            const layoutItemIds = layout.items;
 
             const selectedItemState = untracked(() =>
                 this.selectedCameraStore.selectedLayoutItemState$$(),
             );
 
-            if (selectedItemState.id !== cleanId(layout.id)) {
+            if (!layout?.id || !selectedItemState || selectedItemState.id !== cleanId(layout.id)) {
                 // this.layout$$ is asynchronous and this.selectedStateStore.selectedLayoutItemState$$
                 // is synchronous, this is to handle potential race conditions.
                 return;
@@ -479,7 +513,9 @@ export class NxLayoutGridComponent {
                 return;
             }
 
-            const selectedInLayout = layoutItemIds.includes(cleanId(selectedItemState.selected));
+            const selectedInLayout = layoutItemIds
+                .map(({ id }) => id)
+                .includes(selectedItemState.selected.id);
 
             if (selectedInLayout) {
                 return;
@@ -493,9 +529,9 @@ export class NxLayoutGridComponent {
     );
 
     selectedCameraId$$ = computed(() => {
-        const selectedLayoutItemId = this.selectedCameraStore.selectedLayoutItemId$$();
+        const selectedLayoutItemId = this.selectedCameraStore.selectedLayoutItem$$();
         const layoutItem = this.layout$$()?.items.find(
-            ({ id }) => cleanId(id) === selectedLayoutItemId,
+            ({ id }) => cleanId(id) === selectedLayoutItemId.id,
         );
 
         return layoutItem ? cleanId(layoutItem.resourceId) : '';
@@ -587,7 +623,11 @@ export class NxLayoutGridComponent {
                 [
                     this.parseLayout({
                         ...layout,
-                        items: this.filterRemovedResources(layout.items || []),
+                        items: this.filterRemovedResources(
+                            layout.items.map(
+                                ensureLayoutItemResourcePath(layout.systemId || this.system.id),
+                            ) || [],
+                        ),
                     }),
                     wrapperSize,
                 ] as const,

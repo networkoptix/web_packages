@@ -43,7 +43,7 @@
                     <button
                         class="inset search-clear btn btn-clear"
                         *ngIf="localFilter.query"
-                        (click)="resetQuery()"
+                        (click)="resetQuery(); $event.stopPropagation()"
                     >
                         <svg-icon
                             [src]="icons.dirTextButtons + 'close.svg'"

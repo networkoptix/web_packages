@@ -40,6 +40,7 @@ import {
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { EditableModule } from '@components/editable/editable.module';
 import {
+    assertResourceLeafNode,
     assertResourceOfType,
     assertResourceParentNode,
 } from '@components/layout-grid/layout-grid.type-guards';
@@ -272,10 +273,11 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     doubleClick$ = new Subject<true>();
 
-    handleSingleClick = (node: ResourceNode, parent: ResourceNode): void => {
+    handleSingleClick = (node: ResourceNode, parent: ResourceNode, event: MouseEvent): void => {
+        event.stopPropagation();
         const parentId = parent?.details?.id;
         if (node.type) {
-            if (node.type === ResourceType.SYSTEM && node.details?.id) {
+            if (assertResourceOfType.system_cloud(node)) {
                 const currentSite = {
                     value: [node.details.id],
                     mutationType: MutationType.SET,
@@ -284,10 +286,20 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
                 this.layoutStateService.paramStateHandler.updater(() => ({
                     queryParams: {
                         currentSite,
+                        search: '',
                     },
                 }));
                 return;
             }
+
+            if (assertResourceLeafNode(node)) {
+                this.layoutStateService.paramStateHandler.updater(() => ({
+                    queryParams: {
+                        search: '',
+                    },
+                }));
+            }
+
             of(node)
                 .pipe(delay(250), takeUntil(this.doubleClick$))
                 .subscribe(node => this.layoutGridService.changeView.next(node));
@@ -303,7 +315,8 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         }
     };
 
-    handleDoubleClick = (node: ResourceNode): void => {
+    handleDoubleClick = (node: ResourceNode, event: MouseEvent): void => {
+        event.stopPropagation();
         if (
             !nxConfig.featureFlags.layoutsEditable ||
             this.layout.locked ||
@@ -315,7 +328,10 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         const itemsToAdd = assertResourceOfType.layout(node)
             ? node.details.items
             : [dirtyId(node.details?.id || '')].map(
-                  createLayoutItem(this.layoutItemLookup$$(), this.system.id),
+                  createLayoutItem(
+                      this.layoutItemLookup$$(),
+                      assertResourceOfType.camera(node) ? node.details.systemId : this.system.id,
+                  ),
               );
 
         if (!itemsToAdd.length) {
@@ -330,15 +346,21 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         const focusView = this.layout.name === this.layoutStateService.focusViewToken;
 
         const crossSystemItemsAdded =
-            this.layout.systemId && hasCrossSystemItems(updatedLayout.items, this.layout.systemId);
+            this.layout.systemId &&
+            hasCrossSystemItems(
+                updatedLayout.items,
+                this.layoutStateService.paramStateHandler.state$$().params!.systemId!,
+            );
 
         if (
-            (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) ||
+            (!currentUser?.isAdmin && currentUser?.id !== this.layout.parentId) ||
             this.layout.locked ||
             focusView ||
             crossSystemItemsAdded
         ) {
-            if (focusView) {
+            if (crossSystemItemsAdded) {
+                this.layoutStateService.createNewCrossSystemLayout(updatedLayout.items);
+            } else if (focusView) {
                 this.layoutStateService.createNewLayout(updatedLayout.items);
             } else {
                 this.layoutStateService.duplicateAsNewLayout(updatedLayout);
@@ -359,6 +381,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     }, {});
 
     toggleNode = (node: ResourceNode, event: MouseEvent): void => {
+        event.stopPropagation();
         const nodeId = node.details?.id;
         if (!nodeId) {
             return;

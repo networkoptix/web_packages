@@ -1,5 +1,5 @@
-@if (systemOnline$ | async) {
-    <div class="layout-wrapper">
+<div class="layout-wrapper">
+    @defer (when systemOnline$ | async) {
         <nx-layout-grid
             (layoutChanged)="updateLayout($event)"
             (showPtz)="ptzControlTarget = $event"
@@ -7,20 +7,20 @@
             [layoutItemLookup]="layoutItemLookup$ | async"
             [system]="selectedSystem$ | async"
         ></nx-layout-grid>
+    } @placeholder {
+        <nx-page-placeholder
+            type="OFFLINE"
+            class="page-placeholder"
+        ></nx-page-placeholder>
+    }
 
-        @if (
-            ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)
-        ) {
-            <nx-layout-ptz
-                [camera]="ptzControlTarget"
-                [system]="selectedSystem$ | async"
-                (exitPtz)="ptzControlTarget = null"
-            ></nx-layout-ptz>
-        }
-    </div>
-} @else {
-    <nx-page-placeholder
-        type="OFFLINE"
-        class="page-placeholder"
-    ></nx-page-placeholder>
-}
+    @defer (
+        when ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)
+    ) {
+        <nx-layout-ptz
+            [camera]="ptzControlTarget"
+            [system]="selectedSystem$ | async"
+            (exitPtz)="ptzControlTarget = null"
+        ></nx-layout-ptz>
+    }
+</div>

@@ -12,17 +12,17 @@ export const serverMenuFactory = (
 ): MenuItem<ResourceNodeMap[ResourceType.SERVER]>[] =>
     [
         ...openWindowActions,
-        ...([] ||
-            (nxConfig.featureFlags.layoutsEditable &&
-                nxConfig.featureFlags.layoutsDeviceSettings && [
-                    {
-                        id: 'divider',
-                        name: 'divider',
-                    },
-                    {
-                        id: 'settings',
-                        name: staticLang.layouts.treeActions.serverSettings.name,
-                        action: ($event, node) => createPortal(node.details),
-                    },
-                ])),
+        ...((nxConfig.featureFlags.layoutsEditable &&
+            nxConfig.featureFlags.layoutsDeviceSettings && [
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                {
+                    id: 'settings',
+                    name: staticLang.layouts.treeActions.serverSettings.name,
+                    action: ($event, node) => createPortal(node.details),
+                },
+            ]) ||
+            []),
     ].filter(Boolean);
