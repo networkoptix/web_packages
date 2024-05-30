@@ -407,22 +407,46 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
+                        const isGroupUser = !!folder && roleId !== OrgRoleIds.OrgAdmin;
                         iif(
-                            () => !!folder && roleId !== OrgRoleIds.OrgAdmin,
+                            () => isGroupUser,
                             chpService.updateGroupUser(folder, {
                                 roleId,
                                 email,
                             }),
                             chpService.updateOrganizationUser(orgId, { roleId, email }),
-                        ).subscribe(updatedUser =>
-                            patchState(
-                                store,
-                                updateEntity(
-                                    { id: email, changes: { ...updatedUser } },
-                                    currentGroupUsersEntity,
-                                ),
-                            ),
-                        );
+                        ).subscribe(updatedUser => {
+                            if (isGroupUser) {
+                                const { roles, rolesIds } = updatedUser;
+                                const user = store.currentGroupUsersEntityMap()[email];
+                                const { groupRoles } = user;
+                                const groupIndex = groupRoles.findIndex(
+                                    ({ groupId }) => groupId === folder,
+                                );
+                                if (groupIndex !== -1) {
+                                    groupRoles[groupIndex] = {
+                                        ...groupRoles[groupIndex],
+                                        roles,
+                                        rolesIds,
+                                    };
+                                }
+                                patchState(
+                                    store,
+                                    updateEntity(
+                                        { id: email, changes: { groupRoles } },
+                                        currentGroupUsersEntity,
+                                    ),
+                                );
+                            } else {
+                                patchState(
+                                    store,
+                                    updateEntity(
+                                        { id: email, changes: { ...updatedUser } },
+                                        currentGroupUsersEntity,
+                                    ),
+                                );
+                            }
+                        });
                     },
                 },
                 refreshUsers,
