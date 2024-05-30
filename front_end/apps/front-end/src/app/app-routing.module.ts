@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
@@ -13,6 +13,7 @@ import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
+import { NxMenusService } from '@services/menus.service';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 
@@ -77,6 +78,12 @@ const lazyRoutes: Routes = [
             import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
         canMatch: [FeatureGuardMatch],
         canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
+        canDeactivate: [
+            () => {
+                inject(NxMenusService).channelPartnerServiceMode$.next(false);
+                return true;
+            },
+        ],
         title: SystemTitleResolver,
         data: {
             flag: FeatureFlagStrings.channelPartnersChangeServicesUI,

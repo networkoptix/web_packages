@@ -30,7 +30,7 @@ export class MenuNode {
         public nodes: MenuNode[] = [],
         public authentication: Auth = Auth.BOTH,
         public new_window = false,
-        public asset_id = null,
+        public asset_id: string | null = null,
         public related_asset_ids = [],
         public next_item = false,
         public urlified = '',

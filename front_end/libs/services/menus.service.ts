@@ -31,6 +31,7 @@ export class NxMenusService {
     private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
+    public channelPartnerServiceMode$ = new BehaviorSubject(false);
     apiBase: string = apiBase;
 
     currentUser: CurrentUser;
@@ -322,6 +323,7 @@ export class NxMenusService {
 
     updateActiveSystemMenu(activeSystem): void {
         if (activeSystem) {
+            this.channelPartnerServiceMode$.next(false);
             this.activeSystem$.next(activeSystem);
         }
     }
@@ -415,7 +417,7 @@ export class NxMenusService {
                 'Services',
                 this.getUrl(activeSystem.id, { services: true }),
                 this.LANG?.serverTabTitles.Services,
-                this.endpoint.settings || false,
+                this.endpoint.services || false,
             );
             nodes.push(servicesNode);
         }
@@ -430,6 +432,29 @@ export class NxMenusService {
             Auth.LOGGED_IN,
         );
 
+        this.currentSystemNode$.next(activeSystemMenu);
+    }
+
+    serviceMode(id: string, name: string): void {
+        this.channelPartnerServiceMode$.next(true);
+        const activeSystemMenu = new MenuNode(
+            name,
+            this.getUrl(id, { services: true }),
+            name,
+            true,
+            undefined,
+            [
+                new MenuNode(
+                    'Services',
+                    this.getUrl(id, { services: true }),
+                    this.LANG?.serverTabTitles.Services,
+                    true,
+                ),
+            ],
+            Auth.LOGGED_IN,
+            false,
+            id,
+        );
         this.currentSystemNode$.next(activeSystemMenu);
     }
 }

@@ -12,7 +12,10 @@
         >
             <div
                 class="arrow-btn"
-                *ngIf="!isMobile && !singleSystem"
+                *ngIf="
+                    !isMobile &&
+                    (!singleSystem || (headerService.channelPartnerServiceMode$ | async))
+                "
                 [routerLink]="backIconLink$$()"
                 (click)="emitClick('systems-list')"
             >

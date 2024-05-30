@@ -28,6 +28,7 @@
                 <ng-container
                     *ngTemplateOutlet="
                         node === optimisticSelectedSubNode ||
+                        (headerService.channelPartnerServiceMode$ | async) ||
                         (!optimisticSelectedSubNode &&
                             headerService.currentLocation?.path === node.url)
                             ? activeItem

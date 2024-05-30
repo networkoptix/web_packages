@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
@@ -31,6 +32,12 @@ export class NxHeaderService {
     public createUrl: string;
 
     public dynamicRoutes = {};
+
+    public channelPartnerServiceMode$ = this.menusService.channelPartnerServiceMode$;
+    public systemServiceInfo$ = this.menusService.currentSystemNode$.pipe(
+        filter(Boolean),
+        map(({ name, asset_id }) => ({ name, id: asset_id })),
+    );
 
     get nodes(): MenuNode[] {
         return this.nodes$.getValue();
