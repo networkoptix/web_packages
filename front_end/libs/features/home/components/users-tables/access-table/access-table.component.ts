@@ -170,7 +170,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         this.dialogService.addOrgUserV2({
             organization,
             email: this.email$$(),
-            initialFolder: this.routerState.state$$().groupId || organization.id,
         });
     };
 

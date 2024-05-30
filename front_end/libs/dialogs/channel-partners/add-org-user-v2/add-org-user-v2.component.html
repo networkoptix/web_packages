@@ -1,7 +1,16 @@
 <div class="nx-modal__header">
-    <span class="nx-modal__header-title">{{
-        !emailLocked() ? ('Add User' | translate) : ('Add Access' | translate)
-    }}</span>
+    <span class="nx-modal__header-title">
+        <span
+            [ngClass]="{
+                'header-title--muted': stepper.selectedIndex === 1
+            }"
+            >{{ !emailLocked() ? ('Add User' | translate) : ('Add Access' | translate) }}</span
+        >
+        @if (stepper.selectedIndex === 1) {
+            <span class="header-title--muted"> / </span>
+            <span translate>Access To</span>
+        }
+    </span>
     @if (closable) {
         <button
             type="button"
@@ -115,7 +124,9 @@
                         #stepSelect
                         [ngClass]="{
                             'warning-outline': selectedFolderWarn() && !busy$$(),
-                            'error-outline': selectedFolderError(),
+                            'error-outline':
+                                (orgUserForm.submitted && folderControl.errors?.required) ||
+                                selectedFolderError(),
                             'hide-outline': emailControl.errors?.selfAdd
                         }"
                         formControlName="folder"
@@ -125,11 +136,24 @@
                     ></nx-org-step-select>
 
                     <p class="control-message">
-                        @if (!emailControl.errors?.selfAdd && selectedFolderStatus(); as status) {
-                            @if (status.status === 'warn' && !busy$$()) {
-                                <span class="control-message__warning">{{ status.msg }}</span>
-                            } @else if (status.status === 'disable') {
-                                <span class="control-message__error">{{ status.msg }}</span>
+                        @if (!emailControl.errors?.selfAdd) {
+                            @if (orgUserForm.submitted && folderControl.errors?.required) {
+                                <span
+                                    class="control-message__error"
+                                    translate
+                                    >Folder is required</span
+                                >
+                            } @else {
+                                <!-- as can only be used on @if, not @else if -->
+                                @if (selectedFolderStatus(); as status) {
+                                    @if (status.status === 'warn' && !busy$$()) {
+                                        <span class="control-message__warning">{{
+                                            status.msg
+                                        }}</span>
+                                    } @else if (status.status === 'disable') {
+                                        <span class="control-message__error">{{ status.msg }}</span>
+                                    }
+                                }
                             }
                         }
                     </p>
@@ -172,14 +196,14 @@
                     (ngModelChange)="treeValue.set($event)"
                 ></nx-org-tree-selector>
             </div>
-            <div class="nx-modal__footer">
+            <div class="nx-modal__footer nx-modal__footer--justify-between">
                 <button
                     type="button"
                     class="btn btn-default"
                     translate
                     (click)="cancelFolderSelect()"
                 >
-                    Cancel
+                    Back
                 </button>
                 <nx-async-action-button
                     [action]="confirmFolderSelectAction"

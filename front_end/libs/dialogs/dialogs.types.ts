@@ -200,7 +200,7 @@ export type MoveSystemItem = DialogType<
 export type AddOrgUserV2 = DialogType<
     {
         organization: Organization;
-        initialFolder: string;
+        initialFolder?: string;
         email?: string;
     },
     OrgUser
