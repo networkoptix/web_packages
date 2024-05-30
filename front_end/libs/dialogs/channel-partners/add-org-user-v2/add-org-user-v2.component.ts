@@ -126,11 +126,14 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             },
         ],
     });
-    roleIdControl = new FormControl(null, {
+    roleIdControl = new FormControl<string | null>(null, {
         validators: [Validators.required],
     });
-    folderControl = new FormControl<string[]>([this.organization.name], {
+    folderControl = new FormControl<string[]>([], {
         nonNullable: true,
+        validators: [
+            (control: FormControl<string[]>) => (!control.value.length ? { required: true } : null),
+        ],
     });
     formGroup = new FormGroup({
         email: this.emailControl,
@@ -151,7 +154,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
         return LANG.channelPartners.orgs.permissionDescription[roleName];
     });
 
-    folder = signal<string>(this.organization.id);
+    folder = signal<string | null>(null);
     treeValue = signal<string | null>(null);
     folderLocked = signal(false);
 
@@ -188,6 +191,11 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     protected _folderPathEffect = effect(() => {
         const folder = this.folder();
         untracked(() => {
+            if (!folder) {
+                this.folderControl.setValue([]);
+                return;
+            }
+
             const groupFlatMap = this.groupFlatMap();
 
             const path: string[] = [];
@@ -330,7 +338,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     selectedFolderStatus = computed<OrgTreeStatusValue | undefined>(() => {
         const [stepSelectStatuses, folder] = [this.stepSelectStatuses(), this.folder()];
-        return stepSelectStatuses.get(folder);
+        return folder ? stepSelectStatuses.get(folder) : undefined;
     });
     selectedFolderWarn = computed<boolean>(() => this.selectedFolderStatus()?.status === 'warn');
     selectedFolderError = computed<boolean>(
@@ -339,7 +347,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { organization, email, initialFolder }: DT['data'],
+        @Inject(DIALOG_DATA) { email, initialFolder }: DT['data'],
         private translate: TranslateService,
     ) {
         super(dialogRef);
@@ -347,7 +355,9 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             this.formGroup.patchValue({ email });
             this.emailLocked.set(true);
         }
-        this.folder.set(initialFolder);
+        if (initialFolder) {
+            this.folder.set(initialFolder);
+        }
     }
 
     @ViewChild('mainStepBody') private mainStepBody: ElementRef<HTMLFormElement>;
@@ -381,10 +391,11 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     addOrgUserAction = createAsyncAction({
         action: () => {
-            const { email, roleId: _roleId } = this.formGroup.getRawValue();
-            const roleId = _roleId!; // Required
+            const email = this.email();
+            const roleId = this.roleIdControl.value!;
+            const folder = this.folder()!;
             return firstValueFrom(
-                this.orgUserStore.addUser(this.organization, this.folder(), { email, roleId }),
+                this.orgUserStore.addUser(this.organization, folder, { email, roleId }),
             );
         },
         success: user => {

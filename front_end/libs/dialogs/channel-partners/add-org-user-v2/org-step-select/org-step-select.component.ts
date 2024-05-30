@@ -44,9 +44,12 @@ export class NxOrgStepSelectComponent implements OnInit, ControlValueAccessor {
     }
     private paths = signal<HTMLSpanElement[]>([]);
     protected _pathsEffect = effect(() => {
-        const paths = this.paths()
-            .slice()
-            .sort(paramSortFunc(p => p.scrollWidth, false));
+        let paths = this.paths();
+        if (!paths.length) {
+            this.selectedPath = undefined;
+            return;
+        }
+        paths = paths.slice().sort(paramSortFunc(p => p.scrollWidth, false));
         if (paths.length === 1) {
             this.selectedPath = new DomPortal(paths[0]);
             return;
