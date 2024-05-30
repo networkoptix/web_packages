@@ -1,5 +1,5 @@
 <div class="nx-new-table-container CP-users">
-    @if (channelPartnerUserRecords()?.length > 0) {
+    @if (filteredRecords$$()?.length > 0) {
         <nx-table
             set-pagination
             set-sorting
@@ -7,7 +7,7 @@
             [set-arrange]="setArrange"
             [set-multiple-selected-item-ids]="selectedChannelPartnerUsersMap$$()"
             set-id-prop-name="userId"
-            [data]="channelPartnerUserRecords()"
+            [data]="filteredRecords$$()"
             checkAllContainer
             #containerRef="checkAllContainer"
         >

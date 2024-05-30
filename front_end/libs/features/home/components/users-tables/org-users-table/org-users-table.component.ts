@@ -45,7 +45,8 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     idPropName = 'userId';
 
     roles$$ = this.cpService.organizationRoles$$;
-    orgUserRecords$$ = this.orgUsersStore.filteredRecords$$;
+    orgUserRecords$$ = this.orgUsersStore.currentGroupUsersEntities;
+    filteredRecords$$ = this.orgUsersStore.filteredRecords$$;
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
 
     searching = input.required<boolean>();
