@@ -235,9 +235,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     );
 
     canManageSystem$$ = computed(
-        () =>
-            this.system.permissionManager.isOwner$$() &&
-            (this.cloudSystemType$$() !== 'org' || this.manageOrgSystems$$()),
+        () => this.system.permissionManager.isOwner$$() || this.manageOrgSystems$$(),
     );
 
     systemOfferedToUser$$ = computed<boolean>(() => {
