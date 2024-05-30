@@ -113,9 +113,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit, OnDestroy {
             const path = this.openAPIJSONService.currentAPIDoc.paths[info.path];
             // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
             if (info.method) {
-                description =
-                    path[info.method?.toLowerCase()]?.description ||
-                    path[Object.keys(path)[0]].description;
+                description = path[info.method?.toLowerCase()]?.description;
             } else {
                 description = path[Object.keys(path)[0]].description;
             }
