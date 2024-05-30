@@ -382,15 +382,6 @@ frontend-lint:
         echo 'pushed lint fixes to branch'
       fi
 
-frontend-builds:
-  extends: .frontend-node
-  stage: build
-  script:
-    - |
-      pushd "front_end"
-          npm run build:ci
-      popd
-
 frontend-tests:
   extends: .frontend-node
   stage: test
@@ -457,6 +448,7 @@ jenkins-build-webadmin:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+      "GITLAB_REFSPEC=$CI_COMMIT_SHA"
 
 jenkins-build-frontend:
   extends: .jenkins-builds
@@ -521,7 +513,6 @@ create-vms-mr:
   script:
     - cd cloud
     - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
-    - /usr/local/bin/python -m pip install discord.py
     - cd bots
     - python y_u_no_pipeline_bot.py
     - echo "Canceling jobs still running on pipeline"
@@ -546,10 +537,6 @@ create-vms-mr:
 on-other-frontend-checks:
   extends: .fail-on-frontend
   needs: ["other-frontend-checks"]
-
-on-frontend-builds:
-  extends: .fail-on-frontend
-  needs: ["frontend-builds"]
 
 on-frontend-tests:
   extends: .fail-on-frontend
@@ -592,7 +579,6 @@ on-django-tests-fast:
   before_script:
     - cd cloud
     - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
-    - /usr/local/bin/python -m pip install discord-webhook
     - /usr/local/bin/python -m pip install gql
     - /usr/local/bin/python -m pip install aiohttp
     - cd bots
