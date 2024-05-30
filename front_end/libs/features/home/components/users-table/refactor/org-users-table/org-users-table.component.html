@@ -1,5 +1,5 @@
 <div class="nx-new-table-container org-users">
-    @if (orgUserRecords$$()?.length > 0) {
+    @if (filteredRecords$$()?.length > 0) {
         <nx-table
             set-pagination
             set-sorting
@@ -7,7 +7,7 @@
             [set-arrange]="setArrange"
             [set-multiple-selected-item-ids]="selectedOrgUsersMap$$()"
             [set-id-prop-name]="idPropName"
-            [data]="orgUserRecords$$()"
+            [data]="filteredRecords$$()"
             checkAllContainer
             #containerRef="checkAllContainer"
         >
