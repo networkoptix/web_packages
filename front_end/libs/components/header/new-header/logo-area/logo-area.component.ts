@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatest, map } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { combineLatest, iif, map } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -36,7 +36,7 @@ import { logoAreaState, logoClickType } from '../new-header-types';
         NxTooltipDirective,
     ],
 })
-export class NxHeaderLogoAreaComponent implements OnInit {
+export class NxHeaderLogoAreaComponent implements OnChanges {
     @Input() isMobile = false;
     @Input() menuOpen = false;
     @Input() isProfile = false;
@@ -54,19 +54,26 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.headerService.activeSystem$,
     ]).pipe(map(info => this.getMainUrl(...info)));
 
-    activeSystemName$$ = toSignal(
-        this.headerService.activeSystem$.pipe(
-            filter(Boolean),
-            switchMap(system => system.infoSubject),
-            map(system => system?.info?.name || ''),
+    private systemData$ = this.headerService.channelPartnerServiceMode$.pipe(
+        switchMap(inServiceMode =>
+            iif(
+                () => inServiceMode,
+                this.headerService.systemServiceInfo$.pipe(
+                    tap(() => (this.logoState = logoAreaState.SYSTEM)),
+                ),
+                this.headerService.activeSystem$.pipe(
+                    filter(Boolean),
+                    switchMap(system => system.infoSubject),
+                    map(system => ({ id: system?.systemId, name: system?.info?.name || '' })),
+                ),
+            ),
         ),
     );
 
+    activeSystemName$$ = toSignal(this.systemData$.pipe(map(({ name }) => name)));
+
     backIconLink$$ = toSignal(
-        this.headerService.activeSystem$.pipe(
-            filter(Boolean),
-            map(system => `/home/redirect-to-group/${system.systemId}`),
-        ),
+        this.systemData$.pipe(map(({ id }) => `/home/redirect-to-group/${id}`)),
     );
 
     constructor(
@@ -75,7 +82,10 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         private cookieService: CookieService,
     ) {
         this.headerService.currentLocation$
-            .pipe(takeUntilDestroyed())
+            .pipe(
+                takeUntilDestroyed(),
+                filter(() => !this.headerService.channelPartnerServiceMode$.getValue()),
+            )
             .subscribe(currentLocation => {
                 this.checkLogoState(currentLocation);
             });
@@ -93,10 +103,6 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         return nxConfig.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
             ? '/dashboard'
             : '/';
-    }
-
-    ngOnInit(): void {
-        // this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems : this.LANG.appHeader.systemsList;
     }
 
     emitClick(clickType: logoClickType): void {

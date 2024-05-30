@@ -11,6 +11,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -29,6 +30,7 @@ export const SystemGuard: CanActivateFn = (
     const systemsService: NxSystemsService = inject(NxSystemsService);
     const menusService: NxMenusService = inject(NxMenusService);
     const deviceService: DeviceDetectorService = inject(DeviceDetectorService);
+    const cloudApiService = inject(NxCloudApiService);
 
     if (!environment.isLocal && state.url === '/health-report') {
         // navigate to report viewer if viewing /health route
@@ -109,6 +111,15 @@ export const SystemGuard: CanActivateFn = (
                 );
 
                 if (!sysInfo) {
+                    try {
+                        const info = await firstValueFrom(
+                            cloudApiService.cloudChannelPartnersApi.getSystem(systemId),
+                        );
+                        menusService.serviceMode(systemId, info.name);
+                    } catch {
+                        console.error('User is trying to access a system w/o permission!');
+                        return false;
+                    }
                     return true;
                 }
                 // TODO: Clean up create system args
