@@ -19,6 +19,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -52,9 +53,13 @@ import { icons } from '@static-variables';
     ],
 })
 export class NxInfoGroupComponent {
+    private translateService = inject(TranslateService);
+    private formBuilder = inject(FormBuilder);
+    LANG = staticLang;
+
     @Input() formId: string;
     @Input() linkCaption: string;
-    @Input() descrCaption: string = 'Description (optional)';
+    @Input() descrCaption: string = this.translateService.instant(this.LANG.optionalDescription);
     @Input() linkPredicate: string;
     @Input() set data(data: InfoRow[]) {
         this.data$$.set(data);
@@ -65,7 +70,6 @@ export class NxInfoGroupComponent {
 
     mode$$ = input(false, { alias: 'editMode' });
 
-    LANG = staticLang;
     icons = icons;
     destroyRef = inject(DestroyRef);
     unsub$: Subject<boolean> = new Subject();
@@ -84,7 +88,6 @@ export class NxInfoGroupComponent {
 
     private rows: FormGroup[];
 
-    private formBuilder = inject(FormBuilder);
     formGroup: FormGroup = this.formBuilder.group({
         records: this.formBuilder.array([]),
     });
