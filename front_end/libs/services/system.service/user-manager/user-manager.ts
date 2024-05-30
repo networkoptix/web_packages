@@ -124,7 +124,7 @@ export class UserManager {
         // handles the Custom role
         if (!role) {
             role = {
-                ...roles[roles.length - 1],
+                ...this.CONFIG.accessRoles.customPermission,
                 permissions: user.permissions,
             };
         }
