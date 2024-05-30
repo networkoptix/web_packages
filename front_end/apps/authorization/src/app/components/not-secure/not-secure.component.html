@@ -9,7 +9,6 @@
         [src]="
             icons.dirSectionPlaceholder +
             (environment.isLocal ? 'local_header' : 'cloud_header') +
-            (viewType === 'web' ? '' : '_desktop') +
             '.svg'
         "
         [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"
