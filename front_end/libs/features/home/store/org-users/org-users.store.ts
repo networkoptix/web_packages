@@ -49,7 +49,7 @@ import {
     OrganizationUser,
     OrgRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { caseInsenstiveSearch, interceptMethodCalls } from '@utils/general';
+import { caseInsensitiveSearch, interceptMethodCalls } from '@utils/general';
 
 import { GroupsStore } from '../groups/groups.store';
 import { ChannelPartnersRouteState } from '../route-state/route-state.store';
@@ -160,7 +160,7 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
 
 function getUsersByModel(records: OrgUser[] | undefined, query: string): OrgUser[] {
     if (records) {
-        return records.filter(user => caseInsenstiveSearch(user.email, query));
+        return records.filter(user => caseInsensitiveSearch(user.email, query));
     }
     return [];
 }

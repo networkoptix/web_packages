@@ -152,7 +152,7 @@ export class NxParamStateService {
                     }
                 };
 
-                if (typeof updatedValue === 'string') {
+                if (typeof updatedValue === 'string' && updatedValue !== '') {
                     curr[key] = [updatedValue];
                 } else if (typeof updatedValue === 'object' && 'value' in updatedValue) {
                     curr[key] = handleMutation(updatedValue, originalQueryParams[_key]);
@@ -179,7 +179,7 @@ export class NxParamStateService {
 
         const updatedUrl = missingFromUrl ? findUrl() : urlWithParamsReplaced;
 
-        return this.router.navigate([updatedUrl], {
+        return this.router.navigate([decodeURIComponent(updatedUrl)], {
             queryParams,
             queryParamsHandling: 'merge',
             relativeTo: this.route,

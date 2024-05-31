@@ -29,7 +29,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
 
 import { NxCardComponent } from '../card/card.component';
@@ -75,7 +75,7 @@ export class NxSubchannelsComponent {
             return currentSubchannels;
         }
         return currentSubchannels.filter(subchannels => {
-            return caseInsenstiveSearch(subchannels.name, search);
+            return caseInsensitiveSearch(subchannels.name, search);
         });
     });
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));

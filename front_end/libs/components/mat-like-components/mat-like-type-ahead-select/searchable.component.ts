@@ -25,7 +25,7 @@ import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../../dropdowns/injDropdown';
@@ -147,8 +147,8 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
             this.filter = new RegExp(`(${escapeRegExp(filter)})`, 'i');
             this._items = this.items.filter(
                 item =>
-                    caseInsenstiveSearch(item.name, filter) ||
-                    (item.help && caseInsenstiveSearch(item.help, filter)),
+                    caseInsensitiveSearch(item.name, filter) ||
+                    (item.help && caseInsensitiveSearch(item.help, filter)),
             );
         } else {
             this.filter = undefined;

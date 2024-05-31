@@ -8,7 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { SignalEventEmitter } from '@utils/signals';
 
 import { Org } from '../../../types/cloud-bind.types';
@@ -43,6 +43,6 @@ export class SelectOrgComponent {
     visibleOrgs$$ = computed(() => {
         const orgs = this.orgs$$();
         const search = this.search$$() || '';
-        return orgs.filter(org => caseInsenstiveSearch(org.name, search));
+        return orgs.filter(org => caseInsensitiveSearch(org.name, search));
     });
 }

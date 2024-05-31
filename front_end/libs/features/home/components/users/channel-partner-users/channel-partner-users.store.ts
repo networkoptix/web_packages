@@ -9,14 +9,14 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { paramSignal } from '@utils/signals';
 
 import { UserRecord } from './channel-partner-users.types';
 
 function getUsersByModel(records: UserRecord[] | undefined, query: string): UserRecord[] {
     if (records) {
-        return records.filter(user => caseInsenstiveSearch(user.email, query));
+        return records.filter(user => caseInsensitiveSearch(user.email, query));
     }
     return [];
 }

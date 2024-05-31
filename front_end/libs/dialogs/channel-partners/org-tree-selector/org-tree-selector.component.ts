@@ -34,7 +34,7 @@ import type {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
+import { caseInsensitiveSearch, scrollItemIntoView } from '@utils/general';
 
 import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
 
@@ -375,7 +375,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         let lastAddedIndex = -1;
         for (let i = 0; i < this.flatGroups.length; i++) {
             const group = this.flatGroups[i];
-            if (searches.some(s => caseInsenstiveSearch(group.name, s))) {
+            if (searches.some(s => caseInsensitiveSearch(group.name, s))) {
                 /* Parent lookbehind: when matching a nested item, we also want
                 to show all of its parents, but not any of the match's siblings
                 or parent's siblings unless they also match. In the worst case where

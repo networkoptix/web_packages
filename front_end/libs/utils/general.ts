@@ -74,13 +74,13 @@ export function strSplice(text: string, index: number, replacement: string): str
     return text.slice(0, index) + replacement + text.slice(index);
 }
 
-export function caseInsenstiveSearch(text: string, search: string): boolean {
+export function caseInsensitiveSearch(text: string, search: string): boolean {
     return text.toLowerCase().includes(search.toLowerCase());
 }
 
 export function spaceSplitSearch(items: string[], search: string): string[] {
     const searches = search.trim().split(/\s+/);
-    return items.filter(item => searches.some(search => caseInsenstiveSearch(item, search)));
+    return items.filter(item => searches.some(search => caseInsensitiveSearch(item, search)));
 }
 
 export function slashJoin(

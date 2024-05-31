@@ -4,7 +4,7 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 
 import { SearchBaseComponent } from '../search-base.component';
 
@@ -27,7 +27,7 @@ export class NxDeviceFilterComponent extends SearchBaseComponent<BookmarksDevice
         return !this.search
             ? this.items
             : this.items.filter(({ name }) =>
-                  searches.some(search => caseInsenstiveSearch(name, search)),
+                  searches.some(search => caseInsensitiveSearch(name, search)),
               );
     }
 

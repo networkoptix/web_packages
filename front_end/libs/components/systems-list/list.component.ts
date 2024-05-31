@@ -26,7 +26,7 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { search } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 
 type Endpoint = Partial<{
     ipvd: boolean;
@@ -169,9 +169,9 @@ export class NxSystemsListComponent implements OnInit {
             this.filteredSystems = this.systems.filter(system => {
                 const ownerText = this.systemsService.getSystemOwnerName(system);
                 return (
-                    caseInsenstiveSearch(system.name, search) ||
+                    caseInsensitiveSearch(system.name, search) ||
                     (ownerText !== this.LANG.system.yourSystem &&
-                        caseInsenstiveSearch(ownerText, search))
+                        caseInsensitiveSearch(ownerText, search))
                 );
             });
         } else {

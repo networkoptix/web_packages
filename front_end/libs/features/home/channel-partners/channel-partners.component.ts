@@ -43,7 +43,7 @@ import {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxCardComponent } from '../components/card/card.component';
@@ -218,7 +218,7 @@ export class NxChannelPartnersComponent implements OnInit {
 
         if (search) {
             this.filteredOrganizations$ = this.organizations$.pipe(
-                map(res => res.filter(org => caseInsenstiveSearch(org.name, search))),
+                map(res => res.filter(org => caseInsensitiveSearch(org.name, search))),
             );
         } else {
             this.filteredOrganizations$ = this.organizations$;
