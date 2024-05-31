@@ -621,11 +621,13 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             this.infoPromise = (
                 (!environment.isLocal && this.mediaserver.unauthorizedCallback(false)) ||
                 Promise.resolve(true)
-            ).then(() => {
-                return this.getInfoAndPermissions(useCache, suppressUpdate).then(res => {
-                    return res;
-                });
-            });
+            )
+                .then(() => {
+                    return this.getInfoAndPermissions(useCache, suppressUpdate).then(res => {
+                        return res;
+                    });
+                })
+                .catch(() => this);
         }
         return this.infoPromise;
     }
