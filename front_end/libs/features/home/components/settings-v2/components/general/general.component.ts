@@ -86,6 +86,7 @@ export class NxSettingsGeneralV2Component {
 
     @Input() currState: State | null;
     @Input() canUpdateAccess: boolean = false;
+    @Input() canUpdateGeneral: boolean = false;
 
     @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
     readonly partnerAccess = partnerAccess;

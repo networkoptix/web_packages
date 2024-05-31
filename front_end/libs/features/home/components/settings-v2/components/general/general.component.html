@@ -1,92 +1,94 @@
-<div class="row">
-    <div class="col-10">
-        <!--The plan is to remove subchannels logic once subchannels and channel partners are merged-->
-        @if (canConfigure$$() && settingsState().view !== settingsViews.SUBCHANNELS) {
-            <nx-block>
-                <header>
-                    <h4 translate>General</h4>
-                </header>
+@if (canUpdateGeneral) {
+    <div class="row">
+        <div class="col-10">
+            <!--The plan is to remove subchannels logic once subchannels and channel partners are merged-->
+            @if (canConfigure$$() && settingsState().view !== settingsViews.SUBCHANNELS) {
+                <nx-block>
+                    <header>
+                        <h4 translate>General</h4>
+                    </header>
 
-                <nx-section>
-                    <div class="body">
-                        <form
-                            name="settingsGeneralForm"
-                            #settingsGeneralForm="ngForm"
-                            novalidate
-                        >
-                            <div class="row m-0">
-                                <div
-                                    class="label d-flex align-items-center justify-content-end text-nowrap text-right"
-                                >
-                                    <label
-                                        for="name"
-                                        class="control-label"
-                                        translate
-                                        >Name</label
-                                    >
-                                </div>
-
-                                <div class="col-6">
-                                    <input
-                                        type="text"
-                                        class="fs-mask form-control"
-                                        name="name"
-                                        id="name"
-                                        #name="ngModel"
-                                        [disabled]="!canConfigure$$()"
-                                        [ngModel]="currentName()"
-                                        (ngModelChange)="onNameChange($event)"
-                                        nxFocusMe
-                                    />
-                                </div>
-
-                                @if (name.invalid && name.touched) {
-                                    <div class="col-6 offset-2">
-                                        @if (name.errors.required) {
-                                            <span class="input-error">{{
-                                                LANG.customValidatorMsg.nameRequired | translate
-                                            }}</span>
-                                        }
-                                        @if (name.errors.tooLong) {
-                                            <span class="input-error">{{
-                                                LANG.customValidatorMsg.nameTooLong
-                                                    | translate: { chars: 15 }
-                                            }}</span>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                            @if (canUpdateAccess) {
-                                <div class="row m-0 pt-3 pl-2">
+                    <nx-section>
+                        <div class="body">
+                            <form
+                                name="settingsGeneralForm"
+                                #settingsGeneralForm="ngForm"
+                                novalidate
+                            >
+                                <div class="row m-0">
                                     <div
-                                        class="label d-flex align-items-center justify-content-end text-wrap text-right"
+                                        class="label d-flex align-items-center justify-content-end text-nowrap text-right"
                                     >
                                         <label
-                                            for="channelPartnerAccessSelect"
+                                            for="name"
                                             class="control-label"
                                             translate
-                                            >Channel Partner Access</label
+                                            >Name</label
                                         >
                                     </div>
 
                                     <div class="col-6">
-                                        <nx-select
-                                            [componentId]="'channelPartnerAccessSelect'"
-                                            [items]="partnerAccess"
-                                            [selected]="currAccess$$()"
-                                            (onSelected)="onAccessUpdate($event.value)"
-                                        ></nx-select>
+                                        <input
+                                            type="text"
+                                            class="fs-mask form-control"
+                                            name="name"
+                                            id="name"
+                                            #name="ngModel"
+                                            [disabled]="!canConfigure$$()"
+                                            [ngModel]="currentName()"
+                                            (ngModelChange)="onNameChange($event)"
+                                            nxFocusMe
+                                        />
                                     </div>
+
+                                    @if (name.invalid && name.touched) {
+                                        <div class="col-6 offset-2">
+                                            @if (name.errors.required) {
+                                                <span class="input-error">{{
+                                                    LANG.customValidatorMsg.nameRequired | translate
+                                                }}</span>
+                                            }
+                                            @if (name.errors.tooLong) {
+                                                <span class="input-error">{{
+                                                    LANG.customValidatorMsg.nameTooLong
+                                                        | translate: { chars: 15 }
+                                                }}</span>
+                                            }
+                                        </div>
+                                    }
                                 </div>
-                            }
-                        </form>
-                        <ng-content select="[processButtons]"></ng-content>
-                    </div>
-                </nx-section>
-            </nx-block>
-        }
+                                @if (canUpdateAccess) {
+                                    <div class="row m-0 pt-3 pl-2">
+                                        <div
+                                            class="label d-flex align-items-center justify-content-end text-wrap text-right"
+                                        >
+                                            <label
+                                                for="channelPartnerAccessSelect"
+                                                class="control-label"
+                                                translate
+                                                >Channel Partner Access</label
+                                            >
+                                        </div>
+
+                                        <div class="col-6">
+                                            <nx-select
+                                                [componentId]="'channelPartnerAccessSelect'"
+                                                [items]="partnerAccess"
+                                                [selected]="currAccess$$()"
+                                                (onSelected)="onAccessUpdate($event.value)"
+                                            ></nx-select>
+                                        </div>
+                                    </div>
+                                }
+                            </form>
+                            <ng-content select="[processButtons]"></ng-content>
+                        </div>
+                    </nx-section>
+                </nx-block>
+            }
+        </div>
     </div>
-</div>
+}
 <!--We'll replace settingsViews check with calAlterState check once we have the ability to check parent partner's permissions-->
 @if (showStateChangeBlock && settingsState().view !== settingsViews.CHANNEL_PARTNERS) {
     <div class="row pt-3">
