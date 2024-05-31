@@ -48,21 +48,7 @@
         </div>
     </div>
 }
-@if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
-    <nx-org-users-table
-        (selectedCountEmitter)="updateSelectedCount($event)"
-        [searching]="!!orgUsersStore.searchQuery()"
-    ></nx-org-users-table>
-} @else {
-    <nx-users-table
-        [userType]="inGroup$$() ? UserType.GROUP : UserType.ORGANIZATION"
-        [inGroup]="inGroup$$()"
-        [headers]="headers"
-        [records]="orgUsersStore.filteredRecords$$()"
-        [roles]="orgRoles$$() || []"
-        [searching]="!!orgUsersStore.searchQuery()"
-        (selectedUsersEmitter)="updateSelectedUsers($event)"
-        (onDeleteClick)="deleteUsers($event)"
-        (onAdduser)="newUserDialog()"
-    ></nx-users-table>
-}
+<nx-org-users-table
+    (selectedCountEmitter)="updateSelectedCount($event)"
+    [searching]="!!orgUsersStore.searchQuery()"
+></nx-org-users-table>

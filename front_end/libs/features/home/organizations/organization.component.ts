@@ -51,7 +51,7 @@ import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-accoun
 import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
-import { NxAccessTableContainerComponent } from '../components/users/access-table/access-table-container.component';
+import { NxAccessTableContainerComponent } from '../components/users/access-table-users/access-table-container.component';
 import { Crumb } from '../home.types';
 import { GroupsStore } from '../store/groups/groups.store';
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';

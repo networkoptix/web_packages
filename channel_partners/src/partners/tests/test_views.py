@@ -189,19 +189,26 @@ class TestCloudSystemViewSetRetrieve:
 
     def test_token_403_system_user(self, mock_cdb_token_introspect, cloud_user_factory):
         vms_user = cloud_user_factory()
-        mock_cdb_token_introspect(user=vms_user, system=self.group_system, system_role=None)
+        mock_cdb_token_introspect(user=vms_user, system=None, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
         assert response.status_code == 403
 
+    def test_token_200_custom_user(self, mock_cdb_token_introspect, cloud_user_factory):
+        vms_user = cloud_user_factory()
+        mock_cdb_token_introspect(user=vms_user, system=self.group_system, system_role=None)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+
     def test_token_403_org_user(self, mock_cdb_token_introspect, cloud_user_factory):
-        mock_cdb_token_introspect(user=self.other_org_admin.user, system=self.group_system, system_role=None)
+        mock_cdb_token_introspect(user=self.other_org_admin.user, system=None, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
         assert response.status_code == 403
 
     def test_token_403_group_user(self, mock_cdb_token_introspect, cloud_user_factory):
-        mock_cdb_token_introspect(user=self.other_group_admin.user, system=self.group_system, system_role=None)
+        mock_cdb_token_introspect(user=self.other_group_admin.user, system=None, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
         assert response.status_code == 403
@@ -2038,7 +2045,7 @@ class TestSystemUser:
         response = self.client.get(path)
         assert response.status_code == 403
 
-    def test_cdb_permission(self, mock_cdb_token_introspect, cloud_user_factory,):
+    def test_cdb_permission_power_user(self, mock_cdb_token_introspect, cloud_user_factory,):
         sys_admin = cloud_user_factory()
         user_email = mock_cdb_token_introspect(
             user=sys_admin, system=self.org_sys, system_role=VmsRoles.POWER_USER)
@@ -2051,6 +2058,23 @@ class TestSystemUser:
         path = reverse('system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
+
+    def test_cdb_permission_custom_user(self, mock_cdb_token_introspect, cloud_user_factory,):
+        sys_admin = cloud_user_factory()
+        user_email = mock_cdb_token_introspect(
+            user=sys_admin, system=self.org_sys, system_role=None)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        url_args = {
+            'system_id': str(self.org_sys.system_id),
+            'email': user_email
+        }
+        path = reverse('system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 200
+        assert response.data['vmsRoles'] == []
+        assert response.data['type'] == None
+        assert response.data['email'] == user_email
 
 
 class TestUserSystems:
@@ -5104,7 +5128,7 @@ class TestCloudSystemViewSetPermissions:
         view_name = 'cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
-        assert response.status_code == 403
+        assert response.status_code == 200
 
     def test_retrieve_system_user_no_system(self, mock_cdb_token_introspect, cloud_user_factory):
         user = cloud_user_factory()
@@ -5176,7 +5200,7 @@ class TestCloudSystemViewSetPermissions:
         view_name = 'cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
-        assert response.status_code == 403
+        assert response.status_code == 200
 
     def test_services_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
         user = cloud_user_factory()
@@ -5203,7 +5227,7 @@ class TestCloudSystemViewSetPermissions:
         view_name = 'cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
-        assert response.status_code == 403
+        assert response.status_code == 200
 
     def test_migrate_legacy_licenses_system_viewer(self, mock_cdb_token_introspect, cloud_user_factory):
         user = cloud_user_factory()

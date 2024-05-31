@@ -143,6 +143,23 @@ export type UpdateChannelPartner = Partial<{
     supportInformation: SupportInformationSever;
 }>;
 
+export interface ChannelPartnersStructure {
+    channelPartners: PartnerStructure[];
+    organizations: OrganizationStructure[];
+}
+
+export interface PartnerStructure {
+    id: string;
+    name: string;
+    subChannels: PartnerStructure[];
+    organizations: OrganizationStructure[];
+}
+
+export interface OrganizationStructure {
+    id: string;
+    name: string;
+}
+
 /* Organizations */
 export interface Organization {
     attributes: Record<string, unknown>;

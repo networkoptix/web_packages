@@ -1,0 +1,18 @@
+<div class="sidebar">
+    @for (partner of channelStructure$$()?.channelPartners; track partner.id) {
+        <nx-partner-sidebar-level
+            [partnerStructure]="partner"
+            [openLevels]="openLevels$$()"
+            [selectedEntityId]="entityId$$()"
+            (toggleOpenEvent)="toggleOpen($event)"
+            (openEvent)="open($event)"
+        ></nx-partner-sidebar-level>
+    }
+    @for (org of channelStructure$$()?.organizations; track org.id) {
+        <nx-org-sidebar-level
+            [organization]="org"
+            [openLevels]="openLevels$$()"
+            [selectedEntityId]="entityId$$()"
+        ></nx-org-sidebar-level>
+    }
+</div>

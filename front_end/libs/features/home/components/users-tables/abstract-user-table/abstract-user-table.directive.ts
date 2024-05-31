@@ -1,4 +1,4 @@
-import { inject, Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -12,13 +12,10 @@ import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-s
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { icons } from '@static-variables';
 
-import { UserRecord } from '../../../users/channel-partner-users/channel-partner-users.types';
+import { UserRecord } from '../../users/channel-partner-users/channel-partner-users.types';
 
-/**
- * This is the code copied from the original user table.
- */
 @Directive()
-export abstract class InitialUserTable {
+export abstract class AbstractUserTableDirective {
     protected store = inject(Store);
     protected orgUsersStore = inject(OrgUsersStore);
     protected cpService = inject(NxChannelPartnersService);

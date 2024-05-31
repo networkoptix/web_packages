@@ -14,15 +14,15 @@ import { caseInsensitiveSearch } from '@utils/general';
 import { paramModel } from '@utils/signals';
 import { alphaNumericSort } from '@utils/general';
 
-import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
-import { StranglerImports } from '../strangler-table/strangler-imports';
+import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
+import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
 
 @Component({
     selector: 'nx-users-access-table',
     templateUrl: './access-table.component.html',
     styleUrls: [
         './access-table.component.scss',
-        '../strangler-table/strangler-table.component.scss',
+        '../abstract-user-table/abstract-user-table.component.scss',
     ],
     standalone: true,
     imports: [

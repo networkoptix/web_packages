@@ -55,7 +55,7 @@ class CanPerformChannelPartnerAction(BasePermission):
 
         # Allow access if user is system administrator of the system (directly, not org-level)
         if direct_access_allowed:
-            self.direct_access_allowed = set(direct_access_allowed)
+            self.direct_access_allowed = direct_access_allowed
         else:
             self.direct_access_allowed = None
 

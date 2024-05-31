@@ -1,18 +1,4 @@
-<div class="nx-reports-sidebar">
-    <nx-autocomplete
-        class="fs-mask w-100 mx-2"
-        [(ngModel)]="search"
-        (select)="selectItem($event)"
-        [noMatchesContent]="'No options'"
-        [placeholder]="'Select a partner or org'"
-    >
-        @for (item of dropdownItems$$(); track $index) {
-            <nx-autocomplete-item
-                [name]="item.name"
-                [value]="item"
-                >{{ item.prefix ?? '' }}{{ item.name }}</nx-autocomplete-item
-            >
-        }
-    </nx-autocomplete>
+<div class="reports-sidebar-wrapper">
+    <nx-reports-sidebar></nx-reports-sidebar>
 </div>
 <router-outlet></router-outlet>

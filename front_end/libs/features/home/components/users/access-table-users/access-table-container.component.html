@@ -70,19 +70,7 @@
             <!--            </button>-->
         </div>
     </div>
-    @if (CONFIG.featureFlags.channelPartnersUpdatedUserTable) {
-        <nx-users-access-table
-            (selectedCountEmitter)="updateSelectedCount($event)"
-        ></nx-users-access-table>
-    } @else {
-        <nx-users-table
-            [userType]="UserType.ORGANIZATION"
-            [accessTable]="true"
-            [headers]="headers"
-            [records]="userRecords$$()"
-            [roles]="orgRoles$$()"
-            (onDeleteClick)="deleteUser($event)"
-            (selectedUsersEmitter)="updateSelectedUsers($event)"
-        ></nx-users-table>
-    }
+    <nx-users-access-table
+        (selectedCountEmitter)="updateSelectedCount($event)"
+    ></nx-users-access-table>
 </div>
