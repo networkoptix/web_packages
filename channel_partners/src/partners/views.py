@@ -1396,7 +1396,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.action in ('retrieve', 'services') or (self.action == 'service_quantity' and self.request.method == 'GET'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.is_member_in_branch,
                                                         system_allowed=True,
-                                                        direct_access_allowed=VmsRoles.ALL_ROLES))
+                                                        direct_access_allowed=VmsRoles.ANY_ROLE))
         if self.action in ('saas_report', 'migrate_legacy_licenses'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
                                                         system_allowed=True,
@@ -1672,7 +1672,7 @@ def all_services(request):
     return Response(ServiceSerializer(services, many=True).data)
 
 
-def get_authorized_system(request, system_id, roles: Iterable = None):
+def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole | None = None):
     if not roles:
         roles = {VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER}
     if (cloud_system := getattr(request, 'cloud_system', None)):
@@ -1716,14 +1716,15 @@ def user_systems(request, email):
 @permission_classes([IsAuthenticated])
 def system_user(request, system_id, email):
     if request.user and request.user.email.lower() == email.lower():
-        system = get_authorized_system(request, system_id, roles=VmsRoles.ALL_ROLES)
+        system = get_authorized_system(request, system_id, roles=VmsRoles.ANY_ROLE)
     else:
-        system = get_authorized_system(request, system_id)
+        system = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})
     if not system or not system.organization:
         raise exceptions.NotFound('System not found')
     user_rel = system.get_user_role_by_email(email=email)
     if not user_rel:
-        raise exceptions.NotFound('User not found in system')
+        # There is no user relations for system users, so we need to create a fake one
+        user_rel = {'user__email': email, 'roles': [], 'type': None}
     serializer = SystemUserSerializer(user_rel)
 
     return Response(serializer.data)
@@ -1738,7 +1739,7 @@ def system_user(request, system_id, email):
 @authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_users(request, system_id):
-    system = get_authorized_system(request, system_id)
+    system = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})
     if not system or not system.organization:
         raise exceptions.NotFound('System not found')
     all_user_role_rels = system.get_all_users()

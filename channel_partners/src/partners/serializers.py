@@ -1704,7 +1704,7 @@ class SystemUserSerializer(serializers.Serializer):
     email = serializers.EmailField(source='user__email')
     vmsRoles = serializers.SerializerMethodField(allow_null=True)
     roles = serializers.ListField(allow_empty=True, allow_null=True)
-    type = serializers.ChoiceField(choices=('organization', 'channel_partner'))
+    type = serializers.ChoiceField(choices=('organization', 'channel_partner'), allow_null=True)
 
     @cached_property
     def organization_roles(self):

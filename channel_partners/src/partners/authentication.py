@@ -41,6 +41,7 @@ from partners.models import (
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
+    VmsRoles,
 )
 from tools.exception import APIErrorWithoutRollback
 from tools.helpers import cast_uuid
@@ -66,12 +67,20 @@ class IntrospectionResult:
             for system_id, roles in self.introspected_systems_roles.items()
         }
 
-    def has_roles_in_system(self, email: str, system_id: uuid.UUID, expected_roles: Iterable[uuid]) -> bool:
+    def has_roles_in_system(
+            self,
+            email: str,
+            system_id: uuid.UUID,
+            expected_roles: Iterable[uuid] | VmsRoles.AnyRole | None = None
+    ) -> bool:
         return bool(
                 email
                 and email.lower() == self.get_email().lower()
                 and system_id in self.introspected_systems_roles
-                and set(expected_roles).intersection(self.introspected_systems_roles[system_id])
+                and (
+                    expected_roles == VmsRoles.ANY_ROLE or
+                    set(expected_roles).intersection(self.introspected_systems_roles[system_id])
+                )
         )
 
     @classmethod
@@ -473,7 +482,11 @@ class CdbInternalAuthentication:
         return IntrospectionResult.none()
 
     @staticmethod
-    def has_vms_roles(request, system_id: uuid.UUID, roles: Iterable[uuid.UUID]) -> Optional[bool]:
+    def has_vms_roles(
+            request,
+            system_id: uuid.UUID,
+            roles: Iterable[uuid.UUID] | VmsRoles.AnyRole | None
+    ) -> Optional[bool]:
         if not (token := CdbInternalAuthentication.get_bearer_token(request)):
             return None
         system_introspection = CdbInternalAuthentication.introspect_with_system(
