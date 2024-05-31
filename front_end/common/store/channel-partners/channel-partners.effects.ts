@@ -57,6 +57,26 @@ export class ChannelPartnersEffects {
         );
     });
 
+    loadPartnersOrgsAndStructure$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(ChannelPartnerActions.loadPartnersOrgsAndStructure),
+            switchMap(() =>
+                forkJoin(
+                    this.CPService.getChannelPartners(),
+                    this.CPService.getOrganizations(true),
+                    this.CPService.getChannelStructure(),
+                ).pipe(
+                    map(([channelPartners, organizations, channelStructure]) => ({
+                        type: ChannelPartnerActions.setPartnersOrgsAndStructure.type,
+                        channelPartners,
+                        organizations,
+                        channelStructure,
+                    })),
+                ),
+            ),
+        );
+    });
+
     constructor(
         private actions$: Actions,
         private CPService: NxChannelPartnersService,

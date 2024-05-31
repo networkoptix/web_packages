@@ -19,6 +19,7 @@ const initialState: ChannelPartnersState = {
     channelPartners: [],
     organizations: [],
     rootOrganizations: [],
+    channelStructure: undefined,
     hasStoreLoaded: false,
     banner: null,
 };
@@ -53,6 +54,13 @@ export const channelPartnersReducer = createReducer(
     })),
     on(
         ChannelPartnerActions.loadChannelPartnersAndOrgs,
+        (state): ChannelPartnersState => ({
+            ...state,
+            channelPartnersAndOrgsLoadState: LoadingState.LOADING,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.loadPartnersOrgsAndStructure,
         (state): ChannelPartnersState => ({
             ...state,
             channelPartnersAndOrgsLoadState: LoadingState.LOADING,
@@ -97,6 +105,17 @@ export const channelPartnersReducer = createReducer(
         (state, { currentParentPartnerId }): ChannelPartnersState => ({
             ...state,
             currentParentPartnerId,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setPartnersOrgsAndStructure,
+        (state, { channelPartners, organizations, channelStructure }): ChannelPartnersState => ({
+            ...state,
+            hasStoreLoaded: true,
+            channelPartnersAndOrgsLoadState: LoadingState.LOADED,
+            channelPartners: sortEntityByName(channelPartners),
+            organizations: sortEntityByName(organizations),
+            channelStructure,
         }),
     ),
     on(

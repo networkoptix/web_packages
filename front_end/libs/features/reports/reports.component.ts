@@ -9,14 +9,14 @@ import {
     selectChannelPartners,
     selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';
-import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import { NxReportsSidebarComponent } from './reports-sidebar/reports-sidebar.component';
 
 interface Item {
     name: string;
@@ -27,15 +27,14 @@ interface Item {
 @Component({
     selector: 'nx-reports',
     templateUrl: 'reports.component.html',
-    styleUrl: 'reports.component.scss',
+    styleUrls: ['reports.component.scss', 'reports-theme-variables.scss'],
     imports: [
         CommonModule,
         NxPreLoaderComponent,
         FormsModule,
         TranslateModule,
         RouterModule,
-        NxAutocompleteComponent,
-        NxAutoCompleteItemComponent,
+        NxReportsSidebarComponent,
     ],
     standalone: true,
 })

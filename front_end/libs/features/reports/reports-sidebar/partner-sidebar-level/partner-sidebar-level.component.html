@@ -1,0 +1,49 @@
+<div
+    class="partner-level"
+    [ngClass]="{
+        'no-children': !hasChildren$$(),
+        'is-selected': isSelected$$()
+    }"
+>
+    @if (hasChildren$$()) {
+        <svg-icon
+            (click)="toggleOpen(partnerStructure$$().id)"
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + (isOpen$$() ? 'arrow_down.svg' : 'arrow_right.svg')"
+            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+            svgClass="triangle"
+            class="open-toggle"
+        ></svg-icon>
+    }
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'partner_small.svg'"
+        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+    ></svg-icon>
+    <a
+        [routerLink]="routerLink$$()"
+        (click)="$event.stopPropagation(); open(partnerStructure$$().id)"
+        class="level-name"
+        >{{ partnerStructure$$().name }}</a
+    >
+</div>
+@if (isOpen$$()) {
+    <div class="children">
+        @for (subChannel of partnerStructure$$().subChannels; track subChannel.id) {
+            <nx-partner-sidebar-level
+                [partnerStructure]="subChannel"
+                [openLevels]="openLevels$$()"
+                [selectedEntityId]="selectedEntityId$$()"
+                (toggleOpenEvent)="toggleOpen($event)"
+                (openEvent)="open($event)"
+            ></nx-partner-sidebar-level>
+        }
+        @for (org of partnerStructure$$().organizations; track org.id) {
+            <nx-org-sidebar-level
+                [organization]="org"
+                [openLevels]="openLevels$$()"
+                [selectedEntityId]="selectedEntityId$$()"
+            ></nx-org-sidebar-level>
+        }
+    </div>
+}

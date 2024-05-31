@@ -7,11 +7,13 @@ import * as CPActions from '@common/store/channel-partners/channel-partners.acti
 import {
     selectAreChannelPartnersAndOrgsLoading,
     selectChannelPartners,
+    selectChannelStructure,
     selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type {
     ChannelPartner,
+    ChannelPartnersStructure,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { LoadingState } from '@store/channel-partners/channel-partners.state';
@@ -29,9 +31,12 @@ export const entityResolver: ResolveFn<void> = async (
     );
     const channelPartners$$ = store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     const organizations$$ = store.selectSignal<Organization[]>(selectOrganizations);
+    const channelStructure$$ = store.selectSignal<ChannelPartnersStructure | undefined>(
+        selectChannelStructure,
+    );
 
     appStateService.ready = false;
-    store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: true }));
+    store.dispatch(CPActions.loadPartnersOrgsAndStructure());
     await firstValueFrom(
         areChannelPartnersAndOrgsLoading$.pipe(
             filter(loadState => loadState === LoadingState.LOADED),
@@ -41,6 +46,7 @@ export const entityResolver: ResolveFn<void> = async (
     // handle redirection if needed
     const channelPartners = channelPartners$$();
     const organizations = organizations$$();
+    const channelStructure = channelStructure$$();
 
     const urlSegments = state.url.split('/');
     const entityTypeFromUrl = urlSegments[2];
@@ -57,8 +63,8 @@ export const entityResolver: ResolveFn<void> = async (
     if (!entityTypeFromUrl) {
         const defaultEntityType = channelPartners.length ? 'channel-partner' : 'organization';
         const defaultEntityId = channelPartners.length
-            ? channelPartners[0].id
-            : organizations[0].id;
+            ? channelStructure?.channelPartners[0].id
+            : channelStructure?.organizations[0].id;
         await router.navigate(['reports', defaultEntityType, defaultEntityId, 'service-usage']);
     } else if (!urlHasValidEntityType || (!urlHasValidPartner && !urlHasValidOrg)) {
         await router.navigate(['404']);

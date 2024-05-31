@@ -1,0 +1,31 @@
+.partner-level {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    &.no-children {
+        padding-left: 25px;
+    }
+
+    &.is-selected {
+        background-color: var(--reports-sidebar-highlight-color);
+    }
+
+    .open-toggle:hover {
+        cursor: pointer;
+    }
+
+    a {
+        color: var(--body-text-color);
+        text-decoration: none;
+        margin-left: 0.5rem
+    }
+
+    a:hover {
+        cursor: pointer;
+    }
+}
+
+.children {
+    padding-left: 1rem;
+}
