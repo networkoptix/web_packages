@@ -10,9 +10,8 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
-import { caseInsensitiveSearch } from '@utils/general';
+import { caseInsensitiveSearch, alphaNumericSort } from '@utils/general';
 import { paramModel } from '@utils/signals';
-import { alphaNumericSort } from '@utils/general';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
 import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
