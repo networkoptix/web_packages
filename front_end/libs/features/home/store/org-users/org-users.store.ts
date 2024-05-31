@@ -49,7 +49,7 @@ import {
     OrganizationUser,
     OrgRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { caseInsenstiveSearch, interceptMethodCalls } from '@utils/general';
+import { alphaNumericSort, caseInsenstiveSearch, interceptMethodCalls } from '@utils/general';
 
 import { GroupsStore } from '../groups/groups.store';
 import { ChannelPartnersRouteState } from '../route-state/route-state.store';
@@ -585,7 +585,7 @@ export const OrgUsersStore = signalStore(
     }),
     withComputed(({ searchQuery: searchQuery$$, currentGroupUsersEntities: entities$$ }) => ({
         filteredRecords$$: computed(() => {
-            const records = entities$$();
+            const records = entities$$().sort(alphaNumericSort(record => record.email));
             const search = searchQuery$$();
             if (!records) {
                 return undefined; // avoid showing "No data" msg.
