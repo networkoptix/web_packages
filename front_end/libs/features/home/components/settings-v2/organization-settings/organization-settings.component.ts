@@ -148,7 +148,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         () => accessMap?.[this.accessLevel$$()] || null,
     );
 
-    canUpdateAccess$$ = computed(() =>
+    canUpdateGeneral$$ = computed(() =>
         this.currentOrg$$()?.ownPermissions.includes(PartnerRoles.field_access_org_admin),
     );
 
