@@ -40,7 +40,8 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     protected router = inject(Router);
     protected channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
 
-    channelPartnerUserRecords = this.channelPartnerUsersStore.filteredRecords$$;
+    channelPartnerUserRecords$$ = this.channelPartnerUsersStore.entities;
+    filteredRecords$$ = this.channelPartnerUsersStore.filteredRecords$$;
     headers: HEADER_ITEM[] = [
         {
             name: 'email',
@@ -84,7 +85,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     canManageUsers$$ = computed(() => this.permissionStore.canViewPartnerUsers$$());
 
     hasOneAdmin$$ = computed(() => {
-        const users = this.channelPartnerUserRecords();
+        const users = this.channelPartnerUserRecords$$();
         let count = 0;
         for (const user of users) {
             if (user.roles[0] === 'Administrator') {
@@ -102,13 +103,13 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             return '';
         }
         return (
-            this.channelPartnerUserRecords().find(user => user.roles[0] === 'Administrator')
+            this.channelPartnerUserRecords$$().find(user => user.roles[0] === 'Administrator')
                 ?.email || ''
         );
     });
 
     adminCount$$ = computed(() => {
-        const adminUsers = this.channelPartnerUserRecords()?.filter(
+        const adminUsers = this.channelPartnerUserRecords$$()?.filter(
             user => user.roles[0] === 'Administrator',
         );
         return adminUsers?.length || 0;
@@ -122,7 +123,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                 email: user.email,
             })
             .subscribe(updatedUser => {
-                const staleUser: UserRecord | undefined = this.channelPartnerUserRecords().find(
+                const staleUser: UserRecord | undefined = this.filteredRecords$$().find(
                     ({ email }) => email === user.email,
                 );
                 if (staleUser) {
@@ -171,7 +172,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         this.dialogService
             .addPartnerUser({
                 partnerId: this.currentPartner$$()?.id,
-                users: this.channelPartnerUserRecords(),
+                users: this.filteredRecords$$(),
             })
             .then(user => {
                 this.channelPartnerUsersStore.addRecord({

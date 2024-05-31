@@ -5,6 +5,10 @@
 @use "theme_variables_common" as vars;
 @use '../../dialogs2.scss';
 
+.header-title--muted {
+    color: var(--light14); // TODO: Fix this with new variable generation
+}
+
 .control-container:not(:first-child) {
     margin-top: 0.75rem;
 }

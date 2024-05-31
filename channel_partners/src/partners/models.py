@@ -279,6 +279,29 @@ class ServiceUsageDict(TypedDict):
     quantity: int
 
 
+class VmsRoles:
+    class AnyRole:
+        pass
+
+    ADMINISTRATOR = uuid.UUID('00000000-0000-0000-0000-100000000000')
+    POWER_USER = uuid.UUID('00000000-0000-0000-0000-100000000001')
+    ADVANCED_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000002')
+    VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000003')
+    LIVE_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000004')
+    SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000005')
+
+    ANY_ROLE = AnyRole()
+
+    ALL_ROLES = [
+        ADMINISTRATOR,
+        POWER_USER,
+        ADVANCED_VIEWER,
+        VIEWER,
+        LIVE_VIEWER,
+        SYSTEM_HEALTH_VIEWER,
+    ]
+
+
 class CloudSystemStates:
     NOT_ACTIVATED = 2
     ACTIVATED = 4
@@ -460,8 +483,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def can_set_services(self, user: CloudUser):
         return self.organization and self.organization.can_modify_service_quantities(user)
 
-    def has_vms_role(self, user: CloudUser, vms_roles: List[uuid.UUID]) -> bool:
-        allowed_roles = OrganizationRole.objects.filter(system_role_uuid__in=vms_roles).values_list('id', flat=True)
+    def has_vms_role(self, user: CloudUser, vms_roles: List[uuid.UUID] | VmsRoles.ANY_ROLE) -> bool:
+        if vms_roles == VmsRoles.ANY_ROLE:
+            allowed_roles = OrganizationRoles.ALL_ROLES
+        else:
+            allowed_roles = OrganizationRole.objects.filter(system_role_uuid__in=vms_roles).values_list('id', flat=True)
         if not allowed_roles:
             return False
         if OrganizationToUser.objects.filter(
@@ -1273,23 +1299,14 @@ class OrganizationRoles:
         (SYSTEM_HEALTH_VIEWER, 'System Health Viewer'),
         (None, 'Service Management Only'),
     ]
-
-
-class VmsRoles:
-    ADMINISTRATOR = uuid.UUID('00000000-0000-0000-0000-100000000000')
-    POWER_USER = uuid.UUID('00000000-0000-0000-0000-100000000001')
-    ADVANCED_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000002')
-    VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000003')
-    LIVE_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000004')
-    SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-0000-0000-100000000005')
-
     ALL_ROLES = [
+        ORGANIZATION_ADMINISTRATOR,
         ADMINISTRATOR,
         POWER_USER,
+        SYSTEM_HEALTH_VIEWER,
         ADVANCED_VIEWER,
         VIEWER,
-        LIVE_VIEWER,
-        SYSTEM_HEALTH_VIEWER,
+        LIVE_VIEWER
     ]
 
 
