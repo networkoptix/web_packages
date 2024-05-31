@@ -43,9 +43,8 @@ import {
     GroupUser,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
-import { alphabeticalSort, caseInsensitiveSearch } from '@utils/general';
 import { NxVmsClientService } from '@services/vms-client.service';
+import { alphabeticalSort, caseInsensitiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
