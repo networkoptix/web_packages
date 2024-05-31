@@ -35,7 +35,7 @@ import type {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
+import { alphaNumericSort, caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
 
 import type { OrgTreeStatuses, TreeItem } from './org-tree-selector.types';
 
@@ -165,7 +165,7 @@ export class NxOrgTreeSelectorV0Component implements ControlValueAccessor, Valid
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
         });
-        this.folderSearchResults = this.flatGroups;
+        this.folderSearchResults = this.flatGroups.sort(alphaNumericSort(folder => folder.name));
 
         // Opens all folders for easier testing
         // this.folderSearchResults.forEach(g => {
