@@ -19,8 +19,8 @@ import { NgForm } from '@angular/forms';
 import { Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable, Subscription, timer } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { firstValueFrom, Observable, of, Subscription, timer } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -211,6 +211,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     channelPartnersService = inject(NxChannelPartnersService);
 
+    isOrgUser$$ = signal(false);
+
     manageOrgSystems$$ = pipeSignal(
         this.system$$,
         systems$ =>
@@ -221,14 +223,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     const orgId = 'organizationId' in systemInfo ? systemInfo.organizationId : null;
 
                     if (!orgId) {
+                        this.isOrgUser$$.set(false);
                         return Promise.resolve(false);
                     }
 
-                    return this.channelPartnersService
-                        .getOrganization(orgId)
-                        .pipe(
-                            map(org => org.ownPermissions.includes(OrgPermissions.manage_systems)),
-                        );
+                    return this.channelPartnersService.getOrganization(orgId).pipe(
+                        catchError(() => of(null)),
+                        map(org => {
+                            this.isOrgUser$$.set(!!org);
+                            return org?.ownPermissions.includes(OrgPermissions.manage_systems);
+                        }),
+                    );
                 }),
             ),
         false,
