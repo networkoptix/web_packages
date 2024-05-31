@@ -1,0 +1,20 @@
+.org-level {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-left: 25px;
+
+    &.is-selected {
+        background-color: var(--reports-sidebar-highlight-color);
+    }
+
+    a {
+        color: var(--body-text-color);
+        text-decoration: none;
+        margin-left: 0.5rem
+    }
+
+    a:hover {
+        cursor: pointer;
+    }
+}

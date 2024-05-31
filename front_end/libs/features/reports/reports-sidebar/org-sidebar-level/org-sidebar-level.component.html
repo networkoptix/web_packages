@@ -1,0 +1,16 @@
+<div
+    class="org-level"
+    [ngClass]="{ 'is-selected': isSelected$$() }"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'organization.svg'"
+        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+    ></svg-icon>
+    <a
+        [routerLink]="routerLink$$()"
+        (click)="$event.stopPropagation()"
+        class="level-name"
+        >{{ organization$$().name }}</a
+    >
+</div>

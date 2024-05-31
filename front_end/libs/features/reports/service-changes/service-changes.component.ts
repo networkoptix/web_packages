@@ -32,8 +32,8 @@ export class NxServiceChangesComponent {
     private readonly store = inject(Store);
     private dateTimeService = inject(NxDateTimeFormatService);
 
-    protected entityType$$ = input.required<EntityType>({ alias: 'entityType' });
-    protected entityId$$ = input.required<string>({ alias: 'entityId' });
+    entityType$$ = input.required<EntityType>({ alias: 'entityType' });
+    entityId$$ = input.required<string>({ alias: 'entityId' });
     private channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     private organizations$$ = this.store.selectSignal<Organization[]>(selectOrganizations);
 

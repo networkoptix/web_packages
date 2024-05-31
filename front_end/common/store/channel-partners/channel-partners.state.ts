@@ -1,5 +1,6 @@
 import {
     ChannelPartner,
+    ChannelPartnersStructure,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -20,6 +21,7 @@ export interface ChannelPartnersState {
     channelPartners: ChannelPartner[];
     organizations: Organization[];
     rootOrganizations: Organization[];
+    channelStructure: ChannelPartnersStructure | undefined;
     hasStoreLoaded: boolean;
     showPermissionWarning: boolean;
 }

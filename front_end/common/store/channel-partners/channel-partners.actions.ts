@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 import {
     ChannelPartner,
+    ChannelPartnersStructure,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -25,6 +26,10 @@ export const loadChannelPartnersAndOrgs = createAction(
     props<{ includeChildOrgs: boolean }>(),
 );
 
+export const loadPartnersOrgsAndStructure = createAction(
+    '[Channel Partners] Load channel partners, organizations, and channel structure',
+);
+
 export const setChannelPartners = createAction(
     '[Channel Partners] Set channel partners',
     props<{ channelPartners: ChannelPartner[] }>(),
@@ -43,6 +48,15 @@ export const setChannelPartnersAndOrgs = createAction(
 export const setChannelPartnersAndRootOrgs = createAction(
     '[Channel Partners] Set Channel Partners and Root Orgs',
     props<{ channelPartners: ChannelPartner[]; rootOrganizations: Organization[] }>(),
+);
+
+export const setPartnersOrgsAndStructure = createAction(
+    '[Channel Partners] Set channel partners, organizations, and channel structure',
+    props<{
+        channelPartners: ChannelPartner[];
+        organizations: Organization[];
+        channelStructure: ChannelPartnersStructure;
+    }>(),
 );
 
 export const setCurrentPartnerId = createAction(

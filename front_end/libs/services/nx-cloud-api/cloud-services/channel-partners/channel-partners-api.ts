@@ -52,6 +52,7 @@ import {
     DetailTableResponse,
     CloudSystemLight,
     PaginatedCloudSystemLightList,
+    ChannelPartnersStructure,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -145,6 +146,12 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     removeChannelPartner = (partnerId: string): Observable<void> => {
         return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
+    };
+
+    getChannelStructure = (): Observable<ChannelPartnersStructure> => {
+        return this.get<ChannelPartnersStructure>(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, ['channel_structure']),
+        );
     };
 
     /* Channel Partner Users */
