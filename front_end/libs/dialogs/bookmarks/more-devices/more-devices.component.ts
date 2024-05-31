@@ -8,7 +8,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import staticLang from '@language_static';
 import { BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 
 import type { MoreDevices as DT } from '../../dialogs.types';
 import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters-base.component';
@@ -36,7 +36,7 @@ export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT,
         return !this.search
             ? this.items
             : this.items.filter(({ name }) =>
-                  searches.some(search => caseInsenstiveSearch(name, search)),
+                  searches.some(search => caseInsensitiveSearch(name, search)),
               );
     }
 

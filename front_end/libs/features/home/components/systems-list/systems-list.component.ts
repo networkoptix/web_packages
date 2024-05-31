@@ -30,7 +30,7 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { NxVmsClientService } from '@services/vms-client.service';
 import { icons, search } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { isUserSystem } from '@utils/nx';
 
 @Component({
@@ -88,9 +88,9 @@ export class HomeSystemListComponent {
         return systems.filter(system => {
             const ownerText = this.systemsService.getSystemOwnerName(system);
             return (
-                caseInsenstiveSearch(system.name, searchText) ||
+                caseInsensitiveSearch(system.name, searchText) ||
                 (ownerText !== this.LANG.system.yourSystem &&
-                    caseInsenstiveSearch(ownerText, searchText))
+                    caseInsensitiveSearch(ownerText, searchText))
             );
         });
     });

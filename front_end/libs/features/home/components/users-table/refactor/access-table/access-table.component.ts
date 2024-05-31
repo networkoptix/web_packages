@@ -10,6 +10,8 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
+import { caseInsensitiveSearch } from '@utils/general';
+import { paramModel } from '@utils/signals';
 import { alphaNumericSort } from '@utils/general';
 
 import { AbstractUserTableDirective } from '../shared/abstract-user-table.directive';
@@ -32,6 +34,8 @@ import { StranglerImports } from '../strangler-table/strangler-imports';
     ],
 })
 export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
+    searchQueryModel = paramModel('search');
+
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     email$$ = this.routerState.email;
     orgRoles$$ = this.cpService.organizationRoles$$;
@@ -66,6 +70,24 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                 user.accessId = this.currentOrg$$()?.id;
                 return user;
             });
+    });
+
+    filteredRecords$$ = computed(() => {
+        const groups = this.groupsStore.groupPathMap$$();
+        const searchQuery = this.searchQueryModel();
+        const records = this.accessTableRecords$$();
+
+        if (!searchQuery) {
+            return records;
+        }
+
+        return records.filter(record => {
+            const id = record.groupRoles[0].groupId;
+            return (
+                caseInsensitiveSearch(groups[id].pathString, searchQuery) ||
+                record.roles.some((role: string) => caseInsensitiveSearch(role, searchQuery))
+            );
+        });
     });
 
     protected idPropName = 'accessId';

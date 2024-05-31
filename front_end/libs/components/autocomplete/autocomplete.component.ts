@@ -35,7 +35,7 @@ import { last } from 'lodash-es';
 import { throttle } from '@decorators/throttle';
 import LANG from '@language_static';
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch, scrollItemIntoView } from '@utils/general';
+import { caseInsensitiveSearch, scrollItemIntoView } from '@utils/general';
 import { connectedPosition } from '@utils/nx';
 
 import { NxAutocompleteInjectionToken } from './autocomplete-injection-token';
@@ -192,7 +192,7 @@ export class NxAutocompleteComponent<T> implements ControlValueAccessor, Validat
 
         const matches: Item<T>[] = [];
         for (const item of items) {
-            if (searches.some(s => caseInsenstiveSearch(item.searchString(), s))) {
+            if (searches.some(s => caseInsensitiveSearch(item.searchString(), s))) {
                 matches.push(item);
             }
             if (matches.length === this.MATCH_ITEM_LIMIT) {

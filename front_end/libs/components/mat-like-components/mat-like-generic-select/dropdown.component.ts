@@ -12,7 +12,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { icons } from '@static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { caseInsensitiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../../dropdowns/injDropdown';
@@ -131,8 +131,8 @@ export class NxMatLikeGenericDropdown<
         this.filter = value;
         this._items = this.items.filter(
             item =>
-                caseInsenstiveSearch(item.name, this.filter) ||
-                (item.help && caseInsenstiveSearch(item.help, this.filter)),
+                caseInsensitiveSearch(item.name, this.filter) ||
+                (item.help && caseInsensitiveSearch(item.help, this.filter)),
         );
 
         if (!this._items.length) {

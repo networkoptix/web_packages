@@ -43,8 +43,9 @@ import {
     GroupUser,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { alphabeticalSort, caseInsensitiveSearch } from '@utils/general';
 import { NxVmsClientService } from '@services/vms-client.service';
-import { alphabeticalSort, caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
@@ -181,7 +182,7 @@ export class NxOrganizationCardContainerComponent {
         if (!search) {
             return groups;
         }
-        return Object.values(groups.filter(group => caseInsenstiveSearch(group.name, search)));
+        return Object.values(groups.filter(group => caseInsensitiveSearch(group.name, search)));
     });
 
     currentOrganizationGroupsSearchResults$$ = computed(() => {
@@ -195,7 +196,7 @@ export class NxOrganizationCardContainerComponent {
         return Object.values(flattenGroups(groups))
             .filter(({ id }) => !currentFolderResults.includes(id))
             .map(group => ({ ...group, children: [] }))
-            .filter(group => caseInsenstiveSearch(group.name, search));
+            .filter(group => caseInsensitiveSearch(group.name, search));
     });
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -300,7 +301,7 @@ export class NxOrganizationCardContainerComponent {
         const currentGroup = this.groupsStore.currentGroupId$$();
         const allOrgSystems = this.groupsStore
             .allOrgSystems$$()
-            .filter(system => caseInsenstiveSearch(system.name, search));
+            .filter(system => caseInsensitiveSearch(system.name, search));
 
         return allOrgSystems.reduce(
             (acc, system) => {
