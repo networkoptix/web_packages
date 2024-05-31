@@ -34,7 +34,7 @@ import type {
     InfoDataServer,
     InfoRow,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { icons } from '@static-variables';
+import { icons, MAX_NAME_LENGTH } from '@static-variables';
 
 @Component({
     selector: 'nx-info-form',
@@ -55,6 +55,7 @@ import { icons } from '@static-variables';
 export class NxInfoGroupComponent {
     private translateService = inject(TranslateService);
     private formBuilder = inject(FormBuilder);
+    protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
     LANG = staticLang;
 
     @Input() formId: string;
