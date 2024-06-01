@@ -420,9 +420,9 @@ export const OrgUsersStore = signalStore(
                                 const { roles, rolesIds } = updatedUser;
                                 const user = store.currentGroupUsersEntityMap()[email];
                                 const { groupRoles } = user;
-                                const groupIndex = groupRoles.findIndex(
-                                    ({ groupId }) => groupId === folder,
-                                );
+                                const groupIndex =
+                                    groupRoles?.findIndex(({ groupId }) => groupId === folder) ||
+                                    -1;
                                 if (groupIndex !== -1) {
                                     groupRoles[groupIndex] = {
                                         ...groupRoles[groupIndex],
