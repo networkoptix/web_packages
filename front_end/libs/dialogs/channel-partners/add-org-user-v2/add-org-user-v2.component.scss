@@ -109,6 +109,23 @@ nx-select-v2 {
     border: 1px solid transparent;
 }
 
+:host {
+    // Added to fix micro-differences in figma
+    nx-select-v2::ng-deep {
+        & > div {
+            border-radius: 2px;
+        }
+
+        .select-box.placeholder {
+            color: inherit !important;
+        }
+
+        svg-icon svg g polyline {
+            stroke-width: 1px !important;
+        }
+    }
+}
+
 .role-message {
     min-height: 5rem;
 }
