@@ -3,7 +3,7 @@
     type="button"
     (click)="onClick()"
     [disabled]="disabled$$() || readOnly()"
-    class="org-step-select btn btn-default"
+    class="org-step-select btn btn-dropdown-toggle"
     [ngClass]="{ 'org-step-select--readonly': readOnly() }"
 >
     <div
