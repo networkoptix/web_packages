@@ -1560,8 +1560,8 @@
             "message": ""
         },
         "noSystems": {
-            "connected": "If the system is <span class=\"text-contrast-bold\">connected</span> to the %CLOUD_NAME%",
-            "notConnected": "If the system is <span class=\"text-contrast-bold\">not connected</span> to the %CLOUD_NAME%",
+            "connected": "If the system is <span class=\"text-contrast-bold\">connected</span> to %CLOUD_NAME%",
+            "notConnected": "If the system is <span class=\"text-contrast-bold\">not connected</span> to %CLOUD_NAME%",
             "login": "Log in to the system in %VMS_NAME%"
         }
     },
