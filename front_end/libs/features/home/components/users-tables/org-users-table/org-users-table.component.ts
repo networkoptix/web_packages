@@ -124,7 +124,7 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
             (user.isOrgUser && !userIsOnlyAdmin && currentGroupId === orgId) ||
             (!user.isOrgUser &&
                 !this.hasMultipleRoles(user) &&
-                user.accessLevel?.id === currentGroupId)
+                (user.accessLevel?.id === currentGroupId || currentGroupId === orgId))
         );
     }
 
