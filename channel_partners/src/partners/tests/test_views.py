@@ -2493,6 +2493,38 @@ class TestCloudSystemViewSetDelete:
         response = self.view(request, id=sys.system_id)
         assert response.status_code == 403
 
+    def test_destroy_system_perms_success(self, system_factory, arf, mock_cdb_token_introspect,
+                                          httpx_mock, cdb_introspect_url):
+        self.org_user.roles = [OrganizationRoles.VIEWER]
+        self.org_user.save()
+        # resetting introspection mock from mock_auth_with_user
+        httpx_mock.reset(False)
+        sys = system_factory(organization=self.org)
+        url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
+        httpx_mock.add_response(url=url, status_code=200)
+        email = mock_cdb_token_introspect(user=self.org_user.user, system=sys, system_role=VmsRoles.ADMINISTRATOR)
+        request = arf.delete('/')
+        response = self.view(request, id=sys.system_id)
+        assert response.status_code == 204
+        sys.refresh_from_db()
+        assert sys.system_state == CloudSystemStates.DELETED
+        cdb_request = httpx_mock.get_request(url=cdb_introspect_url)
+        assert cdb_request
+
+    def test_destroy_system_perms_failed(self, system_factory, arf, mock_cdb_token_introspect,
+                                         httpx_mock, cdb_introspect_url):
+        self.org_user.roles = [OrganizationRoles.VIEWER]
+        self.org_user.save()
+        # resetting introspection mock from mock_auth_with_user
+        httpx_mock.reset(False)
+        sys = system_factory(organization=self.org)
+        url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
+        httpx_mock.add_response(url=url, status_code=200)
+        email = mock_cdb_token_introspect(user=self.org_user.user, system=sys, system_role=VmsRoles.VIEWER)
+        request = arf.delete('/')
+        response = self.view(request, id=sys.system_id)
+        assert response.status_code == 403
+
     def test_destroy_cpal_success(self, channel_partner_factory, organization_factory, system_factory,
                                   cp_user_factory, arf, mock_auth_with_user, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=200)
