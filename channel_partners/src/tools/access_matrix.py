@@ -11,6 +11,7 @@ from django.conf import settings
 from django.core.cache import caches
 from django.utils.functional import cached_property
 
+from partners.authentication import IntrospectionResult
 from partners.models import (
     ChannelPartner,
     ChannelPartnerRoles,
@@ -277,6 +278,7 @@ class UserAccessMatrix:
         self.cloud_user = cloud_user
         self.access_matrix = self.matrix_class.load_matrix(content_type=content_type)
         self.request = request
+        self.system_introspection: IntrospectionResult = getattr(request, 'system_introspection', None)
 
     @cached_property
     def user_channel_partners(self):
@@ -372,13 +374,13 @@ class UserAccessMatrix:
             # if field not explicitly defined in json access is always allowed
             return True
 
-        # check if authenticated user is a VMS user with some roles.
-        # partners.authentication.CdbInternalAuthentication.has_vms_roles
+        # check if authenticated user is a VMS user with any role (even none for custom user).
         if (
-            (system_introspection := getattr(self.request, 'system_introspection', None))
+            access_type == AccessTypes.read
+            and self.system_introspection
             and (system_id := getattr(target_instance, 'system_id', None))
         ):
-            if system_introspection.introspected_systems_roles.get(system_id):
+            if system_id in self.system_introspection.introspected_systems_roles:
                 return True
 
         levels_permissions = self.access_matrix.fields.allowed_field_levels(field_name=field_name,
