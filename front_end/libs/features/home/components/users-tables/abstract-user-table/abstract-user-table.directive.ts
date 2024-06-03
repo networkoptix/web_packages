@@ -1,7 +1,10 @@
-import { Directive, inject } from '@angular/core';
+import { Directive, ViewChild, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
+import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';
@@ -29,7 +32,19 @@ export abstract class AbstractUserTableDirective {
     icons = icons;
     LANG = staticLang;
 
+    checkAllContainer = new BehaviorSubject<undefined | NxCheckAllContainerDirective>(undefined);
+    checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
+    @ViewChild(NxCheckAllContainerDirective) set setContainerRef(
+        checkAllContainerRef: NxCheckAllContainerDirective,
+    ) {
+        this.checkAllContainer.next(checkAllContainerRef);
+    }
+
     hasMultipleRoles(user: UserRecord): boolean {
         return user.groupRoles?.length > 1 || user.roles?.length > 1;
+    }
+
+    uncheckAll(): void {
+        this.checkAllContainer$$()?.toggleAllBoxes(true); // true = Unchecks all boxes
     }
 }

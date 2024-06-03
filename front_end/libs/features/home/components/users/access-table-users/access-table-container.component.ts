@@ -2,24 +2,22 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, ViewChild, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PipesModule } from '@pipes/pipes.module';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
 
+import { AbstractUserTableDirective } from '../../users-tables/abstract-user-table/abstract-user-table.directive';
 import { NxUsersAccessTableComponent } from '../../users-tables/access-table/access-table.component';
 
 @Component({
@@ -42,7 +40,7 @@ import { NxUsersAccessTableComponent } from '../../users-tables/access-table/acc
     ],
     standalone: true,
 })
-export class NxAccessTableContainerComponent {
+export class NxAccessTableContainerComponent extends AbstractUserTableDirective {
     LANG = staticLang;
     icons = icons;
     groupsStore = inject(GroupsStore);
@@ -80,12 +78,6 @@ export class NxAccessTableContainerComponent {
         const currentOrg = this.currentOrg$$()!;
         return [currentOrg, ...groupsPath.reverse()];
     });
-
-    constructor(
-        private cpService: NxChannelPartnersService,
-        private store: Store,
-        private dialogService: NxDialogsService,
-    ) {}
 
     setQuery(model: SearchFilter): void {
         this.orgUsersStore.setSearchQuery(model.query);

@@ -1,7 +1,6 @@
-import { Component, Output, ViewChild, computed, forwardRef, inject, input } from '@angular/core';
+import { Component, Output, computed, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
@@ -62,13 +61,6 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     searching = input.required<boolean>();
 
-    checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
-    checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
-    @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
-        checkAllContainerRef: NxCheckAllContainerDirective,
-    ) {
-        this.checkAllContainer.next(checkAllContainerRef);
-    }
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$() || 0);
     selectedUsers$$ = computed(
         () =>

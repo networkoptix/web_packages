@@ -21,12 +21,18 @@
     <div class="actions py-3">
         @if (selectedCount) {
             <div class="selected-users">
-                <div class="text">
+                <button
+                    class="btn uncheckBtn"
+                    (click)="accessTable.uncheckAll()"
+                    type="button"
+                >
                     <svg-icon
                         nx-add-svg-src
                         [src]="icons.dirTextButtons + 'close.svg'"
-                        [svgStyle]="{ 'width.px': '12' }"
+                        [svgStyle]="{ 'width.px': '15' }"
                     ></svg-icon>
+                </button>
+                <div>
                     {{ selectedCount }}
                     <span translate> selected: </span>
                 </div>

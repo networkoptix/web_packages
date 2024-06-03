@@ -38,10 +38,8 @@
     align-items: center;
     color: var(--btn-close-bg);
 
-    .text {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+    .uncheckBtn {
+        padding: 0 5px !important;
 
         svg {
             .st0 {

@@ -92,17 +92,21 @@ export class NxCheckAllContainerDirective {
         this.otherCheckBoxesQuery$.next(checkAllRef);
     }
 
+    toggleAllBoxes = (forceUncheckAll?: boolean): void => {
+        const allChecked = this.checkAllToggled$$();
+        const otherCheckBoxInstances = this.otherCheckBoxInstances$$();
+
+        otherCheckBoxInstances.forEach(ref => {
+            if (forceUncheckAll ? ref.value : ref.value !== allChecked.value) {
+                ref.changeState();
+                ref.notifyChange();
+            }
+        });
+    };
+
     checkAllToggledEffect = effect(
         () => {
-            const allChecked = this.checkAllToggled$$();
-            const otherCheckBoxInstances = this.otherCheckBoxInstances$$();
-
-            otherCheckBoxInstances.forEach(ref => {
-                if (ref.value !== allChecked.value) {
-                    ref.changeState();
-                    ref.notifyChange();
-                }
-            });
+            this.toggleAllBoxes();
         },
         { allowSignalWrites: true },
     );
