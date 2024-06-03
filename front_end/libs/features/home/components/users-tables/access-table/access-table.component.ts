@@ -1,6 +1,5 @@
-import { Component, Output, ViewChild, computed, forwardRef } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject } from 'rxjs';
+import { Component, Output, computed } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
@@ -97,13 +96,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     ];
     protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
 
-    checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
-    checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
-    @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
-        checkAllContainerRef: NxCheckAllContainerDirective,
-    ) {
-        this.checkAllContainer.next(checkAllContainerRef);
-    }
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
     selectedGroups$$ = computed(
         () =>

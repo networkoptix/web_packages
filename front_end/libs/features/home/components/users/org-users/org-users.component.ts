@@ -40,7 +40,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     orgUsersStore = inject(OrgUsersStore);
     routerState = inject(ChannelPartnersRouteState);
 
-    @ViewChild(NxOrgUsersTableComponent) orgUsersTable: NxOrgUsersTableComponent;
+    @ViewChild(NxOrgUsersTableComponent) orgUsersTable!: NxOrgUsersTableComponent;
     searchModel: SearchFilter = { query: '' };
 
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);

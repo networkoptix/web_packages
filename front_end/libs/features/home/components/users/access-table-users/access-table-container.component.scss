@@ -10,7 +10,9 @@
     align-items: center;
     color: var(--btn-close-bg);
 
-    .text {
+    .uncheckBtn {
+        padding: 0 5px !important;
+        
         svg {
             .st0 {
                 stroke: var(--btn-close-bg);
