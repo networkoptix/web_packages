@@ -443,7 +443,7 @@
                 "ioDevice": "I/O modules are not currently supported in the Web client.",
                 "webPage": "Web pages cannot be viewed within the Web Client.",
                 "intercom": "Intercom devices are not currently supported in the Web client.",
-                "virtualCamera": "Intercom devices are not currently supported in the Web client.",
+                "virtualCamera": "Virtual cameras do not provide a Live stream.",
                 "noAccess": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
                 "noAccessToSystem": "You do not have permission to \"{System_name}\" system. Please contact your system administrator to arrange access to the system."
             },

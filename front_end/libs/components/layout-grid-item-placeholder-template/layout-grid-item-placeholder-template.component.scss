@@ -25,7 +25,7 @@
     left: 15%;
     width: 70%;
     height: 0;
-    box-shadow: 0 0 25cqi calc(min(4cqi, 40px)) var(--main-color);
+    box-shadow: 0 0 10cqmax 6px var(--main-color);
 }
 
 .container {
@@ -54,12 +54,14 @@
         display: inline-block;
         text-align: center;
         font-size: 40px;
+        line-height: 50px;
         &.has-tooltip {
             cursor: pointer;
         }
 
         @container container (width < 250px) or (height < 70px) {
-            font-size: 16cqi;
+            font-size: 14cqi;
+            line-height: 20cqi;
         }
     }
 }

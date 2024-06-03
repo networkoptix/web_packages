@@ -37,13 +37,16 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { PipesModule } from '@pipes/pipes.module';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { nxConfig } from '@services/nx-config/config';
-import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
+import {
+    CameraTypeId,
+    NxSystemCamera,
+} from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
 
 const messagesLang = staticLang.layouts.itemPlaceholders.messages;
 const hintsLang = staticLang.layouts.itemPlaceholders.hints;
-const actionsLang = staticLang.layouts.itemPlaceholders.hints;
+const actionsLang = staticLang.layouts.itemPlaceholders.actions;
 const descriptionsLang = staticLang.layouts.itemPlaceholders.descriptions;
 const errorsLang = staticLang.layouts.itemPlaceholders.errors;
 
@@ -116,7 +119,7 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
     },
     virtual_camera: {
         message: messagesLang.noLiveStream,
-        isError: true,
+        isError: false,
         hint: hintsLang.virtualCamera,
     },
     noAccess: {
@@ -162,6 +165,7 @@ const CAMERA_PLACEHOLDERS = {
     unauthorized: PLACEHOLDERS.unauthorized_camera,
     incompatible: PLACEHOLDERS.incompatible,
     unavailable: PLACEHOLDERS.unavailable_camera,
+    virtualCamera: PLACEHOLDERS.virtual_camera,
 };
 
 const SERVER_PLACEHOLDERS = {
@@ -224,25 +228,29 @@ export class NxLayoutGridItemPlaceholderComponent {
         const statuses = this.layoutItemsErrorsStore.statuses$$();
         const itemDetail = this.itemDetail();
 
-        return (
-            status ||
-            statuses[itemDetail.details.id] ||
-            (assertResourceOfType.camera(itemDetail) && itemDetail.details.unauthorized
-                ? 'unauthorized'
-                : !(
-                        (assertResourceOfType.camera(itemDetail) ||
-                            assertResourceOfType.server(itemDetail)) &&
-                        itemDetail.details.online
-                    )
-                  ? 'offline'
-                  : (assertResourceOfType.camera(itemDetail) ||
-                          assertResourceOfType.server(itemDetail)) &&
-                      itemDetail.details.status !== 'archive'
-                    ? (assertResourceOfType.camera(itemDetail) ||
-                          assertResourceOfType.server(itemDetail)) &&
-                      itemDetail.details.status
-                    : 'offline')
-        );
+        const isCamera = assertResourceOfType.camera(itemDetail);
+        const isServer = assertResourceOfType.server(itemDetail);
+        const isCamOrSrv = isCamera || isServer;
+        const isOnline = isCamOrSrv && itemDetail.details.online;
+        const isUnauthorized = isCamera && itemDetail.details.unauthorized;
+        const isNotArchived = isCamOrSrv && itemDetail.details.status !== 'archive';
+        let adjustedStatus = status || statuses[itemDetail.details.id];
+
+        if (!adjustedStatus) {
+            if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
+                adjustedStatus = 'virtualCamera';
+            } else if (isUnauthorized) {
+                adjustedStatus = 'unauthorized';
+            } else if (!isOnline) {
+                adjustedStatus = 'offline';
+            } else if (isNotArchived) {
+                adjustedStatus = itemDetail.details.status;
+            } else {
+                adjustedStatus = 'offline';
+            }
+        }
+
+        return adjustedStatus;
     });
 
     placeholder = computed(() => {

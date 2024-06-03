@@ -103,6 +103,7 @@ import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types/layouts.types';
 import {
     CameraStatus,
+    CameraTypeId,
     NxSystemCamera,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -1555,8 +1556,13 @@ export class NxLayoutGridComponent {
         itemDetail: ReturnType<NxLayoutGridComponent['getItem']>;
         errors: Record<string, string>;
     }): boolean =>
+        // this method is a kind of duplicate. We indicate here if the item has error giving no status
+        // and we do the same thing sometimes to define type of error in the placeholder
         !errors[itemDetail.details.id] &&
-        !(assertResourceOfType.camera(itemDetail) && itemDetail.details.unauthorized) &&
+        !(
+            assertResourceOfType.camera(itemDetail) &&
+            (itemDetail.details.unauthorized || itemDetail.details.typeId === CameraTypeId.Virtual)
+        ) &&
         (((assertResourceOfType.camera(itemDetail) || assertResourceOfType.server(itemDetail)) &&
             itemDetail.details.online) ||
             assertResourceOfType.webpage(itemDetail));

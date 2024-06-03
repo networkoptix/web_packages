@@ -227,7 +227,7 @@ export class NxLayoutGridTreeNode {
                   (node.type !== 'camera' || ['warning', 'unauthorized'].includes(status)
                       ? status.replace('mismatchedCertificate', 'incompatible')
                       : assertResourceOfType.camera(node) &&
-                        (node.details?.typeId === CameraTypeId.Virtual
+                        (node.details.typeId === CameraTypeId.Virtual
                             ? 'virtual'
                             : node.details?.unauthorized
                               ? 'unauthorized'
