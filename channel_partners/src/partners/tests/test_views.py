@@ -200,6 +200,7 @@ class TestCloudSystemViewSetRetrieve:
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
         assert response.status_code == 200
+        assert response.data['organizationName'] == self.organization.name
 
     def test_token_403_org_user(self, mock_cdb_token_introspect, cloud_user_factory):
         mock_cdb_token_introspect(user=self.other_org_admin.user, system=None, system_role=None)
@@ -212,6 +213,7 @@ class TestCloudSystemViewSetRetrieve:
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
         response = self.client.get(path=self.url)
         assert response.status_code == 403
+
 
 
 class TestCloudSystemViewSetBind:
