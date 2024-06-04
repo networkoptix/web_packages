@@ -98,16 +98,20 @@
                         [ngClass]="{ dropdown: canManageUsers$$() }"
                     >
                         <div class="div-container roles">
-                            <nx-select-v2
-                                [ngModel]="getRowRoleId(row)"
-                                (ngModelChange)="updateRole(row, $event)"
-                            >
-                                @for (role of orgRoles$$(); track role.id) {
-                                    <nx-select-item [value]="role.id">
-                                        {{ role.name | translate }}
-                                    </nx-select-item>
-                                }
-                            </nx-select-v2>
+                            @if (!canManageUsers$$()) {
+                                {{ getDisplayRole(row) }}
+                            } @else {
+                                <nx-select-v2
+                                    [ngModel]="getRowRoleId(row)"
+                                    (ngModelChange)="updateRole(row, $event)"
+                                >
+                                    @for (role of orgRoles$$(); track role.id) {
+                                        <nx-select-item [value]="role.id">
+                                            {{ role.name | translate }}
+                                        </nx-select-item>
+                                    }
+                                </nx-select-v2>
+                            }
                         </div>
                     </div>
                 }
