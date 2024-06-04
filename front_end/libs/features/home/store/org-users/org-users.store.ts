@@ -422,7 +422,7 @@ export const OrgUsersStore = signalStore(
                                 const { groupRoles } = user;
                                 let changes: Partial<OrgUser> = { roles, rolesIds };
                                 const groupIndex =
-                                    groupRoles?.findIndex(({ groupId }) => groupId === folder) ||
+                                    groupRoles?.findIndex(({ groupId }) => groupId === folder) ??
                                     -1;
                                 if (groupIndex !== -1) {
                                     changes = { groupRoles };
