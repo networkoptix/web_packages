@@ -611,7 +611,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 id: storageId,
                                 value: storageId,
                                 freeSpace,
-                                disabled: !isOnline,
+                                disabled: !isOnline || !storageStatus.includes('dbReady'),
                             };
                         },
                     );
