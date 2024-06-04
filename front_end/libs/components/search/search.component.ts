@@ -144,6 +144,15 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
         this.route.queryParams.subscribe(params => {
+            const boundParam = params[this.paramBinding];
+
+            if (Array.isArray(boundParam)) {
+                params = {
+                    ...params,
+                    [this.paramBinding]: boundParam[0] || '',
+                };
+            }
+
             this.params = params;
             this.updateFilter();
         });
@@ -387,7 +396,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             }
         }
 
-        queryParams[this.paramBinding] = undefined;
+        queryParams[this.paramBinding] = '';
         if (this.localFilter.query !== '') {
             queryParams[this.paramBinding] = this.localFilter.query;
         }

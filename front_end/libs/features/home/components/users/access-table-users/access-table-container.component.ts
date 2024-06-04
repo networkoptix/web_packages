@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild, computed, inject } from '@angular/core';
+import { Component, Input, ViewChild, computed, inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -40,7 +40,10 @@ import { NxUsersAccessTableComponent } from '../../users-tables/access-table/acc
     ],
     standalone: true,
 })
-export class NxAccessTableContainerComponent extends AbstractUserTableDirective {
+export class NxAccessTableContainerComponent
+    extends AbstractUserTableDirective
+    implements OnDestroy
+{
     LANG = staticLang;
     icons = icons;
     groupsStore = inject(GroupsStore);
@@ -78,6 +81,10 @@ export class NxAccessTableContainerComponent extends AbstractUserTableDirective 
         const currentOrg = this.currentOrg$$()!;
         return [currentOrg, ...groupsPath.reverse()];
     });
+
+    ngOnDestroy(): void {
+        this.setQuery({ query: '' });
+    }
 
     setQuery(model: SearchFilter): void {
         this.orgUsersStore.setSearchQuery(model.query);
