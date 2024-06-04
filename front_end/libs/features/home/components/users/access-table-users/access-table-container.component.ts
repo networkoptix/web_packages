@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild, computed, inject } from '@angular/core';
+import { Component, Input, ViewChild, computed, inject, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -42,7 +42,7 @@ import { NxUsersAccessTableComponent } from '../../users-tables/access-table/acc
     ],
     standalone: true,
 })
-export class NxAccessTableContainerComponent {
+export class NxAccessTableContainerComponent implements OnDestroy {
     LANG = staticLang;
     icons = icons;
     groupsStore = inject(GroupsStore);
@@ -86,6 +86,10 @@ export class NxAccessTableContainerComponent {
         private store: Store,
         private dialogService: NxDialogsService,
     ) {}
+
+    ngOnDestroy(): void {
+        this.setQuery({ query: '' });
+    }
 
     setQuery(model: SearchFilter): void {
         this.orgUsersStore.setSearchQuery(model.query);
