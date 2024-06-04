@@ -156,10 +156,6 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         return this.hasMultipleRoles(row) || userIsOnlyAdmin;
     }
 
-    getDisplayRole(user: UserRecord): string {
-        return user.roles![0];
-    }
-
     newUserDialog = (): void => {
         this.dialogService
             .addPartnerUser({

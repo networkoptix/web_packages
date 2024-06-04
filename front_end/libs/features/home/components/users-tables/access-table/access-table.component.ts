@@ -159,8 +159,8 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         const hasOnlyOneAdmin = checkForOneAdmin();
         if (
             currentUser?.isOrgUser &&
-            hasOnlyOneAdmin &&
-            currentUser.rolesIds?.includes(OrgRoleIds.OrgAdmin)
+            currentUser.rolesIds?.includes(OrgRoleIds.OrgAdmin) &&
+            hasOnlyOneAdmin
         ) {
             return false;
         }

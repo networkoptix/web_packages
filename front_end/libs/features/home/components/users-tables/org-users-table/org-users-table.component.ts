@@ -91,12 +91,6 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
             ?.id.toString();
     }
 
-    getDisplayRole(user: UserRecord): string {
-        return user.groupRoles?.length > 1
-            ? 'Multiple'
-            : user.groupRoles?.[0]?.roles?.[0] || user.roles[0];
-    }
-
     canDeleteUser(user: UserRecord): boolean {
         if (user.isOrgUser) {
             const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;

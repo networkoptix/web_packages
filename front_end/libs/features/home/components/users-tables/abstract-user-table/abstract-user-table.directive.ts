@@ -47,4 +47,10 @@ export abstract class AbstractUserTableDirective {
     uncheckAll(): void {
         this.checkAllContainer$$()?.toggleAllBoxes(true); // true = Unchecks all boxes
     }
+
+    getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user)
+            ? 'Multiple'
+            : user.groupRoles?.[0]?.roles?.[0] || user?.roles[0];
+    }
 }
