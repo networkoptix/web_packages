@@ -16,6 +16,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
+import { MAX_NAME_LENGTH } from '@static-variables';
 
 const FIELDS_MISSING = 'FIELDS_MISSING';
 
@@ -82,5 +83,18 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
         );
     }
 
+    onNameChange(value: string): void {
+        const { partnerName } = this.form?.controls;
+
+        if (value.length > MAX_NAME_LENGTH) {
+            partnerName.setErrors({ tooLong: true });
+            partnerName.markAsTouched();
+            partnerName.markAsDirty();
+        } else {
+            partnerName.setErrors(null);
+        }
+    }
     ngOnInit(): void {}
+
+    protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
 }
