@@ -1,7 +1,13 @@
 /* eslint nx/signal-naming-convention: 0 */
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, Input, input, Output, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { AfterViewInit, Component, computed, EventEmitter, input, Output } from '@angular/core';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -75,21 +81,26 @@ interface SettingsState {
         MatButtonToggle,
         MatButtonToggleGroup,
         NgxTranslateCutModule,
+        ReactiveFormsModule,
     ],
 })
-export class NxSettingsGeneralV2Component {
+export class NxSettingsGeneralV2Component implements AfterViewInit {
     LANG = staticLang;
     icons = icons;
     State = State;
+    generalForm: FormGroup = new FormGroup({
+        name: new FormControl('', [Validators.required, Validators.maxLength(MAX_NAME_LENGTH)]),
+        accessLevel: new FormControl(''),
+    });
+    stateForm: FormGroup = new FormGroup({
+        stateToggle: new FormControl(null),
+    });
 
     showStateChangeBlock = nxConfig.featureFlags.channelPartnersChangeStateUI;
 
-    @Input() currState: State | null;
-    @Input() canUpdateAccess: boolean = false;
-    @Input() canUpdateGeneral: boolean = false;
-
-    @ViewChild('settingsGeneralForm') private settingsGeneralForm: NgForm;
     readonly partnerAccess = partnerAccess;
+    canUpdateAccess = input<boolean>(false);
+    currState = input<State | null>(null);
     currentName = input.required<string>();
     channelPartnerAccessLevel = input<string>('');
     canChangeState = input.required<boolean>();
@@ -100,29 +111,14 @@ export class NxSettingsGeneralV2Component {
         () => accessMap?.[this.channelPartnerAccessLevel()] || null,
     );
 
-    @Output() updateName = new EventEmitter<string>();
     @Output() updateAccess = new EventEmitter<string>();
-    @Output() updateState = new EventEmitter<State>();
 
-    onNameChange(value: string): void {
-        const { name } = this.settingsGeneralForm?.controls;
-
-        if (value.length === 0) {
-            name.setErrors({ required: true });
-            name.markAsTouched();
-            name.markAsDirty();
-        } else if (value.length > MAX_NAME_LENGTH) {
-            name.setErrors({ tooLong: true });
-            name.markAsTouched();
-            name.markAsDirty();
-        } else {
-            name.setErrors(null);
-        }
-        this.updateName.emit(value);
-    }
-
-    onAccessUpdate(value: string): void {
-        this.updateAccess.emit(value);
+    ngAfterViewInit(): void {
+        this.generalForm.patchValue({
+            name: this.currentName(),
+            accessLevel: this.currAccess$$(),
+        });
+        this.stateForm.patchValue({ stateToggle: this.currState() });
     }
 
     protected readonly settingsViews = settingsViews;

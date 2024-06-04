@@ -10,13 +10,12 @@ import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectCurrentOrganization,
     selectCurrentPartnerOrgs,
-    selectRootChannelPartners,
     selectRootOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -26,29 +25,21 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import staticLang from '@language_static';
 import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/settings-base';
 import { settingsViews } from '@pages/home/home.types';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
-import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import {
     Organization,
     OrgRoleIds,
     PartnerRoles,
     State,
     UpdateOrganization,
+    OrgSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { Process } from '@services/process.service/process';
-import { MAX_NAME_LENGTH } from '@static-variables';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
-import { icons } from '@variables/static-variables';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
-
-interface SettingsState {
-    item?: Organization;
-    canUpdateStatus: boolean;
-}
 
 const partnerAccess: DropdownItem<string | null>[] = [
     {
@@ -64,12 +55,6 @@ const partnerAccess: DropdownItem<string | null>[] = [
         value: null,
     },
 ];
-
-const accessMap: { [key: string]: DropdownItem<string | null> } = {
-    [OrgRoleIds.OrgAdmin]: partnerAccess[0],
-    [OrgRoleIds.SysHealthViewer]: partnerAccess[1],
-    null: partnerAccess[2],
-};
 
 @Component({
     selector: 'nx-organization-settings',
@@ -96,21 +81,15 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
     ],
 })
 export class NxOrganizationSettingsComponent extends SettingsBase implements OnInit {
-    LANG = staticLang;
-    icons = icons;
     orgUserStore = inject(OrgUsersStore);
-    readonly settingsViews = settingsViews;
-    permissionsStore = inject(PermissionsStore);
-    channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-    currentPartnerAccess$ = new BehaviorSubject<string | null>(null);
     updateStateProcess: Process;
     updateOrgProcess: Process;
     disableSave: boolean;
 
-    currentState$$ = computed<SettingsState>(() => {
+    currentState$$ = computed<OrgSettingsState>(() => {
         const currentPartner = this.currentPartner$$();
         const currentOrg = this.currentOrg$$();
         return {
@@ -120,35 +99,14 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         };
     });
 
-    // This pattern is not idea, but because we are not live updating the page it's okay for now.
-    effectState$$ = computed<State>(() => {
-        const state = this.currentState$$().item.state;
-        this.currentState$.next(state);
-        return state;
-    });
-
-    name$$ = computed<string>(() => {
-        const name = this.currentState$$().item.name;
-        this.currentName$.next(name);
-        return name;
-    });
-
     accessLevel$$ = computed<string>(() => {
         const currentStateItem = this.currentState$$().item;
-        const accessLevel = (currentStateItem as Organization)?.channelPartnerAccessLevel || null;
-        this.currentPartnerAccess$.next(accessLevel);
-        return accessLevel;
+        return (currentStateItem as Organization)?.channelPartnerAccessLevel || null;
     });
 
     State = State;
 
-    readonly partnerAccess = partnerAccess;
-
-    currAccess$$ = computed<DropdownItem<string | null>>(
-        () => accessMap?.[this.accessLevel$$()] || null,
-    );
-
-    canUpdateGeneral$$ = computed(() =>
+    canUpdateAccess$$ = computed(() =>
         this.currentOrg$$()?.ownPermissions.includes(PartnerRoles.field_access_org_admin),
     );
 
@@ -164,8 +122,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
             {},
             res => {
                 this.updateOrganizationStore(res);
-                this.resetUpdates();
-                this.currentPartnerAccess$.next(this.accessLevel$$());
+                this.resetStateUpdates();
             },
             () => {},
         );
@@ -174,7 +131,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
                 const isPartnerUser = !!this.currentPartner$$();
                 if (
                     !isPartnerUser ||
-                    this.currentPartnerAccess$.getValue() === OrgRoleIds.OrgAdmin // Bandaid fix until 23.3.3 dynamic form refactor is merged.
+                    this.generalForm?.get('accessLevel')?.value.value === OrgRoleIds.OrgAdmin
                 ) {
                     return this.updateOrganization();
                 }
@@ -193,59 +150,52 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
             { ignoreError: true },
             res => {
                 this.updateOrganizationStore(res);
-                this.resetUpdates();
-                this.currentPartnerAccess$.next(this.accessLevel$$());
+                this.resetGeneralUpdates();
             },
             () => {},
         );
     }
 
-    handleAccessUpdate = (id: string | null): void => {
+    handleAccessUpdate = (): void => {
         const currLevel = this.accessLevel$$();
         const hasAdminRole = this.orgUserStore
             .currentGroupUsersEntities()
             ?.some(r => r.roles?.includes('Organization Administrator'));
         this.disableSave = !hasAdminRole;
 
-        if (id !== currLevel) {
-            this.currentPartnerAccess$.next(null);
-            if (id !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
-                this.store.dispatch(
-                    CPActions.showBannerAction({
-                        banner: {
-                            message: this.LANG.channelPartners.orgs.adminWarning,
-                            icon: 'error.svg',
-                            type: 'error',
-                        },
-                    }),
-                );
-                return;
-            }
-            this.currentPartnerAccess$.next(id);
-        } else {
-            this.currentPartnerAccess$.next(id);
+        const formValue = this.generalForm?.get('accessLevel')?.value.value;
+        if (formValue !== currLevel && formValue !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
+            this.store.dispatch(
+                CPActions.showBannerAction({
+                    banner: {
+                        message: this.LANG.channelPartners.orgs.adminWarning,
+                        icon: 'error.svg',
+                        type: 'error',
+                    },
+                }),
+            );
         }
     };
 
-    resetUpdates = (): void => {
-        this.currentState$.next(this.effectState$$());
-        this.currentName$.next(this.name$$());
-        this.currentPartnerAccess$.next(this.accessLevel$$());
+    override resetGeneralUpdates = (): void => {
+        this.generalForm.reset({
+            name: this.name$$(),
+            accessLevel: partnerAccess.find(({ value }) => value === this.accessLevel$$()),
+        });
         this.disableSave = false;
     };
 
-    get generalHasChange(): boolean {
-        return (
-            this.currentName$.value !== this.name$$() ||
-            this.currentPartnerAccess$.value !== this.accessLevel$$()
-        );
-    }
+    override resetStateUpdates = (): void => {
+        this.stateForm.reset({
+            stateToggle: this.effectiveState$$(),
+        });
+    };
 
     updateState(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
         const currOrg = this.currentOrg$$();
-        if (this.effectState$$() !== this.currentState$.value) {
-            orgBody.state = this.currentState$.value;
+        if (this.effectiveState$$() !== this.stateForm?.get('stateToggle')?.value) {
+            orgBody.state = this.stateForm?.get('stateToggle')?.value;
         }
         return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
     }
@@ -253,11 +203,11 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     updateOrganization(): Promise<Organization> {
         const orgBody: UpdateOrganization = {};
         const currOrg = this.currentOrg$$();
-        if (this.name$$() !== this.currentName$.value) {
-            orgBody.name = this.currentName$.value;
+        if (this.name$$() !== this.generalForm?.get('name')?.value) {
+            orgBody.name = this.generalForm?.get('name')?.value;
         }
-        if (this.accessLevel$$() !== this.currentPartnerAccess$.value) {
-            orgBody.channelPartnerAccessLevel = this.currentPartnerAccess$.value;
+        if (this.accessLevel$$() !== this.generalForm?.get('accessLevel')?.value) {
+            orgBody.channelPartnerAccessLevel = this.generalForm?.get('accessLevel')?.value.value;
         }
         return firstValueFrom(this.cpService.updateOrganization(currOrg.id, orgBody));
     }
@@ -280,6 +230,4 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
             );
         }
     }
-
-    protected readonly MAX_ORG_NAME_LENGTH = MAX_NAME_LENGTH;
 }
