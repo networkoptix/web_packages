@@ -34,16 +34,28 @@
                 id="partnerName"
                 name="partnerName"
                 [(ngModel)]="name"
+                (ngModelChange)="onNameChange($event)"
                 #partnerName="ngModel"
                 [required]="addPartnerForm.submitted"
             />
             <div class="warning-container">
-                <span
-                    *ngIf="partnerName.touched && partnerName.errors?.required"
-                    class="input-error"
-                    translate
-                    >Partner name is required</span
-                >
+                @if (partnerName.invalid && partnerName.touched) {
+                    <div>
+                        @if (partnerName.errors?.required) {
+                            <span
+                                class="input-error"
+                                translate
+                                >Partner name is required</span
+                            >
+                        }
+                        @if (partnerName.errors?.tooLong) {
+                            <span class="input-error">{{
+                                LANG.customValidatorMsg.nameTooLong
+                                    | translate: { chars: MAX_NAME_LENGTH }
+                            }}</span>
+                        }
+                    </div>
+                }
             </div>
 
             <label
