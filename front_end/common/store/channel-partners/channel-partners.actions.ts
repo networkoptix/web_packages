@@ -12,11 +12,6 @@ export const loadPartner = createAction(
     props<{ partnerId: string; currentParentPartnerId: string }>(),
 );
 
-export const loadPartnerOrgs = createAction(
-    '[Channel Partners] Load partner organizations',
-    props<{ partnerId: string }>(),
-);
-
 export const showBannerAction = createAction(
     '[Channel Partners] Set Banner',
     props<{ banner: Banner }>(),

@@ -32,12 +32,6 @@ export const channelPartnersReducer = createReducer(
             ...state,
             currentPartnerId: partnerId,
             currentParentPartnerId,
-        }),
-    ),
-    on(
-        ChannelPartnerActions.loadPartnerOrgs,
-        (state): ChannelPartnersState => ({
-            ...state,
             arePartnerOrgsLoading: true,
         }),
     ),
