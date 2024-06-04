@@ -28,6 +28,7 @@ import { SectionApplyExampleComponent } from './section-apply-example/section-ap
 import { NxSignalsComponent } from './signals/signals.component';
 import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
+import { NxThemeVariableGeneratorSandboxComponent } from './theme-variable-generator/theme-variable-generator-sandbox.component';
 import { ToasterComponent } from './toaster/toaster.component';
 import { NxTooltipSandboxComponent } from './tooltip/tooltip-sandbox.component';
 import { ValidationComponent } from './validation/validation.component';
@@ -155,6 +156,10 @@ const appRoutes: Routes = [
             {
                 path: 'signals',
                 component: NxSignalsComponent,
+            },
+            {
+                path: 'theme-variables',
+                component: NxThemeVariableGeneratorSandboxComponent,
             },
         ],
     },

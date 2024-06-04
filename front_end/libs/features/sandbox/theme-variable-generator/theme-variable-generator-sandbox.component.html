@@ -1,0 +1,24 @@
+<h1>Theme variable generator</h1>
+
+<div class="example-row">
+    <div style="width: 100px"></div>
+    @for (theme of themes; track theme) {
+        <div class="theme-label-box">{{ theme }}</div>
+    }
+</div>
+@for (example of examples; track example; let i = $index) {
+    <div class="example-row">
+        <div style="width: 100px">{{ example }}</div>
+        @for (theme of themes; track theme; let j = $index) {
+            <div
+                class="example-box"
+                [attr.data-theme-override]="theme"
+                [ngStyle]="{
+                    backgroundColor: 'var(--' + example + '-example)'
+                }"
+            >
+                <span>{{ colors[i][j] }}</span>
+            </div>
+        }
+    </div>
+}
