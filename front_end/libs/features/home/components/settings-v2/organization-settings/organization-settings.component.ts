@@ -172,7 +172,10 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         this.updateOrgProcess = this.processService.createProcess(
             () => {
                 const isPartnerUser = !!this.currentPartner$$();
-                if (!isPartnerUser) {
+                if (
+                    !isPartnerUser ||
+                    this.currentPartnerAccess$.getValue() === OrgRoleIds.OrgAdmin // Bandaid fix until 23.3.3 dynamic form refactor is merged.
+                ) {
                     return this.updateOrganization();
                 }
                 const { title, message, footer } =
