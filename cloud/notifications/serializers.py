@@ -122,7 +122,7 @@ class SubscriptionSerializer(serializers.Serializer):
             cloud_db_url = CloudDbConfig.url(self.context['request'].CUSTOMIZATION)
             try:
                 systems = System.list(
-                    self.context['request'], email=request_data.get('username'), password=request_data.get('password'), cloud_db_url=cloud_db_url)
+                    self.context['request'], email=request_data.get('username'), password=request_data.get('password'), cloud_db_url=cloud_db_url, one_customization=False)
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:
