@@ -4,29 +4,24 @@
             @if (state.item) {
                 <ng-container>
                     <nx-settings-general-v2
-                        [currentName]="currentName$ | async"
+                        [currentName]="name$$()"
                         [permissions]="permissions$$()"
-                        (updateName)="onNameChange($event)"
-                        [canUpdateAccess]="canUpdateGeneral$$()"
-                        [canUpdateGeneral]="canUpdateGeneral$$()"
-                        [channelPartnerAccessLevel]="currentPartnerAccess$ | async"
+                        [canUpdateAccess]="canUpdateAccess$$()"
+                        [channelPartnerAccessLevel]="accessLevel$$()"
                         [canChangeState]="permissionsStore.canChangeOrganizationState$$()"
-                        [currState]="currentState$ | async"
+                        [currState]="effectiveState$$()"
                         [settingsState]="currentState$$()"
-                        (updateState)="handleStateUpdate($event)"
-                        (updateAccess)="handleAccessUpdate($event)"
+                        (updateAccess)="handleAccessUpdate()"
                     >
-                        @if (generalHasChange) {
+                        @if (
+                            name$$() !== generalForm?.get('name').value ||
+                            accessLevel$$() !== generalForm?.get('accessLevel')?.value.value
+                        ) {
                             <ng-container processButtons>
                                 <div class="row m-0">
                                     <div class="footer pt-4 pl-2 pb-2">
                                         <nx-process-button
-                                            [buttonDisabled]="
-                                                !currentName$.getValue()?.length ||
-                                                currentName$.getValue()?.length >
-                                                    MAX_ORG_NAME_LENGTH ||
-                                                disableSave
-                                            "
+                                            [buttonDisabled]="!generalForm?.valid"
                                             [removeMinWidth]="true"
                                             [process]="updateOrgProcess"
                                             [buttonText]="'Save' | translate"
@@ -34,14 +29,14 @@
                                         </nx-process-button>
                                         <nx-cancel-button
                                             [process]="updateOrgProcess"
-                                            [discardFn]="resetUpdates"
+                                            [discardFn]="resetGeneralUpdates"
                                         >
                                         </nx-cancel-button>
                                     </div>
                                 </div>
                             </ng-container>
                         }
-                        @if (stateHasChange) {
+                        @if (effectiveState$$() !== stateForm?.get('stateToggle').value) {
                             <ng-container stateProcessButtons>
                                 <div class="footer pb-2 pl-2">
                                     <nx-process-button
@@ -52,7 +47,7 @@
                                     </nx-process-button>
                                     <nx-cancel-button
                                         [process]="updateStateProcess"
-                                        [discardFn]="resetUpdates"
+                                        [discardFn]="resetStateUpdates"
                                     >
                                     </nx-cancel-button>
                                 </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, OnInit } from '@angular/core';
+import { Component, OnInit, computed, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -23,17 +23,11 @@ import {
     ChannelPartner,
     State,
     UpdateChannelPartner,
+    CPSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { Process } from '@services/process.service/process';
-import { MAX_NAME_LENGTH } from '@static-variables';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
-
-interface SettingsState {
-    view?: string;
-    item?: ChannelPartner;
-    canUpdateStatus: boolean;
-}
 
 @Component({
     selector: 'nx-channel-partners-settings',
@@ -72,9 +66,9 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
         ),
     );
 
-    currentState$$ = computed<SettingsState>(() => {
+    currentState$$ = computed<CPSettingsState>(() => {
         const currentPartner = this.currentPartner$$();
-        const state: SettingsState = {
+        const state: CPSettingsState = {
             canUpdateStatus: currentPartner?.effectiveState === 'active',
         };
 
@@ -93,21 +87,7 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
         return state;
     });
 
-    // This pattern is not idea, but because we are not live updating the page it's okay for now.
-    effectState$$ = computed<State>(() => {
-        const state = this.currentState$$().item.state;
-        this.currentState$.next(state);
-        return state;
-    });
-
-    name$$ = computed<string>(() => {
-        const name = this.currentState$$().item.name;
-        this.currentName$.next(name);
-        return name;
-    });
-
-    State = State;
-
+    override State = State;
     ngOnInit(): void {
         this.initProcesses();
     }
@@ -137,8 +117,7 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
                         this.updateChannelPartnerStore(res);
                         break;
                 }
-
-                this.resetUpdates();
+                this.resetStateUpdates();
             },
             () => {},
         );
@@ -166,18 +145,29 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
                         this.updateChannelPartnerStore(res);
                         break;
                 }
-
-                this.resetUpdates();
+                this.resetStateUpdates();
             },
             () => {},
         );
     }
 
+    override resetGeneralUpdates = (): void => {
+        this.generalForm.reset({
+            name: this.name$$(),
+        });
+    };
+
+    override resetStateUpdates = (): void => {
+        this.stateForm.reset({
+            stateToggle: this.effectiveState$$(),
+        });
+    };
+
     // Process helper functions
     updateChannelPartner(): Promise<ChannelPartner> {
         const cpBody: UpdateChannelPartner = {};
-        if (this.name$$() !== this.currentName$.value) {
-            cpBody.name = this.currentName$.value;
+        if (this.name$$() !== this.generalForm?.get('name')?.value) {
+            cpBody.name = this.generalForm?.get('name')?.value;
         }
         // Todo: add extId to body when API is ready
         return firstValueFrom(
@@ -187,8 +177,8 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
 
     updateCPState(): Promise<ChannelPartner> {
         const cpBody: UpdateChannelPartner = {};
-        if (this.effectState$$() !== this.currentState$.value) {
-            cpBody.state = this.currentState$.value;
+        if (this.effectiveState$$() !== this.stateForm?.get('stateToggle')?.value) {
+            cpBody.state = this.stateForm?.get('stateToggle')?.value;
         }
         // Todo: add extId to body when API is ready
         return firstValueFrom(
@@ -205,20 +195,20 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
         this.store.dispatch(cpActions.setChannelPartners({ channelPartners: currPartners }));
     }
 
-    updateSubchannel(currentState: SettingsState): Promise<ChannelPartner> {
+    updateSubchannel(currentState: CPSettingsState): Promise<ChannelPartner> {
         const subchannelBody: UpdateChannelPartner = {};
-        if (this.name$$() !== this.currentName$.value) {
-            subchannelBody.name = this.currentName$.value;
+        if (this.name$$() !== this.generalForm?.get('name')?.value) {
+            subchannelBody.name = this.generalForm?.get('name')?.value;
         }
         return firstValueFrom(
             this.cpService.updateChannelPartner(currentState.item?.id, subchannelBody),
         );
     }
 
-    updateSubchannelState(currentState: SettingsState): Promise<ChannelPartner> {
+    updateSubchannelState(currentState: CPSettingsState): Promise<ChannelPartner> {
         const subchannelBody: UpdateChannelPartner = {};
-        if (this.effectState$$() !== this.currentState$.value) {
-            subchannelBody.state = this.currentState$.value;
+        if (this.effectiveState$$() !== this.stateForm?.get('stateToggle')?.value) {
+            subchannelBody.state = this.stateForm?.get('stateToggle')?.value;
         }
         return firstValueFrom(
             this.cpService.updateChannelPartner(currentState.item?.id, subchannelBody),
@@ -237,6 +227,4 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
             }),
         );
     }
-
-    protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
 }

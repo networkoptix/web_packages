@@ -1,108 +1,111 @@
-@if (canUpdateGeneral) {
-    <div class="row">
-        <div class="col-10">
-            <!--The plan is to remove subchannels logic once subchannels and channel partners are merged-->
-            @if (canConfigure$$() && settingsState().view !== settingsViews.SUBCHANNELS) {
-                <nx-block>
-                    <header>
-                        <h4 translate>General</h4>
-                    </header>
+<div class="row">
+    <div class="col-10">
+        <!--The plan is to remove subchannels logic once subchannels and channel partners are merged-->
+        @if (canConfigure$$() && settingsState().view !== settingsViews.SUBCHANNELS) {
+            <nx-block>
+                <header>
+                    <h4 translate>General</h4>
+                </header>
 
-                    <nx-section>
-                        <div class="body">
-                            <form
-                                name="settingsGeneralForm"
-                                #settingsGeneralForm="ngForm"
-                                novalidate
-                            >
-                                <div class="row m-0">
+                <nx-section>
+                    <div class="body">
+                        <form
+                            [formGroup]="generalForm"
+                            class="form"
+                            novalidate
+                        >
+                            <div class="row m-0">
+                                <div
+                                    class="label d-flex align-items-center justify-content-end text-nowrap text-right"
+                                >
+                                    <label
+                                        for="name"
+                                        class="control-label"
+                                        translate
+                                        >Name</label
+                                    >
+                                </div>
+
+                                <div class="col-6">
+                                    <input
+                                        formControlName="name"
+                                        [ngClass]="{
+                                            'input-error':
+                                                generalForm.controls?.name?.invalid &&
+                                                generalForm.controls?.name?.touched
+                                        }"
+                                        type="text"
+                                        class="fs-mask form-control"
+                                        name="name"
+                                        id="name"
+                                        [disabled]="!canConfigure$$()"
+                                        nxFocusMe
+                                    />
+                                </div>
+
+                                @if (
+                                    generalForm?.controls &&
+                                    generalForm.controls.name.invalid &&
+                                    (generalForm.controls.name.touched ||
+                                        generalForm.controls.name.dirty)
+                                ) {
+                                    <div class="col-6 offset-2">
+                                        @if (generalForm.controls.name.errors?.['required']) {
+                                            <span class="input-error">{{
+                                                LANG.customValidatorMsg.nameRequired | translate
+                                            }}</span>
+                                        }
+                                        @if (generalForm.controls.name.errors?.['maxlength']) {
+                                            <span class="input-error">{{
+                                                LANG.customValidatorMsg.nameTooLong
+                                                    | translate: { chars: MAX_NAME_LENGTH }
+                                            }}</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            @if (canUpdateAccess()) {
+                                <div class="row m-0 pt-3 pl-2">
                                     <div
-                                        class="label d-flex align-items-center justify-content-end text-nowrap text-right"
+                                        class="label d-flex align-items-center justify-content-end text-wrap text-right"
                                     >
                                         <label
-                                            for="name"
+                                            for="channelPartnerAccessSelect"
                                             class="control-label"
                                             translate
-                                            >Name</label
+                                            >Channel Partner Access</label
                                         >
                                     </div>
 
                                     <div class="col-6">
-                                        <input
-                                            type="text"
-                                            class="fs-mask form-control"
-                                            name="name"
-                                            id="name"
-                                            #name="ngModel"
-                                            [disabled]="!canConfigure$$()"
-                                            [ngModel]="currentName()"
-                                            (ngModelChange)="onNameChange($event)"
-                                            nxFocusMe
-                                        />
+                                        <nx-select
+                                            formControlName="accessLevel"
+                                            [componentId]="'channelPartnerAccessSelect'"
+                                            [items]="partnerAccess"
+                                            (onSelected)="updateAccess.emit($event.value)"
+                                        ></nx-select>
                                     </div>
-
-                                    @if (name.invalid && name.touched) {
-                                        <div class="col-6 offset-2">
-                                            @if (name.errors.required) {
-                                                <span class="input-error">{{
-                                                    LANG.customValidatorMsg.nameRequired | translate
-                                                }}</span>
-                                            }
-                                            @if (name.errors.tooLong) {
-                                                <span class="input-error">{{
-                                                    LANG.customValidatorMsg.nameTooLong
-                                                        | translate: { chars: 15 }
-                                                }}</span>
-                                            }
-                                        </div>
-                                    }
                                 </div>
-                                @if (canUpdateAccess) {
-                                    <div class="row m-0 pt-3 pl-2">
-                                        <div
-                                            class="label d-flex align-items-center justify-content-end text-wrap text-right"
-                                        >
-                                            <label
-                                                for="channelPartnerAccessSelect"
-                                                class="control-label"
-                                                translate
-                                                >Channel Partner Access</label
-                                            >
-                                        </div>
-
-                                        <div class="col-6">
-                                            <nx-select
-                                                [componentId]="'channelPartnerAccessSelect'"
-                                                [items]="partnerAccess"
-                                                [selected]="currAccess$$()"
-                                                (onSelected)="onAccessUpdate($event.value)"
-                                            ></nx-select>
-                                        </div>
-                                    </div>
-                                }
-                            </form>
-                            <ng-content select="[processButtons]"></ng-content>
-                        </div>
-                    </nx-section>
-                </nx-block>
-            }
-        </div>
+                            }
+                        </form>
+                        <ng-content select="[processButtons]"></ng-content>
+                    </div>
+                </nx-section>
+            </nx-block>
+        }
     </div>
-}
+</div>
 <!--We'll replace settingsViews check with calAlterState check once we have the ability to check parent partner's permissions-->
 @if (showStateChangeBlock && settingsState().view !== settingsViews.CHANNEL_PARTNERS) {
     <div class="row pt-3">
         <div class="col-10">
             @if (!canChangeState()) {
-                <ng-template #changeUnavailable>
-                    <div class="change-unavailable">
-                        <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
-                        <div translate>
-                            Status change is unavailable because it it inherited from the entity
-                            above
-                        </div>
+                <div class="change-unavailable">
+                    <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
+                    <div translate>
+                        Status change is unavailable because it it inherited from the entity above
                     </div>
-                </ng-template>
+                </div>
             } @else {
                 <div>
                     <nx-block>
@@ -113,42 +116,44 @@
                         <nx-section>
                             <div>
                                 <div class="body state-body">
-                                    <mat-button-toggle-group
-                                        name="state"
-                                        [value]="currState"
+                                    <form
+                                        class="form"
+                                        novalidate
+                                        [formGroup]="stateForm"
                                     >
-                                        <mat-button-toggle
-                                            [name]="State.Active"
-                                            [value]="State.Active"
-                                            (change)="updateState.emit(State.Active)"
-                                            disableRipple
-                                        >
-                                            <svg-icon [src]="icons.dir + 'play.svg'"></svg-icon>
-                                            <span translate>Active</span>
-                                        </mat-button-toggle>
-                                        <mat-button-toggle
-                                            [name]="State.Suspended"
-                                            [value]="State.Suspended"
-                                            (change)="updateState.emit(State.Suspended)"
-                                            disableRipple
-                                        >
-                                            <svg-icon [src]="icons.dir + 'pause.svg'"></svg-icon>
-                                            <span translate>Suspended</span>
-                                        </mat-button-toggle>
-                                        <mat-button-toggle
-                                            id="shutdown-btn"
-                                            [name]="State.ShutDown"
-                                            [value]="State.ShutDown"
-                                            (change)="updateState.emit(State.ShutDown)"
-                                            disableRipple
-                                        >
-                                            <svg-icon [src]="icons.dir + 'stop.svg'"></svg-icon>
-                                            <span translate>Shutdown</span>
-                                        </mat-button-toggle>
-                                    </mat-button-toggle-group>
+                                        <mat-button-toggle-group formControlName="stateToggle">
+                                            <mat-button-toggle
+                                                [name]="State.Active"
+                                                [value]="State.Active"
+                                                disableRipple
+                                            >
+                                                <svg-icon [src]="icons.dir + 'play.svg'"></svg-icon>
+                                                <span translate>Active</span>
+                                            </mat-button-toggle>
+                                            <mat-button-toggle
+                                                [name]="State.Suspended"
+                                                [value]="State.Suspended"
+                                                disableRipple
+                                            >
+                                                <svg-icon
+                                                    [src]="icons.dir + 'pause.svg'"
+                                                ></svg-icon>
+                                                <span translate>Suspended</span>
+                                            </mat-button-toggle>
+                                            <mat-button-toggle
+                                                id="shutdown-btn"
+                                                [name]="State.ShutDown"
+                                                [value]="State.ShutDown"
+                                                disableRipple
+                                            >
+                                                <svg-icon [src]="icons.dir + 'stop.svg'"></svg-icon>
+                                                <span translate>Shutdown</span>
+                                            </mat-button-toggle>
+                                        </mat-button-toggle-group>
+                                    </form>
 
                                     <ul class="status-info">
-                                        @switch (currState) {
+                                        @switch (currState()) {
                                             @case (State.Active) {
                                                 <ng-container>
                                                     <li>

@@ -2,59 +2,59 @@
     <div class="settings">
         <div class="settings-container">
             @if (state.item) {
-                <nx-settings-general-v2
-                    [currentName]="currentName$ | async"
-                    [permissions]="permissions$$()"
-                    [canChangeState]="permissionsStore.canChangePartnerState$$()"
-                    [canUpdateGeneral]="permissionsStore.canViewPartnerSettings$$()"
-                    [currState]="currentState$ | async"
-                    (updateName)="onNameChange($event)"
-                    (updateState)="handleStateUpdate($event)"
-                    [settingsState]="currentState$$()"
-                >
-                    @if (generalHasChange) {
-                        <ng-container processButtons>
-                            <div class="row m-0">
-                                <div class="footer pt-4 pl-2 pb-2">
-                                    <nx-process-button
-                                        [buttonDisabled]="
-                                            !currentName$.getValue()?.length ||
-                                            currentName$.getValue()?.length > MAX_NAME_LENGTH
-                                        "
-                                        [removeMinWidth]="true"
-                                        [process]="updateCPProcess"
-                                        [buttonText]="'Save' | translate"
-                                    >
-                                    </nx-process-button>
-                                    <nx-cancel-button
-                                        [process]="updateCPProcess"
-                                        [discardFn]="resetUpdates"
-                                    >
-                                    </nx-cancel-button>
+                <ng-container>
+                    <nx-settings-general-v2
+                        [currentName]="name$$()"
+                        [permissions]="permissions$$()"
+                        [canChangeState]="permissionsStore.canChangePartnerState$$()"
+                        [canUpdateGeneral]="permissionsStore.canViewPartnerSettings$$()"
+                        [currState]="effectiveState$$()"
+                        [settingsState]="currentState$$()"
+                    >
+                        @if (generalHasChange) {
+                            <ng-container processButtons>
+                                <div class="row m-0">
+                                    <div class="footer pt-4 pl-2 pb-2">
+                                        <nx-process-button
+                                            [buttonDisabled]="
+                                                !currentName$.getValue()?.length ||
+                                                currentName$.getValue()?.length > MAX_NAME_LENGTH
+                                            "
+                                            [removeMinWidth]="true"
+                                            [process]="updateCPProcess"
+                                            [buttonText]="'Save' | translate"
+                                        >
+                                        </nx-process-button>
+                                        <nx-cancel-button
+                                            [process]="updateCPProcess"
+                                            [discardFn]="resetUpdates"
+                                        >
+                                        </nx-cancel-button>
+                                    </div>
                                 </div>
-                            </div>
-                        </ng-container>
-                    }
-                    @if (stateHasChange) {
-                        <ng-container stateProcessButtons>
-                            <div class="row m-0">
-                                <div class="footer pb-2 pl-2">
-                                    <nx-process-button
-                                        [process]="updateStateProcess"
-                                        [buttonText]="'Save' | translate"
-                                        [removeMinWidth]="true"
-                                    >
-                                    </nx-process-button>
-                                    <nx-cancel-button
-                                        [process]="updateStateProcess"
-                                        [discardFn]="resetUpdates"
-                                    >
-                                    </nx-cancel-button>
+                            </ng-container>
+                        }
+                        @if (stateHasChange) {
+                            <ng-container stateProcessButtons>
+                                <div class="row m-0">
+                                    <div class="footer pb-2 pl-2">
+                                        <nx-process-button
+                                            [process]="updateStateProcess"
+                                            [buttonText]="'Save' | translate"
+                                            [removeMinWidth]="true"
+                                        >
+                                        </nx-process-button>
+                                        <nx-cancel-button
+                                            [process]="updateStateProcess"
+                                            [discardFn]="resetUpdates"
+                                        >
+                                        </nx-cancel-button>
+                                    </div>
                                 </div>
-                            </div>
-                        </ng-container>
-                    }
-                </nx-settings-general-v2>
+                            </ng-container>
+                        }
+                    </nx-settings-general-v2>
+                </ng-container>
             }
         </div>
     </div>
