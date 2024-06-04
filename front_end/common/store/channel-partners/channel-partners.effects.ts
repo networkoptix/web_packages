@@ -9,9 +9,9 @@ import * as ChannelPartnerActions from './channel-partners.actions';
 
 @Injectable()
 export class ChannelPartnersEffects {
-    loadPartnerOrgs$ = createEffect(() => {
+    loadPartner$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(ChannelPartnerActions.loadPartnerOrgs),
+            ofType(ChannelPartnerActions.loadPartner),
             switchMap(action =>
                 this.CPService.getPartnerOrganizations(action.partnerId).pipe(
                     map(organizations => ({
