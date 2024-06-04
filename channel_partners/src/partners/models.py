@@ -204,17 +204,19 @@ class CloudUser(models.Model):
 
         organization_queryset = CloudSystemId.objects.filter(organization_sys_q).annotate(
             org_id=F('organization_id'),
+            org_name=F('organization__name'),
             sys_id=F('system_id'),
             membership_type=Value('organization'),
             org_roles=F('organization__organizationtouser__roles'),
-        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+        ).values('org_id', 'org_name', 'sys_id', 'membership_type', 'org_roles')
 
         group_queryset = CloudSystemId.objects.filter(group_sys_q).annotate(
             org_id=F('organization_id'),
+            org_name=F('organization__name'),
             sys_id=F('system_id'),
             membership_type=Value('organization'),
             org_roles=F('organization__organizationtouser__roles'),
-        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+        ).values('org_id', 'org_name', 'sys_id', 'membership_type', 'org_roles')
 
         channel_partner_queryset = CloudSystemId.objects.filter(
             organization__channel_partner_access_level__in=roles_with_sys_perm,
@@ -222,10 +224,11 @@ class CloudUser(models.Model):
             organization__channel_partner__channelpartnertouser__roles__overlap=cp_roles,
         ).annotate(
             org_id=F('organization_id'),
+            org_name=F('organization__name'),
             sys_id=F('system_id'),
             membership_type=Value('channel_partner'),
             org_roles=ToArray('organization__channel_partner_access_level_id')
-        ).values('org_id', 'sys_id', 'membership_type', 'org_roles')
+        ).values('org_id', 'org_name', 'sys_id', 'membership_type', 'org_roles')
 
         queryset = organization_queryset.union(group_queryset, channel_partner_queryset)
         return queryset

@@ -60,6 +60,7 @@ from partners.views import (
     grant_access,
     organization_roles,
 )
+from tools.helpers import cast_uuid
 from tools.serializers import VALUE_REPLACEMENT
 
 
@@ -2134,6 +2135,11 @@ class TestUserSystems:
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
+        for sys in response.data:
+            assert cast_uuid(sys['systemId'])
+            assert sys['organizationId'] == str(self.org_admin.organization_id)
+            assert sys['organizationName'] == self.org_admin.organization.name
+
 
     def test_group_user_ok(self):
         url_args = {

@@ -163,8 +163,12 @@ class TestCloudUserSystemsMembership:
         assert systems.count() == 2
         assert systems[0]['sys_id'] in (self.group_0_sys.system_id, self.group_0_1_sys.system_id)
         assert systems[0]['org_roles'] == self.group_user.roles
+        assert systems[0]['org_id'] == self.org.id
+        assert systems[0]['org_name'] == self.org.name
         assert systems[1]['sys_id'] in (self.group_0_sys.system_id, self.group_0_1_sys.system_id)
         assert systems[1]['org_roles'] == self.group_user.roles
+        assert systems[1]['org_id'] == self.org.id
+        assert systems[1]['org_name'] == self.org.name
 
     def test_org_admin(self, organization_factory):
         # org membership
