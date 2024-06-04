@@ -1734,6 +1734,8 @@ class SystemMembershipSerializer(serializers.Serializer):
     vmsRoles = serializers.SerializerMethodField(method_name='get_vms_roles')
     membership_type = serializers.CharField()
     membershipType = serializers.CharField(source='membership_type')
+    organizationId = serializers.UUIDField(source='org_id')
+    organizationName = serializers.CharField(source='org_name')
 
     @cached_property
     def organization_roles(self):
