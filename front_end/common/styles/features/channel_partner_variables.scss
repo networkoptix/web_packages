@@ -1,52 +1,40 @@
-@use 'theme_generator';
+@use 'theme_generator' as tg;
 
-@include theme_generator.generate-theme-vars-matching((
+@include tg.generate-theme-vars((
+    '--change-state-dialog-btn-bg': 5,
+    '--change-state-dialog-btn-border': 4,
+    '--change-state-dialog-btn-checked-bg': 10,
+    '--change-state-dialog-btn-checked-color': ('dark': -4, 'light': -9),
+    '--change-state-dialog-btn-hover-bg': 6,
+    '--change-state-dialog-shutdown-btn-color': ('dark': -1, 'light': 1),
+
+    '--CP-pane-background': ('dark': 3, 'light': 2),
+    '--CP-pane-border': ('dark': 5, 'light': 3),
+    '--CP-pane-header-border': ('dark': 7, 'light': 4),
+    '--CP-pane-input': ('dark': 11, 'light': 10),
+    '--CP-state-button': ('dark': 5, 'light': 3),
+    '--CP-state-button-selected': ('dark': 10, 'light': 7),
+    '--CP-state-color': ('dark': -16, 'light': -9),
+    '--CP-state-help-color': -16,
+    '--channel-partner-back-button-bg-color': -16,
+
     '--groups-sidebar-bg': 4,
     '--groups-sidebar-border': 7,
-    '--groups-sidebar-intro-text-color': 16,
+    '--groups-sidebar-folder-icon-body-fill': ('dark': -10, 'light': 10),
+    '--groups-sidebar-folder-icon-tab-fill': ('dark': -16, 'light': 16),
     '--groups-sidebar-highlight': 7,
-    '--group-card-border-color': 10,
-    '--no-systems-number-icon-color': 16,
-    '--no-systems-description-color': 17,
+    '--groups-sidebar-highlight-color': -4,
+    '--groups-sidebar-intro-text-color': 16,
+
     '--system-card-active-bg': 4,
     '--system-card-owner-color': 16,
-    '--change-state-dialog-btn-bg': 5,
-    '--change-state-dialog-btn-checked-bg': 10,
-    '--change-state-dialog-btn-hover-bg': 6,
-    '--change-state-dialog-btn-border': 4,
+    '--system-card-bg': ('dark': 6, 'light': 2),
+    '--card-border-color': ('dark': 7, 'light': 6),
+    '--group-card-border-color': 10,
+    '--group-system-card-color': ('dark': 15, 'light': -15),
+
+    '--add-partner-dialog-color': ('dark': -16, 'light': 16), // TODO: Move to form field styling
+
+    '--no-systems-number-icon-color': 16,
+    '--no-systems-description-color': 17,
 ));
-
-@include theme_generator.generate-theme-vars-contrast((
-    '--body-text-color': 10,
-    '--groups-sidebar-highlight-color': 4,
-    '--channel-partner-back-button-bg-color': 16,
-    '--CP-state-help-color': 16,
-));
-
-@include theme_generator.generate-theme-vars-split-contrast((
-    '--CP-state-color': (16, 9),
-    '--change-state-dialog-btn-checked-color': (4, 9),
-));
-
-@include theme_generator.generate-theme-vars-split-matching((
-    '--system-card-bg': (6, 2),
-    '--card-border-color': (7, 6),
-    '--CP-pane-background': (3, 2),
-    '--CP-pane-border': (5, 3),
-    '--CP-pane-header-border': (7, 4),
-    '--CP-pane-input': (11, 10),
-    '--CP-state-button': (5, 3),
-    '--CP-state-button-selected': (10, 7),
-));
-
-
-@include theme_generator.generate-theme-vars-all-light((
-    '--groups-sidebar-folder-icon-body-fill': 10,
-    '--groups-sidebar-folder-icon-tab-fill': 16,
-    '--change-state-dialog-shutdown-btn-color': 1,
-    '--add-partner-dialog-color': 16,
-));
-
-@include theme_generator.generate-theme-vars-all-dark((
-    '--group-system-card-color': 15,
-))

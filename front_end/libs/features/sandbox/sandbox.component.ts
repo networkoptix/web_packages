@@ -88,6 +88,11 @@ export class NxSandboxComponent {
                             label: 'CSS Variables',
                             path: '/css-variables',
                         },
+                        {
+                            id: 'themeVariables',
+                            label: 'Theme Variables',
+                            path: '/theme-variables',
+                        },
                     ],
                 },
                 {

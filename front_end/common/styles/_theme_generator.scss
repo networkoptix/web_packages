@@ -1,118 +1,114 @@
-@use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
-@use 'sass:string';
 
-/* Helper functions for generating theme vars */
-@mixin _generate-theme-vars($vars, $themes) {
-    @if meta.type-of($vars) != map {
-        @error 'The argument must be a map.';
+$_theme-names: 'dark', 'dark_gray', 'light_gray', 'light';
+
+$_invert-map: (
+    'dark': 'light',
+    'dark_gray': 'light_gray',
+    'light_gray': 'dark_gray',
+    'light': 'dark'
+);
+@function _invert-theme($theme-name) {
+    @return map.get($_invert-map, $theme-name);
+}
+
+@function _theme-color($theme-name, $theme-value) {
+    @if meta.type-of($theme-value) == string {
+        @return $theme-value;
     }
-    @each $theme_name, $theme_color in $themes {
-        html[data-theme="#{$theme_name}"] {
-            @each $var_name, $color_value in $vars {
-                @if meta.type-of($var_name) != string {
-                    @error '$var_name in the map must be a string.';
-                }
-                @if string.index($var_name, '--') > 1 {
-                    @error '$var_name in the map must start with --.';
-                }
-                @if meta.type-of($color_value) != number {
-                    @error '$color_value in the map must be a number.';
-                }
-                #{$var_name}: var(--#{$theme_color}#{$color_value});
+
+    $theme-prefix: $theme-name;
+    $abs-value: $theme-value;
+    @if $theme-value < 0 {
+        $theme_prefix: _invert-theme($theme_prefix);
+        $abs-value: -1 * $theme-value;
+    } @else {
+        $theme_prefix: $theme_prefix;
+    }
+
+    // light1 but light_gray_1
+    @if $theme-prefix == 'dark_gray' or $theme-prefix == 'light_gray' {
+        $theme-prefix: $theme-prefix + '_';
+    }
+
+    @return $theme-prefix + $abs-value;
+}
+
+$_case-map: (
+    'dark': 'dark',
+    'dark_gray': 'dark-gray',
+    'light_gray': 'light-gray',
+    'light': 'light',
+);
+
+/** A helper function to generate CSS variables for themes.
+
+@param `$variables` A Sass map with variable names as keys and two possible value types.
+
+The variables names must start with `--`.
+
+1. A number
+This will generate variables corresponding to the palette variable.
+Example: 1 => dark: dark1, dark-gray: dark_gray_1...
+
+If the number is negative then the variables will be inverted.
+Example: -1 => dark: light1, dark-gray: light_gray_1...
+
+2. A map with theme names as keys and numbers or existing variables as values
+The map specifies the colors for each theme individually. If values for
+light/dark gray themes are not provided, the values for light/dark will be used.
+*/
+@mixin generate-theme-vars($variables) {
+    $themes: (
+        'dark': (),
+        'dark_gray': (),
+        'light_gray': (),
+        'light': (),
+    );
+
+    @each $variable-name, $variable-raw-value in $variables {
+        $values: (
+            'dark': 0,
+            'dark_gray': 0,
+            'light_gray': 0,
+            'light': 0,
+        );
+
+        @if meta.type-of($variable-raw-value) == number {
+            @each $theme-name in $_theme-names {
+                $values: map.set($values, $theme-name, $variable-raw-value);
+            }
+        } @else {
+            $values: map.merge($values, $variable-raw-value);
+
+            @if map.get($values, 'dark_gray') == 0 {
+                $values: map.set($values, 'dark_gray', map.get($values, 'dark'))
+            }
+
+            @if map.get($values, 'light_gray') == 0 {
+                $values: map.set($values, 'light_gray', map.get($values, 'light'))
+            }
+        }
+
+        @each $theme-name in $_theme-names {
+            $theme-value: map.get($values, $theme-name);
+            $color: _theme-color($theme-name, $theme-value);
+            $theme-variables: map.get($themes, $theme-name);
+            $theme-variables: map.set($theme-variables, $variable-name, $color);
+            $themes: map.set($themes, $theme-name, $theme-variables);
+        }
+    }
+
+    @each $theme-name in $_theme-names {
+        $dashed: map.get($_case-map, $theme-name);
+        $theme-variables: map.get($themes, $theme-name);
+
+        html[data-theme="#{$dashed}"],
+        [data-theme-override="#{$dashed}"] {
+            @each $variable-name, $variable-value in $theme-variables {
+                #{$variable-name}: var(--#{$variable-value});
             }
         }
     }
-}
-
-@mixin _generate-theme-vars-split($vars, $dark_themes, $light_themes) {
-    $dark_vars: ();
-    $light_vars: ();
-    @each $var_name, $color_values in $vars {
-        @if meta.type-of($color_values) != list {
-            @error '$color_values in the map must be a list.';
-        }
-
-        $dark_vars: map.merge($dark_vars, ($var_name: list.nth($color_values, 1)));
-        $light_vars: map.merge($light_vars, ($var_name: list.nth($color_values, 2)));
-    }
-    @include _generate-theme-vars($dark_vars, $dark_themes);
-    @include _generate-theme-vars($light_vars, $light_themes);
-}
-
-
-/* Vars that follow the basic rules */
-//Mapping d -> l1, l -> d1, dg -> lg1, lg -> dg1
-@mixin generate-theme-vars-contrast($vars) {
-    $themes: (
-            'dark': 'light',
-            'dark-gray': 'light_gray_',
-            'light': 'dark',
-            'light-gray': 'dark_gray_'
-    );
-    @include _generate-theme-vars($vars, $themes);
-}
-
-//Mapping d -> d1, l -> l1, dg -> dg1, lg -> lg1
-@mixin generate-theme-vars-matching($vars) {
-    $themes: (
-        'dark': 'dark',
-        'dark-gray': 'dark_gray_',
-        'light': 'light',
-        'light-gray': 'light_gray_'
-    );
-    @include _generate-theme-vars($vars, $themes);
-}
-
-
-/* Vars where all d and all l are the same */
-//Mapping d -> l1, l -> d2, dg -> lg1, lg -> dg2
-@mixin generate-theme-vars-split-contrast($vars) {
-    $dark_themes: (
-            'dark': 'light',
-            'dark-gray': 'light_gray_',
-    );
-    $light_themes: (
-            'light': 'dark',
-            'light-gray': 'dark_gray_'
-    );
-    @include _generate-theme-vars-split($vars, $dark_themes, $light_themes);
-}
-
-//Mapping d -> d1, l -> l2, dg -> dg1, lg -> lg2
-@mixin generate-theme-vars-split-matching($vars) {
-    $dark_themes: (
-            'dark': 'dark',
-            'dark-gray': 'dark_gray_',
-    );
-    $light_themes: (
-            'light': 'light',
-            'light-gray': 'light_gray_'
-    );
-    @include _generate-theme-vars-split($vars, $dark_themes, $light_themes);
-}
-
-
-/* Vars are the same across all themes */
-//Mapping d -> d1, l -> d1, dg -> dg1, lg -> dg1
-@mixin generate-theme-vars-all-dark($vars) {
-    $themes: (
-            'dark': 'dark',
-            'dark-gray': 'dark_gray_',
-            'light': 'dark',
-            'light-gray': 'dark_gray_'
-    );
-    @include _generate-theme-vars($vars, $themes);
-}
-
-//Mapping d -> l1, l -> l1, dg -> lg1, lg -> lg1
-@mixin generate-theme-vars-all-light($vars) {
-    $themes: (
-            'dark': 'light',
-            'dark-gray': 'light_gray_',
-            'light': 'light',
-            'light-gray': 'light_gray_'
-    );
-    @include _generate-theme-vars($vars, $themes);
 }

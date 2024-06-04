@@ -1,0 +1,86 @@
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+    '--matching-example': 9,
+    /* dark: dark9,
+    dark_gray: dark_gray_9,
+    light_gray: light_gray_9,
+    light: light9 */
+
+    '--inverted-example': -11,
+    /* dark: light11,
+    dark_gray: light_gray_11,
+    light_gray: dark_gray_11,
+    light: dark11 */
+
+    '--split-matching-example': ('dark': 12, 'light': 8),
+    /* dark: dark12,
+    dark_gray: dark_gray_12,
+    light_gray: light_gray_8,
+    light: light8 */
+
+    '--split-inverted-example': ('dark': -8, 'light': -12),
+    /* dark: light8,
+    dark_gray: light_gray_8,
+    light_gray: dark_gray_12,
+    light: dark12 */
+
+    '--split-dark-example': ('dark': 'dark10', 'light': 'dark7'),
+    /* dark: dark10,
+    dark_gray: dark10,
+    light_gray: dark7,
+    light: dark7 */
+
+    '--split-light-example': ('dark': 'light7', light: 'light10'),
+    /* dark: light7,
+    dark_gray: light7,
+    light_gray: light10,
+    light: light10 */
+
+    '--all-different-example': (
+        'dark': 6,
+        'dark_gray': 8,
+        'light_gray': 'light14',
+        'light': 'light15',
+    ),
+    /* dark: dark6,
+    dark_gray: dark_gray_8,
+    light_gray: light14,
+    light: light15 */
+));
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.example-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    & > * {
+        width: 100px;
+    }
+
+    .example-box {
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+            padding: 0.25rem 0.5rem;
+            background: rgba(black, 0.7);
+            color: whitesmoke;
+        }
+    }
+
+    .theme-label-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
