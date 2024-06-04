@@ -29,8 +29,14 @@ export const BuildGuard = async (
                     );
 
                 if (!type) {
+                    // Release types from depcon wont match the ones from the cloud.
+                    const ReleaseTypeMap = {
+                        beta: 'betas',
+                        release: 'releases',
+                        patch: 'patches',
+                    };
                     const build = (await cloudApiService.getDownloadsHistory(segment)) as Build;
-                    type = build.type;
+                    type = ReleaseTypeMap[build.type] || build.type;
                 }
 
                 if (type) {
