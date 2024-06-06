@@ -17,7 +17,7 @@ import { UsageDetailDialogRecord, UsageDetailDialogTotals } from './view-usage-d
 @Component({
     selector: 'nx-usage-details-content',
     templateUrl: 'view-usage-details.component.html',
-    styleUrls: [],
+    styleUrls: ['./view-usage-details.component.scss'],
     standalone: true,
     imports: [
         CommonModule,

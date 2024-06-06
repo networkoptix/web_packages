@@ -9,16 +9,14 @@
     <ng-template #header>
         @for (head of headers; track head.name) {
             <div
-                [attr.id]="head.name"
-                [style.justify-content]="head.align || 'flex-start'"
+                class="table-header"
+                [style.justify-content]="head.align || 'flex-end'"
             >
-                <span
-                    class="head-title"
-                    title="{{ head.value }}"
-                    >{{ head.value }}</span
-                >
+                <span>{{ head.value }}</span>
                 @if (head.tooltip) {
-                    <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint>
+                    <span class="hint-icon">
+                        <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint
+                    ></span>
                 }
             </div>
         }
@@ -30,21 +28,21 @@
         <div>
             {{ row.changed }}
         </div>
-        <div class="numeric-column">
+        <div>
             @if (row.isChangeRecord) {
                 <nx-quantity-change [number]="row.channels"></nx-quantity-change>
             } @else {
                 {{ row.channels }}
             }
         </div>
-        <div class="numeric-column">
+        <div>
             @if (row.isChangeRecord) {
                 <nx-quantity-change [number]="row.monthlyRate"></nx-quantity-change>
             } @else {
                 {{ row.monthlyRate }}
             }
         </div>
-        <div class="numeric-column">
+        <div>
             @if (row.isChangeRecord) {
                 <nx-quantity-change [number]="row.fractionalUsage"></nx-quantity-change>
             } @else {
@@ -54,8 +52,8 @@
     </ng-template>
     <ng-template #summaryRow
         ><div></div>
-        <div class="numeric-column">{{ totals().channels }}</div>
-        <div class="numeric-column">{{ totals().monthlyRate }}</div>
-        <div class="numeric-column">{{ totals().fractionalUsage }}</div></ng-template
+        <div>{{ totals().channels }}</div>
+        <div>{{ totals().monthlyRate }}</div>
+        <div>{{ totals().fractionalUsage }}</div></ng-template
     >
 </nx-table>

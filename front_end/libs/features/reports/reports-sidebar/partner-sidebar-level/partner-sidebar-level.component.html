@@ -9,8 +9,8 @@
         <svg-icon
             (click)="toggleOpen(partnerStructure$$().id)"
             nx-add-svg-src
-            [src]="icons.dirTextButtons + (isOpen$$() ? 'arrow_down.svg' : 'arrow_right.svg')"
-            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+            [src]="icons.dirTextButtons + (isOpen$$() ? 'arrow_open.svg' : 'arrow_close.svg')"
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
             svgClass="triangle"
             class="open-toggle"
         ></svg-icon>
@@ -18,12 +18,15 @@
     <svg-icon
         nx-add-svg-src
         [src]="icons.dir + 'partner_small.svg'"
-        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+        class="partner-icon"
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
         (click)="$event.stopPropagation(); open(partnerStructure$$().id)"
-        class="level-name"
+        [ngClass]="{
+            'is-selected': isSelected$$()
+        }"
         >{{ partnerStructure$$().name }}</a
     >
 </div>

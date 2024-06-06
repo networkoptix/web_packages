@@ -22,9 +22,9 @@ interface HEADER_ITEM {
 })
 export class NxServiceChangesTableComponent {
     headers: HEADER_ITEM[] = [
-        { value: 'Service Name', name: 'serviceName' },
+        { value: 'Service Name', name: 'serviceName', align: 'flex-start' },
         { value: 'Amount', name: 'amount' },
-        { value: 'Added To', name: 'addedToName' },
+        { value: 'Changed At', name: 'changedAtName', align: 'flex-start' },
         { value: 'Date', name: 'date' },
     ];
     selectedRecordId = '';

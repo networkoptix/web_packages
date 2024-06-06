@@ -10,18 +10,16 @@
     (onRowClick)="selectService($event.serviceId)"
 >
     <ng-template #header>
-        @for (head of headers; track head.name) {
+        @for (header of headers; track header.name) {
             <div
-                [attr.id]="head.name"
-                [style.justify-content]="head.align || 'flex-start'"
+                class="table-header"
+                [style.justify-content]="header.align || 'flex-start'"
             >
-                <span
-                    class="head-title"
-                    title="{{ head.value }}"
-                    >{{ head.value }}</span
-                >
-                @if (head.tooltip) {
-                    <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint>
+                <span>{{ header.value }}</span>
+                @if (header.tooltip) {
+                    <span class="hint-icon">
+                        <nx-hint [tooltipText]="header.tooltip | translate"></nx-hint>
+                    </span>
                 }
             </div>
         }
@@ -34,22 +32,35 @@
             {{ row.serviceName }}
         </div>
         <div>
-            @if (row.usedByPartnerOrSystemCount > 0) {
-                {{ row.usedByPartnerOrSystemCount }}
-                <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+            @if (row.usedByPartnerCount > 0) {
+                {{ row.usedByPartnerCount }}
+                <svg-icon
+                    class="used-by-icon"
+                    [src]="icons.dir + 'partner_small.svg'"
+                ></svg-icon>
             }
             @if (row.usedByOrgCount > 0) {
                 {{ row.usedByOrgCount }}
-                <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+                <svg-icon
+                    class="used-by-icon"
+                    [src]="icons.dir + 'organization_2.svg'"
+                ></svg-icon>
+            }
+            @if (row.usedBySystemCount > 0) {
+                {{ row.usedBySystemCount }}
+                <svg-icon
+                    class="used-by-icon"
+                    [src]="icons.dir + 'system_local.svg'"
+                ></svg-icon>
             }
         </div>
-        <div>
+        <div class="align-right">
             {{ row.channels }}
         </div>
-        <div>
+        <div class="align-right">
             {{ row.monthlyRate }}
         </div>
-        <div>
+        <div class="align-right">
             {{ row.fractionalUsage }}
         </div>
     </ng-template>

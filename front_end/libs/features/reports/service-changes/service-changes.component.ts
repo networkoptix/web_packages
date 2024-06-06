@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
     ChannelPartner,
@@ -28,6 +29,7 @@ import { NxServiceChangesTableComponent } from './services-changes-table/service
     standalone: true,
 })
 export class NxServiceChangesComponent {
+    LANG = staticLang;
     readonly serviceChangesStore = inject(ServiceChangesStore);
     private readonly store = inject(Store);
     private dateTimeService = inject(NxDateTimeFormatService);
@@ -47,10 +49,10 @@ export class NxServiceChangesComponent {
         const cpIdToNameMap = new Map(channelPartners.map(({ id, name }) => [id, name]));
         const orgIdToNameMap = new Map(organizations.map(({ id, name }) => [id, name]));
 
-        return records.map(({ serviceId, amount, addedToId, date: dateTimeString }) => ({
+        return records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
             serviceName: serviceIdToNameMap.get(serviceId) || '',
             amount,
-            addedToName: cpIdToNameMap.get(addedToId) || orgIdToNameMap.get(addedToId) || '',
+            changedAtName: cpIdToNameMap.get(changedAtId) || orgIdToNameMap.get(changedAtId) || '',
             date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
         }));
     });

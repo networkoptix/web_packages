@@ -1355,6 +1355,7 @@
         }
     },
     "channelPartnerReports": {
+            "customerName": "Customer: {customerName}",
             "changedTooltip": "Date of adding or deleting channels using this service.",
             "channelsTooltip": "Total number of channels in all systems using this service.",
             "monthlyRateTooltip": "The total number of services used by one channel during the period. The Monthy Rate changes when services are added in a previous period or when more channels are deleted than added in the current period.",

@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, untracked } from '@angular/
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import staticLang from '@language_static';
 
 import { EntityType } from '../reports.types';
 import { NxServiceUsageDetailsComponent } from '../service-usage-details/service-usage-details.component';
@@ -24,6 +25,7 @@ import { FormattedUsageReportRecord } from './service-usage.types';
     standalone: true,
 })
 export class NxServiceUsageComponent {
+    LANG = staticLang;
     readonly serviceUsageStore = inject(ServiceUsageStore);
 
     private entityType$$ = input.required<EntityType>({ alias: 'entityType' });

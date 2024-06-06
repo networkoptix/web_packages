@@ -409,6 +409,14 @@ $permission-cell-size: 210px;
         
         .big-row {
             grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            
+            &:hover {
+                cursor: pointer;
+            }
+
+            div:last-child {
+                border-right: none;
+            }
         }
 
         .header, .body {
@@ -425,6 +433,23 @@ $permission-cell-size: 210px;
         
         .big-row {
             grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &.summary-row:hover {
+                cursor: default;
+            }
+
+            div:last-child {
+                border-right: none;
+            }
+        }
+
+        .summary-row {
+            background-color: var(--dark6);
+            color: var(--light16);
         }
 
         .header, .body {
@@ -435,12 +460,33 @@ $permission-cell-size: 210px;
 
 .usage-details-dialog-table {
     .nx-new-table {
+        grid-template-rows: auto !important;
+
         .header {
             grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-left: none !important;
+            border-right: none !important;
+
         }
         
         .big-row {
             grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-left: none !important;
+            border-right: none !important;
+
+            div {
+                justify-content: flex-end;
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+        .summary-row {
+            background-color: var(--dark6);
+            color: var(--light16);
+            border-bottom: none !important;
         }
 
         .header, .body {
@@ -456,7 +502,11 @@ $permission-cell-size: 210px;
         }
         
         .big-row {
-            grid-template-columns: 3fr 1fr 2fr 2fr;;
+            grid-template-columns: 3fr 1fr 2fr 2fr;
+
+            div:last-child {
+                border-right: none;
+            }
         }
 
         .header, .body {

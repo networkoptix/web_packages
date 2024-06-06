@@ -1,3 +1,7 @@
 :host {
-    --reports-sidebar-highlight-color: var(--dark5);
+    --reports-sidebar-background: var(--dark5);
+    --reports-sidebar-highlight-background: var(--dark7);
+    --reports-sidebar-highlight-text: var(--light1);
+    --reports-table-header-text-color: var(--light4);
+    --reports-hint-icon-color: var(--light10);
 }
