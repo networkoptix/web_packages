@@ -1,7 +1,9 @@
 @use 'typography';
+@use 'theme_additional_palette';
 
 :host {
-    --main-color: var(--placeholder-info-color);
+    --placeholder-error-color: var(--attention-red, #00ff00);
+    --main-color: var(--placeholder-info-color, #00ff00);
 
     &.error {
         --main-color: var(--placeholder-error-color);

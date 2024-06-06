@@ -112,3 +112,56 @@ light/dark gray themes are not provided, the values for light/dark will be used.
         }
     }
 }
+
+// [ {red: #ff0000}, {blue: #0000ff} ]
+// =>
+// red: #FF0000;
+// red--hover: #ff0f0f;
+// red--pressed: #f00000;
+// red--background: #4d0000;
+// blue: #0000FF;
+// blue--hover: #0f0fff;
+// blue--pressed: #0000f0;
+// blue--background: #00004d;
+@mixin generateColorSets($colorGroups, $isHsl: false) {
+    @if meta.type-of($colorGroups) != list {
+        @error 'getHexColorSets($colorGroups) argument must be a list.';
+    }
+    @each $colorGroup in $colorGroups {
+        @if meta.type-of($colorGroup) == map {
+            @each $name, $color in $colorGroup {
+                @include generateColorSet($name, $color, $isHsl);
+            }
+        }
+    }
+}
+
+// (red, #ff0000)
+// =>
+// red: #FF0000;
+// red--hover: #ff0f0f;
+// red--pressed: #f00000;
+// red--background: #4d0000;
+@mixin generateColorSet($name, $color, $isHsl: false) {
+    @if meta.type-of($name) != string {
+        @error '$name must be a string.';
+    }
+    @if meta.type-of($color) != color {
+        @error '$color must be a color.';
+    }
+
+    $colors: (
+        #{$name}: $color,
+        #{$name}--hover: adjust-color($color, $lightness: 3%),
+        #{$name}--pressed: adjust-color($color, $lightness: -3%),
+        #{$name}--background: change-color($color, $lightness: 15%)
+    );
+
+    @each $name, $color in $colors {
+        @if ($isHsl == true) {
+            #{$name}: hsl(round(hue($color)), round(saturation($color)), round(lightness($color)));
+        } @else {
+            #{$name}: $color;
+        }
+    }
+}

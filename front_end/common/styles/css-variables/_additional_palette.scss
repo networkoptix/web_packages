@@ -1,0 +1,110 @@
+// https://networkoptix.atlassian.net/wiki/spaces/FS/pages/3358097475/Additional+Attention+Contrast
+
+// _utils.scss#getHexColorSet function will generate:
+// --additional-pink: (default state) (H, S, L)
+// --additional-pink-l: (hover state) (H, S, L + 3)
+// --additional-pink-d: (pressed state) (H, S, L - 3)
+// --additional-pink-bg: (background state) (H, S, 15)
+
+// $additional_pink_d: _d colors are for dark themes
+// $additional_pink_l: _l colors are for light themes
+
+$additional_pink_d: #ec407a;
+$additional_pink_l: #ad1457;
+$additional_purple_d: #ab47bc;
+$additional_purple_l: #6a1b9a;
+$additional_deep_purple_d: #7e57c2;
+$additional_deep_purple_l: #4527a0;
+$additional_indigo_d: #5c6bc0;
+$additional_indigo_l: #283593;
+$additional_light_blue_d: #29b6f6;
+$additional_light_blue_l: #0277bd;
+$additional_cyan_d: #26c6da;
+$additional_cyan_l: #00838f;
+$additional_teal_d: #26a69a;
+$additional_teal_l: #00695c;
+$additional_light_green_d: #9ccc65;
+$additional_light_green_l: #558b2f;
+$additional_lime_d: #d4e157;
+$additional_lime_l: #9e9d24;
+$additional_amber_d: #ffca28;
+$additional_amber_l: #ff8f00;
+$additional_orange_d: #ffa726;
+$additional_orange_l: #ef6c00;
+$additional_deep_orange_d: #ff7043;
+$additional_deep_orange_l: #d84315;
+
+$attention_red_d: #ef5350;
+$attention_red_l: #c62828;
+$attention_yellow_d: #ffee58;
+$attention_yellow_l: #f9a825;
+$attention_blue_d: #42a5f5;
+$attention_blue_l: #1565c0;
+$attention_green_d: #66bb6a;
+$attention_green_l: #2e7d32;
+
+$contrast_blue: #536dfe;
+$contrast_yellow: #ffff00;
+$contrast_orange: #ffab40;
+$contrast_green: #b2ff59;
+$contrast_deep_purple: #7c4dff;
+$contrast_pink: #ff4081;
+$contrast_cyan: #18ffff;
+$contrast_purple: #e040fb;
+
+// in order to minimize space unused colors are commented out
+// uncomment to enable
+
+$attention_colors_dark: (
+    --attention-red: $attention_red_d,
+    /*--attention-yellow: $attention_yellow_d,*/
+    /*--attention-blue: $attention_blue_d,*/
+    /*--attention-green: $attention_green_d,*/
+);
+$attention_colors_light: (
+  --attention-red: $attention_red_l,
+  /*--attention-yellow: $attention_yellow_l,*/
+  /*--attention-blue: $attention_blue_l,*/
+  /*--attention-green: $attention_green_l,*/
+);
+
+$additional_colors_dark: (
+  /*--additional-pink: $additional_pink_d,*/
+  /*--additional-purple: $additional_purple_d,*/
+  /*--additional-deep-purple: $additional_deep_purple_d,*/
+  /*--additional-indigo: $additional_indigo_d,*/
+  /*--additional-light-blue: $additional_light_blue_d,*/
+  /*--additional-cyan: $additional_cyan_d,*/
+  /*--additional-teal: $additional_teal_d,*/
+  /*--additional-light-green: $additional_light_green_d,*/
+  /*--additional-lime: $additional_lime_d,*/
+  /*--additional-amber: $additional_amber_d,*/
+  /*--additional-orange: $additional_orange_d,*/
+  /*--additional-deep-orange: $additional_deep_orange_d,*/
+);
+
+$additional_colors_light: (
+  /*--additional-pink: $additional_pink_l,*/
+  /*--additional-purple: $additional_purple_l,*/
+  /*--additional-deep-purple: $additional_deep_purple_l,*/
+  /*--additional-indigo: $additional_indigo_l,*/
+  /*--additional-light-blue: $additional_light_blue_l,*/
+  /*--additional-cyan: $additional_cyan_l,*/
+  /*--additional-teal: $additional_teal_l,*/
+  /*--additional-light-green: $additional_light_green_l,*/
+  /*--additional-lime: $additional_lime_l,*/
+  /*--additional-amber: $additional_amber_l,*/
+  /*--additional-orange: $additional_orange_l,*/
+  /*--additional-deep-orange: $additional_deep_orange_l,*/
+);
+
+$contrast_colors: (
+  /*--contrast-blue: $contrast_blue,*/
+  /*--contrast-yellow: $contrast_yellow,*/
+  /*--contrast-orange: $contrast_orange,*/
+  /*--contrast-green: $contrast_green,*/
+  /*--contrast-deep_purple: $contrast_deep_purple,*/
+  /*--contrast-pink: $contrast_pink,*/
+  /*--contrast-cyan: $contrast_cyan,*/
+  /*--contrast-purple: $contrast_purple,*/
+);

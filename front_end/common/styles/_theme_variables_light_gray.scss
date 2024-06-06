@@ -703,9 +703,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --sidebar-tab-closed: var(--light8);
 
     --placeholder-background: var(--light6);
-    --placeholder-error-color: var(--attention-red);
     --placeholder-info-color: var(--light10);
-    --placeholder-error-color-old: var(--attention-red_dark);
+    --placeholder-error-color-old: #{$red_main};
     --placeholder-info-color-old: var(--dark11);
     --no-camera-placeholder-color: var(--dark10);
     --no-layouts-body-color: var(--dark17);

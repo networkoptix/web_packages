@@ -1,0 +1,40 @@
+@use "./theme_generator" as theme_generator;
+@import "./css-variables/additional_palette";
+
+:host-context(html[data-theme="dark"]),
+:host-context(html[data-theme="dark-gray"]),
+:host(.theme-override[data-theme="dark"]),
+:host(.theme-override[data-theme="dark-gray"]),{
+    @include theme_generator.generateColorSets([
+        $attention_colors_dark,
+        $additional_colors_dark,
+        $contrast_colors
+    ]);
+}
+
+:host-context(html[data-theme="light"]),
+:host-context(html[data-theme="light-gray"]),
+:host(.theme-override[data-theme="light"]),
+:host(.theme-override[data-theme="light-gray"]) {
+    @include theme_generator.generateColorSets([
+        $attention_colors_light,
+        $additional_colors_light,
+        $contrast_colors
+    ]);
+}
+
+:host-context(html[data-theme-mode="dark"][data-theme="hsl"]) {
+    @include theme_generator.generateColorSets([
+        $attention_colors_dark,
+        $additional_colors_dark,
+        $contrast_colors
+    ], true);
+}
+
+:host-context(html[data-theme-mode="light"][data-theme="hsl"]) {
+    @include theme_generator.generateColorSets([
+        $attention_colors_light,
+        $additional_colors_light,
+        $contrast_colors
+    ], true);
+}
