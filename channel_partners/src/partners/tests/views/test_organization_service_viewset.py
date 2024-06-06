@@ -109,3 +109,31 @@ class TestOrganizationServiceViewSet:
         assert response.status_code == 200
         assert response.data['service']['id'] == str(self.cloud_storage_service.id)
         assert response.data['price'] == '12.000'
+
+    def test_price_history(self, mock_auth_with_user):
+        kwargs = {
+            **self.def_kwargs,
+            'service_id': self.cloud_storage_service.id
+        }
+        init_price = 10
+        service_props = ServiceToOrganizationProperties.objects.create(
+            organization=self.organization,
+            service=self.cloud_storage_service,
+            price=init_price
+        )
+        for i in range(10):
+            service_props.price = init_price + i
+            service_props.save()
+        path = reverse('channelpartners-owned-service-price-history', kwargs=kwargs)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(self.cp_user)
+        response = self.client.get(path)
+        assert response.status_code == 200
+        assert len(response.data) == 10
+        first = response.data[0]
+        assert len(first) == 2
+        assert first['price'] == '10.000'
+        assert first['createdTs'][:-1] in service_props.created_ts.isoformat()
+        last = response.data[-1]
+        assert last['price'] == '19.000'
+        assert last['createdTs'][:-1] not in service_props.created_ts.isoformat()

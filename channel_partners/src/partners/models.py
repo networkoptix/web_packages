@@ -2364,18 +2364,37 @@ class ServiceUsage(models.Model):
         return statuses
 
 
-class ServiceToSubChannelProperties(models.Model):
+class ServiceToSubChannelProperties(FieldOriginalMixin, models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='service_properties')
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE,
                                 related_name='channel_partners_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
     created_ts = models.DateTimeField(auto_now_add=True)
 
+    observed_fields = ('price',)
+
     class Meta:
         constraints = [
             models.constraints.UniqueConstraint(fields=['channel_partner', 'service'],
                                                 name='unique_channel_partner_service_properties')
         ]
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new = self._state.adding
+        price_changed = self.price != self._original_price
+        with transaction.atomic():
+            super().save(force_insert=force_insert,
+                         force_update=force_update,
+                         using=using,
+                         update_fields=update_fields)
+            if new:
+                ChannelPartnerPriceChange.objects.create(
+                    service_properties=self, price=self.price, created_ts=self.created_ts)
+            elif price_changed:
+                ChannelPartnerPriceChange.objects.create(
+                    service_properties=self, price=self.price)
 
     def can_access(self, user: CloudUser):
         return self.channel_partner.can_access(user)
@@ -2400,11 +2419,37 @@ class ServiceToSubChannelProperties(models.Model):
             cls.objects.create(service_id=id, channel_partner_id=channel_partner_id)
 
 
-class ServiceToOrganizationProperties(models.Model):
+class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='service_properties')
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, related_name='organization_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
     created_ts = models.DateTimeField(auto_now_add=True)
+
+    observed_fields = ('price',)
+
+    class Meta:
+        constraints = [
+            models.constraints.UniqueConstraint(fields=['organization', 'service'],
+                                                name='unique_organization_service_properties')
+        ]
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new = self._state.adding
+        price_changed = self.price != self._original_price
+        with transaction.atomic():
+            super().save(force_insert=force_insert,
+                         force_update=force_update,
+                         using=using,
+                         update_fields=update_fields)
+            if new:
+                OrganizationPriceChange.objects.create(
+                    service_properties=self, price=self.price, created_ts=self.created_ts)
+            elif price_changed:
+                OrganizationPriceChange.objects.create(
+                    service_properties=self, price=self.price)
+
 
     def can_access(self, user: CloudUser):
         return self.organization.can_access(user)
@@ -2412,11 +2457,6 @@ class ServiceToOrganizationProperties(models.Model):
     def can_manage(self, user: CloudUser):
         return self.service.created_by_channel_partner.can_add_or_remove_organizations(user)
 
-    class Meta:
-        constraints = [
-            models.constraints.UniqueConstraint(fields=['organization', 'service'],
-                                                name='unique_organization_service_properties')
-        ]
 
     @classmethod
     def create_missing(cls, organization_id: int):
@@ -2846,3 +2886,15 @@ class SystemServiceCurrentQuantity(models.Model):
 
     class Meta:
         unique_together = ('cloud_system', 'organization', 'service')
+
+
+class OrganizationPriceChange(models.Model):
+    service_properties = models.ForeignKey(ServiceToOrganizationProperties, on_delete=models.PROTECT)
+    price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(null=False, default=timezone.now)
+
+
+class ChannelPartnerPriceChange(models.Model):
+    service_properties = models.ForeignKey(ServiceToSubChannelProperties, on_delete=models.PROTECT)
+    price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(null=False, default=timezone.now)
