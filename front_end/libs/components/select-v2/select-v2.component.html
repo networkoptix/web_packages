@@ -1,7 +1,8 @@
 <div
+    data-escape-global-style
     #selectWrapper
     class="select-wrapper"
-    [ngClass]="{ disabled: disabled() }"
+    [ariaDisabled]="disabled()"
     tabIndex="{{ disabled() ? -1 : 0 }}"
     (click)="toggleDropdown()"
     (keydown)="onKeyDown($event)"
@@ -16,8 +17,6 @@
         [innerHTML]="(displayText | async) || '' | safe: 'html'"
         class="select-box"
         [ngClass]="{
-            error: error,
-            disabled: disabled(),
             placeholder: showPlaceholder
         }"
     ></div>

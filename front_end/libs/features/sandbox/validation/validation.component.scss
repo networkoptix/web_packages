@@ -1,0 +1,16 @@
+.ff-container  {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    form {
+        padding: 0.5rem;
+        border: 1px solid gray;
+        width: 250px;
+
+        .footer {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}

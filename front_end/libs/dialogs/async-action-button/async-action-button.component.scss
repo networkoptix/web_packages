@@ -1,5 +1,9 @@
 @use "mixins" as mixins;
 
+:host {
+    display: inline-block;
+}
+
 .async-action-button {
     width: 100%;
     position: relative;

@@ -1,6 +1,6 @@
 @use 'typography';
 
-label {
+label:not([data-escape-global-style]) {
     @include typography.regular13nocolor;
     color: var(--label-color) !important;
     line-height: 16px;

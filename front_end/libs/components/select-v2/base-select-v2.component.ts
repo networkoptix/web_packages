@@ -44,12 +44,11 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
         },
         { allowSignalWrites: true },
     );
-    @Input() error: boolean = false;
     // TODO: Search is not implemented yet
     @Input() search: boolean = false;
     @Input('aria-label') ariaLabel: string = '';
 
-    @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLButtonElement>;
+    @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     @ContentChildren(BaseSelectV2Item, { descendants: true }) dropdownItems = new QueryList<
         BaseSelectV2Item<T>

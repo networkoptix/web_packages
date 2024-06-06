@@ -1,0 +1,21 @@
+@use 'theme_variables_common' as vars;
+
+:host {
+    display: inline;
+
+    font-family: vars.$font-family-regular;
+    font-size: vars.$font-size-base;
+    line-height: 1.5;
+
+    // &.nx-control-message--info {
+    //     color: ???;
+    // }
+
+    &.nx-control-message--warn {
+        color: var(--yellow-d1);
+    }
+
+    &.nx-control-message--error {
+        color: var(--error-label);
+    }
+}

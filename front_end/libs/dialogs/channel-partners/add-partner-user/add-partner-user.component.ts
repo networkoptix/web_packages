@@ -1,30 +1,33 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, signal } from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    AbstractControl,
-    FormControl,
-} from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Inject, computed, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { ToastType } from '@components/toast-container/toast.types';
+import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
+import { NxFormFieldModule } from '@components/forms/forms.module';
+import { NxInputComponent } from '@components/forms/input/input.component';
+import { ControlPresets, NxValidators } from '@components/forms/validators';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import staticLang from '@language_static';
-import { NxValidators } from '@libs/validators/input-validators';
+import LANG from '@language_static';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { NxProcessService } from '@services/process.service';
-import type { Process } from '@services/process.service/process';
-import { NxToastService } from '@services/toast.service';
+import { accountSelectors } from '@store/account';
+import { formControlValueSignal } from '@utils/nx';
+
+interface UserInChildOrgError extends HttpErrorResponse {
+    status: 400;
+    error: { email: [string] };
+}
+/* User {user} has a role in the channel partner child organization and cannot be added to channel partner {partner}. */
+
 @Component({
     selector: 'nx-modal-add-partner-user-content',
     templateUrl: 'add-partner-user.component.html',
@@ -32,88 +35,70 @@ import { NxToastService } from '@services/toast.service';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
-        TranslateModule,
         ReactiveFormsModule,
-        NxGenericDropdownModule,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
+        TranslateModule,
+        NxFormFieldModule,
+        NxInputComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
-    LANG = staticLang;
-    roles: DropdownItem<string>[] = [];
-    selectedRole: DropdownItem<string>;
-    roleDescriptionMap = this.LANG.channelPartners.usersTable.roleDescriptions;
-    partnerAddUserRoleFocused$$ = signal(false);
+    private accountEmail = inject(Store).selectSignal(accountSelectors.selectCurrentUserName);
+    private partnerUsers = new Set<string>(this.data.users.map(user => user.email));
+    private backendRejected = new Set<string>();
 
-    createUserProcess: Process;
-    form: FormGroup;
+    private emailControl = new FormControl('', {
+        nonNullable: true,
+        validators: [
+            NxValidators.requiredEmail,
+            NxValidators.forbidden(this.accountEmail, 'selfAdd'),
+            NxValidators.forbidden(this.partnerUsers, 'existingUser'),
+            NxValidators.forbidden(this.backendRejected, 'backendReject'),
+        ],
+    });
+    emailErrorMatcher = errorMatcherFactory(ControlPresets.RequiredEmail, {
+        onChange: ['selfAdd', 'existingUser', 'backendReject'],
+    });
+
+    partnerRoles = this.cpService.channelPartnerRoles$$;
+    partnerRolesMessages = computed<{ key: string; text: string }[]>(() =>
+        this.cpService.channelPartnerRoles$$().map(role => ({
+            key: role.id,
+            text: LANG.channelPartners.usersTable.roleDescriptions[role.name],
+        })),
+    );
+    permissionGroupControl = new FormControl<string | null>(null, {
+        validators: [Validators.required],
+    });
+    permissionGroup = formControlValueSignal(this.permissionGroupControl);
+
+    formGroup = new FormGroup({
+        email: this.emailControl,
+        permissionGroup: this.permissionGroupControl,
+    });
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { partnerId, users }: DT['data'],
-        cpService: NxChannelPartnersService,
-        processService: NxProcessService,
-        toastService: NxToastService,
-        private formBuilder: FormBuilder,
-        private nxValidators: NxValidators,
-        private translate: TranslateService,
+        @Inject(DIALOG_DATA) private data: DT['data'],
+        private cpService: NxChannelPartnersService,
     ) {
         super(dialogRef);
-        // There's probably a smarter place to put this so we only have
-        // to fetch once, but putting here for now
-        this.selectedRole = { name: 'Select', value: '' };
-        cpService.getChannelPartnerRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<string>>(role => ({
-                name: role.name,
-                value: role.id,
-            }));
-        });
-        this.form = this.formBuilder.group({
-            email: this.formBuilder.control({ value: '', disabled: false }, [
-                this.nxValidators.requiredEmail(),
-                this.nxValidators.email(),
-                this.nxValidators.uniqueEmail(new Map(users.map(user => [user.email, user]))),
-            ]),
-        });
-
-        this.createUserProcess = processService.createProcess(
-            () => {
-                this.lock();
-                return firstValueFrom(
-                    cpService.createChannelPartnerUser(partnerId, {
-                        email: this.form.get('email')?.value,
-                        roleId: this.selectedRole.value,
-                    }),
-                );
-            },
-            {
-                ignoreError: true,
-            },
-            res => this.close(res),
-            err => {
-                this.unlock();
-                console.error(err);
-                const msg =
-                    err.email[0] || this.translate.instant(staticLang.errorCodes.unexpectedError);
-                const emailControl = this.form.get('email');
-                if (!emailControl) {
-                    const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                    toastService.notify(msg, ToastType.Danger);
-                    return;
-                }
-                const errorEmail = emailControl.value;
-                emailControl.addValidators([
-                    (control: FormControl<string>) =>
-                        control.value === errorEmail ? { backendError: true, msg } : null,
-                ]);
-                emailControl.updateValueAndValidity();
-            },
-        );
     }
 
-    get emailInput(): AbstractControl<unknown | unknown> | null {
-        return this.form.get('email');
-    }
+    addUserAction = createAsyncAction({
+        action: () =>
+            firstValueFrom(
+                this.cpService.createChannelPartnerUser(this.data.partnerId, {
+                    email: this.emailControl.value,
+                    roleId: this.permissionGroupControl.value!,
+                }),
+            ),
+        success: res => this.close(res),
+        error: (_: UserInChildOrgError) => {
+            this.backendRejected.add(this.emailControl.value);
+            this.emailControl.updateValueAndValidity();
+        },
+    });
 }

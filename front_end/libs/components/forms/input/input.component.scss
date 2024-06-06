@@ -1,0 +1,53 @@
+@use "sass-rem/rem" as sass_rem;
+
+@use "theme_variables_common" as vars;
+
+:host {
+    display: block;
+    width: 100%;
+    height: 2rem;
+    font-size: 0.875rem;
+    color: var(--input-color);
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border-color);
+    border-radius: 2px;
+    padding: sass_rem.rem(5px) sass_rem.rem(10px);
+    caret-color: var(--input-color);
+
+    &::placeholder {
+        color: var(--input-color-placeholder);
+        font-family: var(--font-family-regular);
+        opacity: 0.7;
+        font-size: 0.75rem;
+    }
+
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:-webkit-autofill {
+        -webkit-text-fill-color: var(--input-color) !important;
+        -webkit-box-shadow: 0 0 0 2rem var(--input-bg) inset !important;
+    }
+    &:-internal-autofill-selected {
+        background-color: var(--input-bg) !important;
+        color: var(--input-color) !important;
+    }
+
+    &:disabled,
+    &:read-only {
+        opacity: 0.4;
+        color: var(--input-disabled-color);
+        border-color: var(--input-disabled-border-color);
+        pointer-events: none;
+    }
+
+    &:focus {
+        border-color: var(--input-focus-border-color);
+        outline: 1px solid var(--input-focus-border-color);
+    }
+
+    &.nx-form-field__control--error:not(:focus) {
+        border-color: var(--input-error-border-color);
+    }
+}

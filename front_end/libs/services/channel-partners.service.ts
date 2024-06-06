@@ -37,7 +37,7 @@ export class NxChannelPartnersService {
         },
     }));
 
-    /** Convert to promise to fire request without needing to subscribe */
+    /* Convert to promise to fire request without needing to subscribe */
     // private promisify<T, M extends (...args: Parameters<M>) => Observable<T>>(
     //     method: M,
     // ): (...args: Parameters<M>) => Promise<T> {
@@ -45,6 +45,10 @@ export class NxChannelPartnersService {
     //         return firstValueFrom(method(...args));
     //     };
     // }
+
+    /* Not associated with a specific partner/org and don't change  */
+    channelPartnerRoles$$ = toSignal(this.cpApi.getChannelPartnerRoles(), { initialValue: [] });
+    organizationRoles$$ = toSignal(this.cpApi.getOrganizationRoles(), { initialValue: [] });
 
     /* Channel Partners */
     @memoizeAsyncShort
@@ -94,8 +98,6 @@ export class NxChannelPartnersService {
     deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
     deleteBulkOrganizationUsers = this.cpApi.deleteBulkOrganizationUsers;
     deleteBulkUserGroups = this.cpApi.deleteBulkUserGroups;
-
-    organizationRoles$$ = toSignal(this.cpApi.getOrganizationRoles(), { initialValue: [] });
 
     /* Organization Reports */
     getOrganizationServiceUsage = this.cpApi.getOrganizationServiceUsage;

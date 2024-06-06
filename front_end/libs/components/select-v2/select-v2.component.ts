@@ -6,6 +6,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { of } from 'rxjs';
 
+import { NxFormFieldControlDirective } from '@components/forms/form-field/form-field-control.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { BaseSelectV2Component } from './base-select-v2.component';
@@ -52,6 +53,7 @@ Going to mostly borrow behavior from Material Select for now
             multi: true,
         },
     ],
+    hostDirectives: [NxFormFieldControlDirective],
 })
 export class NxSelectV2Component<T> extends BaseSelectV2Component<T, false> {
     // The selected DropdownItem
