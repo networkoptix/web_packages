@@ -1,8 +1,12 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 
 import { EntityType } from '../reports.types';
 import { NxServiceUsageTableComponent } from '../service-usage/service-usage-table/service-usage-table.component';
@@ -20,11 +24,15 @@ import { FormattedServiceDetailRecord, ServiceDetailTotals } from './service-usa
         NxServiceUsageTableComponent,
         NxPreLoaderComponent,
         NxServiceDetailsTableComponent,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
     ],
     providers: [ServiceUsageDetailsStore],
     standalone: true,
 })
 export class NxServiceUsageDetailsComponent {
+    LANG = staticLang;
+    icons = icons;
     readonly serviceUsageDetailsStore = inject(ServiceUsageDetailsStore);
     constructor(private router: Router) {}
 

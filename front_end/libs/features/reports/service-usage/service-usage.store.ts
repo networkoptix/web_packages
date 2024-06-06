@@ -38,8 +38,9 @@ export const ServiceUsageStore = signalStore(
                     }) => ({
                         serviceId: service_id,
                         serviceName: service_name,
-                        usedByPartnerOrSystemCount: used_by,
+                        usedByPartnerCount: 0,
                         usedByOrgCount: 0,
+                        usedBySystemCount: used_by,
                         channels,
                         monthlyRate: monthly_rate,
                         fractionalUsage: daily_rate,
@@ -61,8 +62,9 @@ export const ServiceUsageStore = signalStore(
                     }) => ({
                         serviceId: service_id,
                         serviceName: service_name,
-                        usedByPartnerOrSystemCount: used_by_channel_partners,
+                        usedByPartnerCount: used_by_channel_partners,
                         usedByOrgCount: used_by_organizations,
+                        usedBySystemCount: 0,
                         channels,
                         monthlyRate: monthly_rate,
                         fractionalUsage: daily_rate,

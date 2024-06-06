@@ -15,5 +15,9 @@ import { icons } from '@static-variables';
 export class NxHintComponent {
     icons = icons;
     tooltipText$$ = input.required<string>({ alias: 'tooltipText' });
-    iconSrc$$ = input<string>(icons.dir + 'question.svg', { alias: 'iconSrc' });
+    iconSrc$$ = input<string>(icons.dir + 'question_inverted.svg', { alias: 'iconSrc' });
+    svgStyle$$ = input<{ [key: string]: string }>(
+        { width: '16px', height: '16px' },
+        { alias: 'svgStyle' },
+    );
 }

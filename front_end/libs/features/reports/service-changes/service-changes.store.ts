@@ -46,7 +46,7 @@ export const ServiceChangesStore = signalStore(
                     ({ serviceId, changeQuantity, organizationId, channelPartnerId, date }) => ({
                         serviceId,
                         amount: changeQuantity,
-                        addedToId: organizationId || channelPartnerId,
+                        changedAtId: organizationId || channelPartnerId,
                         date,
                     }),
                 );
@@ -77,7 +77,7 @@ export const ServiceChangesStore = signalStore(
                     ({ changeQuantity, service, date }) => ({
                         serviceId: service.id,
                         amount: changeQuantity,
-                        addedToId: entityId,
+                        changedAtId: entityId,
                         date,
                     }),
                 );

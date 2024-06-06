@@ -21,6 +21,7 @@ interface HEADER_ITEM {
 
 @Component({
     selector: 'nx-service-usage-table',
+    styleUrl: './service-usage-table.component.scss',
     templateUrl: './service-usage-table.component.html',
     imports: [
         TranslateModule,
@@ -44,16 +45,19 @@ export class NxServiceUsageTableComponent {
             value: 'Channels',
             name: 'channels',
             tooltip: this.LANG.channelPartnerReports.channelsTooltip,
+            align: 'flex-end',
         },
         {
             value: 'Monthly Rate',
             name: 'monthlyRate',
             tooltip: this.LANG.channelPartnerReports.monthlyRateTooltip,
+            align: 'flex-end',
         },
         {
             value: 'Fractional Usage',
             name: 'fractionalUsage',
             tooltip: this.LANG.channelPartnerReports.fractionalUsageTooltip,
+            align: 'flex-end',
         },
     ];
     selectedRecordId = '';

@@ -25,13 +25,14 @@ interface HEADER_ITEM {
 @Component({
     selector: 'nx-service-details-table',
     templateUrl: './service-details-table.component.html',
+    styleUrls: ['./service-details-table.component.scss'],
     imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
     standalone: true,
 })
 export class NxServiceDetailsTableComponent {
     LANG = staticLang;
     headers: HEADER_ITEM[] = [
-        { value: 'Used By', name: 'usedBy' },
+        { value: 'Used By', name: 'usedBy', align: 'flex-start' },
         {
             value: 'Changed',
             name: 'changed',

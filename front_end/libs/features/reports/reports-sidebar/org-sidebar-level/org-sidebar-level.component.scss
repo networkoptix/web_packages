@@ -1,17 +1,28 @@
 .org-level {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    padding: 2px 0;
+    margin-bottom: 6px;
     padding-left: 25px;
 
     &.is-selected {
-        background-color: var(--reports-sidebar-highlight-color);
+        background-color: var(--reports-sidebar-highlight-background);
+        color: var(--reports-sidebar-highlight-text);
+    }
+
+    .org-icon {
+        position: relative;
+        bottom: 1px;
     }
 
     a {
-        color: var(--body-text-color);
         text-decoration: none;
-        margin-left: 0.5rem
+        margin-left: 6px;
+        color: var(--body-text-color);
+
+        &.is-selected {
+            color: var(--reports-sidebar-highlight-text);
+        }
     }
 
     a:hover {

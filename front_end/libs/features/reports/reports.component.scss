@@ -4,10 +4,15 @@
 
     .reports-sidebar-wrapper {
         width: 320px;
-        border-right: 1px solid var(--border-color);
         display: flex;
         justify-content: center;
         padding: 16px;
+        background-color: var(--reports-sidebar-background);
+    }
+
+    .reports-content {
+        padding: 24px;
+        width: 100%;
     }
 }
 
