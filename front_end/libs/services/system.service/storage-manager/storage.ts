@@ -290,29 +290,11 @@ export class Storage extends StorageDataStructure {
         const isStorageReserved = (storage: Storage, recursive = true): boolean => {
             if (this.isSystemV60) {
                 // Avoid issues with systems below v6.0
-                const nonWritable = !storage.isWritable;
+                const notWritable = !storage.isWritable && storage.usedForWriting;
                 const invalidSpace = storage.totalSpace < 0;
                 const tooSmall = storage.storageStatus.includes('tooSmall');
-                const availableAndNotRemovable =
-                    !storage.storageStatus.includes('removable') &&
-                    storage.storageStatus !== 'none';
-                const enoughSpace = storage.totalSpace > storage.currentStorageState.freeSpace / 6;
-                const isSystem = storage.storageStatus.includes('system');
 
-                return (
-                    nonWritable ||
-                    invalidSpace ||
-                    tooSmall ||
-                    !availableAndNotRemovable ||
-                    (!enoughSpace &&
-                        (isSystem ||
-                            (recursive &&
-                                storage.currentStorageState.locations.some(
-                                    storage =>
-                                        storage.storageId !== this.storageId &&
-                                        isStorageReserved(storage, false),
-                                ))))
-                );
+                return notWritable || invalidSpace || tooSmall;
             } else {
                 return (
                     (!storage.isWritable && !storage.usedForWriting) ||
