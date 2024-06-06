@@ -2140,7 +2140,6 @@ class LegacyLicensesSerializer(serializers.Serializer):
         return results
 
 
-
 class LicensesMigrationResultSerializer(serializers.Serializer):
 
     migratedLicenses = serializers.ListField(child=serializers.CharField())
@@ -2184,3 +2183,8 @@ class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
                 defaults={'quantity': quantity}
             )
         return instance
+
+
+class ServicePriceHistorySerializer(serializers.Serializer):
+    price = serializers.DecimalField(max_digits=10, decimal_places=3)
+    createdTs = serializers.DateTimeField(source='created_ts')

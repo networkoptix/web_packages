@@ -140,6 +140,7 @@ from partners.serializers import (
     OrganizationSystemsQueryParamsSerializer,
     OrganizationUserSerializer,
     SaaSReportSerializer,
+    ServicePriceHistorySerializer,
     ServiceSerializer,
     SystemBindResponseSerializer,
     SystemGroupUserSerializer,
@@ -572,6 +573,15 @@ class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixi
             perms.append(CanPerformChannelPartnerAction(ServiceToSubChannelProperties.can_manage))
         return perms
 
+    @extend_schema(summary="Retrieves price history for service.",
+                   responses=ServicePriceHistorySerializer(many=True))
+    @action(detail=True, methods=['get'])
+    def price_history(self, request, *args, **kwargs):
+        service_properties = self.get_object()
+        serializer = ServicePriceHistorySerializer(
+            service_properties.channelpartnerpricechange_set.order_by('created_ts').all(), many=True)
+        return Response(serializer.data)
+
 
 @extend_schema(
     tags=['Service Management'],
@@ -611,9 +621,19 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelVie
         self.create_missing()
         return super().update(request, *args, **kwargs)
 
+    @extend_schema(summary="Retrieves price history for service.",
+                   responses=ServicePriceHistorySerializer(many=True))
+    @action(detail=True, methods=['get'])
+    def price_history(self, request, *args, **kwargs):
+        self.create_missing()
+        service_properties = self.get_object()
+        serializer = ServicePriceHistorySerializer(
+            service_properties.organizationpricechange_set.order_by('created_ts').all(), many=True)
+        return Response(serializer.data)
+
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action in ['retrieve', 'list']:
+        if self.action in ['retrieve', 'list', 'price_history']:
             perms.append(CanPerformChannelPartnerAction(ServiceToOrganizationProperties.can_access))
         if self.action == 'partial_update':
             perms.append(CanPerformChannelPartnerAction(ServiceToOrganizationProperties.can_manage))
