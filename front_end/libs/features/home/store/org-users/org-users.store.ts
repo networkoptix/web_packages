@@ -321,8 +321,13 @@ export const OrgUsersStore = signalStore(
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
                         const user = store.currentGroupUsersEntityMap()[email];
+                        // No folders or folders === groupRoles effective means we are removing the user from the org.
+                        const deleteFromOrg =
+                            user!.isOrgUser ||
+                            folders.length === 0 ||
+                            folders.length === user.groupRoles.length;
                         iif(
-                            () => user!.isOrgUser || folders.length === 0,
+                            () => deleteFromOrg,
                             chpService.deleteOrganizationUser(orgId, email),
                             chpService.deleteBulkUserGroups(
                                 orgId,
@@ -332,7 +337,7 @@ export const OrgUsersStore = signalStore(
                                     : user!.groupRoles.map(group => group.groupId),
                             ),
                         ).subscribe(() => {
-                            if (user.isOrgUser || folders.length === user.groupRoles.length) {
+                            if (deleteFromOrg) {
                                 patchState(store, removeEntity(email, currentGroupUsersEntity));
                             } else {
                                 patchState(
