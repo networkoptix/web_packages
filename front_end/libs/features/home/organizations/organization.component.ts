@@ -11,7 +11,7 @@ import {
     input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,6 +31,7 @@ import {
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
@@ -84,6 +85,7 @@ interface SidebarSettings {
         PipesModule,
         NxHidableModule,
         NxAlertBlockComponent,
+        NxPagePlaceholderGenericNewV2Component,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -96,6 +98,7 @@ export class NxOrganizationsComponent implements OnInit {
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
+    isValidOrg = true;
 
     hasSupportInfo$$ = computed(() => {
         return Object.values(this.currPartnerSupportInfo$$() || []).some(
@@ -162,7 +165,6 @@ export class NxOrganizationsComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private router: Router,
         private cloudApi: NxCloudApiService,
         private cpService: NxChannelPartnersService,
     ) {
@@ -209,7 +211,9 @@ export class NxOrganizationsComponent implements OnInit {
                     (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) ||
                     !currOrg
                 ) {
-                    return this.router.navigate(['404']);
+                    this.isValidOrg = false;
+                    this.isLoading = false;
+                    return;
                 }
 
                 this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner).subscribe({
