@@ -118,7 +118,6 @@ module.exports = [
     "libs/dialogs/change-storage/change-storage.component.html",
     "libs/dialogs/channel-partners/add-org-user/add-org-user.component.html",
     "libs/dialogs/channel-partners/add-organization/add-organization.component.html",
-    "libs/dialogs/channel-partners/add-partner-user/add-partner-user.component.html",
     "libs/dialogs/channel-partners/add-partner/add-partner.component.html",
     "libs/dialogs/channel-partners/change-state/change-state.component.html",
     "libs/dialogs/channel-partners/edit-org-user/edit-org-user.component.html",

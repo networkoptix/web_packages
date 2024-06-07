@@ -120,6 +120,9 @@ export class NxDialogsService {
                 ...instanceConfig,
                 data,
             };
+            configWithData.autoFocus ??= 'dialog';
+            /* By default the CDK will focus the first focusable element in the dialog,
+            which is usually the close button */
             return this.openV2(component, configWithData);
         };
     }

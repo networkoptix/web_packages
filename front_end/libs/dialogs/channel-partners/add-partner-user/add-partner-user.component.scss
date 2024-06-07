@@ -1,27 +1,4 @@
-@use "theme_variables_common" as *;
+@use '../../dialogs2.scss';
+@use 'components/forms/forms.scss';
 
-.subtext {
-  padding-top: .35rem;
-  color: var(--add-user-dialog-color);
-
-  &.description {
-    padding-bottom: .5rem;
-  }
-}
-
-.error {
-  color: var(--error) !important;
-}
-
-.input-error {
-  border-color: var(--error) !important;
-}
-
-label {
-  color: var(--light10) !important;
-}
-
-.permissions {
-  padding-top: 10px;
-  height: 105px;
-}
+@include forms.stacked-form-fields;

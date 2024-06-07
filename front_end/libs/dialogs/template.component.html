@@ -18,6 +18,8 @@
         <button
             type="button"
             class="btn btn-default"
+            [disabled]="busy"
+            (click)="close()"
         >
             Cancel
         </button>

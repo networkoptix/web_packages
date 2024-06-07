@@ -1,6 +1,7 @@
 @use "typography";
 
 :host {
+    display: block;
     width: 100%;
 }
 
@@ -12,7 +13,7 @@
     box-shadow: var(--btn-dropdown-toggle-shadow-color);
     @include typography.medium13nocolor;
 
-    &:not(.disabled) {
+    &[aria-disabled="false"] {
         cursor: pointer;
 
         &:hover {
@@ -24,6 +25,23 @@
             background-color: var(--btn-dropdown-toggle-active-bg);
             box-shadow: var(--btn-dropdown-toggle-active-shadow);
         }
+
+        &:focus-visible {
+            outline: 2px solid var(--btn-default-focus-outline-rgb);
+            outline-offset: 2px;
+            box-shadow: var(--btn-default-focus-shadow);
+        }
+
+        :host.nx-form-field__control--error &:not(:focus-visible) {
+            outline: 1px solid var(--input-error-border-color);
+            outline-offset: -1px;
+        }
+        /* Borders are incompatible with shadow effects for raised buttons,
+        fake a border with an offset outline instead */
+    }
+
+    &[aria-disabled="true"] {
+        color: var(--elements-disabled);
     }
 }
 
@@ -32,7 +50,7 @@ svg-icon svg g polyline {
     stroke-width: 2px;
 }
 
-.disabled {
+[aria-disabled="true"] {
     svg-icon svg g polyline {
         stroke: var(--elements-disabled);
     }
@@ -56,10 +74,6 @@ $paddingBottom: 5px;
     }
 }
 
-.disabled {
-    cursor: auto;
-}
-
 .custom-dropdown-menu {
     background-color: var(--dropdown-menu-bg);
     box-shadow: var(--dropdown-menu-shadow);
@@ -71,9 +85,6 @@ $paddingBottom: 5px;
 .placeholder {
     color: var(--dropdown-placeholder-color);
 }
-
-// TODO: Add error styling
-.error {}
 
 .rotationTransition {
     -webkit-transition: .2s ease-in-out;

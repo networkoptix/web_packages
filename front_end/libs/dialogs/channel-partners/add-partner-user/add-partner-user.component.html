@@ -1,97 +1,106 @@
-<form
-    name="addCustomizationUserForm"
-    novalidate
->
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            Add User
-        </h1>
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+        >Add User</span
+    >
+    @if (closable) {
         <button
             type="button"
-            class="close"
-            id="closeAddCustomizationUser"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
-        >
-            <div class="close-content"></div>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form class="form">
-            <div
-                class="form-group"
-                [formGroup]="form"
+        ></button>
+    }
+</div>
+<form
+    class="nx-modal__content"
+    [formGroup]="formGroup"
+>
+    <div class="nx-modal__body">
+        <nx-form-field [errorMatcher]="emailErrorMatcher">
+            <label
+                nx-label
+                for="add-partner-user-email"
+                translate
+                >Email</label
             >
-                <label
-                    for="email"
-                    translate
-                    >Email</label
-                >
-                <input
-                    id="email"
-                    class="form-control"
-                    formControlName="email"
-                    [ngClass]="{ 'input-error': emailInput?.invalid && emailInput?.touched }"
-                />
-                <ng-container
-                    *ngIf="emailInput?.invalid && (emailInput?.touched || emailInput?.dirty)"
-                >
-                    <span
-                        *ngIf="
-                            emailInput?.errors['requiredEmail'] ||
-                            emailInput?.errors['emailInvalid'] ||
-                            emailInput?.errors['existingEmail'] ||
-                            emailInput?.errors['backendError']
-                        "
-                        class="input-error"
-                        >{{ emailInput?.errors?.msg }}</span
+            <input
+                type="email"
+                id="add-partner-user-email"
+                nx-input
+                formControlName="email"
+            />
+            <nx-control-messages preset="requiredEmail">
+                <nx-control-message
+                    key="selfAdd"
+                    [text]="'You cannot add yourself' | translate"
+                ></nx-control-message>
+                <nx-control-message
+                    key="existingUser"
+                    [text]="'User has already been added to this channel partner' | translate"
+                ></nx-control-message>
+                <nx-control-message
+                    key="backendReject"
+                    [text]="'User has already been added to a child organization' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
+        </nx-form-field>
+        <nx-form-field>
+            <label
+                nx-label
+                for="add-partner-user-permission-group"
+                translate
+                >Permission Group</label
+            >
+            <nx-select-v2
+                id="add-partner-user-permission-group"
+                formControlName="permissionGroup"
+                [placeholder]="'Select' | translate"
+            >
+                @for (role of partnerRoles(); track role.id) {
+                    <nx-select-item
+                        [value]="role.id"
+                        [selected]="permissionGroupControl.value === role.id"
+                        >{{ role.name | translate }}</nx-select-item
                     >
-                </ng-container>
-            </div>
-            <div class="form-group permissions">
-                <label
-                    for="userRole"
-                    translate
-                    >Permission Group</label
-                >
-                <nx-select
-                    [componentId]="'partnerAddUserRole'"
-                    name="userRole"
-                    [items]="roles"
-                    [selected]="selectedRole"
-                    [(ngModel)]="selectedRole"
-                    (focusout)="partnerAddUserRoleFocused$$.set(true)"
-                ></nx-select>
-                <div
-                    *ngIf="selectedRole.value"
-                    class="subtext description"
-                >
-                    {{ roleDescriptionMap[selectedRole.name] | translate }}
-                </div>
-                <span
-                    *ngIf="!selectedRole.value && partnerAddUserRoleFocused$$()"
-                    class="input-error"
-                    translate
-                    >The "Permission group" is empty</span
-                >
-            </div>
-        </form>
+                }
+            </nx-select-v2>
+            <nx-control-messages
+                [spacingLines]="2"
+                [state]="permissionGroup() ?? null"
+            >
+                <nx-control-message
+                    key="required"
+                    [text]="'Permission Group is required' | translate"
+                ></nx-control-message>
+                @for (message of partnerRolesMessages(); track message.key) {
+                    <nx-control-message
+                        [key]="message.key"
+                        [text]="message.text | translate"
+                        type="info"
+                    ></nx-control-message>
+                }
+            </nx-control-messages>
+        </nx-form-field>
     </div>
-    <div class="modal-footer">
-        <nx-process-button
-            [buttonDisabled]="!emailInput?.value || emailInput?.invalid || !selectedRole.value"
-            [process]="createUserProcess"
-            [buttonText]="'Add' | translate"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="createUserProcess"
-            [cancelFn]="unlock"
-            [discardFn]="close"
-        ></nx-cancel-button>
+    <div class="nx-modal__footer">
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
+        <nx-async-action-button
+            [action]="addUserAction"
+            [(busy)]="busy"
+            translate
+        >
+            Add
+        </nx-async-action-button>
     </div>
 </form>

@@ -1,0 +1,12 @@
+@if (translateWith() === undefined) {
+    {{ text() }}
+} @else if (translateWith === null) {
+    {{ text() | translate }}
+} @else if (translateWith() === 'data') {
+    <!-- Avoid recomputing translation with changing error data unless selected -->
+    @if (selected() && data()) {
+        {{ text() | translate: data() }}
+    }
+} @else {
+    {{ text() | translate: translateWith() }}
+}
