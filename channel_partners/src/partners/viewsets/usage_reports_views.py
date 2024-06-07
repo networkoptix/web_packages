@@ -168,6 +168,7 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     report_entity_model = Organization
     lookup_url_kwarg = 'service_id'
     entity_kwarg = 'organization'
+    serializer_class = OrganizationServiceReportSerializer
 
     @extend_schema(
         summary='Get an organization usage report.',
@@ -409,6 +410,7 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     report_entity_model = ChannelPartner
     lookup_url_kwarg = 'service_id'
     entity_kwarg = 'channel_partner'
+    serializer_class = ChannelPartnerServiceReportSerializer
 
     @extend_schema(
         summary='Get a channel partner usage report.',
