@@ -564,7 +564,7 @@ class TestOrganizationSerializerFieldAccessLevels:
         org = self.organizations[1]
         group = self.groups[1]
         group_admin = sys_group_user_factory(organization=org, group=group,
-                                             role_id=OrganizationRoles.ADMINISTRATOR)
+                                             role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR)
         group_power_user = sys_group_user_factory(organization=org, group=group,
                                                   role_id=OrganizationRoles.POWER_USER)
         group_viewer = sys_group_user_factory(organization=org, group=group,
@@ -624,7 +624,7 @@ class TestOrganizationSerializerFieldAccessLevels:
 
 
     def test_serializer_many(self, org_user_factory, arf):
-        cp_user = org_user_factory(organization=self.organizations[2], role='Administrator')
+        cp_user = org_user_factory(organization=self.organizations[2], role=OrganizationRoles.SYSTEMS_ADMINISTRATOR)
         request = arf.get('/')
         request.user = cp_user.user
         ctx = {'request': request}
@@ -790,7 +790,7 @@ class TestCloudSystemSerializerFieldAccessLevels:
         org = self.organizations[1]
         group = self.groups[1]
         group_admin = sys_group_user_factory(organization=org, group=group,
-                                             role_id=OrganizationRoles.ADMINISTRATOR)
+                                             role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR)
         group_power_user = sys_group_user_factory(organization=org, group=group,
                                                   role_id=OrganizationRoles.POWER_USER)
         group_admin_viewer = sys_group_user_factory(organization=org, group=group,
@@ -834,7 +834,7 @@ class TestCloudSystemSerializerFieldAccessLevels:
 
 
     def test_serializer_many(self, org_user_factory, arf):
-        cp_user = org_user_factory(organization=self.organizations[2], role='Administrator')
+        cp_user = org_user_factory(organization=self.organizations[2], role=OrganizationRoles.SYSTEMS_ADMINISTRATOR)
         request = arf.get('/')
         request.user = cp_user.user
         ctx = {'request': request}
