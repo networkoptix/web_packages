@@ -140,7 +140,7 @@ class SystemExpiringServiceSummarySerializer(serializers.Serializer):
 class OrganizationExpiringServiceSummarySerializer(serializers.Serializer):
     channels = serializers.IntegerField()
     systems = serializers.IntegerField()
-    expirations: serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
+    expirations = serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
 
 
 class OrganizationExpiringServiceReportSerializer(serializers.Serializer):
@@ -149,9 +149,9 @@ class OrganizationExpiringServiceReportSerializer(serializers.Serializer):
 
 
 class ChannelPartnerExpiringServiceSummarySerializer(serializers.Serializer):
-    channels: serializers.IntegerField()
-    organizations: serializers.IntegerField()
-    channel_partners: serializers.IntegerField()
+    channels = serializers.IntegerField()
+    organizations = serializers.IntegerField()
+    channel_partners = serializers.IntegerField()
 
 
 class ChannelPartnerExpiringServiceEntitiesSerializer(serializers.Serializer):
@@ -159,12 +159,12 @@ class ChannelPartnerExpiringServiceEntitiesSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=('organization', 'channel_partner'))
     name = serializers.CharField()
     channels = serializers.IntegerField()
-    expirations: serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
+    expirations = serializers.ListSerializer(child=serializers.DateField(format='%Y-%m-%d'), allow_empty=True)
 
 
 class ChannelPartnerExpiringServiceReportSerializer(serializers.Serializer):
     sub_entities = ChannelPartnerExpiringServiceEntitiesSerializer(many=True)
-    summary = ChannelPartnerExpiringServiceSummarySerializer(many=False)
+    summary = ChannelPartnerExpiringServiceSummarySerializer(many=False, required=True)
 
 
 class ExpiringUsageDetailRecordSerializer(serializers.Serializer):
