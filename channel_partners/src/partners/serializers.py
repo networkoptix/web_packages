@@ -347,8 +347,6 @@ class OrganizationQueryParamsSerializer(serializers.Serializer):
 class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'organization'
 
-
-
     class CloudSystemsField(serializers.HyperlinkedRelatedField):
         view_name = 'organizations-cloudsystem-list'
 
