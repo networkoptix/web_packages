@@ -29,103 +29,128 @@
 </ng-template>
 
 <ng-container *ngIf="!isLoading; else loading">
-    <div
-        id="groups"
-        cdkDropListGroup
-        *ngIf="!showAccessTable; else accessTable"
-    >
-        <button
-            *ngIf="rootGroups$$()?.length"
-            class="sidebar-toggling-ear-wrapper"
-            type="button"
-            [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
-            (click)="handleSidebarTogglingEarClick()"
-        >
-            <div class="sidebar-toggling-ear">
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                >
-                </svg-icon>
-            </div>
-        </button>
+    @if (isValidOrg) {
         <div
-            *ngIf="
-                (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
-                (sidebarSettings.value$ | async)?.showSidebarState
-            "
+            id="groups"
+            cdkDropListGroup
+            *ngIf="!showAccessTable; else accessTable"
         >
-            <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
-            <ng-template #sidebar>
-                <nx-groups-sidebar></nx-groups-sidebar>
-            </ng-template>
-        </div>
-        <div class="content-container">
-            <nx-ribbon-standalone
-                [context]="groupsStore.currentRibbonContext$$()"
-            ></nx-ribbon-standalone>
+            <button
+                *ngIf="rootGroups$$()?.length"
+                class="sidebar-toggling-ear-wrapper"
+                type="button"
+                [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
+                (click)="handleSidebarTogglingEarClick()"
+            >
+                <div class="sidebar-toggling-ear">
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                    >
+                    </svg-icon>
+                </div>
+            </button>
+            <div
+                *ngIf="
+                    (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
+                    (sidebarSettings.value$ | async)?.showSidebarState
+                "
+            >
+                <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
+                <ng-template #sidebar>
+                    <nx-groups-sidebar></nx-groups-sidebar>
+                </ng-template>
+            </div>
+            <div class="content-container">
+                <nx-ribbon-standalone
+                    [context]="groupsStore.currentRibbonContext$$()"
+                ></nx-ribbon-standalone>
 
-            <nx-pre-loader
-                *ngIf="isLoading && !currentOrganization$$(); else cards"
-            ></nx-pre-loader>
-            <ng-template #cards>
-                <nx-hidable>
-                    @if (inChannelPartner) {
-                        <a
-                            [routerLink]="routerState.partnersRoot$$()"
-                            queryParamsHandling="preserve"
-                        >
-                            @if (!groupsStore.groupsPath$$().length) {
+                <nx-pre-loader
+                    *ngIf="isLoading && !currentOrganization$$(); else cards"
+                ></nx-pre-loader>
+                <ng-template #cards>
+                    <nx-hidable>
+                        @if (inChannelPartner) {
+                            <a
+                                [routerLink]="routerState.partnersRoot$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                @if (!groupsStore.groupsPath$$().length) {
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                    ></svg-icon>
+                                }
+                                <span translate> All Organizations </span></a
+                            >
+                        }
+                        @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
+                            <a
+                                [nxHidableItem]="inChannelPartner"
+                                [routerLink]="routerState.rootGroupLink$$()"
+                                queryParamsHandling="preserve"
+                            >
                                 <svg-icon
                                     nx-add-svg-src
-                                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                    [svgStyle]="breadcrumbIconStyle"
+                                    [src]="icons.dir + 'organization.svg'"
                                 ></svg-icon>
-                            }
-                            <span translate> All Organizations </span></a
-                        >
-                    }
-                    @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
-                        <a
-                            [nxHidableItem]="inChannelPartner"
-                            [routerLink]="routerState.rootGroupLink$$()"
-                            queryParamsHandling="preserve"
-                        >
-                            <svg-icon
-                                nx-add-svg-src
-                                [svgStyle]="breadcrumbIconStyle"
-                                [src]="icons.dir + 'organization.svg'"
-                            ></svg-icon>
-                            {{ currentOrganization$$()!.name }}</a
-                        >
-                    }
+                                {{ currentOrganization$$()!.name }}</a
+                            >
+                        }
 
-                    <a nxHidableTemplate>...</a>
+                        <a nxHidableTemplate>...</a>
 
-                    @for (
-                        breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
-                        track breadcrumb.id;
-                        let last = $last
-                    ) {
-                        <a
-                            [nxHidableItem]="!last"
-                            [ngStyle]="{ display: 'inline' }"
-                            [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
-                            queryParamsHandling="preserve"
-                        >
-                            <svg-icon
-                                nx-add-svg-src
-                                [svgStyle]="breadcrumbIconStyle"
-                                [src]="icons.dir + 'folder2.svg'"
-                            ></svg-icon>
-                            {{ breadcrumb.name }}</a
-                        >
-                    }
-                </nx-hidable>
-                <ng-template [ngTemplateOutlet]="body"></ng-template>
-                <router-outlet></router-outlet>
-            </ng-template>
+                        @for (
+                            breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
+                            track breadcrumb.id;
+                            let last = $last
+                        ) {
+                            <a
+                                [nxHidableItem]="!last"
+                                [ngStyle]="{ display: 'inline' }"
+                                [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [svgStyle]="breadcrumbIconStyle"
+                                    [src]="icons.dir + 'folder2.svg'"
+                                ></svg-icon>
+                                {{ breadcrumb.name }}</a
+                            >
+                        }
+                    </nx-hidable>
+                    <ng-template [ngTemplateOutlet]="body"></ng-template>
+                    <router-outlet></router-outlet>
+                </ng-template>
+            </div>
         </div>
-    </div>
+    } @else {
+        <nx-page-generic-placeholder-v2>
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirPageV2Placeholder + 'no_access.svg'"
+                [svgStyle]="{ 'width.px': '400', 'height.px': '200' }"
+            ></svg-icon>
+            <div
+                class="title text-contrast"
+                style="font-size: 1.5rem !important"
+                translate
+            >
+                Failed to access organization
+            </div>
+            <div
+                class="message text-contrast"
+                translate
+            >
+                No organization can be accessed by this link. This may happen when access to this
+                organization has been revoked, the organization from the link does not exist, or if
+                you are logged into the incorrect account
+            </div>
+        </nx-page-generic-placeholder-v2>
+    }
 </ng-container>
 
 <ng-template #accessTable>
