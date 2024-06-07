@@ -385,8 +385,7 @@ async def connect(request):
 
     if auth:
         data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
-            auth, request.data['name'], customization=request.CUSTOMIZATION
-        )
+            auth, request.data['name'], customization=request.CUSTOMIZATION)
         return api_success(data)
 
     require_params(request, ('email', 'password'))

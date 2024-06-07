@@ -74,14 +74,18 @@ no-changes:
 
 .django-python:
   extends: .backend-changes
-  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+    pull_policy: always
   needs:
     - job: docker:build-django-python
       optional: true
   services:
     - name: mysql:8.0
+      pull_policy: if-not-present
       alias: mysql
     - name: redis:5.0.6-alpine
+      pull_policy: if-not-present
       alias: redis
       command:
         - redis-server
@@ -124,7 +128,9 @@ no-changes:
 
 django-checks:
   extends: .backend-changes
-  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+    pull_policy: always
   stage: check
   variables:
     USE_SQLITE: "true"
@@ -237,7 +243,9 @@ open-source:open-source-checker:
     - open_source_check_config.json
 
 check-python-licenses:
-  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+    pull_policy: always
   stage: check
   extends: .backend-changes
   needs:
@@ -263,7 +271,9 @@ check-python-licenses:
     - ./cloud_helper.sh check_licenses
 
 .cp-backend-changes:
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+  image:
+    name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+    pull_policy: always
   needs:
     - job: docker:build-channel-partners
       optional: true
@@ -304,7 +314,9 @@ check-python-licenses:
   services:
     - name: postgres:15.3-bullseye
       alias: postgres-cp
+      pull_policy: if-not-present
     - name: redis:5.0.6
+      pull_policy: if-not-present
       alias: redis-cp
       command:
         - redis-server
@@ -418,7 +430,9 @@ cp-lint:
 
 approval-check:
   stage: check
-  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+  image:
+    name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+    pull_policy: always
   rules:
     - if: !reference [ .enable_for_mr ]
   script:
