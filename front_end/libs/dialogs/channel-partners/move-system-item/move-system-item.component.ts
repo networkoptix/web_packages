@@ -16,18 +16,18 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import { NxOrgTreeSelectorV0Component } from '../org-tree-selector-v0/org-tree-selector.component';
-import type { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types';
+import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
+import { OrgTreeStatusMap } from '../org-tree-selector/org-tree-selector.types';
 
 @Component({
     selector: 'nx-modal-move-system-item-content',
     templateUrl: 'move-system-item.component.html',
     standalone: true,
     imports: [
-        NxOrgTreeSelectorV0Component,
         NxAsyncActionButtonComponent,
         FormsModule,
         TranslateModule,
+        NxOrgTreeSelectorComponent,
     ],
 })
 export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
@@ -35,7 +35,7 @@ export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
 
     organization: Organization;
     groups: GroupItem[];
-    orgTreeStatuses: OrgTreeStatuses;
+    orgTreeStatuses: OrgTreeStatusMap;
     selectedFolder: WritableSignal<string>;
 
     constructor(
@@ -50,13 +50,14 @@ export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
         this.selectedFolder = signal(
             item.groupId === null && groups.length ? groups[0].id : organization.id,
         );
+        const itemId = item.groupId ?? item.organizationId;
         // Try to avoid starting with error state
 
         this.orgTreeStatuses = new Map([
             [
-                item.groupId ?? item.organizationId,
+                itemId,
                 {
-                    type: 'error',
+                    status: 'disable',
                     msg: translate.instant(LANG.dialogs.channelPartners.systemAlreadyInFolder),
                 },
             ],
