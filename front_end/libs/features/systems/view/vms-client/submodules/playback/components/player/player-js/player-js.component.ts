@@ -10,6 +10,8 @@ import {
     OnChanges,
     Inject,
 } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import type videojs from 'video.js';
 
 import { WINDOW } from '@services/window-provider';
@@ -35,7 +37,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     @Output() bufferingChange = new EventEmitter<number>();
     @Output() videoEnded = new EventEmitter<boolean>();
-    @Output() videoError = new EventEmitter<Event>();
+
+    debounceError$ = new Subject<Event>();
+    @Output() videoError: Observable<Event> = this.debounceError$.pipe(debounceTime(1000));
 
     @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
@@ -131,13 +135,13 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('error', err => {
-            this.videoError.emit(err);
+            this.debounceError$.next(err);
         });
 
         this.player.on('abort', err => {
             this.hasPlayed = false;
             if (!this.paused) {
-                this.videoError.emit(err);
+                this.debounceError$.next(err);
             }
         });
 
