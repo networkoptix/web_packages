@@ -325,7 +325,7 @@ export const OrgUsersStore = signalStore(
                         const deleteFromOrg =
                             user!.isOrgUser ||
                             folders.length === 0 ||
-                            folders.length === user.groupRoles.length;
+                            folders.length === user.groupRoles?.length;
                         iif(
                             () => deleteFromOrg,
                             chpService.deleteOrganizationUser(orgId, email),
@@ -337,7 +337,7 @@ export const OrgUsersStore = signalStore(
                                     : user!.groupRoles.map(group => group.groupId),
                             ),
                         ).subscribe(() => {
-                            if (deleteFromOrg) {
+                            if (deleteFromOrg || !!user.accessLevel) {
                                 patchState(store, removeEntity(email, currentGroupUsersEntity));
                             } else {
                                 patchState(
@@ -346,7 +346,7 @@ export const OrgUsersStore = signalStore(
                                         {
                                             id: user.email,
                                             changes: {
-                                                groupRoles: user.groupRoles.filter(
+                                                groupRoles: user.groupRoles?.filter(
                                                     group => !folders.includes(group.groupId),
                                                 ),
                                             },
