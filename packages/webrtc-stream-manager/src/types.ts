@@ -34,6 +34,7 @@ export enum ConnectionError {
     lostConnection = 'lostConnection',
     transcodingDisabled = 'transcodingDisabled',
     mjpegDisabled = 'mjpegDisabled',
+    invalidAccessToken = 'invalidAccessToken'
 }
 
 export enum StreamQuality {
@@ -158,7 +159,7 @@ export enum TargetStream {
 export interface WebRtcUrlConfigUnknown {
     systemId: string;
     cameraId: string;
-    accessToken: string;
+    accessToken: string | (() => string);
     targetStream: TargetStream;
     position?:  number;
     speed?: 'unlimited' | number;
