@@ -31,7 +31,6 @@ import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import {
     Organization,
     OrgRoleIds,
-    PartnerRoles,
     State,
     UpdateOrganization,
     OrgSettingsState,
@@ -105,10 +104,6 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     });
 
     State = State;
-
-    canUpdateAccess$$ = computed(() =>
-        this.currentOrg$$()?.ownPermissions.includes(PartnerRoles.field_access_org_admin),
-    );
 
     ngOnInit(): void {
         this.initProcesses();

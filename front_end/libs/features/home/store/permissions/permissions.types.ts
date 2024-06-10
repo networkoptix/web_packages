@@ -5,6 +5,7 @@ export const OrgPermissions = {
     view_service_reports: 'view_service_reports',
     view_health_monitoring: 'view_health_monitoring',
     access_systems: 'access_systems',
+    field_access_org_admin: 'field_access_org_admin',
 } as const;
 
 export const ChannelPartnerPermissions = {

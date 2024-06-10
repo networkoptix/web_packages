@@ -99,13 +99,23 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     showStateChangeBlock = nxConfig.featureFlags.channelPartnersChangeStateUI;
 
     readonly partnerAccess = partnerAccess;
-    canUpdateAccess = input<boolean>(false);
     currState = input<State | null>(null);
+    inOrganization = input<boolean>(false);
     currentName = input.required<string>();
     channelPartnerAccessLevel = input<string>('');
     canChangeState = input.required<boolean>();
-    permissions = input.required<{ canAlterState: boolean; canConfigure: boolean }>();
-    canConfigure$$ = computed<boolean>(() => this.permissions().canConfigure);
+    permissions = input.required<{
+        canAlterState: boolean;
+        canViewPartnerSettings: boolean;
+        canConfigureOrg: boolean;
+        canUpdateAccess: boolean;
+    }>();
+    canConfigure$$ = computed<boolean>(() =>
+        this.inOrganization()
+            ? this.permissions().canConfigureOrg
+            : this.permissions().canViewPartnerSettings,
+    );
+    canUpdateAccess$$ = computed<boolean>(() => this.permissions().canUpdateAccess);
     settingsState = input.required<SettingsState>();
     currAccess$$ = computed<DropdownItem<string | null>>(
         () => accessMap?.[this.channelPartnerAccessLevel()] || null,

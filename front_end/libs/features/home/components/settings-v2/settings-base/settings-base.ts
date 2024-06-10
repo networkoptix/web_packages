@@ -68,10 +68,13 @@ export abstract class SettingsBase {
             canConfigureOrganization$$,
             canChangePartnerState$$,
             canViewPartnerSettings$$,
+            canUpdateOrgAccess$$,
         } = this.permissionsStore;
         return {
             canAlterState: canChangeOrganizationState$$() || canChangePartnerState$$(),
-            canConfigure: canConfigureOrganization$$() || canViewPartnerSettings$$(),
+            canViewPartnerSettings: canViewPartnerSettings$$(),
+            canConfigureOrg: canConfigureOrganization$$(),
+            canUpdateAccess: canUpdateOrgAccess$$(),
         };
     });
     protected effectiveState$$ = computed<State>(() => this.currentState$$().item.state);
