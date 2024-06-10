@@ -4,9 +4,9 @@
             @if (state.item) {
                 <ng-container>
                     <nx-settings-general-v2
+                        [inOrganization]="true"
                         [currentName]="name$$()"
                         [permissions]="permissions$$()"
-                        [canUpdateAccess]="canUpdateAccess$$()"
                         [channelPartnerAccessLevel]="accessLevel$$()"
                         [canChangeState]="permissionsStore.canChangeOrganizationState$$()"
                         [currState]="effectiveState$$()"
