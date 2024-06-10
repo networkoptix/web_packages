@@ -7,6 +7,8 @@
       echo "Current merge request id: ${CI_MERGE_REQUEST_ID}"
       echo "Current docker directory: ${DOCKER_DIR}"
 
+      sed -i 's@{{BUILD_COMMIT}}@'"$CI_COMMIT_SHA"'@' "${DOCKER_DIR}/Dockerfile"
+
       if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" && "${IMAGE_VERSION}" != "${CI_MERGE_REQUEST_ID}" ]]; then
         echo "Please update the IMAGE_VERSION from ${IMAGE_VERSION} to ${CI_MERGE_REQUEST_ID}"
         echo "see ${DOCKER_DIR}/.gitlab-ci.yml"

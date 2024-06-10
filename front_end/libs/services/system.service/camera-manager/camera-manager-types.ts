@@ -139,6 +139,7 @@ export interface NxSystemCamera {
     url: string;
     systemId: string;
     accessToken: string;
+    getAccessToken: () => string;
     typeId: string;
 
     // Compatibility patches

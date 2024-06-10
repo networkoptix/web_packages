@@ -197,6 +197,7 @@ export class CameraManager {
             get accessToken(): string {
                 return getAccessToken();
             },
+            getAccessToken,
             parentId,
             audioEnabled,
             audioSupported,

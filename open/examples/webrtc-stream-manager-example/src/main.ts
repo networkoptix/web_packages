@@ -160,7 +160,7 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
   WebRTCStreamManager.closeAll();
   const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
   const webRtcUrlConfig = {
-    accessToken: systemToken.access_token,
+    accessToken: () => systemToken.access_token,
     allowTranscoding,
     systemId,
     cameraId,
@@ -192,6 +192,11 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
           if (confirm('Transcoding is disabled. Do you want to enable it?')) {
             startStream(systemId, cameraId, serverId, true);
           }
+        } else if(error === 'invalidAccessToken') {
+          getSystemToken(systemSelect.value).then(tokenInfo => {
+            systemToken = tokenInfo
+            startStream(systemId, cameraId, serverId)
+          });
         } else {
           alert(`Error playing back stream: ${error}}`);
         }

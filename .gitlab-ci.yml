@@ -33,6 +33,7 @@ workflow:
 stages:
   - pre-build
   - docker image
+  - docker pull
   - check
   - build
   - deploy

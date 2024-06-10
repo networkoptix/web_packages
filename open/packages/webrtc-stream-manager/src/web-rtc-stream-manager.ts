@@ -378,14 +378,14 @@ export class WebRTCStreamManager {
         webRtcUrlFactory: WebRtcUrlFactory,
         videoElement?: HTMLVideoElement,
         targetStreams?: StreamsConfig,
-        accessToken?: string,
+        accessToken?: string | (() => string),
         allowTranscoding?: boolean,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
     static connect(
         webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         videoElement?: HTMLVideoElement,
         targetStreams: StreamsConfig = null,
-        accessToken: string = null,
+        accessToken: string | (() => string) = null,
         allowTranscoding: boolean = false,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
         const connectionKey = typeof webRtcUrlFactoryOrConfig === 'function' ? getConnectionKey(webRtcUrlFactoryOrConfig()) : cleanId(webRtcUrlFactoryOrConfig.cameraId);
@@ -408,11 +408,13 @@ export class WebRTCStreamManager {
             accessToken = webRtcUrlFactoryOrConfig.accessToken;
         }
 
+        const getAccessToken = typeof accessToken === 'function' ? accessToken : () => accessToken as string;
+
         WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey] ||= new WebRTCStreamManager(
             webRtcUrlFactoryOrConfig,
             videoElement,
             availableStreams,
-            accessToken,
+            getAccessToken,
             allowTranscoding,
             connectionKey,
         );
@@ -946,7 +948,7 @@ export class WebRTCStreamManager {
         const fallback = { version: '5.1' }
         const version = await cacheSuccess(() => fetchWithRedirectAuthorization(
             endpoint,
-            { headers: { authorization: `Bearer ${this.accessToken}` }}
+            { headers: { authorization: `Bearer ${this.accessToken()}` }}
         ), `${relayHost.split('.')[0]}-version`).then(
             response => response.json() as Promise<typeof fallback>
         ).catch(
@@ -1018,12 +1020,12 @@ export class WebRTCStreamManager {
 
             const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
                 allStreamsInfoEndpoint,
-                { headers: { authorization: `Bearer ${this.accessToken}` }}
+                { headers: { authorization: `Bearer ${this.accessToken()}` }}
                 ), `${systemId}-streams`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
 
             const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
                 streamInfoEndpoint,
-                { headers: { authorization: `Bearer ${this.accessToken}` }}
+                { headers: { authorization: `Bearer ${this.accessToken()}` }}
                 ), `${this.cameraId}-streams-${this.codecChanged}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
 
             const fetchStreams = fetchAllStreams.then(devices => {
@@ -1046,28 +1048,35 @@ export class WebRTCStreamManager {
 
             const resolvedHost = await fetch(`https://${relayHost}/api/ping?${this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
-            if (resolvedHost) {
-                if (this.accessToken) {
-                    if (this.apiVersion === ApiVersions.v1) {
-                        this.getStatic().AUTHENTICATED_HOSTS[resolvedHost] = !(await this.getStatic().AUTHENTICATED_HOSTS[resolvedHost]) ? cacheSuccess(() => fetch(
-                            `https://${resolvedHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true`,
-                            { credentials: 'include' }
-                        ), resolvedHost).then(res => res.ok) : this.getStatic().AUTHENTICATED_HOSTS[resolvedHost];
+            const invalidAccessToken = () => {
+                this.mediaStream$.next([null, ConnectionError.invalidAccessToken, this]);
+                return this.close(5)
+            }
 
-                        if (!(await this.getStatic().AUTHENTICATED_HOSTS[resolvedHost])) {
-                            return requeue();
+            if (resolvedHost) {
+                if (this.accessToken()) {
+                    if (this.apiVersion === ApiVersions.v1) {
+                        const accessToken = this.accessToken();
+                        const hostWithAccessToken = `${resolvedHost}-${accessToken}`
+                        this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken] = !(await this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken]) ? cacheSuccess(() => fetch(
+                            `https://${resolvedHost}/rest/v2/login/sessions/${accessToken}?setCookie=true`,
+                            { credentials: 'include' }
+                        ), hostWithAccessToken).then(res => res.ok) : this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken];
+
+                        if (!(await this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken])) {
+                            return invalidAccessToken()
                         }
                     } else {
                         const oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
 
-                        const oneTimeToken = await fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken}` }, method: 'POST'}).then(response => response.json()).then(res => {
+                        const oneTimeToken = await fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken()}` }, method: 'POST'}).then(response => response.json()).then(res => {
                             return res.token;
                         }).catch(() => '');
 
                         if (oneTimeToken) {
                             webRtcUrl += `_ticket=${oneTimeToken}&`
                         } else {
-                            return requeue();
+                            return invalidAccessToken()
                         }
                     }
                 }
@@ -1120,8 +1129,7 @@ export class WebRTCStreamManager {
             this.wsConnection.pipe(takeUntil(this.closeWsConnectionNotifier$)).subscribe({
                 next: this.gotMessageFromServer,
                 error: (err: Error) => {
-                    complete();
-                    this.close(1);
+                    invalidAccessToken()
                 },
                 complete,
             });
@@ -1256,7 +1264,7 @@ export class WebRTCStreamManager {
         private webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         videoElement?: HTMLVideoElement,
         private availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
-        private accessToken = '',
+        private accessToken = () => '',
         public allowTranscoding = false,
         private cameraId = '',
     ) {
