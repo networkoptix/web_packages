@@ -413,6 +413,7 @@ export const OrgUsersStore = signalStore(
                     },
                     updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
                         const isGroupUser = !!folder && roleId !== OrgRoleIds.OrgAdmin;
+                        const isOrgUser = roleId === OrgRoleIds.OrgAdmin;
                         iif(
                             () => isGroupUser,
                             chpService.updateGroupUser(folder, {
@@ -425,7 +426,7 @@ export const OrgUsersStore = signalStore(
                                 const { roles, rolesIds } = updatedUser;
                                 const user = store.currentGroupUsersEntityMap()[email];
                                 const { groupRoles } = user;
-                                let changes: Partial<OrgUser> = { roles, rolesIds };
+                                let changes: Partial<OrgUser> = { roles, rolesIds, isOrgUser };
                                 const groupIndex =
                                     groupRoles?.findIndex(({ groupId }) => groupId === folder) ??
                                     -1;
@@ -445,7 +446,7 @@ export const OrgUsersStore = signalStore(
                                 patchState(
                                     store,
                                     updateEntity(
-                                        { id: email, changes: { ...updatedUser } },
+                                        { id: email, changes: { ...updatedUser, isOrgUser } },
                                         currentGroupUsersEntity,
                                     ),
                                 );
