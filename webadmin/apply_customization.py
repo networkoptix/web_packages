@@ -29,6 +29,8 @@ def traverse_and_replace(cur_dict, replacements=None):
         for key, value in cur_dict.items():
             if type(value) in [dict, list]:
                 traverse_and_replace(value, replacements=replacements)
+            elif type(value) in [bool, int]:
+                cur_dict[key] = value
             else:
                 for search, replacement in replacements.items():
                     missing = f"--{search} IS MISSING FROM CONFIG--"
