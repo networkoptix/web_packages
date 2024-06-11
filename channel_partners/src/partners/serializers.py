@@ -7,7 +7,10 @@ from dataclasses import (
     dataclass,
     field,
 )
-from typing import List
+from typing import (
+    Dict,
+    List,
+)
 
 import httpx
 import llutil
@@ -2169,16 +2172,22 @@ class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
         model = CloudSystemId
         fields = ['currentUsages']
 
-    def update(self, instance, validated_data):
-        services = defaultdict(int)
+    def update(self, instance: CloudSystemId, validated_data: Dict) -> CloudSystemId:
+
+        SystemServiceCurrentQuantity.objects.filter(cloud_system=instance).delete()
+
+        services: defaultdict = defaultdict(int)
+        # consolidate & add
         for item in validated_data['currentUsages']:
             services[item['service'].id] += item['quantity']
-        for service, quantity in services.items():
-            SystemServiceCurrentQuantity.objects.update_or_create(
+
+        # create
+        for service_id, quantity in services.items():
+            SystemServiceCurrentQuantity.objects.create(
                 cloud_system=instance,
                 organization=instance.organization,
-                service_id=service,
-                defaults={'quantity': quantity}
+                service_id=service_id,
+                quantity=quantity
             )
         ServiceUsage.check_excess(instance)
         instance.refresh_from_db()
