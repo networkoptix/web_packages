@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { SessionStorageService } from 'ngx-webstorage';
+import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ export class NxSessionService {
     langChanged$: BehaviorSubject<boolean>;
 
     constructor(
-        private session: SessionStorageService,
+        private session: LocalStorageService,
         private nxCache: NxSwCacheService,
         @Inject(WINDOW) private window: Window
     ) {
