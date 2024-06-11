@@ -1391,13 +1391,13 @@
                 "rename": "Rename..."
             },
             "permissionDescription": {
-                "Organization Administrator": "Permission to manage all aspects of the Organization",
-                "Administrator": "Permission to manage Systems, Folders, and Users within the Organization. Not authorized to add Systems to the organization",
-                "Power User": "Permission to view all Organizational Systems, Folders, and Users. Not permitted to create Administrators or Power Users. Restrictions on the creation and restoration of backups",
-                "Advanced Viewer": "Permitted to view live video, browse the archive and control specific devices",
-                "Viewer": "Permitted to view live video, browse the archive, create bookmarks, and export video",
-                "Live Viewer": "Permitted to view live video ",
-                "System Health Viewer": "Permitted to view all alerts and access system health monitors."
+                "Organization Administrator": "Can manage all aspects of the Organization and its Systems",
+                "Administrator": "Grants user Administrator permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders.",
+                "Power User": "Grants user Power User permissions in all Systems within the assigned Folder or the Organization",
+                "Advanced Viewer": "Grants user Advanced Viewer permissions in all Systems within the assigned Folder or the Organization",
+                "Viewer": "Grants user Viewer permissions in all Systems within the assigned Folder or the Organization",
+                "Live Viewer": "Grants user Live Viewer permissions in all Systems within the assigned Folder or the Organization",
+                "System Health Viewer": "Grants user System Health Viewer permissions in all Systems within the assigned Folder or the Organization"
             },
             "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
         }
