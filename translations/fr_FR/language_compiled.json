@@ -4,7 +4,7 @@
     "%ANDROID_APPLICATION_LINK%": "%ANDROID_APPLICATION_LINK%",
     "%CLIENT_PROTOCOL%:": "%CLIENT_PROTOCOL%:",
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "%CLOUD_NAME% - Cloud Portal": "%CLOUD_NAME% - Portail Nuage",
+    "%CLOUD_NAME% - Cloud Portal": "%CLOUD_NAME% - Portail Cloud",
     "%CLOUD_NAME% is currently unavailable. Please try again later.": "%CLOUD_NAME% est actuellement indisponible. Veuillez réessayer plus tard.",
     "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems.": "%CLOUD_NAME%, un moyen simple de se connecter, de gérer et d'étendre les systèmes %VMS_NAME%.",
     "%IOS_APPLICATION_LINK%": "%IOS_APPLICATION_LINK%",
