@@ -2180,6 +2180,8 @@ class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
                 service_id=service,
                 defaults={'quantity': quantity}
             )
+        ServiceUsage.check_excess(instance)
+        instance.refresh_from_db()
         return instance
 
 
