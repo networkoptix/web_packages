@@ -11,6 +11,7 @@ import {
 } from '@authorization/src/app/types/bind-service.types';
 import { environment } from '@environments/environment';
 import { OrgPermissions } from '@pages/home/store/permissions/permissions.types';
+import { BaseConfig, FeatureFlags } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 
 import { Org } from '../../types/cloud-bind.types';
@@ -81,20 +82,26 @@ export class BindToCloudService {
         });
     }
 
-    getOrgs(code: string): Observable<Org[]> {
-        return this.getTokens(code).pipe(
-            switchMap(() =>
-                this.http.get<{ results: Org[] }>(`/${this.apiBase}/organizations/`, {
-                    params: { includeChildOrgs: true },
-                    headers: this.buildRequestHeaders(),
-                }),
-            ),
-            map(res =>
-                res.results.filter(({ ownPermissions }) =>
-                    ownPermissions.includes(OrgPermissions.manage_systems),
+    fetchFlags(): Observable<FeatureFlags> {
+        const headers = this.buildRequestHeaders();
+        return this.http
+            .get<BaseConfig>(`/api/utils/settings/`, { headers })
+            .pipe(map(res => res.featureFlags));
+    }
+
+    getOrgs(): Observable<Org[]> {
+        return this.http
+            .get<{ results: Org[] }>(`/${this.apiBase}/organizations/`, {
+                params: { includeChildOrgs: true },
+                headers: this.buildRequestHeaders(),
+            })
+            .pipe(
+                map(res =>
+                    res.results.filter(({ ownPermissions }) =>
+                        ownPermissions.includes(OrgPermissions.manage_systems),
+                    ),
                 ),
-            ),
-        );
+            );
     }
 
     deleteTokens(): Observable<DeleteResponse> {

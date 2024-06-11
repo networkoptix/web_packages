@@ -73,7 +73,6 @@ interface BindState {
 })
 export class BindSystemToCloudComponent implements OnInit {
     protected readonly environment = environment;
-    protected readonly channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
     protected readonly icons = icons;
     readonly fsmStates = BindDialogStates;
 
@@ -87,6 +86,7 @@ export class BindSystemToCloudComponent implements OnInit {
     // Services
     private bindService = inject(BindToCloudService);
     private processService = inject(NxProcessService);
+    private channelPartnersEnabled = nxConfig.featureFlags.channelPartners;
     bindSystem: Process;
 
     // State management
@@ -123,25 +123,27 @@ export class BindSystemToCloudComponent implements OnInit {
     getOrgsEffect = effect(async () => {
         const code = this.code$$();
         if (code) {
+            await firstValueFrom(this.bindService.getTokens(code));
+            if (!this.channelPartnersEnabled) {
+                const flags = await firstValueFrom(this.bindService.fetchFlags());
+                this.channelPartnersEnabled = flags?.channelPartners;
+            }
             if (this.channelPartnersEnabled) {
-                const orgs = await firstValueFrom(this.bindService.getOrgs(code));
+                const orgs = await firstValueFrom(this.bindService.getOrgs());
                 this.state$$.update(state => ({
                     ...state,
                     orgs,
                     fsmState: BindDialogStates.initial,
+                    email: this.bindService.getEmailFromToken(),
                 }));
             } else {
-                await firstValueFrom(this.bindService.getTokens(code));
                 this.state$$.update(state => ({
                     ...state,
                     bindType: BindType.account,
                     fsmState: BindDialogStates.confirmAccount,
+                    email: this.bindService.getEmailFromToken(),
                 }));
             }
-            this.state$$.update(state => ({
-                ...state,
-                email: this.bindService.getEmailFromToken(),
-            }));
         }
     });
 
