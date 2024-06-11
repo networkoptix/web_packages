@@ -2358,6 +2358,21 @@ class ServiceUsage(models.Model):
                 cloud_system.usage_issue_detected = True
                 services[service_id] = ServiceUsage.STATUS_OVER_USE
                 types[service_type] = ServiceUsage.STATUS_OVER_USE
+        system_service_current_quantites = SystemServiceCurrentQuantity.objects.filter(
+            cloud_system=cloud_system,
+            service_id__in=current_services.keys(),
+            organization=cloud_system.organization
+        ).values(
+            'service_id', 'quantity', 'service__type'
+        )
+        for record in system_service_current_quantites:
+            service_id = str(record['service_id'])
+            service_type = record['service__type']
+            allocated_service_qty = current_services.get(service_id, {}).get('quantity', 0)
+            if record['quantity'] > allocated_service_qty:
+                cloud_system.usage_issue_detected = True
+                services[service_id] = ServiceUsage.STATUS_OVER_USE
+                types[service_type] = ServiceUsage.STATUS_OVER_USE
         statuses = {'services': services, 'types': types}
         cloud_system.set_security_statuses(statuses=statuses)
         cloud_system.save()

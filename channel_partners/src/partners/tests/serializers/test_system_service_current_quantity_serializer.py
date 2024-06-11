@@ -1,8 +1,15 @@
+import datetime
 from uuid import uuid4
 
 import pytest
+from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta
 
-from partners.models import SystemServiceCurrentQuantity
+from partners.models import (
+    ChannelPartnerService,
+    ServiceUsage,
+    SystemServiceCurrentQuantity,
+)
 from partners.serializers import SystemServiceCurrentQuantitySerializer
 
 
@@ -19,9 +26,11 @@ class TestSystemServiceCurrentQuantitySerializer:
         )
         self.cp_service_2 = cp_service_factory(
             channel_partner=self.channel_partner,
+            service_type=ChannelPartnerService.CLOUD_STORAGE,
         )
         self.cp_service_3 = cp_service_factory(
             channel_partner=self.channel_partner,
+            service_type=ChannelPartnerService.ANALYTICS,
         )
         self.other_service = cp_service_factory(
             channel_partner=self.other_channel_partner,
@@ -183,4 +192,48 @@ class TestSystemServiceCurrentQuantitySerializer:
         assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).cloud_system == self.system
         assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).organization == self.organization
         assert SystemServiceCurrentQuantity.objects.count() == 3
+
+    def test_updated_security_statuses(self):
+        statuses = ServiceUsage.check_excess(self.system)
+        for typ, status in statuses['types'].items():
+            assert status == ServiceUsage.STATUS_OK
+        assert len(statuses['types']) > 0
+        for sid, status in statuses['services'].items():
+            assert status == ServiceUsage.STATUS_OK
+        assert len(statuses['services']) > 0
+        data = {
+            'currentUsages': [
+                {
+                    'service': str(self.cp_service_1.id),
+                    'quantity': 10,
+                },
+                {
+                    'service': str(self.cp_service_2.id),
+                    'quantity': 20,
+                },
+                {
+                    'service': str(self.cp_service_3.id),
+                    'quantity': 40,
+                }
+            ]
+        }
+        now = datetime.datetime.utcnow()
+        serializer = SystemServiceCurrentQuantitySerializer(instance=self.system, data=data)
+        assert serializer.is_valid()
+        ret = serializer.save()
+        self.system.refresh_from_db()
+        assert self.system == ret
+        assert self.system.security_statuses == ret.security_statuses
+        local_recording_type = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.LOCAL_RECORDING]
+        cloud_storage_type = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.CLOUD_STORAGE]
+        analytics_type = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[ChannelPartnerService.ANALYTICS]
+        assert ret.security_statuses['types'][local_recording_type]['status'] == ServiceUsage.STATUS_OK
+        assert ret.security_statuses['types'][cloud_storage_type]['status'] == ServiceUsage.STATUS_OK
+        assert ret.security_statuses['types'][analytics_type]['status'] == ServiceUsage.STATUS_OVER_USE
+        assert ret.security_statuses['services'][str(self.cp_service_1.id)]['status'] == ServiceUsage.STATUS_OK
+        assert ret.security_statuses['services'][str(self.cp_service_2.id)]['status'] == ServiceUsage.STATUS_OK
+        assert ret.security_statuses['services'][str(self.cp_service_3.id)]['status'] == ServiceUsage.STATUS_OVER_USE
+        expiration_date = parse(ret.security_statuses['types'][analytics_type]['issueExpirationDate'])
+        assert expiration_date >= (now + relativedelta(days=29, hours=23, minutes=58))
+        assert expiration_date <= (now + relativedelta(days=30, minutes=2))
 
