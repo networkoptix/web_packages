@@ -217,6 +217,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                         message: this.LANG.channelPartners.usersTable.adminWarning,
                         icon: 'error.svg',
                         type: 'error',
+                        page: 'channel-partner',
                     },
                 }),
             );

@@ -14,6 +14,7 @@ export interface Banner {
     message: string;
     icon: string;
     type: 'error';
+    page: 'channel-partner' | 'organization';
 }
 
 export interface ChannelPartnersState {
