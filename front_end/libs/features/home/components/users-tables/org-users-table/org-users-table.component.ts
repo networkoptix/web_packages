@@ -1,6 +1,7 @@
 import { Component, Output, computed, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 
+import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
@@ -71,6 +72,12 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         }
         return this.orgUserRecords$$()?.find(user => user.rolesIds?.includes(OrgRoleIds.OrgAdmin))
             ?.email;
+    });
+
+    adminUsers$$ = computed(() => {
+        return this.orgUserRecords$$()?.filter(user =>
+            user.rolesIds?.includes(OrgRoleIds.OrgAdmin),
+        );
     });
 
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
@@ -168,6 +175,21 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     }
 
     bulkDeleteUsers(): void {
+        const selectedOrgUsersMap = this.selectedOrgUsersMap$$();
+        if (this.adminUsers$$().every(({ email }) => selectedOrgUsersMap.has(email))) {
+            this.store.dispatch(
+                cpActions.showBannerAction({
+                    banner: {
+                        message: this.LANG.channelPartners.orgs.adminWarning,
+                        icon: 'error.svg',
+                        type: 'error',
+                        page: 'organization',
+                    },
+                }),
+            );
+            return;
+        }
+
         this.dialogService
             .confirm(
                 {

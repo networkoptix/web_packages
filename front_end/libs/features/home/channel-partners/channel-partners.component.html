@@ -1,9 +1,9 @@
-@if (warningBanner$$()) {
+@if (banner$$()?.page === 'channel-partner') {
     <nx-alert-block
-        [type]="warningBanner$$().type"
+        [type]="banner$$().type"
         id="error"
-        [iconSrc]="icons.dirNonStandard + warningBanner$$().icon"
-        [line1]="warningBanner$$().message | translate"
+        [iconSrc]="icons.dirNonStandard + banner$$().icon"
+        [line1]="banner$$().message | translate"
     >
     </nx-alert-block>
 }

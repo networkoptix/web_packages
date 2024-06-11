@@ -62,6 +62,15 @@
                 </ng-template>
             </div>
             <div class="content-container">
+                @if (banner$$()?.page === 'organization') {
+                    <nx-alert-block
+                        [type]="banner$$().type"
+                        id="error"
+                        [iconSrc]="icons.dirNonStandard + banner$$().icon"
+                        [line1]="banner$$().message | translate"
+                    >
+                    </nx-alert-block>
+                }
                 <nx-ribbon-standalone
                     [context]="groupsStore.currentRibbonContext$$()"
                 ></nx-ribbon-standalone>

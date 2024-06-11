@@ -98,7 +98,7 @@ export class NxChannelPartnersComponent implements OnInit {
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
-    warningBanner$$ = this.store.selectSignal(selectBanner);
+    banner$$ = this.store.selectSignal(selectBanner);
 
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];

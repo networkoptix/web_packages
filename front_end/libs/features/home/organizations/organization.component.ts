@@ -27,6 +27,7 @@ import {
     selectCurrentPartnerInfo,
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
+    selectBanner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
@@ -162,6 +163,7 @@ export class NxOrganizationsComponent implements OnInit {
     currentGroupId$$ = computed(() => this.cpService.paramStateHandler.state$$()?.params?.groupId);
     currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
     rootGroups$$ = this.groupsStore.groupsEntities;
+    banner$$ = this.store.selectSignal(selectBanner);
 
     constructor(
         private store: Store,

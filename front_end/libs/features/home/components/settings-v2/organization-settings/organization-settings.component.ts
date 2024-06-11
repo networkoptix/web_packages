@@ -166,6 +166,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
                         message: this.LANG.channelPartners.orgs.adminWarning,
                         icon: 'error.svg',
                         type: 'error',
+                        page: 'organization',
                     },
                 }),
             );
