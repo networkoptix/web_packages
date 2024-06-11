@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
+import { LOGIN_STATE } from '@services/session.service.types';
 import { Role } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
@@ -77,7 +78,8 @@ export class DynamicConfig {
             fetch(environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account')
                 .then(res => res.json())
                 .then(result =>
-                    result.resultCode || !result?.is_authenticated || environment.isLocal
+                    result.resultCode ||
+                    (environment.isLocal ? !result?.token : !result?.is_authenticated)
                         ? null
                         : result,
                 )
@@ -109,6 +111,12 @@ export class DynamicConfig {
                 .catch(() => null);
 
         const current = await getCurrentAccount();
+        if (environment.isLocal) {
+            localStorage.setItem(
+                'ngx-webstorage|loginstate',
+                `"${current ? LOGIN_STATE.AUTHORIZED : LOGIN_STATE.UNAUTHORIZED}"`,
+            );
+        }
 
         if (current) {
             return current;
