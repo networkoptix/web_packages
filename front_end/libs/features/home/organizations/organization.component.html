@@ -85,17 +85,12 @@
                                 <span translate> All Organizations </span></a
                             >
                         }
-                        @if (groupsStore.groupsPath$$().length || !inChannelPartner) {
+                        @if (groupsStore.groupsPath$$().length) {
                             <a
                                 [nxHidableItem]="inChannelPartner"
                                 [routerLink]="routerState.rootGroupLink$$()"
                                 queryParamsHandling="preserve"
                             >
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [svgStyle]="breadcrumbIconStyle"
-                                    [src]="icons.dir + 'organization.svg'"
-                                ></svg-icon>
                                 {{ currentOrganization$$()!.name }}</a
                             >
                         }
@@ -113,11 +108,6 @@
                                 [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
                                 queryParamsHandling="preserve"
                             >
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [svgStyle]="breadcrumbIconStyle"
-                                    [src]="icons.dir + 'folder2.svg'"
-                                ></svg-icon>
                                 {{ breadcrumb.name }}</a
                             >
                         }
