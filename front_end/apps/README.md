@@ -1,4 +1,4 @@
-This folder will contain complete apps at the root and features(previously pages) will be in the features folder.
+This folder will contain complete apps at the root and features(previously pages) will be in the features' folder.
 
 Apps will eventually be refactored to have the following architecture.
 
