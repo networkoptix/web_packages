@@ -15,8 +15,7 @@ function build_frontend () {
         npm run build
         mkdir -p dist/skins
         npm run buildSkins dist/skins
-        rm -rf dist/front-end/src
-        rm -rf dist/front-end/customization
+        rm -rf dist/front-end
         # Save the repository info.
         echo -e "\nCreate version.txt"
         if [ -e "$PORTAL_REPOSITORY/.git" ]; then
@@ -24,7 +23,7 @@ function build_frontend () {
             git -C "$PORTAL_REPOSITORY" log --format="commit %H%nDate: %cd" -n 1 >> dist/version.txt
             git -C "$PORTAL_REPOSITORY" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
         else
-            echo "Neither git nor hg has been detected in $2" && exit 1
+            echo "Neither git nor hg has been detected in $PORTAL_REPOSITORY" && exit 1
         fi
         cat dist/version.txt
     popd
@@ -114,15 +113,26 @@ do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
 
-    echo "Move front_end to destination"
-    mkdir -p $SOURCE_DIR/$SKIN
-    mv $FRONT_END_DIST/skins/$SKIN.css $FRONT_END_DIST/styles/skin.css
-    rsync -a $FRONT_END_DIST/* $SOURCE_DIR/$SKIN/static --exclude="$FRONT_END_DIST/skins"
-    cp -R $SOURCE_DIR/$SKIN/static/scripts/. $SOURCE_DIR/$SKIN/static/
+    # Step vars to make file path manipulation more readable
+    SOURCE_SKIN="$SOURCE_DIR/$SKIN"
+    SOURCE_SKIN_STATIC="$SOURCE_SKIN/static"
+    WELL_KNOWN="$SOURCE_SKIN_STATIC/.well-known"
+    APPLE_MOBILE="$SOURCE_SKIN_STATIC/apple-app-site-association"
+    ANDROID_MOBILE="$SOURCE_SKIN_STATIC/assetlinks.json"
 
-    ./build_skin.sh $SKIN $PORTAL_REPOSITORY
+    echo "Move front_end to destination"
+    mkdir -p "$SOURCE_SKIN"
+    mv "$FRONT_END_DIST/skins/$SKIN.css" "$FRONT_END_DIST/styles/skin.css"
+    rsync -a $FRONT_END_DIST/* "$SOURCE_SKIN_STATIC" --exclude="$FRONT_END_DIST/skins"
+    cp -R "$SOURCE_SKIN_STATIC/scripts/." "$SOURCE_SKIN_STATIC"
+
+    mkdir "$WELL_KNOWN"
+    [ -e "$APPLE_MOBILE" ] && mv "$APPLE_MOBILE" "$WELL_KNOWN"
+    [ -e "$ANDROID_MOBILE" ] && mv "$ANDROID_MOBILE" "$WELL_KNOWN"
+
+    ./build_skin.sh "$SKIN" "$PORTAL_REPOSITORY"
     if [ -n "$LOCAL_ENV" ]; then
-      break
+        break
     fi
 done
 
