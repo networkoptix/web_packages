@@ -90,6 +90,10 @@
 .label {
     width: 13%;
     max-width: 13%;
+
+    .control-label {
+        color: var(--label-color) !important;
+    }
 }
 
 nx-select {
