@@ -10,7 +10,6 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -25,7 +24,6 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     constructor(
         configService: NxConfigService,
         private appState: NxAppStateService,
-        private dialogService: NxSimpleDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
@@ -78,21 +76,6 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
 
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
-        } else if (
-            res instanceof HttpErrorResponse &&
-            ([400, 401, 422].includes(status) && res.url.includes('rest/v1/login/sessions') &&
-                res.error?.errorId !== this.CONFIG.servers.errors.invalidParameter ||
-            (status === 0 && res.url?.includes('oauth/token')))
-        ) {
-            // Session expired
-            if (this.isDialogActive) {
-                return;
-            }
-            // remove overlay if visible
-            this.appState.systemAvailable$.next(true);
-            this.isDialogActive = true;
-            return this.dialogService.expiredSession()
-                .then(() => this.window.location.reload());
         } else if (
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&

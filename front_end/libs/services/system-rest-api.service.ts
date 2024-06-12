@@ -343,7 +343,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         url: string,
         params?: any,
         customHttpHeaders: IParams<string> = {},
-        requestTimeout = 60000
+        requestTimeout = 60000,
+        retry = true
     ) {
         params = params || {};
 
@@ -353,7 +354,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.delete<ResponseType>(fullUrl, { headers, params }).pipe(
-            retryWhen(request => this.retryHandler(request)),
+            retryWhen(request => retry ? this.retryHandler(request) : throwError(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
@@ -616,9 +617,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         } else if (!environment.isLocal) {
             logoutObservable$ = this.deleteToken('', accessToken);
         } else {
-            logoutObservable$ = this.delete('/rest/v1/login/sessions/current');
+            logoutObservable$ = this.delete('/rest/v1/login/sessions/current', {}, {}, undefined, false);
         }
         return logoutObservable$.pipe(
+            catchError(() => of(true)),
             map(() => this.clearTokens())
         ).toPromise();
     }
