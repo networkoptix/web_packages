@@ -1882,7 +1882,13 @@ export class NxLayoutGridComponent {
                 });
             }
             this.layoutStateService.portal = null;
-            this.layoutChanged.emit(id);
+            const withCrossSystemId =
+                'type' in node &&
+                assertResourceOfType.camera(node) &&
+                node.details.systemId !== this.system.id
+                    ? `${node.details.systemId}.${id}`
+                    : id;
+            this.layoutChanged.emit(withCrossSystemId);
         }
 
         const systemName = this.systemService.getCurrentSystem().info.name;
@@ -2141,11 +2147,14 @@ export class NxLayoutGridComponent {
                 ]).map(ensureLayoutItemResourcePath(this.system.id));
 
                 const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
-
-                if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
+                const layoutOrFocus = this.layoutItemLookup[dirtyId(this.layout.id)];
+                if (
+                    assertResourceOfType.layout(layoutOrFocus) &&
+                    layoutOrFocus.crossSystem === !isLocalLayout
+                ) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
-                    if (!currentUser.isAdmin || !isLocalLayout) {
+                    if (!currentUser!.isAdmin) {
                         // If user doesn't have permissions to edit a layout then create duplicate local layout
                         this.layoutStateService.duplicateAsNewLayout({
                             ...this.layout,

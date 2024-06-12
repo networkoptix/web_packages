@@ -173,7 +173,9 @@
                             [selected]="
                                 layout?.id
                                     ? cleanIdLegacy(changingLayout || layout?.id) ===
-                                      cleanIdLegacy(node?.details?.id)
+                                          cleanIdLegacy(node?.details?.id) &&
+                                      (node.details.systemId || system.id) ===
+                                          (layout.systemId || system.id)
                                     : node?.details?.id === 'noLayouts'
                             "
                             [query]="search$$()"

@@ -22,10 +22,11 @@ export const findSelectedLayoutFactory =
 
             // Prevent showing a layout that was accidentally saved with the same ID as a resource.
             if (existingLayout && !isResourceId) {
-                return { systemId: system.id, ...existingLayout };
+                return { ...existingLayout, systemId: existingLayout.systemId || system.id };
             }
         }
+        const [extractedLayoutId, systemId = system.id] = layoutId.split('.').reverse();
         return layoutId
-            ? createFocusLayout(system.id, layoutId).catch(() => createNewLayout(system.id))
-            : createNewLayout(system.id);
+            ? createFocusLayout(systemId, extractedLayoutId).catch(() => createNewLayout(systemId))
+            : createNewLayout(systemId);
     };

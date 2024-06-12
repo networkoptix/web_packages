@@ -1,5 +1,6 @@
 import { Observable, firstValueFrom, merge, map, filter, skip, timeout } from 'rxjs';
 
+import { findOtherSite } from '@components/layout-grid/find-other-site';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import { LayoutResourceTree } from '@components/layout-grid/layout-grid.types';
 import { Account } from '@services/account.service/account';
@@ -25,7 +26,26 @@ export const createFocusLayoutFactory =
         const node = await firstValueFrom(
             merge(
                 layoutItemLookup$.pipe(
-                    map(layoutItems => layoutItems[dirtyId(id)]),
+                    map(layoutItems => {
+                        const item = layoutItems[dirtyId(id)];
+
+                        if (
+                            assertResourceOfType.camera(item) &&
+                            item.details.systemId === systemId
+                        ) {
+                            return item;
+                        }
+                        const otherSite = findOtherSite(systemId, layoutItems.otherSystems || []);
+                        if (otherSite && 'children' in otherSite) {
+                            const device = otherSite.children.find(
+                                ({ details }) => details.id === id,
+                            );
+                            if (device) {
+                                return device;
+                            }
+                        }
+                        return item;
+                    }),
                     filter(Boolean),
                 ),
                 selectedLayout$.pipe(
@@ -93,9 +113,7 @@ export const createFocusLayoutFactory =
                     id: `{${id}}`,
                     left: 0,
                     resourceId: `{${id}}`,
-                    resourcePath: `cloud://${
-                        'systemId' in node.details ? node.details.systemId : systemId
-                    }.${node.details.id}`,
+                    resourcePath: `cloud://${systemId}.${node.details.id}`,
                     right,
                     rotation: rotation || 0,
                     top: 0,
