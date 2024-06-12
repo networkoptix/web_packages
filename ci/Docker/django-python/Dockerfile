@@ -10,6 +10,8 @@ ENV POETRY_VERSION="1.5.1" \
     POETRY_HOME="/opt/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
+ENV BUILD_COMMIT={{BUILD_COMMIT}}
+
 WORKDIR /app
 RUN set -ex \
     && apt clean -y \

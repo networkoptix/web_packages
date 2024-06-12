@@ -12,7 +12,6 @@ include:
     NX_CLOUD_ACCESS_TOKEN: NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU=
   image:
     name: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-    pull_policy: if-not-present
   before_script:
     - echo "Build commit $BUILD_COMMIT"
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules

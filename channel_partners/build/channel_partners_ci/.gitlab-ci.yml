@@ -3,9 +3,8 @@ include:
 
 variables:
   CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
-  CP_IMAGE_VERSION: '44725'
+  CP_IMAGE_VERSION: '45309'
   CP_DJANGO_PYTHON_IMAGE_TAG: '${CP_IMAGE_VERSION}'
-
 
 # Required CI/CD variables, which should be defined on Gitlab instance layer
 # https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-an-instance:
@@ -21,6 +20,7 @@ docker:build-channel-partners:
       --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
       --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
+    DOCKER_DIR: 'channel_partners/build/channel_partners_ci'
   before_script:
   - !reference [".version-enforced-docker", "before_script"]
   - |
@@ -44,3 +44,16 @@ docker:build-channel-partners:
     - channel_partners/build/channel_partners_ci/*
     - channel_partners/pyproject.toml
     - channel_partners/poetry.lock
+
+docker:build-channel-partners-pulled:
+  stage: docker pull
+  needs:
+    - job: docker:build-channel-partners
+  image:
+    name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
+    pull_policy: always
+  rules:
+    - !reference ["docker:build-channel-partners", "rules"]
+  script:
+    - echo "Pulling ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}"
+    - echo "Build commit $BUILD_COMMIT"

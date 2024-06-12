@@ -3,7 +3,7 @@ include:
 
 variables:
   DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_django_python'
-  CLOUD_IMAGE_VERSION: '44725'
+  CLOUD_IMAGE_VERSION: '45309'
   DJANGO_PYTHON_IMAGE_TAG: '${CLOUD_IMAGE_VERSION}'
 
 
@@ -21,6 +21,7 @@ docker:build-django-python:
       --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
       --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
       --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
+    DOCKER_DIR: 'ci/Docker/django-python'
   before_script:
   - !reference [".version-enforced-docker", "before_script"]
   - |
@@ -45,3 +46,16 @@ docker:build-django-python:
     - cloud/**/poetry.lock
     - cloud/**/poetry.toml
     - cloud/**/allowed_licenses.txt
+
+docker:build-django-python-pulled:
+  stage: docker pull
+  needs:
+    - job: docker:build-django-python
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+    pull_policy: always
+  rules:
+    - !reference ["docker:build-django-python", "rules"]
+  script:
+    - echo "Pulling ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}"
+    - echo "Build commit $BUILD_COMMIT"

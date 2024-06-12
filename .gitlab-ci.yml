@@ -57,7 +57,7 @@ no-changes:
 
 .backend-changes:
   needs:
-    - job: docker:build-django-python
+    - job: docker:build-django-python-pulled
       optional: true
   rules:
     - if: !reference [ .enable_for_mr ]
@@ -68,6 +68,7 @@ no-changes:
         - cloud/pyproject.toml
         - cloud/allowed_licenses.txt
   before_script:
+    - echo "Build commit $BUILD_COMMIT"
     - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
     - cat /app/requirements.txt
     - pip install --upgrade --no-cache-dir -r /app/requirements.txt
@@ -76,16 +77,13 @@ no-changes:
   extends: .backend-changes
   image:
     name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
-    pull_policy: always
   needs:
-    - job: docker:build-django-python
+    - job: docker:build-django-python-pulled
       optional: true
   services:
     - name: mysql:8.0
-      pull_policy: if-not-present
       alias: mysql
     - name: redis:5.0.6-alpine
-      pull_policy: if-not-present
       alias: redis
       command:
         - redis-server
@@ -130,7 +128,6 @@ django-checks:
   extends: .backend-changes
   image:
     name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
-    pull_policy: always
   stage: check
   variables:
     USE_SQLITE: "true"
@@ -245,11 +242,10 @@ open-source:open-source-checker:
 check-python-licenses:
   image:
     name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
-    pull_policy: always
   stage: check
   extends: .backend-changes
   needs:
-    - job: docker:build-django-python
+    - job: docker:build-django-python-pulled
 # Docker must be rebuilt before licenses check
       optional: false
 # Does not produce artifacts anymore, see job logs
@@ -273,9 +269,8 @@ check-python-licenses:
 .cp-backend-changes:
   image:
     name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
-    pull_policy: always
   needs:
-    - job: docker:build-channel-partners
+    - job: docker:build-channel-partners-pulled
       optional: true
   rules:
     - if: !reference [ .enable_for_mr ]
@@ -286,6 +281,7 @@ check-python-licenses:
         - channel_partners/poetry.lock
         - channel_partners/pyproject.toml
   before_script:
+    - echo "Build commit $BUILD_COMMIT"
     - env
     - >
       for i in {1..60}; do
@@ -309,14 +305,12 @@ check-python-licenses:
 .cp-django-python:
   extends: .cp-backend-changes
   needs:
-    - job: docker:build-channel-partners
+    - job: docker:build-channel-partners-pulled
       optional: true
   services:
     - name: postgres:15.3-bullseye
       alias: postgres-cp
-      pull_policy: if-not-present
     - name: redis:5.0.6
-      pull_policy: if-not-present
       alias: redis-cp
       command:
         - redis-server
@@ -432,10 +426,10 @@ approval-check:
   stage: approval
   image:
     name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
-    pull_policy: always
   rules:
     - if: !reference [ .enable_for_mr ]
   script:
+    - echo "Build commit $BUILD_COMMIT"
     - |
         REACTIONS=$(curl -s --header "PRIVATE-TOKEN: $CANCEL_PIPELINE_ACCESS_TOKEN" "https://gitlab.nxvms.dev/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/award_emoji")
 

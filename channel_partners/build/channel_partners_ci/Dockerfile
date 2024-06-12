@@ -6,6 +6,8 @@ ENV PIP_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-r
 ENV PIP_EXTRA_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
 ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
 
+ENV BUILD_COMMIT={{BUILD_COMMIT}}
+
 WORKDIR /app
 RUN set -ex \
     && apt clean -y \
