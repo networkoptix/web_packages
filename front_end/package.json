@@ -67,7 +67,6 @@
         "update-type-blacklist": "export NX_TASK_TARGET_TARGET=lint; echo \"module.exports = [];\" > type-lint-error-count.js; echo \"$(npx esprint check --workers=4)\" > lint_out.txt; echo \"$(node parse-lint-stdout.js)\" > type-lint-error-count.js; rm lint_out.txt",
         "removeDeadCss": "node deadCss.mjs",
         "buildSkins": "node buildSkins.mjs",
-        "presetSkin": "npm run build-open-libs",
         "setSkin": "node setSkin.mjs --skin",
         "presetVarSkin": "npm run build-open-libs",
         "setVarSkin": "node buildSkins.mjs ./common/styles",

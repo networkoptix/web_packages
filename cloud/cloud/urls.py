@@ -88,13 +88,6 @@ urlpatterns = [
     re_path(r'^admin_tools/', include('admin_tools.urls')),
     re_path(r'^zapier/', include('zapier.urls')),
 
-    re_path(r'^apple-app-site-association',
-        TemplateView.as_view(template_name="static/apple-app-site-association",
-                             content_type='application/json')),
-    re_path(r'^\.well-known/apple-app-site-association',
-        TemplateView.as_view(template_name="static/apple-app-site-association",
-                             content_type='application/json')),
-
     # The firebase service worker js file needs to be available at the root to be recognized by the Angular fire module.
     # Since we have no good way to serve a js file at the root without adding a url pattern or nginx conf,
     # we check for it here
@@ -116,7 +109,7 @@ urlpatterns = [
     # Serving DB static for local development
     re_path(r'^static/styles/skin.css', static_serve.skin_styles),
     re_path(r'^static/503.html', static_serve.customizable_files),
-    re_path(r'^static/apple-app-site-association', static_serve.customizable_files),
+    re_path(r'^static/\.well-known', static_serve.customizable_files),
     re_path(r'^static(/\d+/|/)languages.json', static_serve.languages_json),
     re_path(r'^static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$',
             static_serve.customizable_files, name="customizable_static"),
