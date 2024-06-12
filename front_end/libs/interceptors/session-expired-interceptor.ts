@@ -11,6 +11,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { servers } from '@static-variables';
+import { isSessionExpiredError, isUserPwRequiredError } from '@variables/api-errors';
 
 @Injectable()
 export class SessionExpiredInterceptor implements HttpInterceptor {
@@ -70,8 +71,8 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(error => {
                 if (
-                    error?.error?.errorId === servers.errors.oldSessionErrorId ||
-                    error?.error?.resultCode === servers.errors.userPasswordRequired ||
+                    isSessionExpiredError(error) ||
+                    isUserPwRequiredError(error) ||
                     error?.error?.resultCode === servers.errors.vmsRequestFailure
                 ) {
                     const system = this.systemService.getCurrentSystem();
