@@ -2360,7 +2360,6 @@ class ServiceUsage(models.Model):
                 types[service_type] = ServiceUsage.STATUS_OVER_USE
         system_service_current_quantites = SystemServiceCurrentQuantity.objects.filter(
             cloud_system=cloud_system,
-            service_id__in=current_services.keys(),
             organization=cloud_system.organization
         ).values(
             'service_id', 'quantity', 'service__type'

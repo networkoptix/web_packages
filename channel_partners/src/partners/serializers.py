@@ -2182,13 +2182,15 @@ class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
             services[item['service'].id] += item['quantity']
 
         # create
+        quantities = []
         for service_id, quantity in services.items():
-            SystemServiceCurrentQuantity.objects.create(
+            quantities.append(SystemServiceCurrentQuantity(
                 cloud_system=instance,
                 organization=instance.organization,
                 service_id=service_id,
                 quantity=quantity
-            )
+            ))
+        SystemServiceCurrentQuantity.objects.bulk_create(quantities)
         ServiceUsage.check_excess(instance)
         instance.refresh_from_db()
         return instance
