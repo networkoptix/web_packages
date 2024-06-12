@@ -39,6 +39,7 @@ stages:
   - deploy
   - test
   - ft (#ask-ft)
+  - approval
 
 no-changes:
   needs: []
@@ -428,7 +429,7 @@ cp-lint:
     - !reference [".commit-changes", "script"]
 
 approval-check:
-  stage: check
+  stage: approval
   image:
     name: ${CP_DJANGO_PYTHON_IMAGE}:${CP_IMAGE_VERSION}
     pull_policy: always
