@@ -48,7 +48,9 @@ class TestChannelPartnerEvent:
         ChannelPartnerEvent.new_event(ChannelPartnerEvent.SERVICE_CHANGED, system=None, service=service)
         assert ChannelPartnerEvent.objects.filter(service=service, cloud_system=None).count() == 1
 
+
 class TestChannelPartner:
+
     def test_create(self, cloud_test_host, channel_partner_factory):
         root = channel_partner_factory()
         partner = ChannelPartner.objects.create(
@@ -500,16 +502,22 @@ class TestOrganization:
 
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
+
         system_group = system_group_factory(organization=org)
+
         org_system = system_factory(organization=org)
         group_system = system_factory(organization=org, system_group=system_group)
+
         cache_key = organization_system_count(org.id)
+
         assert org.system_count == 2
         assert caches['default'].get(cache_key) == 2
+
         group_system.disconnect_system()
         assert caches['default'].get(cache_key) is None
         assert org.system_count == 1
         assert caches['default'].get(cache_key) == 1
+
         org_system.disconnect_system()
         assert caches['default'].get(cache_key) is None
         assert org.system_count == 0
@@ -837,10 +845,14 @@ class TestSystemGroup:
         assert caches['default'].get(group_key_1_1) == 1
 
     def test_system_count_invalidation_on_change(self, system_factory):
+        # Cache Keys
         group_key_1 = cache_key_cloud_system_group_children_count(self.group_1.id)
         group_key_1_0 = cache_key_cloud_system_group_children_count(self.group_1_0.id)
         group_key_1_1 = cache_key_cloud_system_group_children_count(self.group_1_1.id)
+
         sys = system_factory(organization=self.organization, system_group=self.group_1_1)
+
+        # Initial Assertions
         assert self.group_1_0.system_count == 0
         assert self.group_1_1.system_count == 1
         assert self.group_1.system_count == 2
@@ -851,13 +863,17 @@ class TestSystemGroup:
         # Change group
         sys.system_group = self.group_1_0
         sys.save()
+        # Assertions after changing group
         assert caches['default'].get(group_key_1) == None
         assert caches['default'].get(group_key_1_0) == None
         assert caches['default'].get(group_key_1_1) == None
+
+        # Check system counts
         assert self.group_1_0.system_count == 1
         assert self.group_1_1.system_count == 0
         assert self.group_1.system_count == 2
 
+        # Check cache values
         assert caches['default'].get(group_key_1_0) == 1
         assert caches['default'].get(group_key_1_1) == 0
         assert caches['default'].get(group_key_1) == 2

@@ -842,9 +842,14 @@ class BackendSyncCommandsMixin:
         return self._cache.hlen(key)
 
     def hmget(self, key, *fields, version=None):
+        # Validate and construct the key
         key = self.make_and_validate_key(key, version=version)
+
+        # Validate each field
         for f in fields:
             self.validate_key(f)
+
+        # Call the underlying cache's hmget method with the unpacked fields
         return self._cache.hmget(key, *fields)
 
     def hmset(self, key, data, timeout=DEFAULT_TIMEOUT, version=None):
@@ -938,4 +943,15 @@ class RedisSyncClient(RedisSyncCommandsMixin, RedisCacheClient):
 
 
 class RedisSyncBackend(BackendSyncCommandsMixin, RedisCache):
-    pass
+    def __init__(self, server, params):
+        super().__init__(server, params)
+        self._class = RedisSyncClient  # Use RedisSyncClient instead of RedisCacheClient
+
+    @cached_property
+    def _cache(self):
+        return self._class(self._servers, **self._options)
+
+    def clean_keys(self, *keys, version=None):
+        prefix = self.make_key('', version=version)
+        keys = [k.decode() for k in keys if isinstance(k, bytes) or isinstance(k, bytearray)]
+        return [k.replace(prefix, '') for k in keys]

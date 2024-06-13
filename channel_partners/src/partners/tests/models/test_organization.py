@@ -17,13 +17,19 @@ class TestOrganizationStateChangeNotification:
         self.organization.channel_partner_access_level_id = OrganizationRoles.SYSTEM_HEALTH_VIEWER
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.organization.save()
-        assert len(callbacks) == 0
+        assert "run_organization_state_changed_tasks" not in str(callbacks), "No changes should not trigger a task"
+        assert "run_organization_name_change_tasks" not in str(callbacks), "No changes should not trigger a task"
 
     def test_suspend(self, django_capture_on_commit_callbacks):
         self.organization.state = ChannelPartnerStates.SUSPENDED
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.organization.save()
+
+        # This is due to the caching -- out of scope for this test
+        callbacks = [callback for callback in callbacks if "on_organization_saved" not in str(callback)]
+
         assert len(callbacks) == 1
+
         callbacks[0]()
         self.mocked_task.assert_called_once_with(args=[[self.organization.id]])
 
@@ -31,7 +37,12 @@ class TestOrganizationStateChangeNotification:
         self.organization.state = ChannelPartnerStates.SHUTDOWN
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.organization.save()
+
+        # This is due to the caching -- out of scope for this test
+        callbacks = [callback for callback in callbacks if "on_organization_saved" not in str(callback)]
+
         assert len(callbacks) == 1
+
         callbacks[0]()
         self.mocked_task.assert_called_once_with(args=[[self.organization.id]])
 

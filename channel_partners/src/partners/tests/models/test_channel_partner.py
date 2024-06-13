@@ -84,6 +84,9 @@ class TestChannelPartnerStateChangeNotification:
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.cp_0_1.save()
 
+        # This is due to the caching -- out of scope for this test
+        callbacks = [callback for callback in callbacks if "on_channel_partner_saved" not in str(callback)]
+
         assert len(callbacks) == 2
         for callback in callbacks:
             callback()
@@ -101,6 +104,8 @@ class TestChannelPartnerStateChangeNotification:
         expected_changes = [self.cp_0_0.id, self.org_0_0.id]
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.cp_0_0.save()
+
+        callbacks = [callback for callback in callbacks if "on_channel_partner_saved" not in str(callback)]
 
         assert len(callbacks) == 2
         for callback in callbacks:
@@ -133,6 +138,8 @@ class TestChannelPartnerStateChangeNotification:
         self.cp.state = ChannelPartnerStates.SUSPENDED
         with django_capture_on_commit_callbacks(execute=False) as callbacks:
             self.cp.save()
+
+        callbacks = [callback for callback in callbacks if "on_channel_partner_saved" not in str(callback)]
 
         assert len(callbacks) == 2
         for callback in callbacks:
