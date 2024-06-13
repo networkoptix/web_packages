@@ -96,205 +96,207 @@ nx-modal-wizard {
     }
 }
 
-.modal {
-    &.fade {
-        transition: none !important;
-    }
-
-    &-holder {
-        animation: slide-up-fade-in ease .1s;
-
-        .modal-dialog {
-            transition: none;
-            margin-top: 96px; // double the header height
+.nx-legacy-dialog-style {
+    .modal {
+        &.fade {
+            transition: none !important;
         }
-    }
 
-    &-content {
-        border: none !important;
-        border-radius: 2px !important;
-        box-shadow: 0 1rem 2rem 0 transparentize(colors.$dark15, 0.8) !important;
-    }
+        &-holder {
+            animation: slide-up-fade-in ease .1s;
 
-    &-paragraph,
-    &-paragraph-light {
-        padding-bottom: 15px !important;
-
-        p {
-            line-height: 10px !important;
+            .modal-dialog {
+                transition: none;
+                margin-top: 96px; // double the header height
+            }
         }
-    }
 
-    &-paragraph-light {
-        color: var(--light16);
-        padding-top: 5px;
-    }
-
-    &-header {
-        position: relative;
-        background-color: var(--dialog-header-bg);
-        border-top: 1px solid transparent !important;
-        border-bottom: 1px solid var(--dialog-border-color) !important;
-        padding: vars.$modal-title-padding 1rem !important;
-        border-radius: 2px 2px 0 0 !important;
-
-        .modal-title {
-            @include typography.medium14nocolor;
-            color: var(--card-header-text);
-            line-height: vars.$modal-title-line-height  !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-    }
-
-    &-header, &-info-header {
-        .close {
-            color: var(--card-header-text) !important;
-            opacity: 1 !important;
-            width: 32px !important;
-            height: 32px !important;
-            position: absolute !important;
-            right: 6px !important;
-            top: 6px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin: 0 !important;
-            padding: 0 !important;
+        &-content {
+            border: none !important;
             border-radius: 2px !important;
-            outline: none !important; // Fix for mobile ios to remove blue circle.
+            box-shadow: 0 1rem 2rem 0 transparentize(colors.$dark15, 0.8) !important;
+        }
 
-            &:before,
-            &:after {
-                position: absolute;
-                content: " ";
-                height: 16px;
-                width: 1px;
-                background-color: var(--card-header-text);
+        &-paragraph,
+        &-paragraph-light {
+            padding-bottom: 15px !important;
+
+            p {
+                line-height: 10px !important;
             }
+        }
 
-            .close-content {
-                border-radius: 2px !important;
+        &-paragraph-light {
+            color: var(--light16);
+            padding-top: 5px;
+        }
+
+        &-header {
+            position: relative;
+            background-color: var(--dialog-header-bg);
+            border-top: 1px solid transparent !important;
+            border-bottom: 1px solid var(--dialog-border-color) !important;
+            padding: vars.$modal-title-padding 1rem !important;
+            border-radius: 2px 2px 0 0 !important;
+
+            .modal-title {
+                @include typography.medium14nocolor;
+                color: var(--card-header-text);
+                line-height: vars.$modal-title-line-height  !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
+        }
 
-            &:hover,
-            &:active,
-            &:focus {
-                box-shadow: none !important;
-            }
-
-            &:hover {
-
-                &:before,
-                &:after {
-                    background-color: var(--btn-close-hover-color);
-                }
-
-                .close-content {
-                    background-color: var(--btn-close-hover-bg) !important;
-                }
-            }
-
-            &:active {
-
-                &:before,
-                &:after {
-                    background-color: var(--btn-close-active-color);
-                }
-
-                .close-content {
-                    background-color: var(--btn-close-active-bg) !important;
-                }
-            }
-
-            &-content {
-                width: 40px !important;
-                height: 40px !important;
+        &-header, &-info-header {
+            .close {
+                color: var(--card-header-text) !important;
+                opacity: 1 !important;
+                width: 32px !important;
+                height: 32px !important;
+                position: absolute !important;
+                right: 6px !important;
+                top: 6px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-radius: 2px !important;
+                outline: none !important; // Fix for mobile ios to remove blue circle.
 
-                .close-icon {
-                    margin: 0 !important;
+                &:before,
+                &:after {
+                    position: absolute;
+                    content: " ";
+                    height: 16px;
+                    width: 1px;
+                    background-color: var(--card-header-text);
+                }
+
+                .close-content {
+                    border-radius: 2px !important;
+                }
+
+                &:hover,
+                &:active,
+                &:focus {
+                    box-shadow: none !important;
+                }
+
+                &:hover {
+
+                    &:before,
+                    &:after {
+                        background-color: var(--btn-close-hover-color);
+                    }
+
+                    .close-content {
+                        background-color: var(--btn-close-hover-bg) !important;
+                    }
+                }
+
+                &:active {
+
+                    &:before,
+                    &:after {
+                        background-color: var(--btn-close-active-color);
+                    }
+
+                    .close-content {
+                        background-color: var(--btn-close-active-bg) !important;
+                    }
+                }
+
+                &-content {
+                    width: 40px !important;
+                    height: 40px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+
+                    .close-icon {
+                        margin: 0 !important;
+                    }
                 }
             }
         }
-    }
 
-    &-body {
-        padding: 1rem 1rem 0 !important;
-        background-color: var(--dialog-bg) !important;
-
-        label {
-            margin: 0 0 .5rem !important;
-            padding: 0;
-        }
-
-        .input-error,
-        .input-info {
-            margin: .5rem 0 0 !important;
-
-            &+a {
-                margin: .5rem 0 0 !important;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 1rem !important;
-
-            &:last-child {
-                margin-bottom: 0 !important;
-            }
-        }
-
-        .checkbox {
-            margin: 0 !important;
-        }
-
-        .help-block {
-            display: block;
-            background-color: transparent;
-            color: var(--label-color);
-            padding: .5rem 0 0;
-            overflow-wrap: break-word;
-        }
-
-        .clipboard-block {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-
-            &--info {
-                padding-right: 1rem;
-                word-break: break-all;
-            }
-        }
-
-        p:last-of-type:not(:first-of-type) {
-            margin-bottom: 0;
-        }
-    }
-
-    &-footer {
-        & {
+        &-body {
+            padding: 1rem 1rem 0 !important;
             background-color: var(--dialog-bg) !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            padding: 1rem !important;
-            border-radius: 2px 2px 0 0 !important;
-        }
 
-        &>* {
-            margin: 0 0.5rem 0 0 !important;
+            label {
+                margin: 0 0 .5rem !important;
+                padding: 0;
+            }
 
-            &:last-child {
+            .input-error,
+            .input-info {
+                margin: .5rem 0 0 !important;
+
+                &+a {
+                    margin: .5rem 0 0 !important;
+                }
+            }
+
+            .form-group {
+                margin-bottom: 1rem !important;
+
+                &:last-child {
+                    margin-bottom: 0 !important;
+                }
+            }
+
+            .checkbox {
                 margin: 0 !important;
             }
+
+            .help-block {
+                display: block;
+                background-color: transparent;
+                color: var(--label-color);
+                padding: .5rem 0 0;
+                overflow-wrap: break-word;
+            }
+
+            .clipboard-block {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                &--info {
+                    padding-right: 1rem;
+                    word-break: break-all;
+                }
+            }
+
+            p:last-of-type:not(:first-of-type) {
+                margin-bottom: 0;
+            }
         }
 
-        button {
-            min-width: 80px;
+        &-footer {
+            & {
+                background-color: var(--dialog-bg) !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                border-radius: 2px 2px 0 0 !important;
+            }
+
+            &>* {
+                margin: 0 0.5rem 0 0 !important;
+
+                &:last-child {
+                    margin: 0 !important;
+                }
+            }
+
+            button {
+                min-width: 80px;
+            }
         }
     }
 }

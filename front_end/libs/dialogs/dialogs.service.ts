@@ -45,7 +45,7 @@ export class NxDialogsService {
             // is properly migrated
         };
 
-        return this.openV2<any, any>(component, config);
+        return this.openV1<any, any>(component, config);
     }
 
     public async edit(genericEditModalContent: GenericEditModalContent);
@@ -77,10 +77,52 @@ export class NxDialogsService {
 
         const component = await import('./edit/edit.component').then(m => m.EditModalContent);
 
-        return this.openV2<any, any>(component, { data, disableClose: true });
+        return this.openV1<any, any>(component, { data, disableClose: true });
         // Also disabling close here
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
+
+    /** @deprecated For backwards compatibility with legacy styling */
+    private openV1<R, D = never, T = unknown>(
+        component: ComponentType<T>,
+        customconfig: DialogConfig<D> = {},
+    ): Promise<R> {
+        const dialogConfig: DialogConfig<D> = {
+            width: DIALOG_SIZE.NORMAL, // Default width
+            ...customconfig,
+        };
+
+        const { panelClass } = dialogConfig;
+        if (panelClass) {
+            dialogConfig.panelClass = (
+                typeof panelClass === 'string' ? [panelClass] : panelClass
+            ).concat('nx-legacy-dialog-style');
+        } else {
+            dialogConfig.panelClass = 'nx-legacy-dialog-style';
+        }
+
+        return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
+    }
+
+    /** @deprecated For backwards compatibility with legacy styling */
+    private dialogV1Factory<DT extends Dt.DialogType, CT = unknown>(
+        componentPromise: () => Promise<ComponentType<CT>>,
+        staticConfig: DialogConfig<never> = {},
+    ): (
+        data: DT['data'] extends void ? null | void : DT['data'],
+        instanceConfig?: DialogConfig<never>,
+    ) => Promise<DT['return']> {
+        return async (data, instanceConfig = {}) => {
+            const component = await componentPromise();
+            const configWithData: DialogConfig<DT['data']> = {
+                ...staticConfig,
+                ...instanceConfig,
+                data,
+            };
+            configWithData.autoFocus ??= 'dialog';
+            return this.openV1(component, configWithData);
+        };
+    }
 
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
@@ -128,7 +170,7 @@ export class NxDialogsService {
     }
 
     /* General use */
-    generic = this.dialogV2Factory<Dt.Generic>(() =>
+    generic = this.dialogV1Factory<Dt.Generic>(() =>
         import('./generic/generic.component').then(m => m.GenericModalContent),
     );
 
@@ -141,7 +183,7 @@ export class NxDialogsService {
             data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },
             // Only close button
         };
-        return this.openV2(component, dialogConfig);
+        return this.openV1(component, dialogConfig);
     }
 
     async confirm(
@@ -156,7 +198,7 @@ export class NxDialogsService {
             data: { ...data, footer: { actionable: true, ...data.footer } },
             // With action/cancel buttons
         };
-        return this.openV2(component, dialogConfig);
+        return this.openV1(component, dialogConfig);
     }
 
     async apply(data: Dt.Apply['data']): Promise<Dt.Apply['return']> {
@@ -166,31 +208,31 @@ export class NxDialogsService {
             disableClose: true,
             hasBackdrop: true,
         };
-        return this.openV2(component, dialogConfig);
+        return this.openV1(component, dialogConfig);
     }
 
-    message = this.dialogV2Factory<Dt.Message>(
+    message = this.dialogV1Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
         { autoFocus: '#message' },
     );
 
-    tosUpdate = this.dialogV2Factory<Dt.TosUpdate>(
+    tosUpdate = this.dialogV1Factory<Dt.TosUpdate>(
         () => import('./tos-update/tos-update.component').then(m => m.TosUpdateModalContent),
         { disableClose: true, width: DIALOG_SIZE.LARGE },
     );
 
-    tosRejected = this.dialogV2Factory<Dt.TosRejected>(
+    tosRejected = this.dialogV1Factory<Dt.TosRejected>(
         () => import('./tos-update/tos-rejected.component').then(m => m.TosRejectedModalContent),
         { disableClose: true, width: DIALOG_SIZE.NORMAL },
     );
 
     /* WebAdmin */
-    wizard = this.dialogV2Factory<Dt.Wizard>(
+    wizard = this.dialogV1Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
         { width: DIALOG_SIZE.SMALL, disableClose: true, hasBackdrop: false },
     );
 
-    loginWebAdmin = this.dialogV2Factory<Dt.LoginWebAdmin>(
+    loginWebAdmin = this.dialogV1Factory<Dt.LoginWebAdmin>(
         () =>
             import('./login-webadmin/login-webadmin.component').then(
                 m => m.LoginWebadminModalContent,
@@ -202,7 +244,7 @@ export class NxDialogsService {
         },
     );
 
-    temporaryUserLogin = this.dialogV2Factory<Dt.TemporaryUserLogin>(
+    temporaryUserLogin = this.dialogV1Factory<Dt.TemporaryUserLogin>(
         () =>
             import('./temporary-auth-login/temporary-auth-login.component').then(
                 m => m.TemporaryAuthLoginComponent,
@@ -225,7 +267,7 @@ export class NxDialogsService {
         });
     }
 
-    updateSession = this.dialogV2Factory<Dt.UpdateSession>(
+    updateSession = this.dialogV1Factory<Dt.UpdateSession>(
         () =>
             import('./update-session/update-session.component').then(
                 m => m.NxUpdateSessionModalContent,
@@ -233,7 +275,7 @@ export class NxDialogsService {
         { disableClose: true },
     );
 
-    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(
+    client2faWarning = this.dialogV1Factory<Dt.Client2faWarning>(
         () =>
             import('./two-fa/client-2fa-warning/client-2fa-warning.component').then(
                 m => m.Client2faWarningModalContent,
@@ -242,7 +284,7 @@ export class NxDialogsService {
     );
 
     /* Account */
-    account2faEnable = this.dialogV2Factory<Dt.EnableAccount2fa>(
+    account2faEnable = this.dialogV1Factory<Dt.EnableAccount2fa>(
         () =>
             import('./two-fa/enable-account-2fa/enable-account-2fa.component').then(
                 m => m.NxEnableAccount2faModalContent,
@@ -250,7 +292,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL },
     );
 
-    account2faDisable = this.dialogV2Factory<Dt.DisableAccount2fa>(
+    account2faDisable = this.dialogV1Factory<Dt.DisableAccount2fa>(
         () =>
             import('./two-fa/disable-account-2fa/disable-account-2fa.component').then(
                 m => m.NxDisableAccount2faModalContent,
@@ -258,7 +300,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
     );
 
-    account2faCodeToggle = this.dialogV2Factory<Dt.Require2faCodeOnLogin>(
+    account2faCodeToggle = this.dialogV1Factory<Dt.Require2faCodeOnLogin>(
         () =>
             import('./two-fa/require-code-on-login/require-code-on-login.component').then(
                 m => m.NxRequire2faCodeOnLoginModalContent,
@@ -266,7 +308,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL, restoreFocus: false, autoFocus: 'input' },
     );
 
-    account2faNewBackupCodes = this.dialogV2Factory<Dt.New2faBackupCodes>(
+    account2faNewBackupCodes = this.dialogV1Factory<Dt.New2faBackupCodes>(
         () =>
             import('./two-fa/new-backup-codes/new-backup-codes.component').then(
                 m => m.NxNew2faBackupCodesModalContent,
@@ -274,7 +316,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL, disableClose: true },
     );
 
-    account2faPasswordChange = this.dialogV2Factory<Dt.PasswordChange2fa>(
+    account2faPasswordChange = this.dialogV1Factory<Dt.PasswordChange2fa>(
         () =>
             import('./two-fa/password-change/password-change.component').then(
                 m => m.NxPasswordChange2faModalContent,
@@ -285,7 +327,7 @@ export class NxDialogsService {
     /* Systems */
 
     /* Channel partners */
-    createChannelPartner = this.dialogV2Factory<Dt.AddChannelPartner>(
+    createChannelPartner = this.dialogV1Factory<Dt.AddChannelPartner>(
         () =>
             import('./channel-partners/add-partner/add-partner.component').then(
                 m => m.AddPartnerModalContent,
@@ -293,7 +335,7 @@ export class NxDialogsService {
         { autoFocus: 'input', width: '313px' },
     );
 
-    updateChannelPartner = this.dialogV2Factory<Dt.EditChannelPartner>(() =>
+    updateChannelPartner = this.dialogV1Factory<Dt.EditChannelPartner>(() =>
         import('./channel-partners/edit-partner/edit-partner.component').then(
             m => m.NxEditPartnerModalContent,
         ),
@@ -307,13 +349,13 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.EXTRA_SMALL },
     );
 
-    updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(() =>
+    updatePartnerUser = this.dialogV1Factory<Dt.EditPartnerUser>(() =>
         import('./channel-partners/edit-partner-user/edit-partner-user.component').then(
             m => m.NxEditPartnerUserModalContent,
         ),
     );
 
-    createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
+    createOrganization = this.dialogV1Factory<Dt.AddOrganization>(
         () =>
             import('./channel-partners/add-organization/add-organization.component').then(
                 m => m.AddOrganizationModalContent,
@@ -321,31 +363,31 @@ export class NxDialogsService {
         { autoFocus: 'input' },
     );
 
-    updateOrganization = this.dialogV2Factory<Dt.EditOrganization>(() =>
+    updateOrganization = this.dialogV1Factory<Dt.EditOrganization>(() =>
         import('./channel-partners/edit-organization/edit-organization.component').then(
             m => m.NxEditOrganizationModalContent,
         ),
     );
 
-    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(() =>
+    addOrgUser = this.dialogV1Factory<Dt.AddOrgUser>(() =>
         import('./channel-partners/add-org-user/add-org-user.component').then(
             m => m.NxAddOrgUserModalContent,
         ),
     );
 
-    editOrgUser = this.dialogV2Factory<Dt.EditOrgUser>(() =>
+    editOrgUser = this.dialogV1Factory<Dt.EditOrgUser>(() =>
         import('./channel-partners/edit-org-user/edit-org-user.component').then(
             m => m.NxEditOrgUserModalContent,
         ),
     );
 
-    changeCpState = this.dialogV2Factory<Dt.ChangeCpState>(() =>
+    changeCpState = this.dialogV1Factory<Dt.ChangeCpState>(() =>
         import('./channel-partners/change-state/change-state.component').then(
             m => m.NxChangeStateModalContent,
         ),
     );
 
-    createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
+    createSystemGroup = this.dialogV1Factory<Dt.CreateSystemGroup>(
         () =>
             import('./channel-partners/create-system-group/create-system-group.component').then(
                 m => m.CreateSystemGroupModalContent,
@@ -353,7 +395,7 @@ export class NxDialogsService {
         { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
     );
 
-    updateGroupName = this.dialogV2Factory<Dt.UpdateSystemGroup>(
+    updateGroupName = this.dialogV1Factory<Dt.UpdateSystemGroup>(
         () =>
             import('./channel-partners/update-system-group/update-system-group.component').then(
                 m => m.UpdateSystemGroupModalContent,
@@ -363,7 +405,7 @@ export class NxDialogsService {
         },
     );
 
-    moveGroupItem = this.dialogV2Factory<Dt.MoveGroupItem>(
+    moveGroupItem = this.dialogV1Factory<Dt.MoveGroupItem>(
         () =>
             import('./channel-partners/move-group-item/move-group-item.component').then(
                 m => m.MoveGroupItemModalContent,
@@ -371,7 +413,7 @@ export class NxDialogsService {
         { width: '360px' },
     );
 
-    moveSystemItem = this.dialogV2Factory<Dt.MoveSystemItem>(
+    moveSystemItem = this.dialogV1Factory<Dt.MoveSystemItem>(
         () =>
             import('./channel-partners/move-system-item/move-system-item.component').then(
                 m => m.MoveSystemItemModalContent,
@@ -387,7 +429,7 @@ export class NxDialogsService {
         { width: '360px' },
     );
 
-    changeService = this.dialogV2Factory<Dt.ChangeService>(
+    changeService = this.dialogV1Factory<Dt.ChangeService>(
         () =>
             import('./channel-partners/change-service/change-service.component').then(
                 m => m.NxChangeServiceModalContent,
@@ -397,7 +439,7 @@ export class NxDialogsService {
 
     /* Channel Partner Reports */
 
-    viewUsageDetails = this.dialogV2Factory<Dt.ViewUsageDetails>(
+    viewUsageDetails = this.dialogV1Factory<Dt.ViewUsageDetails>(
         () =>
             import('./channel-partners/view-usage-details/view-usage-details.component').then(
                 m => m.NxUsageDetailsModalContent,
@@ -406,30 +448,30 @@ export class NxDialogsService {
     );
 
     /* Admin */
-    connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(() =>
+    connectLocalToCloud = this.dialogV1Factory<Dt.ConnectLocalToCloud>(() =>
         import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),
     );
 
-    disconnect = this.dialogV2Factory<Dt.Disconnect>(() =>
+    disconnect = this.dialogV1Factory<Dt.Disconnect>(() =>
         import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent),
     );
 
-    removeSystem = this.dialogV2Factory<Dt.RemoveSystem>(
+    removeSystem = this.dialogV1Factory<Dt.RemoveSystem>(
         () =>
             import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent),
         { autoFocus: 'input' },
     );
 
-    merge = this.dialogV2Factory<Dt.MergeRefactored>(
+    merge = this.dialogV1Factory<Dt.MergeRefactored>(
         () => import('./merge/merge.component').then(m => m.MergeModalContent),
         { disableClose: true },
     );
 
-    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(() =>
+    mergeRefactored = this.dialogV1Factory<Dt.MergeRefactored>(() =>
         import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
     );
 
-    toggleSystem2fa = this.dialogV2Factory<Dt.ToggleSystem2fa>(
+    toggleSystem2fa = this.dialogV1Factory<Dt.ToggleSystem2fa>(
         () =>
             import('./two-fa/toggle-system-2fa/toggle-system-2fa.component').then(
                 m => m.ToggleSystem2faModalContent,
@@ -437,7 +479,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
     );
 
-    cantEnableSystem2fa = this.dialogV2Factory<Dt.CantEnableSystem2fa>(
+    cantEnableSystem2fa = this.dialogV1Factory<Dt.CantEnableSystem2fa>(
         () =>
             import('./two-fa/cant-enable-system-2fa/cant-enable-system-2fa.component').then(
                 m => m.NxCantEnableSystem2faModalContent,
@@ -494,7 +536,7 @@ export class NxDialogsService {
     );
 
     /* Cameras */
-    updateCameraCredentials = this.dialogV2Factory<Dt.UpdateCameraCredentials>(
+    updateCameraCredentials = this.dialogV1Factory<Dt.UpdateCameraCredentials>(
         () =>
             import('./update-camera-credentials/update-camera-credentials.component').then(
                 m => m.UpdateCameraCredentialsModalContent,
@@ -503,15 +545,15 @@ export class NxDialogsService {
     );
 
     /* Users */
-    addUser = this.dialogV2Factory<Dt.AddUser>(() =>
+    addUser = this.dialogV1Factory<Dt.AddUser>(() =>
         import('./add-user/add-user.component').then(m => m.AddUserModalContent),
     );
 
-    removeUser = this.dialogV2Factory<Dt.RemoveUser>(() =>
+    removeUser = this.dialogV1Factory<Dt.RemoveUser>(() =>
         import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent),
     );
 
-    deleteCloudUser = this.dialogV2Factory<Dt.DeleteCloudUser>(
+    deleteCloudUser = this.dialogV1Factory<Dt.DeleteCloudUser>(
         () =>
             import('./delete-cloud-user/delete-cloud-user.component').then(
                 m => m.DeleteCloudUserModalContent,
@@ -519,46 +561,46 @@ export class NxDialogsService {
         { autoFocus: 'input' },
     );
 
-    changePassword = this.dialogV2Factory<Dt.ChangePassword>(() =>
+    changePassword = this.dialogV1Factory<Dt.ChangePassword>(() =>
         import('./change-password/change-password.component').then(
             m => m.ChangePasswordModalContent,
         ),
     );
 
     /* Servers */
-    restartServer = this.dialogV2Factory<Dt.RestartServer>(() =>
+    restartServer = this.dialogV1Factory<Dt.RestartServer>(() =>
         import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent),
     );
 
-    resetServer = this.dialogV2Factory<Dt.ResetServer>(() =>
+    resetServer = this.dialogV1Factory<Dt.ResetServer>(() =>
         import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent),
     );
 
-    detachServer = this.dialogV2Factory<Dt.DetachServer>(() =>
+    detachServer = this.dialogV1Factory<Dt.DetachServer>(() =>
         import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent),
     );
 
     /* Storage */
-    addStorage = this.dialogV2Factory<Dt.AddStorage>(() =>
+    addStorage = this.dialogV1Factory<Dt.AddStorage>(() =>
         import('./add-storage/add-storage.component').then(m => m.AddStorageModalContent),
     );
 
-    changeStorage = this.dialogV2Factory<Dt.ChangeStorage>(() =>
+    changeStorage = this.dialogV1Factory<Dt.ChangeStorage>(() =>
         import('./change-storage/change-storage.component').then(m => m.ChangeStorageModalContent),
     );
 
-    reserveSpaceWarning = this.dialogV2Factory<Dt.ReserveSpaceWarning>(() =>
+    reserveSpaceWarning = this.dialogV1Factory<Dt.ReserveSpaceWarning>(() =>
         import('./reserve-space-warning/reserve-space-warning.component').then(
             m => m.ReserveSpaceWarningModalContent,
         ),
     );
 
-    resetBackupSettings = this.dialogV2Factory<Dt.ResetBackup>(() =>
+    resetBackupSettings = this.dialogV1Factory<Dt.ResetBackup>(() =>
         import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent),
     );
 
     /* Bookmarks */
-    moreDevices = this.dialogV2Factory<Dt.MoreDevices>(
+    moreDevices = this.dialogV1Factory<Dt.MoreDevices>(
         () =>
             import('./bookmarks/more-devices/more-devices.component').then(
                 m => m.NxMoreDevicesModalContent,
@@ -566,13 +608,13 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' },
     );
 
-    moreTags = this.dialogV2Factory<Dt.MoreTags>(
+    moreTags = this.dialogV1Factory<Dt.MoreTags>(
         () =>
             import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
         { width: DIALOG_SIZE.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' },
     );
 
-    bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
+    bookmarkDetails = this.dialogV1Factory<Dt.BookmarkDetails>(
         () =>
             import('./bookmarks/card-modal/bookmarks-card-modal.component').then(
                 m => m.NxBookmarksCardModalComponent,
@@ -580,7 +622,7 @@ export class NxDialogsService {
         { panelClass: 'no-container-shadow' },
     );
 
-    bookmarkDownload = this.dialogV2Factory<Dt.BookmarkDownload>(
+    bookmarkDownload = this.dialogV1Factory<Dt.BookmarkDownload>(
         () =>
             import('./bookmarks/download-modal/bookmark-download.component').then(
                 m => m.NxBookmarkDownloadComponent,
@@ -608,7 +650,7 @@ export class NxDialogsService {
                 ...customConfig,
                 data,
             };
-            return this.openV2(component, configWithData);
+            return this.openV1(component, configWithData);
         };
     }
 
@@ -620,7 +662,7 @@ export class NxDialogsService {
     );
 
     /* View */
-    selectTimeRange = this.dialogV2Factory<Dt.SelectTimeRange>(
+    selectTimeRange = this.dialogV1Factory<Dt.SelectTimeRange>(
         () =>
             import('./select-time-range-native-fallback/select-time-range.component').then(
                 m => m.SelectTimeRangeModalContent,
@@ -628,7 +670,7 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
     );
 
-    selectWebGlTimeRange = this.dialogV2Factory<Dt.WebGlSelectTimeRange>(
+    selectWebGlTimeRange = this.dialogV1Factory<Dt.WebGlSelectTimeRange>(
         () =>
             import('./webgl-select-time-range/select-time-range.component').then(
                 m => m.WebGlSelectTimeRangeModalContent,

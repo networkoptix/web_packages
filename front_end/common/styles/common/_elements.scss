@@ -190,17 +190,19 @@ span.marked {
     background-color: var(--dialog-overlay-bg) !important;
 }
 
-.cdk-dialog-container {
-    // <p> has bottom margin which can create a gap between the body and footer
-    background-color: var(--dialog-bg);
-    box-shadow: var(--dialog-box-shadow);
+.cdk-overlay-pane.nx-legacy-dialog-style {
+    .cdk-dialog-container {
+        // <p> has bottom margin which can create a gap between the body and footer
+        background-color: var(--dialog-bg);
+        box-shadow: var(--dialog-box-shadow);
+    }
 
     // Add "panelClass: 'no-container-shadow'" in the Dialog's config to apply this class
-    .no-container-shadow & {
+    &.no-container-shadow .cdk-dialog-container {
         box-shadow: none;
     }
 
-    .no-container-background & {
+    &.no-container-background .cdk-dialog-container {
         box-shadow: none;
         background: none;
     }
@@ -227,4 +229,3 @@ span.marked {
 .cdk-virtual-scroll-content-wrapper {
     width: 100%;
 }
-
