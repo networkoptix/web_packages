@@ -1,7 +1,6 @@
 import datetime
 import json
 import uuid
-from enum import StrEnum
 
 import structlog
 from celery import (
@@ -22,6 +21,7 @@ from channel_partners import settings
 from channel_partners.storages import ReportsStorage
 from partners.models import (
     ChannelPartner,
+    HierarchyLevels,
     Organization,
 )
 from partners.services.reports_export_service import (
@@ -29,6 +29,7 @@ from partners.services.reports_export_service import (
     OrganizationReportGenerator,
     ReportFormat,
 )
+from partners.tasks.constants import ReportTaskState
 from tools.helpers import cast_uuid
 
 
@@ -37,16 +38,6 @@ logger = structlog.get_logger(__name__)
 
 class TaskRetry(Exception):
     pass
-
-
-class ReportTaskState(StrEnum):
-    success = 'success'
-    failed = 'failed'
-    pending = 'pending'
-
-    @classmethod
-    def states(cls):
-        return list(map(lambda c: c.value, cls))
 
 
 def get_cached_report_key(
@@ -64,7 +55,8 @@ def generate_report(channel_partner_id: str = None,
                     report_date: str = None,
                     period_start: str = None,
                     user_id: int = None,
-                    report_format: ReportFormat = ReportFormat.xlsx):
+                    report_format: ReportFormat = ReportFormat.xlsx,
+                    hierarchy_level: int = HierarchyLevels.own):
     organization_id = cast_uuid(organization_id)
     channel_partner_id = cast_uuid(channel_partner_id)
     period_start = datetime.datetime.strptime(period_start, '%Y-%m-%d').date() if period_start else None
@@ -72,9 +64,14 @@ def generate_report(channel_partner_id: str = None,
     task_id = current_task.request.id
     retry_count = current_task.request.retries
     max_retries = current_task.max_retries
-    if report_format not in (ReportFormat.xlsx, ReportFormat.csv):
-        logger.warning('Unsupported format', format=report_format, task_id=current_task.request.id)
-        raise ValueError(f'Unsupported format format={report_format}')
+    match report_format:
+        case ReportFormat.xlsx:
+            file_ext = 'xlsx'
+        case ReportFormat.csv:
+            file_ext = 'zip'
+        case _:
+            logger.warning('Unsupported format', format=report_format, task_id=task_id)
+            raise ValueError(f'Unsupported format format={report_format}')
     if not channel_partner_id and not organization_id:
         logger.warning('Missing channel_partner_id or organization_id', task_id=current_task.request.id)
         raise ValueError('Missing channel_partner_id or organization_id')
@@ -92,6 +89,7 @@ def generate_report(channel_partner_id: str = None,
             report_date=report_date,
             period_start=period_start,
             report_format=report_format,
+            hierarchy_level=hierarchy_level,
         )
     else:
         organization = Organization.objects.get(id=organization_id)
@@ -100,6 +98,7 @@ def generate_report(channel_partner_id: str = None,
             report_date=report_date,
             period_start=period_start,
             report_format=report_format,
+            hierarchy_level=hierarchy_level,
         )
     try:
         fp = generator.stream()
@@ -113,7 +112,7 @@ def generate_report(channel_partner_id: str = None,
                                       report_format=report_format)
             )
         raise TaskRetry('Failed to generate report. Retrying...')
-    file_name = f'{organization_id or channel_partner_id}/{task_id}.{report_format}'
+    file_name = f'{organization_id or channel_partner_id}/{task_id}.{file_ext}'
     storage = ReportsStorage()
     try:
         filename = storage.save(file_name, fp)

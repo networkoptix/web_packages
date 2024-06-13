@@ -130,7 +130,7 @@ class TestGenerateReportCsv:
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
                                  report_format=self.report_format)
-        pattern = name_pattern.format(self.channel_partner_id, self.report_format)
+        pattern = name_pattern.format(self.channel_partner_id, 'zip')
         assert re.match(pattern, result)
         self.spy_storage_save.assert_called_once()
         assert result in self.spy_storage_save.mock_calls[0].args
@@ -146,7 +146,7 @@ class TestGenerateReportCsv:
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
                                  report_format=self.report_format)
-        pattern = name_pattern.format(self.organization_id, self.report_format)
+        pattern = name_pattern.format(self.organization_id, 'zip')
         assert re.match(pattern, result)
 
     def test_unsupported_format(self):

@@ -9,6 +9,7 @@ from typing import (
 import structlog
 from celery.result import AsyncResult
 from django.core.cache import caches
+from django.db.models import F
 from django.urls import converters
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
@@ -32,8 +33,11 @@ from partners.authentication import NxCloudOauthTokenAuthentication
 from partners.models import (
     ChannelPartner,
     ChannelPartnerService,
+    ChannelPartnerToUser,
     CloudSystemId,
+    HierarchyLevels,
     Organization,
+    OrganizationToUser,
 )
 from partners.serialization.usage_reports_serializers import (
     ChannelPartnerExpiringServiceReportSerializer,
@@ -50,7 +54,6 @@ from partners.serialization.usage_reports_serializers import (
     RegularUsageDetailRecordSerializer,
     ReportExportParamSerializer,
     ReportPeriodParamSerializer,
-    SystemUsageSerializer,
 )
 from partners.services.usage_reports_service import (
     ChannelPartnerExpiringServiceReport,
@@ -62,10 +65,9 @@ from partners.services.usage_reports_service import (
     OrganizationReportsService,
     RegularUsageDetailRecord,
     ReportSnapshotDoesNotExists,
-    SystemRegularUsage,
 )
+from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
-    ReportTaskState,
     generate_report,
     get_cached_report_key,
     get_report_result,
@@ -74,10 +76,28 @@ from partners.views import (
     DefaultPagination,
     ParentLookUpMixin,
 )
+from tools.helpers import get_path_from_parent
 
 
 logger = structlog.get_logger(__name__)
 DAILY_REPORTS_LIMIT = 100
+
+
+def get_hierarchy_level(entity, user) -> int | None:
+    if isinstance(entity, Organization):
+        if OrganizationToUser.objects.filter(organization=entity, user=user).exists():
+            return HierarchyLevels.own
+        entity = entity.channel_partner
+    user_relation = (
+        ChannelPartnerToUser.objects
+        .filter(user=user, channel_partner_id__in=get_path_from_parent(entity))
+        .annotate(path=F('channel_partner__path'))
+        .order_by('-channel_partner__path__len').first()
+    )
+    if not user_relation:
+        return None
+    return len(entity.path or []) - len(user_relation.path or [])
+
 
 class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericViewSet):
     http_method_names = ['get', 'post']
@@ -152,6 +172,13 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
                         reason=result['reason'])
         return result
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['hierarchy_level'] = get_hierarchy_level(self.get_entity(), self.request.user)
+        if context['hierarchy_level'] is None:
+            # It must be filtered in permissions check, but leave it to ensure the hierarchy level is set
+            raise PermissionDenied(detail='You do not have permission to access this report.')
+        return context
 
 
 @extend_schema(
@@ -187,26 +214,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
         except ReportSnapshotDoesNotExists:
             raise PermissionDenied(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
-        serializer = OrganizationUsageReportRecordSerializer(instance=report, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @extend_schema(
-        summary='Get an organization systems report.',
-        responses={'200': SystemUsageSerializer(many=True)},
-        parameters=[OpenApiParameter('service_id',
-                                     location='path',
-                                     type=OpenApiTypes.UUID,
-                                     description='The primary key of the service',
-                                     required=False)],
-    )
-    @action(
-        detail=True,
-        methods=['get'],
-    )
-    def system_reports(self, request, *args, **kwargs):
-        report: List[SystemRegularUsage] = self.get_service_report(
-            OrganizationReportsService.get_regular_system_reports)
-        serializer = SystemUsageSerializer(instance=report, many=True)
+        serializer = OrganizationUsageReportRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -225,7 +234,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     def regular_detail_table(self, request, *args, **kwargs):
         report: List[RegularUsageDetailRecord] = self.get_service_report(
             OrganizationReportsService.get_regular_detail_table)
-        serializer = RegularUsageDetailRecordSerializer(instance=report, many=True)
+        serializer = RegularUsageDetailRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -244,7 +254,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     def expiring_detail_table(self, request, *args, **kwargs):
         report: List[ExpiringUsageDetailRecord] = self.get_service_report(
             OrganizationReportsService.get_expiring_detail_table)
-        serializer = ExpiringUsageDetailRecordSerializer(instance=report, many=True)
+        serializer = ExpiringUsageDetailRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -263,7 +274,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     def regular_service_report(self, request, *args, **kwargs):
         report: OrganizationRegularServiceReport = self.get_service_report(
             OrganizationReportsService.get_regular_service_report)
-        serializer = OrganizationServiceReportSerializer(instance=report, many=False)
+        serializer = OrganizationServiceReportSerializer(
+            instance=report, many=False, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -279,7 +291,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
     def expiring_service_report(self, request, *args, **kwargs):
         report: OrganizationExpiringServiceReport = self.get_service_report(
             OrganizationReportsService.get_expiring_service_report)
-        serializer = OrganizationExpiringServiceReportSerializer(instance=report, many=False)
+        serializer = OrganizationExpiringServiceReportSerializer(
+            instance=report, many=False, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -390,6 +403,7 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
             period_start=period_start.isoformat(),
             user_id=request.user.id,
             report_format=report_format,
+            hierarchy_level=get_hierarchy_level(organization, request.user),
         )
         requests.append(now)
         caches['default'].set(cache_key, requests, timeout=86400)
@@ -429,7 +443,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
         except ReportSnapshotDoesNotExists:
             raise PermissionDenied(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
-        serializer = ChannelPartnerUsageReportRecordSerializer(instance=report, many=True)
+        serializer = ChannelPartnerUsageReportRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -447,7 +462,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     )
     def channel_partner_usages(self, request, *args, **kwargs):
         report = self.get_service_report(ChannelPartnerReportsService.get_regular_channel_partner_usages)
-        serializer = ChannelPartnerUsageSerializer(instance=report, many=True)
+        serializer = ChannelPartnerUsageSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -465,7 +481,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     )
     def organization_usages(self, request, *args, **kwargs):
         report = self.get_service_report(ChannelPartnerReportsService.get_regular_organization_usages)
-        serializer = OrganizationUsageSerializer(instance=report, many=True)
+        serializer = OrganizationUsageSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -483,7 +500,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     )
     def regular_detail_table(self, request, *args, **kwargs):
         report = self.get_service_report(ChannelPartnerReportsService.get_regular_detail_table)
-        serializer = RegularUsageDetailRecordSerializer(instance=report, many=True)
+        serializer = RegularUsageDetailRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -502,7 +520,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     def expiring_detail_table(self, request, *args, **kwargs):
         report: List[ExpiringUsageDetailRecord] = self.get_service_report(
             ChannelPartnerReportsService.get_expiring_detail_table)
-        serializer = ExpiringUsageDetailRecordSerializer(instance=report, many=True)
+        serializer = ExpiringUsageDetailRecordSerializer(
+            instance=report, many=True, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -520,7 +539,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     )
     def regular_service_report(self, request, *args, **kwargs):
         report = self.get_service_report(ChannelPartnerReportsService.get_regular_service_report)
-        serializer = ChannelPartnerServiceReportSerializer(instance=report, many=False)
+        serializer = ChannelPartnerServiceReportSerializer(
+            instance=report, many=False, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -536,7 +556,8 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
     def expiring_service_report(self, request, *args, **kwargs):
         report: ChannelPartnerExpiringServiceReport = self.get_service_report(
             ChannelPartnerReportsService.get_expiring_service_report)
-        serializer = ChannelPartnerExpiringServiceReportSerializer(instance=report, many=False)
+        serializer = ChannelPartnerExpiringServiceReportSerializer(
+            instance=report, many=False, context=self.get_serializer_context())
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -587,6 +608,7 @@ class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
             period_start=period_start.isoformat(),
             user_id=request.user.id,
             report_format=report_format,
+            hierarchy_level=get_hierarchy_level(channel_partner, request.user),
         )
         requests.append(now)
         caches['default'].set(cache_key, requests, timeout=86400)

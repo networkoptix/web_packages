@@ -31,19 +31,36 @@ from openpyxl.worksheet.worksheet import Worksheet
 from partners.models import (
     ChannelPartner,
     ChannelPartnerService,
+    HierarchyLevels,
     Organization,
+)
+from partners.serialization.usage_reports_serializers import (
+    ChannelPartnerExpiringUsageSerializer,
+    ChannelPartnerUsageReportRecordSerializer,
+    ChannelPartnerUsageSerializer,
+    OrganizationExpiringUsageSerializer,
+    OrganizationUsageReportRecordSerializer,
+    OrganizationUsageSerializer,
+    SystemExpiringUsageSerializer,
+    SystemUsageSerializer,
 )
 from partners.services.usage_reports_service import (
     BeginningOfPeriodDate,
+    ChannelPartnerExpiringUsage,
+    ChannelPartnerRegularUsage,
     ChannelPartnerRegularUsageList,
     ChannelPartnerReportsService,
     ChannelPartnerUsageReport,
     ChannelPartnerUsageReportRecord,
     ExpiringUsageDetailRecord,
+    OrganizationExpiringUsage,
+    OrganizationRegularUsage,
     OrganizationRegularUsageList,
     OrganizationReportsService,
     OrganizationUsageReportRecord,
     RegularUsageDetailRecord,
+    SystemExpiringUsage,
+    SystemRegularUsage,
     TotalUsageDate,
 )
 
@@ -78,13 +95,49 @@ class Styling:
     fill_formulae = PatternFill('solid', fgColor=peach)
 
 
+UsagesTypes = Union[
+    ChannelPartnerRegularUsage,
+    ChannelPartnerExpiringUsage,
+    OrganizationRegularUsage,
+    OrganizationExpiringUsage,
+    SystemRegularUsage,
+    SystemExpiringUsage,
+]
+
+
+def get_used_by(hierarchy_level: int, usages: UsagesTypes):
+        """
+        'Used by' column for service usage report sheets.
+        """
+        if hierarchy_level == HierarchyLevels.own:
+            used_by_name = (
+                    usages.get('channel_partner_name') or usages.get('channel_partner_id')
+                    or usages.get('organization_name') or usages.get('organization_id')
+                    or usages.get('system_name') or usages.get('system_id')
+            )
+        else:
+            used_by_name = (
+                    usages.get('channel_partner_id')
+                    or usages.get('organization_id')
+                    or usages.get('system_name')
+                    or usages.get('system_id')
+            )
+        return used_by_name
+
+
 class HeadersMixin:
 
     def report_name_header(self):
-        if self.service:
-            return f"{self.entity.name} {self.service.name} Service Usage Report"
+        if self.hierarchy_level <= HierarchyLevels.direct_child:
+            name = self.entity.name
+            service_name = self.service.name if self.service else ''
         else:
-            return f"{self.entity.name} Service Usage Report"
+            name = self.entity.id
+            service_name = self.service.id if self.service else ''
+        if self.service:
+            return f"{name} {service_name} Service Usage Report"
+        else:
+            return f"{name} Service Usage Report"
 
     def date_range_header(self):
         return f"Date Range: {self.period_start: %B %d} - {self.period_end:%B %d, %Y}"
@@ -110,7 +163,8 @@ class ReportsExportServiceBase(HeadersMixin):
             period_start: datetime.date,
             entity: ChannelPartner | Organization,
             service: ChannelPartnerService | None,
-            sheet: Worksheet
+            sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         self.report_date = report_date
         self.period_start = period_start
@@ -120,6 +174,11 @@ class ReportsExportServiceBase(HeadersMixin):
         self.sheet = sheet
         self.current_row = self.start_row
         self.sub_total_rows: List[int] = []
+        self.hierarchy_level = hierarchy_level
+
+    @property
+    def serializer_context(self):
+        return {'hierarchy_level': self.hierarchy_level}
 
     def generate_report(self):
         raise NotImplemented("This method must be implemented in the subclass.")
@@ -142,13 +201,12 @@ class ReportsExportServiceBase(HeadersMixin):
         """
         raise NotImplemented("This method must be implemented in the subclass.")
 
-    def get_used_by(self, usages: ChannelPartnerUsageReportRecord | OrganizationUsageReportRecord):
+    def get_used_by(self, usages):
         """
         'Used by' column for service usage report sheets.
         """
-        used_by_name = (usages.get('channel_partner_name') or usages.get('organization_name')
-                        or usages.get('system_name') or usages.get('system_id'))
-        return used_by_name
+        return get_used_by(self.hierarchy_level, usages)
+
 
     def fill_services(self, report: ChannelPartnerRegularUsageList | OrganizationRegularUsageList):
         """
@@ -215,10 +273,18 @@ class PartnerReportDataMixin:
         )
         if self.service.is_expiring:
             partners_report = ChannelPartnerReportsService.get_expiring_channel_partner_usages(**kwargs)
+            partners_report = ChannelPartnerExpiringUsageSerializer(
+                partners_report, many=True, context=self.serializer_context).data
             organizations_report = ChannelPartnerReportsService.get_expiring_organization_usages(**kwargs)
+            organizations_report = OrganizationExpiringUsageSerializer(
+                organizations_report, many=True, context=self.serializer_context).data
         else:
             partners_report = ChannelPartnerReportsService.get_regular_channel_partner_usages(**kwargs)
+            partners_report = ChannelPartnerUsageSerializer(
+                partners_report, many=True, context=self.serializer_context).data
             organizations_report = ChannelPartnerReportsService.get_regular_organization_usages(**kwargs)
+            organizations_report = OrganizationUsageSerializer(
+                organizations_report, many=True, context=self.serializer_context).data
         return partners_report + organizations_report
 
 
@@ -235,8 +301,12 @@ class OrganizationReportDataMixin:
         )
         if self.service.is_expiring:
             organizations_report = OrganizationReportsService.get_expiring_system_reports(**kwargs)
+            organizations_report = SystemExpiringUsageSerializer(
+                organizations_report, many=True, context=self.serializer_context).data
         else:
             organizations_report = OrganizationReportsService.get_regular_system_reports(**kwargs)
+            organizations_report = SystemUsageSerializer(
+                organizations_report, many=True, context=self.serializer_context).data
 
         return organizations_report
 
@@ -620,14 +690,16 @@ class SummarySheetBase(PartnerReportsExportBase):
             report_date: datetime.date,
             period_start: datetime.date,
             entity: ChannelPartner | Organization,
-            sheet: Worksheet
+            sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own,
     ):
         super().__init__(
             report_date=report_date,
             period_start=period_start,
             entity=entity,
             service=None,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=hierarchy_level
         )
         self.sheet.title = "Summary"
 
@@ -683,7 +755,8 @@ class PartnerSummaryDataMixin:
             generate=self.generate
         )
         report = ChannelPartnerReportsService.get_channel_partner_report(**kwargs)
-        return report
+        return ChannelPartnerUsageReportRecordSerializer(
+            report, many=True, context=self.serializer_context).data
 
 
 class ChannelPartnerSummarySheet(PartnerSummaryDataMixin, SummarySheetBase):
@@ -693,20 +766,6 @@ class ChannelPartnerSummarySheet(PartnerSummaryDataMixin, SummarySheetBase):
     columns = 8
     record_row_class = ChannelPartnerSummaryRow
     report: ChannelPartnerUsageReport
-
-    def __init__(
-            self,
-            report_date: datetime.date,
-            period_start: datetime.date,
-            entity: ChannelPartner,
-            sheet: Worksheet
-    ):
-        super().__init__(
-            report_date=report_date,
-            period_start=period_start,
-            entity=entity,
-            sheet=sheet
-        )
 
 
 class OrganizationSummaryDataMixin:
@@ -720,7 +779,8 @@ class OrganizationSummaryDataMixin:
             generate=self.generate
         )
         report = OrganizationReportsService.get_organization_report(**kwargs)
-        return report
+        return OrganizationUsageReportRecordSerializer(
+            report, many=True, context=self.serializer_context).data
 
 
 class OrganizationSummarySheet(OrganizationSummaryDataMixin, SummarySheetBase):
@@ -746,13 +806,15 @@ class ChannelPartnerRegularServiceSheet(PartnerReportsExportBase):
             channel_partner: ChannelPartner,
             service: ChannelPartnerService,
             sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         super().__init__(
             report_date=report_date,
             period_start=period_start,
             entity=channel_partner,
             service=service,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=hierarchy_level
         )
 
     def set_footer_values(self):
@@ -784,13 +846,15 @@ class OrganizationRegularServiceSheet(OrganizationReportsExportBase):
             organization: Organization,
             service: ChannelPartnerService,
             sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         super().__init__(
             report_date=report_date,
             period_start=period_start,
             entity=organization,
             service=service,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=hierarchy_level
         )
 
     def set_footer_values(self):
@@ -822,13 +886,15 @@ class ChannelPartnerExpiringServiceSheet(PartnerReportsExportBase):
             channel_partner: ChannelPartner,
             service: ChannelPartnerService,
             sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         super().__init__(
             report_date=report_date,
             period_start=period_start,
             entity=channel_partner,
             service=service,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=hierarchy_level
         )
 
     def set_footer_values(self):
@@ -859,13 +925,15 @@ class OrganizationExpiringServiceSheet(OrganizationReportsExportBase):
             organization: Organization,
             service: ChannelPartnerService,
             sheet: Worksheet,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         super().__init__(
             report_date=report_date,
             period_start=period_start,
             entity=organization,
             service=service,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=hierarchy_level
         )
 
     def set_footer_values(self):
@@ -890,7 +958,8 @@ class ChannelPartnerReportGenerator:
                  channel_partner: ChannelPartner,
                  report_date: datetime.date = None,
                  period_start: datetime.date = None,
-                 report_format: ReportFormat = ReportFormat.xlsx):
+                 report_format: ReportFormat = ReportFormat.xlsx,
+                 hierarchy_level: int = HierarchyLevels.own):
         self.channel_partner = channel_partner
         self.report_date = report_date if report_date else datetime.date.today()
         self.period_start = period_start or self.report_date.replace(day=1)
@@ -898,6 +967,15 @@ class ChannelPartnerReportGenerator:
         self.archive = None
         self.buf = None
         self.report_format = report_format
+        self.hierarchy_level = hierarchy_level
+
+    def get_service_sheet_name(self, service: ChannelPartnerService):
+        sheet_name = service.name if self.hierarchy_level == HierarchyLevels.own else str(service.id)
+        idx = 0
+        while sheet_name in self.wb.sheetnames:
+            idx += 1
+            sheet_name = f"{service.name} ({idx})"
+        return sheet_name
 
     def generate_summary_sheet(self):
         sheet = self.wb['Summary']
@@ -905,38 +983,37 @@ class ChannelPartnerReportGenerator:
             report_date=self.report_date,
             period_start=self.period_start,
             entity=self.channel_partner,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=self.hierarchy_level,
         )
         summary_sheet.generate_report_sheet()
 
     def generate_regular_services_sheets(self):
         for service in self.channel_partner.services.filter(sub_type=ChannelPartnerService.REGULAR):
             sheet = self.wb.copy_worksheet(self.wb['Regular Service'])
+            sheet.title = self.get_service_sheet_name(service)
             service_sheet = ChannelPartnerRegularServiceSheet(
                 report_date=self.report_date,
                 period_start=self.period_start,
                 channel_partner=self.channel_partner,
                 service=service,
-                sheet=sheet
+                sheet=sheet,
+                hierarchy_level=self.hierarchy_level
             )
             service_sheet.generate_report_sheet()
 
     def generate_expiring_services_sheets(self):
         for service in self.channel_partner.services.exclude(sub_type=ChannelPartnerService.REGULAR):
             sheet = self.wb.copy_worksheet(self.wb['Expiring Service'])
-            sheet_name = service.name
-            idx = 0
-            while sheet_name in self.wb.sheetnames:
-                idx += 1
-                sheet_name = f"{service.name} ({idx})"
-            sheet.title = sheet_name
+            sheet.title = self.get_service_sheet_name(service)
 
             service_sheet = ChannelPartnerExpiringServiceSheet(
                 report_date=self.report_date,
                 period_start=self.period_start,
                 channel_partner=self.channel_partner,
                 service=service,
-                sheet=sheet
+                sheet=sheet,
+                hierarchy_level=self.hierarchy_level,
             )
             service_sheet.generate_report_sheet()
 
@@ -955,7 +1032,8 @@ class ChannelPartnerReportGenerator:
             report_date=self.report_date,
             period_start=self.period_start,
             entity=self.channel_partner,
-            service=None
+            service=None,
+            hierarchy_level=self.hierarchy_level,
         )
         self.archive.writestr(summary_report.file_name, summary_report.stream().getvalue())
 
@@ -966,6 +1044,7 @@ class ChannelPartnerReportGenerator:
                 period_start=self.period_start,
                 entity=self.channel_partner,
                 service=service,
+                hierarchy_level=self.hierarchy_level,
             )
             self.archive.writestr(reg_service_report.file_name, reg_service_report.stream().getvalue())
 
@@ -976,6 +1055,7 @@ class ChannelPartnerReportGenerator:
                 period_start=self.period_start,
                 entity=self.channel_partner,
                 service=service,
+                hierarchy_level=self.hierarchy_level,
             )
             self.archive.writestr(exp_service_report.file_name, exp_service_report.stream().getvalue())
 
@@ -1041,14 +1121,24 @@ class OrganizationReportGenerator:
                  organization: Organization,
                  period_start: datetime.date = None,
                  report_date: datetime.date = None,
-                 report_format: ReportFormat = ReportFormat.xlsx):
+                 report_format: ReportFormat = ReportFormat.xlsx,
+                 hierarchy_level: int = HierarchyLevels.own):
         self.organization = organization
         self.report_date = report_date or datetime.datetime.now(tz=datetime.timezone.utc).date()
         self.report_format = report_format
         self.period_start = period_start or self.report_date.replace(day=1)
+        self.hierarchy_level = hierarchy_level
         self.wb = None
         self.archive = None
         self.buf = None
+
+    def get_service_sheet_name(self, service: ChannelPartnerService):
+        sheet_name = service.name if self.hierarchy_level == HierarchyLevels.own else str(service.id)
+        idx = 0
+        while sheet_name in self.wb.sheetnames:
+            idx += 1
+            sheet_name = f"{service.name} ({idx})"
+        return sheet_name
 
     def generate_summary_sheet(self):
         sheet = self.wb['Summary']
@@ -1056,31 +1146,36 @@ class OrganizationReportGenerator:
             report_date=self.report_date,
             period_start=self.period_start,
             entity=self.organization,
-            sheet=sheet
+            sheet=sheet,
+            hierarchy_level=self.hierarchy_level,
         )
         summary_sheet.generate_report_sheet()
 
     def generate_regular_services_sheets(self):
         for service in self.organization.channel_partner.services.filter(sub_type=ChannelPartnerService.REGULAR):
             sheet = self.wb.copy_worksheet(self.wb['Regular Service'])
+            sheet.title = self.get_service_sheet_name(service)
             service_sheet = OrganizationRegularServiceSheet(
                 report_date=self.report_date,
                 period_start=self.period_start,
                 organization=self.organization,
                 service=service,
-                sheet=sheet
+                sheet=sheet,
+                hierarchy_level=self.hierarchy_level,
             )
             service_sheet.generate_report_sheet()
 
     def generate_expiring_services_sheets(self):
         for service in self.organization.channel_partner.services.exclude(sub_type=ChannelPartnerService.REGULAR):
             sheet = self.wb.copy_worksheet(self.wb['Expiring Service'])
+            sheet.title = self.get_service_sheet_name(service)
             service_sheet = OrganizationExpiringServiceSheet(
                 report_date=self.report_date,
                 period_start=self.period_start,
                 organization=self.organization,
                 service=service,
-                sheet=sheet
+                sheet=sheet,
+                hierarchy_level=self.hierarchy_level,
             )
             service_sheet.generate_report_sheet()
 
@@ -1099,7 +1194,8 @@ class OrganizationReportGenerator:
             report_date=self.report_date,
             period_start=self.period_start,
             entity=self.organization,
-            service=None
+            service=None,
+            hierarchy_level=self.hierarchy_level,
         )
         self.archive.writestr(summary_report.file_name, summary_report.stream().getvalue())
 
@@ -1110,6 +1206,7 @@ class OrganizationReportGenerator:
                 period_start=self.period_start,
                 entity=self.organization,
                 service=service,
+                hierarchy_level=self.hierarchy_level,
             )
             self.archive.writestr(reg_service_report.file_name, reg_service_report.stream().getvalue())
 
@@ -1120,6 +1217,7 @@ class OrganizationReportGenerator:
                 period_start=self.period_start,
                 entity=self.organization,
                 service=service,
+                hierarchy_level=self.hierarchy_level,
             )
             self.archive.writestr(exp_service_report.file_name, exp_service_report.stream().getvalue())
 
@@ -1188,6 +1286,7 @@ class CSVReportBase(HeadersMixin):
             period_start: datetime.date,
             entity: ChannelPartner | Organization,
             service: ChannelPartnerService | None,
+            hierarchy_level: int = HierarchyLevels.own
     ):
         self.report_date = report_date
         self.period_start = period_start
@@ -1196,6 +1295,12 @@ class CSVReportBase(HeadersMixin):
         self.service = service
         self.buf = StringIO()
         self.csv_writer = csv.writer(self.buf, delimiter=',', dialect='excel')
+        self.hierarchy_level = hierarchy_level
+
+    @property
+    def serializer_context(self):
+        return {'hierarchy_level': self.hierarchy_level}
+
 
     def generate_report(self):
         raise NotImplemented("This method must be implemented in the subclass.")
@@ -1309,7 +1414,10 @@ class CSVRegularServiceReportBase(CSVReportBase):
 
     @property
     def file_name(self):
-        return f"{self.entity.name} Service Usage Report - {self.service.name} ({self.service.id}).csv"
+        if self.hierarchy_level == HierarchyLevels.own:
+            return f"{self.entity.name} Service Usage Report - {self.service.name} ({self.service.id}).csv"
+        else:
+            return f"{self.entity.id} Service Usage Report - {self.service.id}.csv"
 
     def get_report_data(self):
         raise NotImplemented("This method must be implemented in the subclass.")
@@ -1328,14 +1436,11 @@ class CSVRegularServiceReportBase(CSVReportBase):
             usage['daily_rate'],
         ]
 
-    @staticmethod
-    def get_used_by(usages: ChannelPartnerUsageReportRecord | OrganizationUsageReportRecord):
+    def get_used_by(self, usages):
         """
         'Used by' column for service usage report sheets.
         """
-        used_by_name = (usages.get('channel_partner_name') or usages.get('organization_name')
-                        or usages.get('system_name') or usages.get('system_id'))
-        return used_by_name
+        return get_used_by(self.hierarchy_level, usages)
 
     @staticmethod
     def get_changed(usage):
@@ -1391,14 +1496,11 @@ class CSVExpiringServiceReportBase(CSVReportBase):
             usage['channels'],
         ]
 
-    @staticmethod
-    def get_used_by(usages: ChannelPartnerUsageReportRecord | OrganizationUsageReportRecord):
+    def get_used_by(self, usages):
         """
         'Used by' column for service usage report sheets.
         """
-        used_by_name = (usages.get('channel_partner_name') or usages.get('organization_name')
-                        or usages.get('system_name') or usages.get('system_id'))
-        return used_by_name
+        return get_used_by(self.hierarchy_level, usages)
 
     @staticmethod
     def get_expiration_date(usage):
