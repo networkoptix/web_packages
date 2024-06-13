@@ -17,12 +17,8 @@ p {
     text-overflow: ellipsis;
     padding: 0.75rem $adjusted-padding-right 0.75rem $horizontal-padding;
     border-bottom: 1px solid var(--dialog-border-color);
-    // border-top-left-radius: vars.$modal-border-radius;
-    // border-top-right-radius: vars.$modal-border-radius;
-    /* Border rounding is disabled for now since the background on the
-    cdk-dialog-container colors behind it
-    https://gitlab.nxvms.dev/dev/cloud_portal/-/blob/eeabe82996569211b4e727786996c0f1dc071cf3/front_end/common/styles/common/_elements.scss#L195
-    */
+    border-top-left-radius: vars.$modal-border-radius;
+    border-top-right-radius: vars.$modal-border-radius;
 
     &-title {
         @include typography.medium14nocolor;
@@ -64,7 +60,7 @@ p {
         }
 
         &:hover,
-        &:focus {
+        &:focus-visible {
             background-color: var(--btn-close-hover-bg);
 
             &:before,
@@ -85,8 +81,8 @@ p {
 }
 
 .nx-modal__content {
-    // border-bottom-left-radius: vars.$modal-border-radius;
-    // border-bottom-right-radius: vars.$modal-border-radius;
+    border-bottom-left-radius: vars.$modal-border-radius;
+    border-bottom-right-radius: vars.$modal-border-radius;
     background-color: var(--dialog-bg);
     padding: 1rem;
 

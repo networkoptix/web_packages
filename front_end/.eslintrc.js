@@ -391,7 +391,7 @@ module.exports = {
                 '**/layout/layout.component.html',
                 '**/push-notifications/push-notifications.component.html',
                 '**/sandbox/**/*.html',
-                'libs/dialogs/template.component.html',
+                'libs/dialogs/nx-modal-template.component.html',
                 // Not required for internal/testing components
             ],
             rules: {
