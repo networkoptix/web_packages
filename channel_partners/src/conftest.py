@@ -428,12 +428,25 @@ def arf_host_factory(cloud_test_host):
 @pytest.fixture()
 def system_factory(cloud_test_host, default_organization):
 
-    def factory(organization=default_organization, cloud_host=cloud_test_host,
-                system_id=None, state=ChannelPartnerStates.ACTIVE, system_group=None):
+    def factory(
+            organization=default_organization,
+            cloud_host=cloud_test_host,
+            system_id=None,
+            state=ChannelPartnerStates.ACTIVE,
+            system_group=None,
+            name=None
+    ) -> CloudSystemId:
         sys_id = system_id or f'{uuid4()}'
-        return baker.make(CloudSystemId, system_id=sys_id, system_group=system_group,
-                          organization=organization, cloud_host=cloud_host, state=state,
-                          system_state=CloudSystemStates.ACTIVATED, name=f'System {sys_id}')
+        system_name = name or f'System {sys_id}'
+        return baker.make(
+            CloudSystemId,
+            system_id=sys_id,
+            system_group=system_group,
+            organization=organization,
+            cloud_host=cloud_host,
+            state=state,
+            system_state=CloudSystemStates.ACTIVATED,
+            name=system_name)
 
     return factory
 
@@ -494,7 +507,12 @@ def service_record_factory():
 def system_group_factory():
     def factory(organization, parent=None, name=None):
         uid = uuid4()
-        return baker.make(SystemGroup, id=uid, name=name or str(uid), organization=organization, parent=parent)
+        return baker.make(
+            SystemGroup,
+            id=uid,
+            name=name or str(uid),
+            organization=organization,
+            parent=parent)
 
     return factory
 

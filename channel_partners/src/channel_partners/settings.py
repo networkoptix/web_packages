@@ -250,8 +250,9 @@ DATABASES = {
 REDIS_CACHE_BACKEND = "nx_django_redis.redis_cache.RedisSyncBackend"
 REDIS_CACHE_LOCATION = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
-REDIS_CELERY_DB = 15
 REDIS_THROTTLING_DB = 12
+REDIS_DEPENDENT_CACHE_DB = 13
+REDIS_CELERY_DB = 15
 
 if MIGRATING:
     # Avoid issues with redis on migrations
@@ -260,7 +261,8 @@ if MIGRATING:
 CACHES = {
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'local'
+        'LOCATION': 'local',
+        'TIMEOUT': None
     },
     'default': {
         "BACKEND": REDIS_CACHE_BACKEND,
@@ -276,6 +278,11 @@ CACHES = {
     "throttling": {
         "BACKEND": REDIS_CACHE_BACKEND,
         "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_THROTTLING_DB}",
+        "TIMEOUT": None
+    },
+    "dependent_cache": {
+        "BACKEND": REDIS_CACHE_BACKEND,
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_DEPENDENT_CACHE_DB}",
         "TIMEOUT": None
     }
 }

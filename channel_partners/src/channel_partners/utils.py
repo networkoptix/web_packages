@@ -18,10 +18,13 @@ from drf_spectacular.utils import (
 )
 from rest_framework.fields import (
     CharField,
-    Field,
     empty,
 )
 from rest_framework.settings import api_settings
+
+from channel_partners.mixins.force_non_partial_serializer_mixin import (
+    ForceNonPartialSerializerMixin,
+)
 
 
 def standardize_path(path: str) -> str:
@@ -267,61 +270,10 @@ def nx_extend_schema(
     return decorator
 
 
-class ForceNonPartialSerializerMixin(Field):
-    def validate_empty_values(self, data):
-        """
-        Validate empty values, and either:
-
-        * Raise `ValidationError`, indicating invalid data.
-        * Raise `SkipField`, indicating that the field should be ignored.
-        * Return (True, data), indicating an empty value that should be
-          returned without any further validation being applied.
-        * Return (False, data), indicating a non-empty value, that should
-          have validation applied as normal.
-        """
-        if self.read_only:
-            return (True, self.get_default())
-
-        if data is empty:
-            # !! This is the difference from drf implementation
-            # if getattr(self.root, 'partial', False):
-            #     raise SkipField()
-            if self.required:
-                self.fail('required')
-            return (True, self.get_default())
-
-        if data is None:
-            if not self.allow_null:
-                self.fail('null')
-            # Nullable `source='*'` fields should not be skipped when its named
-            # field is given a null value. This is because `source='*'` means
-            # the field is passed the entire object, which is not null.
-            elif self.source == '*':
-                return (False, None)
-            return (True, None)
-
-        return (False, data)
-
-
 class NonPartialCharfield(ForceNonPartialSerializerMixin, CharField):
     pass
 
 
-class FieldOriginalMixin:
-    """
-    Populates '_original_{field_name}' fields with original values.
-    TODO. Fix usage with newly created objects
-    """
-    observed_fields = None
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.observed_fields:
-            for field_name in self.observed_fields:
-                setattr(self, f'_original_{field_name}', getattr(self, field_name))
-
-    def save(self, *args, **kwargs):
-        if self.observed_fields:
-            for field_name in self.observed_fields:
-                setattr(self, f'_original_{field_name}', getattr(self, field_name))
-        super().save(*args, **kwargs)
+def validate_model(model, mixin):
+    if not issubclass(model, mixin):
+        raise ValueError(f"Model {model.__name__} must be a subclass of {mixin.__name__}")

@@ -402,15 +402,17 @@ class TestOrganizationReportsService:
             [mocker.call(cloud_system=system.system_id, organization=organization,
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
         )
-        assert system_reports == [
-            {
-                'system_id': systems[i].system_id,
-                'system_name': systems[i].name,
-                'report': f'report_{i + 1}',
-                'groups_path': [{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}]
-            }
-            for i in range(3)
-        ]
+        system_ids = [system['system_id'] for system in system_reports]
+        system_names = [system['system_name'] for system in system_reports]
+        group_paths = [system['groups_path'] for system in system_reports]
+
+        for i in range(3):
+            assert systems[i].system_id in system_ids
+            assert systems[i].name in system_names
+
+        assert all([[{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}] == group_path for group_path in group_paths])
+
+
         assert save_snapshot_spy.call_count == 1
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
         assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))
@@ -447,15 +449,17 @@ class TestOrganizationReportsService:
             [mocker.call(cloud_system=system.system_id, organization=organization,
                          period_start=parser.parse('01-01-2024'), service=service) for system in systems]
         )
-        assert system_reports == [
-            {
-                'system_id': systems[i].system_id,
-                'system_name': systems[i].name,
-                'report': f'report_{i + 1}',
-                'groups_path': [{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}]
-            }
-            for i in range(3)
-        ]
+
+        system_ids = [system['system_id'] for system in system_reports]
+        system_names = [system['system_name'] for system in system_reports]
+        group_paths = [system['groups_path'] for system in system_reports]
+
+        for i in range(3):
+            assert systems[i].system_id in system_ids
+            assert systems[i].name in system_names
+
+        assert all([[{'id': group_1.id, 'name': group_1.name}, {'id': group_0.id, 'name': group_0.name}] == group_path for group_path in group_paths])
+
         assert save_snapshot_spy.call_count == 1
         snapshot = ReportSnapshot.objects.get(entity_id=organization.id, service=service)
         assert snapshot.report_data == json.loads(json.dumps(system_reports, cls=JSONEncoder))

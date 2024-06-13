@@ -46,7 +46,13 @@ from django_cte import CTEManager
 from rest_framework.authtoken.models import Token
 from rest_framework.utils.encoders import JSONEncoder
 
-from channel_partners.utils import FieldOriginalMixin
+from channel_partners.mixins.descendant_version_mixin import (
+    DescendantVersionMixin,
+)
+from channel_partners.mixins.field_original_mixin import FieldOriginalMixin
+from channel_partners.mixins.path_cache_mixin import PathCacheMixin
+from channel_partners.mixins.version_mixin import VersionMixin
+from partners.receivers.cloud_system_receiver import on_cloud_system_saved
 from partners.tasks.cloud_user_full_name import update_cloud_user_full_name
 from partners.tasks.services import (
     new_channel_partner_created,
@@ -158,7 +164,7 @@ class ExternalIdTargetManager(models.Manager):
         return ExternalIdTargetManagerQueryset(self.model, using=self._db)
 
 
-class CloudUser(models.Model):
+class CloudUser(VersionMixin, models.Model):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255, null=True, blank=True, default=None)
 
@@ -323,7 +329,13 @@ class CloudSystemStates:
     STATE_DICT = dict(STATE_CODES)
 
 
-class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
+class CloudSystemId(
+    PathCacheMixin,
+    VersionMixin,
+    FieldOriginalMixin,
+    ChannelPartnerStates,
+    models.Model
+):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
@@ -346,8 +358,10 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     security_statuses = models.JSONField(default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
-    system_state = models.IntegerField(choices=CloudSystemStates.STATE_CHOICES, blank=True,
-                                       default=CloudSystemStates.NOT_ACTIVATED)
+    system_state = models.IntegerField(
+        blank=True,
+        choices=CloudSystemStates.STATE_CHOICES,
+        default=CloudSystemStates.NOT_ACTIVATED)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
@@ -554,6 +568,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
             self.update_state()
             super().save(*args, **kwargs)
+            transaction.on_commit(lambda: on_cloud_system_saved(
+                self.__class__,
+                self,
+                new,
+                groups_changed=system_groups_are_different
+            ))
 
             # If system transferred to another organization or disconnected from cloud
             # add system history record
@@ -781,7 +801,14 @@ class ChannelPartnerPermissions:
     add_remove_service_quantities = 'add_remove_service_quantities'
 
 
-class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
+class ChannelPartner(
+    PathCacheMixin,
+    VersionMixin,
+    DescendantVersionMixin,
+    FieldOriginalMixin,
+    ChannelPartnerStates,
+    models.Model
+):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     users = models.ManyToManyField(CloudUser, blank=True, related_name='channel_partners',
                                    through='ChannelPartnerToUser')
@@ -1004,7 +1031,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return count
 
     @property
-    def all_services(self)->QuerySet['ChannelPartnerService']:
+    def all_services(self) -> QuerySet['ChannelPartnerService']:
         services = self.services.all()
         return services
 
@@ -1067,7 +1094,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             secondary_arg='parent_service',
             suffix_arg='',
             value=None
-        ) -> models.Q:
+    ) -> models.Q:
         """Returns Q object of parent channel partner condtions"""
         if value is None:
             value = self
@@ -1170,6 +1197,13 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             )
         )
         return partners_tree
+
+    @property
+    def ancestors(self) -> 'QuerySet[ChannelPartner]':
+        if self.parent_channel_partner:
+            return ChannelPartner.objects.filter(id__in=self.path)
+        else:
+            return ChannelPartner.objects.none()
 
     def successors(self) -> 'QuerySet[ChannelPartner]':
         return ChannelPartner.objects.filter(path__contains=[self.id])
@@ -1352,20 +1386,36 @@ class ChannelPartnerAccessLevel:
     ]
 
 
-class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model):
+class Organization(
+    PathCacheMixin,
+    VersionMixin,
+    DescendantVersionMixin,
+    FieldOriginalMixin,
+    ChannelPartnerAccessLevel,
+    ChannelPartnerStates,
+    models.Model
+):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='organizations')
     name = models.CharField(max_length=150)
-    users = models.ManyToManyField(CloudUser, related_name='organizations',
-                                   blank=True, through='OrganizationToUser')
-    state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
-                                blank=False, default=ChannelPartnerStates.ACTIVE)
-    effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
-                                          blank=False, default=ChannelPartnerStates.ACTIVE)
-    channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
-                                                     default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
-                                                     limit_choices_to={'id__in': OrganizationRoles.CPAL_ROLES},
-                                                     on_delete=models.SET_NULL)
+    users = models.ManyToManyField(
+        CloudUser,
+        related_name='organizations',
+        blank=True,
+        through='OrganizationToUser')
+    state = models.IntegerField(
+        choices=ChannelPartnerStates.STATE_CHOICES,
+        blank=False,
+        default=ChannelPartnerStates.ACTIVE)
+    effective_state = models.IntegerField(
+        choices=ChannelPartnerStates.STATE_CHOICES,
+        blank=False,
+        default=ChannelPartnerStates.ACTIVE)
+    channel_partner_access_level = models.ForeignKey(
+        OrganizationRole, null=True,
+        default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
+        limit_choices_to={'id__in': OrganizationRoles.CPAL_ROLES},
+        on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     attributes = models.JSONField(default=dict, blank=True)
@@ -1500,7 +1550,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             self,
             start_ts: datetime.date,
             end_ts: datetime.date
-        ) -> 'QuerySet[ChannelPartnerServiceRecord]':
+    ) -> 'QuerySet[ChannelPartnerServiceRecord]':
         if start_ts is None or end_ts is None:
             raise ValueError("Filter timestamps must be passed.")
         return ChannelPartnerServiceRecord.objects.filter(
@@ -1624,8 +1674,8 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             bool
         """
         return (
-            OrganizationToUser.objects.filter(organization=self, system_group__isnull=True, user=user).exists()
-            or self.channel_partner.is_member_in_branch(user)
+                OrganizationToUser.objects.filter(organization=self, system_group__isnull=True, user=user).exists()
+                or self.channel_partner.is_member_in_branch(user)
         )
 
     def user_systems(self, user: CloudUser):
@@ -1648,7 +1698,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.channel_partner.can_alter_organization_state(user)
 
     @property
-    def all_services(self)->QuerySet['ChannelPartnerService']:
+    def all_services(self) -> QuerySet['ChannelPartnerService']:
         return self.channel_partner.all_services
 
     @classmethod
@@ -1780,16 +1830,26 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.users.filter(organizationtouser__system_group=None)
 
 
-class SystemGroup(FieldOriginalMixin, models.Model):
+class SystemGroup(
+    PathCacheMixin,
+    VersionMixin,
+    DescendantVersionMixin,
+    FieldOriginalMixin,
+    models.Model
+):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=1024)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='groups')
-    parent = models.ForeignKey('SystemGroup', on_delete=models.PROTECT,
-                               blank=True, null=True, related_name='groups')
+    parent = models.ForeignKey(
+        'SystemGroup',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name='groups')
     created_ts = models.DateTimeField(auto_now_add=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
-    observed_fields = ('organization_id', 'parent_id')
+    observed_fields = ('organization_id', 'parent_id', 'path')
 
     class Meta:
         indexes = [
@@ -1880,6 +1940,13 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         return self.path[:self.path.index(self.organization_id)]
 
     @property
+    def ancestors(self) -> 'QuerySet[SystemGroup]':
+        if self.parent:
+            return SystemGroup.objects.filter(id__in=self.groups_path)
+        else:
+            return SystemGroup.objects.none()
+
+    @property
     def visible_path(self) -> List[uuid.UUID]:
         """
         Returns path up to organization's parent channel partner
@@ -1964,7 +2031,6 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         ).filter(
             Q(system_group_id__isnull=True) | Q(system_group_id__in=self.groups_path)
         ).exists()
-
 
     @property
     def system_count(self) -> int:
