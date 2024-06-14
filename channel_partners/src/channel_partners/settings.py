@@ -35,17 +35,34 @@ class EnvironmentEnum(StrEnum):
     ci = 'ci'
     local = 'local'
     prod = 'prod'
+    private = 'private-1'
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOCAL_ENV = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+LOCAL_ENV = (
+        'runserver' in sys.argv or
+        os.getenv('LOCAL_ENV', False)
+)
 LOCAL_DOCKER = os.getenv('LOCAL_DOCKER', False)
 CI = os.getenv('CI', False)
-MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
-TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
+MIGRATING = (
+        'makemigrations' in sys.argv or
+        'migrate' in sys.argv
+)
+TESTING = (
+        sys.argv[1:2] == ['test'] or
+        os.getenv('TESTING', False)
+)
 BUILD = 'collectstatic' in sys.argv
-IS_CELERY = 'celery' in ' '.join(sys.argv) or 'celery' in get_container_name()
-IS_DJANGO_SHELL = ('shell' in sys.argv and 'manage.py' in sys.argv)
+IS_CELERY = (
+        'celery' in ' '.join(sys.argv) or
+        'celery' in get_container_name() or
+        ' beat ' in ' '.join(sys.argv)
+)
+IS_DJANGO_SHELL = (
+        'shell' in sys.argv and
+        'manage.py' in sys.argv
+)
 
 
 if CI:
@@ -71,20 +88,25 @@ DEBUG = env.bool("DEBUG", False)
 DOMAIN_NAME = env.str('DOMAIN_NAME')
 ECS_CONTAINER_METADATA_URI = env.str('ECS_CONTAINER_METADATA_URI', default=None)
 INSTANCE_NAME = env.str('INSTANCE_NAME')
+INSTANCE_CONFIG = env.str('INSTANCE_CONFIG', '')
+IS_PRIVATE_CLOUD = INSTANCE_CONFIG == EnvironmentEnum.private
 LICENSE_SERVER = env.str("LICENSE_SERVER", default="https://nxlicensed.hdw.mx")
 NOTIFICATION_SECRET = env.str('NOTIFICATION_SECRET').split(':')
 NOTIFICATION_SECRET_PASSWORD = NOTIFICATION_SECRET[1]
 NOTIFICATION_SECRET_USER = NOTIFICATION_SECRET[0]
 SILK_ENABLED = env.bool('SILK_ENABLED', False)
 TRAFFIC_RELAY_DOMAIN = env.str('TRAFFIC_RELAY_DOMAIN')
-DEFAULT_HOST_NAME = get_default_host(INSTANCE_NAME, DOMAIN_NAME)
+if IS_PRIVATE_CLOUD:
+    DEFAULT_HOST_NAME = DOMAIN_NAME
+else:
+    DEFAULT_HOST_NAME = get_default_host(INSTANCE_NAME, DOMAIN_NAME)
 APPEND_SLASH = env.bool('APPEND_SLASH', False)
 
 ## AWS S3
 if BUILD or MIGRATING or IS_DJANGO_SHELL:
-    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET', '')
+    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET', '') or env.str('AWS_STORAGE_BUCKET_NAME', '')
 else:
-    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET')
+    AWS_STORAGE_BUCKET_NAME = env.str('CACHE_BUCKET', '') or env.str('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = env.str('AWS_S3_CUSTOM_DOMAIN', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
 AWS_S3_REGION_NAME = env.str('AWS_REGION', 'us-east-1')
 ## Database
@@ -123,9 +145,12 @@ else:
 MIN_LOGGING_LEVEL = logging.DEBUG if DEBUG and (LOCAL_ENV or LOCAL_DOCKER) else logging.INFO
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!gefm+0ps6f!vlc^*wqby=k6%o81$=s2jjum@qre=5pqf)d&yk'
-
-CACHE_SALT = 'just-a-salt-Jah2ro2zaex7ChieChieShaiz)ah5ieh>ieR*uku1xeecheeCh$ae3aero8w'
+if IS_PRIVATE_CLOUD:
+    SECRET_KEY = env.str('SECRET_KEY')
+    CACHE_SALT = env.str('CACHE_SALT')
+else:
+    SECRET_KEY = env.str('SECRET_KEY', 'django-insecure-!gefm+0ps6f!vlc^*wqby=k6%o81$=s2jjum@qre=5pqf)d&yk')
+    CACHE_SALT = env.str('CACHE_SALT', 'just-a-salt-Jah2ro2zaex7ChieChieShaiz)ah5ieh>ieR*uku1xeecheeCh$ae3aero8w')
 
 CONFIRMATION_CODE_LEN = 6
 # SECURITY WARNING: don't run with debug turned on in production!
