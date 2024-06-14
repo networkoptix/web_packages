@@ -175,5 +175,9 @@ $opacity in $nx-theme-colors {
 }
 
 .dark-text {
-    color: var(--dark1) !important;
+    color: var(--channel-partner-card-status-dark) !important;
+}
+
+.theme-text {
+    color: var(--channel-partner-card-status-theme-text);
 }
