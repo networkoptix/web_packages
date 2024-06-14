@@ -1,7 +1,10 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
+import { MediaServerPeerConnection } from "../media-server-peer-connection";
 import { RTCStatReportTypes, CandidatePairReport, InboundRtpReport } from "../types";
 import { BaseConnectionTracker } from "./base-connection-tracker";
+import { BaseTracker } from "./base-tracker";
+import { WebRTCIssueDetectorWithState } from "./webrtc-issue-detector";
 
 type CombinedReport = Omit<CandidatePairReport, 'type'> & Omit<InboundRtpReport, 'type'>;
 
@@ -14,39 +17,46 @@ const toMs = (seconds: number) => seconds * 1000;
  *
  * Could potentially be used as a base class if a more customized algorithm is needed.
  */
-export class MosScoreTracker extends BaseConnectionTracker<CombinedReport> {
+export class MosScoreTracker extends BaseTracker<number> {
     metricName = 'mosScore';
+    currentValue = 5;
 
     weight = 5;
     priorityWeight = 0;
 
     /**
-     * Filter used by BaseConnectionTracker to determine if a report should included in the report
-     * used by processInboundReport.
+     * Use default metric handler.
      *
-     * @param report
-     * @returns boolean
+     * @param reset boolean
+     * @returns number
      */
-    public override isTargetReport(report: RTCStats): boolean {
-        return [RTCStatReportTypes.candidatePair, RTCStatReportTypes.inboundRtp].includes(report.type as RTCStatReportTypes)
+    getMetric(reset = false): number {
+        return this.defaultMetricHandler(reset)
     };
 
     /**
-     *  Calculates a MOS score from 1-5 based on the current connection stats using CandidatePairReport and InboundRtpReport.
+     * Override the updateMetric method to use calculateFocusScore.
      *
-     * @param report - CandidatePairReport & InboundRtpReport
-     * @returns - number
+     * @param now number
+     * @returns number
      */
-    processInboundReport(report: CombinedReport): number {
-        const averageLatency = Math.min(toMs(report?.currentRoundTripTime) || 100, 1000);
-        const jitter = toMs(report?.jitter) || 10;
-        const packetsLost = toMs(report?.packetsLost) || 0;
-        const packetsReceived = toMs(report?.packetsReceived) || 0;
-        const effectiveLatency = averageLatency + jitter * 2 + 10;
-        const latencyDeduction = (latency: number) => latency < 160 ? latency / 40 : (latency - 120) / 10;
-        const packetLossDeduction = (packetsLost: number, packetsReceived: number) => !packetsLost || !packetsReceived ? 0 : packetsLost / packetsReceived * 100 * 2.5;
-        const rCurve = 93.2 - latencyDeduction(effectiveLatency) - packetLossDeduction(packetsLost, packetsReceived);
-        const mos = 1 + (0.035 * rCurve) + (0.000007 * rCurve * (rCurve - 60) * (100 - rCurve));
-        return mos
+    override updateMetric(time: number): number {
+        this.updateWindow(time)
+        this.metricValues.push({ time, value: this.currentValue });
+        return this.getMetric();
+    };
+
+    public updateConnection(connection: MediaServerPeerConnection) {
+        this.destroy?.();
+        this.connection = connection;
+        this.destroy = WebRTCIssueDetectorWithState.track(this.connection, mos => {
+            if (mos) {
+                this.currentValue = mos;
+            }
+        }, issues => {
+            this.logger?.info({ issues });
+            connection.reconnectionHandler(true);
+        })
+        this.updateMetric(performance.now());
     }
 }

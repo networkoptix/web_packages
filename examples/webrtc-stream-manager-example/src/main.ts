@@ -4,8 +4,10 @@ import './style.css';
 
 import { description } from '../package.json';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { WebRTCStreamManager, generateWebRtcUrlFactory } from './open_check_excluded';
+import { WebRTCStreamManager } from './open_check_excluded';
 import { ApiVersions, TargetStream } from '@networkoptix/webrtc-stream-manager';
+
+WebRTCStreamManager.logger = console;
 
 const newStream$ = new Subject<void>();
 

@@ -5,6 +5,8 @@ import { BufferHandler, SignalingMessage, StreamHandler } from './types';
 import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
+    connectionId: string;
+
     remoteDataChannel: RTCDataChannel;
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (event.candidate) {
@@ -14,16 +16,16 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
 
     oniceconnectionstatechange = (): void => {
         if (this.iceConnectionState === 'connected') {
-            console.log('peerConnection connected, closing websocket');
+            this.logger?.log('peerConnection connected, closing websocket');
             this.closeWebsocket();
         } else if (this.iceConnectionState === 'disconnected') {
-            console.log('peerConnection disconnected, reconnecting websocket');
+            this.logger?.log('peerConnection disconnected, reconnecting websocket');
             this.reconnectionHandler(true);
         } else if (this.iceConnectionState === 'failed') {
-            console.log('peerConnection failed, reconnecting websocket');
+            this.logger?.log('peerConnection failed, reconnecting websocket');
             this.reconnectionHandler(true);
         } else {
-            console.log('peerConnection ice state ' + this.iceConnectionState);
+            this.logger?.log('peerConnection ice state ' + this.iceConnectionState);
         }
     };
 
@@ -34,11 +36,12 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
-        private reconnectionHandler: (lostConnection: true) => void,
+        public reconnectionHandler: (lostConnection: true) => void,
         trackHandler: StreamHandler,
         bufferHandler: BufferHandler,
         private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number, speed: number | 'unlimited' },
         private handleDataChannelMessage: (message: string) => void,
+        private logger?: Console,
     ) {
         super({
             iceServers,
@@ -53,14 +56,14 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                 if (typeof(data) === 'string') {
                     this.handleDataChannelMessage(data)
                 } else if ('status' in data) {
-                    console.log('dc status: ' + data.status);
+                    this.logger?.log('dc status: ' + data.status);
                     // if (webrtc.deliveryMethod != null && webrtc.deliveryMethod == 'mse') {
                     //     // Note that initial segment can be received before 200, so restarting MSE on 100.
                     //     restartMse();
                     //   }
                 } else {
                     const buffer = new Uint8Array(data);
-                    console.log('dc binary: type = ' + typeof(data) +  ' len = ' + buffer.length);
+                    this.logger?.log('dc binary: type = ' + typeof(data) +  ' len = ' + buffer.length);
                     bufferHandler(new Uint8Array(data));
                 }
             })
