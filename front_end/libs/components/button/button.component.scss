@@ -1,4 +1,4 @@
-@use './buttons.scss';
+@use './buttons';
 
 .nx-button {
     @include buttons.nx-button;

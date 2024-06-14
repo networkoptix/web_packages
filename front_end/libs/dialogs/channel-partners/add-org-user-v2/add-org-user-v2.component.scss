@@ -3,7 +3,7 @@
 @use 'typography';
 @use 'mixins';
 @use "theme_variables_common" as vars;
-@use '../../nx-modal.scss';
+@use '../../nx-modal';
 
 .header-title--muted {
     color: var(--light14); // TODO: Fix this with new variable generation

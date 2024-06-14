@@ -1,23 +1,20 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, ViewChild } from '@angular/core';
-import type { NgForm } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
+import { NxFormFieldModule } from '@components/forms/forms.module';
+import { NxInputComponent } from '@components/forms/input/input.component';
+import { ControlPresets, NxValidators } from '@components/forms/validators';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { CreateGroup } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxProcessService } from '@services/process.service';
-import { Process } from '@services/process.service/process';
-import { assignFrom } from '@utils/general';
-
-const FIELDS_MISSING = 'FIELDS_MISSING';
 
 @Component({
     selector: 'nx-modal-create-system-group-content',
@@ -26,54 +23,44 @@ const FIELDS_MISSING = 'FIELDS_MISSING';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
+        ReactiveFormsModule,
         TranslateModule,
+
+        NxFormFieldModule,
+        NxInputComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
-    @ViewChild('createSystemGroupForm') form: NgForm;
+    private folderNameControl = new FormControl('', {
+        validators: [NxValidators.requiredInput],
+        nonNullable: true,
+    });
+    folderNameErrorMatcher = errorMatcherFactory(ControlPresets.RequiredInput);
 
-    name: string;
-    parentGroup: string | undefined;
-    orgId: string | undefined;
-    parentGroupName?: string | undefined;
-
-    createSystemGroupProcess: Process;
+    formGroup = new FormGroup({
+        folderName: this.folderNameControl,
+    });
 
     constructor(
-        private processService: NxProcessService,
         dialogRef: DialogRef<DT['return']>,
         private cpService: NxChannelPartnersService,
-        @Inject(DIALOG_DATA) private dialogData: DT['data'],
+        @Inject(DIALOG_DATA) private data: DT['data'],
     ) {
         super(dialogRef);
-        this.createSystemGroupProcess = this.processService.createProcess(
-            () => {
-                if (!this.name) {
-                    return Promise.reject({ status: FIELDS_MISSING });
-                }
-                const data: CreateGroup = {
-                    name: this.name,
-                    parentId: this.parentGroup ?? null,
-                    organizationId: this.orgId,
-                };
-                return firstValueFrom(this.cpService.createGroup(data));
-            },
-            { ignoreError: true },
-            res => this.close(res),
-            err => {
-                if (err.status === FIELDS_MISSING) {
-                    this.form.form.markAllAsTouched();
-                }
-            },
-        );
     }
 
-    ngOnInit(): void {
-        assignFrom(this.dialogData, ['parentGroup', 'orgId', 'parentGroupName'], this);
-    }
+    createGroupAction = createAsyncAction({
+        action: () =>
+            firstValueFrom(
+                this.cpService.createGroup({
+                    name: this.folderNameControl.value,
+                    parentId: this.data.parentGroup ?? null,
+                    organizationId: this.data.orgId,
+                }),
+            ),
+        success: res => this.close(res),
+    });
 }

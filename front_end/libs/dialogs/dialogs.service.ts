@@ -387,7 +387,7 @@ export class NxDialogsService {
         ),
     );
 
-    createSystemGroup = this.dialogV1Factory<Dt.CreateSystemGroup>(
+    createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
         () =>
             import('./channel-partners/create-system-group/create-system-group.component').then(
                 m => m.CreateSystemGroupModalContent,

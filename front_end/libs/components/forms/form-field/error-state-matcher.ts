@@ -31,10 +31,14 @@ interface ErrorMatches {
 
 @staticImplements<{ [P in ControlPresets]: ErrorMatches }>()
 class NxPresetMatches {
-    static requiredEmail = {
+    static requiredInput: ErrorMatches = {
         onChange: ['maxlength'],
-        onBlur: ['pattern'],
         onSubmit: ['required'],
+    };
+
+    static requiredEmail = {
+        ...NxPresetMatches.requiredInput,
+        onBlur: ['pattern'],
     };
 }
 

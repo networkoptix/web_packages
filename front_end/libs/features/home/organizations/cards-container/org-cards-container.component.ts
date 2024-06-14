@@ -112,7 +112,6 @@ export class NxOrganizationCardContainerComponent {
             !this.groupsStore.currentSystems$$()?.length
         );
     });
-    groupName: string = '';
     isMobile = false;
 
     constructor(
@@ -150,7 +149,6 @@ export class NxOrganizationCardContainerComponent {
             .createSystemGroup({
                 parentGroup: groupId!,
                 orgId: organizationId!,
-                parentGroupName: this.groupName,
             })
             .then(group => {
                 if (group) {

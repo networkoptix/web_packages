@@ -1,6 +1,6 @@
 @use 'typography';
 
-@use '../nx-modal.scss';
+@use '../nx-modal';
 
 .subtext {
     @include typography.regular13nocolor;
