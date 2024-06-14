@@ -207,3 +207,14 @@ class TestCloudUserFullName:
         assert task_completed_count == 1
         assert processing_batch_count == num_batches
         assert batch_update_completed_count == num_batches
+
+    def test_missing_request_id(self, cloud_test_host, httpx_mock):
+        url = f"https://{cloud_test_host}/cdb/internal/accounts/info"
+        httpx_mock.add_response(
+            method="POST",
+            url=url,
+            status_code=200,
+            json=[{"email": "test@example.com", "fullName": "Test User"}]
+        )
+        get_emails_from_internal_endpoint(["test@exemple.com"], None)
+
