@@ -39,19 +39,23 @@
     justify-content: center;
     max-width: 250px;
     text-align: center;
-    gap: 12px;
     margin: auto;
 }
 
 .placeholder-heading {
     @include typography.medium15dark17;
     color: var(--placehoder-v2-title-color) !important;
+    margin-bottom: 4px;
 }
 
 .placeholder-body {
     @include typography.regular13dark17;
     color: var(--placehoder-v2-message-color) !important;
     margin-bottom: 15px;
+}
+
+.placeholder-icon {
+    margin-bottom: 13px;
 }
 
 .card-content {
