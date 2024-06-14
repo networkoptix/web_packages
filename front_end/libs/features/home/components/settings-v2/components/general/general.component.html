@@ -67,7 +67,7 @@
                             @if (canUpdateAccess$$()) {
                                 <div class="row m-0 pt-3 pl-2">
                                     <div
-                                        class="label d-flex align-items-center justify-content-end text-wrap text-right"
+                                        class="label d-flex justify-content-end text-wrap text-right"
                                     >
                                         <label
                                             for="channelPartnerAccessSelect"
@@ -84,6 +84,14 @@
                                             [items]="partnerAccess"
                                             (onSelected)="updateAccess.emit($event.value)"
                                         ></nx-select>
+
+                                        <div class="accessLevel-description">
+                                            {{
+                                                LANG.channelPartners.orgs.permissionDescription[
+                                                    this.generalForm?.get('accessLevel')?.value.name
+                                                ]
+                                            }}
+                                        </div>
                                     </div>
                                 </div>
                             }
