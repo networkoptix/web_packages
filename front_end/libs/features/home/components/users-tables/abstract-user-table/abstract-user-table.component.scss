@@ -2,8 +2,12 @@
 
 .nx-new-table-container {
   margin: 0;
-  height: calc(100% - 3rem) !important;
+  height: calc(100% - 3rem);
   display: grid;
+
+  &:has(nx-page-generic-placeholder-v2) {
+    height: 100%;
+  }
 }
 
 new-table-wrapper {

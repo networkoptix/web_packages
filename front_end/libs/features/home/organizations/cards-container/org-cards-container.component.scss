@@ -81,11 +81,7 @@ $org-cards-hidden-spacing: 4px;
 }
 
 .no-systems {
-    display: grid;
-    place-items: center;
     height: $org-cards-container-height;
-    overflow-y: auto;
-    padding-bottom: 64px;
 }
 
 .actions {
