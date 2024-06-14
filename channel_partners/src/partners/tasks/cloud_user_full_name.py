@@ -32,11 +32,13 @@ def get_emails_from_internal_endpoint(emails: List[str], request_id: str, origin
         List[UserInfo]: A list of dictionaries containing user information.
     """
     path = f"https://{settings.DEFAULT_HOST_NAME}/cdb/internal/accounts/info"
-    with httpx.Client() as client:
-        headers = {"x-request-id": request_id, }
+    headers = {}
+    if request_id:
+        headers["x-request-id"] = request_id
 
-        if original_host:
-            headers["x-original-host"] = original_host
+    if original_host:
+        headers["x-original-host"] = original_host
+    with httpx.Client() as client:
 
         response: Response = client.post(
             path,
