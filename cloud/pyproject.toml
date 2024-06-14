@@ -39,7 +39,7 @@ django-tinymce = "^3.5.0" #MIT License|https://github.com/jazzband/django-tinymc
 # since version 2.6. flag.is_active() must have read_only keyword argument
 django_waffle = "~2.5.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/django-waffle/django-waffle|https://github.com/django-waffle/django-waffle/blob/master/LICENSE
 # in newer version there is issue with scheme generation for drf_yasg
-djangorestframework = "~3.14.0" #Copyright © 2011-present, Encode OSS Ltd.|https://github.com/encode/django-rest-framework|https://github.com/encode/django-rest-framework/blob/master/LICENSE.md
+djangorestframework = "~3.15.0" #Copyright © 2011-present, Encode OSS Ltd.|https://github.com/encode/django-rest-framework|https://github.com/encode/django-rest-framework/blob/master/LICENSE.md
 drf_yasg = "~1.21.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/axnsan12/drf-yasg|https://github.com/axnsan12/drf-yasg/blob/master/LICENSE.rst
 gunicorn = "~20.1.0" #2009-2023 (c) Benoît Chesneau|https://github.com/benoitc/gunicorn|https://github.com/benoitc/gunicorn/blob/master/LICENSE
 html2text = "2020.1.16" #GNU General Public License v3.0|https://github.com/aaronsw/html2text

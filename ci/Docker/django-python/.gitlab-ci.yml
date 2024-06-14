@@ -3,7 +3,7 @@ include:
 
 variables:
   DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_django_python'
-  CLOUD_IMAGE_VERSION: '45309'
+  CLOUD_IMAGE_VERSION: '45236'
   DJANGO_PYTHON_IMAGE_TAG: '${CLOUD_IMAGE_VERSION}'
 
 
