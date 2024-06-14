@@ -631,10 +631,10 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --badge-default-bg : #{$light8};
     --badge-color : #{$light1};
     --badge-selected-color : #{$light1};
-    --badge-danger-bg : #{$red_main};
+    --badge-danger-bg : #D42B2B;
     --badge-danger-bright-bg : #{$red_l2};
     --badge-danger-bright-color : #{$light1};
-    --badge-warning-bg : #{$yellow_d1};
+    --badge-warning-bg : #FF960F;
     --badge-warning-bright-bg : #{$yellow_main};
     --badge-warning-bright-color : #{$light1};
     --badge-success-bg : #{$green_main};
