@@ -82,6 +82,16 @@
     }
 }
 
+.body {
+
+    .accessLevel {
+
+        &-description {
+            margin-top: 5px;
+        }
+    }
+}
+
 .change-unavailable {
     display: flex;
     gap: .5rem;
