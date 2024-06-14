@@ -7,7 +7,6 @@ from datetime import timedelta
 from uuid import uuid4
 
 import pytest
-import pytz
 from dateutil import relativedelta
 from django.core.cache import caches
 from django.db.models import Prefetch
@@ -1337,7 +1336,7 @@ class TestSystemUsageReportSerializer:
         self.organization = organization_factory(channel_partner=self.cp)
         self.system = system_factory(organization=self.organization)
         self.service_quantity = 10
-        self.fromTs = datetime.datetime(year=2024, month=1, day=10, hour=0, tzinfo=pytz.UTC)
+        self.fromTs = datetime.datetime(year=2024, month=1, day=10, hour=0, tzinfo=datetime.timezone.utc)
         self.toTs = self.fromTs + timedelta(days=1)
         self.local_recording_service = cp_service_factory(
             channel_partner=self.cp, service_type=ChannelPartnerService.LOCAL_RECORDING)

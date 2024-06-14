@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from collections.abc import Mapping
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -9,7 +8,6 @@ from rest_framework.fields import (
     SkipField,
     empty,
     get_error_detail,
-    set_value,
 )
 from rest_framework.settings import api_settings
 
@@ -51,8 +49,8 @@ class FieldAccessMixin:
                 api_settings.NON_FIELD_ERRORS_KEY: [message]
             }, code='invalid')
 
-        ret = OrderedDict()
-        errors = OrderedDict()
+        ret = {}
+        errors = {}
         fields = self._writable_fields
 
         for field in fields:
@@ -79,7 +77,7 @@ class FieldAccessMixin:
             except SkipField:
                 pass
             else:
-                set_value(ret, field.source_attrs, validated_value)
+                self.set_value(ret, field.source_attrs, validated_value)
 
         if errors:
             raise ValidationError(errors)

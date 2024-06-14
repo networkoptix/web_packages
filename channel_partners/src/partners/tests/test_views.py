@@ -821,7 +821,7 @@ class TestCloudSystemViewSetSystemCurrentUsage:
         )
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
         self.path = reverse('cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
-        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {uuid4()}')
+        self.client.credentials(HTTP_AUTHORIZATION=httpx.BasicAuth(username='username', password='password')._auth_header)
         mock_auth_with_system(self.system)
 
     def test_invalid_data(self):

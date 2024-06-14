@@ -5,7 +5,6 @@ from dateutil.relativedelta import relativedelta
 from django.db import migrations, models
 import django.db.models.deletion
 import uuid
-import pytz
 from django.utils import timezone
 
 
@@ -13,7 +12,7 @@ def fill_history(apps, schema_editor):
     CloudSystemHistory = apps.get_model('partners', 'CloudSystemHistory')
     CloudSystemId = apps.get_model('partners', 'CloudSystemId')
     records = []
-    from_ts = datetime.datetime(2023, 6,1, tzinfo=pytz.utc)
+    from_ts = datetime.datetime(2023, 6,1, tzinfo=datetime.timezone.utc)
     for system in CloudSystemId.objects.all():
         records.append(CloudSystemHistory(
             cloud_system=system,

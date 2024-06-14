@@ -76,7 +76,7 @@ channel_partners_routes.register('reports', ChannelPartnerServiceReportsViewSet,
 organization_routes = channel_partners_router.register('organizations', OrganizationViewSet, basename='organization')
 organization_users_routes = organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organizations'])
 organization_routes.register('cloud_systems', CloudSystemNestedViewSet, basename='organizations-cloudsystem', parents_query_lookups=['organization'])
-organization_routes.register('services', OrganizationServiceViewSet, basename='channelpartners-owned-service', parents_query_lookups=['organization'])
+organization_routes.register('services', OrganizationServiceViewSet, basename='organizations-owned-service', parents_query_lookups=['organization'])
 organization_routes.register('reports', OrganizationServiceReportsViewSet, basename='organizations-reports', parents_query_lookups=['organization'])
 
 
