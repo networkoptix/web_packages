@@ -35,3 +35,6 @@ libs/features/systems/view/datatypes/testMediaServers.ts
 
 apps/**/*.d.ts
 **/*.example.ts
+
+# Ignore until we can update lint config for react
+libs/nx-components/.storybook/**

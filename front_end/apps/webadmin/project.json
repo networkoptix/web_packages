@@ -84,7 +84,7 @@
                 "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
                 "scripts": [],
                 "stylePreprocessorOptions": {
-                    "includePaths": ["common/styles", "common/styles/common", "libs"]
+                    "includePaths": ["common/styles", "common/styles/common", "libs", "libs/nx-components"]
                 },
                 "vendorChunk": true,
                 "extractLicenses": false,

@@ -1,136 +1,140 @@
 @use "typography";
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
+@use "nx-components";
 
-:host {
-    .installers {
-        .links {
-            &.a-link {
-                width: 160px;
-                float: left;
-            }
 
-            @include bootstrap.media-breakpoint-down(lg) {
-                width: 50% !important;
-                float: left;
-            }
+@include nx-components.wrap-app-globals {
+    :host {
+        .installers {
+            .links {
+                &.a-link {
+                    width: 160px;
+                    float: left;
+                }
 
-            @include bootstrap.media-breakpoint-down(sm) {
-                width: 100% !important;
-                float: left;
+                @include bootstrap.media-breakpoint-down(lg) {
+                    width: 50% !important;
+                    float: left;
+                }
+
+                @include bootstrap.media-breakpoint-down(sm) {
+                    width: 100% !important;
+                    float: left;
+                }
             }
         }
-    }
 
-    .mobile-badge {
-        float: left;
-        margin-top: 24px;
+        .mobile-badge {
+            float: left;
+            margin-top: 24px;
+
+            .mobile-link {
+                margin-right: 0.5rem;
+            }
+        }
 
         .mobile-link {
-            margin-right: 0.5rem;
-        }
-    }
+            display: inline-block;
+            width: 140px;
+            height: 40px;
+            position: relative;
+            background-repeat: no-repeat;
+            background-size: 140px 40px;
 
-    .mobile-link {
-        display: inline-block;
-        width: 140px;
-        height: 40px;
-        position: relative;
-        background-repeat: no-repeat;
-        background-size: 140px 40px;
+            margin-right: 10px;
 
-        margin-right: 10px;
+            &.iOS,
+            &.ios {
+                background-image: url("/static/images/appstore.png") !important;
 
-        &.iOS,
-        &.ios {
-            background-image: url("/static/images/appstore.png") !important;
+                @media only screen and (-webkit-min-device-pixel-ratio : 2),
+                only screen and (min-device-pixel-ratio : 2) {
+                    background-image: url("/static/images/appstore@2x.png") !important;
+                }
+            }
 
-            @media only screen and (-webkit-min-device-pixel-ratio : 2),
-            only screen and (min-device-pixel-ratio : 2) {
-                background-image: url("/static/images/appstore@2x.png") !important;
+            &.Android,
+            &.android {
+                background-image: url("/static/images/googleplay.png") !important;
+
+                @media only screen and (-webkit-min-device-pixel-ratio : 2),
+                only screen and (min-device-pixel-ratio : 2) {
+                    background-image: url("/static/images/googleplay@2x.png") !important;
+                }
             }
         }
 
-        &.Android,
-        &.android {
-            background-image: url("/static/images/googleplay.png") !important;
+        .download-button {
+            max-width: fit-content;
+            margin: 0 0 8px 0;
+            padding: 0 12px 0 0 !important;
+            height: auto !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            border: 1px solid var(--border-color) !important;
 
-            @media only screen and (-webkit-min-device-pixel-ratio : 2),
-            only screen and (min-device-pixel-ratio : 2) {
-                background-image: url("/static/images/googleplay@2x.png") !important;
+            &:hover {
+                border-color: var(--border-hover-color) !important;
+                background-color: var(--btn-download-hover-bg) !important;
+            }
+
+            &:active {
+                border-color: var(--border-hover-color) !important;
+                //background-color : rgba(var(--light5--rgb), .5) !important;
+            }
+
+            .installer-name {
+                font-weight: normal;
+            }
+
+            .media-left {
+                height: 64px;
+                width: 64px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg-icon svg .icon-with-fill {
+                    fill: var(--body-text-color) !important;
+                }
+            }
+
+            .media-body {
+                width: auto;
+
+                h3,
+                .h7 {
+                    color: var(--body-text-color) !important;
+                    margin: 0;
+                }
+            }
+
+            h2 {
+                max-width: 320px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            h3 {
+                margin-top: 0;
+            }
+
+            &+p {
+                color: var(--light16);
+                margin-bottom: 1rem;
+                font-size: rem(12px);
             }
         }
-    }
 
-    .download-button {
-        max-width: fit-content;
-        margin: 0 0 8px 0;
-        padding: 0 12px 0 0 !important;
-        height: auto !important;
-        box-shadow: none !important;
-        background-color: transparent !important;
-        border: 1px solid var(--border-color) !important;
-
-        &:hover {
-            border-color: var(--border-hover-color) !important;
-            background-color: var(--btn-download-hover-bg) !important;
+        .version-panel {
+            border-left: 1px solid var(--border-color);
         }
 
-        &:active {
-            border-color: var(--border-hover-color) !important;
-            //background-color : rgba(var(--light5--rgb), .5) !important;
+        h2.version-number {
+            @include typography.medium32nocolor;
+            line-height: 34px;
+            margin: 0 0 8px 0;
         }
-
-        .installer-name {
-            font-weight: normal;
-        }
-
-        .media-left {
-            height: 64px;
-            width: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            svg-icon svg .icon-with-fill {
-                fill: var(--body-text-color) !important;
-            }
-        }
-
-        .media-body {
-            width: auto;
-
-            h3,
-            .h7 {
-                color: var(--body-text-color) !important;
-                margin: 0;
-            }
-        }
-
-        h2 {
-            max-width: 320px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        h3 {
-            margin-top: 0;
-        }
-
-        &+p {
-            color: var(--light16);
-            margin-bottom: 1rem;
-            font-size: rem(12px);
-        }
-    }
-
-    .version-panel {
-        border-left: 1px solid var(--border-color);
-    }
-
-    h2.version-number {
-        @include typography.medium32nocolor;
-        line-height: 34px;
-        margin: 0 0 8px 0;
     }
 }

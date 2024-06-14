@@ -1,65 +1,68 @@
 @use "typography";
 @use "theme_variables_common" as *;
+@use "nx-components";
 
 
-.menu-level-one {
-    display: flex;
-    background-color: var(--header-level-one-bg);
-    padding-left: 12px;
-    height: 40px;
+@include nx-components.wrap-app-globals {
+    .menu-level-one {
+        display: flex;
+        background-color: var(--header-level-one-bg);
+        padding-left: 12px;
+        height: 40px;
 
-    .menu-item {
-        height: 25px !important;
-        white-space: nowrap;
-        @extend .header-button;
-        margin: 8px 0px;
-        border: none !important;
-        border-radius: 4px !important;
-        text-transform: uppercase;
+        .menu-item {
+            height: 25px !important;
+            white-space: nowrap;
+            @extend .header-button;
+            margin: 8px 0px;
+            border: none !important;
+            border-radius: 4px !important;
+            text-transform: uppercase;
 
+        }
+
+        nx-account-settings-select {
+            display: block;
+            position: relative;
+            margin: auto 0 auto auto;
+        }
+
+        nx-header-language-select {
+            position: relative;
+            right: 10px;
+        }
+
+        .create-account {
+            white-space: nowrap;
+            @extend .header-button;
+            text-decoration: inherit;
+            color: inherit;
+            min-height: 24px;
+            margin: 11.5px 33px 10px auto;
+        }
+
+        a{
+            color: var(--header-level-one-color);
+            text-decoration: none;
+        }
     }
 
-    nx-account-settings-select {
-        display: block;
-        position: relative;
-        margin: auto 0 auto auto;
-    }
-
-    nx-header-language-select {
-        position: relative;
-        right: 10px;
-    }
-
-    .create-account {
-        white-space: nowrap;
-        @extend .header-button;
-        text-decoration: inherit;
-        color: inherit;
-        min-height: 24px;
-        margin: 11.5px 33px 10px auto;
-    }
-
-    a{
+    .header-button {
+        @include typography.regular11nocolor;
         color: var(--header-level-one-color);
-        text-decoration: none;
-    }
-}
 
-.header-button {
-    @include typography.regular11nocolor;
-    color: var(--header-level-one-color);
+        &:hover {
+            color: var(--header-level-one-hover-color);
+        }
 
-    &:hover {
-        color: var(--header-level-one-hover-color);
-    }
+        &.active {
+            cursor: default !important;
+            color: var(--header-level-one-active-color);
+            background-color: var(--header-level-one-active-bg);
+        }
 
-    &.active {
-        cursor: default !important;
-        color: var(--header-level-one-active-color);
-        background-color: var(--header-level-one-active-bg);
-    }
-
-    &.disabled {
-        color: var(--header-item-disabled);
+        &.disabled {
+            color: var(--header-item-disabled);
+        }
     }
 }

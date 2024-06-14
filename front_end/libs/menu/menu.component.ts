@@ -148,7 +148,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         fromEvent<Event>(window, 'resize')
             .pipe(
                 untilDestroyed(this),
-                map(event => (event.target as Window).innerHeight),
+                map(event => (event.target as unknown as Window).innerHeight),
                 startWith(window.innerHeight),
             )
             .subscribe(height => {

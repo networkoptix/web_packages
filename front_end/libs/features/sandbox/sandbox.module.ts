@@ -22,6 +22,7 @@ import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
+import { NxComponents } from './nx-components/nx-components.component';
 import { NxSandboxComponent } from './sandbox.component';
 import { SearchComponent } from './search/search.component';
 import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
@@ -160,6 +161,10 @@ const appRoutes: Routes = [
             {
                 path: 'theme-variables',
                 component: NxThemeVariableGeneratorSandboxComponent,
+            },
+            {
+                path: 'components',
+                component: NxComponents,
             },
         ],
     },

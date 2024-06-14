@@ -1,96 +1,100 @@
 @use "typography";
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
+@use "nx-components";
 
-:host {
-    .installers {
-        .links {
-            &.a-link {
-                width: 160px;
-                float: left;
-            }
 
-            @include bootstrap.media-breakpoint-down(lg) {
-                width: 50% !important;
-                float: left;
-            }
+@include nx-components.wrap-app-globals {
+    :host {
+        .installers {
+            .links {
+                &.a-link {
+                    width: 160px;
+                    float: left;
+                }
 
-            @include bootstrap.media-breakpoint-down(sm) {
-                width: 100% !important;
-                float: left;
-            }
-        }
-    }
+                @include bootstrap.media-breakpoint-down(lg) {
+                    width: 50% !important;
+                    float: left;
+                }
 
-    .download-button {
-        max-width: fit-content;
-        margin: 0 0 8px 0;
-        padding: 0 12px 0 0 !important;
-        height: auto !important;
-        box-shadow: none !important;
-        background-color: transparent !important;
-        border: 1px solid var(--border-color) !important;
-
-        &:hover {
-            border-color: var(--border-hover-color) !important;
-            background-color: var(--btn-download-hover-bg) !important;
-        }
-
-        &:active {
-            border-color: var(--border-hover-color) !important;
-            //background-color : rgba(var(--light5--rgb), .5) !important;
-        }
-
-        .installer-name {
-            font-weight: normal;
-        }
-
-        .media-left {
-            height: 64px;
-            width: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            svg-icon svg .icon-with-fill {
-                fill: var(--body-text-color) !important;
+                @include bootstrap.media-breakpoint-down(sm) {
+                    width: 100% !important;
+                    float: left;
+                }
             }
         }
 
-        .media-body {
-            width: auto;
+        .download-button {
+            max-width: fit-content;
+            margin: 0 0 8px 0;
+            padding: 0 12px 0 0 !important;
+            height: auto !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            border: 1px solid var(--border-color) !important;
 
-            h3,
-            .h7 {
-                color: var(--body-text-color) !important;
-                margin: 0;
+            &:hover {
+                border-color: var(--border-hover-color) !important;
+                background-color: var(--btn-download-hover-bg) !important;
+            }
+
+            &:active {
+                border-color: var(--border-hover-color) !important;
+                //background-color : rgba(var(--light5--rgb), .5) !important;
+            }
+
+            .installer-name {
+                font-weight: normal;
+            }
+
+            .media-left {
+                height: 64px;
+                width: 64px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg-icon svg .icon-with-fill {
+                    fill: var(--body-text-color) !important;
+                }
+            }
+
+            .media-body {
+                width: auto;
+
+                h3,
+                .h7 {
+                    color: var(--body-text-color) !important;
+                    margin: 0;
+                }
+            }
+
+            h2 {
+                max-width: 320px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            h3 {
+                margin-top: 0;
+            }
+
+            &+p {
+                color: var(--light16);
+                margin-bottom: 1rem;
+                font-size: rem(12px);
             }
         }
 
-        h2 {
-            max-width: 320px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .version-panel {
+            border-left: 1px solid var(--border-color);
         }
 
-        h3 {
-            margin-top: 0;
+        h2.version-number {
+            @include typography.medium32nocolor;
+            line-height: 34px;
+            margin: 0 0 8px 0;
         }
-
-        &+p {
-            color: var(--light16);
-            margin-bottom: 1rem;
-            font-size: rem(12px);
-        }
-    }
-
-    .version-panel {
-        border-left: 1px solid var(--border-color);
-    }
-
-    h2.version-number {
-        @include typography.medium32nocolor;
-        line-height: 34px;
-        margin: 0 0 8px 0;
     }
 }

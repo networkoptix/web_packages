@@ -1,0 +1,33 @@
+@use "sass:meta";
+
+// Use to reset globals by wrapping component styles like @include common.reset-globals { ...styles... }
+@mixin reset-globals {
+    @if not meta.content-exists() {
+        @error 'Must wrap content needs to escape globals like @include reset-mixins.reset-globals { ...stylesHere }';
+    }
+
+    @layer nxcomponents {
+        * {
+            font-family: reset;
+            font-weight: reset;
+        }
+        @content;
+    }
+
+    @layer nxglobal {
+        * {
+            all: revert-layer !important;
+        }
+    }
+}
+
+@mixin wrap-app-globals {
+    @if not meta.content-exists() {
+        @error 'Must wrap content with globals to escape like @include reset-mixins.wrap-app-globals { ...stylesHere }';
+    }
+    @layer nxcomponents, nxglobal;
+
+    @layer nxglobal {
+        @content
+    }
+}

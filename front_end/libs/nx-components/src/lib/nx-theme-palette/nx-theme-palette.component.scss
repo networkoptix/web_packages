@@ -1,0 +1,41 @@
+@use "../styles/reset-mixins";
+
+@include reset-mixins.reset-globals {
+    :host {
+        * {
+            color: var(--contrast-core);
+        }
+
+        h2 {
+            color: var(--base-actual);
+        }
+
+        th {
+            color: var(--base-contrast);
+        }
+
+        th, td {
+            --num-rows: 21;
+            &.full-palette {
+                --num-rows: 9;
+            }
+            text-align: center;
+            vertical-align: top;
+            width: calc(100% / 37);
+            &:not(.is-header) {
+                height: 64px;
+            }
+            span {
+                display: block;
+                padding: 4px;
+            }
+        }
+
+        tr {
+            background: white !important;
+            &.editing-color > * {
+                height: 128px;
+            }
+        }
+    }
+}

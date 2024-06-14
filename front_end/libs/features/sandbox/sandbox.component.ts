@@ -178,6 +178,11 @@ export class NxSandboxComponent {
                             label: 'Signals Utilities',
                             path: '/signals',
                         },
+                        {
+                            id: 'components-library',
+                            label: 'Components Library',
+                            path: '/components',
+                        },
                     ],
                 },
             ],

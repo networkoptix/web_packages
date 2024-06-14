@@ -2,162 +2,166 @@
 @use "mixins" as mixins;
 @use "theme_variables_common" as *;
 @use "../dropdowns";
+@use "nx-components";
 
-:host {
-    width: 100%;
 
-    .dropdown {
-        width   : 100%;
-        display : block;
+@include nx-components.wrap-app-globals {
+    :host {
+        width: 100%;
 
-        hr {
-            width        : 95%;
-            margin       : 6px auto;
-            border-color : var(--light4);
+        .dropdown {
+            width   : 100%;
+            display : block;
 
-            &.narrow-hr {
-                width : calc(95% - 16px);
-            }
-        }
+            hr {
+                width        : 95%;
+                margin       : 6px auto;
+                border-color : var(--light4);
 
-        .search-box {
-            input {
-                height        : 28px !important;
-                padding-left  : 28px !important;
-                margin-bottom : 4px;
-                margin-left   : 4px;
-                width         : calc(100% - 8px) !important;
-            }
-
-            .icon-search {
-                position : absolute;
-                top      : 8px;
-                left     : 8px;
-            }
-
-            .search-clear {
-                position : absolute;
-                top      : 10px;
-                right    : 5px;
-            }
-        }
-
-        .additional-help {
-            @include typography.regular13light;
-            margin-left : 0.25rem;
-        }
-
-        .selected .additional-help {
-            color : var(--light1) !important;
-        }
-
-        @include mixins.keyframe(bubblingG) {
-            0% {
-                opacity : 1;
-            }
-
-            77% {
-                opacity : 0;
-            }
-
-            100% {
-                opacity : 0;
-            }
-        }
-
-        .loading {
-            width          : 100%;
-            height         : 100%;
-
-            text-align     : center;
-            vertical-align : middle;
-            overflow       : hidden;
-            margin         : 0 auto;
-
-            div {
-                margin : 0 auto;
-
-                span {
-                    display           : inline-block;
-                    width             : 8px;
-                    height            : 8px;
-                    margin            : auto 10px;
-                    background        : var(--light1);
-                    border-radius     : 8px;
-                    animation         : bubblingG 650ms infinite alternate;
-                    -o-animation      : bubblingG 650ms infinite alternate;
-                    -webkit-animation : bubblingG 650ms infinite alternate;
-                    -moz-animation    : bubblingG 650ms infinite alternate;
+                &.narrow-hr {
+                    width : calc(95% - 16px);
                 }
             }
 
-            .dot1 {
-                animation-delay         : 0s;
-                -o-animation-delay      : 0s;
-                -webkit-animation-delay : 0s;
-                -moz-animation-delay    : 0s;
+            .search-box {
+                input {
+                    height        : 28px !important;
+                    padding-left  : 28px !important;
+                    margin-bottom : 4px;
+                    margin-left   : 4px;
+                    width         : calc(100% - 8px) !important;
+                }
+
+                .icon-search {
+                    position : absolute;
+                    top      : 8px;
+                    left     : 8px;
+                }
+
+                .search-clear {
+                    position : absolute;
+                    top      : 10px;
+                    right    : 5px;
+                }
             }
 
-            .dot2 {
-                animation-delay         : 0.3s;
-                -o-animation-delay      : 0.3s;
-                -webkit-animation-delay : 0.3s;
-                -moz-animation-delay    : 0.3s;
+            .additional-help {
+                @include typography.regular13light;
+                margin-left : 0.25rem;
             }
 
-            .dot3 {
-                animation-delay         : 0.6s;
-                -o-animation-delay      : 0.6s;
-                -webkit-animation-delay : 0.6s;
-                -moz-animation-delay    : 0.6s;
+            .selected .additional-help {
+                color : var(--light1) !important;
             }
-        }
 
-        .dropdown-force-position,
-        .force-position {
-            position : static !important;
+            @include mixins.keyframe(bubblingG) {
+                0% {
+                    opacity : 1;
+                }
 
-            & > button#genericSelect:active {
+                77% {
+                    opacity : 0;
+                }
+
+                100% {
+                    opacity : 0;
+                }
+            }
+
+            .loading {
+                width          : 100%;
+                height         : 100%;
+
+                text-align     : center;
+                vertical-align : middle;
+                overflow       : hidden;
+                margin         : 0 auto;
+
+                div {
+                    margin : 0 auto;
+
+                    span {
+                        display           : inline-block;
+                        width             : 8px;
+                        height            : 8px;
+                        margin            : auto 10px;
+                        background        : var(--light1);
+                        border-radius     : 8px;
+                        animation         : bubblingG 650ms infinite alternate;
+                        -o-animation      : bubblingG 650ms infinite alternate;
+                        -webkit-animation : bubblingG 650ms infinite alternate;
+                        -moz-animation    : bubblingG 650ms infinite alternate;
+                    }
+                }
+
+                .dot1 {
+                    animation-delay         : 0s;
+                    -o-animation-delay      : 0s;
+                    -webkit-animation-delay : 0s;
+                    -moz-animation-delay    : 0s;
+                }
+
+                .dot2 {
+                    animation-delay         : 0.3s;
+                    -o-animation-delay      : 0.3s;
+                    -webkit-animation-delay : 0.3s;
+                    -moz-animation-delay    : 0.3s;
+                }
+
+                .dot3 {
+                    animation-delay         : 0.6s;
+                    -o-animation-delay      : 0.6s;
+                    -webkit-animation-delay : 0.6s;
+                    -moz-animation-delay    : 0.6s;
+                }
+            }
+
+            .dropdown-force-position,
+            .force-position {
+                position : static !important;
+
+                & > button#genericSelect:active {
+                    box-shadow : none !important;
+                }
+
+                & > .dropdown-menu {
+                    transform : translateY(calc(100% - 22px));
+                }
+
+                & > button.dropdown-toggle {
+                    height : 24px !important;
+
+                    & > .arrow-flip > svg-icon {
+                        bottom : 2px !important;
+                    }
+                }
+            }
+
+            &.dropdown-transparent-button > button.btn.btn-dropdown-toggle.dropdown-toggle {
                 box-shadow : none !important;
+                background : transparent !important;
             }
 
-            & > .dropdown-menu {
-                transform : translateY(calc(100% - 22px));
-            }
-
-            & > button.dropdown-toggle {
-                height : 24px !important;
-
-                & > .arrow-flip > svg-icon {
-                    bottom : 2px !important;
+            .item-icon {
+                .storage-cloud {
+                    fill : var(--brand-core);
                 }
             }
-        }
 
-        &.dropdown-transparent-button > button.btn.btn-dropdown-toggle.dropdown-toggle {
-            box-shadow : none !important;
-            background : transparent !important;
-        }
+            .seperator {
+                display  : block;
+                overflow : hidden;
+                height   : 8px;
 
-        .item-icon {
-            .storage-cloud {
-                fill : var(--brand-core);
-            }
-        }
-
-        .seperator {
-            display  : block;
-            overflow : hidden;
-            height   : 8px;
-
-            &:after {
-                content    : "";
-                position   : absolute;
-                top        : 50%;
-                left       : 12px;
-                width      : calc(100% - 24px);
-                height     : 1.5px;
-                background : var(--light7);
+                &:after {
+                    content    : "";
+                    position   : absolute;
+                    top        : 50%;
+                    left       : 12px;
+                    width      : calc(100% - 24px);
+                    height     : 1.5px;
+                    background : var(--light7);
+                }
             }
         }
     }

@@ -112,6 +112,10 @@ http {
             try_files /static/authorization/index.html =404;
         }
 
+        location /nx-components-storybook {
+            try_files /static/nx-components-storybook/index.html =404;
+        }
+
         # Must be on a first place to override paths
         location ~* ^/static/(503.html|styles/skin.css)$ {
             include static_caching.conf;

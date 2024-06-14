@@ -9,7 +9,7 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 export class NxScrollMechanicsService {
     windowSizeSubject = fromEvent<Event>(window, 'resize').pipe(
         map(({ target }) => {
-            const { innerWidth: width, innerHeight: height } = target as Window;
+            const { innerWidth: width, innerHeight: height } = target as unknown as Window;
             return { width, height };
         }),
         startWith({ width: window.innerWidth, height: window.innerHeight }),

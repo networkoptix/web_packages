@@ -84,6 +84,8 @@
     "!/api/utils/language",
     "!/docs/developers",
     "!/docs/developers/**",
-    "!/partners/**"
+    "!/partners/**",
+    "!/nx-components-storybook",
+    "!/nx-components-storybook/**"
   ]
 }

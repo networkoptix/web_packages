@@ -1,0 +1,66 @@
+<h2>{{ heading() }}</h2>
+
+<table>
+    <thead>
+        @for (shade of shades; track shade) {
+            <th
+                [ngClass]="{ 'full-palette': !singleColor() }"
+                class="is-header"
+            >
+                {{ shade }}
+            </th>
+        }
+    </thead>
+    <tbody>
+        @if (singleColor(); as selectedSingleColor) {
+            @for (opacity of opacityList; track opacity) {
+                <tr>
+                    @for (shade of shades; track shade; let first = $first) {
+                        @if (first) {
+                            <th
+                                [style]="
+                                    generateBackground(selectedSingleColor, 'initial', opacity)
+                                "
+                            >
+                                {{ opacity }}
+                            </th>
+                        } @else {
+                            <td [style]="generateBackground(selectedSingleColor, shade, opacity)">
+                                {{ opacity }}
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        } @else {
+            @for (color of themeColors(); track color) {
+                <tr [ngClass]="{ 'editing-color': activeColor() === color }">
+                    @for (shade of shades; track shade; let first = $first) {
+                        @if (first) {
+                            <th
+                                [style]="generateBackground(color, 'initial', 100)"
+                                class="full-palette"
+                            >
+                                <span [style]="generateLabel(color)">{{ color }}</span>
+                                @if (!configurable.includes(color)) {
+                                    <span
+                                        [style]="generateLabel(color)"
+                                        translate
+                                        >Generated</span
+                                    >
+                                }
+                            </th>
+                        } @else {
+                            <td
+                                [style]="generateBackground(color, shade, 100)"
+                                class="full-palette"
+                            >
+                                <span [style]="generateLabel(color)">{{ shade }}</span>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

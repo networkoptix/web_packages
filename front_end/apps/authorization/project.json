@@ -40,7 +40,8 @@
                         "node_modules/",
                         "common/styles",
                         "common/styles/common",
-                        "libs"
+                        "libs",
+                        "libs/nx-components"
                     ]
                 },
                 "scripts": [],

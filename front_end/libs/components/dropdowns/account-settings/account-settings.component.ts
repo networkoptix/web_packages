@@ -90,6 +90,11 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
             newWindow: true,
         },
         {
+            name: 'Component Library Storybook',
+            route: '/nx-components-storybook/index.html',
+            newWindow: true,
+        },
+        {
             name: 'Channel partners',
             route: '/partners/',
             newWindow: false,

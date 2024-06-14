@@ -13,6 +13,13 @@ function build_frontend () {
     echo "Build statics"
     pushd ../front_end
         npm run build
+
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' 's#<head>#<head><base href='\/static/nx-components-storybook\/'>#' ./dist/nx-components-storybook/index.html
+        else
+            sed -i 's#<head>#<head><base href='\/static/nx-components-storybook\/'>#' ./dist/nx-components-storybook/index.html
+        fi
+
         mkdir -p dist/skins
         npm run buildSkins dist/skins
         rm -rf dist/front-end

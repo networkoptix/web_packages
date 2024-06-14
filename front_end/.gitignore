@@ -40,3 +40,7 @@ inline-wizard/customization/custom/_custom_palette.scss
 .angular/cache
 
 .nx/cache
+.angular/cache
+
+
+storybook-static

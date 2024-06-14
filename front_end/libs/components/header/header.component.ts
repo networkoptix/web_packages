@@ -204,7 +204,7 @@ export class NxHeaderComponent implements OnInit {
         fromEvent<Event>(window, 'resize')
             .pipe(
                 takeUntilDestroyed(),
-                map(event => (event.target as Window).innerWidth),
+                map(event => (event.target as unknown as Window).innerWidth),
                 startWith(window.innerWidth),
             )
             .subscribe(width => this.windowWidth$.next(width));

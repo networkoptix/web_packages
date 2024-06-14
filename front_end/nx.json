@@ -3,7 +3,7 @@
         "default": {
             "runner": "nx/tasks-runners/default",
             "options": {
-                "cacheableOperations": ["build", "lint", "test"]
+                "cacheableOperations": ["build", "lint", "test", "build-storybook"]
             }
         }
     },
@@ -64,6 +64,14 @@
                 "{projectRoot}/tsconfig*.json"
             ],
             "outputs": ["{projectRoot}"]
+        },
+        "@nx/angular:package": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["production", "^production"]
+        },
+        "build-storybook": {
+            "cache": true
         }
     },
     "workspaceLayout": {
@@ -109,8 +117,22 @@
             "!{projectRoot}/tsconfig.spec.json",
             "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
             "!{projectRoot}/jest.config.[jt]s",
-            "!{projectRoot}/src/test-setup.[jt]s"
+            "!{projectRoot}/src/test-setup.[jt]s",
+            "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+            "!{projectRoot}/.storybook/**/*",
+            "!{projectRoot}/tsconfig.storybook.json"
         ]
     },
-    "defaultBase": "develop"
+    "defaultBase": "develop",
+    "plugins": [
+        {
+            "plugin": "@nx/storybook/plugin",
+            "options": {
+                "serveStorybookTargetName": "storybook",
+                "buildStorybookTargetName": "build-storybook",
+                "testStorybookTargetName": "test-storybook",
+                "staticStorybookTargetName": "static-storybook"
+            }
+        }
+    ]
 }

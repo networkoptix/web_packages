@@ -1,0 +1,13 @@
+{
+    "name": "@networkoptix/nx-components",
+    "version": "0.0.1",
+    "peerDependencies": {
+        "@angular/common": "^18.0.0",
+        "@angular/core": "^18.0.0",
+        "@angular/forms": "18.0.0",
+        "color-convert": "^2.0.1",
+        "lodash-es": "^4.17.21",
+        "safe-stable-stringify": "^2.4.2"
+    },
+    "sideEffects": false
+}

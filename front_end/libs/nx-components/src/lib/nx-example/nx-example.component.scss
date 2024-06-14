@@ -1,0 +1,19 @@
+@use "../styles/reset-mixins";
+
+@include reset-mixins.reset-globals {
+    :host, * {
+        background-color: var(--example-background-color, green);
+        color: var(--example-text-color, 'blue')
+    }
+
+    button {
+        font-size: 42px;
+        font-family: Impact;
+    }
+
+    h2 {
+        padding: 20px;
+        font-size: 69px;
+        max-width: 420px;
+    }
+}

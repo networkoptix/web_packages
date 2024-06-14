@@ -126,7 +126,7 @@ module.exports = {
             files: ['*.ts'],
             parser: '@typescript-eslint/parser',
             parserOptions: {
-                project: './tsconfig.json',
+                project: ['./tsconfig.json', './libs/nx-components/.storybook/tsconfig.json'],
                 createDefaultProgram: true,
             },
             plugins: ['nx', '@typescript-eslint'],
@@ -353,7 +353,7 @@ module.exports = {
         },
         {
             // Jest configs use default export
-            files: ['jest.config.ts'],
+            files: ['jest.config.ts', '*.stories.ts'],
             rules: {
                 'import/no-default-export': 'off',
             },

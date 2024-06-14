@@ -1,0 +1,11 @@
+<h2>{{ testModel() }}</h2>
+<input
+    [ngModel]="testModel()"
+    (ngModelChange)="testModel.set($event)"
+/>
+
+<textarea
+    [ngModel]="testModel()"
+    (ngModelChange)="testModel.set($event)"
+></textarea>
+<button (click)="testModel.set(testInput()); themeProvider.toggleTheme()">{{ testInput() }}</button>
