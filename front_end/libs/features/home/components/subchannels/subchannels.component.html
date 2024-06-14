@@ -99,7 +99,7 @@
         *ngIf="subchannelsStoresLoaded"
         class="placeholder-container"
     >
-        <div>
+        <div class="placeholder-icon">
             <!-- TEMPORARY SVG - replace Aria label -->
             <svg-icon
                 nx-add-svg-src
@@ -109,7 +109,6 @@
                     'pointer-events': 'none'
                 }"
                 [src]="icons.dirPageV2Placeholder + 'no_partners.svg'"
-                svgAriaLabel="change me please"
             ></svg-icon>
         </div>
         <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
@@ -120,13 +119,14 @@
         >
             You have not yet created any partners.
         </div>
-        <div *ngIf="canCreatePartners$$()">
-            <nx-button
-                [text]="'New Partner' | translate"
-                type="brand"
-                (onClick)="newPartnerDialog()"
-            >
-            </nx-button>
-        </div>
+
+        <button
+            *ngIf="canCreatePartners$$()"
+            class="btn btn-default"
+            translate
+            (click)="newPartnerDialog()"
+        >
+            New Partner
+        </button>
     </div>
 </ng-template>
