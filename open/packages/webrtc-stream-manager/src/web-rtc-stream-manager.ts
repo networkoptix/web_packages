@@ -3,7 +3,7 @@
 import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
+import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
@@ -28,6 +28,8 @@ export class WebRTCStreamManager {
 
     static AUTHENTICATED_HOSTS: Record<string, Promise<Boolean>> = {};
 
+    static logger?: Console;
+
     /** Configure how often performance tuning as well as connection cleanup happens  */
     static SYNC_INTERVAL = 1000;
 
@@ -37,7 +39,7 @@ export class WebRTCStreamManager {
     static position = 0;
 
     /** Default Stream for new streams. Dependent on MOS score. */
-    static INITIAL_STREAM: AvailableStreams = null;
+    static INITIAL_STREAM: AvailableStreams = AvailableStreams.PRIMARY;
 
     /** Used to trigger sync events such as performance tuning and connection cleanup */
     static sync$ = WebRTCStreamManager.forceSync$.pipe(
@@ -108,22 +110,23 @@ export class WebRTCStreamManager {
      * or a a class derived from MosScoreTracker.
      */
     protected performanceTrackers: BaseTracker<unknown>[] = [
-        new FrameTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE),
-        new FocusTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE),
-        new MosScoreTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE),
-        new BytesReceivedTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE)
+        new FocusTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE, WebRTCStreamManager.logger),
+        new MosScoreTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE, WebRTCStreamManager.logger),
+        new BytesReceivedTracker(WebRTCStreamManager.PERFORMANCE_SAMPLE_SIZE, WebRTCStreamManager.logger)
     ]
 
     /**
      * Checks if mos score is adequate on open connections to allow for high quality stream.
      */
     static calculateAdequateMosScore() {
-        const openConnections = Object.keys(WebRTCStreamManager.EXISTING_CONNECTIONS).length;
-        const mosScoreAverage = openConnections ? Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).reduce((total, connection) => {
-            const mosScore = connection.getMetrics().mosScore as number || WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
-            return mosScore + total
-        }, 0) / openConnections : WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
-        return mosScoreAverage >= WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
+        const mosValues = Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).map(connection => connection.getMetrics().mosScore as number).filter(mos => !!mos && !Number.isNaN(mos));
+
+        if (!mosValues.length) {
+            return true;
+        }
+
+        const mosAverage = mosValues.reduce((total, mos) => total + mos, 0) / mosValues.length;
+        return mosAverage >= WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
     }
 
     /**
@@ -138,8 +141,7 @@ export class WebRTCStreamManager {
     static getInitialStream(videoElement: HTMLVideoElement): AvailableStreams {
         /** Calculate initial stream if it hasn't been set */
         WebRTCStreamManager.INITIAL_STREAM ??= WebRTCStreamManager.calculateAdequateMosScore() ? AvailableStreams.PRIMARY : AvailableStreams.SECONDARY;
-        const addequateFocus = calculateElementFocus(videoElement) >= WebRTCStreamManager.HIGH_QUALITY_FOCUS_THRESHOLD;
-        return addequateFocus ? WebRTCStreamManager.INITIAL_STREAM : AvailableStreams.SECONDARY;
+        return WebRTCStreamManager.INITIAL_STREAM
     }
 
     /** Playback details for use in either logging during development or for performance tuning */
@@ -149,15 +151,7 @@ export class WebRTCStreamManager {
 
     /** Stream Switching Algorithm Parameters */
 
-    static HIGH_QUALITY_FOCUS_THRESHOLD: IntRange<0, 6> = 2;
-
-    static FOCUS_SCORE_MULTIPLIER = 5;
-
-    static HIGH_QUALITY_FOCUS_SCORE_THRESHOLD = WebRTCStreamManager.HIGH_QUALITY_FOCUS_THRESHOLD * WebRTCStreamManager.FOCUS_SCORE_MULTIPLIER;
-
-    static HIGH_QUALITY_FOCUS_SCORE_BASELINE = 320;
-
-    static HIGH_QUALITY_MOS_THRESHOLD: IntRange<0, 6> = 3;
+    static HIGH_QUALITY_MOS_THRESHOLD: IntRange<0, 6> = 4;
 
     static LOW_QUALITY_MOS_THRESHOLD: IntRange<0, 6> = 3;
 
@@ -190,69 +184,48 @@ export class WebRTCStreamManager {
             stream: connection.currentStream()
         }))),
         map(details => {
-            const mosAverage = details.reduce((total, { mos }) => total + mos as IntRange<0, 6>, WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD) / details.length
-            const targetStream = !details.length || mosAverage >= WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD ? 0 : 1
-            WebRTCStreamManager.INITIAL_STREAM = targetStream
+            const mosValues = details.filter(({ mos }) => !!mos && !Number.isNaN(mos)).map(({ mos }) => mos);
+            WebRTCStreamManager.INITIAL_STREAM = !details.length || Math.max(...mosValues) >= WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD ? 0 : 1;
 
-            const shouldUpdateStream = targetStream ? mosAverage < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD : mosAverage > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
-            details = details.sort((a, b) => targetStream ? a.priority - b.priority : b.priority - a.priority)
+            WebRTCStreamManager.logger?.info({ mosValues })
 
-            return {
-                targetStream,
-                shouldUpdateStream,
-                details
-            }
+            return details.sort((a, b) => b.priority - a.priority)
         }),
-        tap(({ targetStream, shouldUpdateStream, details }) => {
-            WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD = calculateWindowFocusThreshold(WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_BASELINE);
-            // console.info(`Focus threshold: ${WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD}`)
+        tap(details => {
             const getCameraId = (connection: WebRTCStreamManager) => {
                 const webRtcUrl = connection.webRtcUrlFactory();
                 return getConnectionKey(webRtcUrl)
             };
 
-            const coolOff = (fn: (param: typeof details[number]) => boolean) => (cooloffSeconds?: number) => (param: typeof details[number]) => {
-                if (param.connection.cooldownLock || !fn(param)) {
+            const streamsToUpgrade = details.filter(({ stream,  mos }) => stream === 1 && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD);
+            const streamsToDowngrade = details.filter(({ stream, mos }) => stream === 0 && mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD).reverse();
+            const numStreamsToUpgrade = streamsToUpgrade.length > streamsToDowngrade.length ? streamsToDowngrade.length + 1: streamsToUpgrade.length;
+            const numStreamsToDowngrade = streamsToDowngrade.length > streamsToUpgrade.length ? streamsToUpgrade.length + 1: streamsToDowngrade.length;
+            const streamsToUpdate = [...streamsToUpgrade.slice(0, numStreamsToUpgrade), ...streamsToDowngrade.slice(0, numStreamsToDowngrade)];
+
+            const coolOff = (cooloffSeconds?: number) => (connection: WebRTCStreamManager) => {
+                if (connection.cooldownLock) {
                     return false;
                 }
 
-                param.connection.aquireLock(cooloffSeconds);
+                connection.aquireLock(cooloffSeconds);
 
                 return true;
             }
 
-            const canUpgrade = ({ stream, priority, mos }: typeof details[number]) => stream === 1 && priority > WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
-
-            const canDowngrade = ({ stream, connection }: typeof details[number]) => connection.availableStreams.includes(AvailableStreams.SECONDARY) && stream === 0;
-
-            const downgradeLowPriority = () => details.filter(coolOff(canDowngrade)()).forEach(({ priority, connection }) => {
-                if (priority < WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD) {
-                    console.info(`Downgrading camera ${getCameraId(connection)} due to low priority/focus`)
-                    connection.aquireLock(5);
-                    connection.updateStream(AvailableStreams.SECONDARY)
+            const updated = streamsToUpdate.filter(({ connection, mos}) => {
+                const upgrade = mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD;
+                const shouldUpdateStream = (upgrade? coolOff(30) : coolOff(15))(connection);
+                if (shouldUpdateStream) {
+                    connection.updateStream(upgrade ? AvailableStreams.PRIMARY : AvailableStreams.SECONDARY);
                 }
+                return shouldUpdateStream;
             })
-
-            const downgradeConnnectionQuality = () => details.filter(coolOff(canDowngrade)()).forEach(({ mos, connection }) => {
-                if (mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD) {
-                    console.info(`Downgrading camera ${getCameraId(connection)} due to low connection quality`)
-                    connection.aquireLock(90);
-                    connection.updateStream(AvailableStreams.SECONDARY)
-                }
-            })
-
-            if (shouldUpdateStream) {
-                const updateTarget = details.find(targetStream ? coolOff(canDowngrade)(30) : coolOff(canUpgrade)(15))
-                if (updateTarget) {
-                    updateTarget.connection?.updateStream(targetStream as 0 | 1)
-                    console.info(`Switching camera ${getCameraId(updateTarget.connection)} (${updateTarget.priority}) to ${targetStream ? 'low' : 'high'} quality`)
-                } else {
-                    console.info(`No cameras available to switch to ${targetStream ? 'low' : 'high'} quality`)
-                }
+            if (updated.length) {
+                WebRTCStreamManager.logger?.info(`Switched streams for ${updated.length} devices: ${updated.map(({ connection }) => `${getCameraId(connection)}(Stream ${connection.currentStream()})`).join(', ')}`)
+            } else {
+                WebRTCStreamManager.logger?.info(`No cameras available to switch quality`)
             }
-
-            downgradeLowPriority();
-            downgradeConnnectionQuality();
         })
     )
 
@@ -273,7 +246,7 @@ export class WebRTCStreamManager {
                         const threshold = connection.stream$.value ? 5 : 2;
                         if(connection.noFrames > threshold && connection?.peerConnection?.connectionState === 'connected') {
                             connection.noFrames = 0;
-                            console.info(`No bytes received for ${indentifier}. Reconnecting`);
+                            WebRTCStreamManager.logger?.info(`No bytes received for ${indentifier}. Reconnecting`);
                             WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier].close(1);
                         }
                     } else {
@@ -634,9 +607,8 @@ export class WebRTCStreamManager {
      */
     public getPriority() {
         return {
-            priority: this.performanceTrackers.reduce((acc, tracker) => acc + tracker.toPriority(), 0),
+            priority: <number>this.performanceTrackers.find((tracker) => tracker instanceof FocusTracker)?.toMetric().focus || 0,
             mos: <number>this.performanceTrackers.find((tracker) => tracker instanceof MosScoreTracker)?.toMetric().mosScore || 0,
-            fps: <number>this.performanceTrackers.find((tracker) => tracker instanceof FrameTracker)?.toMetric().fps ?? Infinity
         }
     }
 
@@ -716,6 +688,7 @@ export class WebRTCStreamManager {
         this.peerConnection = null;
         this.performanceTrackers.forEach((tracker) => {
             tracker.connection = null;
+            tracker.destroy();
         })
 
         this.videoRef?.remove();
@@ -831,7 +804,7 @@ export class WebRTCStreamManager {
             const webRtcStreamManager = this;
             this.mediaSource.onsourceopen = function () {
                 const mediaSource = this;
-                console.log(`ms is opened: ${mimeType}`);
+                WebRTCStreamManager.logger?.log(`ms is opened: ${mimeType}`);
                 if (!webRtcStreamManager.sourceBuffer) {
                     webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
@@ -899,7 +872,7 @@ export class WebRTCStreamManager {
      * @param description RTCSessionDescriptionInit
      */
     private createdDescription = (description: RTCSessionDescriptionInit): void => {
-        console.log('got description');
+        WebRTCStreamManager.logger?.log('got description');
 
         this.peerConnection
             .setLocalDescription(description)
@@ -919,7 +892,7 @@ export class WebRTCStreamManager {
      * @param error
      */
     private errorHandler = (error: unknown): void => {
-        console.log(error);
+        WebRTCStreamManager.logger?.log(error);
         this.peerConnection.close();
         this.peerConnection = null;
         this.initPeerConnection();
@@ -989,6 +962,8 @@ export class WebRTCStreamManager {
             this.apiVersion ||= await this.getApiVersion();
 
             if (lostConnection) {
+                this.updateStream(AvailableStreams.SECONDARY);
+                this.aquireLock(30);
                 this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
                 complete();
                 return this.close(3, this.apiVersion === ApiVersions.v1);
@@ -1006,8 +981,8 @@ export class WebRTCStreamManager {
             webRtcUrl += `stream=${stream}&`;
             const systemId = new URL(webRtcUrl).host.split('.').shift();
 
-            console.info('Starting stream')
-            // console.table({ webRtcUrl, stream, position })
+            WebRTCStreamManager.logger?.info('Starting stream')
+            // WebRTCStreamManager.logger?.table({ webRtcUrl, stream, position })
             const webRtcUrlObject = new URL(webRtcUrl);
             const relayHost = webRtcUrlObject.host;
             this.serverId = webRtcUrlObject.searchParams.get('x-server-guid');
@@ -1134,7 +1109,7 @@ export class WebRTCStreamManager {
                 complete,
             });
 
-        }, new URL(this.webRtcUrlFactory()).host, 500);
+        }, new URL(this.webRtcUrlFactory()).host, 500, 10_000, WebRTCStreamManager.logger);
         await firstValueFrom(this.mediaStream$.pipe(filter((stream) => !!stream), takeUntil(this.closeNotifier$), timeout({ first: 2500, with: () => Promise.resolve() })))
     };
 
@@ -1160,13 +1135,13 @@ export class WebRTCStreamManager {
     handleDataChannelMessage = (message: string): void => {
         try {
             const data = JSON.parse(message) as DataChannelMessage;
-            console.info('Data channel message', data);
+            WebRTCStreamManager.logger?.info('Data channel message', data);
 
             if(isTimeStampMessage(data)) {
                 if (this.isLive) {
-                    console.info('skip updating position from timestamp since live', data.timestamp)
+                    WebRTCStreamManager.logger?.info('skip updating position from timestamp since live', data.timestamp)
                 } else {
-                    console.info('updating position from timestamp', data.timestamp)
+                    WebRTCStreamManager.logger?.info('updating position from timestamp', data.timestamp)
                     this.position$.next(new WithSkip(data.timestamp, true));
                 }
 
@@ -1175,13 +1150,13 @@ export class WebRTCStreamManager {
             }
 
             if (isStreamChangeMessage(data)) {
-                console.info('stream codec changed, reconnecting')
+                WebRTCStreamManager.logger?.info('stream codec changed, reconnecting')
                 this.close(0.1, true);
                 return;
             }
 
         } catch(e) {
-            console.error('Error parsing data channel message', e);
+            WebRTCStreamManager.logger?.error('Error parsing data channel message', e);
         }
     }
 
@@ -1194,7 +1169,7 @@ export class WebRTCStreamManager {
             this.closeWsConnection,
             this.start,
             stream => {
-                console.log(stream);
+                WebRTCStreamManager.logger?.log(stream);
                 this.stopCurrentStream();
                 this.mediaStream$.next([stream, null, this]);
             },
@@ -1205,6 +1180,7 @@ export class WebRTCStreamManager {
                 speed: this.speed$.value.value
             }),
             this.handleDataChannelMessage,
+            WebRTCStreamManager.logger,
         );
 
         this.updateTrackerConnections();

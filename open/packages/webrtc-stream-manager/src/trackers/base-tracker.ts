@@ -2,6 +2,7 @@
 
 import { MediaServerPeerConnection } from '../media-server-peer-connection';
 import { IntRange, StreamQuality, StreamQualityStrings } from '../types';
+import { WebRTCIssueDetectorWithState } from './webrtc-issue-detector';
 
 interface MetricWrapper<Metric> {
     time: number,
@@ -31,6 +32,8 @@ export abstract class BaseTracker<Metric> {
     public abstract updateMetric(now: number, ...args: unknown[]): unknown;
 
     public abstract metricName: string;
+
+    public  destroy: () => void = () => {};
 
     get players() {
         return this.videoElementRefs.length
@@ -72,6 +75,8 @@ export abstract class BaseTracker<Metric> {
         this.videoElementRefs = players;
     }
 
+    private tracker: WebRTCIssueDetectorWithState
+
     /**
      * Update the connection ref used by tracker and updates intial metrics.
      *
@@ -103,7 +108,7 @@ export abstract class BaseTracker<Metric> {
         if (typeof metric === 'number') {
             return metric * this.priorityWeight;
         }
-        console.error('Metric type incompatible with default suggestedStream implementation. Please override in your derived class.')
+        this.logger?.error('Metric type incompatible with default suggestedStream implementation. Please override in your derived class.')
         return 0;
     }
 
@@ -146,7 +151,7 @@ export abstract class BaseTracker<Metric> {
         if (typeof metric === 'number') {
             return metric > this.metricThreshold ? StreamQuality.high : StreamQuality.low;
         }
-        console.error('Metric type incompatible with default suggestedStream implementation. Please override in your derived class.')
+        this.logger?.error('Metric type incompatible with default suggestedStream implementation. Please override in your derived class.')
         return StreamQuality.low;
     }
 
@@ -179,7 +184,7 @@ export abstract class BaseTracker<Metric> {
         }
 
         this.filterMetricValues();
-        const average = Math.round(this.getAverage());
+        const average = Math.round(this.getAverage() * 100) / 100;
 
         if (reset) {
             this.reset();
@@ -201,6 +206,7 @@ export abstract class BaseTracker<Metric> {
     }
 
     constructor(
-        public sampleSize = 5000
+        public sampleSize = 5000,
+        protected logger?: Console,
     ) { }
 }

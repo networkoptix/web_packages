@@ -32,7 +32,7 @@ export class FocusTracker extends BaseTracker<number> {
      * @returns number
      */
     getMetric(reset = false): number {
-        return this.defaultMetricHandler(reset)
+        return this.calculateFocusScore();
     };
 
     /**
