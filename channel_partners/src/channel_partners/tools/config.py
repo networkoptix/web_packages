@@ -28,7 +28,7 @@ def get_default_host(instance_name: str, instance_domain_name: str) -> str | Non
 
 
 def get_container_name():
-    metadata_uri = os.environ.get('ECS_CONTAINER_METADATA_URI')
+    metadata_uri = os.environ.get('ECS_CONTAINER_METADATA_URI', '')
     if not metadata_uri:
         return ''
     try:
