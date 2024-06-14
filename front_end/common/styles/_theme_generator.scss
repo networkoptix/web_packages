@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:string';
 
 $_theme-names: 'dark', 'dark_gray', 'light_gray', 'light';
 
@@ -58,8 +59,14 @@ Example: -1 => dark: light1, dark-gray: light_gray_1...
 2. A map with theme names as keys and numbers or existing variables as values
 The map specifies the colors for each theme individually. If values for
 light/dark gray themes are not provided, the values for light/dark will be used.
+
+@param `$selector` Element with [data-theme] attribute.
+
+Defaults to html (global).
+
+Use :host with theme attribute directive if limiting to single component
 */
-@mixin generate-theme-vars($variables) {
+@mixin generate-theme-vars($variables, $selector: 'html') {
     $themes: (
         'dark': (),
         'dark_gray': (),
@@ -104,7 +111,7 @@ light/dark gray themes are not provided, the values for light/dark will be used.
         $dashed: map.get($_case-map, $theme-name);
         $theme-variables: map.get($themes, $theme-name);
 
-        html[data-theme="#{$dashed}"],
+        #{string.unquote($selector)}[data-theme="#{$dashed}"],
         [data-theme-override="#{$dashed}"] {
             @each $variable-name, $variable-value in $theme-variables {
                 #{$variable-name}: var(--#{$variable-value});

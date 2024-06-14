@@ -3,12 +3,15 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
+
 @Component({
     selector: 'nx-theme-variable-generator-sandbox',
     templateUrl: 'theme-variable-generator-sandbox.component.html',
     styleUrls: ['theme-variable-generator-sandbox.component.scss'],
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxThemeVariableGeneratorSandboxComponent {
     themes = ['dark', 'dark-gray', 'light-gray', 'light'];
