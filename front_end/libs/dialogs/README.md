@@ -131,7 +131,7 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
 ```
 
 ```scss
-@use '../nx-modal.scss'; // Default styling for modals
+@use '../nx-modal'; // Default styling for modals
 ```
 
 **3\. Add the method to open the dialog**

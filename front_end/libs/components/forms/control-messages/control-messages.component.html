@@ -2,17 +2,31 @@
     class="sizing-container"
     [ngStyle]="{ 'width.px': width() }"
 >
-    @if (preset() === 'requiredEmail') {
+    @if (preset() === 'requiredInput') {
+        <ng-container [ngTemplateOutlet]="requiredInputPreset"></ng-container>
+    } @else if (preset() === 'requiredEmail') {
         <ng-container [ngTemplateOutlet]="requiredEmailPreset"></ng-container>
     }
     <ng-content></ng-content>
 </div>
 <ng-template [cdkPortalOutlet]="selectedMessage()"></ng-template>
 
+<ng-template #requiredInputPreset>
+    <nx-control-message
+        key="required"
+        [text]="'Required' | translate"
+    ></nx-control-message>
+    <nx-control-message
+        key="maxlength"
+        [text]="LANG.customValidatorMsg.charLimitFraction"
+        translateWith="data"
+    ></nx-control-message>
+</ng-template>
+
 <ng-template #requiredEmailPreset>
     <nx-control-message
         key="required"
-        [text]="'Email is required' | translate"
+        [text]="'Required' | translate"
     ></nx-control-message>
     <nx-control-message
         key="pattern"

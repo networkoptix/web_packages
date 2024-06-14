@@ -10,6 +10,8 @@ import { staticImplements } from '@utils/general';
  * equivalent to React <Fragment> so those can't be moved to a separate file.
  */
 export enum ControlPresets {
+    /** Generic required input, base max length of 150 characters */
+    RequiredInput = 'requiredInput',
     RequiredEmail = 'requiredEmail',
 }
 
@@ -17,6 +19,8 @@ type PresetValidators = { [P in ControlPresets]: ValidatorFn | (() => ValidatorF
 
 @staticImplements<PresetValidators>()
 export class NxValidators {
+    static requiredInput = Validators.compose([Validators.maxLength(150), Validators.required])!;
+
     static requiredEmail = Validators.compose([
         Validators.maxLength(255),
         Validators.pattern(simpleEmailRegex),

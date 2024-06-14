@@ -172,7 +172,6 @@ export type CreateSystemGroup = DialogType<
     {
         orgId: string;
         parentGroup: string;
-        parentGroupName?: string;
     },
     Group
 >;
