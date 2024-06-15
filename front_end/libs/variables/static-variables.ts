@@ -124,8 +124,8 @@ export const excludeFooterURLs: string[] = [
     '/systems',
     '/doc/developers/api-tool',
     '/health-report',
-    '/home'
-]
+    '/home',
+];
 
 export const healthMonitoring = {
     staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
@@ -548,6 +548,7 @@ export const servers = {
     errors: {
         invalidParameter: 'invalidParameter',
         oldSessionErrorId: 'sessionExpired',
+        cloudSessionTruncated: 'sessionTruncated',
         unauthorized: 'unauthorized',
         badRequest: 'badRequest',
         userPasswordRequired: 'userPasswordRequired',
@@ -739,6 +740,7 @@ export const settingsConfig = {
     upnpPortMappingEnabled: { type: 'checkbox' },
     useCloudServiceToSendEmail: { type: 'checkbox' },
     useHttpsOnlyForCameras: { type: 'checkbox' },
+    useSessionLimitForCloud: { type: 'checkbox' },
     useTextEmailFormat: { type: 'checkbox' },
     useWindowsEmailLineFeed: { type: 'checkbox' },
     videoTrafficEncryptionForced: {

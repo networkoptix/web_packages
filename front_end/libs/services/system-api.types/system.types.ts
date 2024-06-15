@@ -115,6 +115,7 @@ export interface Settings {
     trafficEncryptionForced: string;
     updateNotificationsEnabled: string;
     upnpPortMappingEnabled: string;
+    useSessionLimitForCloud: string;
     useTextEmailFormat: string;
     useWindowsEmailLineFeed: string;
     videoTrafficEncryptionForced: string;

@@ -17,6 +17,7 @@ export enum ResultCodes {
 export enum ErrorIds {
     SessionExpired = 'sessionExpired',
     Forbidden = 'forbidden',
+    SessionTruncated = 'sessionTruncated',
 }
 
 interface ApiError<Status extends number, ErrorValue> extends HttpErrorResponse {
@@ -80,4 +81,20 @@ export const isSessionExpiredError = isApiError<SessionExpiredError>()(
     403,
     'errorId',
     ErrorIds.SessionExpired,
+);
+
+/** When a server has the useSessionLimitForCloud flag set to true, the session can expire for that specific server */
+export type SessionTruncatedError = ApiError<
+    403,
+    {
+        error: '15';
+        errorId: ErrorIds.SessionTruncated;
+        /** Cloud session lifetime is truncated by Site setting.  */
+        errorString: string;
+    }
+>;
+export const isSessionTruncatedError = isApiError<SessionTruncatedError>()(
+    403,
+    'errorId',
+    ErrorIds.SessionTruncated,
 );

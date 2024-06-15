@@ -622,6 +622,7 @@ export interface SettingsConfig {
     upnpPortMappingEnabled: Setting;
     useCloudServiceToSendEmail: Setting;
     useHttpsOnlyForCameras: Setting;
+    useSessionLimitForCloud: Setting;
     useTextEmailFormat: Setting;
     useWindowsEmailLineFeed: Setting;
     videoTrafficEncryptionForced: Setting;

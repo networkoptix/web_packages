@@ -15,6 +15,7 @@ import type {
     SystemUser,
     UserGroup,
 } from '@services/system-user.types';
+import { servers } from '@static-variables';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
@@ -117,7 +118,10 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                 })
                 .catch(err => {
                     // Unknown session token
-                    if (err.errorId === 'cantProcessRequest') {
+                    if (
+                        err.errorId === 'cantProcessRequest' ||
+                        err.errorId === servers.errors.cloudSessionTruncated
+                    ) {
                         this.accessToken = '';
                     } else if (err.error?.errorString === `Resource '${userId}' is not found`) {
                         // Set the error string here to avoid making another API call for userId at Login

@@ -267,7 +267,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 if (
                     !environment.isLocal &&
                     [401, 403, 422].includes(e.status) &&
-                    location.href.includes(this.systemId)
+                    location.href.includes(this.systemId) &&
+                    e.error.errorId !== servers.errors.cloudSessionTruncated
                 ) {
                     location.reload();
                 }
@@ -322,13 +323,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 ) => {
                     if (
                         attempt === 0 &&
-                        error?.error?.errorId !== servers.errors.oldSessionErrorId
+                        error?.error?.errorId !== servers.errors.oldSessionErrorId &&
+                        error?.error?.errorId !== servers.errors.cloudSessionTruncated
                     ) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
 
-                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions');
+                        const isLoginRequest = error.url?.includes('/rest/v1/login/sessions');
                         const isInvalidParamterError =
                             error.status === 422 && errorId === servers.errors.invalidParameter;
                         const isBadRequestError =
