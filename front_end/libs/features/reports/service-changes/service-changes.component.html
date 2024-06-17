@@ -14,10 +14,17 @@
                     | translate: { customerName: selectedEntityName$$() }
             }}
         </p>
+        <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
     </div>
     <div class="service-changes-table-wrapper">
         <nx-service-changes-table
             [records]="formattedServiceChangeRecords$$()"
         ></nx-service-changes-table>
     </div>
+    <nx-month-select
+        [monthIndex]="monthIndex()"
+        (monthIndexChange)="monthIndex.set($event)"
+        [year]="year()"
+        (yearChange)="year.set($event)"
+    ></nx-month-select>
 }

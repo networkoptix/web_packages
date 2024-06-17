@@ -1,10 +1,15 @@
 @use "theme_variables_common" as vars;
 @use "typography";
 
-@mixin nx-button {
-    height: 2rem;
+@mixin reset {
     outline: none;
     border: none;
+    color: inherit;
+}
+
+@mixin nx-button {
+    height: 2rem;
+    @include reset;
     border-radius: vars.$border-radius-base;
 
     display: flex;

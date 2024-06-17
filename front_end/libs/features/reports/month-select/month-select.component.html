@@ -1,0 +1,37 @@
+<button
+    class="arrow-btn arrow-btn--decrement"
+    data-escape-global-style
+    (click)="decrementMonth()"
+>
+    <svg-icon [src]="icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+</button>
+<button
+    class="menu-trigger-btn"
+    #monthsMenuTrigger
+    data-escape-global-style
+    [cdkMenuTriggerFor]="monthsMenu"
+>
+    {{ display() }}
+</button>
+<button
+    class="arrow-btn arrow-btn--increment"
+    data-escape-global-style
+    (click)="incrementMonth()"
+>
+    <svg-icon [src]="icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+</button>
+
+<ng-template #monthsMenu>
+    <div cdkMenu>
+        @for (month of longMonths; track $index) {
+            <button
+                data-escape-global-style
+                cdkMenuItemCheckbox
+                [cdkMenuItemChecked]="$index === monthIndex()"
+                (cdkMenuItemTriggered)="monthIndex.set($index)"
+            >
+                {{ month }}
+            </button>
+        }
+    </div>
+</ng-template>

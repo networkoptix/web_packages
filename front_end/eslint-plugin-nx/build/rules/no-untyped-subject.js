@@ -18,6 +18,7 @@ module.exports = (0, utils_2.createRule)({
                     return;
                 }
                 if (value.type === utils_1.AST_NODE_TYPES.NewExpression &&
+                    value.callee.type === utils_1.AST_NODE_TYPES.Identifier &&
                     value.callee.name.endsWith('Subject') &&
                     !value.typeParameters &&
                     !typeAnnotation) {
