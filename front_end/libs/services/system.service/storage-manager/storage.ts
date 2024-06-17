@@ -170,7 +170,7 @@ export class CurrentStorageState {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
+    #checkCanStoreAnalytics = ({ storageType }: Storage) => [STORAGE_TYPES.LOCAL, STORAGE_TYPES.USB].includes(storageType);
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     checkAnalytics = (storage: Storage) => ({
