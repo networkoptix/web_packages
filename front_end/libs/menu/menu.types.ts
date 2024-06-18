@@ -25,6 +25,7 @@ export interface Level1Item {
     alerts?: Alert[];
     icon?: string;
     query?: string;
+    params?: Record<string, string>;
 }
 
 interface Alert {

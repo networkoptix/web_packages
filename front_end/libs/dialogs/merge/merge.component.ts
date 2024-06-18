@@ -189,7 +189,8 @@ export class MergeModalContent {
     }
 
     async init(targetSystem?, currentUrl?): Promise<void> {
-        this.dryRunAvailable = this.system.info.capabilities.merge_systems >= 1;
+        this.dryRunAvailable =
+            this.system.info.capabilities.merge_systems >= 1 || this.system.useRest;
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);

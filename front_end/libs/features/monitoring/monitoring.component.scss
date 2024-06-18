@@ -7,3 +7,13 @@
         }
     }
 }
+
+::ng-deep nx-select-v2 {
+    * {
+        font-size: 14px;
+    }
+}
+
+nx-select-item {
+    font-size: 14px;
+}

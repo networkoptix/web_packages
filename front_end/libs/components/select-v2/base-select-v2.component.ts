@@ -172,7 +172,9 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
     }
 
     scrollOptionIntoView(item: BaseSelectV2Item<T>): void {
-        scrollItemIntoView(item.self.nativeElement, this.dropdown.nativeElement);
+        if (item.self && this.dropdown) {
+            scrollItemIntoView(item.self.nativeElement, this.dropdown.nativeElement);
+        }
     }
 
     abstract onKeyDown(event: KeyboardEvent): void;

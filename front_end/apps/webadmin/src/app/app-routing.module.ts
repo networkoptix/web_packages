@@ -101,7 +101,6 @@ const lazyRoutes: Routes = [
             anchorScrolling: 'enabled',
             enableTracing: false,
             // preloadingStrategy: HoverPreloadStrategy,
-            onSameUrlNavigation: 'reload',
             bindToComponentInputs: true,
             enableViewTransitions: true,
         }),

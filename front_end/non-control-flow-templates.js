@@ -239,7 +239,6 @@ module.exports = [
     "libs/features/landing/landing.component.html",
     "libs/features/monitoring/graphs/graphs.component.html",
     "libs/features/monitoring/logs/logs.component.html",
-    "libs/features/monitoring/monitoring.component.html",
     "libs/features/new-landing/background-graphic/background-graphic.component.html",
     "libs/features/new-landing/content-container/content-container.component.html",
     "libs/features/new-landing/landing-content-block/landing-content-block.component.html",
