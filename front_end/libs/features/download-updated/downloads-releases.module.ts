@@ -1,6 +1,7 @@
 import { Injectable, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 
+import { BackwardsCompatPlatformGuard } from '@guards/backwardsCompatPlatformGuard';
 import { DownloadGuard } from '@guards/downloadGuard';
 import { ReleaseGuard } from '@guards/releaseGuard';
 import { DownloadComponent } from '@pages/download-updated/download/download-component.component';
@@ -55,6 +56,12 @@ const appRoutes: Routes = [
                     downloadData: DownloadDataReleaseTypeResolver,
                     sortedPlatforms: SortedPlatformsResolver,
                 },
+            },
+            {
+                path: ':platform',
+                canActivate: [BackwardsCompatPlatformGuard],
+                // This is here because something needs to be here. In A18 we can probably remove it in favor of a redirect method
+                component: DownloadComponent,
             },
             {
                 path: 'betas',

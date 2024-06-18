@@ -14,10 +14,10 @@ export const DownloadHistoryResolver: ResolveFn<Promise<BuildHistory | Build>> =
         params: { type },
     } = route;
 
-    let data = await cloudApiService.getDownloadsHistory((type === 'rc' && fragment) || undefined);
-    if (type !== 'rc') {
-        return data;
+    const publicData = await cloudApiService.getDownloadsHistory(undefined);
+    const data = await cloudApiService.getDownloadsHistory(fragment || undefined);
+    if (!fragment || publicData[type].some(({ version }) => version === fragment)) {
+        return publicData;
     }
-    data = data as Build;
-    return { [data.type]: [data] };
+    return { [type]: [data] };
 };
