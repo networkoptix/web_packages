@@ -1,0 +1,107 @@
+@use 'components/button/buttons';
+@use "typography";
+
+:host {
+    display: flex;
+    box-shadow: var(--btn-dropdown-toggle-shadow-color);
+}
+
+button {
+    @include buttons.reset();
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    @include typography.medium13nocolor;
+}
+
+.menu-trigger-btn,
+.arrow-btn {
+    background-color: var(--btn-dropdown-toggle-bg);
+
+    &:hover {
+        background-color: var(--btn-dropdown-toggle-hover-bg);
+        box-shadow: var(--btn-dropdown-toggle-hover-shadow);
+    }
+
+    &:active {
+        background-color: var(--btn-dropdown-toggle-active-bg);
+        box-shadow: var(--btn-dropdown-toggle-active-shadow);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--btn-default-focus-outline-rgb);
+        outline-offset: 2px;
+        box-shadow: var(--btn-default-focus-shadow);
+    }
+}
+
+$menu-width: 8rem;
+
+.menu-trigger-btn {
+    padding: 0.5rem 1rem;
+    width: $menu-width;
+    z-index: 10; // Don't cover outline with arrow buttons
+}
+
+.arrow-btn {
+    padding: 0.5rem;
+    width: 2rem;
+
+    svg-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+            width: 1.125rem;
+            height: 1.125rem;
+            polyline {
+                stroke-width: 2px;
+            }
+        }
+    }
+
+    &--decrement {
+        border-start-start-radius: 2px;
+        border-end-start-radius: 2px;
+        svg-icon {
+            rotate: 90deg;
+        }
+    }
+    &--increment {
+        border-start-end-radius: 2px;
+        border-end-end-radius: 2px;
+        svg-icon {
+            rotate: -90deg;
+        }
+    }
+}
+
+
+
+.cdk-menu {
+    width: $menu-width;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--btn-dropdown-toggle-bg);
+    box-shadow: var(--dropdown-menu-shadow);
+}
+
+.cdk-menu-item {
+    background-color: transparent;
+    padding: 0.5rem;
+    color: inherit;
+    @include typography.medium13nocolor;
+
+    &[aria-checked="false"] {
+        &:hover,
+        &:focus {
+            background-color: var(--btn-dropdown-toggle-hover-bg);
+        }
+    }
+
+    &[aria-checked="true"] {
+        background-color: var(--dropdown-item-selected-bg);
+        color: var(--dropdown-item-selected-color);
+    }
+}

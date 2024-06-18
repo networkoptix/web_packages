@@ -1,7 +1,12 @@
 :host {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+p {
+    margin-bottom: unset;
 }
 
 .heading {
@@ -15,4 +20,10 @@
 
 .service-changes-table-wrapper {
     flex-grow: 1;
+}
+
+nx-month-select {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

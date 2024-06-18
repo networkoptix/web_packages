@@ -14,6 +14,8 @@ import {
     selectOrganizations,
 } from '@store/channel-partners/channel-partners.selectors';
 
+import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
+import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
 
 import { ServiceChangesStore } from './service-changes.store';
@@ -24,11 +26,16 @@ import { NxServiceChangesTableComponent } from './services-changes-table/service
     selector: 'nx-service-changes',
     templateUrl: './service-changes.component.html',
     styleUrl: './service-changes.component.scss',
-    imports: [TranslateModule, NxServiceChangesTableComponent, NxPreLoaderComponent],
+    imports: [
+        TranslateModule,
+        NxServiceChangesTableComponent,
+        NxPreLoaderComponent,
+        NxMonthSelectComponent,
+    ],
     providers: [ServiceChangesStore],
     standalone: true,
 })
-export class NxServiceChangesComponent {
+export class NxServiceChangesComponent extends BaseMonthPageComponent {
     LANG = staticLang;
     readonly serviceChangesStore = inject(ServiceChangesStore);
     private readonly store = inject(Store);

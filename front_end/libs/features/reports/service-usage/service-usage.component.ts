@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
 
+import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
+import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
 import { NxServiceUsageDetailsComponent } from '../service-usage-details/service-usage-details.component';
 
@@ -20,16 +22,17 @@ import { FormattedUsageReportRecord } from './service-usage.types';
         NxServiceUsageTableComponent,
         NxPreLoaderComponent,
         NxServiceUsageDetailsComponent,
+        NxMonthSelectComponent,
     ],
     providers: [ServiceUsageStore],
     standalone: true,
 })
-export class NxServiceUsageComponent {
+export class NxServiceUsageComponent extends BaseMonthPageComponent {
     LANG = staticLang;
     readonly serviceUsageStore = inject(ServiceUsageStore);
 
-    protected entityType$$ = input.required<EntityType>({ alias: 'entityType' });
-    protected entityId$$ = input.required<string>({ alias: 'entityId' });
+    entityType$$ = input.required<EntityType>({ alias: 'entityType' });
+    entityId$$ = input.required<string>({ alias: 'entityId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
 
     formattedServiceUsageRecords$$ = computed<FormattedUsageReportRecord[]>(() => {
