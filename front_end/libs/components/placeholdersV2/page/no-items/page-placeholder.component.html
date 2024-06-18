@@ -8,12 +8,14 @@
     <div class="title">
         {{ LANG.placeholderV2Texts.noItems.title | translate }}
     </div>
-    <div class="message">
-        {{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 0 }}
-        <span
-            (click)="addFolder()"
-            class="inline-button"
-            >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 1 }}</span
-        >
-    </div>
+    @if (canManageSystems$$()) {
+        <div class="message">
+            {{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 0 }}
+            <span
+                (click)="addFolder()"
+                class="inline-button"
+                >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 1 }}</span
+            >
+        </div>
+    }
 </nx-page-generic-placeholder-v2>

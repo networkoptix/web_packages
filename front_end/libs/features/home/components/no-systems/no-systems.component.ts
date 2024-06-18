@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@language_static';
@@ -13,4 +13,6 @@ import staticLang from '@language_static';
 })
 export class NxNoSystemsCardsComponent {
     LANG = staticLang;
+
+    canManageSystems$$ = input<boolean>(false, { alias: 'canManageSystems' });
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
@@ -33,6 +33,7 @@ import { icons } from '@static-variables';
 })
 export class NxPagePlaceholderNoItemsComponent {
     @Output() addFolderEvent = new EventEmitter<void>();
+    canManageSystems$$ = input<boolean>(false, { alias: 'canManageSystems' });
 
     LANG = staticLang;
     icons = icons;
