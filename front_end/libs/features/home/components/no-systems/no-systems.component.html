@@ -1,68 +1,71 @@
 <div>
     <div class="no-systems-header">{{ 'No Systems' | translate }}</div>
-    <div class="cards-container">
-        <div class="card">
-            <div class="card-interior">
-                <p [innerHTML]="LANG.placeholderTexts.noSystems.notConnected | translate"></p>
-                <div class="number-row">
-                    <div class="number-circle">1</div>
-                    <p
-                        class="description-text"
-                        [innerHTML]="LANG.placeholderTexts.noSystems.login | translate"
-                    ></p>
-                </div>
-                <div class="number-row">
-                    <div class="number-circle">2</div>
-                    <div
-                        class="description-text"
-                        translate
-                    >
-                        Click "Connect to %CLOUD_NAME%" in the %CLOUD_NAME% tab in System
-                        Administration
+    @if (canManageSystems$$()) {
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-interior">
+                    <p [innerHTML]="LANG.placeholderTexts.noSystems.notConnected | translate"></p>
+                    <div class="number-row">
+                        <div class="number-circle">1</div>
+                        <p
+                            class="description-text"
+                            [innerHTML]="LANG.placeholderTexts.noSystems.login | translate"
+                        ></p>
+                    </div>
+                    <div class="number-row">
+                        <div class="number-circle">2</div>
+                        <div
+                            class="description-text"
+                            translate
+                        >
+                            Click "Connect to %CLOUD_NAME%" in the %CLOUD_NAME% tab in System
+                            Administration
+                        </div>
+                    </div>
+                    <div class="number-row">
+                        <div class="number-circle">3</div>
+                        <div
+                            class="description-text"
+                            translate
+                        >
+                            Follow the steps of wizard
+                        </div>
                     </div>
                 </div>
-                <div class="number-row">
-                    <div class="number-circle">3</div>
-                    <div
-                        class="description-text"
-                        translate
-                    >
-                        Follow the steps of wizard
+            </div>
+            <div class="card">
+                <div class="card-interior">
+                    <p [innerHTML]="LANG.placeholderTexts.noSystems.connected | translate"></p>
+                    <div class="number-row">
+                        <div class="number-circle">1</div>
+                        <div
+                            class="description-text"
+                            translate
+                        >
+                            Connect to %CLOUD_NAME% by system owner’s account
+                        </div>
+                    </div>
+                    <div class="number-row">
+                        <div class="number-circle">2</div>
+                        <div
+                            class="description-text"
+                            translate
+                        >
+                            Open System Settings page and click “change” link next to the owner's
+                            name
+                        </div>
+                    </div>
+                    <div class="number-row">
+                        <div class="number-circle">3</div>
+                        <div
+                            class="description-text"
+                            translate
+                        >
+                            Follow the steps of wizard
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-interior">
-                <p [innerHTML]="LANG.placeholderTexts.noSystems.connected | translate"></p>
-                <div class="number-row">
-                    <div class="number-circle">1</div>
-                    <div
-                        class="description-text"
-                        translate
-                    >
-                        Connect to %CLOUD_NAME% by system owner’s account
-                    </div>
-                </div>
-                <div class="number-row">
-                    <div class="number-circle">2</div>
-                    <div
-                        class="description-text"
-                        translate
-                    >
-                        Open System Settings page and click “change” link next to the owner's name
-                    </div>
-                </div>
-                <div class="number-row">
-                    <div class="number-circle">3</div>
-                    <div
-                        class="description-text"
-                        translate
-                    >
-                        Follow the steps of wizard
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    }
 </div>

@@ -177,9 +177,12 @@
             class="no-systems"
         >
             @if (inRoot) {
-                <nx-no-systems-cards />
+                <nx-no-systems-cards [canManageSystems]="canManageSystems$$()" />
             } @else {
-                <nx-page-placeholder-no-items (addFolderEvent)="newGroupDialog()" />
+                <nx-page-placeholder-no-items
+                    [canManageSystems]="canManageSystems$$()"
+                    (addFolderEvent)="newGroupDialog()"
+                />
             }
         </div>
     } @else {
