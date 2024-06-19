@@ -294,22 +294,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         const systemName = this.system.info.systemName || this.system.info.name;
         if (!this.systemNameFormWatcher || this.systemName !== systemName) {
             // Removes the expression changed after checked error. Needs to be moved to a computed signal.
-            setTimeout(() => {
-                this.systemName = systemName;
-            });
+            this.systemName = systemName;
 
             if (this.systemNameFormWatcher) {
                 this.applyService.removeFormWatcher('systemNameForm');
             }
-            if (this.systemNameForm) {
-                setTimeout(() => {
-                    this.systemNameFormWatcher = this.applyService.createFormWatcher(
-                        'systemNameForm',
-                        this.systemNameForm,
-                        this.systemNameProcess,
-                    );
-                });
-            }
+            setTimeout(() => {
+                this.systemNameFormWatcher = this.applyService.createFormWatcher(
+                    'systemNameForm',
+                    this.systemNameForm,
+                    this.systemNameProcess,
+                );
+            });
         }
     }
 
