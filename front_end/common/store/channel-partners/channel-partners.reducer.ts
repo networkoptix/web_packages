@@ -54,7 +54,7 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
-        ChannelPartnerActions.loadPartnersOrgsAndStructure,
+        ChannelPartnerActions.loadChannelStructure,
         (state): ChannelPartnersState => ({
             ...state,
             channelPartnersAndOrgsLoadState: LoadingState.LOADING,
@@ -102,13 +102,11 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
-        ChannelPartnerActions.setPartnersOrgsAndStructure,
-        (state, { channelPartners, organizations, channelStructure }): ChannelPartnersState => ({
+        ChannelPartnerActions.setChannelStructure,
+        (state, { channelStructure }): ChannelPartnersState => ({
             ...state,
             hasStoreLoaded: true,
             channelPartnersAndOrgsLoadState: LoadingState.LOADED,
-            channelPartners: sortEntityByName(channelPartners),
-            organizations: sortEntityByName(organizations),
             channelStructure,
         }),
     ),

@@ -24,8 +24,8 @@ export const loadChannelPartnersAndOrgs = createAction(
     props<{ includeChildOrgs: boolean }>(),
 );
 
-export const loadPartnersOrgsAndStructure = createAction(
-    '[Channel Partners] Load channel partners, organizations, and channel structure',
+export const loadChannelStructure = createAction(
+    '[Channel Partners] Load channel partners structure',
 );
 
 export const setChannelPartners = createAction(
@@ -48,11 +48,9 @@ export const setChannelPartnersAndRootOrgs = createAction(
     props<{ channelPartners: ChannelPartner[]; rootOrganizations: Organization[] }>(),
 );
 
-export const setPartnersOrgsAndStructure = createAction(
-    '[Channel Partners] Set channel partners, organizations, and channel structure',
+export const setChannelStructure = createAction(
+    '[Channel Partners] Set channel structure',
     props<{
-        channelPartners: ChannelPartner[];
-        organizations: Organization[];
         channelStructure: ChannelPartnersStructure;
     }>(),
 );

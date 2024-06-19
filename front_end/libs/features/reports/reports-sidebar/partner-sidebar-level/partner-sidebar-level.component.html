@@ -9,9 +9,12 @@
         <svg-icon
             (click)="toggleOpen(partnerStructure$$().id)"
             nx-add-svg-src
-            [src]="icons.dirTextButtons + (isOpen$$() ? 'arrow_open.svg' : 'arrow_close.svg')"
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-            svgClass="triangle"
+            [src]="icons.dirTextButtons + 'arrow_close.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20',
+                transform: isOpen$$() ? 'rotate(90deg)' : 'rotate(0deg)'
+            }"
             class="open-toggle"
         ></svg-icon>
     }
