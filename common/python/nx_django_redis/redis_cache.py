@@ -1,6 +1,7 @@
 import asyncio
 import dataclasses
 import random
+import re
 import threading
 import typing
 import types
@@ -905,6 +906,12 @@ class BackendSyncCommandsMixin:
         return self._cache.time()
 
 
+def clean_keys(cache_backend, *keys, version=None):
+    prefix = cache_backend.make_key('', version=version)
+    keys = [k.decode() for k in keys if isinstance(k, bytes) or isinstance(k, bytearray)]
+    return [re.sub(rf'^{prefix}', '', k) for k in keys]
+
+
 class SyncAsyncRedisBackend(BackendAsyncCommandsMixin, BackendSyncCommandsMixin, RedisCache):
     def __init__(self, server, params):
         super().__init__(server, params)
@@ -933,9 +940,7 @@ class SyncAsyncRedisBackend(BackendAsyncCommandsMixin, BackendSyncCommandsMixin,
         return self._class(self._servers, **self._options)
 
     def clean_keys(self, *keys, version=None):
-        prefix = self.make_key('', version=version)
-        keys = [k.decode() for k in keys if isinstance(k, bytes) or isinstance(k, bytearray)]
-        return [k.replace(prefix, '') for k in keys]
+        return clean_keys(self, *keys, version=version)
 
 
 class RedisSyncClient(RedisSyncCommandsMixin, RedisCacheClient):
@@ -952,6 +957,4 @@ class RedisSyncBackend(BackendSyncCommandsMixin, RedisCache):
         return self._class(self._servers, **self._options)
 
     def clean_keys(self, *keys, version=None):
-        prefix = self.make_key('', version=version)
-        keys = [k.decode() for k in keys if isinstance(k, bytes) or isinstance(k, bytearray)]
-        return [k.replace(prefix, '') for k in keys]
+        return clean_keys(self, *keys, version=version)
