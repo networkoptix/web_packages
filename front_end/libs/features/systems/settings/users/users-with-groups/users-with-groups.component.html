@@ -32,6 +32,7 @@
                             formControlName="isEnabled"
                             *ngIf="systemAvailable && editPermissions$$().enable"
                             id="user-active-status"
+                            data-testid="user-active-switch"
                             name="user-active-status"
                             showWarning
                         ></nx-switch>
@@ -62,6 +63,7 @@
                         formControlName="groupIds"
                         *ngIf="editPermissions$$().changePermissions"
                         [componentId]="'edit-user-groups'"
+                        data-testid="group-dropdown"
                         name="userGroupsSelect"
                         [dataType]="DATA_TYPE.GROUPS"
                         [canSelectAll]="false"
@@ -168,6 +170,7 @@
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             name="fullName"
                             id="fullName"
+                            data-testid="fullname"
                             [readonly]="isLdap$$()"
                             maxlength="255"
                         />
@@ -189,6 +192,7 @@
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             name="email"
                             id="email"
+                            data-testid="email"
                             pattern="{{ credentialsValidation.emailRegex }}"
                             maxlength="255"
                         />
@@ -214,6 +218,7 @@
                     <button
                         class="btn btn-default"
                         id="accountSettingsButton"
+                        data-testid="account-settings"
                         (click)="routeToAccountSettings()"
                         translate
                     >
@@ -226,6 +231,7 @@
                 >
                     <button
                         class="btn btn-default"
+                        data-testid="change-password"
                         (click)="changePassword()"
                         translate
                     >
@@ -238,6 +244,7 @@
                 >
                     <button
                         class="btn btn-default has-icon"
+                        data-testid="delete-user"
                         [disabled]="!systemAvailable"
                         (click)="removeUser()"
                     >

@@ -29,6 +29,7 @@
                         <nx-switch
                             *ngIf="systemAvailable && canBeEdited$$()"
                             formControlName="isEnabled"
+                            data-testid="user-active-switch"
                             id="user-active-status"
                             name="user-active-status"
                             showWarning
@@ -57,6 +58,7 @@
                     >
                     <nx-permissions-select
                         id="permissionsSelect"
+                        data-testid="role-dropdown"
                         name="permissionsSelect"
                         formControlName="role"
                         [system]="system"
@@ -100,6 +102,7 @@
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             name="fullName"
                             id="fullName"
+                            data-testid="fullname"
                             maxlength="255"
                         />
                     </div>
@@ -120,6 +123,7 @@
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             name="email"
                             id="email"
+                            data-testid="email"
                             pattern="{{ credentialsValidation.emailRegex }}"
                             maxlength="255"
                         />
@@ -145,6 +149,7 @@
                     <button
                         class="btn btn-default"
                         id="accountSettingsButton"
+                        data-testid="account-settings"
                         (click)="routeToAccountSettings()"
                         translate
                     >
@@ -157,6 +162,7 @@
                 >
                     <button
                         class="btn btn-default"
+                        data-testid="change-password"
                         (click)="changePassword()"
                         [disabled]="isLdap$$()"
                         translate
@@ -170,6 +176,7 @@
                 >
                     <button
                         class="btn btn-default has-icon"
+                        data-testid="delete-user"
                         [disabled]="!systemAvailable"
                         (click)="removeUser()"
                     >

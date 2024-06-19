@@ -322,7 +322,7 @@ const lazyRoutes: Routes = [
             anchorScrolling: 'enabled',
             enableTracing: false,
             bindToComponentInputs: true,
-            enableViewTransitions: true,
+            enableViewTransitions: false,
         }),
     ],
     declarations: [],

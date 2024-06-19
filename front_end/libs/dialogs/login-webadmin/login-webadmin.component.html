@@ -50,6 +50,7 @@
                 type="email"
                 class="form-control"
                 id="login_email"
+                data-testid="user-input"
                 name="login_email"
                 #login_email="ngModel"
                 [ngModel]="auth.email"
@@ -72,6 +73,7 @@
                 class="form-control"
                 name="login_password"
                 id="login_password"
+                data-testid="password-input"
                 #login_password="ngModel"
                 [(ngModel)]="password"
                 (ngModelChange)="resetForm()"
@@ -100,6 +102,7 @@
     <div class="modal-footer">
         <nx-process-button
             class="login-full-width-wrapper"
+            data-testid="login-webadmin"
             buttonText="{{ 'Log In' | translate }}"
             [style.width.%]="100"
             customButtonClass="login-full-width"
@@ -119,6 +122,7 @@
             </div>
             <button
                 class="btn btn-default oauth-login"
+                data-testid="login-cloud"
                 [disabled]="loading"
                 (click)="redirectOauthLogin()"
             >

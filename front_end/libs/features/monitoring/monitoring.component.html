@@ -10,7 +10,10 @@
                 @if (!servers()) {
                     <nx-pre-loader />
                 } @else {
-                    <nx-select-v2 [(ngModel)]="serverId">
+                    <nx-select-v2
+                        data-testid="server-dropdown"
+                        [(ngModel)]="serverId"
+                    >
                         @for (server of servers()!; track server.id) {
                             <nx-select-item
                                 [selected]="serverId() === server.id"
