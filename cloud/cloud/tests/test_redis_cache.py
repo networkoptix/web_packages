@@ -9,7 +9,8 @@ from django.core.cache import caches
 class TestSyncAsyncRedisBackend:
     @pytest.fixture(autouse=True)
     def setup(self):
-        self.cache = caches["global"]
+        self.cache_name = 'global'
+        self.cache = caches[self.cache_name]
         self.cache.clear()
         self.key = 'test_hash_key'
         self.length = 10
@@ -149,11 +150,31 @@ class TestSyncAsyncRedisBackend:
             assert key in keys
             assert data == self.cache.hget(hash, key)
 
+    def test_clean_keys(self):
+        version = 2
+        keys = [
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+        ]
+        validated_keys = [self.cache.make_and_validate_key(k, version=version).encode() for k in keys]
+        cleaned = self.cache.clean_keys(*validated_keys, version=version)
+
+        assert cleaned == keys
+
+    def test_hmget_keys(self):
+        version = 2
+        data = {f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}':1 for _ in range(10)}
+        self.cache.hmset('test', data, version=version)
+        cached = self.cache.hmget('test', *list(data.keys()), version=version)
+        assert cached == data
+
 
 class TestSyncAsyncRedisBackendAsync:
     @pytest.fixture(autouse=True)
     async def setup(self):
-        self.cache = caches["global"]
+        self.cache_name = 'global'
+        self.cache = caches[self.cache_name]
         self.cache.clear()
         self.key = 'test_hash_key'
         self.length = 10
@@ -330,4 +351,21 @@ class TestSyncAsyncRedisBackendAsync:
         assert isinstance(err, ValueError)
         assert err.args[0].startswith('Awaitable cannot be cached. Got object:')
 
+    def test_clean_keys(self):
+        version = 2
+        keys = [
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+            f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}',
+        ]
+        validated_keys = [self.cache.make_and_validate_key(k, version=version).encode() for k in keys]
+        cleaned = self.cache.clean_keys(*validated_keys, version=version)
 
+        assert cleaned == keys
+
+    async def test_hmget_keys(self):
+        version = 2
+        data = {f'key:{self.cache_name}:{version}:{self.cache_name}:{version}:{uuid4()}':1 for _ in range(10)}
+        await self.cache.ahmset('test', data, version=version)
+        cached = await self.cache.ahmget('test', *list(data.keys()), version=version)
+        assert cached == data
