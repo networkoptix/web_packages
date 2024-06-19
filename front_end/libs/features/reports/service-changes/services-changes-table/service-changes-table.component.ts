@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
+import { EntityType } from '@pages/reports/reports.types';
 
-import type { FormattedServiceChangeRecord } from '../service-changes.types';
+import type {
+    FormattedOrgServiceChangeRecord,
+    FormattedPartnerServiceChangeRecord,
+    FormattedServiceChangeRecord,
+} from '../service-changes.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -28,5 +33,18 @@ export class NxServiceChangesTableComponent {
         { value: 'Date', name: 'date' },
     ];
     selectedRecordId = '';
-    records = input.required<FormattedServiceChangeRecord[]>();
+    entityType$$ = input.required<EntityType>({ alias: 'entityType' });
+    partnerRecords$$ = input.required<FormattedPartnerServiceChangeRecord[]>({
+        alias: 'partnerRecords',
+    });
+    orgRecords$$ = input.required<FormattedOrgServiceChangeRecord[]>({ alias: 'orgRecords' });
+
+    isPartnerTable$$ = computed<boolean>(() => this.entityType$$() === EntityType.channelPartner);
+    records$$ = computed<FormattedServiceChangeRecord[]>(() => {
+        const isPartnerTable = this.isPartnerTable$$();
+        const partnerRecords = this.partnerRecords$$();
+        const orgRecords = this.orgRecords$$();
+
+        return isPartnerTable ? partnerRecords : orgRecords;
+    });
 }

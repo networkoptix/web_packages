@@ -6,12 +6,8 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
-    ChannelPartner,
-    Organization,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import {
-    selectChannelPartners,
-    selectOrganizations,
+    selectOrgsFromStructure,
+    selectPartnersFromStructure,
 } from '@store/channel-partners/channel-partners.selectors';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
@@ -19,7 +15,10 @@ import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
 
 import { ServiceChangesStore } from './service-changes.store';
-import { FormattedServiceChangeRecord } from './service-changes.types';
+import {
+    FormattedOrgServiceChangeRecord,
+    FormattedPartnerServiceChangeRecord,
+} from './service-changes.types';
 import { NxServiceChangesTableComponent } from './services-changes-table/service-changes-table.component';
 
 @Component({
@@ -43,23 +42,32 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
-    private channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
-    private organizations$$ = this.store.selectSignal<Organization[]>(selectOrganizations);
+    private partners$$ = this.store.selectSignal(selectPartnersFromStructure);
+    private organizations$$ = this.store.selectSignal(selectOrgsFromStructure);
 
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
-    formattedServiceChangeRecords$$ = computed<FormattedServiceChangeRecord[]>(() => {
+    formattedPartnerServiceChangeRecords$$ = computed<FormattedPartnerServiceChangeRecord[]>(() => {
         const records = this.serviceChangesStore.records();
-        const channelPartners = this.channelPartners$$();
+        const partners = this.partners$$();
         const organizations = this.organizations$$();
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
-        const cpIdToNameMap = new Map(channelPartners.map(({ id, name }) => [id, name]));
-        const orgIdToNameMap = new Map(organizations.map(({ id, name }) => [id, name]));
+        return records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
+            serviceName: serviceIdToNameMap.get(serviceId) ?? '',
+            amount,
+            changedAtName:
+                partners.get(changedAtId)?.name ?? organizations.get(changedAtId)?.name ?? '',
+            date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
+        }));
+    });
+    formattedOrgServiceChangeRecords$$ = computed<FormattedOrgServiceChangeRecord[]>(() => {
+        const records = this.serviceChangesStore.records();
+        const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
         return records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
-            serviceName: serviceIdToNameMap.get(serviceId) || '',
+            serviceName: serviceIdToNameMap.get(serviceId) ?? '',
             amount,
-            changedAtName: cpIdToNameMap.get(changedAtId) || orgIdToNameMap.get(changedAtId) || '',
+            changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
             date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
         }));
     });

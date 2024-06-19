@@ -18,7 +18,9 @@
     </div>
     <div class="service-changes-table-wrapper">
         <nx-service-changes-table
-            [records]="formattedServiceChangeRecords$$()"
+            [entityType]="entityType$$()"
+            [partnerRecords]="formattedPartnerServiceChangeRecords$$()"
+            [orgRecords]="formattedOrgServiceChangeRecords$$()"
         ></nx-service-changes-table>
     </div>
     <nx-month-select

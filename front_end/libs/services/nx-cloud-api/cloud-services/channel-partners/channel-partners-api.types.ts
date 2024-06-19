@@ -465,6 +465,7 @@ interface OrgServiceChangeEntry {
         displayName: string;
     };
     changeQuantity: number;
+    system: string;
     date: string;
 }
 

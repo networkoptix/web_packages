@@ -57,19 +57,13 @@ export class ChannelPartnersEffects {
         );
     });
 
-    loadPartnersOrgsAndStructure$ = createEffect(() => {
+    loadChannelStructure$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(ChannelPartnerActions.loadPartnersOrgsAndStructure),
+            ofType(ChannelPartnerActions.loadChannelStructure),
             switchMap(() =>
-                forkJoin(
-                    this.CPService.getChannelPartners(),
-                    this.CPService.getOrganizations(true),
-                    this.CPService.getChannelStructure(),
-                ).pipe(
-                    map(([channelPartners, organizations, channelStructure]) => ({
-                        type: ChannelPartnerActions.setPartnersOrgsAndStructure.type,
-                        channelPartners,
-                        organizations,
+                this.CPService.getChannelStructure().pipe(
+                    map(channelStructure => ({
+                        type: ChannelPartnerActions.setChannelStructure.type,
                         channelStructure,
                     })),
                 ),
