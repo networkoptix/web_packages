@@ -23,14 +23,14 @@ from NoptixLibrary.server_api import _MediaserverUser
 from email_access import get_random_email
 from requests import HTTPError
 
-_docker_host = "10.2.34.112"
+_docker_host = "10.2.38.98"
 _vms_version = "5.1"
 if len(sys.argv) >= 2:
     _CLOUD_HOST = sys.argv[1]
 else:
     _CLOUD_HOST = "https://test.ft-cloud.hdw.mx"
 _CLOUD_API = CloudPortalAPI(env=_CLOUD_HOST)
-_DOCKER_API = DockerHTTPApi(f'http://{_docker_host}:5555')
+_DOCKER_API = DockerHTTPApi(f'http://{_docker_host}:2375')
 
 _logger = logging.getLogger(__name__)
 
