@@ -102,7 +102,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     orgName$$ = signal('');
 
     settingsForSystem$: Observable<Settings>;
-    systemName: string;
+    systemName: string | undefined;
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;
     icons = icons;

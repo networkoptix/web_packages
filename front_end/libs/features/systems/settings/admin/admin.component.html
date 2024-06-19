@@ -2,7 +2,10 @@
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
 <div
-    *ngIf="!environment.isLocal ? cloudSystemInfo$$() : systemName; else systemNotReady"
+    *ngIf="
+        !environment.isLocal ? cloudSystemInfo$$() : systemName !== undefined;
+        else systemNotReady
+    "
     class="row d-flex align-items-start"
 >
     <div class="col-12 system-settings">
