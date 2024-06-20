@@ -472,12 +472,12 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
     --dropdown-menu-shadow : none;
     --dropdown-menu-shadow-upper : none;
-    --dropdown-menu-bg : #121517; //dark4;
+    --dropdown-menu-bg : var(--dark13);
     --drop-menu-systems-bg    : #171C1F; //$dark5;
     --drop-menu-navigation-bg : #212A2F; //$dark7;
     --dropdown-placeholder-color: #738F9D; //$light15;
 
-    --dropdown-item-color: #A5B7C0; //$light10
+    --dropdown-item-color: var(--light1);
     --dropdown-item-active-bg : #2B383F; //$dark9;
     // --dropdown-item-active-color
     --dropdown-item-hover-bg : #212A2F; //dark7;
