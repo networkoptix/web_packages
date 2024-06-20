@@ -88,8 +88,8 @@ class DateTimeHelper {
     }
 
     msToHour24(ms: number): string {
-        const hours = Math.floor(ms / MS.hr);
-        const minutes = (ms - hours * MS.hr) / MS.min;
+        const hours = Math.floor(ms / MS.hour);
+        const minutes = (ms - hours * MS.hour) / MS.minute;
         const date = new Date();
         date.setHours(hours);
         date.setMinutes(minutes);
@@ -97,8 +97,8 @@ class DateTimeHelper {
     }
 
     msToHour12(ms: number): [time: string, PM: boolean] {
-        const hours = Math.floor(ms / MS.hr);
-        const minutes = (ms - hours * MS.hr) / MS.min;
+        const hours = Math.floor(ms / MS.hour);
+        const minutes = (ms - hours * MS.hour) / MS.minute;
         const date = new Date();
         date.setHours(hours);
         date.setMinutes(minutes);
@@ -181,7 +181,7 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
         if (!hours && !minutes && this.point === 'end') {
             hours += 24;
         }
-        return MS.hr * hours + MS.min * minutes;
+        return MS.hour * hours + MS.minute * minutes;
     }
 
     h12StrToMs(time: string): number {
@@ -198,7 +198,7 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
                 hours -= 12;
             }
         }
-        return MS.hr * hours + MS.min * minutes;
+        return MS.hour * hours + MS.minute * minutes;
     }
 
     emitValue(value: string = this.value): void {

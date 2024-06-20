@@ -34,43 +34,43 @@ export const getExpirationText = (expiration: Date): Observable<Translatable> =>
     }
 
     // Only run the timer if the expiration is less than an hour away. The one minute buffer was added per product request
-    if (expirationInMS - nowInMS < MS.hr + MS.min) {
-        return timer(0, MS.s).pipe(
+    if (expirationInMS - nowInMS < MS.hour + MS.minute) {
+        return timer(0, MS.second).pipe(
             map(() => {
                 const timeUntilExpiration = expirationInMS - new Date().getTime();
                 if (timeUntilExpiration <= 0) {
                     return LANG.bookmarkSharing.expirationOptions.expired;
                 }
 
-                if (timeUntilExpiration <= MS.min) {
+                if (timeUntilExpiration <= MS.minute) {
                     return {
                         value: LANG.bookmarkSharing.expirationOptions.seconds,
-                        params: { count: Math.round(timeUntilExpiration / MS.s).toString() },
+                        params: { count: Math.round(timeUntilExpiration / MS.second).toString() },
                     };
                 }
 
                 // display minutes if less than 59 minutes and 30 seconds
-                if (timeUntilExpiration <= MS.hr - MS.s * 30) {
+                if (timeUntilExpiration <= MS.hour - MS.second * 30) {
                     return {
                         value: LANG.bookmarkSharing.expirationOptions.minutes,
-                        params: { count: Math.round(timeUntilExpiration / MS.min).toString() },
+                        params: { count: Math.round(timeUntilExpiration / MS.minute).toString() },
                     };
                 }
 
                 return {
                     value: LANG.bookmarkSharing.expirationOptions.hours,
-                    params: { count: Math.round(timeUntilExpiration / MS.hr).toString() },
+                    params: { count: Math.round(timeUntilExpiration / MS.hour).toString() },
                 };
             }),
         );
     }
 
-    const roundedToNearestHourExpiration = new Date(Math.round(expirationInMS / MS.hr) * MS.hr);
+    const roundedToNearestHourExpiration = new Date(Math.round(expirationInMS / MS.hour) * MS.hour);
     // This is the time remaining that we want to display
     const roundedTimeRemaining = roundedToNearestHourExpiration.getTime() - nowInMS;
 
     if (roundedTimeRemaining < MS.day) {
-        const hoursLeft = Math.round(roundedTimeRemaining / MS.hr);
+        const hoursLeft = Math.round(roundedTimeRemaining / MS.hour);
         return of({
             value: LANG.bookmarkSharing.expirationOptions.hours,
             params: { count: hoursLeft.toString() },

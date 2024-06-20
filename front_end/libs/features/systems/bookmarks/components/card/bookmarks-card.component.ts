@@ -41,7 +41,11 @@ export class NxBookmarksCardComponent implements OnInit {
             numberingSystem: 'latn',
         });
 
-        const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark$$().durationMs);
+        const {
+            second: seconds,
+            minute: minutes,
+            hour: hours,
+        } = msToParts(this.bookmark$$().durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
         this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds
             .toString()

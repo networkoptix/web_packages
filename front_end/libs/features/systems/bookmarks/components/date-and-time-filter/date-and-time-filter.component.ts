@@ -80,7 +80,7 @@ export class NxDateAndTimeFilterComponent {
     constructor(dateAdapter: DateAdapter<Date>, dateTimeService: NxDateTimeFormatService) {
         dateAdapter.setLocale(dateTimeService.locale);
         this.updateFixedDates();
-        timer(MS.min, MS.min)
+        timer(MS.minute, MS.minute)
             .pipe(untilDestroyed(this))
             .subscribe(_ => {
                 if (this.todayStart.getTime() !== this.lastDay.start.getTime()) {

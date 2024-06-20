@@ -219,7 +219,7 @@
             [tooltipPositions]="['N', 'start']"
             (click)="slowTooltip.toggle(); slowTransition = true"
             (tooltipOpenChange)="slowTransition = false; resetCountdown()"
-            [tooltipDelay]="MS.s * 1000"
+            [tooltipDelay]="MS.second * 1000"
             style="width: 96px"
         >
             {{ slowTransition ? (thousandCountdown | async) : 'Slow' }}
