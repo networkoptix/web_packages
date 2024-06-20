@@ -9,6 +9,7 @@
     border-right: 1px solid var(--groups-sidebar-border);
     background-color: var(--groups-sidebar-bg);
     color: var(--groups-sidebar-intro-text-color);
+    z-index: 2;
 
 
     @include bootstrap.media-breakpoint-down(sm) {
