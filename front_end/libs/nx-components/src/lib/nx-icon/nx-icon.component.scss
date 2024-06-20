@@ -1,0 +1,29 @@
+@use "../styles/reset-mixins";
+
+@mixin apply-fill-and-stroke($stroke, $fill) {
+    &[applyFill] {
+        fill: $fill;
+    }
+    &[applyStroke] {
+        stroke: $stroke;
+    }
+}
+
+@include reset-mixins.reset-globals {
+    :host {
+        display: inline-block;
+        ::ng-deep {
+            .Primary, .Primary *:not(.Secondary):not(.Third) {
+                @include apply-fill-and-stroke(var(--svg-primary-stroke), var(--svg-primary-fill));
+            }
+
+            .Secondary, .Secondary *:not(.Primary):not(.Third) {
+                @include apply-fill-and-stroke(var(--svg-secondary-stroke), var(--svg-secondary-fill));
+            }
+
+            .Third, .Third *:not(.Primary):not(.Secondary) {
+                @include apply-fill-and-stroke(var(--svg-third-stroke), var(--svg-third-fill));
+            }
+        }
+    }
+}

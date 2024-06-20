@@ -1,0 +1,39 @@
+{
+    "name": "nx-icons",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/nx-icons/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "generate-icons": {
+            "executor": "nx:run-script",
+            "inputs": [
+                "{workspaceRoot}/src/lib/initial-icons/**",
+                "{workspaceRoot}/tsconfig*.json",
+                "{workspaceRoot}/package*.json"
+            ],
+            "outputs": ["{workspaceRoot}/src/lib/generated/**"],
+            "options": {
+                "script": "generate-icons"
+            }
+        },
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "dependsOn": ["generate-icons"],
+            "options": {
+                "outputPath": "dist/libs/nx-icons",
+                "main": "libs/nx-icons/src/index.ts",
+                "tsConfig": "libs/nx-icons/tsconfig.lib.json",
+                "assets": ["libs/nx-icons/*.md"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/nx-icons/jest.config.ts"
+            }
+        }
+    }
+}

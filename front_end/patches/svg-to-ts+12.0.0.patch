@@ -1,0 +1,118 @@
+diff --git a/node_modules/svg-to-ts/src/lib/converters/shared.converter.js b/node_modules/svg-to-ts/src/lib/converters/shared.converter.js
+index cae0883..f1a4dbc 100644
+--- a/node_modules/svg-to-ts/src/lib/converters/shared.converter.js
++++ b/node_modules/svg-to-ts/src/lib/converters/shared.converter.js
+@@ -45,11 +45,40 @@ const filesProcessor = (conversionOptions) => __awaiter(void 0, void 0, void 0,
+     if (!filePaths.length) {
+         throw `No SVG files found for ${srcFiles}`;
+     }
++    const fileNamesWithEnding = filePaths.map((filePath) => path.basename(filePath).replace(`'`, ''));
++    const filenameLookup = filePaths.reduce((acc, filePath) => {
++        const fileNameWithEnding = path.basename(filePath).replace(`'`, '');
++        const [filenameWithoutEnding] = fileNameWithEnding.split('.');
++        const dimensions = filePath.match(/(\d+x\d+)/g)?.[0] || '';
++        const filenameWithDimensions = `${filenameWithoutEnding}${dimensions}`;
++        const numberOfIdentical = fileNamesWithEnding.reduce((acc, name) => name === fileNameWithEnding ? acc + 1 : acc, 0);
++
++        if (numberOfIdentical > 1) {
++            const fileNamesWithDimensions = filePaths.map(filePath => {
++                const [filenameWithoutEnding] = path.basename(filePath).replace(`'`, '').split('.');
++                const dimensions = filePath.match(/(\d+x\d+)/g)?.[0] || '';
++                return { filePath, name: `${filenameWithoutEnding}${dimensions}`};
++            })
++            const filteredNamesWithDimensions = fileNamesWithDimensions.filter(({ name }) => name === filenameWithDimensions);
++            const numberIdential = filteredNamesWithDimensions.length;
++            if (numberIdential > 1) {
++                acc[filePath] = `${filenameWithDimensions}Variant${filteredNamesWithDimensions.findIndex(node => node.filePath === filePath) + 1}`
++            } else {
++                acc[filePath] = filenameWithDimensions
++            }
++        } else {
++            acc[filePath] = filenameWithoutEnding;
++        }
++
++        return acc;
++    }, {})
++
+     // Using Promise.all we are making all files be processed in parallel as they have no dependency on each other
+     let svgDefinitions = yield Promise.all(filePaths.map((filePath) => __awaiter(void 0, void 0, void 0, function* () {
+         let svgDefinition = null;
+         const fileNameWithEnding = path.basename(filePath).replace(`'`, '');
+-        const [filenameWithoutEnding, extension] = fileNameWithEnding.split('.');
++        const [_filenameWithoutEnding, extension] = fileNameWithEnding.split('.');
++        const filenameWithoutEnding = filenameLookup[filePath];
+         if (extension === 'svg') {
+             const rawSvg = yield (0, file_helpers_1.extractSvgContent)(filePath);
+             logger_1.Logger.verboseInfo(`optimize svg: ${fileNameWithEnding}`);
+diff --git a/node_modules/svg-to-ts/src/lib/generators/code-snippet-generators.js b/node_modules/svg-to-ts/src/lib/generators/code-snippet-generators.js
+index 01c9972..56fdf21 100644
+--- a/node_modules/svg-to-ts/src/lib/generators/code-snippet-generators.js
++++ b/node_modules/svg-to-ts/src/lib/generators/code-snippet-generators.js
+@@ -25,9 +25,11 @@ const generateInterfaceDefinition = (conversionOptions) => {
+     if (generateEnum) {
+         nameType = enumName;
+     }
+-    return `export interface ${interfaceName}{
+-        name: ${nameType};
+-        data: string;}`;
++
++    return '';
++    // return `export interface ${interfaceName}{
++    //     name: ${nameType};
++    //     data: string;}`;
+ };
+ exports.generateInterfaceDefinition = generateInterfaceDefinition;
+ const generateObjectInterface = (exportAsDefaultObject, conversionOptions) => {
+@@ -66,20 +68,17 @@ const generateEnumDefinition = (conversionOptions, svgDefinitions) => {
+     if (generateEnum) {
+         enumDefinition += `
+     export enum ${enumName} {${svgDefinitions
+-            .map(({ typeName }, index) => `${(0, lodash_snakecase_1.default)(typeName).toUpperCase()} = '${typeName}'${index === svgDefinitions.length - 1 ? '}' : ','}`)
++            .map(({ typeName }, index) => `${(0, lodash_snakecase_1.default)(typeName).toUpperCase()} = '${capitalize(typeName)}'${index === svgDefinitions.length - 1 ? '}' : ','}`)
+             .join('')};`;
+     }
+     return enumDefinition;
+ };
+ exports.generateEnumDefinition = generateEnumDefinition;
+ const generateSvgConstant = (variableName, filenameWithoutEnding, data) => {
+-    return `export const ${variableName}: {
+-            name: '${filenameWithoutEnding}',
+-            data: string
+-          } = {
+-                name: '${filenameWithoutEnding}',
+-                data: \`${data}\`
+-            };`;
++    return `export const ${variableName} = {
++        name: '${capitalize(filenameWithoutEnding)}',
++        data: \`${data}\`
++    } as const;`;
+ };
+ exports.generateSvgConstant = generateSvgConstant;
+ function generateTSXConstant(variableName, svg) {
+@@ -89,6 +88,12 @@ function generateTSXConstant(variableName, svg) {
+ }
+ exports.generateTSXConstant = generateTSXConstant;
+ const generateExportStatement = (fileName, generatedIconsFolderName) => {
++
++    console.info({ fileName })
++    if (fileName.endsWith('my-icons.model')) {
++        return ''
++    }
++
+     if (generatedIconsFolderName) {
+         return `export * from './${generatedIconsFolderName}/${fileName}';`;
+     }
+@@ -119,11 +124,11 @@ const generateVariableName = (prefix, filenameWithoutEnding) => {
+ };
+ exports.generateVariableName = generateVariableName;
+ const generateTypeHelper = (interfaceName) => `
+-    export type ${interfaceName}NameSubset<T extends Readonly<${interfaceName}[]>> = T[number]['name'];
++    // export type ${interfaceName}NameSubset<T extends Readonly<${interfaceName}[]>> = T[number]['name'];
+     `;
+ exports.generateTypeHelper = generateTypeHelper;
+ const generateTypeHelperWithImport = (interfaceName, iconsFolderName, modelFileName) => `
+-    import type {${interfaceName}} from './${iconsFolderName}/${modelFileName}';
++    // import type {${interfaceName}} from './${iconsFolderName}/${modelFileName}';
+     ${(0, exports.generateTypeHelper)(interfaceName)}
+     `;
+ exports.generateTypeHelperWithImport = generateTypeHelperWithImport;

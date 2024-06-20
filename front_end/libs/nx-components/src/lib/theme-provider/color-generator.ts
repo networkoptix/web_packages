@@ -179,7 +179,7 @@ export const withGeneratedColors = memoize(
     (initialTheme: ThemeDefinition, options: ThemeOptions): ThemeDefinition<ThemeColors> => {
         return {
             ...initialTheme,
-            core: applyCoreSaturation(initialTheme.brand, options),
+            core: applyCoreSaturation(initialTheme.brandBg, options),
         };
     },
     hash,

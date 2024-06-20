@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-import { background } from '../styles/core';
+import { background, textColor } from '../styles/core';
 
 import { ColorGenerator, withGeneratedColors } from './color-generator';
 import {
@@ -28,9 +28,9 @@ export class NxThemeProviderService {
     });
     public readonly colors = computed(() => this.colorGenerator.createTheme(this.currentTheme()));
 
-    public toggleTheme(): void {
+    public toggleTheme(inverse?: boolean): void {
         this.theme.update(({ theme, options = {} }: ThemeWithOptions) => {
-            const inverse = !options?.inverse;
+            inverse = inverse ?? !options?.inverse;
             return {
                 theme,
                 options: {
@@ -64,8 +64,10 @@ export class NxThemeProviderService {
     private updateStorybookBackground(): void {
         const updatedColors = this.colors();
         document.body.style.setProperty('background', updatedColors[background]);
+        document.body.style.setProperty('color', updatedColors[textColor]);
         document.querySelectorAll<HTMLElement>('.docs-story').forEach(element => {
             element.style.setProperty('background', updatedColors[background]);
+            element.style.setProperty('color', updatedColors[textColor]);
         });
     }
 

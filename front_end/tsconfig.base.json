@@ -26,6 +26,7 @@
                 "libs/components-buildable/src/*",
                 "libs/components-buildable/src/lib/*"
             ],
+            "nx-icons": ["libs/nx-icons/src/index"],
             "nx-components": ["libs/nx-components/src/index"],
             "@decorators/*": ["libs/decorators/*"],
             "@db/*": ["libs/db/*"],

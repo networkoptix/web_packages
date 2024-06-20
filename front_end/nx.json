@@ -72,6 +72,11 @@
         },
         "build-storybook": {
             "cache": true
+        },
+        "@nx/js:tsc": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["production", "^production"]
         }
     },
     "workspaceLayout": {
@@ -132,6 +137,13 @@
                 "buildStorybookTargetName": "build-storybook",
                 "testStorybookTargetName": "test-storybook",
                 "staticStorybookTargetName": "static-storybook"
+            }
+        },
+        {
+            "plugin": "@nx/eslint/plugin",
+            "options": {
+                "targetName": "eslint:lint",
+                "extensions": ["ts", "tsx", "js", "jsx", "html", "vue"]
             }
         }
     ]

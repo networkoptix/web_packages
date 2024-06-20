@@ -1,6 +1,7 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
+        "module": "es2022",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "resolveJsonModule": true,

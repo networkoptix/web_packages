@@ -1,0 +1,34 @@
+{
+    "name": "@networkoptix/nx-icons",
+    "version": "0.0.1",
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "type": "commonjs",
+    "main": "./src/index.js",
+    "typings": "./src/index.d.ts",
+    "peerDependencies": {
+        "lodash-es": "^4.17.21",
+        "svg-to-ts": "^12.0.0"
+    },
+    "private": true,
+    "scripts": {
+        "generate-icons": "svg-to-ts-files"
+    },
+    "svg-to-ts": {
+        "srcFiles": ["./src/lib/initial-icons/**/*.svg"],
+        "outputDirectory": "./src/lib/generated",
+        "generateType": false,
+        "exportCompleteIconSet": false,
+        "enumName": "NxIconEnum",
+        "generateEnum": true,
+        "prefix": "nxIcon",
+        "delimiter": "CAMEL",
+        "iconsFolderName": "icons",
+        "svgoConfig": {
+          "plugins": ["cleanupAttrs"]
+        },
+        "fileName": "nx-icons.generated",
+        "compileSources": false
+      }
+}
