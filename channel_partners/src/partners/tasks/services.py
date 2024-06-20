@@ -10,6 +10,7 @@ from django.db.models.query import QuerySet
 
 from partners.services.channel_partner_service_service import (
     ChannelPartnerServiceService,
+    DuplicatedServiceError,
 )
 
 
@@ -60,9 +61,19 @@ def new_channel_partner_service_created(channel_partner_service_pk: uuid.UUID) -
                     channel_partner_name=channel_partner.name
                 )
                 continue
+            try:
+                cloned_service = ChannelPartnerServiceService.clone(channel_partner, service)
+            except DuplicatedServiceError as e:
+                logger.warning(
+                    "Clone already exists for this channel partner, skipping",
+                    original_service_pk=service_pk,
+                    channel_partner_pk=channel_partner.pk,
 
-            cloned_service = ChannelPartnerServiceService.clone(channel_partner, service)
-
+                    original_service_id=service_pk,
+                    channel_partner_id=channel_partner.pk,
+                    channel_partner_name=channel_partner.name
+                )
+                continue
             logger.info(
                 "Created new Channel Partner Service",
                 original_service_pk=service_pk,
@@ -101,7 +112,19 @@ def new_channel_partner_created(channel_partner_pk: uuid.UUID) -> None:
                     created_by_channel_partner=channel_partner
             ).exists():
                 # Clone service
-                cloned_service: ChannelPartnerService = ChannelPartnerServiceService.clone(channel_partner, service)
+                try:
+                    cloned_service: ChannelPartnerService = ChannelPartnerServiceService.clone(channel_partner, service)
+                except DuplicatedServiceError as e:
+                    logger.warning(
+                        "Clone already exists for this channel partner, skipping",
+                        original_service_pk=service.pk,
+                        channel_partner_pk=channel_partner.pk,
+
+                    original_service_id=service_pk,
+                    channel_partner_id=channel_partner.pk,
+                    channel_partner_name=channel_partner.name
+                    )
+                    continue
 
                 logger.info(
                     "Created new Channel Partner Service",
@@ -160,3 +183,6 @@ def organization_systems_negation_task(
                             f"records for organization {organization_id}")
     finally:
         caches['default'].delete(lock_key)
+
+
+
