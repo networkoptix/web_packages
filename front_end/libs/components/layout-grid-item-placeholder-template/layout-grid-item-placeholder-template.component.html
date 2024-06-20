@@ -62,7 +62,7 @@
     @if (hasActionButton()) {
         <nx-button
             type="brand-outline"
-            (click)="action()"
+            (click)="callAction()"
         >
             {{ actionName() | nxTranslate }}
         </nx-button>

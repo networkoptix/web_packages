@@ -109,6 +109,7 @@ import {
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
@@ -1036,7 +1037,7 @@ export class NxLayoutGridComponent {
         private toastService: NxToastService,
         public tourService: TourService,
         private systemService: NxSystemService,
-        private systemsService: NxSystemsService,
+        public systemsService: NxSystemsService,
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
@@ -1549,6 +1550,26 @@ export class NxLayoutGridComponent {
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
     }) => layoutItemLookup?.[item.resourceId];
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    getItemForDisplay = ({
+        item,
+        layoutItemLookup,
+        errors,
+    }: {
+        item: ParsedLayoutItem;
+        layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
+        errors: Record<string, string>;
+    }) => {
+        const itemDetail = this.getItem({ item, layoutItemLookup });
+        return this.itemHasNoErrors({ itemDetail, errors }) ? itemDetail : null;
+    };
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    getSystemInfo = ({ item, systems }: { item: ParsedLayoutItem; systems: NxSystemInfo[] }) => {
+        const { systemId } = extractSystemAndResourceId(item.resourcePath);
+        return systems?.find(({ id }) => id === systemId);
+    };
+
     itemHasNoErrors = ({
         itemDetail,
         errors,
@@ -1729,7 +1750,7 @@ export class NxLayoutGridComponent {
         ...layout,
         items: layout.items.map(item => ({
             ...item,
-            systemStatus$$: computed(() => {
+            systemStatusOld$$: computed(() => {
                 const systems = this.systemsService.systems$$();
                 const { systemId } = extractSystemAndResourceId(item.resourcePath);
                 const system = systems?.find(({ id }) => id === systemId) || { id: systemId };

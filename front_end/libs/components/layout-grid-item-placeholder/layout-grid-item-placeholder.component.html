@@ -6,16 +6,24 @@
         Not supported
     </div>
 } @else if (!layoutsItemNewPlaceholder) {
-    <nx-layout-grid-item-placeholder-template-legacy
-        [placeholderIcon]="placeholderIcon()"
-        [placeholderMessage]="placeholderMessage()"
-        [placeholderAdditionalMessage]="placeholderAdditionalMessage()"
-        [action]="action()"
-        [hasAction]="hasAction()"
-        [notSupported]="notSupported()"
-        [renderConfig]="renderConfig()"
-    >
-    </nx-layout-grid-item-placeholder-template-legacy>
+    @if (!!itemDetail()) {
+        <nx-layout-grid-item-placeholder-template-legacy
+            [placeholderIcon]="placeholderIcon()"
+            [placeholderMessage]="placeholderMessage()"
+            [placeholderAdditionalMessage]="placeholderAdditionalMessage()"
+            [action]="action()"
+            [hasAction]="hasAction()"
+            [notSupported]="notSupported()"
+            [renderConfig]="renderConfig()"
+        >
+        </nx-layout-grid-item-placeholder-template-legacy>
+    } @else {
+        <div
+            class="not-supported w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+        >
+            {{ systemStatus() | nxTranslate }}
+        </div>
+    }
 } @else {
     <nx-layout-grid-item-placeholder-template
         *ngrxLet="placeholder() as placeholder"

@@ -72,7 +72,8 @@ export interface LayoutItemRenderConfig {
 }
 
 export interface ParsedLayoutItem extends LayoutItem {
-    systemStatus$$: Signal<Translatable>;
+    /** @deprecated */
+    systemStatusOld$$: Signal<Translatable>;
     renderConfig: LayoutItemRenderConfig;
 }
 

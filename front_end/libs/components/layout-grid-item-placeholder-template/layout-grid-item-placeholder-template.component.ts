@@ -72,4 +72,13 @@ export class NxLayoutGridItemPlaceholderTemplateComponent {
     hasTooltip = computed(() => {
         return !!this.hint() || this.hasActionButton();
     });
+
+    callAction = (): void => {
+        const action = this.action();
+
+        if (!action) {
+            return;
+        }
+        action();
+    };
 }

@@ -34,6 +34,7 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { nxConfig } from '@services/nx-config/config';
@@ -42,6 +43,7 @@ import {
     NxSystemCamera,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 
 const messagesLang = staticLang.layouts.itemPlaceholders.messages;
@@ -82,6 +84,11 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
     },
     offline_server: {
         ...offline,
+    },
+    offline_system: {
+        ...offline,
+        icon: 'unavailable',
+        message: messagesLang.systemIsOffline,
     },
     defaultPassword: {
         ...unauthorized,
@@ -156,7 +163,6 @@ const KNOWN_STATUSES = [
     'lostConnection',
     'mjpegDisabled',
     'defaultPassword',
-    'unauthorized',
 ];
 
 const CAMERA_PLACEHOLDERS = {
@@ -172,6 +178,11 @@ const SERVER_PLACEHOLDERS = {
     offline: PLACEHOLDERS.offline_server,
     unauthorized: PLACEHOLDERS.unauthorized_server,
     incompatible: PLACEHOLDERS.incompatible,
+};
+
+const SYSTEM_PLACEHOLDERS = {
+    systemOffline: PLACEHOLDERS.offline_system,
+    systemIncompatible: PLACEHOLDERS.incompatible,
 };
 
 @UntilDestroy()
@@ -207,8 +218,12 @@ const SERVER_PLACEHOLDERS = {
 })
 export class NxLayoutGridItemPlaceholderComponent {
     status = input.required<string | null>();
-    itemDetail = input.required<LayoutResourceTree[string]>();
+    itemDetail = input<LayoutResourceTree[string]>();
+    systemInfo = input<NxSystemInfo>();
+    /** to be deprecated */
     renderConfig = input.required<ParsedLayoutItem['renderConfig']>();
+    /** to be deprecated */
+    systemStatus = input.required<Translatable>();
     isEditable = input.required<boolean>();
 
     @Output() updateCameraCredentials = new EventEmitter<NxSystemCamera>();
@@ -227,24 +242,32 @@ export class NxLayoutGridItemPlaceholderComponent {
         const status = this.status();
         const statuses = this.layoutItemsErrorsStore.statuses$$();
         const itemDetail = this.itemDetail();
+        const systemInfo = this.systemInfo();
 
-        const isCamera = assertResourceOfType.camera(itemDetail);
-        const isServer = assertResourceOfType.server(itemDetail);
+        const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
+        const isServer = !!itemDetail && assertResourceOfType.server(itemDetail);
         const isCamOrSrv = isCamera || isServer;
-        const isOnline = isCamOrSrv && itemDetail.details.online;
+        const isOffline = isCamOrSrv && !itemDetail.details.online;
         const isUnauthorized = isCamera && itemDetail.details.unauthorized;
         const isNotArchived = isCamOrSrv && itemDetail.details.status !== 'archive';
-        let adjustedStatus = status || statuses[itemDetail.details.id];
+        const itemDetailError = !!itemDetail && statuses[itemDetail.details.id];
+        const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
+        const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
+        let adjustedStatus = status || itemDetailError;
 
         if (!adjustedStatus) {
             if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
                 adjustedStatus = 'virtualCamera';
             } else if (isUnauthorized) {
                 adjustedStatus = 'unauthorized';
-            } else if (!isOnline) {
+            } else if (isOffline) {
                 adjustedStatus = 'offline';
             } else if (isNotArchived) {
                 adjustedStatus = itemDetail.details.status;
+            } else if (isSystemOffline) {
+                adjustedStatus = 'systemOffline';
+            } else if (isSystemIncompatible) {
+                adjustedStatus = 'systemIncompatible';
             } else {
                 adjustedStatus = 'offline';
             }
@@ -258,28 +281,26 @@ export class NxLayoutGridItemPlaceholderComponent {
         const itemDetail = this.itemDetail();
         let placeholder = PLACEHOLDERS.default;
 
-        if (!itemDetail || !status) {
-            return placeholder;
-        }
-
-        if (assertResourceOfType.camera(itemDetail)) {
-            placeholder = CAMERA_PLACEHOLDERS[status];
-            if (!placeholder && status in KNOWN_STATUSES) {
-                placeholder = CAMERA_PLACEHOLDERS.offline;
+        if (itemDetail) {
+            if (assertResourceOfType.camera(itemDetail)) {
+                placeholder = CAMERA_PLACEHOLDERS[status];
+                if (!placeholder && status in KNOWN_STATUSES) {
+                    placeholder = CAMERA_PLACEHOLDERS.offline;
+                }
             }
-        }
-        if (assertResourceOfType.server(itemDetail)) {
-            placeholder = SERVER_PLACEHOLDERS[status];
-        }
-        if (assertResourceOfType.webpage(itemDetail) || status === ResourceType.WEB_PAGE) {
-            placeholder = PLACEHOLDERS.webPage;
-        }
-        if (assertResourceOfType.iodevice(itemDetail) || status === ResourceType.IO_DEVICE) {
-            placeholder = PLACEHOLDERS.ioDevice;
-        }
-
-        if (!placeholder) {
-            placeholder = PLACEHOLDERS.default;
+            if (assertResourceOfType.server(itemDetail)) {
+                placeholder = SERVER_PLACEHOLDERS[status];
+            }
+            if (assertResourceOfType.webpage(itemDetail) || status === ResourceType.WEB_PAGE) {
+                placeholder = PLACEHOLDERS.webPage;
+            }
+            if (assertResourceOfType.iodevice(itemDetail) || status === ResourceType.IO_DEVICE) {
+                placeholder = PLACEHOLDERS.ioDevice;
+            }
+        } else {
+            if (SYSTEM_PLACEHOLDERS[status]) {
+                placeholder = SYSTEM_PLACEHOLDERS[status];
+            }
         }
 
         return {
