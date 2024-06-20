@@ -161,7 +161,7 @@ export const nxConfig: IConfig = {
         auditTime: 500,
     },
     tosConfig: {
-        hourly: MS.hr,
+        hourly: MS.hour,
         daily: MS.day,
     },
 

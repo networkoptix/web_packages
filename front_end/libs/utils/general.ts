@@ -153,16 +153,16 @@ export function offsetDate(
 }
 
 export enum MS {
-    ms = 1,
-    s = 1000,
-    min = MS.s * 60,
-    hr = MS.min * 60,
-    day = MS.hr * 24,
+    millisecond = 1,
+    second = 1000,
+    minute = MS.second * 60,
+    hour = MS.minute * 60,
+    day = MS.hour * 24,
 }
 
 type MsParts = { ms: number } & { [k in Exclude<keyof typeof MS, 'ms'>]?: number };
-export function msToParts(ms: number, maxUnit: Exclude<keyof typeof MS, 'ms'> = 'hr'): MsParts {
-    let keys: (keyof typeof MS)[] = ['day', 'hr', 'min', 's', 'ms'];
+export function msToParts(ms: number, maxUnit: Exclude<keyof typeof MS, 'ms'> = 'hour'): MsParts {
+    let keys: (keyof typeof MS)[] = ['day', 'hour', 'minute', 'second', 'millisecond'];
     keys = keys.slice(keys.indexOf(maxUnit));
     return Object.fromEntries(
         keys.map(k => {

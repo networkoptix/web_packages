@@ -479,7 +479,7 @@ export class CameraManager {
         if (serverTime) {
             // Intentionally made descriptive ... I dislike time manipulation
             const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = serverTime;
-            const localTimeZoneOffsetMs = new Date().getTimezoneOffset() * MS.min;
+            const localTimeZoneOffsetMs = new Date().getTimezoneOffset() * MS.minute;
             const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
             const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
             const vmsDate = new Date(vmsTimeFromLocal);
