@@ -1,11 +1,11 @@
 <div
     class="partner-level"
     [ngClass]="{
-        'no-children': !hasChildren$$(),
+        'is-subchannel': isSubchannel$$(),
         'is-selected': isSelected$$()
     }"
 >
-    @if (hasChildren$$()) {
+    @if (!isSubchannel$$()) {
         <svg-icon
             (click)="toggleOpen(partnerStructure$$().id)"
             nx-add-svg-src
@@ -16,6 +16,7 @@
                 transform: isOpen$$() ? 'rotate(90deg)' : 'rotate(0deg)'
             }"
             class="open-toggle"
+            [ngStyle]="{ visibility: isOpenIconVisible$$() ? 'visible' : 'hidden' }"
         ></svg-icon>
     }
     <svg-icon
@@ -26,12 +27,15 @@
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
-        (click)="$event.stopPropagation(); open(partnerStructure$$().id)"
+        (click)="maybeOpenPartner($event)"
         [ngClass]="{
             'is-selected': isSelected$$()
         }"
-        >{{ partnerStructure$$().name }}</a
-    >
+        ><nx-search-highlight
+            [text]="partnerStructure$$().name"
+            [search]="highlightRegex$$()"
+        ></nx-search-highlight
+    ></a>
 </div>
 @if (isOpen$$()) {
     <div class="children">
@@ -40,6 +44,7 @@
                 [partnerStructure]="subChannel"
                 [openLevels]="openLevels$$()"
                 [selectedEntityId]="selectedEntityId$$()"
+                [search]="search$$()"
                 (toggleOpenEvent)="toggleOpen($event)"
                 (openEvent)="open($event)"
             ></nx-partner-sidebar-level>
@@ -49,6 +54,8 @@
                 [organization]="org"
                 [openLevels]="openLevels$$()"
                 [selectedEntityId]="selectedEntityId$$()"
+                [search]="search$$()"
+                (openParentEvent)="open($event)"
             ></nx-org-sidebar-level>
         }
     </div>

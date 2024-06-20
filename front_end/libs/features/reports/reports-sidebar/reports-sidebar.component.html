@@ -1,18 +1,27 @@
 <div class="sidebar">
-    @for (partner of channelStructure$$()?.channelPartners; track partner.id) {
+    <div class="search">
+        <nx-simple-search
+            [ngModel]="search$$()"
+            (ngModelChange)="search$$.set($event)"
+        ></nx-simple-search>
+    </div>
+
+    @for (partner of searchFilteredChannelStructure$$()?.channelPartners; track partner.id) {
         <nx-partner-sidebar-level
             [partnerStructure]="partner"
             [openLevels]="openLevels$$()"
             [selectedEntityId]="entityId$$()"
+            [search]="search$$()"
             (toggleOpenEvent)="toggleOpen($event)"
             (openEvent)="open($event)"
         ></nx-partner-sidebar-level>
     }
-    @for (org of channelStructure$$()?.organizations; track org.id) {
+    @for (org of searchFilteredChannelStructure$$()?.organizations; track org.id) {
         <nx-org-sidebar-level
             [organization]="org"
             [openLevels]="openLevels$$()"
             [selectedEntityId]="entityId$$()"
+            [search]="search$$()"
         ></nx-org-sidebar-level>
     }
 </div>

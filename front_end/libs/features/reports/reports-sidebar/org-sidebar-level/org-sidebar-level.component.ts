@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, EventEmitter, Output, computed, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { filter, map, startWith } from 'rxjs';
 
+import { highlightRegex } from '@components/search-highlight/highlight-regex';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { EntityType } from '@pages/reports/reports.types';
-import { OrganizationStructure } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
+
+import { FormattedOrganizationStructure } from '../reports-sidebar.types';
 
 @Component({
     selector: 'nx-org-sidebar-level',
@@ -21,22 +24,21 @@ import { icons } from '@static-variables';
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
         RouterModule,
+        NxSearchHighlightComponent,
     ],
     standalone: true,
 })
 export class NxOrgSidebarLevelComponent {
-    organization$$ = input.required<OrganizationStructure>({ alias: 'organization' });
+    organization$$ = input.required<FormattedOrganizationStructure>({ alias: 'organization' });
     openLevels$$ = input.required<Set<string>>({ alias: 'openLevels' });
     selectedEntityId$$ = input.required<string | undefined>({ alias: 'selectedEntityId' });
+    search$$ = input.required<string>({ alias: 'search' });
+
     icons = icons;
     EntityType = EntityType;
 
-    isOpen$$ = computed<boolean>(() => {
-        const organization = this.organization$$();
-        const openLevels = this.openLevels$$();
-        return openLevels.has(organization.id);
-    });
     isSelected$$ = computed<boolean>(() => this.organization$$().id === this.selectedEntityId$$());
+    highlightRegex$$ = computed<RegExp | null>(() => highlightRegex(this.search$$()));
 
     currentTab$$ = toSignal(
         this.router.events.pipe(
@@ -51,5 +53,17 @@ export class NxOrgSidebarLevelComponent {
         return ['/reports', EntityType.organization, orgId, currentTab];
     });
 
+    @Output() openParentEvent = new EventEmitter<string>();
+
     constructor(private router: Router) {}
+
+    handleSelection($event: MouseEvent): void {
+        const organization = this.organization$$();
+        $event.stopPropagation();
+        // In the search view we can select a child org when its parent partner is not open. We then want the parent to
+        // be open after exiting the search
+        if (organization.parentPartner) {
+            this.openParentEvent.emit(organization.parentPartner);
+        }
+    }
 }
