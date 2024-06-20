@@ -15,6 +15,7 @@ from django.utils import timezone
 
 from partners.models import (
     ActionConfirmation,
+    ChannelPartner,
     ChannelPartnerRole,
     ChannelPartnerRoles,
     ChannelPartnerService,
@@ -302,14 +303,16 @@ class TestSystemServiceQuantitySerializer:
 
 class TestChannelPartnerSerializer:
 
-    def test_partner_count_and_organization_count(self, channel_partner_factory, organization_factory, cp_user_factory, arf):
+    def test_partner_count_and_organization_count(self, channel_partner_factory, organization_factory,
+                                                  mocker, cp_user_factory, arf):
         def context(cloud_user):
             context = {}
             context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
             context['request'] = arf.get('/')
             context['request'].user = cloud_user
             return context
-
+        partner_count_spy = mocker.spy(ChannelPartner, 'partner_count')
+        organization_count_spy = mocker.spy(ChannelPartner, 'organization_count')
 
         parent = channel_partner_factory()
         role = ChannelPartnerRole.objects.all().first()
@@ -324,8 +327,43 @@ class TestChannelPartnerSerializer:
 
         assert data['partnerCount'] == 3
         assert data['organizationCount'] == 0
+        assert partner_count_spy.call_count == 1
+        assert organization_count_spy.call_count == 1
 
+    def test_partner_count_and_organization_count_for_listing(self, channel_partner_factory, organization_factory,
+                                                  cp_user_factory, arf, mocker):
+        def context(cloud_user):
+            context = {}
+            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
+            context['request'] = arf.get('/')
+            context['request'].user = cloud_user
+            return context
 
+        partner_count_spy = mocker.spy(ChannelPartner, 'partner_count')
+        organization_count_spy = mocker.spy(ChannelPartner, 'organization_count')
+
+        parents = [channel_partner_factory() for _ in range(3)]
+        for parent in parents:
+            role = ChannelPartnerRole.objects.all().first()
+            user = cp_user_factory(channel_partner=parent, role=role.name)
+            # Create some children for the parent
+            child1 = channel_partner_factory(parent_channel_partner=parent)
+            child2 = channel_partner_factory(parent_channel_partner=parent)
+            child3 = channel_partner_factory(parent_channel_partner=parent)
+            organization_factory(channel_partner=parent)
+
+        serializer = ChannelPartnerSerializer(parents, context=context(user.user), many=True)
+        data = serializer.data
+
+        assert partner_count_spy.call_count == 3
+        assert organization_count_spy.call_count == 3
+
+        parents += [channel_partner_factory() for _ in range(2)]
+        serializer = ChannelPartnerSerializer(parents, context=context(user.user), many=True)
+        data = serializer.data
+
+        assert partner_count_spy.call_count == 5
+        assert organization_count_spy.call_count == 5
 
     def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf):
         cp = channel_partner_factory()

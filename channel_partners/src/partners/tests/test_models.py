@@ -238,6 +238,21 @@ class TestChannelPartner:
         assert ChannelPartner.get_direct_organization_children_count(cp) == 1
         assert caches['default'].get(cache_key) == 1
 
+    def test_get_direct_organization_children_count_forced(self, channel_partner_factory, organization_factory, mocker):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        cache_mock = mocker.patch("partners.models.caches", autospec=True)
+        assert ChannelPartner.get_direct_organization_children_count(cp, force=True) == 1
+        assert cache_mock['default'].get.call_count == 0
+        assert cache_mock['default'].set.call_count == 1
+
+    def test_get_direct_children_count_forced(self, channel_partner_factory, mocker):
+        parent = channel_partner_factory()
+        cache_mock = mocker.patch("partners.models.caches", autospec=True)
+        assert ChannelPartner.get_direct_channel_partner_children_count(parent, force=True) == 0
+        assert cache_mock['default'].get.call_count == 0
+        assert cache_mock['default'].set.call_count == 1
+
     def test_can_modify_organization_service_quantities(self, channel_partner_factory, cp_user_factory):
         root = channel_partner_factory(parent_channel_partner=None)
         child = channel_partner_factory(parent_channel_partner=root)
