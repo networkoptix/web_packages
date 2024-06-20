@@ -434,7 +434,7 @@ class CloudPortalAPI(object):
             data=features_dict,
             verify=_ssl_certs_path,
             timeout=10)
-        if set_flags_response.status_code != 200:
+        if set_flags_response.headers["Content-Type"] != "application/json":
             raise CannotSetFeatureFlags()
 
     def get_cloud_settings(self):

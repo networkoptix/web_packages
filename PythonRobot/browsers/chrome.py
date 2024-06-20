@@ -20,6 +20,7 @@ class ChromeBrowser(Chrome):
     def _configure(self):
         self._options.add_argument("--enable-logging")
         self._options.add_argument("--log-level=3")
+        self._options.add_argument(("--headless"))
 
     def location_should_be(self, url: str):
         timeout_sec = 10
