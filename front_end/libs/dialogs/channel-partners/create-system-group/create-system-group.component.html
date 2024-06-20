@@ -19,7 +19,7 @@
     [formGroup]="formGroup"
 >
     <div class="nx-modal__body">
-        <nx-form-field [errorMatcher]="folderNameErrorMatcher">
+        <nx-form-field>
             <label
                 for="add-group-folder-name"
                 nx-label
@@ -31,7 +31,7 @@
                 id="add-group-folder-name"
                 formControlName="folderName"
             />
-            <nx-control-messages preset="requiredInput"></nx-control-messages>
+            <nx-control-messages></nx-control-messages>
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">

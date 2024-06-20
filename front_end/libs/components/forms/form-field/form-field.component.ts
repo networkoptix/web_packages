@@ -5,19 +5,30 @@ import {
     Component,
     ContentChild,
     DestroyRef,
+    Injector,
     SkipSelf,
+    computed,
     effect,
     forwardRef,
     input,
+    runInInjectionContext,
     signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroupDirective, NgControl } from '@angular/forms';
-import { merge, take } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroupDirective, NgControl } from '@angular/forms';
+import { map, merge, take } from 'rxjs';
+
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 
 import { NxControlMessagesComponent as NxMessages } from '../control-messages/control-messages.component';
+import { InputMaxLength } from '../validators';
 
-import { ControlState, ErrorMatcher, requiredErrorMatcher } from './error-state-matcher';
+import {
+    ControlState,
+    ErrorMatcher,
+    NxErrorMatches,
+    errorMatcherFactory,
+} from './error-state-matcher';
 import { NxFormFieldControlDirective as NxControlDirective } from './form-field-control.directive';
 import { NxFormFieldToken } from './form-field.token';
 
@@ -39,6 +50,7 @@ import { NxFormFieldToken } from './form-field.token';
     styleUrls: ['form-field.component.scss'],
     standalone: true,
     imports: [CommonModule],
+    hostDirectives: [NxThemeAttributeDirective],
     providers: [
         {
             provide: NxFormFieldToken,
@@ -52,9 +64,9 @@ export class NxFormFieldComponent implements AfterContentInit {
      *
      * See `error-state-matcher.ts`.
      *
-     * A custom matcher is required for automatic matching of custom errors
+     * Defaults to `NxErrorMatches.text()` matchter.
      */
-    errorMatcher = input<ErrorMatcher>(requiredErrorMatcher);
+    errorMatcher = input<ErrorMatcher>(errorMatcherFactory(NxErrorMatches.text()));
 
     @ContentChild(NxControlDirective) private nxControlDirective: NxControlDirective;
     @ContentChild(NgControl) private ngControl: NgControl;
@@ -78,12 +90,29 @@ export class NxFormFieldComponent implements AfterContentInit {
         own styling for error state */
     });
 
+    valueLength = signal(0).asReadonly();
+    maxLength = signal(0);
+    overMaxLength = computed<boolean>(() => this.valueLength() > this.maxLength());
+
     constructor(
+        private injector: Injector,
         private destroyRef: DestroyRef,
         @SkipSelf() private formGroup: FormGroupDirective,
     ) {}
 
     ngAfterContentInit(): void {
+        const nativeElement = this.nxControlDirective.host.nativeElement;
+        if (nativeElement.tagName === 'INPUT') {
+            const input = nativeElement as HTMLInputElement;
+            const control = this.ngControl.control as FormControl<string>;
+            this.maxLength.set(InputMaxLength[input.type] ?? 0);
+            runInInjectionContext(this.injector, () => {
+                this.valueLength = toSignal(control.valueChanges.pipe(map(v => v.length)), {
+                    initialValue: control.value.length,
+                });
+            });
+        }
+
         merge(this.formGroup.ngSubmit.pipe(take(1)), this.ngControl.statusChanges!)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {

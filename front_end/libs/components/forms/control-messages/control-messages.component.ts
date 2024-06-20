@@ -26,12 +26,16 @@ import LANG from '@language_static';
 import { ControlState } from '../form-field/error-state-matcher';
 import { NxFormFieldComponent } from '../form-field/form-field.component';
 import { NxFormFieldToken } from '../form-field/form-field.token';
-import { ControlPresets } from '../validators';
 
 import { NxControlMessageComponent as NxMessage } from './control-message/control-message.component';
 import { NxControlMessagesToken } from './control-messages.token';
 
-/** Container component to manage nx-control-message selection */
+type PatternMessageKey = keyof typeof LANG.patternValidatorMsg;
+
+/** Container component to manage nx-control-message selection.
+ *
+ * Base cases like maxlength, required, and certain patterns are built in.
+ */
 @Component({
     selector: 'nx-control-messages',
     templateUrl: 'control-messages.component.html',
@@ -49,7 +53,8 @@ import { NxControlMessagesToken } from './control-messages.token';
 export class NxControlMessagesComponent implements AfterViewInit {
     LANG = LANG;
 
-    preset = input<`${ControlPresets}` | undefined>(undefined);
+    /** Input value type for pattern error message */
+    pattern = input<PatternMessageKey>();
 
     /** How many lines of space to preallocate.
      *
@@ -71,26 +76,27 @@ export class NxControlMessagesComponent implements AfterViewInit {
         () => this.manualState() ?? this.nxFormField.errorState(),
     );
 
-    @ContentChildren(NxMessage) protected set _projectedMessages(messages: QueryList<NxMessage>) {
-        this.projectedMessages.set(messages.toArray());
-    }
-    private projectedMessages = signal<NxMessage[]>([]);
     @ViewChildren(NxMessage) protected set _presetMessages(messages: QueryList<NxMessage>) {
         this.presetMessages.set(messages.toArray());
     }
     private presetMessages = signal<NxMessage[]>([]);
+    @ContentChildren(NxMessage) protected set _projectedMessages(messages: QueryList<NxMessage>) {
+        this.projectedMessages.set(messages.toArray());
+    }
+    private projectedMessages = signal<NxMessage[]>([]);
+
     private messages = computed<Map<string, NxMessage>>(() => {
-        const [projectedMessages, presetMessages] = [
-            this.projectedMessages(),
+        const [presetMessages, projectedMessages] = [
             this.presetMessages(),
+            this.projectedMessages(),
         ];
         const messages = new Map<string, NxMessage>();
-        for (let i = 0; i < projectedMessages.length; i++) {
-            const message = projectedMessages[i];
-            messages.set(message.key(), message);
-        }
         for (let i = 0; i < presetMessages.length; i++) {
             const message = presetMessages[i];
+            messages.set(message.key(), message);
+        }
+        for (let i = 0; i < projectedMessages.length; i++) {
+            const message = projectedMessages[i];
             messages.set(message.key(), message);
         }
         return messages;

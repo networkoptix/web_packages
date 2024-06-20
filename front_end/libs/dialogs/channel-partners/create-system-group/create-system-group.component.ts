@@ -5,10 +5,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
-import { ControlPresets, NxValidators } from '@components/forms/validators';
+import { NxValidators } from '@components/forms/validators';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
@@ -35,10 +34,9 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     private folderNameControl = new FormControl('', {
-        validators: [NxValidators.requiredInput],
+        validators: NxValidators.text(),
         nonNullable: true,
     });
-    folderNameErrorMatcher = errorMatcherFactory(ControlPresets.RequiredInput);
 
     formGroup = new FormGroup({
         folderName: this.folderNameControl,

@@ -2171,7 +2171,11 @@
         "emailNotUnique": "This email has already been registered",
         "phoneInvalid": "Phone number is invalid",
         "phoneNotUnique": "Phone already in use",
-        "charLimitExceeded": "{ requiredLength } character limit exceeded",
-        "charLimitFraction": "{ actualLength }/{ requiredLength } character limit"
+        "characterLimit": "{ requiredLength } character limit"
+    },
+    "patternValidatorMsg": {
+        "email": "Invalid email",
+        "phone": "Invalid phone number",
+        "url": "Invalid URL"
     }
 }

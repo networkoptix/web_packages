@@ -11,11 +11,14 @@ import {
 import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxControlMessageComponent } from '@components/forms/control-messages/control-message/control-message.component';
 import { NxControlMessagesComponent } from '@components/forms/control-messages/control-messages.component';
-import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
+import {
+    NxErrorMatches,
+    errorMatcherFactory,
+} from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldComponent } from '@components/forms/form-field/form-field.component';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxLabelComponent } from '@components/forms/label/label.component';
-import { ControlPresets } from '@components/forms/validators';
+import { NxValidators } from '@components/forms/validators';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -25,7 +28,6 @@ import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async
 import { NxMenuService } from '@menu/menu.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { simpleEmailRegex } from '@static-variables';
 
 @Component({
     selector: 'validation',
@@ -80,14 +82,12 @@ export class ValidationComponent {
     private emailControl = new FormControl('', {
         nonNullable: true,
         validators: [
-            Validators.maxLength(10),
-            Validators.pattern(simpleEmailRegex),
-            Validators.required,
+            ...NxValidators.email(),
             (control: FormControl<string>) =>
                 control.value.match(/a/i) ? { letterA: true } : null,
         ],
     });
-    emailErrorMatcher = errorMatcherFactory(ControlPresets.RequiredEmail, {
+    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
         onChange: ['letterA'],
     });
     emailFormGroup = new FormGroup({
