@@ -1,3 +1,13 @@
+from django.db import (
+    IntegrityError,
+    transaction,
+)
+
+
+class DuplicatedServiceError(Exception):
+    pass
+
+
 class ChannelPartnerServiceService:
 
     @staticmethod
@@ -13,7 +23,8 @@ class ChannelPartnerServiceService:
         :type channel_partner: ChannelPartner
         :param original_service: The ChannelPartnerService instance to clone.
         :type original_service: ChannelPartnerService
-        :return: A new ChannelPartnerService instance with the same attributes as the original service, but assigned to the specified partner.
+        :return: A new ChannelPartnerService instance with the same attributes as the original service, 
+         but assigned to the specified partner.
         :rtype: ChannelPartnerService
         """
         copy = ChannelPartnerService(
@@ -26,6 +37,8 @@ class ChannelPartnerServiceService:
             parent_service=original_service,
             sub_type=original_service.sub_type,
             duration=original_service.duration,
+            # Set cloned to True to indicate that this is a cloned service, and it can/must be cloned downward.
+            cloned=True,
             # Do not set conversion_service here; it will be set later if applicable
         )
 
@@ -45,6 +58,12 @@ class ChannelPartnerServiceService:
                 )
                 copy.conversion_service = conversion_service_clone
 
-        # Call super().save() on the model instance to bypass the custom save method
-        super(ChannelPartnerService, copy).save()
+        # Call super().save() on the model instance to bypass the custom save method\
+        try:
+            with transaction.atomic():
+                super(ChannelPartnerService, copy).save()
+        except IntegrityError as e:
+            if 'cloned_service_unique' in str(e):
+                raise DuplicatedServiceError(
+                    f'A cloned service {original_service.id} already exists for this channel partner.')
         return copy

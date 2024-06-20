@@ -2,9 +2,13 @@ import io
 import logging
 import sys
 from unittest.mock import patch
+from uuid import uuid4
 
 import pytest
-from django.db import transaction
+from django.db import (
+    IntegrityError,
+    transaction,
+)
 
 from partners.models import ChannelPartnerService
 from partners.tasks.services import new_channel_partner_service_created
@@ -247,3 +251,58 @@ def test_clone_multiple_services_with_parent_services(channel_partner_factory, c
 
     # The count should remain the same since these services were already cloned
     assert ChannelPartnerService.objects.count() == 12
+
+
+class TestChannelPartnerService:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory):
+        self.channel_partner = channel_partner_factory()
+        self.sub_partner = channel_partner_factory(parent_channel_partner=self.channel_partner)
+
+
+    def test_channel_partner_service_creation(self, cp_service_factory):
+        service = cp_service_factory(channel_partner=self.channel_partner)
+        assert service.created_by_channel_partner == self.channel_partner
+        assert service.parent_service is None
+        new_channel_partner_service_created(service.id)
+        assert ChannelPartnerService.objects.count() == 2
+        sub_service = ChannelPartnerService.objects.get(parent_service=service)
+        assert sub_service.created_by_channel_partner == self.sub_partner
+
+    def test_duplicated_cloned_service(self, cp_service_factory):
+        service = cp_service_factory(channel_partner=self.channel_partner)
+        new_channel_partner_service_created(service.id)
+        assert ChannelPartnerService.objects.count() == 2
+        sub_service = ChannelPartnerService.objects.get(parent_service=service)
+        assert sub_service.created_by_channel_partner == self.sub_partner
+        duplicate = ChannelPartnerService(
+            type=service.type,
+            created_by_channel_partner=self.sub_partner,
+            name=f'{uuid4()}',
+            parent_service=service,
+            sub_type=service.sub_type,
+            duration=service.duration,
+            cloned=True,
+        )
+        with pytest.raises(IntegrityError) as e:
+            duplicate.save()
+            assert 'cloned_service_unique' in str(e)
+
+    def test_duplicated_custom_services(self, cp_service_factory):
+        service = cp_service_factory(channel_partner=self.channel_partner)
+        for _ in range(3):
+            # cloned service
+            new_channel_partner_service_created(service.id)
+            # custom services
+            custom_service = ChannelPartnerService(
+                type=service.type,
+                created_by_channel_partner=self.sub_partner,
+                name=f'{uuid4()}',
+                parent_service=service,
+                sub_type=service.sub_type,
+                duration=service.duration,
+                cloned=False,
+            )
+            custom_service.save()
+        assert ChannelPartnerService.objects.count() == 5

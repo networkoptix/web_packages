@@ -2165,9 +2165,19 @@ class ChannelPartnerService(models.Model):
         on_delete=models.PROTECT,
         related_name='converting_services')
     enabled = models.BooleanField(default=True)
+    cloned = models.BooleanField(default=False)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='cloned_service_unique',
+                fields=['created_by_channel_partner', 'parent_service'],
+                condition=Q(cloned=True),
+            )
+        ]
 
     def __str__(self):
         return f'{self.name} - {self.created_by_channel_partner.name}'
