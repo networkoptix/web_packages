@@ -46,30 +46,37 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
     private organizations$$ = this.store.selectSignal(selectOrgsFromStructure);
 
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
+    isPartner$$ = computed(() => this.entityType$$() === EntityType.channelPartner);
     formattedPartnerServiceChangeRecords$$ = computed<FormattedPartnerServiceChangeRecord[]>(() => {
         const records = this.serviceChangesStore.records();
         const partners = this.partners$$();
         const organizations = this.organizations$$();
+        const isPartner = this.isPartner$$();
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
-        return records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
-            serviceName: serviceIdToNameMap.get(serviceId) ?? '',
-            amount,
-            changedAtName:
-                partners.get(changedAtId)?.name ?? organizations.get(changedAtId)?.name ?? '',
-            date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
-        }));
+        return isPartner
+            ? records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
+                  serviceName: serviceIdToNameMap.get(serviceId) ?? '',
+                  amount,
+                  changedAtName:
+                      partners.get(changedAtId)?.name ?? organizations.get(changedAtId)?.name ?? '',
+                  date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
+              }))
+            : [];
     });
     formattedOrgServiceChangeRecords$$ = computed<FormattedOrgServiceChangeRecord[]>(() => {
+        const isPartner = this.isPartner$$();
         const records = this.serviceChangesStore.records();
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
-        return records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
-            serviceName: serviceIdToNameMap.get(serviceId) ?? '',
-            amount,
-            changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
-            date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
-        }));
+        return !isPartner
+            ? records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
+                  serviceName: serviceIdToNameMap.get(serviceId) ?? '',
+                  amount,
+                  changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
+                  date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
+              }))
+            : [];
     });
 
     loadServiceChangesEffect = effect(() => {
