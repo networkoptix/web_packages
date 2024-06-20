@@ -17,6 +17,7 @@ import llutil
 import structlog
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.core.cache import caches
 from django.db import transaction
 from django.db.models import (
     Prefetch,
@@ -79,6 +80,10 @@ from partners.tasks.notification import (
     added_channel_partner_role_task,
     added_organization_role_task,
     state_confirmation_task,
+)
+from partners.utils.cache_keys import (
+    cp_direct_children_count,
+    direct_organization_children_count,
 )
 from partners.utils.context_vars import get_context_vars
 from partners.validators import validate_active_organization
@@ -242,9 +247,9 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
-    partnerCount = serializers.IntegerField(source='partner_count', read_only=True)
+    partnerCount = serializers.SerializerMethodField(read_only=True)
     lastModified = serializers.DateTimeField(source='last_modified', read_only=True)
-    organizationCount = serializers.IntegerField(source='organization_count', read_only=True)
+    organizationCount = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = ChannelPartner
@@ -266,6 +271,38 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             'organizationCount'
         ]
         read_only_fields = ['users', 'parentChannelPartner', 'partnerCount', 'organizationCount']
+
+    @cached_property
+    def partners_counters(self):
+        if isinstance(self.instance, ChannelPartner):
+            keys = [cp_direct_children_count(self.instance.id)]
+        elif isinstance(self.instance, list):
+            keys = [cp_direct_children_count(partner.id) for partner in self.instance]
+        else:
+            return {}
+        return caches['default'].get_many(keys)
+
+    def get_partnerCount(self, instance: ChannelPartner) -> int:
+        cached = self.partners_counters.get(cp_direct_children_count(instance.id))
+        if cached is not None:
+            return cached
+        return instance.partner_count(force=True)
+
+    @cached_property
+    def organization_counters(self):
+        if isinstance(self.instance, ChannelPartner):
+            keys = [direct_organization_children_count(str(self.instance.id))]
+        elif isinstance(self.instance, list):
+            keys = [direct_organization_children_count(str(partner.id)) for partner in self.instance]
+        else:
+            return {}
+        return caches['default'].get_many(keys)
+
+    def get_organizationCount(self, instance: ChannelPartner) -> int:
+        cached = self.organization_counters.get(direct_organization_children_count(instance.id))
+        if cached is not None:
+            return cached
+        return instance.organization_count(force=True)
 
     @cached_property
     def channel_partner_roles(self):

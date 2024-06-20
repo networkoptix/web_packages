@@ -862,13 +862,11 @@ class ChannelPartner(
     def __str__(self):
         return f'{self.name} - {self.cloud_host.hostname}'
 
-    @property
-    def partner_count(self) -> int:
-        return ChannelPartner.get_direct_channel_partner_children_count(channel_partner=self)
+    def partner_count(self, force: bool = False) -> int:
+        return ChannelPartner.get_direct_channel_partner_children_count(channel_partner=self, force=force)
 
-    @property
-    def organization_count(self) -> int:
-        return ChannelPartner.get_direct_organization_children_count(channel_partner=self)
+    def organization_count(self, force: bool = False) -> int:
+        return ChannelPartner.get_direct_organization_children_count(channel_partner=self, force=force)
 
     @django.db.transaction.atomic()
     def set_attributes(self, attributes: Dict[str, any], partial=False):
@@ -1011,23 +1009,26 @@ class ChannelPartner(
         return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)
 
     @staticmethod
-    def get_direct_channel_partner_children_count(channel_partner: 'ChannelPartner') -> int:
+    def get_direct_channel_partner_children_count(channel_partner: 'ChannelPartner', force: bool = False) -> int:
         cache_key: str = cp_direct_children_count(str(channel_partner.id))
-        cached_result = caches['default'].get(cache_key)
-        if cached_result:
-            return cached_result
-        else:
-            count = ChannelPartner.objects.filter(parent_channel_partner=channel_partner).count()
-            caches['default'].set(cache_key, count, timeout=3600)
-            return count
+        if not force:
+            cached_result = caches['default'].get(cache_key)
+            if cached_result is not None:
+                return cached_result
+        count = ChannelPartner.objects.filter(parent_channel_partner=channel_partner).count()
+        caches['default'].set(cache_key, count, timeout=3600)
+        return count
 
     @staticmethod
-    def get_direct_organization_children_count(channel_partner: 'ChannelPartner') -> int:
+    def get_direct_organization_children_count(channel_partner: 'ChannelPartner', force: bool = False) -> int:
         cache_key = direct_organization_children_count(str(channel_partner.id))
-        count = caches['default'].get(cache_key)
-        if count is None:
-            count = Organization.objects.filter(channel_partner=channel_partner).count()
-            caches['default'].set(cache_key, count, 3600)
+        cache = caches['default']
+        if not force:
+            count = cache.get(cache_key)
+            if count is not None:
+                return count
+        count = Organization.objects.filter(channel_partner=channel_partner).count()
+        cache.set(cache_key, count, 3600)
         return count
 
     @property
