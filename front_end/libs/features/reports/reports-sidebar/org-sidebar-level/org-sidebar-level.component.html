@@ -10,10 +10,13 @@
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
-        (click)="$event.stopPropagation()"
+        (click)="handleSelection($event)"
         [ngClass]="{
             'is-selected': isSelected$$()
         }"
-        >{{ organization$$().name }}</a
-    >
+        ><nx-search-highlight
+            [text]="organization$$().name"
+            [search]="highlightRegex$$()"
+        ></nx-search-highlight
+    ></a>
 </div>

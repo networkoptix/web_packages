@@ -6,12 +6,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { filter, map, startWith } from 'rxjs';
 
+import { highlightRegex } from '@components/search-highlight/highlight-regex';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { EntityType } from '@pages/reports/reports.types';
-import { PartnerStructure } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { NxOrgSidebarLevelComponent } from '../org-sidebar-level/org-sidebar-level.component';
+import { FormattedPartnerStructure } from '../reports-sidebar.types';
 
 @Component({
     selector: 'nx-partner-sidebar-level',
@@ -24,28 +26,35 @@ import { NxOrgSidebarLevelComponent } from '../org-sidebar-level/org-sidebar-lev
         NxAddSvgSrcDirective,
         NxOrgSidebarLevelComponent,
         RouterModule,
+        NxSearchHighlightComponent,
     ],
     standalone: true,
 })
 export class NxPartnerSidebarLevelComponent {
-    partnerStructure$$ = input.required<PartnerStructure>({ alias: 'partnerStructure' });
+    partnerStructure$$ = input.required<FormattedPartnerStructure>({ alias: 'partnerStructure' });
     openLevels$$ = input.required<Set<string>>({ alias: 'openLevels' });
     selectedEntityId$$ = input.required<string | undefined>({ alias: 'selectedEntityId' });
+    search$$ = input.required<string>({ alias: 'search' });
+
     icons = icons;
     EntityType = EntityType;
 
     isOpen$$ = computed<boolean>(() => {
         const partnerStructure = this.partnerStructure$$();
         const openLevels = this.openLevels$$();
-        return openLevels.has(partnerStructure.id);
+        const search = this.search$$();
+        return openLevels.has(partnerStructure.id) || !!search;
     });
     hasChildren$$ = computed<boolean>(() => {
         const { subChannels, organizations } = this.partnerStructure$$();
         return subChannels.length > 0 || organizations.length > 0;
     });
+    isOpenIconVisible$$ = computed<boolean>(() => this.hasChildren$$() && !this.search$$());
+    isSubchannel$$ = computed<boolean>(() => !!this.partnerStructure$$().parentPartner);
     isSelected$$ = computed<boolean>(
         () => this.partnerStructure$$().id === this.selectedEntityId$$(),
     );
+    highlightRegex$$ = computed<RegExp | null>(() => highlightRegex(this.search$$()));
 
     currentTab$$ = toSignal(
         this.router.events.pipe(
@@ -69,8 +78,24 @@ export class NxPartnerSidebarLevelComponent {
         this.toggleOpenEvent.emit(entityId);
     }
     open(entityId: string): void {
-        if (this.hasChildren$$()) {
-            this.openEvent.emit(entityId);
+        this.openEvent.emit(entityId);
+    }
+    maybeOpenPartner($event: MouseEvent): void {
+        const partnerStructure = this.partnerStructure$$();
+        const isOpen = this.isOpen$$();
+        const openLevels = this.openLevels$$();
+        const isSubchannel = this.isSubchannel$$();
+        const { parentPartner } = partnerStructure;
+
+        $event.stopPropagation();
+        // In the search view it's possible to select a child partner when its parent is not open. We want the parent to
+        // be open after exiting the search
+        if (parentPartner && !openLevels.has(parentPartner)) {
+            this.open(parentPartner);
+        }
+        // If it's a root partner we want to open it if it isn't already
+        else if (!isSubchannel && !isOpen) {
+            this.open(partnerStructure.id);
         }
     }
 }
