@@ -1,31 +1,48 @@
 import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
-import { simpleEmailRegex } from '@static-variables';
+import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';
 import { staticImplements } from '@utils/general';
 
 /** Use cases that we want consistent across the entire codebase
  *
- * Every preset should have a validator in the `NxValidators` class and a matching message
- * set in `NxControlMessagesComponent`. Unfortunately, Angular doesn't have an
- * equivalent to React <Fragment> so those can't be moved to a separate file.
+ * Every preset should have a validator and matcher.
  */
 export enum ControlPresets {
-    /** Generic required input, base max length of 150 characters */
-    RequiredInput = 'requiredInput',
-    RequiredEmail = 'requiredEmail',
+    Text = 'text',
+    Email = 'email',
+    Phone = 'phone',
+    Url = 'url',
 }
 
-type PresetValidators = { [P in ControlPresets]: ValidatorFn | (() => ValidatorFn) };
+type PresetValidators = {
+    [P in ControlPresets]: () => ValidatorFn[];
+};
+
+export enum InputMaxLength {
+    text = 150,
+    email = 255,
+}
+
+function validatorFactory(...baseValidators: ValidatorFn[]): (required?: boolean) => ValidatorFn[] {
+    return (required = true) => {
+        const validators = baseValidators;
+        if (required) {
+            validators.push(Validators.required);
+        }
+        return validators;
+    };
+}
 
 @staticImplements<PresetValidators>()
 export class NxValidators {
-    static requiredInput = Validators.compose([Validators.maxLength(150), Validators.required])!;
-
-    static requiredEmail = Validators.compose([
-        Validators.maxLength(255),
+    /** Generic text input */
+    static text = validatorFactory(Validators.maxLength(InputMaxLength.text));
+    static email = validatorFactory(
+        Validators.maxLength(InputMaxLength.email),
         Validators.pattern(simpleEmailRegex),
-        Validators.required,
-    ])!;
+    );
+    static phone = validatorFactory(Validators.pattern(simplePhoneRegex));
+    static url = validatorFactory(Validators.pattern(simpleURLRegex));
 
     static forbidden<T>(
         values: (() => T) | T[] | Set<T> | Map<T, unknown>,

@@ -1,4 +1,13 @@
-<div class="label-container"><ng-content select="[nx-label]"></ng-content></div>
+<div class="label-container">
+    <ng-content select="[nx-label]"></ng-content>
+    @if (maxLength()) {
+        <span
+            class="character-count"
+            [ngClass]="{ 'character-count--error': overMaxLength() }"
+            >{{ valueLength() }}/{{ maxLength() }}</span
+        >
+    }
+</div>
 <div class="input-container"><ng-content></ng-content></div>
 @if (hasMessages()) {
     <div class="messages-container"><ng-content select="nx-control-messages"></ng-content></div>

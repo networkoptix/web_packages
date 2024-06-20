@@ -1,8 +1,28 @@
+@use "theme_variables_common" as vars;
+@use "theme_generator" as tg;
+
+@include tg.generate-theme-vars((
+    '--character-count-color': ('dark': -16, 'light': 16),
+), ':host');
+
 :host {
     display: block;
 }
 
 .label-container {
+    display: flex;
+    justify-content: space-between;
+
+    .character-count {
+        font-family: vars.$font-family-regular;
+        font-size: vars.$font-size-base;
+        color: var(--character-count-color);
+
+        &--error {
+            color: var(--error-label);
+        }
+    }
+
     margin-bottom: 0.25rem;
 }
 

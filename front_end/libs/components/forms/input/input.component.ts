@@ -27,7 +27,9 @@ export class NxInputComponent {
         { nativeElement }: ElementRef<HTMLInputElement>,
     ) {
         nativeElement.classList.add('fs-mask');
-        if (nativeElement.type === 'email') {
+        if (!nativeElement.type) {
+            nativeElement.type = 'text';
+        } else if (nativeElement.type === 'email') {
             nativeElement.autocomplete = 'email';
             nativeElement.spellcheck = false;
             nativeElement.name ||= 'email'; // This seems required for Firefox autocomplete

@@ -5,6 +5,10 @@ import { staticImplements } from '@utils/general';
 
 import { ControlPresets } from '../validators';
 
+/** State of a form control, usually a validation error.
+ *
+ * Example: `{ key: 'pattern', data: {requiredPattern: '^[a-zA-Z ]*$', actualValue: '1'} }`
+ */
 export interface ControlState {
     key: string;
     data?: unknown;
@@ -23,23 +27,46 @@ export interface ControlState {
  */
 export type ErrorMatcher = (control: NgControl, form: FormGroupDirective) => ControlState | null;
 
+/** Sets of triggers to display errors.
+ *
+ * The strings are validator error keys.
+ *
+ * Example: `Validators.maxLength` => `'maxlength'`
+ *
+ * https://github.com/angular/angular/blob/d64ee6cc9decc83c58ba8e90780e9afe69326b86/packages/forms/src/validators.ts#L339
+ * */
 interface ErrorMatches {
     onChange?: string[];
     onBlur?: string[];
     onSubmit?: string[];
 }
 
-@staticImplements<{ [P in ControlPresets]: ErrorMatches }>()
-class NxPresetMatches {
-    static requiredInput: ErrorMatches = {
-        onChange: ['maxlength'],
-        onSubmit: ['required'],
-    };
-
-    static requiredEmail = {
-        ...NxPresetMatches.requiredInput,
-        onBlur: ['pattern'],
-    };
+@staticImplements<{ [P in ControlPresets]: () => ErrorMatches }>()
+export class NxErrorMatches {
+    static text(required = true): ErrorMatches {
+        return {
+            onChange: ['maxlength'],
+            onSubmit: required ? ['required'] : [],
+        };
+    }
+    static email(required = true): ErrorMatches {
+        return {
+            ...NxErrorMatches.text(required),
+            onBlur: ['pattern'],
+        };
+    }
+    static phone(required = true): ErrorMatches {
+        return {
+            onBlur: ['pattern'],
+            onSubmit: required ? ['required'] : [],
+        };
+    }
+    static url(required = true): ErrorMatches {
+        return {
+            onBlur: ['pattern'],
+            onSubmit: required ? ['required'] : [],
+        };
+    }
 }
 
 /** Factory to produce error matcher functions.
@@ -47,16 +74,15 @@ class NxPresetMatches {
  * At least one set of triggers is required. Multiple sets will be composed.
  */
 export function errorMatcherFactory(
-    trigger: ErrorMatches | `${ControlPresets}`,
-    ...others: (ErrorMatches | `${ControlPresets}`)[]
+    trigger: ErrorMatches,
+    ...others: ErrorMatches[]
 ): ErrorMatcher {
     const changeErrors: string[] = [];
     const blurErrors: string[] = [];
     const submitErrors: string[] = [];
     const triggers = [trigger].concat(others);
     for (const trigger of triggers) {
-        const { onChange, onBlur, onSubmit } =
-            typeof trigger === 'string' ? NxPresetMatches[trigger] : trigger;
+        const { onChange, onBlur, onSubmit } = trigger;
         if (onChange) {
             changeErrors.push(...onChange);
         }
@@ -111,5 +137,3 @@ export function errorMatcherFactory(
         return null;
     };
 }
-
-export const requiredErrorMatcher = errorMatcherFactory({ onSubmit: ['required'] });

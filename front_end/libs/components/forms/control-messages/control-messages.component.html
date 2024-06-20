@@ -1,40 +1,24 @@
+<div class="preset-container">
+    <nx-control-message
+        key="maxlength"
+        [text]="LANG.customValidatorMsg.characterLimit"
+        translateWith="data"
+    ></nx-control-message>
+    @if (pattern()) {
+        <nx-control-message
+            key="pattern"
+            [text]="LANG.patternValidatorMsg[pattern()!] | translate"
+        ></nx-control-message>
+    }
+    <nx-control-message
+        key="required"
+        [text]="'Required' | translate"
+    ></nx-control-message>
+</div>
 <div
     class="sizing-container"
     [ngStyle]="{ 'width.px': width() }"
 >
-    @if (preset() === 'requiredInput') {
-        <ng-container [ngTemplateOutlet]="requiredInputPreset"></ng-container>
-    } @else if (preset() === 'requiredEmail') {
-        <ng-container [ngTemplateOutlet]="requiredEmailPreset"></ng-container>
-    }
     <ng-content></ng-content>
 </div>
 <ng-template [cdkPortalOutlet]="selectedMessage()"></ng-template>
-
-<ng-template #requiredInputPreset>
-    <nx-control-message
-        key="required"
-        [text]="'Required' | translate"
-    ></nx-control-message>
-    <nx-control-message
-        key="maxlength"
-        [text]="LANG.customValidatorMsg.charLimitFraction"
-        translateWith="data"
-    ></nx-control-message>
-</ng-template>
-
-<ng-template #requiredEmailPreset>
-    <nx-control-message
-        key="required"
-        [text]="'Required' | translate"
-    ></nx-control-message>
-    <nx-control-message
-        key="pattern"
-        [text]="'Invalid email' | translate"
-    ></nx-control-message>
-    <nx-control-message
-        key="maxlength"
-        [text]="LANG.customValidatorMsg.charLimitExceeded"
-        translateWith="data"
-    ></nx-control-message>
-</ng-template>

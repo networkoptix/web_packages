@@ -7,10 +7,13 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
+import {
+    NxErrorMatches,
+    errorMatcherFactory,
+} from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
-import { ControlPresets, NxValidators } from '@components/forms/validators';
+import { NxValidators } from '@components/forms/validators';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
@@ -52,13 +55,13 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
     private emailControl = new FormControl('', {
         nonNullable: true,
         validators: [
-            NxValidators.requiredEmail,
+            ...NxValidators.email(),
             NxValidators.forbidden(this.accountEmail, 'selfAdd'),
             NxValidators.forbidden(this.partnerUsers, 'existingUser'),
             NxValidators.forbidden(this.backendRejected, 'backendReject'),
         ],
     });
-    emailErrorMatcher = errorMatcherFactory(ControlPresets.RequiredEmail, {
+    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
         onChange: ['selfAdd', 'existingUser', 'backendReject'],
     });
 
