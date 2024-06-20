@@ -4,18 +4,62 @@
         class="header"
         *ngIf="currentOrganization$$() as currentOrg"
     >
-        <h2>{{ groupsStore.currentGroupName$$() || currentOrg.name }}</h2>
-        <nx-tag
-            *ngIf="currentOrg.effectiveState !== 'active'"
-            [type]="currentOrg.effectiveState === 'suspended' ? 'warning' : 'danger'"
-            [size]="'large'"
-            [locked]="true"
-            [customClass]="
-                'status' + (currentOrg.effectiveState === 'suspended' ? ' dark-text' : '')
-            "
-        >
-            {{ currentOrg.effectiveState | translate | uppercase }}
-        </nx-tag>
+        <nx-hidable>
+            @if (inChannelPartner) {
+                <a
+                    [routerLink]="routerState.partnersRoot$$()"
+                    queryParamsHandling="preserve"
+                >
+                    @if (!groupsStore.groupsPath$$().length) {
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                        ></svg-icon>
+                    }
+                    <span translate> All Organizations </span></a
+                >
+            }
+            @if (groupsStore.groupsPath$$().length) {
+                <a
+                    [nxHidableItem]="inChannelPartner"
+                    [routerLink]="routerState.rootGroupLink$$()"
+                    queryParamsHandling="preserve"
+                >
+                    {{ currentOrganization$$()!.name }}</a
+                >
+            }
+
+            <a nxHidableTemplate>...</a>
+
+            @for (
+                breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
+                track breadcrumb.id;
+                let last = $last
+            ) {
+                <a
+                    [nxHidableItem]="!last"
+                    [ngStyle]="{ display: 'inline' }"
+                    [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                    queryParamsHandling="preserve"
+                >
+                    {{ breadcrumb.name }}</a
+                >
+            }
+        </nx-hidable>
+        <h2 class="org-name">
+            {{ groupsStore.currentGroupName$$() || currentOrg.name }}
+            <nx-tag
+                *ngIf="currentOrg.effectiveState !== 'active'"
+                [type]="currentOrg.effectiveState === 'suspended' ? 'warning' : 'danger'"
+                [size]="'large'"
+                [locked]="true"
+                [customClass]="
+                    'status' + (currentOrg.effectiveState === 'suspended' ? ' dark-text' : '')
+                "
+            >
+                {{ currentOrg.effectiveState | translate | uppercase }}
+            </nx-tag>
+        </h2>
     </div>
     <nx-tabs animated>
         <nx-base-tab
@@ -79,48 +123,6 @@
                     *ngIf="isLoading && !currentOrganization$$(); else cards"
                 ></nx-pre-loader>
                 <ng-template #cards>
-                    <nx-hidable>
-                        @if (inChannelPartner) {
-                            <a
-                                [routerLink]="routerState.partnersRoot$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                @if (!groupsStore.groupsPath$$().length) {
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [src]="icons.dirTextButtons + 'arrow_left.svg'"
-                                    ></svg-icon>
-                                }
-                                <span translate> All Organizations </span></a
-                            >
-                        }
-                        @if (groupsStore.groupsPath$$().length) {
-                            <a
-                                [nxHidableItem]="inChannelPartner"
-                                [routerLink]="routerState.rootGroupLink$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                {{ currentOrganization$$()!.name }}</a
-                            >
-                        }
-
-                        <a nxHidableTemplate>...</a>
-
-                        @for (
-                            breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
-                            track breadcrumb.id;
-                            let last = $last
-                        ) {
-                            <a
-                                [nxHidableItem]="!last"
-                                [ngStyle]="{ display: 'inline' }"
-                                [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
-                                queryParamsHandling="preserve"
-                            >
-                                {{ breadcrumb.name }}</a
-                            >
-                        }
-                    </nx-hidable>
                     <ng-template [ngTemplateOutlet]="body"></ng-template>
                     <router-outlet></router-outlet>
                 </ng-template>

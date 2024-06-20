@@ -59,6 +59,15 @@
         flex-direction: column;
         width: 100%;
         padding: 1.5rem;
+        .header {
+            padding-bottom: 0;
+            
+            .org-name {
+                display: flex;
+                height: 28px;
+                gap: 1rem;
+            }
+        }
     }
 
     .content {
