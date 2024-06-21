@@ -5,6 +5,7 @@ from ssl import SSLError
 import traceback
 import logging
 import base64
+from typing import Any
 
 from celery import shared_task
 from celery.exceptions import Ignore
@@ -54,16 +55,32 @@ def send_email_log(_task):
     return wrapper
 
 
-def get_email_full_name(email: str, send_individual: bool):
-    try:
-        users_emails = json.loads(email)
-    except:
-        users_emails = [email]
+def get_email_full_name(email: Any):
+    if isinstance(email, str):
+        # If email is a string, it is a single email or json encoded array of emails
+        try:
+            users_emails = json.loads(email)
+        except json.JSONDecodeError:
+            # If it is not a json encoded array, it is a single email, I guess
+            users_emails = [email]
+        except:
+            # Return an original email if we can't parse it
+            logger.warning(f'Invalid email format: {email}, {email.__class__}.')
+            return email
+    elif isinstance(email, list) or isinstance(email, tuple):
+        # if list or tuple
+        users_emails = email
+    else:
+        # Return an original email if we can't parse it, error will be thrown later
+        return email
 
-    if send_individual and (user := Account.objects.filter(email=email).first()):
-        return user.get_full_name()
+    # If it is a single email, trying to return the full name of the user
+    if len(users_emails) == 1:
+        if user := Account.objects.filter(email=users_emails[0]).first():
+            return user.get_full_name() or user.email
 
-    return ', '.join(users_emails)
+    # Otherwise, return the first email
+    return users_emails[0]
 
 
 @shared_task
@@ -125,7 +142,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
             is_dict_content = isinstance(initial_email_content, dict)
             email_content = {**initial_email_content} if is_dict_content else initial_email_content
             if is_dict_content and 'userFullName' not in email_content:
-                email_content['userFullName'] = get_email_full_name(email, send_individual)
+                email_content['userFullName'] = get_email_full_name(email)
             try:
                 email_engine.send(email, template_type, email_content, lang, customization, subject, attachments, cloud_wrapper)
             except Exception as e:
