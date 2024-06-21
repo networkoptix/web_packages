@@ -9,6 +9,7 @@ import {
     selectOrgsFromStructure,
     selectPartnersFromStructure,
 } from '@store/channel-partners/channel-partners.selectors';
+import { dateToYMD, MS } from '@utils/general';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
@@ -82,9 +83,12 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
     loadServiceChangesEffect = effect(() => {
         const entityType = this.entityType$$();
         const entityId = this.entityId$$();
+        const date = new Date();
+        date.setMonth(this.monthIndex());
+        date.setFullYear(this.year());
 
-        const startTs = '';
-        const endTs = '';
+        const startTs = dateToYMD(new Date(date).setDate(0));
+        const endTs = dateToYMD(new Date(date).getTime() + MS.day);
         untracked(() => {
             if (entityType === EntityType.channelPartner) {
                 this.serviceChangesStore.loadPartnerServiceChanges(entityId, startTs, endTs);
