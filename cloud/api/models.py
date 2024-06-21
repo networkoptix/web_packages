@@ -193,7 +193,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 group=release_group, asset=get_cloud_portal_asset(customization=self.customization))
 
     def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
+        full_name = self.first_name + ' ' + self.last_name
+        return full_name.strip()
 
     def get_short_name(self):
         return self.first_name

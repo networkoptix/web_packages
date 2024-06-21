@@ -114,7 +114,7 @@ class TestSendEmail:
             call(
                 email,
                 SystemEmail.MSG_TYPE,
-                { **expected_message, 'userFullName': get_email_full_name(email, True) },
+                { **expected_message, 'userFullName': get_email_full_name(email)},
                 self.expected_lang,
                 settings.TEST_CUSTOMIZATION,
                 sys_email.subject,
@@ -356,3 +356,46 @@ def test_async_task_test(mocker):
     assert async_task_test(x, y) == x * y
     with open('task.log', 'r') as f:
         assert f.read() == f"Task Done: {x} * {y} = {x*y}"
+
+
+class TestGetFullName:
+    @pytest.fixture(autouse=True)
+    def setup(self, account_factory, default_customization):
+        self.user_1 = account_factory(
+            email=f'{uuid4()}@{uuid4()}.com', first_name=str(uuid4()), last_name=str(uuid4()))
+        self.user_2 = account_factory(
+            email=f'{uuid4()}@{uuid4()}.com', first_name=str(uuid4()), last_name=str(uuid4()))
+        self.user_without_name = account_factory(
+            email=f'{uuid4()}@{uuid4()}.com', first_name='', last_name='')
+
+    def test_get_email_full_name_with_single_email_string(self):
+        result = get_email_full_name(self.user_1.email)
+        assert result
+        assert result == self.user_1.get_full_name()
+
+    def test_get_email_full_name_non_existing_user(self):
+        email = f'{uuid4()}@{uuid4()}.com'
+        result = get_email_full_name([email])
+        assert result
+        assert result == email
+
+    def test_get_email_full_name_with_single_email_no_name(self):
+        result = get_email_full_name(self.user_without_name.email)
+        assert result
+        assert result == self.user_without_name.email
+
+    def test_get_email_full_name_with_single_email_list(self):
+        result = get_email_full_name([self.user_1.email])
+        assert result
+        assert result == self.user_1.get_full_name()
+
+
+    def test_get_email_full_name_with_multiple_emails(self):
+        emails = [self.user_1.email, self.user_2.email]
+        result = get_email_full_name(emails)
+        assert result == emails[0]
+
+    def test_get_email_full_name_with_invalid_email_format(self):
+        email = 12345  # Invalid email format
+        result = get_email_full_name(email)
+        assert result == email
