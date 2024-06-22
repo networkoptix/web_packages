@@ -14,6 +14,7 @@ import {
 } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxAccountService } from '@services/account.service';
+import { ChannelPartnerRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import {
     selectCurrentPartner,
     selectRootChannelPartners,
@@ -39,6 +40,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     protected router = inject(Router);
     protected channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
 
+    ChannelPartnerRoleIds = ChannelPartnerRoleIds;
     channelPartnerUserRecords$$ = this.channelPartnerUsersStore.entities;
     filteredRecords$$ = this.channelPartnerUsersStore.filteredRecords$$;
     headers: HEADER_ITEM[] = [
@@ -80,7 +82,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         const users = this.channelPartnerUserRecords$$();
         let count = 0;
         for (const user of users) {
-            if (user.roles[0] === 'Administrator') {
+            if (user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR)) {
                 count += 1;
                 if (count >= 2) {
                     return false;
@@ -95,14 +97,15 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             return '';
         }
         return (
-            this.channelPartnerUserRecords$$().find(user => user.roles[0] === 'Administrator')
-                ?.email || ''
+            this.channelPartnerUserRecords$$().find(user =>
+                user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
+            )?.email || ''
         );
     });
 
     adminCount$$ = computed(() => {
-        const adminUsers = this.channelPartnerUserRecords$$()?.filter(
-            user => user.roles[0] === 'Administrator',
+        const adminUsers = this.channelPartnerUserRecords$$()?.filter(user =>
+            user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
         );
         return adminUsers?.length || 0;
     });
@@ -206,8 +209,8 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     }
 
     bulkDeleteUsers(): void {
-        const adminUsers = this.selectedUsers$$()?.filter(
-            user => user.roles[0] === 'Administrator',
+        const adminUsers = this.selectedUsers$$()?.filter(user =>
+            user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
         );
 
         if (adminUsers?.length === this.adminCount$$()) {
