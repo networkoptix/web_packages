@@ -9,17 +9,22 @@
         {{ warn }}
     </div>
     <div class="d-flex">
-        <nx-button
-            type="brand"
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="save()"
             [disabled]="saveDisabled"
-            (onClick)="save()"
-            text="{{ 'Save' | translate }}"
-        ></nx-button>
-        <nx-button
-            class="ml-2"
-            type="secondary"
-            (onClick)="discard()"
-            text="{{ 'Cancel' | translate }}"
-        ></nx-button>
+            translate
+        >
+            Save
+        </button>
+        <button
+            type="button"
+            class="ml-2 btn btn-default"
+            (click)="discard()"
+            translate
+        >
+            Cancel
+        </button>
     </div>
 </div>

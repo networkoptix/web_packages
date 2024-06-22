@@ -3,7 +3,6 @@ import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { delay, mergeMap, of, throwError, timer } from 'rxjs';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
@@ -14,7 +13,7 @@ import { NxToastService } from '@services/toast.service';
     templateUrl: 'buttonsExample.component.html',
     styleUrls: ['buttonsExample.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, NxButtonComponent, NxAsyncActionButtonComponent],
+    imports: [CommonModule, FormsModule, NxAsyncActionButtonComponent],
 })
 export class NxButtonsExampleComponent implements AfterViewInit {
     toastService = inject(NxToastService);

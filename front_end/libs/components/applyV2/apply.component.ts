@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxButtonComponent } from '../button/button.component';
-
 @Component({
     selector: 'nx-apply',
     templateUrl: 'apply.component.html',
     styleUrls: ['apply.component.scss'],
-    imports: [CommonModule, TranslateModule, NxButtonComponent],
+    imports: [CommonModule, TranslateModule],
     standalone: true,
 })
 export class NxApplyComponent {

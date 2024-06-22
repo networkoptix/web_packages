@@ -24,7 +24,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -49,7 +48,6 @@ import { icons, MAX_NAME_LENGTH } from '@static-variables';
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxAddSvgSrcDirective,
-        NxButtonComponent,
     ],
 })
 export class NxInfoGroupComponent {

@@ -1,4 +1,4 @@
-@use 'components/button/buttons';
+@use "resets";
 @use "typography";
 
 :host {
@@ -7,7 +7,7 @@
 }
 
 button {
-    @include buttons.reset();
+    @include resets.button();
     display: flex;
     justify-content: center;
     align-items: center;

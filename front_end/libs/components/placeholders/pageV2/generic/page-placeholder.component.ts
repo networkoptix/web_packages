@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -47,7 +46,6 @@ export class NxPagePlaceholderGenericV2Component {
     @Input() title?: string;
     @Input() message?: string;
     @Input() description?: string;
-    @Input() button?: NxButtonComponent;
 
     LANG = staticLang;
 

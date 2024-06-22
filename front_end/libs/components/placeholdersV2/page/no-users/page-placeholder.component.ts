@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -24,7 +23,6 @@ import { icons } from '@static-variables';
         AngularSvgIconModule,
         PipesModule,
         NxAddSvgSrcDirective,
-        NxButtonComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
 })
