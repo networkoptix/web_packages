@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
+import { SvgResizeComponent } from '@pages/sandbox/svg-resize/svg.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 
@@ -116,6 +117,10 @@ const appRoutes: Routes = [
             {
                 path: 'validation',
                 component: ValidationComponent,
+            },
+            {
+                path: 'svg-resize',
+                component: SvgResizeComponent,
             },
             {
                 path: 'tags',

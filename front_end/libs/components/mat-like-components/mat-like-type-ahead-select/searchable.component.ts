@@ -239,6 +239,6 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
         this.show = false;
         this.form?.form.markAsTouched();
         this.form?.form.get(this.componentId)?.markAsTouched();
-        this.onClickElsewhere.emit(this.searchInput.nativeElement.innerText);
+        this.onClickElsewhere.emit(this.searchInput?.nativeElement.innerText);
     }
 }

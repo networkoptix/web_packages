@@ -32,21 +32,27 @@ export class NxSandboxComponent {
             this.content.selectedDetailsSection = detailSelection;
             this.content = { ...this.content }; // trigger onChange
         });
-
-        effect(() => {
-            if (this.content) {
-                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection$$();
-                this.content = { ...this.content }; // trigger onChange
-            }
-        });
     }
 
     ngOnInit(): void {
         this.content = {
             base: '/sandbox',
-            selectedSection: 'components',
-            selectedSubSection: 'table',
+            selectedSection: 'experiments',
+            selectedSubSection: 'svgResize',
             level1: [
+                {
+                    id: 'experiments',
+                    svg: 'system',
+                    label: 'Experiments',
+                    path: '',
+                    level3: [
+                        {
+                            id: 'svgResize',
+                            label: 'SVG Resize',
+                            path: '/svg-resize',
+                        },
+                    ],
+                },
                 {
                     id: 'colors',
                     svg: 'system',

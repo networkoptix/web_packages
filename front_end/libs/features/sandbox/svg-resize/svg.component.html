@@ -1,0 +1,61 @@
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <form
+        class="col-12"
+        #svgForm="ngForm"
+        novalidate
+    >
+        <div class="row col-12 pb-2">
+            <div class="d-flex flex-column col-2 p-0">
+                <img
+                    alt=""
+                    [src]="icons.dir + 'dashboard.svg'"
+                    style="width: 12px; border: 1px solid red"
+                />
+            </div>
+            <div class="d-flex flex-column col-2">width: 12px</div>
+        </div>
+        <div class="row col-12 pb-2">
+            <div class="d-flex flex-column col-2 p-0">
+                <img
+                    alt=""
+                    [src]="icons.dir + 'dashboard.svg'"
+                    style="width: 20px; border: 1px solid red"
+                />
+            </div>
+            <div class="d-flex flex-column col-2">width: 20px</div>
+        </div>
+        <div class="row col-12 pb-2">
+            <div class="grid-1">
+                <img
+                    alt=""
+                    [src]="icons.dir + 'dashboard.svg'"
+                    style="width: 24px"
+                />
+            </div>
+            <div class="d-flex flex-column col-2">width: 24px / grid: 1px</div>
+        </div>
+        <div class="row col-12 pb-2">
+            <div class="grid-3">
+                <img
+                    alt=""
+                    [src]="icons.dir + 'dashboard.svg'"
+                    style="width: 48px"
+                />
+            </div>
+            <div class="d-flex flex-column col-2">width: 48px / grid: 3px</div>
+        </div>
+        <div class="row col-12 pb-2">
+            <div class="grid-6">
+                <img
+                    alt=""
+                    [src]="icons.dir + 'dashboard.svg'"
+                    style="width: 96px"
+                />
+            </div>
+            <div class="d-flex flex-column col-2">width: 96px / grid: 6px</div>
+        </div>
+    </form>
+</div>

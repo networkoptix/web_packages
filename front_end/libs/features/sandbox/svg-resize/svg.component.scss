@@ -1,0 +1,20 @@
+:host {
+    .grid-1 {
+        background-image:
+            repeating-linear-gradient(#ccc 0 0, transparent 1px 1px),
+            repeating-linear-gradient(90deg, #ccc 0 0, transparent 1px 1px);
+        background-size: 24px 24px;
+    }
+    .grid-3 {
+        background-image:
+            repeating-linear-gradient(#ccc 0 0, transparent 1px 3px),
+            repeating-linear-gradient(90deg, #ccc 0 0, transparent 1px 3px);
+        background-size: 48px 48px;
+    }
+    .grid-6 {
+        background-image:
+            repeating-linear-gradient(#ccc 0 0, transparent 1px 6px),
+            repeating-linear-gradient(90deg, #ccc 0 0, transparent 1px 6px);
+        background-size: 96px 96px;
+    }
+}
