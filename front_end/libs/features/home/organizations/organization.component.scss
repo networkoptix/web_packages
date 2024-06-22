@@ -120,6 +120,12 @@ nx-hidable {
             }
             margin-left: 1em;
         }
+}
+    .tutorial-link {
+        position: absolute;
+        right: 20px;
+        color: var(--body-text-color);
+        cursor: pointer;
     }
 }
 

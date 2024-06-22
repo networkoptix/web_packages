@@ -1,0 +1,108 @@
+@use '../../../dialogs/nx-modal.scss';
+@use 'typography';
+@use 'theme_palette' as colors;
+@use 'theme_variables_common' as *;
+
+mat-button-toggle-group {
+  border-radius: 0;
+  border: none;
+  padding-top: 8px;
+
+  mat-button-toggle {
+    background: var(--switch-circle-color);
+    width: 208px;
+
+    &:hover {
+      background: var(--change-state-dialog-btn-hover-bg);
+    }
+
+    button {
+      padding: 2px 8px !important;
+      height: initial !important;
+
+      background: var(--change-state-dialog-btn-bg);
+      color: var(--change-state-dialog-color);
+
+      span {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      & > span {
+        padding: 0 !important;
+        font-size: 14px;
+        line-height: 20px !important;
+
+        display: flex;
+        align-items: center;
+      }
+
+    }
+
+    &.mat-button-toggle-checked {
+      background: $blue1;
+      color: var(--checkbox-active-color);
+
+      svg > path, svg > rect {
+        --change-state-dialog-color: var(--change-state-dialog-btn-checked-color);
+      }
+    }
+  }
+}
+
+.cards-container {
+  @include typography.regular14nocolor;
+}
+
+.card {
+  border: none;
+  background-color: var(--dialog-bg);
+}
+
+.card-interior {
+  height: 100%;
+  padding: 16px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  white-space: normal;
+}
+
+.number-row {
+  display: flex;
+  align-items: center;
+}
+
+.number-circle {
+  height: 28px;
+  width: 28px;
+  text-align: center;
+  line-height: 28px;
+  background: var(--no-systems-number-icon-color);
+  border-radius: 9999px;
+  color: var(--promo-tile-bg);
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.description-text {
+  color: var(--body-text-color);
+  @include typography.regular14nocolor;
+  line-height: 1.2;
+}
+
+.nx-modal__body {
+  color: var(--body-text-color);
+}
+
+.nx-modal__header {
+  padding: 0.55rem calc(38px + 1rem) 0.55rem 1rem;
+}
+
+.nx-modal__header-title {
+  margin: 3px;
+}
+
+.card-interior {
+  padding: 16px 0 4px 0;
+}

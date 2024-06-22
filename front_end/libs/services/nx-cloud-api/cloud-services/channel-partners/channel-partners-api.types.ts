@@ -18,6 +18,11 @@ export enum OrgRoleIds {
     LiveViewer = '00000000-0000-4000-8000-000000000007',
 }
 
+export enum ConnectionStatus {
+    NotConnected = 'not-connected',
+    Connected = 'connected',
+}
+
 export type Page<Results> = {
     count: number;
     next: string | null;
