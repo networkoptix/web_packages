@@ -44,7 +44,10 @@
                 >
                     <nx-checkbox
                         componentId="checkBox{{ row[idPropName] }}"
-                        [disabled]="!canManageUsers$$()"
+                        [disabled]="
+                            row.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR) &&
+                            hasOneAdmin$$()
+                        "
                         [data]="row"
                     >
                     </nx-checkbox>
@@ -101,7 +104,8 @@
                         <svg-icon
                             class="info"
                             [nxTooltip]="
-                                (row.roles[0] === 'Administrator' && hasOneAdmin$$()
+                                (row.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR) &&
+                                hasOneAdmin$$()
                                     ? LANG.channelPartners.usersTable.adminTooltip
                                     : LANG.channelPartners.usersTable.infoToolTip
                                 ) | translate
