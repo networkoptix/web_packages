@@ -65,6 +65,18 @@ light/dark gray themes are not provided, the values for light/dark will be used.
 Defaults to html (global).
 
 Use :host with theme attribute directive if limiting to single component
+
+Example of Single Component use:
+1. In theme-variable-generator-sandbox.component.ts:
+In the Component, we add: hostDirectives: [NxThemeAttributeDirective]
+
+2. Then in theme-variable-generator-sandbox.component.scss:
+We add ':host' as the 2nd parameter of tg.generate-theme-vars for the selector
+Ex:
+@use 'theme_generator' as tg;
+@include tg.generate-theme-vars((~Theme-Generated-Var-examples~), ':host');
+
+Then the Theme-Generated-Var should be applied to that Component's SCSS file
 */
 @mixin generate-theme-vars($variables, $selector: 'html') {
     $themes: (
