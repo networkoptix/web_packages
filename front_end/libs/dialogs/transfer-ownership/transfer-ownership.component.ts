@@ -21,6 +21,7 @@ import { createAsyncAction } from '@dialogs/async-action-button/create-async-act
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import staticLang from '@language_static';
 import { OrgPermissions } from '@pages/home/store/permissions/permissions.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -64,6 +65,7 @@ import { NxTransferStepperComponent } from './transfer-stepper.component';
         NxAutoCompleteItemComponent,
         NxAsyncActionButtonComponent,
     ],
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> {
     selectedIndex: number = 0;

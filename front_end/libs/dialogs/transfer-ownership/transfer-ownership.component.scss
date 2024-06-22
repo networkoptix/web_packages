@@ -2,6 +2,11 @@
 
 @use '../nx-modal';
 
+@use 'theme_generator' as tg;
+@include tg.generate-theme-vars((
+    '--transfer-ownership-dialog-no-users-border-color': 7,
+), ':host');
+
 .subtext {
     @include typography.regular13nocolor;
     color: var(--light-text-color); // light16
@@ -141,7 +146,7 @@
     }
 
     .nx-modal__body--org-and-user-select & {
-        border: 1px solid gray;
+        border: 1px solid var(--transfer-ownership-dialog-no-users-border-color);
     }
 }
 
