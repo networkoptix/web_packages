@@ -37,8 +37,11 @@ import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalon
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxTutorialDialogComponent } from '@dialogs/channel-partners/tutorial-dialog/tutorial-dialog.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PipesModule } from '@pipes/pipes.module';
 import { Account } from '@services/account.service/account';
@@ -86,6 +89,7 @@ interface SidebarSettings {
         PipesModule,
         NxHidableModule,
         NxAlertBlockComponent,
+        NxTutorialDialogComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
 })
@@ -100,12 +104,15 @@ export class NxOrganizationsComponent implements OnInit {
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     isValidOrg = true;
+    orgUserStore = inject(OrgUsersStore);
 
     hasSupportInfo$$ = computed(() => {
         return Object.values(this.currPartnerSupportInfo$$() || []).some(
             fieldset => fieldset?.length,
         );
     });
+
+    canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
@@ -169,6 +176,7 @@ export class NxOrganizationsComponent implements OnInit {
         private store: Store,
         private cloudApi: NxCloudApiService,
         private cpService: NxChannelPartnersService,
+        private dialogsService: NxDialogsService,
     ) {
         const { email } = this.account$$();
         this.userEmail = email;
@@ -247,5 +255,8 @@ export class NxOrganizationsComponent implements OnInit {
         return item.id;
     }
 
+    openTutorial(): void {
+        this.dialogsService.addSystemTutorial();
+    }
     excludeLast = <T>(items: T[]): T[] => items.slice(0, -1);
 }

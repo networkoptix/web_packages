@@ -369,6 +369,14 @@ export class NxDialogsService {
         ),
     );
 
+    addSystemTutorial = this.dialogV2Factory<Dt.AddSystemTutorial>(
+        () =>
+            import('./channel-partners/tutorial-dialog/tutorial-dialog.component').then(
+                m => m.NxTutorialDialogComponent,
+            ),
+        { width: DIALOG_SIZE.ACTION },
+    );
+
     addOrgUser = this.dialogV1Factory<Dt.AddOrgUser>(() =>
         import('./channel-partners/add-org-user/add-org-user.component').then(
             m => m.NxAddOrgUserModalContent,

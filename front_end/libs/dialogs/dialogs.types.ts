@@ -167,6 +167,7 @@ export type ChangeCpState = DialogType<
     { currentState: State; update: (newState: State) => Observable<unknown> },
     State
 >;
+export type AddSystemTutorial = DialogType<void, void>;
 
 export type CreateSystemGroup = DialogType<
     {
