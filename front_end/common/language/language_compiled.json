@@ -1572,7 +1572,7 @@
     "There are too many attempts to connect to this camera. Please wait for a minute and try again.": "There are too many attempts to connect to this camera. Please wait for a minute and try again.",
     "There are unsaved changes on the layout": "There are unsaved changes on the layout",
     "There is a another layout with the same name. Overwrite existing layout?": "There is a another layout with the same name. Overwrite existing layout?",
-    "There must be at least one Organization administrator. To change the role, add another user with the Organization administrator role.": "There must be at least one Organization administrator. To change the role, add another user with the Organization administrator role.",
+    "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.": "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.",
     "There must be at least one administrator. To change the role, add another user with the administrator role.": "There must be at least one administrator. To change the role, add another user with the administrator role.",
     "There should be at least one user in the channel partner with Administrator permission": "There should be at least one user in the channel partner with Administrator permission",
     "There should be at least one user in the organization with Organization Administrator permissions": "There should be at least one user in the organization with Organization Administrator permissions",

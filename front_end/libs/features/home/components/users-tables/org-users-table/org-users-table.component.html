@@ -149,7 +149,10 @@
                     } @else {
                         <svg-icon
                             class="info"
-                            [nxTooltip]="
+                            nxTooltipV2
+                            [src]="icons.dirTextButtons + 'info.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                            [tooltipContent]="
                                 (inGroup$$()
                                     ? LANG.channelPartners.usersTable.infoToolTip
                                     : hasOnlyOneAdmin$$() && onlyAdmin$$() !== row.email
@@ -157,8 +160,6 @@
                                       : LANG.channelPartners.usersTable.infoToolTip
                                 ) | translate
                             "
-                            [src]="icons.dirTextButtons + 'info.svg'"
-                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                         ></svg-icon>
                     }
                 </div>
