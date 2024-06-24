@@ -1,6 +1,9 @@
 @use 'typography';
-
+@use "theme_variables_common" as theme_vars;
 @use '../nx-modal';
+
+$border-blue: rgba(theme_vars.$blue10, 0.3);
+$body-blue: rgba(theme_vars.$blue10, 0.1);
 
 @use 'theme_generator' as tg;
 @include tg.generate-theme-vars((
@@ -156,7 +159,7 @@
         flex-wrap: wrap;
     }
 
-    .warning-block {
+    .block {
         margin-top: 0.5rem;
 
         color: var(--card-simple-warning-color);
@@ -164,6 +167,22 @@
         border: 1px solid var(--card-simple-warning-border-color);
 
         padding: 5px 10px;
+
+        &.info-block {
+            color: var(--card-simple-info-color);
+            border: 1px solid $border-blue;
+            background-color: $body-blue;
+
+            svg-icon svg path {
+                fill: var(--attention-blue);
+            }
+        }
+
+        &.warning-block {
+            color: var(--card-simple-warning-color);
+            background-color: var(--card-simple-warning-bg);
+            border: 1px solid var(--card-simple-warning-border-color);
+        }
 
         &__header {
             display: flex;
@@ -203,4 +222,8 @@
     color: var(--body-text-color); // dark9
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+}
+
+.nx-modal__content {
+    height: 350px;
 }

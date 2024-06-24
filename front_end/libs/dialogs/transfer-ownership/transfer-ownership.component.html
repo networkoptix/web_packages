@@ -264,7 +264,7 @@
         </p>
         <div
             *ngIf="toUser$$()"
-            class="warning-block"
+            class="block warning-block"
         >
             <div class="warning-block__header mb-1">
                 <svg-icon
@@ -279,6 +279,35 @@
             >
                 Once the ownership transfer is complete, you will be removed from the system.
             </p>
+        </div>
+        <div
+            *ngIf="toOrg$$()"
+            class="block info-block"
+        >
+            <div class="info-block__header mb-1">
+                <svg-icon
+                    [src]="icons.dirNonStandard + 'info.svg'"
+                    [svgStyle]="{ height: '18px' }"
+                ></svg-icon
+                ><span translate>INFORMATION</span>
+            </div>
+            <p translate>
+                Once connected to your Organization, this System will be upgraded to Enterprise with
+                a Service Subscription licensing model:
+            </p>
+            <ul>
+                <li translate>
+                    Each existing Pro License will be converted into 24 months of Service
+                    Subscription enabling additional Enterprise features on your System.
+                </li>
+                <li>
+                    <strong>{{ 'warning' | translate | uppercase }}:</strong>
+                    <span translate>
+                        This action is not reversible, existing Pro Licenses can not be re-used once
+                        converted to Service Subscriptions.</span
+                    >
+                </li>
+            </ul>
         </div>
     </div>
     <div class="nx-modal__footer nx-modal__footer--justify-between">
