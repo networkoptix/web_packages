@@ -104,7 +104,11 @@
     </div>
 </div>
 <!--We'll replace settingsViews check with calAlterState check once we have the ability to check parent partner's permissions-->
-@if (showStateChangeBlock && settingsState().view !== settingsViews.CHANNEL_PARTNERS) {
+@if (
+    showStateChangeBlock &&
+    canConfigure$$() &&
+    settingsState().view !== settingsViews.CHANNEL_PARTNERS
+) {
     <div class="row pt-3">
         <div class="col-10">
             @if (!canChangeState()) {
@@ -271,6 +275,33 @@
                     </nx-block>
                 </div>
             }
+        </div>
+    </div>
+}
+
+@if (inOrganization$$() && canDeleteSelfFromOrg$$()) {
+    <div class="row pt-3">
+        <div class="col-10">
+            <div>
+                <nx-block>
+                    <header><h4 translate>Disconnection</h4></header>
+                    <nx-section>
+                        <div class="disconnect-body">
+                            <div translate>
+                                You can disconnect Organization from your account if access to
+                                Organization was granted accidentally.
+                            </div>
+                            <button
+                                class="btn btn-default disconnect-btn"
+                                (click)="disconnectOrg.emit()"
+                                translate
+                            >
+                                Disconnect from My Account
+                            </button>
+                        </div>
+                    </nx-section>
+                </nx-block>
+            </div>
         </div>
     </div>
 }

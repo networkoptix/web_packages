@@ -33,7 +33,6 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
-import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -85,7 +84,6 @@ interface SidebarSettings {
         NxAccessTableContainerComponent,
         NxTagComponent,
         TranslateModule,
-        NxRibbonStandaloneComponent,
         PipesModule,
         NxHidableModule,
         NxAlertBlockComponent,
@@ -135,7 +133,7 @@ export class NxOrganizationsComponent implements OnInit {
                     route: 'reports',
                 });
             }
-            if (this.permissionsStore.canViewOrgSettings$$()) {
+            if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
                 tabs.push({
                     displayName: this.LANG.channelPartners.tabNames.settings,
                     route: 'settings',

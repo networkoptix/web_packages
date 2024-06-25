@@ -3,6 +3,7 @@
         <div class="settings-container">
             @if (state.item) {
                 <nx-settings-general-v2
+                    [inOrganization]="false"
                     [currentName]="name$$()"
                     [permissions]="permissions$$()"
                     [canChangeState]="permissionsStore.canChangePartnerState$$()"
