@@ -60,7 +60,9 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
                   serviceName: serviceIdToNameMap.get(serviceId) ?? '',
                   amount,
                   changedAtName:
-                      partners.get(changedAtId)?.name ?? organizations.get(changedAtId)?.name ?? '',
+                      partners.get(changedAtId)?.name ??
+                      organizations.get(changedAtId)?.name ??
+                      changedAtId,
                   date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
               }))
             : [];
