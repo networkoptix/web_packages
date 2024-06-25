@@ -124,7 +124,8 @@ export class NxHomeComponent implements OnInit {
 
         if (
             !hasAccessToPartnersOrSystems ||
-            systems.some(sys => sys.accessRole === 'owner' && isUserSystem(sys))
+            systems.some(sys => sys.accessRole === 'owner' && isUserSystem(sys)) ||
+            (!systems.length && !filteredChannelPartners.length && !filteredOrganizations.length)
         ) {
             redirectPath = 'personal';
             nodes.push(
