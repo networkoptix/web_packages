@@ -2479,7 +2479,7 @@ class TestCloudSystemViewSetDelete:
         assert request.headers.get('Authorization') == f'Bearer {self.token}'
 
     def test_destroy_perms(self, system_factory, org_user_factory, arf, mock_auth_with_user, httpx_mock):
-        for role in OrganizationRole.objects.filter(permissions__codename=OrganizationPermissions.manage_systems):
+        for role in OrganizationRole.objects.filter(permissions__codename=OrganizationPermissions.disconnect_systems):
             sys = system_factory(organization=self.org)
             url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
             httpx_mock.add_response(url=url, status_code=200)
@@ -2487,11 +2487,11 @@ class TestCloudSystemViewSetDelete:
             request = arf.delete('/')
             mock_auth_with_user(user)
             response = self.view(request, id=sys.system_id)
-            assert response.status_code == 204
+            assert response.status_code == 204, f'Failed for role {role.name} {role.id}'
             sys.refresh_from_db()
             assert sys.system_state == CloudSystemStates.DELETED
 
-        role = OrganizationRole.objects.exclude(permissions__codename=OrganizationPermissions.manage_systems).first()
+        role = OrganizationRole.objects.exclude(permissions__codename=OrganizationPermissions.disconnect_systems).first()
         sys = system_factory(organization=self.org)
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)

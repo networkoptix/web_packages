@@ -460,6 +460,9 @@ class CloudSystemId(
     def can_manage(self, user: CloudUser):
         return self.organization and self.organization.can_manage_systems(user)
 
+    def can_disconnect(self, user: CloudUser):
+        return self.organization and self.organization.can_disconnect_systems(user)
+
     def can_access(self, user: CloudUser):
         queryset = OrganizationToUser.objects.none().values('id')
         if self.system_group_id:
@@ -1361,6 +1364,7 @@ class OrganizationRole(models.Model):
 
 class OrganizationPermissions:
     manage_systems = 'manage_systems'
+    disconnect_systems = 'disconnect_systems'
     manage_users = 'manage_users'
     configure_organization = 'configure_organization'
     view_service_reports = 'view_service_reports'
@@ -1641,6 +1645,9 @@ class Organization(
 
     def can_manage_systems(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.manage_systems)
+
+    def can_disconnect_systems(self, user: CloudUser):
+        return self.has_perm(user, OrganizationPermissions.disconnect_systems)
 
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, OrganizationPermissions.manage_users):

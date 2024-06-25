@@ -1433,7 +1433,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
                                                         system_allowed=True,
                                                         direct_access_allowed=VmsRoles.ALL_ROLES))
         if self.action == 'destroy':
-            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage, system_allowed=True,
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_disconnect, system_allowed=True,
                                                         direct_access_allowed=[VmsRoles.ADMINISTRATOR]))
         if self.action == 'transfer_offer':
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_systems))
