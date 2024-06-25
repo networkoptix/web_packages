@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { delay, mergeMap, of, throwError, timer } from 'rxjs';
 
 import { NxButtonComponent } from '@components/button/button.component';
+import { NxButtonToggleModule } from '@components/button-toggle/button-toggle.module';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
@@ -15,7 +16,14 @@ import { icons } from '@static-variables';
     templateUrl: 'buttonsExample.component.html',
     styleUrls: ['buttonsExample.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, NxButtonComponent, NxAsyncActionButtonComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NxButtonComponent,
+        NxAsyncActionButtonComponent,
+        NxButtonToggleModule,
+    ],
 })
 export class NxButtonsExampleComponent implements AfterViewInit {
     toastService = inject(NxToastService);
@@ -55,5 +63,14 @@ export class NxButtonsExampleComponent implements AfterViewInit {
         this.hostElement
             .querySelectorAll<HTMLButtonElement>('.endless-action-button button')
             .forEach(elem => elem.click());
+    }
+
+    toggleControl = new FormControl<string | null>(null);
+    disableToggle(): void {
+        if (this.toggleControl.disabled) {
+            this.toggleControl.enable();
+        } else {
+            this.toggleControl.disable();
+        }
     }
 }

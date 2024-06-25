@@ -209,7 +209,6 @@ module.exports = [
     "libs/features/home/components/information/info-form/info-form.component.html",
     "libs/features/home/components/information/information.component.html",
     "libs/features/home/components/reports/reports.component.html",
-    "libs/features/home/components/settings/components/general/general.component.html",
     "libs/features/home/components/settings/components/state/state.component.html",
     "libs/features/home/components/settings/settings.component.html",
     "libs/features/home/components/sidebar-level/sidebar-level.component.html",

@@ -1,14 +1,14 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom } from 'rxjs';
 
+import { NxButtonToggleModule } from '@components/button-toggle/button-toggle.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { ChangeCpState as DT } from '@dialogs/dialogs.types';
@@ -23,19 +23,18 @@ import { icons } from '@variables/static-variables';
     selector: 'nx-change-state',
     templateUrl: 'change-state.component.html',
     styleUrls: ['change-state.component.scss'],
-    encapsulation: ViewEncapsulation.None, // Needed to style inside CDK components
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
         NgxTranslateCutModule,
-        MatButtonToggleModule,
         LetDirective,
         AngularSvgIconModule,
 
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxButtonToggleModule,
     ],
 })
 export class NxChangeStateModalContent extends ModalBase<DT['return']> implements OnInit {

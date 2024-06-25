@@ -1,54 +1,23 @@
+@use 'components/forms/forms' as forms;
 @use '../../../dialogs/nx-modal.scss';
 @use 'typography';
+@use 'theme_generator' as tg;
 @use 'theme_palette' as colors;
 @use 'theme_variables_common' as *;
 
-mat-button-toggle-group {
-  border-radius: 0;
-  border: none;
-  padding-top: 8px;
-
-  mat-button-toggle {
-    background: var(--switch-circle-color);
-    width: 208px;
-
-    &:hover {
-      background: var(--change-state-dialog-btn-hover-bg);
-    }
-
-    button {
-      padding: 2px 8px !important;
-      height: initial !important;
-
-      background: var(--change-state-dialog-btn-bg);
-      color: var(--change-state-dialog-color);
-
-      span {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      & > span {
-        padding: 0 !important;
-        font-size: 14px;
-        line-height: 20px !important;
-
-        display: flex;
-        align-items: center;
-      }
-
-    }
-
-    &.mat-button-toggle-checked {
-      background: $blue1;
-      color: var(--checkbox-active-color);
-
-      svg > path, svg > rect {
-        --change-state-dialog-color: var(--change-state-dialog-btn-checked-color);
-      }
-    }
-  }
+[nx-label] {
+  margin-bottom: forms.$form-field-margin;
 }
+nx-button-toggle-group {
+  display: grid;
+  margin-bottom: 1rem;
+}
+@include tg.generate-theme-vars((
+    '--button-toggle-bg': ('dark': 8, 'light': 4),
+    '--button-toggle-hover-bg': ('dark': 9, 'light': 6),
+), 'nx-button-toggle');
+// Darken to avoid button background being same as dialog bg.
+// This doesn't look good with default checked color, but only brand is used here
 
 .cards-container {
   @include typography.regular14nocolor;
@@ -61,7 +30,6 @@ mat-button-toggle-group {
 
 .card-interior {
   height: 100%;
-  padding: 16px 0 20px 0;
   display: flex;
   flex-direction: column;
   gap: 13px;
@@ -101,8 +69,4 @@ mat-button-toggle-group {
 
 .nx-modal__header-title {
   margin: 3px;
-}
-
-.card-interior {
-  padding: 16px 0 4px 0;
 }

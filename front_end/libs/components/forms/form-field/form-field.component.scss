@@ -1,5 +1,6 @@
 @use "theme_variables_common" as vars;
 @use "theme_generator" as tg;
+@use "../forms.scss";
 
 @include tg.generate-theme-vars((
     '--character-count-color': ('dark': -16, 'light': 16),
@@ -23,9 +24,9 @@
         }
     }
 
-    margin-bottom: 0.25rem;
+    margin-bottom: forms.$form-field-margin;
 }
 
 .messages-container {
-    margin-top: 0.25rem;
+    margin-top: forms.$form-field-margin;
 }

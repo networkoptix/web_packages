@@ -1,8 +1,4 @@
 @use '@angular/material';
-@use 'mat';
-
-@include material.button-theme(mat.$mat-test-theme);
-@include material.button-toggle-theme(mat.$mat-test-theme);
 
 .NxChangeStateModalContent {
 
@@ -14,81 +10,6 @@
 
 
     .modal-body {
-        // https://github.com/angular/components/blob/main/src/material/button-toggle
-        mat-button-toggle-group {
-            margin-bottom: 1rem;
-            border-radius: 0;
-            border: none;
-
-            mat-button-toggle {
-                border: none !important;
-                background: var(--dialog-bg);
-
-                button {
-                    padding: 2px 8px !important;
-                    height: initial !important;
-                    border-radius: 0 !important;
-
-                    background: var(--change-state-dialog-btn-bg);
-                    color: var(--change-state-dialog-color);
-
-                    & > span {
-                        padding: 0 !important;
-                        font-size: 14px;
-                        line-height: 20px !important;
-
-                        display: flex;
-                        align-items: center;
-
-                        svg-icon {
-                            height: 20px;
-                            display: flex;
-                            align-items: center;
-
-                            svg {
-                                path, rect {
-                                    fill: var(--change-state-dialog-color);
-                                }
-                            }
-                        }
-                    }
-
-                }
-
-                &:first-child button {
-                    border-top-left-radius: 2px !important;
-                    border-bottom-left-radius: 2px !important;
-                }
-
-                &:last-child button {
-                    border-top-right-radius: 2px !important;
-                    border-bottom-right-radius: 2px !important;
-                }
-
-                &.mat-button-toggle-checked {
-                    background: var(--change-state-dialog-btn-checked-bg);
-                    color: var(--change-state-dialog-btn-checked-color);
-
-                    button svg {
-                        path, rect {
-                            fill: var(--change-state-dialog-btn-checked-color);
-                        }
-                    }
-
-                    &#shutdown-btn {
-                        button {
-                            background: var(--red_main);
-                            color: var(--change-state-dialog-shutdown-btn-color);
-
-                            svg rect {
-                                fill: var(--change-state-dialog-shutdown-btn-color);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         .status-info {
             padding-left: 0.25rem;
             margin-top: 0.5rem;

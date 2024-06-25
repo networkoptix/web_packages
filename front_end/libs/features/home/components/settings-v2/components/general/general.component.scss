@@ -2,67 +2,6 @@
 
 .state-body {
     padding: .5rem 1rem;
-    // https://github.com/angular/components/blob/main/src/material/button-toggle
-    mat-button-toggle-group {
-        border-radius: 0;
-        border: none;
-
-        mat-button-toggle {
-            background: var(--change-state-dialog-btn-bg);
-
-            &:hover {
-                background: var(--change-state-dialog-btn-hover-bg);
-            }
-
-            button {
-                padding: 2px 8px !important;
-                height: initial !important;
-                //border-radius: 0 !important;
-
-                background: var(--change-state-dialog-btn-bg);
-                color: var(--change-state-dialog-color);
-
-                span {
-                    display: flex;
-                    gap: 0.5rem;
-                }
-
-                & > span {
-                    padding: 0 !important;
-                    font-size: 14px;
-                    line-height: 20px !important;
-
-                    display: flex;
-                    align-items: center;
-                }
-
-            }
-
-            &:nth-child(1) {
-                border-radius: 4px 0 0 4px !important;
-                border-right: 1px solid var(--change-state-dialog-btn-border);
-            }
-
-            &:nth-child(2) {
-                border-left: 1px solid var(--change-state-dialog-btn-border);
-                border-right: 1px solid var(--change-state-dialog-btn-border);
-            }
-
-            &:nth-child(3) {
-                border-radius: 0 4px 4px 0 !important;
-                border-left: 1px solid var(--change-state-dialog-btn-border);
-            }
-
-            &.mat-button-toggle-checked {
-                background: var(--change-state-dialog-btn-checked-bg);
-                color: var(--change-state-dialog-btn-checked-color);
-
-                svg > path, svg > rect {
-                    --change-state-dialog-color: var(--change-state-dialog-btn-checked-color);
-                }
-            }
-        }
-    }
 
     .status-info {
         padding-left: 0.25rem;

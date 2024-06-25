@@ -6,11 +6,6 @@
 svg {
     pointer-events: none;
 
-    .button-with-fill {
-        fill: var(--change-state-dialog-color);
-        stroke: none;
-    }
-
     .icon-with-fill {
         fill: var(--svg-std-icon-fill);
         stroke: none;

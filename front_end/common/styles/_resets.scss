@@ -1,0 +1,9 @@
+@mixin button {
+    outline: none;
+    border: none;
+    color: inherit;
+
+    &:focus {
+        outline: none;
+    }
+}

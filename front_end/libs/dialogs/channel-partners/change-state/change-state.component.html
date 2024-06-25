@@ -21,37 +21,23 @@
         </button>
     </div>
     <div class="modal-body">
-        <mat-button-toggle-group
+        <nx-button-toggle-group
             name="state"
-            [(value)]="newState"
+            [(ngModel)]="newState"
         >
-            <mat-button-toggle
-                [name]="State.Active"
-                [value]="State.Active"
-                disableRipple
-            >
+            <nx-button-toggle [value]="State.Active">
                 <svg-icon [src]="icons.dir + 'play.svg'"></svg-icon>
                 <span translate>Active</span>
-            </mat-button-toggle>
-            <mat-button-toggle
-                [name]="State.Suspended"
-                [value]="State.Suspended"
-                disableRipple
-            >
+            </nx-button-toggle>
+            <nx-button-toggle [value]="State.Suspended">
                 <svg-icon [src]="icons.dir + 'pause.svg'"></svg-icon>
                 <span translate>Suspended</span>
-            </mat-button-toggle>
-            <mat-button-toggle
-                id="shutdown-btn"
-                [name]="State.ShutDown"
-                [value]="State.ShutDown"
-                disableRipple
-            >
+            </nx-button-toggle>
+            <nx-button-toggle [value]="State.ShutDown">
                 <svg-icon [src]="icons.dir + 'stop.svg'"></svg-icon>
                 <span translate>Shutdown</span>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-
+            </nx-button-toggle>
+        </nx-button-toggle-group>
         <ul
             [ngSwitch]="newState"
             class="status-info"
