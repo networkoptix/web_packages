@@ -2,6 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewInit,
     Component,
     ContentChild,
     ContentChildren,
@@ -77,7 +78,7 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
         NxResizeObserver,
     ],
 })
-export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
+export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit, OnChanges {
     @Input() headers: T[] = [];
     @Input() data: T[] = [];
 
@@ -210,6 +211,12 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             }
             this.tableClasses = this.additionalClasses.join(' ');
         }
+    }
+
+    ngAfterViewInit(): void {
+        // initPageRows() only initializes the rows when the #tableBodyContainer element is available in the view
+        // since ngOnChanges() runs before the component view initialization, this is the initial load for rows
+        this.initPageRows();
     }
 
     ngAfterContentInit(): void {
