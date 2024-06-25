@@ -31,4 +31,5 @@ export interface ChannelPartnersState {
     channelStructure: ChannelPartnersStructure | undefined;
     hasStoreLoaded: boolean;
     banner: Banner | null;
+    parentPartnerForCurrentChild: ChannelPartner | null;
 }

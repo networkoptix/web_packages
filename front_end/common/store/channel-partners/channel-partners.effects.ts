@@ -71,6 +71,20 @@ export class ChannelPartnersEffects {
         );
     });
 
+    loadCurrentParentPartnerForChild$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(ChannelPartnerActions.loadCurrentParentPartnerForChild),
+            switchMap(action =>
+                this.CPService.getChannelPartner(action.parentId).pipe(
+                    map(partner => ({
+                        type: ChannelPartnerActions.setCurrentParentPartnerForChild.type,
+                        parentPartnerForCurrentChild: partner,
+                    })),
+                ),
+            ),
+        );
+    });
+
     constructor(
         private actions$: Actions,
         private CPService: NxChannelPartnersService,

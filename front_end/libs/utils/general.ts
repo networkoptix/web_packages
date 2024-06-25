@@ -177,10 +177,6 @@ export function coerceDate(date: number | Date): Date {
     return typeof date === 'number' ? new Date(date) : date;
 }
 
-export function dateToYMD(dateMs: number): string {
-    return new Date(dateMs).toISOString().split('T')!.shift() as string;
-}
-
 /* Array */
 export function moveArrayElem<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
     while (oldIndex < 0) {

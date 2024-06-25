@@ -1,7 +1,17 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, DestroyRef, inject, computed, input, HostBinding } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import {
+    Component,
+    OnInit,
+    DestroyRef,
+    inject,
+    computed,
+    input,
+    HostBinding,
+    effect,
+    untracked,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -18,6 +28,7 @@ import {
     selectCurrentPartnerParent,
     selectArePartnerOrgsLoading,
     selectBanner,
+    selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
@@ -87,14 +98,20 @@ export class NxChannelPartnersComponent implements OnInit {
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
-    channelPartners$$ = toSignal(this.channelPartners$);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
     parentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartnerParent);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
-    filteredOrganizations$: Observable<Organization[]>;
+    filteredOrganizations$: Observable<Organization[]> | undefined;
     destroyRef = inject(DestroyRef);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     banner$$ = this.store.selectSignal(selectBanner);
+    directParentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
+
+    hasSupportInfo$$ = computed(() => {
+        return Object.values(this.directParentPartner$$()?.supportInformation || []).some(
+            fieldset => fieldset?.length,
+        );
+    });
 
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
@@ -120,6 +137,18 @@ export class NxChannelPartnersComponent implements OnInit {
             tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.users,
                 route: 'users',
+            });
+        }
+        if (this.permissionStore.canViewPartnerReports$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.reports,
+                route: 'reports',
+            });
+        }
+        if (this.permissionStore.canViewPartnerSupportUI$$() && this.hasSupportInfo$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.support,
+                route: 'support',
             });
         }
         if (this.permissionStore.canViewPartnerSettings$$()) {
@@ -159,6 +188,28 @@ export class NxChannelPartnersComponent implements OnInit {
         private CPService: NxChannelPartnersService,
         private dialogsService: NxDialogsService,
     ) {}
+
+    updateParentInfoEffect = effect(() => {
+        this.currentPartner$$();
+        untracked(() => this.fetchParentInfoOnLoad());
+    });
+
+    private fetchParentInfoOnLoad(): void {
+        const currentPartner = this.currentPartner$$();
+        if (currentPartner?.parentChannelPartner) {
+            this.store.dispatch(
+                CPActions.loadCurrentParentPartnerForChild({
+                    parentId: currentPartner.parentChannelPartner,
+                }),
+            );
+        } else {
+            this.store.dispatch(
+                CPActions.setCurrentParentPartnerForChild({
+                    parentPartnerForCurrentChild: null,
+                }),
+            );
+        }
+    }
 
     ngOnInit(): void {
         this.CPService.paramStateHandler.state$

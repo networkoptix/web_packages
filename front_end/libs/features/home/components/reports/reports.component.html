@@ -1,11 +1,11 @@
 <div class="cards-container">
-    <ng-container *ngFor="let service of services">
+    <ng-container *ngFor="let service of services$$()">
         <nx-card
+            [routerLink]="service.url"
             [icon]="icons.dir + service.icon"
-            [dropdownItems]="dropddownItems"
             [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
         >
-            <h3 name>{{ service.name }}</h3>
+            <h3 name>{{ service.name | translate }}</h3>
         </nx-card>
     </ng-container>
 </div>

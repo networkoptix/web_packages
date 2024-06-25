@@ -44,6 +44,8 @@ export const cpTabGuard: CanActivateFn = (
                         return true;
                     }
                     break;
+                case 'support':
+                    return true;
             }
         }
         router.navigate(['404']);

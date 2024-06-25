@@ -9,7 +9,7 @@ import {
     selectOrgsFromStructure,
     selectPartnersFromStructure,
 } from '@store/channel-partners/channel-partners.selectors';
-import { dateToYMD, MS } from '@utils/general';
+import { paramSortFunc } from '@utils/general';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
@@ -56,15 +56,19 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
         return isPartner
-            ? records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
-                  serviceName: serviceIdToNameMap.get(serviceId) ?? '',
-                  amount,
-                  changedAtName:
-                      partners.get(changedAtId)?.name ??
-                      organizations.get(changedAtId)?.name ??
-                      changedAtId,
-                  date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
-              }))
+            ? records
+                  .map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
+                      serviceName: serviceIdToNameMap.get(serviceId) ?? '',
+                      amount,
+                      changedAtName:
+                          partners.get(changedAtId)?.name ??
+                          organizations.get(changedAtId)?.name ??
+                          changedAtId,
+                      date: this.dateTimeService.mediumDateShortTimeString(
+                          new Date(dateTimeString),
+                      ),
+                  }))
+                  .sort(paramSortFunc(r => new Date(r.date).getTime(), false))
             : [];
     });
     formattedOrgServiceChangeRecords$$ = computed<FormattedOrgServiceChangeRecord[]>(() => {
@@ -73,24 +77,24 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
 
         return !isPartner
-            ? records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
-                  serviceName: serviceIdToNameMap.get(serviceId) ?? '',
-                  amount,
-                  changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
-                  date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
-              }))
+            ? records
+                  .map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
+                      serviceName: serviceIdToNameMap.get(serviceId) ?? '',
+                      amount,
+                      changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
+                      date: this.dateTimeService.mediumDateShortTimeString(
+                          new Date(dateTimeString),
+                      ),
+                  }))
+                  .sort(paramSortFunc(r => new Date(r.date).getTime(), false))
             : [];
     });
 
     loadServiceChangesEffect = effect(() => {
         const entityType = this.entityType$$();
         const entityId = this.entityId$$();
-        const date = new Date();
-        date.setMonth(this.monthIndex());
-        date.setFullYear(this.year());
-
-        const startTs = dateToYMD(new Date(date).setDate(0));
-        const endTs = dateToYMD(new Date(date).getTime() + MS.day);
+        const startTs = this.requestStartString();
+        const endTs = this.requestEndString();
         untracked(() => {
             if (entityType === EntityType.channelPartner) {
                 this.serviceChangesStore.loadPartnerServiceChanges(entityId, startTs, endTs);
