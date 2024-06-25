@@ -31,7 +31,7 @@
         }
     }
 }
-    
+
 .disconnect-body {
     display: flex;
     flex-direction: column;
@@ -58,4 +58,12 @@
 
 nx-select {
     width: 45% !important;
+}
+
+.name-input {
+    padding-left: 15px;
+}
+
+.cp-label {
+    padding-right: 7px;
 }
