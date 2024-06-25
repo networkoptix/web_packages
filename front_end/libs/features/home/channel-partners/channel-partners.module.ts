@@ -4,7 +4,10 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
+import { NxReportsComponent } from '@pages/home/components/reports/reports.component';
+import { Mode } from '@pages/home/components/reports/reports.types';
 import { updateParentPartnerId } from '@pages/home/resolvers/update-parent-partner-guard';
+import { nxConfig } from '@services/nx-config/config';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
@@ -77,6 +80,20 @@ const CPRoutes: Routes = withTabReporterResolver([
                 path: 'users',
                 canActivate: [cpTabGuard],
                 component: NxChannelPartnerUsersComponent,
+            },
+            {
+                path: 'reports',
+                canActivate: [() => nxConfig.featureFlags.channelPartnersReportsUI, cpTabGuard],
+                component: NxReportsComponent,
+                data: {
+                    mode: Mode.Partner,
+                },
+            },
+            {
+                path: 'support',
+                canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, cpTabGuard],
+                component: NxChannelPartnerInformationComponent,
+                data: { readonlyInfo: true },
             },
             { path: '**', redirectTo: '' },
         ],

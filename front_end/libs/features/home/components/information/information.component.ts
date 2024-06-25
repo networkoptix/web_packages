@@ -9,6 +9,7 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import {
     selectCurrentPartnerId,
     selectCurrentPartnerInfo,
+    selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxApplyBackComponent } from '@components/applyV2/apply-back/apply.component';
 import { NxApplyComponent } from '@components/applyV2/apply.component';
@@ -223,9 +224,15 @@ export class NxChannelPartnerInformationComponent {
     };
 
     currPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
+    currParentSupportInfo$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
     currSupportInfoEffect = effect(() => {
-        this.mapPartnerSupportInfo(this.currPartnerSupportInfo$$());
+        const parentInfo = this.currParentSupportInfo$$()?.supportInformation;
+        const currentPartnerInfo = this.currPartnerSupportInfo$$();
+        const info = this.readonlyInfo() ? parentInfo : currentPartnerInfo;
+        if (info) {
+            this.mapPartnerSupportInfo(info);
+        }
         this.informationData = cloneDeep(this.information);
         this.hasNoItems = this.noItems();
     });

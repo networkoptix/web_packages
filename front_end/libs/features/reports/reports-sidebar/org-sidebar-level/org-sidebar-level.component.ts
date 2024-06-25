@@ -45,6 +45,7 @@ export class NxOrgSidebarLevelComponent {
             filter(event => event instanceof NavigationEnd),
             map(event => (event as NavigationEnd).url.split('/')[4]),
             startWith(this.router.url.split('/')[4]),
+            map(tab => tab.split('?')[0]),
         ),
     );
     routerLink$$ = computed<string[]>(() => {

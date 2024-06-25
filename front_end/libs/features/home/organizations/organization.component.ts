@@ -9,6 +9,9 @@ import {
     signal,
     computed,
     input,
+    untracked,
+    effect,
+    OnDestroy,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
@@ -24,10 +27,10 @@ import * as CPActions from '@common/store/channel-partners/channel-partners.acti
 import {
     selectCurrentOrganization,
     selectCurrentPartnerId,
-    selectCurrentPartnerInfo,
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
     selectBanner,
+    selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
@@ -91,12 +94,12 @@ interface SidebarSettings {
         NxPagePlaceholderGenericNewV2Component,
     ],
 })
-export class NxOrganizationsComponent implements OnInit {
+export class NxOrganizationsComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     icons = icons;
     State = State;
     permissionsStore = inject(PermissionsStore);
-    currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
+    parentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
@@ -105,7 +108,7 @@ export class NxOrganizationsComponent implements OnInit {
     orgUserStore = inject(OrgUsersStore);
 
     hasSupportInfo$$ = computed(() => {
-        return Object.values(this.currPartnerSupportInfo$$() || []).some(
+        return Object.values(this.parentPartner$$()?.supportInformation || []).some(
             fieldset => fieldset?.length,
         );
     });
@@ -126,6 +129,7 @@ export class NxOrganizationsComponent implements OnInit {
                 route: 'users',
             });
         }
+
         if (!this.currentGroupId$$()) {
             if (this.permissionsStore.canViewOrgReports$$()) {
                 tabs.push({
@@ -133,19 +137,20 @@ export class NxOrganizationsComponent implements OnInit {
                     route: 'reports',
                 });
             }
+
+            if (this.permissionsStore.canViewPartnerSupportUI$$() && this.hasSupportInfo$$()) {
+                tabs.push({
+                    displayName: this.LANG.channelPartners.tabNames.support,
+                    route: 'support',
+                });
+            }
+
             if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
                 tabs.push({
                     displayName: this.LANG.channelPartners.tabNames.settings,
                     route: 'settings',
                 });
             }
-        }
-
-        if (this.permissionsStore.canViewPartnerSupportUI$$() && this.hasSupportInfo$$()) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.support,
-                route: 'support',
-            });
         }
         return tabs;
     });
@@ -183,6 +188,44 @@ export class NxOrganizationsComponent implements OnInit {
             email,
             { showSidebarState: true },
         );
+    }
+    changeOrgEffect = effect(() => {
+        this.currentOrganization$$();
+        untracked(() => this.fetchParentInfoOnLoad());
+    });
+
+    private fetchParentInfoOnLoad(): void {
+        const currentOrg = this.currentOrganization$$();
+        if (currentOrg?.channelPartner) {
+            this.store.dispatch(
+                CPActions.loadCurrentParentPartnerForChild({
+                    parentId: currentOrg.channelPartner,
+                }),
+            );
+        } else {
+            this.store.dispatch(
+                CPActions.setCurrentParentPartnerForChild({
+                    parentPartnerForCurrentChild: null,
+                }),
+            );
+        }
+    }
+
+    ngOnDestroy(): void {
+        const parentPartner = this.parentPartner$$();
+        if (parentPartner?.parentChannelPartner) {
+            this.store.dispatch(
+                CPActions.loadCurrentParentPartnerForChild({
+                    parentId: parentPartner.parentChannelPartner,
+                }),
+            );
+        } else {
+            this.store.dispatch(
+                CPActions.setCurrentParentPartnerForChild({
+                    parentPartnerForCurrentChild: null,
+                }),
+            );
+        }
     }
 
     ngOnInit(): void {

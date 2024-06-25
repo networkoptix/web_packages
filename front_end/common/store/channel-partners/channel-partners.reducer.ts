@@ -22,6 +22,7 @@ const initialState: ChannelPartnersState = {
     channelStructure: undefined,
     hasStoreLoaded: false,
     banner: null,
+    parentPartnerForCurrentChild: null,
 };
 
 export const channelPartnersReducer = createReducer(
@@ -148,6 +149,13 @@ export const channelPartnersReducer = createReducer(
         (state, { currentSubchannels }): ChannelPartnersState => ({
             ...state,
             currentSubchannels: sortEntityByName(currentSubchannels),
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setCurrentParentPartnerForChild,
+        (state, { parentPartnerForCurrentChild }): ChannelPartnersState => ({
+            ...state,
+            parentPartnerForCurrentChild,
         }),
     ),
 );
