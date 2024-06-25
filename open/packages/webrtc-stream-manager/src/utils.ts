@@ -99,10 +99,10 @@ export class ConnectionQueue {
                 setTimeout(() => this.runTask(task), requeueDelay)
             };
 
-            timer(taskTimeout).pipe(takeUntil(cancelTimedOut$)).subscribe(() => {
-                this.logger?.info(`[${this.origin}] Running tasks: Timeout`)
-                requeue();
-            });
+            // timer(taskTimeout).pipe(takeUntil(cancelTimedOut$)).subscribe(() => {
+            //     this.logger?.info(`[${this.origin}] Running tasks: Timeout`)
+            //     requeue();
+            // });
 
             completed$.pipe(take(1)).subscribe(() => {
                 cancelTimedOut$.next('cancel');
