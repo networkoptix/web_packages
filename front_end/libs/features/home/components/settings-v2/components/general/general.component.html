@@ -26,7 +26,7 @@
                                     >
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-6 name-input">
                                     <input
                                         formControlName="name"
                                         [ngClass]="{
@@ -71,7 +71,7 @@
                                     >
                                         <label
                                             for="channelPartnerAccessSelect"
-                                            class="control-label"
+                                            class="control-label cp-label"
                                             translate
                                             >Channel Partner Access</label
                                         >
@@ -152,7 +152,7 @@
                                     </form>
 
                                     <ul class="status-info">
-                                        @switch (currState()) {
+                                        @switch (stateForm?.get('stateToggle')?.value) {
                                             @case (State.Active) {
                                                 <ng-container>
                                                     <li>
