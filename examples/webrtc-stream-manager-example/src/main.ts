@@ -5,7 +5,7 @@ import './style.css';
 import { description } from '../package.json';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { WebRTCStreamManager } from './open_check_excluded';
-import { ApiVersions, TargetStream } from '@networkoptix/webrtc-stream-manager';
+import { ApiVersions, TargetStream, fetchWithRedirectAuthorization } from '@networkoptix/webrtc-stream-manager';
 
 WebRTCStreamManager.logger = console;
 
@@ -261,12 +261,14 @@ const systemSelected = async () => {
   systemId = systemSelect.value;
   systemToken = await getSystemToken(systemSelect.value);
 
-  await fetch(
+  await fetchWithRedirectAuthorization(
     `https://${systemRelay}/rest/v2/login/sessions/${systemToken.access_token}?setCookie=true`,
     { credentials: 'include' }
-  );
+  ).catch();
 
-  cameras = await fetch(`https://${systemRelay}/rest/v2/devices`, { credentials: 'include' }).then((res) => res.json());
+  cameras = await fetchWithRedirectAuthorization(`https://${systemRelay}/rest/v2/devices`, {
+    headers: { Authorization: `Bearer ${systemToken.access_token}` },
+  }).then((res) => res.json());
 
   const cameraAvailable = (camera: BasicCameraInfo) => true;
   const camerasOptions = cameras.sort((a, b) => a.name.localeCompare(b.name)).map(

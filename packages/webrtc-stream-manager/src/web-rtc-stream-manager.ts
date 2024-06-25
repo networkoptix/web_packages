@@ -481,9 +481,6 @@ export class WebRTCStreamManager {
      * @param clearStream - stop current stream immediately
      */
     updatePosition(position: number, clearStream = false): void {
-        if (position < 1_000_000_000_000_000) {
-            position *= 1_000;
-        }
         if (clearStream) {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
@@ -1207,7 +1204,7 @@ export class WebRTCStreamManager {
                 return ''
             }
 
-            return `${useV2 ? 'positionUs' : 'position'}=${position || 0}&`
+            return `${useV2 ? 'positionMs' : 'position'}=${position || 0}&`
         };
 
         const speedParam = (position: unknown): string => {
