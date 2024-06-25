@@ -5,7 +5,7 @@
         *ngIf="currentOrganization$$() as currentOrg"
     >
         <nx-hidable>
-            @if (inChannelPartner) {
+            @if (!groupsStore.groupsPath$$().length || inChannelPartner) {
                 <a
                     [routerLink]="routerState.partnersRoot$$()"
                     queryParamsHandling="preserve"
@@ -21,15 +21,18 @@
             }
             @if (groupsStore.groupsPath$$().length) {
                 <a
-                    [nxHidableItem]="inChannelPartner"
                     [routerLink]="routerState.rootGroupLink$$()"
                     queryParamsHandling="preserve"
                 >
+                    @if (!inChannelPartner) {
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                        ></svg-icon>
+                    }
                     {{ currentOrganization$$()!.name }}</a
                 >
             }
-
-            <a nxHidableTemplate>...</a>
 
             @for (
                 breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
@@ -117,7 +120,7 @@
                     <nx-groups-sidebar></nx-groups-sidebar>
                 </ng-template>
             </div>
-            <div class="content-container">
+            <div class="ribbon-container">
                 @if (banner$$()?.page === 'organization') {
                     <nx-alert-block
                         [type]="banner$$().type"
@@ -127,17 +130,15 @@
                     >
                     </nx-alert-block>
                 }
-                <nx-ribbon-standalone
-                    [context]="groupsStore.currentRibbonContext$$()"
-                ></nx-ribbon-standalone>
-
-                <nx-pre-loader
-                    *ngIf="isLoading && !currentOrganization$$(); else cards"
-                ></nx-pre-loader>
-                <ng-template #cards>
-                    <ng-template [ngTemplateOutlet]="body"></ng-template>
-                    <router-outlet></router-outlet>
-                </ng-template>
+                <div class="content-container">
+                    <nx-pre-loader
+                        *ngIf="isLoading && !currentOrganization$$(); else cards"
+                    ></nx-pre-loader>
+                    <ng-template #cards>
+                        <ng-template [ngTemplateOutlet]="body"></ng-template>
+                        <router-outlet></router-outlet>
+                    </ng-template>
+                </div>
             </div>
         </div>
     } @else {

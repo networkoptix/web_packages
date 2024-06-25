@@ -100,7 +100,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
 
     readonly partnerAccess = partnerAccess;
     currState = input<State | null>(null);
-    inOrganization = input<boolean>(false);
+    inOrganization$$ = input.required<boolean>({ alias: 'inOrganization' });
     currentName = input.required<string>();
     channelPartnerAccessLevel = input<string>('');
     canChangeState = input.required<boolean>();
@@ -111,10 +111,11 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
         canUpdateAccess: boolean;
     }>();
     canConfigure$$ = computed<boolean>(() =>
-        this.inOrganization()
+        this.inOrganization$$()
             ? this.permissions().canConfigureOrg
             : this.permissions().canViewPartnerSettings,
     );
+    canDeleteSelfFromOrg$$ = computed(() => this.inOrganization$$());
     canUpdateAccess$$ = computed<boolean>(() => this.permissions().canUpdateAccess);
     settingsState = input.required<SettingsState>();
     currAccess$$ = computed<DropdownItem<string | null>>(
@@ -122,6 +123,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     );
 
     @Output() updateAccess = new EventEmitter<string>();
+    @Output() disconnectOrg = new EventEmitter<void>();
 
     ngAfterViewInit(): void {
         this.generalForm.patchValue({

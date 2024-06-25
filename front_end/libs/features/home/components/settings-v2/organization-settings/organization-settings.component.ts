@@ -6,6 +6,7 @@ import {
     MatButtonToggleGroup,
     MatButtonToggleModule,
 } from '@angular/material/button-toggle';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -28,6 +29,7 @@ import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/settings-base';
 import { settingsViews } from '@pages/home/home.types';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
+import { NxAccountService } from '@services/account.service';
 import {
     Organization,
     OrgRoleIds,
@@ -36,7 +38,6 @@ import {
     OrgSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { Process } from '@services/process.service/process';
-import * as CPActions from '@store/channel-partners/channel-partners.actions';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
@@ -81,6 +82,9 @@ const partnerAccess: DropdownItem<string | null>[] = [
 })
 export class NxOrganizationSettingsComponent extends SettingsBase implements OnInit {
     orgUserStore = inject(OrgUsersStore);
+    accountService = inject(NxAccountService);
+    router = inject(Router);
+    route = inject(ActivatedRoute);
     rootOrgs$$ = this.store.selectSignal(selectRootOrganizations);
     partnerOrgs$$ = this.store.selectSignal(selectCurrentPartnerOrgs);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
@@ -161,7 +165,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         const formValue = this.generalForm?.get('accessLevel')?.value.value;
         if (formValue !== currLevel && formValue !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
             this.store.dispatch(
-                CPActions.showBannerAction({
+                cpActions.showBannerAction({
                     banner: {
                         message: this.LANG.channelPartners.orgs.adminWarning,
                         icon: 'error.svg',
@@ -225,5 +229,49 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
                 }),
             );
         }
+    }
+
+    deleteUserFromOrg(): void {
+        const { title, message, footer } = this.LANG.dialogs.channelPartners.disconnectOrganization;
+        const { id } = this.currentOrg$$()!;
+        const { email } = this.accountService;
+        this.dialogsService
+            .confirm({
+                title,
+                message,
+                footer: {
+                    actionLabel: footer.actionLabel,
+                    cancelLabel: footer.cancelLabel,
+                    buttonClass: 'btn-danger',
+                },
+            })
+            .then(confirm => {
+                if (confirm) {
+                    this.cpService.deleteOrganizationUser(id, email).subscribe({
+                        next: () => {
+                            this.store.dispatch(
+                                cpActions.setRootOrganizations({
+                                    rootOrganizations: this.rootOrgs$$().filter(
+                                        org => org.id !== id,
+                                    ),
+                                }),
+                            );
+                            this.router.navigateByUrl('');
+                        },
+                        error: () => {
+                            this.store.dispatch(
+                                cpActions.showBannerAction({
+                                    banner: {
+                                        message: this.LANG.channelPartners.orgs.adminWarning,
+                                        icon: 'error.svg',
+                                        type: 'error',
+                                        page: 'organization',
+                                    },
+                                }),
+                            );
+                        },
+                    });
+                }
+            });
     }
 }

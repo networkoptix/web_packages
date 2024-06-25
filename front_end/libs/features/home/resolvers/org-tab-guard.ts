@@ -36,6 +36,7 @@ export const orgTabGuard: CanActivateFn = (
         switch (path) {
             case 'settings':
                 if (
+                    !currPartnerId$$() ||
                     permissionsStore.canChangeOrganizationState$$() ||
                     permissionsStore.canViewOrgSettings$$()
                 ) {

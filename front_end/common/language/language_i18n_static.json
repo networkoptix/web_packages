@@ -1020,6 +1020,14 @@
                     "actionLabel": "Confirm",
                     "cancelLabel": "Cancel"
                 }
+            },
+            "disconnectOrganization" : {
+                "title": "Disconnect Organization?",
+                "message": "You are about to disconnect this Organization from your account. You will not be able to access this Organization anymore. Are you sure?",
+                "footer": {
+                    "actionLabel": "Disconnect",
+                    "cancelLabel": "Cancel"
+                }
             }
         }
     },

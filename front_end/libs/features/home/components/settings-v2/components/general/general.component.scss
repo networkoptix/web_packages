@@ -83,12 +83,23 @@
 }
 
 .body {
-
     .accessLevel {
-
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         &-description {
             margin-top: 5px;
         }
+    }
+}
+    
+.disconnect-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .disconnect-btn {
+        max-width: fit-content;
     }
 }
 

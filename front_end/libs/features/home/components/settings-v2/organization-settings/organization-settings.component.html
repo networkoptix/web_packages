@@ -12,10 +12,11 @@
                         [currState]="effectiveState$$()"
                         [settingsState]="currentState$$()"
                         (updateAccess)="handleAccessUpdate()"
+                        (disconnectOrg)="deleteUserFromOrg()"
                     >
                         @if (
-                            name$$() !== generalForm?.get('name').value ||
-                            accessLevel$$() !== generalForm?.get('accessLevel')?.value.value
+                            name$$() !== generalForm?.get('name')?.value ||
+                            accessLevel$$() !== generalForm?.get('accessLevel')?.value?.value
                         ) {
                             <ng-container processButtons>
                                 <div class="row m-0">
