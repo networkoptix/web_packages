@@ -176,3 +176,32 @@
         </form>
     </div>
 </div>
+
+<h3>Button toggle</h3>
+<nx-button-toggle-group [formControl]="toggleControl">
+    <nx-button-toggle
+        value="Default"
+        color="default"
+        >Default</nx-button-toggle
+    >
+    <nx-button-toggle
+        value="Brand"
+        color="brand"
+        >Brand</nx-button-toggle
+    >
+    <nx-button-toggle
+        value="Danger"
+        color="danger"
+        >Danger</nx-button-toggle
+    >
+</nx-button-toggle-group>
+<button
+    class="btn btn-default"
+    style="display: inline-flex !important; margin-left: 1rem"
+    (click)="disableToggle()"
+>
+    {{ toggleControl.disabled ? 'Enable' : 'Disable' }}
+</button>
+<div>
+    {{ toggleControl.value | json }}
+</div>

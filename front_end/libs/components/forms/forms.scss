@@ -1,3 +1,5 @@
+$form-field-margin: 0.25rem;
+
 @mixin stacked-form-fields {
     nx-form-field + nx-form-field {
         margin-top: 1rem;

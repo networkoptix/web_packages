@@ -1,4 +1,3 @@
-/* eslint nx/signal-naming-convention: 0 */
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, computed, EventEmitter, input, Output } from '@angular/core';
 import {
@@ -8,12 +7,12 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
+import { NxButtonToggleModule } from '@components/button-toggle/button-toggle.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -78,10 +77,9 @@ interface SettingsState {
         NxProcessCancelButtonComponent,
         AngularSvgIconModule,
         LetDirective,
-        MatButtonToggle,
-        MatButtonToggleGroup,
         NgxTranslateCutModule,
         ReactiveFormsModule,
+        NxButtonToggleModule,
     ],
 })
 export class NxSettingsGeneralV2Component implements AfterViewInit {

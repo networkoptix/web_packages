@@ -1,0 +1,95 @@
+@use 'resets';
+@use 'theme_generator' as tg;
+@use "theme_variables_common" as vars;
+
+@include tg.generate-theme-vars((
+    '--button-toggle-bg': ('dark': 5, 'light': 3),
+    '--button-toggle-color': 'body-text-color',
+    '--button-toggle-border': 4,
+    '--button-toggle-checked-default-bg': ('dark': 10, 'light': 7),
+    '--button-toggle-checked-default-color': ('dark': -4, 'light': -9),
+    '--button-toggle-checked-danger-bg': 'red_main',
+    '--button-toggle-checked-danger-color': 'light1',
+    '--button-toggle-checked-brand-bg': 'btn-primary-bg',
+    '--button-toggle-checked-brand-color': 'btn-primary-color',
+    '--button-toggle-hover-bg': 6,
+), 'nx-button-toggle');
+
+nx-button-toggle {
+    $horizontal-border: 1px solid var(--button-toggle-border);
+    $border-radius: 2px;
+
+    &:first-child {
+        border-inline-end: $horizontal-border;
+        .nx-button-toggle__button {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+    }
+
+    &:not(:first-child):not(:last-child) {
+        border-left: $horizontal-border;
+        border-right: $horizontal-border;
+    }
+
+    &:last-child {
+        border-inline-start: $horizontal-border;
+        .nx-button-toggle__button {
+            border-start-end-radius: $border-radius;
+            border-end-end-radius: $border-radius;
+        }
+    }
+}
+
+.nx-button-toggle__button {
+    @include resets.button();
+
+    height: 2rem;
+    padding: 0 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--button-toggle-bg);
+    color: var(--button-toggle-color);
+    font-family: vars.$font-family-medium;
+    svg-icon {
+        path, rect {
+            fill: var(--button-toggle-color);
+        }
+    }
+
+    &:not(:disabled):not(.nx-button-toggle__button--checked) {
+        &:hover,
+        &:focus-visible {
+            background-color: var(--button-toggle-hover-bg);
+        }
+    }
+
+    &:focus-visible {
+        position: relative;
+        outline: 2px solid var(--btn-primary-focus-outline-rgb);
+        outline-offset: 2px;
+        box-shadow: var(--btn-primary-focus-shadow);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+    }
+
+    &.nx-button-toggle__button--checked {
+        &.nx-button-toggle__button--default {
+            --button-toggle-bg: var(--button-toggle-checked-default-bg);
+            --button-toggle-color: var(--button-toggle-checked-default-color);
+        }
+        &.nx-button-toggle__button--danger {
+            --button-toggle-bg: var(--button-toggle-checked-danger-bg);
+            --button-toggle-color: var(--button-toggle-checked-danger-color);
+        }
+        &.nx-button-toggle__button--brand {
+            --button-toggle-bg: var(--button-toggle-checked-brand-bg);
+            --button-toggle-color: var(--button-toggle-checked-brand-color);
+        }
+    }
+}

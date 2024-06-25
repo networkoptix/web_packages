@@ -18,31 +18,32 @@
     </div>
     <div class="nx-modal__content">
         <div class="nx-modal__body">
-            <p [innerHTML]="LANG.placeholderTexts.noSystems.isConnected | translate"></p>
+            <label
+                nx-label
+                for="add-org-system-connection-state"
+                translate
+                >Is your system already connected to %CLOUD_NAME%?</label
+            >
+            <nx-button-toggle-group
+                [formControl]="statusControl"
+                id="add-org-system-connection-state"
+            >
+                <nx-button-toggle
+                    [value]="ConnectionStatus.NotConnected"
+                    color="brand"
+                    translate
+                    >Not connected</nx-button-toggle
+                >
+                <nx-button-toggle
+                    [value]="ConnectionStatus.Connected"
+                    color="brand"
+                    translate
+                    >Connected</nx-button-toggle
+                >
+            </nx-button-toggle-group>
             <div>
                 <div class="body state-body">
-                    <mat-button-toggle-group
-                        name="state"
-                        [value]="systemStatus"
-                    >
-                        <mat-button-toggle
-                            [name]="ConnectionStatus.NotConnected"
-                            [value]="ConnectionStatus.NotConnected"
-                            (change)="toggleState(ConnectionStatus.NotConnected)"
-                            disableRipple
-                        >
-                            <span translate>Not connected</span>
-                        </mat-button-toggle>
-                        <mat-button-toggle
-                            [name]="ConnectionStatus.Connected"
-                            [value]="ConnectionStatus.Connected"
-                            (change)="toggleState(ConnectionStatus.Connected)"
-                            disableRipple
-                        >
-                            <span translate>Connected</span>
-                        </mat-button-toggle>
-                    </mat-button-toggle-group>
-                    @switch (systemStatus) {
+                    @switch (statusControl.value) {
                         @case (ConnectionStatus.NotConnected) {
                             <div class="cards-container">
                                 <div class="card">
