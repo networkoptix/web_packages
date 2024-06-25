@@ -42,7 +42,7 @@ const partnerAccess: DropdownItem<string | null>[] = [
         value: OrgRoleIds.SysHealthViewer,
     },
     {
-        name: 'Service Management Only',
+        name: 'Service Subscription Managers',
         value: null,
     },
 ];

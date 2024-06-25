@@ -1406,7 +1406,7 @@
                 "Viewer": "Grants user Viewer permissions in all Systems within the assigned Folder or the Organization",
                 "Live Viewer": "Grants user Live Viewer permissions in all Systems within the assigned Folder or the Organization",
                 "System Health Viewer": "Can view System Health Monitoring information in all Systems within the Organization in addition to Service Subscription Management",
-                "Service Subscription Manager": "Can manage Service Subscriptions in all Systems within all the Organization"
+                "Service Subscription Managers": "Can manage Service Subscriptions in all Systems within all the Organization"
             },
             "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
         }
