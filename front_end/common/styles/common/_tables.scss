@@ -4,6 +4,10 @@
 // @import 'styles/theme_palette';
 // @use 'theme_variables_common' as variables;
 $permission-cell-size: 210px;
+$large-desktop-breakpoint: 1477px;
+
+// Table column width variables
+$service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minmax(150px, 2fr) minmax(216px, 2fr);
 
 .nx-table {
     table-layout: auto;
@@ -498,11 +502,11 @@ $permission-cell-size: 210px;
 .service-changes-table {
     .nx-new-table {
         .header {
-            grid-template-columns: 3fr 1fr 2fr 2fr;
+            grid-template-columns: $service-changes-table-column-width;
         }
         
         .big-row {
-            grid-template-columns: 3fr 1fr 2fr 2fr;
+            grid-template-columns: $service-changes-table-column-width;
 
             div:last-child {
                 border-right: none;
@@ -511,6 +515,9 @@ $permission-cell-size: 210px;
 
         .header, .body {
             width: 100% !important;
+            @media screen and (max-width: $large-desktop-breakpoint) {
+                width: fit-content !important;
+            }
         }
     }
 }
