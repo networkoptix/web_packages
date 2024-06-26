@@ -1,11 +1,4 @@
-@if (!adjustedStatus()) {
-    <div
-        class="not-supported"
-        translate
-    >
-        Not supported
-    </div>
-} @else if (!layoutsItemNewPlaceholder) {
+@if (!layoutsItemNewPlaceholder) {
     @if (!!itemDetail()) {
         <nx-layout-grid-item-placeholder-template-legacy
             [placeholderIcon]="placeholderIcon()"

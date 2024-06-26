@@ -4,7 +4,7 @@
         <svg-icon
             nx-add-svg-src
             [svgStyle]="{ 'width.px': '48', 'height.px': '48' }"
-            [src]="icon()"
+            [src]="icon() || ''"
         >
         </svg-icon>
         @if (hasTooltip()) {
@@ -62,7 +62,7 @@
     @if (hasActionButton()) {
         <nx-button
             type="brand-outline"
-            (click)="callAction()"
+            (click)="action()?.()"
         >
             {{ actionName() | nxTranslate }}
         </nx-button>

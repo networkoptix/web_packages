@@ -137,7 +137,7 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
     noAccessToSystem: {
         ...unavailable,
         message: messagesLang.noAccessToSystem,
-        hint: hintsLang.noAccessToSystem,
+        hint: { value: hintsLang.noAccessToSystem, params: { systemName: '' } },
     },
     systemOffline: {
         ...unavailable,
@@ -183,6 +183,7 @@ const SERVER_PLACEHOLDERS = {
 const SYSTEM_PLACEHOLDERS = {
     systemOffline: PLACEHOLDERS.offline_system,
     systemIncompatible: PLACEHOLDERS.incompatible,
+    systemNoAccess: PLACEHOLDERS.noAccessToSystem,
 };
 
 @UntilDestroy()
@@ -239,7 +240,7 @@ export class NxLayoutGridItemPlaceholderComponent {
     ) {}
 
     adjustedStatus = computed(() => {
-        const status = this.status();
+        const status = this.status(); /* ?.toLowerCase() */
         const statuses = this.layoutItemsErrorsStore.statuses$$();
         const itemDetail = this.itemDetail();
         const systemInfo = this.systemInfo();
@@ -250,10 +251,16 @@ export class NxLayoutGridItemPlaceholderComponent {
         const isOffline = isCamOrSrv && !itemDetail.details.online;
         const isUnauthorized = isCamera && itemDetail.details.unauthorized;
         const isNotArchived = isCamOrSrv && itemDetail.details.status !== 'archive';
-        const itemDetailError = !!itemDetail && statuses[itemDetail.details.id];
+        const itemDetailError = itemDetail ? statuses[itemDetail.details.id] : null;
         const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
         const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
         let adjustedStatus = status || itemDetailError;
+
+        if (!systemInfo) {
+            if (isCamera) {
+                adjustedStatus = 'systemNoAccess';
+            }
+        }
 
         if (!adjustedStatus) {
             if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
@@ -268,7 +275,8 @@ export class NxLayoutGridItemPlaceholderComponent {
                 adjustedStatus = 'systemOffline';
             } else if (isSystemIncompatible) {
                 adjustedStatus = 'systemIncompatible';
-            } else {
+            } else if (itemDetail) {
+                // not sure if this is totally true but it makes sense at least for now
                 adjustedStatus = 'offline';
             }
         }
@@ -280,6 +288,10 @@ export class NxLayoutGridItemPlaceholderComponent {
         const status = this.adjustedStatus();
         const itemDetail = this.itemDetail();
         let placeholder = PLACEHOLDERS.default;
+
+        if (!status) {
+            return this.getWithIconFullPath(placeholder);
+        }
 
         if (itemDetail) {
             if (assertResourceOfType.camera(itemDetail)) {
@@ -297,24 +309,34 @@ export class NxLayoutGridItemPlaceholderComponent {
             if (assertResourceOfType.iodevice(itemDetail) || status === ResourceType.IO_DEVICE) {
                 placeholder = PLACEHOLDERS.ioDevice;
             }
-        } else {
-            if (SYSTEM_PLACEHOLDERS[status]) {
-                placeholder = SYSTEM_PLACEHOLDERS[status];
-            }
+        }
+
+        if (SYSTEM_PLACEHOLDERS[status]) {
+            placeholder = SYSTEM_PLACEHOLDERS[status];
+        }
+
+        if (!placeholder) {
+            // should be gone after statuses are typed
+            throw new Error(`Unknown status: ${status}`, {
+                cause: {
+                    status,
+                    itemDetail,
+                    systemInfo: this.systemInfo(),
+                },
+            });
+        }
+        return this.getWithIconFullPath(placeholder);
+    });
+
+    getWithIconFullPath = (placeholder: Placeholder): Placeholder => {
+        if (!placeholder?.icon) {
+            return placeholder;
         }
 
         return {
             ...placeholder,
-            icon: this.getIconFullPath(placeholder.icon),
+            icon: `${this.icons.dirLayouts}placeholders/48/${placeholder.icon}.svg`,
         };
-    });
-
-    getIconFullPath = (icon: string | undefined): string => {
-        if (!icon) {
-            return '';
-        }
-
-        return `${this.icons.dirLayouts}placeholders/48/${icon}.svg`;
     };
 
     action = computed(() => {
@@ -336,7 +358,7 @@ export class NxLayoutGridItemPlaceholderComponent {
         const status = this.adjustedStatus();
         const isEditable = this.isEditable();
 
-        const isCamera = itemDetail && assertResourceOfType.camera(itemDetail);
+        const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
         const hasAuthorize =
             isCamera &&
             (status === 'defaultPassword' || itemDetail.details.unauthorized) &&

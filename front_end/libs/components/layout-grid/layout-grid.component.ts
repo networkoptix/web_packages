@@ -1551,23 +1551,27 @@ export class NxLayoutGridComponent {
     }) => layoutItemLookup?.[item.resourceId];
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    getSystemInfo = ({ item, systems }: { item: ParsedLayoutItem; systems: NxSystemInfo[] }) => {
+        const { systemId } = extractSystemAndResourceId(item.resourcePath);
+        return systems?.find(({ id }) => id === systemId);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     getItemForDisplay = ({
         item,
         layoutItemLookup,
         errors,
+        systems,
     }: {
         item: ParsedLayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
         errors: Record<string, string>;
+        systems: NxSystemInfo[];
     }) => {
         const itemDetail = this.getItem({ item, layoutItemLookup });
-        return this.itemHasNoErrors({ itemDetail, errors }) ? itemDetail : null;
-    };
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    getSystemInfo = ({ item, systems }: { item: ParsedLayoutItem; systems: NxSystemInfo[] }) => {
-        const { systemId } = extractSystemAndResourceId(item.resourcePath);
-        return systems?.find(({ id }) => id === systemId);
+        const hasNoErrors = itemDetail && this.itemHasNoErrors({ itemDetail, errors });
+        const hasSystem = this.getSystemInfo({ item, systems });
+        return hasNoErrors && hasSystem ? itemDetail : null;
     };
 
     itemHasNoErrors = ({
@@ -1933,7 +1937,7 @@ export class NxLayoutGridComponent {
         const showOfflineError = (): void => {
             itemDetail.details.online = false;
             this.layoutItemsErrorsStore.set(itemId, {
-                status: staticLang.common.cameraStates.unavailable,
+                status: staticLang.common.cameraStates.unavailable.toLowerCase(),
                 icon: 'offline',
                 message: staticLang.layouts.itemPlaceholders.additionalErrorMessages.UNAVAILABLE,
             });

@@ -48,12 +48,12 @@ import { PipesModule } from '@pipes/pipes.module';
     ],
 })
 export class NxLayoutGridItemPlaceholderTemplateComponent {
-    icon = input<string>('');
+    icon = input<string>();
     message = input.required<Translatable>();
-    description = input<Translatable>('');
-    hint = input<Translatable>('');
-    action = input<(() => void) | undefined>(undefined);
-    actionName = input<Translatable>('');
+    description = input<Translatable>();
+    hint = input<Translatable>();
+    action = input<() => void>();
+    actionName = input<Translatable>();
     hasAction = input<boolean>(false);
     isError = input<boolean>(false);
 
@@ -72,13 +72,4 @@ export class NxLayoutGridItemPlaceholderTemplateComponent {
     hasTooltip = computed(() => {
         return !!this.hint() || this.hasActionButton();
     });
-
-    callAction = (): void => {
-        const action = this.action();
-
-        if (!action) {
-            return;
-        }
-        action();
-    };
 }

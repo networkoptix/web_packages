@@ -15,6 +15,7 @@
         <ng-container [ngTemplateOutlet]="simpleNodeText" />
         @for (menuItem of planeMenuItems$$(); track menuItem.id) {
             <button
+                data-escape-global-style
                 class="action-button"
                 [nxTooltip]="menuItem?.tooltip || false"
                 (click)="menuItem?.action($event, node$$())"
@@ -98,6 +99,7 @@
             }
         </div>
         <button
+            data-escape-global-style
             [cdkMenuTriggerFor]="nodeActionMenu"
             (click)="$event.stopPropagation()"
             [tourAnchor]="''"
