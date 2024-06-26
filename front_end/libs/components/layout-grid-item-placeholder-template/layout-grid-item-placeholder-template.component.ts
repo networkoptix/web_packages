@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
@@ -44,7 +43,6 @@ import { PipesModule } from '@pipes/pipes.module';
         NxContextMenu,
         CdkMenuTrigger,
         CdkContextMenuTrigger,
-        NxButtonComponent,
     ],
 })
 export class NxLayoutGridItemPlaceholderTemplateComponent {

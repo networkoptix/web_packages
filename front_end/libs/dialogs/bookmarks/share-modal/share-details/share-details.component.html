@@ -26,16 +26,16 @@
     </ul>
 </div>
 <div class="buttons-sections">
-    <nx-button
-        type="secondary"
+    <button
+        class="btn btn-default"
+        (click)="onEditClick.emit()"
         translate
-        (onClick)="onEditClick.emit()"
     >
         Edit
-    </nx-button>
-    <nx-button
-        type="text"
-        (onClick)="onDeleteClick.emit()"
+    </button>
+    <button
+        class="btn btn-text"
+        (click)="onDeleteClick.emit()"
     >
         <svg-icon
             nx-add-svg-src
@@ -50,5 +50,5 @@
         >
             Stop Sharing
         </span>
-    </nx-button>
+    </button>
 </div>

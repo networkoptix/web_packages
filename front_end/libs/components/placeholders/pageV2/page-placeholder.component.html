@@ -9,11 +9,13 @@
     <div message>{{ message }}</div>
     @if (buttonText) {
         <div button>
-            <nx-button
-                type="secondary"
+            <button
+                type="button"
+                class="btn btn-default"
                 (click)="clickHandler($event)"
-                >{{ buttonText | translate }}</nx-button
             >
+                {{ buttonText | translate }}
+            </button>
         </div>
     }
 </nx-page-generic-placeholder-v2>

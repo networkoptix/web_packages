@@ -4,7 +4,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxPagePlaceholderGenericV2Component } from '@components/placeholders/pageV2/generic/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -38,7 +37,6 @@ import { icons } from '@static-variables';
         PipesModule,
         NxAddSvgSrcDirective,
         NxPagePlaceholderGenericV2Component,
-        NxButtonComponent,
         TranslateModule,
     ],
 })

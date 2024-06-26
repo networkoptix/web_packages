@@ -3,7 +3,6 @@ import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { delay, mergeMap, of, throwError, timer } from 'rxjs';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxButtonToggleModule } from '@components/button-toggle/button-toggle.module';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
@@ -20,7 +19,6 @@ import { icons } from '@static-variables';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        NxButtonComponent,
         NxAsyncActionButtonComponent,
         NxButtonToggleModule,
     ],

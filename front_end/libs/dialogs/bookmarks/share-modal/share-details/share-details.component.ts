@@ -11,7 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ClipboardService } from 'ngx-clipboard';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { icons } from '@static-variables';
@@ -27,7 +26,6 @@ import { icons } from '@static-variables';
         CommonModule,
         TranslateModule,
         NxAddSvgSrcDirective,
-        NxButtonComponent,
         AsyncPipe,
         NxTooltipDirective,
     ],

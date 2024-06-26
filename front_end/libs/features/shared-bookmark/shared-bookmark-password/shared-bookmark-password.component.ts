@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, model } from 
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { nxConfig } from '@services/nx-config/config';
 
 @Component({
@@ -12,7 +11,7 @@ import { nxConfig } from '@services/nx-config/config';
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['shared-bookmark-password.component.scss'],
     templateUrl: 'shared-bookmark-password.component.html',
-    imports: [CommonModule, NxButtonComponent, FormsModule, TranslateModule],
+    imports: [CommonModule, FormsModule, TranslateModule],
 })
 export class SharedBookmarkPasswordComponent {
     @Output() onConfirmPressed = new EventEmitter<string>();

@@ -81,12 +81,13 @@
                 the Local Settings dialog.'
             </div>
             <div *ngIf="canCreatePartners$$()">
-                <nx-button
-                    type="brand"
-                    (onClick)="newPartnerDialog()"
+                <button
+                    class="btn btn-primary"
+                    (click)="newPartnerDialog()"
+                    translate
                 >
-                    <span translate>New Partner</span>
-                </nx-button>
+                    New Partner
+                </button>
             </div>
         </ng-template>
     </div>

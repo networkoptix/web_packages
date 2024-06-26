@@ -3,7 +3,6 @@ import { Component, EventEmitter, OnInit, Output, computed, input } from '@angul
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
@@ -19,7 +18,6 @@ import { getExpirationText } from '../bookmark-sharing.util';
     imports: [
         CommonModule,
         TranslateModule,
-        NxButtonComponent,
         NxSelectV2Module,
         FormsModule,
         ReactiveFormsModule,

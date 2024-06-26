@@ -157,12 +157,14 @@
                                 You have not yet created any organizations
                             </div>
                             @if (permissionStore.canCreateOrgs$$()) {
-                                <nx-button
-                                    class="button"
-                                    [type]="buttonType.secondary"
+                                <button
+                                    type="button"
+                                    class="button btn btn-default"
                                     (click)="newOrgDialog()"
-                                    ><span translate>New Organization</span></nx-button
+                                    translate
                                 >
+                                    New Organization
+                                </button>
                             }
                         </nx-page-generic-placeholder-v2>
                     </ng-template>

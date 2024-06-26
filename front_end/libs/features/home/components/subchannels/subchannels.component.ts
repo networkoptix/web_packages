@@ -16,7 +16,6 @@ import {
     selectCurrentPartnerId,
     selectCurrentSubchannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -50,7 +49,6 @@ import { NxCardComponent } from '../card/card.component';
         NxSearchComponent,
         FormsModule,
         CommonModule,
-        NxButtonComponent,
         TranslateModule,
         NxAddSvgSrcDirective,
         NxCardComponent,

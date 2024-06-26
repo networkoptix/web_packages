@@ -6,18 +6,23 @@
             </div>
         }
         <div class="d-flex">
-            <nx-button
-                type="brand"
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="save()"
                 [disabled]="saveDisabled"
-                (onClick)="save()"
-                >{{ 'Save' | translate }}</nx-button
+                translate
             >
-            <nx-button
-                class="ml-2"
-                type="secondary"
-                (onClick)="discard()"
-                ><span>{{ 'Cancel' | translate }}</span></nx-button
+                Save
+            </button>
+            <button
+                type="button"
+                class="ml-2 btn btn-default"
+                (click)="discard()"
+                translate
             >
+                Cancel
+            </button>
         </div>
     </div>
 }

@@ -57,21 +57,21 @@
             />
         </div>
         <div class="buttons-section">
-            <nx-button
-                type="brand"
-                (onClick)="onConfirm()"
+            <button
+                class="btn btn-primary"
+                (click)="onConfirm()"
                 [disabled]="!shareForm.valid || shareForm.pristine"
                 translate
             >
                 Confirm
-            </nx-button>
-            <nx-button
-                type="secondary"
-                (onClick)="onCancelClick.emit()"
+            </button>
+            <button
+                class="btn btn-default"
+                (click)="onCancelClick.emit()"
                 translate
             >
                 Cancel
-            </nx-button>
+            </button>
         </div>
     </form>
 </div>

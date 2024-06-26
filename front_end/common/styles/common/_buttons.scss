@@ -571,3 +571,31 @@ button:not([data-escape-global-style]),
         }
     }
 }
+
+.btn.btn-brand-outline {
+    color: var(--btn-primary-bg);
+    background-color: transparent;
+    outline: 1px solid var(--btn-primary-bg);
+
+    &:not(:disabled) {
+        &:hover {
+            outline-color: var(--btn-primary-hover-bg);
+            color: var(--btn-primary-hover-color);
+            background-color: var(--btn-primary-hover-bg);
+            box-shadow: var(--btn-primary-hover-shadow);
+        }
+
+        &:active {
+            outline-color: var(--btn-primary-active-bg);
+            color: var(--btn-primary-active-color);
+            background-color: var(--btn-primary-active-bg);
+            box-shadow: var(--btn-primary-active-shadow);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--btn-primary-focus-outline-rgb);
+            outline-offset: 2px;
+            box-shadow: var(--btn-primary-focus-shadow);
+        }
+    }
+}

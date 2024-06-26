@@ -60,12 +60,12 @@
 
 <ng-template #actionTemplate>
     @if (hasActionButton()) {
-        <nx-button
-            type="brand-outline"
+        <button
+            class="btn btn-brand-outline"
             (click)="action()?.()"
         >
             {{ actionName() | nxTranslate }}
-        </nx-button>
+        </button>
     }
 </ng-template>
 

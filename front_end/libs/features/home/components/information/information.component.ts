@@ -13,7 +13,6 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxApplyBackComponent } from '@components/applyV2/apply-back/apply.component';
 import { NxApplyComponent } from '@components/applyV2/apply.component';
-import { NxButtonComponent } from '@components/button/button.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderNoInfoComponent } from '@components/placeholdersV2/page/no-info/page-placeholder.component';
@@ -49,7 +48,6 @@ import { icons } from '@static-variables';
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxAddSvgSrcDirective,
-        NxButtonComponent,
         NxInfoGroupComponent,
         NxApplyComponent,
         TranslateModule,
