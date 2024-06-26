@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import sys
 import time
@@ -9,7 +10,9 @@ from typing import Collection
 from typing import List
 from typing import Mapping
 from typing import Optional
+import urllib.request
 
+import requests
 from NoptixLibrary.test_runner import Reporter
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
@@ -22,6 +25,7 @@ from NoptixLibrary.server_api import ServerApi
 from NoptixLibrary.server_api import _MediaserverUser
 from email_access import get_random_email
 from requests import HTTPError
+import docker
 
 _docker_host = "localhost"
 _vms_version = "5.1"
@@ -292,9 +296,41 @@ class Mediaserver:
                 slave.id = self.id
                 break
 
+    def download_file(self, url, save_dir, filename=None):
+        # Get the filename from the URL if not provided
+        if not filename:
+            filename = url.split('/')[-1]
+
+        # Define the complete file path
+        file_path = os.path.join(save_dir, filename)
+
+        # Download the file
+        response = requests.get(url)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Write the file to the specified directory
+            with open(file_path, 'wb') as file:
+                file.write(response.content)
+            print(f"File downloaded successfully and saved as: {file_path}")
+        else:
+            print(f"Failed to download file. Status code: {response.status_code}")
+
+    # Example usage
+
+
+
     def set_up(self, vms_version: str, primary_port: int, secondary_port: int):
         # Create a docker server.
-        # Mimic configuration from JSON files.
+        if not os.path.isfile("./../robot_tests/Docker/5.0/nxwitness-server-5.1.4.38659-linux_x64.deb"):
+            url = 'https://updates.networkoptix.com/default/38659/linux/nxwitness-server-5.1.4.38659-linux_x64.deb'
+            save_dir = './../robot_tests/Docker/5.0'
+            self.download_file(url, save_dir)
+
+        client = docker.from_env()
+        if not client.images.list(name='5.1'):
+            client.images.build(path='./../robot_tests/Docker/5.0', tag='5.1', buildargs={
+                                       "mediaserver_deb": "nxwitness-server-5.1.4.38659-linux_x64.deb"})
         self.name = self.suite_name + str(self.run_id)
         self._primary_port = primary_port
         self._secondary_port = secondary_port
