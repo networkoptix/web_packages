@@ -12,9 +12,17 @@
         <div class="message">
             {{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 0 }}
             <span
+                (click)="addSystem()"
+                class="inline-button"
+                >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 1 }}
+            </span>
+            <span
+                >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 2 }}
+            </span>
+            <span
                 (click)="addFolder()"
                 class="inline-button"
-                >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 1 }}</span
+                >{{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 3 }}</span
             >
         </div>
     }

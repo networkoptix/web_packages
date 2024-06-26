@@ -33,6 +33,7 @@ import { icons } from '@static-variables';
 })
 export class NxPagePlaceholderNoItemsComponent {
     @Output() addFolderEvent = new EventEmitter<void>();
+    @Output() addSystemEvent = new EventEmitter<void>();
     canManageSystems$$ = input<boolean>(false, { alias: 'canManageSystems' });
 
     LANG = staticLang;
@@ -40,5 +41,9 @@ export class NxPagePlaceholderNoItemsComponent {
 
     addFolder(): void {
         this.addFolderEvent.emit();
+    }
+
+    addSystem(): void {
+        this.addSystemEvent.emit();
     }
 }
