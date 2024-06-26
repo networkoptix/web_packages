@@ -1,0 +1,24 @@
+include:
+  - local: "ci/.shared.yml"
+
+test-system-users:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'cloud-deploy' ]
+  script: [ 'test-system-users' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:
+    - if: !reference [ .functional_tests_required ]
+      # noinspection YAMLSchemaValidation
+      changes: !reference [ .frontend_changes ]
+
+test-enable-2fa:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'cloud-deploy' ]
+  script: [ 'test-enable-2fa' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:
+    - if: !reference [ .functional_tests_required ]
+      # noinspection YAMLSchemaValidation
+      changes: !reference [ .frontend_changes ]
