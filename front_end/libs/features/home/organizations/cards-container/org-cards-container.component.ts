@@ -158,6 +158,10 @@ export class NxOrganizationCardContainerComponent {
             });
     }
 
+    addSystemDialog(): void {
+        this.dialogsService.addSystemTutorial();
+    }
+
     #groupUsers: Record<string, Promise<GroupUser[]> | null> = {};
 
     getGroupUsers(groupId: string, clearExisting = true): Promise<GroupUser[]> {

@@ -48,18 +48,20 @@
                     {{ breadcrumb.name }}</a
                 >
             }
-            <button
-                (click)="openTutorial()"
-                class="tutorial-link btn btn-clear"
-                type="text"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [svgStyle]="breadcrumbIconStyle"
-                    [src]="icons.dirTextButtons + 'info.svg'"
-                ></svg-icon>
-                <span translate>How to add system</span>
-            </button>
+            @if (canManageSystems$$() && currentTabRoute$$() === 'systems') {
+                <button
+                    (click)="openTutorial()"
+                    class="tutorial-link btn btn-clear"
+                    type="text"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="breadcrumbIconStyle"
+                        [src]="icons.dirTextButtons + 'info.svg'"
+                    ></svg-icon>
+                    <span translate>How to add system</span>
+                </button>
+            }
         </nx-hidable>
         <h2 class="org-name">
             {{ groupsStore.currentGroupName$$() || currentOrg.name }}
