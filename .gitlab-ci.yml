@@ -10,6 +10,7 @@ include:
   - local: "front_end/ci/.gitlab-ci.yml"
   - local: "ci/.shared.yml"
   - local: "ci/.jenkins-builds.yml"
+  - local: "ft/ci/.gitlab-ci.yml"
 
 default:
   tags:

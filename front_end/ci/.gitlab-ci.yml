@@ -63,23 +63,3 @@ frontend-tests:
       pushd "front_end"
         npm run test:ci
       popd
-
-test-system-users:
-  stage: 'ft (#ask-ft)'
-  needs: [ 'cloud-deploy' ]
-  script: [ 'test-system-users' ]
-  tags: [ 'cloud_portal_tests' ]
-  timeout: '180m'
-  rules:
-  - if: !reference [ .functional_tests_required ]
-    changes: !reference [ .frontend_changes ]
-
-test-enable-2fa:
-  stage: 'ft (#ask-ft)'
-  needs: [ 'cloud-deploy' ]
-  script: [ 'test-enable-2fa' ]
-  tags: [ 'cloud_portal_tests' ]
-  timeout: '180m'
-  rules:
-  - if: !reference [ .functional_tests_required ]
-    changes: !reference [ .frontend_changes ]
