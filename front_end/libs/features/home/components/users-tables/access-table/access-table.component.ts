@@ -188,14 +188,37 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     };
 
     deleteUser(row: UserRecord): void {
+        let message: string;
+        switch (row.groupRoles?.length) {
+            case 0:
+                message = this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.singleOrgMessage,
+                    {
+                        name: row.email,
+                        organization: this.currentOrg$$()?.name,
+                    },
+                );
+                break;
+            case 1:
+                message = this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
+                    {
+                        name: row.email,
+                        folder: row.groupRoles[0].name,
+                    },
+                );
+                break;
+            default:
+                message = this.translateService.instant(
+                    this.LANG.channelPartners.usersTable.deleteDialog.multipleFoldersMessage,
+                    {
+                        name: row.email,
+                        count: row.groupRoles?.length,
+                    },
+                );
+        }
         const groupId = row.groupRoles[0]?.groupId || this.currentOrg$$().id;
-        const message = this.translateService.instant(
-            this.LANG.channelPartners.usersTable.deleteDialog.singleAccessRole,
-            {
-                name: this.fullName$$(),
-                folder: row?.groupRoles[0]?.name || this.currentOrg$$().name,
-            },
-        );
+
         this.dialogService
             .confirm({
                 message,
@@ -221,9 +244,9 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         this.dialogService
             .confirm({
                 message: this.translateService.instant(
-                    this.LANG.channelPartners.usersTable.deleteDialog.multipleAccessRole,
+                    this.LANG.channelPartners.usersTable.deleteDialog.multipleFoldersMessage,
                     {
-                        name: this.fullName$$(),
+                        name: this.email$$(),
                         count: this.selectedCount$$(),
                     },
                 ),
