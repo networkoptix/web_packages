@@ -105,9 +105,9 @@ def create_customization(root_channel_partner, customization, host_name):
 
 
 def run(instance_name, root_name=None):
-    if settings.IS_PRIVATE_CLOUD and not root_name:
-        raise ValueError('Root channel partner name is required for private cloud.')
     if settings.IS_PRIVATE_CLOUD:
+        if not root_name:
+            raise ValueError('Root channel partner name is required for private cloud.')
         customizations = []
         host_name = settings.DEFAULT_HOST_NAME.lower()
     else:
