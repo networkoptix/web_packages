@@ -18,6 +18,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthorizeState } from '@authorization/src/app/components/authorize.component.types';
 import { BindErrorStateComponent } from '@authorization/src/app/components/bind-system-to-cloud/bind-error-state/bind-error-state.component';
 import { BindToCloudService } from '@authorization/src/app/components/bind-system-to-cloud/bind-to-cloud.service';
+import { OrgPromoComponent } from '@authorization/src/app/components/bind-system-to-cloud/org-promo/org-promo.component';
 import { BindResponse } from '@authorization/src/app/types/bind-service.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -39,6 +40,7 @@ enum BindDialogStates {
     error = 'error',
     initial = 'initial',
     confirmAccount = 'confirmAccount',
+    orgPromo = 'orgPromo',
     selectOrg = 'selectOrg',
     finished = 'finished',
 }
@@ -69,6 +71,7 @@ interface BindState {
         SelectBindTypeComponent,
         SelectOrgComponent,
         BindErrorStateComponent,
+        OrgPromoComponent,
     ],
 })
 export class BindSystemToCloudComponent implements OnInit {
@@ -151,6 +154,9 @@ export class BindSystemToCloudComponent implements OnInit {
         if (!this.channelPartnersEnabled || this.fsmState$$() === BindDialogStates.initial) {
             this.setCurrentState.emit(AuthorizeState.email);
             this.cleanup();
+        } else if (this.fsmState$$() === BindDialogStates.orgPromo) {
+            this.fsmState = BindDialogStates.confirmAccount;
+            return;
         }
         this.state$$.update(state => ({
             ...state,

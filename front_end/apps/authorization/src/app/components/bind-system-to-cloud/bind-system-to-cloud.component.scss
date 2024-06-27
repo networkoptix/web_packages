@@ -1,5 +1,19 @@
+@use 'typography';
+
 :host-context {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.org-promo-button {
+    @include typography.regular13nocolor;
+    color: var(--btn-text-color);
+    width: 100%;
+}
+
+svg {
+    #Union.icon-with-fill {
+        fill: var(--btn-text-color);
+    }
 }

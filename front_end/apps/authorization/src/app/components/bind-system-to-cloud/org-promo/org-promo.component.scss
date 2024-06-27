@@ -1,0 +1,30 @@
+@use 'typography';
+
+.org-promo {
+    display: flex;
+    flex-direction: column;
+    margin: 0 16px
+}
+
+.icon-wrapper {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.org-promo-text {
+    display: flex;
+    flex-direction: column;
+
+    div {
+        @include typography.medium14nocolor;
+        color: var(--input-color);
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+.solid-org-icon {
+    .icon-with-fill {
+        fill: var(--input-color) !important;
+    }
+}

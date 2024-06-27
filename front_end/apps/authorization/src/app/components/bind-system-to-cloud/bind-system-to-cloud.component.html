@@ -34,16 +34,59 @@
                     <h3 class="authorize-header">{{ 'Connect system to' | translate }}</h3>
                     {{ state$$().email }}
                 }
+                @case (fsmStates.orgPromo) {
+                    <nx-org-promo></nx-org-promo>
+                }
             }
         </div>
-        <nx-auth-footer
-            [buttonText]="fsmState$$() !== fsmStates.error ? 'Connect' : 'Try Again'"
-            [bindProcess]="bindSystem"
-            [blockBack]="fsmState$$() === fsmStates.finished"
-            [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
-            [viewType]="viewType"
-            (goBack)="back()"
-        ></nx-auth-footer>
+        @if (fsmState$$() !== fsmStates.orgPromo) {
+            <nx-auth-footer
+                [buttonText]="fsmState$$() !== fsmStates.error ? 'Connect' : 'Try Again'"
+                [bindProcess]="bindSystem"
+                [blockBack]="fsmState$$() === fsmStates.finished"
+                [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
+                [viewType]="viewType"
+                (goBack)="back()"
+            >
+                @if (fsmState$$() === fsmStates.confirmAccount) {
+                    <div
+                        class="org-promo-button"
+                        (click)="fsmState = fsmStates.orgPromo"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [applyClass]="true"
+                            [src]="icons.dirTextButtons + 'organization_outline.svg'"
+                            [svgStyle]="{
+                                marginTop: '-2px',
+                                marginRight: '4px',
+                                width: '20px',
+                                height: '20px'
+                            }"
+                        ></svg-icon>
+                        <span translate>Connect to Organization</span>
+                    </div>
+                }
+            </nx-auth-footer>
+        } @else {
+            <footer
+                [ngClass]="{
+                    'footer-w': viewType === 'web',
+                    'footer-d': viewType === 'desktop',
+                    'footer-m': viewType === 'mobile'
+                }"
+            >
+                <div class="d-flex justify-content-end flex-1 w-100 right">
+                    <button
+                        class="btn btn-primary"
+                        (click)="back()"
+                        translate
+                    >
+                        Back
+                    </button>
+                </div>
+            </footer>
+        }
     </main>
 } @else {
     <nx-pre-loader></nx-pre-loader>
