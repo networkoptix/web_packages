@@ -14,6 +14,7 @@
 
     .left-draggable,
     .right-draggable {
+        pointer-events: all;
         position: absolute;
         bottom: 0;
         height: 86px;
@@ -29,6 +30,7 @@
     }
 
     > .selected-range {
+        pointer-events: none; // pass through for time under cursor -- [T]
         display: none;
         position: absolute;
         bottom: 0;
