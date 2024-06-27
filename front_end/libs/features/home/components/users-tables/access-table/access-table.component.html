@@ -106,7 +106,13 @@
                                     (ngModelChange)="updateRole(row, $event)"
                                 >
                                     @for (role of orgRoles$$(); track role.id) {
-                                        <nx-select-item [value]="role.id">
+                                        <nx-select-item
+                                            [value]="role.id"
+                                            nxTooltipV2
+                                            [tooltipContent]="permissionDescription(role.name)"
+                                            [tooltipPositions]="['N', 'center']"
+                                            tooltipTheme="contrast"
+                                        >
                                             {{ role.name | translate }}
                                         </nx-select-item>
                                     }

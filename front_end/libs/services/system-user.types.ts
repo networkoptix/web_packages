@@ -58,6 +58,7 @@ export interface UserGroup {
     description: string;
     externalId: ExternalUserGroupId;
     id: string;
+    orgRoleId: string;
     name: string;
     parentGroupIds: string[];
     permissions: string;

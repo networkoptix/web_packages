@@ -25,6 +25,7 @@ import {
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom } from 'rxjs';
 
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
@@ -33,11 +34,13 @@ import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import LANG from '@language_static';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
 import { simpleEmailRegex } from '@static-variables';
 import { accountSelectors } from '@store/account';
 import { formControlValueSignal } from '@utils/nx';
@@ -71,16 +74,19 @@ type UserRoles = Map<string, Map<string, string>>;
         forwardRef(() => NxAddOrgUserStepperComponent),
         LetDirective,
         TranslateModule,
+        NgxTranslateCutModule,
 
         NxSelectV2Component,
         NxSelectV2ItemComponent,
         NxOrgStepSelectComponent,
         NxOrgTreeSelectorComponent,
         NxAsyncActionButtonComponent,
+        NxTooltipV2Directive,
     ],
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     LANG = LANG;
+    DefaultUserGroups = DefaultUserGroups;
 
     private accountEmail = inject(Store).selectSignal(accountSelectors.selectCurrentUserName);
     private groupsStore = inject(GroupsStore);
@@ -145,13 +151,33 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     emailLocked = signal(false);
 
     private roleId = formControlValueSignal(this.roleIdControl);
-    roleDescription = computed<string>(() => {
+    roleName = computed<string>(() => {
         const [orgRoles, roleId] = [this.orgRoles(), this.roleId()];
         if (!roleId) {
             return '';
         }
-        const roleName = orgRoles.find(role => role.id === roleId)!.name;
-        return LANG.channelPartners.orgs.permissionDescription[roleName];
+        return orgRoles.find(role => role.id === roleId)!.name;
+    });
+    // The strings that contain "|" require a tooltip and need translateCut. Otherwise, no translateCut will be needed
+    roleDescription = computed<string>(() => {
+        return LANG.channelPartners.orgs.permissionDescription[this.roleName()];
+    });
+
+    roleHasTooltip = computed<boolean>(() => {
+        // If the role description contains the role name, the role name in the description would need a tooltip
+        // An exception will be for "Systems Administrator", where the tooltip will be on the word "Administrators"
+        // ToDo: Remove "Administrator" when we change it to "System Administrators" in the near future
+        const roleName = this.roleName();
+        const description = this.roleDescription();
+        return (
+            description?.includes('|') &&
+            (description?.includes(roleName) || roleName === 'Systems Administrator')
+        );
+    });
+    tooltipDescription = computed<string>(() => {
+        return DefaultUserGroups.find(group => {
+            return this.roleId() === group.orgRoleId;
+        })!.description;
     });
 
     folder = signal<string | null>(null);

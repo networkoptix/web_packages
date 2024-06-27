@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, computed, EventEmitter, input, Output } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    computed,
+    EventEmitter,
+    inject,
+    input,
+    Output,
+} from '@angular/core';
 import {
     FormControl,
     FormGroup,
@@ -8,7 +16,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
@@ -83,6 +91,7 @@ interface SettingsState {
     ],
 })
 export class NxSettingsGeneralV2Component implements AfterViewInit {
+    translateService: TranslateService = inject(TranslateService);
     LANG = staticLang;
     icons = icons;
     State = State;
@@ -93,6 +102,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     stateForm: FormGroup = new FormGroup({
         stateToggle: new FormControl(null),
     });
+    roleDescription: string | undefined;
 
     showStateChangeBlock = nxConfig.featureFlags.channelPartnersChangeStateUI;
 
@@ -129,6 +139,23 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
             accessLevel: this.currAccess$$(),
         });
         this.stateForm.patchValue({ stateToggle: this.currState() });
+        this.updatePermissionDesc();
+    }
+
+    onSelect(value: string): void {
+        this.updateAccess.emit(value);
+        this.updatePermissionDesc();
+    }
+
+    updatePermissionDesc(): void {
+        const role =
+            this.LANG.channelPartners.orgs.permissionDescription[
+                this.generalForm?.get('accessLevel')?.value.name
+            ];
+        if (!role) {
+            this.roleDescription = '';
+        }
+        this.roleDescription = this.translateService.instant(role)?.replaceAll('|', '');
     }
 
     protected readonly settingsViews = settingsViews;
