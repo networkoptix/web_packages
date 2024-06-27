@@ -109,8 +109,19 @@
                                 translate
                                 >Role is required</span
                             >
+                        } @else if (roleHasTooltip() && tooltipDescription()) {
+                            <span>{{ roleDescription() | translate | translateCut: 0 }} </span>
+                            <span
+                                class="pseudo-anchor"
+                                nxTooltipV2
+                                [tooltipContent]="tooltipDescription() | translate"
+                                [tooltipPositions]="['S', 'start']"
+                                tooltipTheme="contrast"
+                                >{{ roleDescription() | translate | translateCut: 1 }}</span
+                            >
+                            {{ roleDescription() | translate | translateCut: 2 }}
                         } @else {
-                            {{ roleDescription() }}
+                            {{ roleDescription() | translate }}
                         }
                     </p>
                 </div>

@@ -5,6 +5,7 @@ import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-chec
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -29,6 +30,7 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxCheckAllContainerDirective,
         NxCheckAllDirective,
         NxSelectV2Module,
+        NxTooltipV2Directive,
     ],
 })
 export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
@@ -37,6 +39,14 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     email$$ = this.routerState.email;
     orgRoles$$ = this.cpService.organizationRoles$$;
+
+    // Since the code runs everytime the dom is updated, we'll pre-translate the descriptions here
+    translatedPermissionDesc = Object.entries(
+        this.LANG.channelPartners.orgs.permissionDescription,
+    ).reduce((roles, [key, value]) => {
+        roles[key.toLowerCase()] = this.translateService.instant(value).replaceAll('|', '');
+        return roles;
+    });
 
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
     accessTableRecords$$ = computed(() => {
@@ -271,5 +281,9 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                     );
                 }
             });
+    }
+
+    permissionDescription(roleName: string): string {
+        return this.translatedPermissionDesc[roleName.toLowerCase()] ?? '';
     }
 }
