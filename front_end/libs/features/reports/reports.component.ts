@@ -10,6 +10,7 @@ import {
     selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type {
     ChannelPartner,
@@ -27,7 +28,7 @@ interface Item {
 @Component({
     selector: 'nx-reports',
     templateUrl: 'reports.component.html',
-    styleUrls: ['reports.component.scss', 'reports-theme-variables.scss'],
+    styleUrls: ['reports.component.scss'],
     imports: [
         CommonModule,
         NxPreLoaderComponent,
@@ -36,6 +37,7 @@ interface Item {
         RouterModule,
         NxReportsSidebarComponent,
     ],
+    hostDirectives: [NxThemeAttributeDirective],
     standalone: true,
 })
 export class NxReportsComponent implements OnInit {
