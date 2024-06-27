@@ -14,6 +14,7 @@ include:
 
 .frontend_changes:
   - front_end/**/*
+  - build_scripts/**/*
 
 .notification_changes:
  - desktop_notifications/**/*

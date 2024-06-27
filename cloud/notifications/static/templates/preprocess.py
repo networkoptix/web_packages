@@ -17,12 +17,7 @@ css_content = open("styles.css").read()
 
 
 def read_branding(content):
-    branding_file = open("_custom_palette.scss").read()
-    pattern = re.compile("(\$.+?)\s*:\s*(#[0-9a-sA-F]{3,6})\s*;")
-    for match in re.finditer(pattern, branding_file):
-        groups = match.groups()
-        content = content.replace(groups[0], groups[1])
-    return content
+    return content.replace("$brand_core", "cyan ")
 
 
 def write_html(file_name):
