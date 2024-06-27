@@ -178,3 +178,30 @@ export const memoizeAsyncMedium = memoizeAsync(60 * 1000);
 export const memoizeAsyncLong = memoizeAsync(5 * 60 * 1000);
 
 export const memoizeAsyncPersistent = memoizeAsync(Infinity);
+
+/**
+ * Used to manually invalidate memoization cache for a method or getter.
+ *
+ * This is for use with methods or getters using a decorator from this file.
+ *
+ * @param target Reference to object with method or getter to invalidate
+ * @param functionName method or getter to invalidate
+ */
+export const invalidateCache = <Target extends object>(
+    target: Target,
+    functionName: keyof Target,
+): void => {
+    const invalidiationKey = functionName.toString() + 'InvalidationKey';
+    while (true) {
+        if (Object.hasOwn(target, invalidiationKey)) {
+            break;
+        }
+        const prototype = Reflect.getPrototypeOf(target);
+
+        if (!prototype) {
+            break;
+        }
+        target = prototype as Target;
+    }
+    target[invalidiationKey] = { uuid: uuid() };
+};

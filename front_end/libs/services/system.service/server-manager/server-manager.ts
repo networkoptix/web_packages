@@ -27,7 +27,7 @@ import type {
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { alphabeticalSort, dirtyId } from '@utils/general';
-import { memoizeAsyncPersistent } from '@utils/memoize';
+import { invalidateCache, memoizeAsyncPersistent } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
@@ -437,6 +437,10 @@ export class ServerManager {
 
     getStorageAnalytics(serverId: string): Observable<StorageAnalytics> {
         return this.mediaserverConnections[serverId].getStorageAnalytics();
+    }
+
+    invalidateStorageAnalytics(serverId: string): void {
+        invalidateCache(this.mediaserverConnections[serverId], 'getStorageAnalytics');
     }
 
     rebuildArchive(
