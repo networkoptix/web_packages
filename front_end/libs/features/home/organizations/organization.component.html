@@ -5,7 +5,7 @@
         *ngIf="currentOrganization$$() as currentOrg"
     >
         <nx-hidable>
-            @if (!groupsStore.groupsPath$$().length || inChannelPartner) {
+            @if (inChannelPartner) {
                 <a
                     [routerLink]="routerState.partnersRoot$$()"
                     queryParamsHandling="preserve"
@@ -18,20 +18,31 @@
                     }
                     <span translate> All Organizations </span></a
                 >
+
+                @if (groupsStore.groupsPath$$().length) {
+                    <a
+                        [routerLink]="routerState.rootGroupLink$$()"
+                        queryParamsHandling="preserve"
+                    >
+                        {{ currentOrganization$$()!.name }}</a
+                    >
+                }
             }
-            @if (groupsStore.groupsPath$$().length) {
-                <a
-                    [routerLink]="routerState.rootGroupLink$$()"
-                    queryParamsHandling="preserve"
-                >
-                    @if (!inChannelPartner) {
+
+            @if (!inChannelPartner) {
+                @if (groupsStore.groupsPath$$().length) {
+                    <a
+                        [routerLink]="routerState.rootGroupLink$$()"
+                        queryParamsHandling="preserve"
+                    >
                         <svg-icon
                             nx-add-svg-src
                             [src]="icons.dirTextButtons + 'arrow_left.svg'"
                         ></svg-icon>
-                    }
-                    {{ currentOrganization$$()!.name }}</a
-                >
+
+                        {{ currentOrganization$$()!.name }}</a
+                    >
+                }
             }
 
             @for (
@@ -40,7 +51,6 @@
                 let last = $last
             ) {
                 <a
-                    [nxHidableItem]="!last"
                     [ngStyle]="{ display: 'inline' }"
                     [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
                     queryParamsHandling="preserve"
