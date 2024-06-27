@@ -1327,7 +1327,7 @@
                 "singleFolderMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{name}</span> to <span class=\"text-contrast-bold\">{folder}</span> folder?",
                 "multipleFoldersMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{name}</span> to <span class=\"text-contrast-bold\">{count}</span> folders?",
                 "singleOrgMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{name}</span> to <span class=\"text-contrast-bold\">{organization}</span> organization?",
-                "multipleMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{count} users</span>",
+                "multipleMessage": "Are you sure you want to delete access for <span class=\"text-contrast-bold\">{count} users</span>?",
                 "channelPartner": {
                     "singleMessage": "Are you sure you want to delete user <span class=\"text-contrast-bold\">{email}</span> with permission <span class=\"text-contrast-bold\">{permission}</span>?"
                 },
