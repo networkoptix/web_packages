@@ -333,6 +333,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 this.selectedServer.id,
                                 params,
                             );
+                            this.system.serverManager.invalidateStorageAnalytics(
+                                this.selectedServer.id,
+                            );
                         }
 
                         await firstValueFrom(this.system.storageManager.update());
