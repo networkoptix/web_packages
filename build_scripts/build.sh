@@ -107,33 +107,44 @@ build_frontend
 move_fonts_and_help
 echo -e "\nBuilding front_end finished"
 
-echo -e "\nIterate all skins"
-for dir in ../skins/*/
-do
-    dir=${dir%*/}
-    SKIN=${dir/..\/skins\//}
+echo -e "\nBuild the base skin"
+BASE_SKIN="blue"
 
-    # Step vars to make file path manipulation more readable
-    SOURCE_SKIN="$SOURCE_DIR/$SKIN"
-    SOURCE_SKIN_STATIC="$SOURCE_SKIN/static"
-    WELL_KNOWN="$SOURCE_SKIN_STATIC/.well-known"
-    APPLE_MOBILE="$SOURCE_SKIN_STATIC/apple-app-site-association"
-    ANDROID_MOBILE="$SOURCE_SKIN_STATIC/assetlinks.json"
+# Step vars to make file path manipulation more readable
+SOURCE_SKIN="$SOURCE_DIR/$BASE_SKIN"
+SOURCE_SKIN_STATIC="$SOURCE_SKIN/static"
+WELL_KNOWN="$SOURCE_SKIN_STATIC/.well-known"
+APPLE_MOBILE="$SOURCE_SKIN_STATIC/apple-app-site-association"
+ANDROID_MOBILE="$SOURCE_SKIN_STATIC/assetlinks.json"
 
-    echo "Move front_end to destination"
-    mkdir -p "$SOURCE_SKIN"
-    mv "$FRONT_END_DIST/skins/$SKIN.css" "$FRONT_END_DIST/styles/skin.css"
-    rsync -a $FRONT_END_DIST/* "$SOURCE_SKIN_STATIC" --exclude="$FRONT_END_DIST/skins"
-    cp -R "$SOURCE_SKIN_STATIC/scripts/." "$SOURCE_SKIN_STATIC"
+echo "Move front_end to destination"
+mkdir -p $SOURCE_DIR/$BASE_SKIN
+cp $FRONT_END_DIST/skins/$BASE_SKIN.css $FRONT_END_DIST/styles/skin.css
+rsync -a $FRONT_END_DIST/* $SOURCE_DIR/$BASE_SKIN/static --exclude="$FRONT_END_DIST/skins"
+cp -R $SOURCE_DIR/$BASE_SKIN/static/scripts/. $SOURCE_DIR/$BASE_SKIN/static/
 
-    mkdir "$WELL_KNOWN"
-    [ -e "$APPLE_MOBILE" ] && mv "$APPLE_MOBILE" "$WELL_KNOWN"
-    [ -e "$ANDROID_MOBILE" ] && mv "$ANDROID_MOBILE" "$WELL_KNOWN"
+mkdir "$WELL_KNOWN"
+[ -e "$APPLE_MOBILE" ] && mv "$APPLE_MOBILE" "$WELL_KNOWN"
+[ -e "$ANDROID_MOBILE" ] && mv "$ANDROID_MOBILE" "$WELL_KNOWN"
 
-    ./build_skin.sh "$SKIN" "$PORTAL_REPOSITORY"
-    if [ -n "$LOCAL_ENV" ]; then
-        break
+./build_skin.sh
+# Hard coding because we aren't adding more colors.
+SKINS="orange green blue" # Skin order is reversed because the other skins copy from blue.
+echo "Copy the other skins"
+for SKIN in $SKINS; do
+    if [ "$SKIN" != "$BASE_SKIN" ]; then
+        mkdir -p $SOURCE_DIR/$SKIN
+        cp -R $SOURCE_DIR/$BASE_SKIN/* $SOURCE_DIR/$SKIN
+        cp $SOURCE_DIR/$SKIN/static/skins/$SKIN.css $SOURCE_DIR/$SKIN/static/styles/skin.css
+        cp -R $PORTAL_REPOSITORY/skins/$SKIN/front_end/images $SOURCE_DIR/$SKIN/static/images
     fi
+
+    BRAND_CORE=$(python extract_brand_core_value.py $PORTAL_REPOSITORY/skins/$SKIN/front_end/styles/_custom_palette.scss)
+    find $SOURCE_DIR/$SKIN/templates -name "*.mustache" -exec sed -i.bak "s/cyan/$BRAND_CORE/g" {} \;
+
+    echo "Clean sources for $SKIN"
+    rm -rf $SOURCE_DIR/$SKIN/templates/*/src $SOURCE_DIR/$SKIN/templates/*/*.bak
+    echo
 done
 
 cp ../cloud/cloud/cloud_portal.yaml $SOURCE_DIR
@@ -163,5 +174,5 @@ else
 fi
 
 echo -e "\n*******************************************"
-echo -e "***   Cloud portal build is finished"   ***
+echo -e "***   Cloud portal build is finished   ***"
 echo -e "*******************************************"

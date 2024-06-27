@@ -255,6 +255,10 @@
   },
   "67887": {
     "name": "sqlparse",
-    "note": "ADVISORY: Sqlparse 0.5.0 addresses a potential denial of service (DoS) vulnerability related to recursion errors in deeply nested SQL\n   statements. To mitigate this issue, the update replaces recursion errors with a general SQLParseError, improving the resilience and stability of the parsing process. PVE-2024-67887"
+    "note": "ADVISORY: Sqlparse 0.5.0 addresses a potential denial of service (DoS) vulnerability related to recursion errors in deeply nested SQL statements. To mitigate this issue, the update replaces recursion errors with a general SQLParseError, improving the resilience and stability of the parsing process. PVE-2024-67887"
+  },
+  "71199": {
+    "name": "Anyio",
+    "note": "ADVISORY: Anyio version 4.4.0 addresses a thread race condition in `_eventloop.get_asynclib()` that caused crashes when multiple event loops of the same backend were running in separate threads and simultaneously attempted to use AnyIO for the first time. This fix ensures more stable and reliable performance in multi-threaded environments. PVE-2024-71199 For more information, please visit https://data.safetycli.com/v/71199/f17"
   }
 }

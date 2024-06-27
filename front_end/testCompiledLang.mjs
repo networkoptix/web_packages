@@ -38,6 +38,9 @@ for (const filePath of walkSync(sourceDir)) {
     const langJson = fs.readFileSync(filePath, { encoding: 'utf-8' });
     const translation = JSON.parse(langJson);
     const lang = translation.language;
+    if (lang === 'en_US') {
+        continue;
+    }
     try {
         compiler.compile(translation, lang);
     } catch (e) {
