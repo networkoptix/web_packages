@@ -1,0 +1,4 @@
+@use '../../nx-modal.scss';
+@use 'components/forms/forms.scss';
+
+@include forms.stacked-form-fields;

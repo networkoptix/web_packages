@@ -45,12 +45,22 @@
         <div class="filter">
             <nx-search
                 [(ngModel)]="searchModel"
+                (ngModelChange)="setQuery($event)"
                 layout="search"
                 instant
             ></nx-search>
-            <!--            <button (click)="sortRecords()">-->
-            <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
-            <!--            </button>-->
+
+            <nx-filter-tags
+                [filters]="filters$$()"
+                (filterChange)="updateFilters($event)"
+            ></nx-filter-tags>
+
+            <button
+                class="btn btn-default-clear"
+                (click)="filterRecords()"
+            >
+                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>
+            </button>
         </div>
     </div>
     <div

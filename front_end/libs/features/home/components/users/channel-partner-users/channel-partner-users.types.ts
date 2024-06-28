@@ -1,5 +1,11 @@
 import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+export type CPUsersState = {
+    selectedUser?: string; // Do we need it? -- [T]
+    searchQuery: string;
+    searchFilters: object;
+};
+
 export interface AccessLevel {
     id: string;
     name: string;

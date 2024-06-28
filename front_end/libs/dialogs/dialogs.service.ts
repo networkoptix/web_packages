@@ -383,6 +383,14 @@ export class NxDialogsService {
         ),
     );
 
+    filterUsers = this.dialogV1Factory<Dt.FilterUsers>(
+        () =>
+            import('@dialogs/channel-partners/filter-users/filter-users.component').then(
+                m => m.NxFilterUsersModalContent,
+            ),
+        { autoFocus: '#filterByEmailComponent' },
+    );
+
     editOrgUser = this.dialogV1Factory<Dt.EditOrgUser>(() =>
         import('./channel-partners/edit-org-user/edit-org-user.component').then(
             m => m.NxEditOrgUserModalContent,

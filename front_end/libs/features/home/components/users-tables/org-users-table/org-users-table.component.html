@@ -29,7 +29,7 @@
                         <span
                             class="head-title ellipsis caption"
                             title="{{ head.value }}"
-                            >{{ head.value | translate }}</span
+                            >{{ head.value | nxTranslate }}</span
                         >
                     </div>
                 }
@@ -54,13 +54,19 @@
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: email"
                 >
-                    {{ row.email }}
+                    <nx-search-highlight
+                        [text]="row.email"
+                        [search]="searchingQuery$$()"
+                    ></nx-search-highlight>
                 </div>
                 <div
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: fullName"
                 >
-                    {{ row.fullName }}
+                    <nx-search-highlight
+                        [text]="row.fullName"
+                        [search]="searchingQuery$$()"
+                    ></nx-search-highlight>
                 </div>
 
                 <div
@@ -94,20 +100,29 @@
                             [src]="icons.dir + 'organization_2.svg'"
                             [svgStyle]="{ 'width.px': '20px' }"
                         ></svg-icon>
-                        {{ currentOrg$$().name }}
+                        <nx-search-highlight
+                            [text]="currentOrg$$().name"
+                            [search]="searchingQuery$$()"
+                        ></nx-search-highlight>
                     } @else {
                         <svg-icon
                             [src]="icons.dir + 'folder2.svg'"
                             [svgStyle]="{ 'width.px': '20px' }"
                         ></svg-icon>
-                        @if (row.groupRoles) {
-                            {{
-                                row.groupRoles?.length > 1
-                                    ? row.groupRoles.length + ' folders'
-                                    : row.groupRoles[0]?.name
-                            }}
+                        @if (!row?.groupRoles) {
+                            <nx-search-highlight
+                                [text]="row.accessLevel.name"
+                                [search]="searchingQuery$$()"
+                            ></nx-search-highlight>
+                        } @else if (row.groupRoles.length === 1) {
+                            <nx-search-highlight
+                                [text]="row.groupRoles[0].name"
+                                [search]="searchingQuery$$()"
+                            ></nx-search-highlight>
                         } @else {
-                            {{ row.accessLevel.name }}
+                            <span>{{
+                                LANG.systemsCount | translate: { count: row.groupRoles.length }
+                            }}</span>
                         }
                     }
                 </div>
@@ -119,7 +134,10 @@
                 >
                     <div class="div-container roles">
                         @if (!canUpdateUserRole(row)) {
-                            {{ getDisplayRole(row) | translate }}
+                            <nx-search-highlight
+                                [text]="getDisplayRole(row) | nxTranslate"
+                                [search]="searchingQuery$$()"
+                            ></nx-search-highlight>
                         } @else {
                             <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"
@@ -133,7 +151,11 @@
                                         [tooltipPositions]="['N', 'center']"
                                         tooltipTheme="contrast"
                                     >
-                                        {{ role.name | translate }}
+                                        <nx-search-highlight
+                                            [text]="role.name | nxTranslate"
+                                            [search]="searchingQuery$$()"
+                                        >
+                                        </nx-search-highlight>
                                     </nx-select-item>
                                 }
                             </nx-select-v2>
@@ -164,7 +186,7 @@
                                     : hasOnlyOneAdmin$$() && onlyAdmin$$() !== row.email
                                       ? LANG.channelPartners.usersTable.adminTooltip
                                       : LANG.channelPartners.usersTable.infoToolTip
-                                ) | translate
+                                ) | nxTranslate
                             "
                         ></svg-icon>
                     }
@@ -182,7 +204,7 @@
                 </div>
             </ng-template>
         </nx-table>
-    } @else if (searching()) {
+    } @else if (searching$$()) {
         <nx-page-placeholder-v2 [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"></nx-page-placeholder-v2>
     } @else {
         <nx-page-placeholder-v2

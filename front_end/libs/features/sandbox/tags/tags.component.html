@@ -13,3 +13,56 @@
         </nx-tag>
     </div>
 </div>
+
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <div class="d-inline-flex">
+        <nx-tag
+            *ngFor="let option of options"
+            [type]="option.type"
+            [value]="option.selected"
+            class="mr-1"
+            size="medium"
+        >
+            {{ option.name | translate }}
+        </nx-tag>
+    </div>
+</div>
+
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <div class="d-inline-flex">
+        <nx-tag
+            *ngFor="let option of options"
+            [type]="option.type"
+            [value]="option.selected"
+            class="mr-1"
+            size="large"
+        >
+            {{ option.name | translate }}
+        </nx-tag>
+    </div>
+</div>
+
+<div class="mb-1 d-inline-flex align-items-center">
+    <span>Filter tags</span>
+    <button
+        class="btn btn-primary ml-3"
+        (click)="addMoreFilters()"
+    >
+        Add More
+    </button>
+</div>
+
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <nx-filter-tags [filters]="filters"></nx-filter-tags>
+</div>
+
+<div>Current filters: {{ filters | json }}</div>

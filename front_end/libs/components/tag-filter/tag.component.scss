@@ -1,0 +1,14 @@
+.filter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+
+    nx-tag {
+        &:first-child {
+            margin-left: 8px;
+        }
+        &:last-child {
+            margin-right: 8px;
+        }
+    }
+}

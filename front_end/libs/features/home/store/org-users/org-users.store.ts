@@ -61,6 +61,7 @@ const initialState: OrgUsersState = {
     selectedUser: '',
     groups: [],
     searchQuery: '',
+    searchFilters: {},
     refreshUsersSubject: new Subject(),
 };
 
@@ -158,9 +159,36 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
     }));
 };
 
+function getUsersByFilters(
+    records: OrgUser[] | undefined,
+    filters: Record<string, string>,
+): OrgUser[] {
+    if (records) {
+        return records.filter(user => {
+            return (
+                (filters.email && caseInsensitiveSearch(user.email, filters.email)) ||
+                (filters.name && caseInsensitiveSearch(user.fullName, filters.name)) ||
+                (filters.role &&
+                    user.roles?.some(role => caseInsensitiveSearch(role, filters.role))) ||
+                (filters.folder &&
+                    user.groupRoles?.some(role => caseInsensitiveSearch(role.name, filters.folder)))
+            );
+        });
+    }
+    return [];
+}
+
 function getUsersByModel(records: OrgUser[] | undefined, query: string): OrgUser[] {
     if (records) {
-        return records.filter(user => caseInsensitiveSearch(user.email, query));
+        return records.filter(user => {
+            return (
+                query &&
+                (caseInsensitiveSearch(user.email, query) ||
+                    caseInsensitiveSearch(user.fullName, query) ||
+                    user.roles?.some(role => caseInsensitiveSearch(role, query)) ||
+                    user.groupRoles?.some(role => caseInsensitiveSearch(role.name, query)))
+            );
+        });
     }
     return [];
 }
@@ -536,6 +564,8 @@ export const OrgUsersStore = signalStore(
                 ),
             ),
             setSearchQuery: search => patchState(store, { searchQuery: search }),
+            setSearchFilters: filters => patchState(store, { searchFilters: filters }),
+            clearSearchFilters: () => patchState(store, { searchQuery: '', searchFilters: {} }),
             usersByGroupSignalFactory: (groupId?: string) => {
                 if (!groupId) {
                     groupId = routerStateStore.organizationId();
@@ -588,17 +618,31 @@ export const OrgUsersStore = signalStore(
             store.setGroups(toObservable(groupsStore.currentGroups$$));
         },
     }),
-    withComputed(({ searchQuery: searchQuery$$, currentGroupUsersEntities: entities$$ }) => ({
-        filteredRecords$$: computed(() => {
-            const records = entities$$().sort(alphaNumericSort(record => record.email));
-            const search = searchQuery$$();
-            if (!records) {
-                return undefined; // avoid showing "No data" msg.
-            } else if (search.length) {
-                return getUsersByModel(records, search) as UserRecord[];
-            } else {
-                return records as UserRecord[];
-            }
+    withComputed(
+        ({
+            searchQuery: searchQuery$$,
+            searchFilters: searchFilters$$,
+            currentGroupUsersEntities: entities$$,
+        }) => ({
+            filteredRecords$$: computed(() => {
+                if (!entities$$().length) {
+                    return undefined; // avoid showing "No data" msg.
+                }
+
+                const records = entities$$().sort(alphaNumericSort(record => record.email));
+                const search = searchQuery$$();
+                const filters = searchFilters$$() as Record<string, string>;
+                let filteredRecords: OrgUser[] = records;
+
+                if (Object.keys(filters).length) {
+                    filteredRecords = getUsersByFilters(filteredRecords, filters);
+                }
+                if (search.length) {
+                    filteredRecords = getUsersByModel(filteredRecords, search);
+                }
+
+                return filteredRecords as UserRecord[];
+            }),
         }),
-    })),
+    ),
 );
