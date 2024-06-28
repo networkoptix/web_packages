@@ -15,7 +15,7 @@ export const generateRoute = ({
     }
 
     if (subChannelId) {
-        segments.push('subchannels', subChannelId);
+        segments.push('subChannel', subChannelId);
     }
 
     if (organizationId) {

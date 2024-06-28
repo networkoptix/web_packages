@@ -30,7 +30,7 @@ export class NxChannelPartnersService {
             partnerId: params.partnerId,
             groupId: params.groupId,
             email: params.email,
-            subchannelId: params.subchannelId,
+            subChannelId: params.subChannelId,
         },
         queryParams: {
             openGroups: queryParams.openGroups,

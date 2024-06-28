@@ -63,9 +63,9 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     searchModel: SearchFilter = { query: '' };
     currentPartnerId$: Observable<string>;
     currentPartnerId$$: Signal<string | undefined>;
-    subchannelId$: Observable<string>;
+    subChannelId$: Observable<string>;
     selectedCount = 0;
-    totalRecords: number;
+    totalRecords: number = 0;
 
     @ViewChild(NxChannelPartnersUsersTableComponent)
     channelPartnersUsersTable!: NxChannelPartnersUsersTableComponent;
@@ -80,14 +80,14 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         );
         this.currentPartnerId$$ = toSignal(this.currentPartnerId$);
 
-        this.subchannelId$ = this.CPService.paramStateHandler.state$.pipe(
-            map(({ params: { subchannelId } }) => subchannelId),
+        this.subChannelId$ = this.CPService.paramStateHandler.state$.pipe(
+            map(({ params: { subChannelId } }) => subChannelId),
             distinctUntilChanged(),
         );
     }
 
     ngOnInit(): void {
-        const currentItem = this.inSubchannel ? this.subchannelId$ : this.currentPartnerId$;
+        const currentItem = this.inSubchannel ? this.subChannelId$ : this.currentPartnerId$;
         currentItem
             .pipe(
                 take(1),
@@ -102,7 +102,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
             )
             .subscribe(records => {
                 this.channelPartnerUsersStore.setRecords(records);
-                this.totalRecords = this.channelPartnerUsersStore.filteredRecords$$().length;
+                this.totalRecords = this.channelPartnerUsersStore.filteredRecords$$()?.length;
             });
     }
 
@@ -111,7 +111,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         if (this.inSubchannel) {
             this.CPService.paramStateHandler.state$
                 .pipe(
-                    map(({ params }) => params.subchannelId),
+                    map(({ params }) => params.subChannelId),
                     take(1),
                 )
                 .subscribe(id => {
