@@ -94,6 +94,38 @@
     }
 }
 
+.session-alert-ribbon {
+    border-bottom: 1px solid var(--ribbon-alert-border);
+    background-color: var(--ribbon-alert-bg) !important;
+    
+
+    .message {
+        color: var(--ribbon-alert-color);
+
+        &-content {
+            justify-content: space-between;
+            a {
+                text-decoration: none;
+            }
+        }
+        .action-link {
+            cursor: pointer;
+
+            &:hover {
+                opacity: .8;
+            }
+
+            span {
+                color: var(--ribbon-alert-color);
+            }
+
+            svg * {
+                stroke: var(--ribbon-alert-color);
+            }
+        }
+    }
+}
+
 .groups-error-ribbon {
     @include typography.regular12nocolor;
     border-bottom: 1px solid var(--CP-error-ribbon-border);

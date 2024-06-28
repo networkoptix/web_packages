@@ -1608,7 +1608,9 @@
             "installButton": "Refresh to Update"
         },
         "systemOffline": "System is offline. Some settings may not be available.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "This system is currently involved in a merge operation.",
+        "sessionTruncated": "Your session will expire in {count, plural, one{less than a minute} other{# minutes}}",
+        "reauthenticate": "Re-authenticate"
     },
     "search": {
         "All": "All",

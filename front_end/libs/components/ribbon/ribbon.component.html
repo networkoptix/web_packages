@@ -78,6 +78,33 @@
                 </div>
             </div>
         }
+        @case ('session-expiring-alert') {
+            <div class="clearfix session-alert-ribbon ribbon">
+                <div class="message">
+                    <div class="message-content">
+                        <div class="message-content-wrapper">
+                            <div
+                                [innerHTML]="message | nxTranslate"
+                                data-testid="systemMessage"
+                            ></div>
+                        </div>
+                        <div
+                            *ngIf="actions[0].type === 'button'"
+                            (click)="actions[0].value()"
+                            class="action-link"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirTextButtons + 'reload.svg'"
+                                [svgStyle]="{ 'height.px': '20' }"
+                                title="Reload"
+                            ></svg-icon>
+                            <span>{{ actions[0].text | nxTranslate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         @default {
             <div class="clearfix ribbon">
                 <div

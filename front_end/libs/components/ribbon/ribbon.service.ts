@@ -18,6 +18,8 @@ export class NxRibbonService {
         actions: [],
     };
 
+    forceShow = false;
+
     contextSubject = new BehaviorSubject(this.context);
 
     constructor(
@@ -57,6 +59,9 @@ export class NxRibbonService {
     }
 
     hide(): void {
+        if (this.forceShow) {
+            return;
+        }
         this.context = {
             visibility: false,
             message: '',

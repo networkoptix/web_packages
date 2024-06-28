@@ -15,7 +15,13 @@ interface RibbonLinkAction {
     external?: boolean;
 }
 
-export type RibbonAction = RibbonProcessAction | RibbonLinkAction;
+interface RibbonButtonAction {
+    type: 'button';
+    text: Translatable;
+    value: () => void;
+}
+
+export type RibbonAction = RibbonProcessAction | RibbonLinkAction | RibbonButtonAction;
 
 export interface RibbonContext {
     visibility: boolean;

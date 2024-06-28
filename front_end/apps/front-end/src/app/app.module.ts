@@ -61,6 +61,7 @@ import { initializeApp } from '@pages/push-notifications/push-notifications.modu
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
+import { NxSessionTruncatedBannerService } from '@services/session-truncated-banner.service';
 import { NxSwPromptUpdateService } from '@services/sw-prompt-update.service';
 import { TosService } from '@services/tos.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
@@ -241,5 +242,6 @@ export class AppModule {
     constructor(
         // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
         nxSwPromptUpdateService: NxSwPromptUpdateService,
+        nxSessionTruncatedBannerService: NxSessionTruncatedBannerService,
     ) {}
 }
