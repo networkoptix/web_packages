@@ -25,6 +25,7 @@ export type OrgUsersState = {
     selectedUser: string;
     groups: GroupItem[];
     searchQuery: string;
+    searchFilters: object;
     /**
      * Notifier for when users should be refreshed.
      *

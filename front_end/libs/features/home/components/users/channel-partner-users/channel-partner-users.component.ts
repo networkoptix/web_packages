@@ -1,8 +1,19 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, Signal, ViewChild } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    inject,
+    Input,
+    OnInit,
+    signal,
+    Signal,
+    untracked,
+    ViewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
@@ -11,6 +22,8 @@ import { take } from 'rxjs/operators';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
+import { NxFilterTagsComponent } from '@components/tag-filter/tag.component';
+import { UserFilter } from '@dialogs/channel-partners/filter-users/filter-users.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
@@ -21,8 +34,7 @@ import { icons } from '@static-variables';
 import { NxChannelPartnersUsersTableComponent } from '../../users-tables/channel-partner-users-table/channel-partner-users-table.component';
 
 import { ChannelPartnerUsersStore } from './channel-partner-users.store';
-import type { UserRecord } from './channel-partner-users.types';
-import { UserType } from './channel-partner-users.types';
+import { UserRecord, UserType } from './channel-partner-users.types';
 
 const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
     return {
@@ -51,6 +63,7 @@ const mapCpUser = (user: ChannelPartnerUser): UserRecord => {
         NxResizeObserver,
         NxSearchComponent,
         NxPreLoaderComponent,
+        NxFilterTagsComponent,
     ],
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
@@ -59,7 +72,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     channelPartnerUsersStore = inject(ChannelPartnerUsersStore);
     Router = inject(Router);
 
-    @Input() inSubchannel: boolean = false;
+    @Input() inSubChannel: boolean = false;
     searchModel: SearchFilter = { query: '' };
     currentPartnerId$: Observable<string>;
     currentPartnerId$$: Signal<string | undefined>;
@@ -70,9 +83,33 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     @ViewChild(NxChannelPartnersUsersTableComponent)
     channelPartnersUsersTable!: NxChannelPartnersUsersTableComponent;
 
+    filters$$ = signal<UserFilter[]>([]);
+
+    searchFilters$$ = computed<Record<string, unknown>>(() => {
+        const filters = this.filters$$();
+        if (!filters) {
+            return {};
+        }
+        const searchFilters: Record<string, unknown> = {};
+        filters.forEach(filter => {
+            if (filter.selected) {
+                searchFilters[filter.group] = filter.value;
+            }
+        });
+        return searchFilters;
+    });
+    updateSearchEffect = effect(() => {
+        this.filters$$();
+        untracked(() => {
+            this.channelPartnerUsersStore.setSearchFilters(this.searchFilters$$());
+        });
+    });
+
     constructor(
+        private route: ActivatedRoute,
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
+        private dialogs: NxDialogsService,
     ) {
         this.currentPartnerId$ = this.CPService.paramStateHandler.state$.pipe(
             map(({ params: { partnerId } }) => partnerId),
@@ -87,7 +124,12 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const currentItem = this.inSubchannel ? this.subChannelId$ : this.currentPartnerId$;
+        const searchParam = this.route.snapshot.queryParamMap.get('search') || '';
+
+        this.searchModel.query = searchParam;
+        this.setQuery(this.searchModel);
+
+        const currentItem = this.inSubChannel ? this.subChannelId$ : this.currentPartnerId$;
         currentItem
             .pipe(
                 take(1),
@@ -108,7 +150,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
 
     newUserDialog(id?: string): void {
         const partnerId = id || this.currentPartnerId$$();
-        if (this.inSubchannel) {
+        if (this.inSubChannel) {
             this.CPService.paramStateHandler.state$
                 .pipe(
                     map(({ params }) => params.subChannelId),
@@ -143,5 +185,36 @@ export class NxChannelPartnerUsersComponent implements OnInit {
 
     updateSelectedCount(count: number): void {
         this.selectedCount = count;
+    }
+
+    setQuery(model: SearchFilter): void {
+        this.channelPartnerUsersStore.setSearchQuery(model.query);
+    }
+
+    filterRecords(): void {
+        this.dialogs.filterUsers(null).then(filters => {
+            this.filters$$.update(() => filters);
+        });
+    }
+
+    updateFilters({
+        idx,
+        value,
+        remove = false,
+    }: {
+        idx: number;
+        value: boolean;
+        remove?: boolean;
+    }): void {
+        this.filters$$.update(filters => {
+            const newFilters: UserFilter[] = [...filters];
+            if (remove) {
+                newFilters.splice(idx, 1);
+            } else {
+                newFilters[idx].selected = value;
+            }
+
+            return newFilters;
+        });
     }
 }

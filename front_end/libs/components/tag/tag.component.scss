@@ -8,7 +8,6 @@ a {
 }
 
 .close-button {
-    border-radius: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,13 +40,13 @@ a {
         position: relative;
     }
 
-       &.medium {
-            @include typography.regular11nocolor;
-            height: 1.5rem !important;
-            line-height: 1.5rem !important;
-            padding: 0 8px;
-            border-radius: 6px;
-            position: relative;
+    &.medium {
+        @include typography.regular11nocolor;
+        height: 1.5rem !important;
+        line-height: 1.5rem !important;
+        padding: 0 8px;
+        border-radius: 6px;
+        position: relative;
     }
 }
 
@@ -81,6 +80,21 @@ a {
         position: absolute;
         right: 0;
         top: 0;
+        height: 20px;
+        border-radius: 2px;
+    }
+
+    &.large {
+        .close-button {
+            height: 32px;
+        }
+    }
+
+    &.medium {
+        .close-button {
+            height: 24px;
+            border-radius: 6px;
+        }
     }
 }
 
@@ -148,6 +162,21 @@ $opacity in $nx-theme-colors {
             position: absolute;
             right: 0;
             top: 0;
+            height: 20px;
+            border-radius: 2px;
+        }
+
+        &.large {
+            .close-button {
+                height: 32px;
+            }
+        }
+
+        &.medium {
+            .close-button {
+                height: 24px;
+                border-radius: 6px;
+            }
         }
     }
 }

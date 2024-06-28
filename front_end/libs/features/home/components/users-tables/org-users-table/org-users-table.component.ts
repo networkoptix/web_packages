@@ -1,10 +1,11 @@
-import { Component, Output, computed, input } from '@angular/core';
+import { Component, Output, computed } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
@@ -26,6 +27,7 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxCheckAllContainerDirective,
         NxCheckAllDirective,
         NxSelectV2Module,
+        NxSearchHighlightComponent,
         NxTooltipV2Directive,
         NgxTranslateCutModule,
     ],
@@ -61,7 +63,13 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         return roles;
     });
 
-    searching = input.required<boolean>();
+    searching$$ = computed(
+        () =>
+            !!this.orgUsersStore.searchQuery() ||
+            Object.keys(this.orgUsersStore.searchFilters()).length,
+    );
+    searchingQuery$$ = computed(() => this.orgUsersStore.searchQuery());
+
     currentGroupId$$ = computed(() => this.groupsStore.currentGroupId$$()?.id);
     inGroup$$ = computed(() => this.currentGroupId$$() !== this.currentOrg$$().id);
     canManageUsers$$ = computed(() => this.permissionStore.canViewOrgUsers$$());

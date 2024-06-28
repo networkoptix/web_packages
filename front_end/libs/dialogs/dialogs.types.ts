@@ -5,6 +5,7 @@ import type { Observable } from 'rxjs';
 
 import type { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
 import type { SELECTION_DATE_RANGE } from '@components/nx-webgl-canvas/services/webgl.types';
+import { UserFilter } from '@dialogs/channel-partners/filter-users/filter-users.types';
 import type { OrgUser } from '@pages/home/store/org-users/org-users.types';
 import type { Bookmark, BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import type { Row } from '@pages/systems/services/services.types';
@@ -160,6 +161,7 @@ export type EditPartnerUser = DialogType<
     { channelPartner: string; user: ChannelPartnerUser },
     ChannelPartnerUser
 >;
+export type FilterUsers = DialogType<void, UserFilter[]>;
 export type AddOrganization = DialogType<string, Organization>;
 export type EditOrganization = DialogType<Organization, Organization>;
 export type AddOrgUser = DialogType<string, OrganizationUser>;

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { ChannelPartnerUsersStore } from '@pages/home/components/users/channel-partner-users/channel-partner-users.store';
@@ -33,6 +34,7 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxSelectV2Module,
         NxCheckAllContainerDirective,
         NxCheckAllDirective,
+        NxSearchHighlightComponent,
     ],
 })
 export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirective {
@@ -62,6 +64,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     searching = input.required<boolean>();
+    searchingQuery$$ = computed(() => this.channelPartnerUsersStore.searchQuery());
 
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$() || 0);
     selectedUsers$$ = computed(
