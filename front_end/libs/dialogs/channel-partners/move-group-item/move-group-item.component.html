@@ -1,43 +1,32 @@
-<form #moveGroupItemForm="ngForm">
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            Move to
-        </h1>
-        @if (closable) {
-            <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                (click)="close()"
-            >
-                <span class="close-content"></span>
-            </button>
-        }
-    </div>
-    <div class="modal-body">
-        <nx-org-tree-selector-v0
-            name="targetFolder"
-            #targetFolder="ngModel"
-            [model]="targetFolder"
-            [statuses]="orgTreeStatuses"
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+        >Move to</span
+    >
+    @if (closable) {
+        <button
+            type="button"
+            class="nx-modal__header-close-btn"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        ></button>
+    }
+</div>
+<form
+    class="nx-modal__content"
+    [formGroup]="formGroup"
+>
+    <div class="nx-modal__body">
+        <nx-org-tree-selector
+            formControlName="folder"
             [organization]="organization"
             [groups]="groups"
-            [ngModel]="selectedFolder()"
-            (ngModelChange)="selectedFolder.set($event)"
-        ></nx-org-tree-selector-v0>
+            [statuses]="orgTreeStatuses"
+        ></nx-org-tree-selector>
     </div>
-    <div class="modal-footer">
-        <nx-async-action-button
-            [action]="moveGroupItemAction"
-            [(busy)]="busy"
-            noInvalidFirstSubmit
-        >
-            {{ 'Move' | translate }}
-        </nx-async-action-button>
+    <div class="nx-modal__footer">
         <button
             type="button"
             class="btn btn-default"
@@ -47,5 +36,12 @@
         >
             Cancel
         </button>
+        <nx-async-action-button
+            [action]="moveItemAction"
+            [(busy)]="busy"
+            noInvalidFirstSubmit
+        >
+            {{ 'Move' | translate }}
+        </nx-async-action-button>
     </div>
 </form>

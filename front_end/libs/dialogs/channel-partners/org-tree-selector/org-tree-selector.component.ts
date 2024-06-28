@@ -1,14 +1,17 @@
 import { CdkStepper } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     OnInit,
     Optional,
+    SkipSelf,
     ViewChild,
     forwardRef,
     input,
+    signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -66,10 +69,13 @@ import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validator, OnInit {
+export class NxOrgTreeSelectorComponent
+    implements ControlValueAccessor, Validator, OnInit, AfterViewInit
+{
     icons = icons;
 
     @ViewChild('orgTreeSearch') private orgTreeSearch: ElementRef<HTMLInputElement>;
+    @ViewChild('orgTreeWrapper') private orgTreeWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('orgTreeList') private orgTreeList: ElementRef<HTMLUListElement>;
 
     organization = input.required<Organization>();
@@ -78,6 +84,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     selected: string;
 
+    private maxDepth = 0;
     private flatGroups: OrgTreeItem[] = [];
     private groupInfoMap = new Map<
         string,
@@ -89,7 +96,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     folderSearch: string = '';
     searchRegex: RegExp | null = null;
-    folderSearchResults: OrgTreeItem[];
+    folderSearchResults = signal<OrgTreeItem[]>([]);
 
     highlightIndex: number = -1;
     private lastVisibleIndex: number | null = null;
@@ -142,7 +149,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
                     const folderElem = this.orgTreeList.nativeElement.querySelector<HTMLLIElement>(
                         '.org-tree__item--' + this.highlightIndex.toString(),
                     )!;
-                    scrollItemIntoView(folderElem, this.orgTreeList.nativeElement);
+                    scrollItemIntoView(folderElem, this.orgTreeWrapper.nativeElement);
                 });
             }
             this.initialized = true;
@@ -159,7 +166,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         this.onTouched = fn;
     }
 
-    constructor(@Optional() stepper: CdkStepper | null) {
+    constructor(@SkipSelf() @Optional() stepper: CdkStepper | null) {
         stepper?.selectionChange.pipe(takeUntilDestroyed()).subscribe(() => {
             this.closeTooltip();
         });
@@ -170,10 +177,10 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
         });
-        this.folderSearchResults = this.flatGroups;
+        this.folderSearchResults.set(this.flatGroups);
 
         // Opens all folders for easier testing
-        // this.folderSearchResults.forEach(g => {
+        // this.folderSearchResults().forEach(g => {
         //     this.visibleFolders.add(g.id);
         //     this.openFolders.add(g.id);
         // });
@@ -181,11 +188,28 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         this.updateLastVisible();
     }
 
+    horizontalScroll = signal(false);
+    ngAfterViewInit(): void {
+        /* Default is to truncate long names with ellipses, but if the nesting
+        is deep enough that the deepest level won't have 100px of space for text
+        switch to horizontal scrolling with full names instead */
+
+        /* Manually account for scrollbar since it might not be present */
+        const offsetWidth = this.orgTreeWrapper.nativeElement.offsetWidth - 8;
+        const horizontalMargins = (5 + 5) * 2;
+        const icons = 25 * 3;
+        const leftTextMargin = 5;
+        const textSpace =
+            offsetWidth - horizontalMargins - icons - leftTextMargin - 25 * this.maxDepth;
+        this.horizontalScroll.set(textSpace < 100);
+    }
+
     private parseGroup(item: GroupItem, level: number, parent: string | null): void {
         const { id, name } = item;
         const children: string[] = [];
         this.groupInfoMap.set(id, { name, parent, children });
         this.flatGroups.push({ id, name, level, hasChildren: !!item.children.length });
+        this.maxDepth = Math.max(this.maxDepth, level);
         item.children.forEach(g => {
             children.push(g.id);
             this.parseGroup(g, level + 1, id);
@@ -215,7 +239,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         if (this.highlightIndex === -1) {
             this.selectFolder(this.organization().id);
         } else {
-            this.selectFolder(this.folderSearchResults[this.highlightIndex].id);
+            this.selectFolder(this.folderSearchResults()[this.highlightIndex].id);
         }
     }
 
@@ -251,7 +275,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
             return;
         }
 
-        const highlightedId = this.folderSearchResults[this.highlightIndex].id;
+        const highlightedId = this.folderSearchResults()[this.highlightIndex].id;
         if (!this.groupInfoMap.get(highlightedId)!.children.length) {
             return;
         }
@@ -280,12 +304,12 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     }
 
     private updateLastVisible(): void {
-        if (!this.folderSearchResults.length) {
+        if (!this.folderSearchResults().length) {
             this.lastVisibleIndex = null;
             return;
         }
-        let i = this.folderSearchResults.length - 1;
-        while (!this.visibleFolders.has(this.folderSearchResults[i].id)) {
+        let i = this.folderSearchResults().length - 1;
+        while (!this.visibleFolders.has(this.folderSearchResults()[i].id)) {
             i -= 1;
         }
         this.lastVisibleIndex = i;
@@ -294,14 +318,14 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     up(): void {
         this.closeTooltip();
         if (this.highlightIndex === -1) {
-            if (this.folderSearchResults.length) {
+            if (this.folderSearchResults().length) {
                 this.highlightLast();
             }
         } else if (this.highlightIndex === 0) {
             this.highlightOrgItem();
         } else {
             let i = this.highlightIndex - 1;
-            while (!this.visibleFolders.has(this.folderSearchResults[i].id)) {
+            while (!this.visibleFolders.has(this.folderSearchResults()[i].id)) {
                 i -= 1;
             }
             this.highlightFolderIndex(i);
@@ -311,14 +335,14 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
     down(): void {
         this.closeTooltip();
         if (this.highlightIndex === -1) {
-            if (this.folderSearchResults.length) {
+            if (this.folderSearchResults().length) {
                 this.highlightFolderIndex(0);
             }
         } else if (this.highlightIndex === this.lastVisibleIndex) {
             this.highlightOrgItem();
         } else {
             let i = this.highlightIndex + 1;
-            while (!this.visibleFolders.has(this.folderSearchResults[i].id)) {
+            while (!this.visibleFolders.has(this.folderSearchResults()[i].id)) {
                 i += 1;
             }
             this.highlightFolderIndex(i);
@@ -327,7 +351,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
     private highlightOrgItem(): void {
         this.highlightIndex = -1;
-        this.orgTreeList.nativeElement.scrollTop = 0;
+        this.orgTreeWrapper.nativeElement.scrollTop = 0;
     }
 
     private highlightFolderIndex(index: number): void {
@@ -339,16 +363,18 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
 
         if (index === this.lastVisibleIndex) {
             // Bottom out if going to last element
-            this.orgTreeList.nativeElement.scrollTop = this.orgTreeList.nativeElement.scrollHeight;
+            this.orgTreeWrapper.nativeElement.scrollTop =
+                this.orgTreeWrapper.nativeElement.scrollHeight;
         } else {
-            scrollItemIntoView(folder, this.orgTreeList.nativeElement);
+            scrollItemIntoView(folder, this.orgTreeWrapper.nativeElement);
         }
     }
 
     private highlightLast(): void {
         if (this.lastVisibleIndex !== null) {
             this.highlightIndex = this.lastVisibleIndex;
-            this.orgTreeList.nativeElement.scrollTop = this.orgTreeList.nativeElement.scrollHeight;
+            this.orgTreeWrapper.nativeElement.scrollTop =
+                this.orgTreeWrapper.nativeElement.scrollHeight;
         } else {
             this.highlightOrgItem();
         }
@@ -359,7 +385,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
         this.closeTooltip();
         this.highlightIndex = -1;
         if (!search.trim()) {
-            this.folderSearchResults = this.flatGroups;
+            this.folderSearchResults.set(this.flatGroups);
             this.searchRegex = null;
             this.updateLastVisible();
             return;
@@ -417,7 +443,7 @@ export class NxOrgTreeSelectorComponent implements ControlValueAccessor, Validat
             }
         }
 
-        this.folderSearchResults = results;
+        this.folderSearchResults.set(results);
         this.updateLastVisible();
     }
 

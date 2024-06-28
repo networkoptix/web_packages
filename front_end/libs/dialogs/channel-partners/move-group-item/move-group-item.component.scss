@@ -1,0 +1,7 @@
+@use '../../nx-modal.scss';
+
+:host {
+    nx-org-tree-selector {
+        height: 300px;
+    }
+}
