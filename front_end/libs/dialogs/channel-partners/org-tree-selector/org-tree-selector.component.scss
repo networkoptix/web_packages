@@ -3,39 +3,61 @@
 :host {
     display: flex;
     flex-direction: column;
+}
 
-    .input-wrapper {
-        position: relative;
+.input-wrapper {
+    position: relative;
+    margin-bottom: 0.5rem;
 
-        .icon-search {
-            position: absolute;
-            left: 6px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        #org-tree-search {
-            padding-left: 32px !important;
-        }
+    .icon-search {
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
+    #org-tree-search {
+        padding-left: 32px !important;
+    }
+}
+
+.tree-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &--horizontal-scroll {
+        overflow-x: auto;
+    }
 
     .org-tree {
         position: relative; // This is required for item autoscrolling
-        min-width: 100px;
-        width: 100%;
         padding: 5px;
         margin-bottom: 0;
+        min-width: 100%;
+        height: 100%;
 
-        overflow: auto;
+        display: flex;
+        @at-root .tree-wrapper--horizontal-scroll .org-tree {
+            display: inline-flex;
+        }
+        flex-direction: column;
 
         #org-item {
-            svg-icon.org-icon svg path {
+            svg path {
                 fill: var(--dropdown-item-color);
             }
             &.org-tree__item--selected {
-                svg-icon.org-icon svg path {
+                svg path {
                     fill: var(--dropdown-item-selected-color);
+                }
+            }
+            &.org-tree__item--disabled {
+                cursor: default;
+
+                // Color wasn't provided in figma  ¯\_(ツ)_/¯
+                color: #414a4f;
+                svg path {
+                    fill: #414a4f;
                 }
             }
         }
@@ -64,26 +86,25 @@
                 color: var(--dropdown-item-hover-color);
             }
 
-            &.org-tree__item--disabled {
-                cursor: auto;
-
-                // Color wasn't provided in figma  ¯\_(ツ)_/¯
-                color: #414a4f;
-                .org-tree__arrow-btn svg path {
-                    stroke: #414a4f;
-                }
-                svg.folder path {
-                    fill: #414a4f;
-                }
-            }
-
-            // Extra specificity to override :hover
             &.org-tree__item--selected {
                 background-color: var(--dropdown-item-selected-bg);
                 color: var(--dropdown-item-selected-color);
             }
 
-            span {
+            &.org-tree__item--disabled {
+                cursor: default;
+
+                // Color wasn't provided in figma  ¯\_(ツ)_/¯
+                color: #414a4f;
+                svg path {
+                    fill: #414a4f;
+                }
+            }
+
+            &-text {
+                text-overflow: ellipsis;
+                min-width: 0;
+                overflow: hidden;
                 margin-inline-end: 5px;
                 user-select: none;
                 margin-inline-start: 5px;
@@ -92,22 +113,25 @@
             }
 
             svg-icon.status-icon {
+                display: flex;
                 margin-inline-start: auto;
-
-                // Override for global
-                // https://gitlab.nxvms.dev/dev/cloud_portal/-/blob/635495e004d60fc7088fac072f6a060b3e1e5442/front_end/common/styles/common/_icons.scss#L72
-                svg .error {
-                    fill: var(--error);
-                }
             }
         }
 
         &__arrow-btn {
+            flex-shrink: 0;
             height: 25px;
             width: 25px;
             padding: 0;
             background: none;
             border-radius: 2px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg-icon {
+                display: flex;
+            }
 
             &:hover {
                 background: var(--btn-dropdown-toggle-hover-bg);
@@ -115,8 +139,13 @@
         }
 
         &__no-arrow-spacer {
+            flex-shrink: 0;
             height: 25px;
             width: 25px;
         }
+    }
+
+    .no-results-placeholder {
+        margin-inline-start: 4px;
     }
 }

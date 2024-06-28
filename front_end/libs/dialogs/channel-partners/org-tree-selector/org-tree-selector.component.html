@@ -6,7 +6,7 @@
         (ngModelChange)="searchGroups($event)"
         type="text"
         spellcheck="false"
-        class="form-control mb-1"
+        class="form-control"
         name="orgTreeSearch"
         id="org-tree-search"
         autocomplete="off"
@@ -19,123 +19,153 @@
         (blur)="onBlur()"
     />
 </div>
-<!-- The behavior here is sort of like an autocomplete dropdown, but always open.
-We block the default left/right/up/down behavior of an input and instead have it
-navigate the tree, so that users can search and nav at the same time.  -->
-
-<!-- Ignoring mousedown keeps the focus in input -->
-<ul
-    #orgTreeList
-    class="org-tree"
-    (mousedown)="$event.preventDefault(); focus()"
-    (scroll)="closeTooltip()"
+<div
+    #orgTreeWrapper
+    class="tree-wrapper"
+    [class.tree-wrapper--horizontal-scroll]="horizontalScroll()"
 >
-    <!-- Org itself has index of -1 since it's separate from the folders, but
-    still highlightable -->
-    <li
-        #orgItem
-        id="org-item"
-        *ngrxLet="statuses()?.get(organization().id) as status"
-        class="org-tree__item"
-        [ngClass]="{
-            'org-tree__item--highlight': highlightIndex === -1,
-            'org-tree__item--selected': selected === organization().id
-        }"
-        (click)="selectFolder(organization().id, -1)"
-    >
-        <svg-icon
-            class="org-icon"
-            [src]="icons.dirTextButtons + 'organization.svg'"
-            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-        ></svg-icon>
-        <span>{{ organization().name }}</span>
-        @if (status?.status === 'warn' && selected === organization().id) {
-            <ng-container
-                [ngTemplateOutlet]="warningIcon"
-                [ngTemplateOutletContext]="{ msg: status!.msg, id: organization().id }"
-            ></ng-container>
-        }
-    </li>
-    @for (group of folderSearchResults; track group.id; let i = $index) {
-        @if (visibleFolders.has(group.id)) {
+    @if (folderSearchResults().length) {
+        <!-- The behavior here is sort of like an autocomplete dropdown, but always open.
+        We block the default left/right/up/down behavior of an input and instead have it
+        navigate the tree, so that users can search and nav at the same time.  -->
+
+        <!-- Ignoring mousedown keeps the focus in input -->
+        <ul
+            #orgTreeList
+            class="org-tree"
+            (mousedown)="$event.preventDefault(); focus()"
+            (scroll)="closeTooltip()"
+        >
+            <!-- Org itself has index of -1 since it's separate from the folders, but
+            still highlightable -->
             <li
-                *ngrxLet="statuses()?.get(group.id) as status"
-                [ngStyle]="{
-                    paddingLeft: group.level * 25 + 'px'
-                }"
-                [class]="'org-tree__item' + ' ' + 'org-tree__item--' + i"
+                #orgItem
+                id="org-item"
+                *ngrxLet="statuses()?.get(organization().id) as status"
+                class="org-tree__item"
                 [ngClass]="{
-                    'org-tree__item--highlight': highlightIndex === i,
-                    'org-tree__item--selected': selected === group.id,
+                    'org-tree__item--highlight': highlightIndex === -1,
+                    'org-tree__item--selected': selected === organization().id,
                     'org-tree__item--disabled': status?.status === 'disable'
                 }"
-                (click)="selectFolder(group.id, i)"
+                (click)="selectFolder(organization().id, -1)"
             >
-                @if (group.hasChildren) {
-                    <div
-                        class="org-tree__arrow-btn"
-                        (click)="
-                            $event.stopPropagation(); toggleFolderOpen(group.id); highlightIndex = i
-                        "
-                    >
-                        <svg-icon
-                            [src]="
-                                icons.dirTextButtons +
-                                (openFolders.has(group.id) ? 'arrow_down.svg' : 'arrow_right.svg')
-                            "
-                            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                        ></svg-icon>
-                    </div>
-                } @else {
-                    <div class="org-tree__no-arrow-spacer"></div>
-                }
                 @if (status?.status === 'disable') {
                     <svg-icon
                         nxTooltipV2
                         [tooltipContent]="status!.msg"
                         [tooltipPositions]="['S', 'start']"
                         tooltipTheme="contrast"
-                        [tooltipOpen]="(tooltipTarget$ | async) === group.id"
-                        (tooltipComponentClick)="closeTooltip(group.id)"
-                        (tooltipOutsideClick)="closeTooltip(group.id)"
-                        [src]="
-                            icons.dir +
-                            (openFolders.has(group.id)
-                                ? 'ws_folder_open.svg'
-                                : 'ws_folder_close.svg')
-                        "
+                        [tooltipOpen]="(tooltipTarget$ | async) === organization().id"
+                        (tooltipComponentClick)="closeTooltip(organization().id)"
+                        (tooltipOutsideClick)="closeTooltip(organization().id)"
+                        [src]="icons.dirTextButtons + 'organization.svg'"
                         [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                        svgClass="folder"
                     ></svg-icon>
                 } @else {
                     <svg-icon
-                        [src]="
-                            icons.dir +
-                            (openFolders.has(group.id)
-                                ? 'ws_folder_open.svg'
-                                : 'ws_folder_close.svg')
-                        "
+                        [src]="icons.dirTextButtons + 'organization.svg'"
                         [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                        svgClass="folder"
                     ></svg-icon>
                 }
-                <span
-                    ><nx-search-highlight
-                        [text]="group.name"
-                        [search]="searchRegex"
-                    ></nx-search-highlight
-                ></span>
-
-                @if (status?.status === 'warn' && selected === group.id) {
+                <span class="org-tree__item-text">{{ organization().name }}</span>
+                @if (status?.status === 'warn' && selected === organization().id) {
                     <ng-container
                         [ngTemplateOutlet]="warningIcon"
-                        [ngTemplateOutletContext]="{ msg: status!.msg, id: group.id }"
+                        [ngTemplateOutletContext]="{ msg: status!.msg, id: organization().id }"
                     ></ng-container>
                 }
             </li>
-        }
+            @for (group of folderSearchResults(); track group.id; let i = $index) {
+                @if (visibleFolders.has(group.id)) {
+                    <li
+                        *ngrxLet="statuses()?.get(group.id) as status"
+                        [ngStyle]="{
+                            paddingLeft: group.level * 25 + 'px'
+                        }"
+                        [class]="'org-tree__item' + ' ' + 'org-tree__item--' + i"
+                        [ngClass]="{
+                            'org-tree__item--highlight': highlightIndex === i,
+                            'org-tree__item--selected': selected === group.id,
+                            'org-tree__item--disabled': status?.status === 'disable'
+                        }"
+                        (click)="selectFolder(group.id, i)"
+                    >
+                        @if (group.hasChildren) {
+                            <div
+                                class="org-tree__arrow-btn"
+                                (click)="
+                                    $event.stopPropagation();
+                                    toggleFolderOpen(group.id);
+                                    highlightIndex = i
+                                "
+                            >
+                                <svg-icon
+                                    [src]="
+                                        icons.dirTextButtons +
+                                        (openFolders.has(group.id)
+                                            ? 'arrow_open.svg'
+                                            : 'arrow_close.svg')
+                                    "
+                                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                                ></svg-icon>
+                            </div>
+                        } @else {
+                            <div class="org-tree__no-arrow-spacer"></div>
+                        }
+                        @if (status?.status === 'disable') {
+                            <svg-icon
+                                nxTooltipV2
+                                [tooltipContent]="status!.msg"
+                                [tooltipPositions]="['S', 'start']"
+                                tooltipTheme="contrast"
+                                [tooltipOpen]="(tooltipTarget$ | async) === group.id"
+                                (tooltipComponentClick)="closeTooltip(group.id)"
+                                (tooltipOutsideClick)="closeTooltip(group.id)"
+                                [src]="
+                                    icons.dir +
+                                    (openFolders.has(group.id)
+                                        ? 'ws_folder_open.svg'
+                                        : 'ws_folder_close.svg')
+                                "
+                                [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                            ></svg-icon>
+                        } @else {
+                            <svg-icon
+                                [src]="
+                                    icons.dir +
+                                    (openFolders.has(group.id)
+                                        ? 'ws_folder_open.svg'
+                                        : 'ws_folder_close.svg')
+                                "
+                                [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                            ></svg-icon>
+                        }
+                        <span class="org-tree__item-text"
+                            ><nx-search-highlight
+                                [text]="group.name"
+                                [search]="searchRegex"
+                            ></nx-search-highlight
+                        ></span>
+
+                        @if (status?.status === 'warn' && selected === group.id) {
+                            <ng-container
+                                [ngTemplateOutlet]="warningIcon"
+                                [ngTemplateOutletContext]="{ msg: status!.msg, id: group.id }"
+                            ></ng-container>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    } @else {
+        <span
+            class="no-results-placeholder"
+            translate
+            >Nothing found</span
+        >
     }
-</ul>
+</div>
 
 <ng-template
     #warningIcon

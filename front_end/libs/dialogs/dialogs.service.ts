@@ -416,12 +416,12 @@ export class NxDialogsService {
         },
     );
 
-    moveGroupItem = this.dialogV1Factory<Dt.MoveGroupItem>(
+    moveGroupItem = this.dialogV2Factory<Dt.MoveGroupItem>(
         () =>
             import('./channel-partners/move-group-item/move-group-item.component').then(
                 m => m.MoveGroupItemModalContent,
             ),
-        { width: '360px' },
+        { width: '360px', autoFocus: 'input' },
     );
 
     moveSystemItem = this.dialogV1Factory<Dt.MoveSystemItem>(
@@ -429,7 +429,7 @@ export class NxDialogsService {
             import('./channel-partners/move-system-item/move-system-item.component').then(
                 m => m.MoveSystemItemModalContent,
             ),
-        { width: '360px' },
+        { width: '360px', autoFocus: 'input' },
     );
 
     addOrgUserV2 = this.dialogV2Factory<Dt.AddOrgUserV2>(

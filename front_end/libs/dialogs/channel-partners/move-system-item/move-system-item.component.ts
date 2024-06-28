@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, Inject, WritableSignal, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -21,22 +21,24 @@ import { OrgTreeStatusMap } from '../org-tree-selector/org-tree-selector.types';
 
 @Component({
     selector: 'nx-modal-move-system-item-content',
-    templateUrl: 'move-system-item.component.html',
+    templateUrl: '../move-group-item/move-group-item.component.html',
+    styleUrl: '../move-group-item/move-group-item.component.scss',
     standalone: true,
     imports: [
-        NxAsyncActionButtonComponent,
-        FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
         NxOrgTreeSelectorComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
-    moveSystemItemAction: AsyncAction<CloudSystem>;
+    moveItemAction: AsyncAction<CloudSystem>;
 
     organization: Organization;
     groups: GroupItem[];
     orgTreeStatuses: OrgTreeStatusMap;
-    selectedFolder: WritableSignal<string>;
+    folderControl = new FormControl<string | null>(null);
+    formGroup = new FormGroup({ folder: this.folderControl });
 
     constructor(
         cpService: NxChannelPartnersService,
@@ -47,15 +49,10 @@ export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         this.organization = organization;
         this.groups = groups;
-        this.selectedFolder = signal(
-            item.groupId === null && groups.length ? groups[0].id : organization.id,
-        );
-        const itemId = item.groupId ?? item.organizationId;
-        // Try to avoid starting with error state
 
         this.orgTreeStatuses = new Map([
             [
-                itemId,
+                item.groupId ?? item.organizationId,
                 {
                     status: 'disable',
                     msg: translate.instant(LANG.dialogs.channelPartners.systemAlreadyInFolder),
@@ -63,10 +60,10 @@ export class MoveSystemItemModalContent extends ModalBase<DT['return']> {
             ],
         ]);
 
-        this.moveSystemItemAction = createAsyncAction({
+        this.moveItemAction = createAsyncAction({
             action: () => {
                 const groupId =
-                    this.selectedFolder() === organization.id ? null : this.selectedFolder();
+                    this.folderControl.value === organization.id ? null : this.folderControl.value;
                 return firstValueFrom(cpService.updateSystemGroup(item.systemId, { groupId }));
             },
             success: res => this.close(res),

@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, Inject, WritableSignal, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -16,27 +16,29 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import { NxOrgTreeSelectorV0Component } from '../org-tree-selector-v0/org-tree-selector.component';
-import type { OrgTreeStatuses } from '../org-tree-selector-v0/org-tree-selector.types';
+import { NxOrgTreeSelectorComponent } from '../org-tree-selector/org-tree-selector.component';
+import { OrgTreeStatusMap } from '../org-tree-selector/org-tree-selector.types';
 
 @Component({
     selector: 'nx-modal-move-group-item-content',
     templateUrl: 'move-group-item.component.html',
+    styleUrl: 'move-group-item.component.scss',
     standalone: true,
     imports: [
-        NxOrgTreeSelectorV0Component,
-        NxAsyncActionButtonComponent,
-        FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
+        NxOrgTreeSelectorComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
-    moveGroupItemAction: AsyncAction<Group>;
+    moveItemAction: AsyncAction<Group>;
 
     organization: Organization;
     groups: GroupItem[];
-    orgTreeStatuses: OrgTreeStatuses;
-    selectedFolder: WritableSignal<string>;
+    orgTreeStatuses: OrgTreeStatusMap;
+    folderControl = new FormControl<string | null>(null);
+    formGroup = new FormGroup({ folder: this.folderControl });
 
     constructor(
         cpService: NxChannelPartnersService,
@@ -47,11 +49,10 @@ export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         this.organization = organization;
         this.groups = groups;
-        this.selectedFolder = signal(organization.id);
 
-        const orgTreeStatuses: OrgTreeStatuses = new Map();
+        const orgTreeStatuses: OrgTreeStatusMap = new Map();
         const msg = translate.instant(LANG.dialogs.channelPartners.cannotMoveIntoSelf);
-        const status = { type: 'error' as const, msg };
+        const status = { status: 'disable' as const, msg };
         orgTreeStatuses.set(item.id, status);
         function recursivelySetChildren(groups: GroupItem[]): void {
             groups.forEach(g => {
@@ -62,10 +63,10 @@ export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
         recursivelySetChildren(item.children);
         this.orgTreeStatuses = orgTreeStatuses;
 
-        this.moveGroupItemAction = createAsyncAction({
+        this.moveItemAction = createAsyncAction({
             action: () => {
                 const parentId =
-                    this.selectedFolder() === organization.id ? null : this.selectedFolder();
+                    this.folderControl.value === organization.id ? null : this.folderControl.value;
                 return firstValueFrom(cpService.patchGroup(item.id, { parentId }));
             },
             success: res => this.close(res),
