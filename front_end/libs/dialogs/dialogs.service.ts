@@ -201,15 +201,10 @@ export class NxDialogsService {
         return this.openV1(component, dialogConfig);
     }
 
-    async apply(data: Dt.Apply['data']): Promise<Dt.Apply['return']> {
-        const component = await import('./apply/apply.component').then(m => m.ApplyModalContent);
-        const dialogConfig: DialogConfig<Dt.Apply['data']> = {
-            data: { ...data },
-            disableClose: true,
-            hasBackdrop: true,
-        };
-        return this.openV1(component, dialogConfig);
-    }
+    apply = this.dialogV1Factory<Dt.Apply>(
+        () => import('./apply/apply.component').then(m => m.ApplyModalContent),
+        { disableClose: true },
+    );
 
     message = this.dialogV1Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
