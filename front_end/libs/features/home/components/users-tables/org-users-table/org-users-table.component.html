@@ -120,9 +120,7 @@
                                 [search]="searchingQuery$$()"
                             ></nx-search-highlight>
                         } @else {
-                            <span>{{
-                                LANG.systemsCount | translate: { count: row.groupRoles.length }
-                            }}</span>
+                            {{ LANG.foldersCount | translate: { count: row.groupRoles.length } }}
                         }
                     }
                 </div>

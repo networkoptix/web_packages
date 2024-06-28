@@ -272,6 +272,7 @@ export const OrgUsersStore = signalStore(
                         folder: string,
                         user: { email: string; roleId: string },
                     ) => {
+                        const currentGroupId = store.selectedGroupId();
                         const isAddingToOrg = org.id === folder;
                         const groups = groupsStore.groupsEntities();
                         return iif(
@@ -327,7 +328,7 @@ export const OrgUsersStore = signalStore(
                                                 currentGroupUsersEntity,
                                             ),
                                         );
-                                    } else {
+                                    } else if (currentGroupId === folder) {
                                         patchState(
                                             store,
                                             addEntity(
@@ -441,7 +442,7 @@ export const OrgUsersStore = signalStore(
                     },
                     updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
                         const isGroupUser = !!folder && roleId !== OrgRoleIds.OrgAdmin;
-                        const isOrgUser = roleId === OrgRoleIds.OrgAdmin;
+                        const isOrgUser = roleId === OrgRoleIds.OrgAdmin || !folder;
                         iif(
                             () => isGroupUser,
                             chpService.updateGroupUser(folder, {
@@ -603,8 +604,8 @@ export const OrgUsersStore = signalStore(
                         updater$$.pipe(
                             switchMap(() => currentGroupEntities),
                             debounceTime(100),
-                            map((_, index) => [...state, true] as const),
-                            startWith([...state, false] as const),
+                            map((_, index) => [...state, !index] as const),
+                            startWith([...state, true] as const),
                         ),
                     ),
                     map(([{ email }, { groupId }, refreshUsers]) => {
