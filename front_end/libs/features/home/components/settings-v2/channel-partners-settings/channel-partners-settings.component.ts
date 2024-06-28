@@ -61,7 +61,7 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
 
     subChannelId$$ = toSignal(
         this.cpService.paramStateHandler.state$.pipe(
-            map(({ params: { subchannelId } }) => subchannelId),
+            map(({ params: { subChannelId } }) => subChannelId),
             distinctUntilChanged(),
         ),
     );

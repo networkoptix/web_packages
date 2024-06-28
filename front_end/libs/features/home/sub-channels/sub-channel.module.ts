@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { of, tap } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+import { NxReportsComponent } from '@pages/home/components/reports/reports.component';
+import { Mode } from '@pages/home/components/reports/reports.types';
 import { NxChannelPartnersSettingsComponent } from '@pages/home/components/settings-v2/channel-partners-settings/channel-partners-settings.component';
 import { cpTabGuard } from '@pages/home/resolvers/CP-tab-guard';
 import { withTabReporterResolver } from '@pages/home/resolvers/tab-id-reporter-resolver';
@@ -16,7 +18,7 @@ import * as CPSelectors from '@store/channel-partners/channel-partners.selectors
 const setParentPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     const partnerService = inject(NxChannelPartnersService);
     const store = inject(Store);
-    const id = route.params.subchannelId;
+    const id = route.params.subChannelId;
     return store.select(CPSelectors.selectChannelPartners).pipe(
         switchMap(partners => {
             const currentPartner = partners.find(partner => partner.id === id);
@@ -53,7 +55,7 @@ const setParentPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
 
 const subChannelRoutes: Routes = withTabReporterResolver([
     {
-        path: ':subchannelId',
+        path: ':subChannelId',
         canActivate: [setParentPartnerId],
         canDeactivate: [updateParentPartnerId],
         component: NxSubchannelComponent,
@@ -66,6 +68,14 @@ const subChannelRoutes: Routes = withTabReporterResolver([
                     subchannelSettings: true,
                 },
                 component: NxChannelPartnersSettingsComponent,
+            },
+            {
+                path: 'reports',
+                canActivate: [cpTabGuard],
+                data: {
+                    mode: Mode.Partner,
+                },
+                component: NxReportsComponent,
             },
             {
                 path: '**',

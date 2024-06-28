@@ -48,7 +48,7 @@ export class NxSubchannelComponent implements OnInit {
 
     @Input() currentTabRoute: string;
     currentSubchannel$ = this.route.params.pipe(
-        switchMap(({ subchannelId }) => this.store.select(selectSubchannelPartner(subchannelId))),
+        switchMap(({ subChannelId }) => this.store.select(selectSubchannelPartner(subChannelId))),
     );
     currentParent$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartnerParent);
     constructor(
@@ -58,12 +58,20 @@ export class NxSubchannelComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        const tabs: Tab[] = [];
+        if (this.permissionStore.canViewPartnerReports$$()) {
+            tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.reports,
+                route: 'reports',
+            });
+        }
         if (this.permissionStore.canViewPartnerSettings$$()) {
-            this.tabs.push({
+            tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.settings,
                 route: 'settings',
             });
         }
+        this.tabs = tabs;
     }
 
     toRoot(): Promise<boolean> {

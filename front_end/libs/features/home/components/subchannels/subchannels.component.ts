@@ -25,7 +25,10 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartner,
+    PartnerRoles,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { icons } from '@static-variables';
 import { caseInsensitiveSearch } from '@utils/general';
@@ -122,9 +125,13 @@ export class NxSubchannelsComponent {
     }
 
     handleChannelClick(id: string): Promise<boolean> {
-        const redirectUrl = this.channelPartners$$().find(partner => partner.id === id)
-            ? PartnerRedirect.toPartner(id)
-            : PartnerRedirect.toSubChannelPartner(id);
+        const redirectUrl =
+            !this.subchannels$$()
+                .find(partner => partner.id === id)
+                ?.ownPermissions?.includes(PartnerRoles.field_access_cp_accountant) &&
+            this.channelPartners$$().find(partner => partner.id === id)
+                ? PartnerRedirect.toPartner(id)
+                : PartnerRedirect.toSubChannelPartner(id);
         return this.router.navigate([redirectUrl]);
     }
 }

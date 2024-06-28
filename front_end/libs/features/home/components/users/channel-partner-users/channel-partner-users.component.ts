@@ -118,7 +118,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         this.currentPartnerId$$ = toSignal(this.currentPartnerId$);
 
         this.subChannelId$ = this.CPService.paramStateHandler.state$.pipe(
-            map(({ params: { subchannelId } }) => subchannelId),
+            map(({ params: { subChannelId } }) => subChannelId),
             distinctUntilChanged(),
         );
     }
@@ -153,7 +153,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         if (this.inSubChannel) {
             this.CPService.paramStateHandler.state$
                 .pipe(
-                    map(({ params }) => params.subchannelId),
+                    map(({ params }) => params.subChannelId),
                     take(1),
                 )
                 .subscribe(id => {
