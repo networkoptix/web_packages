@@ -1,5 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, effect, EventEmitter, OnDestroy, Output } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    computed,
+    effect,
+    EventEmitter,
+    OnDestroy,
+    Output,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
 import { skip } from 'rxjs/operators';
@@ -67,6 +75,12 @@ export class PlayerComponent implements OnDestroy, AfterViewInit {
 
         effect(() => {
             this.rotateDeg = this.vms.state$$().selectedCamera?.rotation || 0;
+        });
+
+        const selectedCameraId$$ = computed(() => this.vms.state$$().selectedCameraId);
+        effect(() => {
+            selectedCameraId$$();
+            this.playerErrorCount = 0;
         });
     }
 
