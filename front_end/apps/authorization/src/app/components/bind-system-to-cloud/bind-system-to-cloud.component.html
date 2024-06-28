@@ -1,6 +1,10 @@
 @if (fsmState$$()) {
-    @if (fsmStates.confirmAccount !== fsmState$$() && fsmStates.error !== fsmState$$()) {
+    @if (![fsmStates.confirmAccount, fsmStates.error, fsmStates.orgPromo].includes(fsmState$$())) {
         <nx-auth-header [viewType]="viewType">{{ 'Connect system to' | translate }}</nx-auth-header>
+    } @else if (fsmStates.orgPromo === fsmState$$()) {
+        <nx-auth-header [viewType]="viewType">{{
+            'Introducing Organizations' | translate
+        }}</nx-auth-header>
     }
     <main>
         <div

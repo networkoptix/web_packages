@@ -16,7 +16,7 @@
     flex-direction: column;
 
     div {
-        @include typography.medium14nocolor;
+        @include typography.regular14nocolor;
         color: var(--input-color);
         text-align: center;
         margin-bottom: 8px;
