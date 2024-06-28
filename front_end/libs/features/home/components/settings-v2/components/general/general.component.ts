@@ -105,6 +105,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     roleDescription: string | undefined;
 
     showStateChangeBlock = nxConfig.featureFlags.channelPartnersChangeStateUI;
+    readonly canDisconnectAccount = false; // Either add flag or update check in 23.3.4
 
     readonly partnerAccess = partnerAccess;
     currState = input<State | null>(null);

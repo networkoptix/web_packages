@@ -262,7 +262,7 @@
     </div>
 }
 
-@if (inOrganization$$() && canDeleteSelfFromOrg$$()) {
+@if (canDisconnectAccount && inOrganization$$() && canDeleteSelfFromOrg$$()) {
     <div class="row pt-3">
         <div class="col-10">
             <div>
