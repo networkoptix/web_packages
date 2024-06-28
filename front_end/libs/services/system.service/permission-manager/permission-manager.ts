@@ -455,7 +455,7 @@ export class PermissionManager {
     /**
      * Returns an observable that emits the currentUser after permissions have been resolved.
      *
-     * The timeout is set to 10 seconds for webadmin and 3 seconds for cloud portal.
+     * The timeout is set to 10 seconds for webadmin and 5 seconds for cloud portal.
      *
      * On cloud portal we fallback to getting the user from the cloud if the currentUser is not resolved in time.
      *
@@ -467,7 +467,12 @@ export class PermissionManager {
      */
     public permissionsInitialized = (injector: Injector): Observable<CurrentUser | undefined> =>
         runInInjectionContext(injector, () => toObservable(this.currentUser$$)).pipe(
-            filter(user => !!user && Object.values(user.permissions).some(identity)),
+            filter(
+                user =>
+                    (!!user && Object.values(user.permissions).some(identity)) ||
+                    ('resourceAccessRights' in user! &&
+                        Object.values(user.resourceAccessRights!).some(identity)),
+            ),
             timeout({
                 first: environment.isLocal ? 10_000 : 5_000,
                 with: async () => {
