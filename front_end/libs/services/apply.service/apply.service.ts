@@ -1,14 +1,12 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep, isArray } from 'lodash-es';
-import { BehaviorSubject, combineLatest as combineLatestFrom, firstValueFrom, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest as combineLatestFrom, Subject } from 'rxjs';
 import { combineLatest, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { NxApplyComponent } from '@components/apply/apply.component';
-import { ApplyModalContent } from '@dialogs/apply/apply.component';
-import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Apply as DialogTypes } from '@dialogs/dialogs.types';
 import { isObject } from '@utils/general';
 
@@ -65,7 +63,7 @@ export class NxApplyService {
     isOnline$ = new BehaviorSubject(true);
 
     constructor(
-        private dialog: Dialog,
+        private dialogs: NxDialogsService,
         private processService: NxProcessService,
     ) {}
 
@@ -504,13 +502,7 @@ export class NxApplyService {
         }
         const isApplyDisabled = this.isInvalid;
 
-        return firstValueFrom(
-            this.dialog.open<DialogTypes['return'], DialogTypes['data']>(ApplyModalContent, {
-                width: DIALOG_SIZE.NORMAL,
-                disableClose: true,
-                data: { applyFunc, discardFunc, isApplyDisabled },
-            }).closed,
-        );
+        return this.dialogs.apply({ applyFunc, discardFunc, isApplyDisabled });
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
