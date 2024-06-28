@@ -21,6 +21,7 @@ import {
     Observable,
     combineLatest,
     firstValueFrom,
+    timer,
 } from 'rxjs';
 import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/operators';
 
@@ -57,6 +58,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { icons, menus, settingsConfig } from '@static-variables';
+import { MS } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import {
@@ -277,6 +279,19 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             });
 
         this.setPreviewImage();
+
+        // Keep the camera status up to date
+        timer(0, MS.second * 30)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                const currentCamera = this.system.cameraManager.cameras.find(
+                    camera => camera.id === this.camera.id,
+                );
+                if (currentCamera && currentCamera.status !== this.camera.status) {
+                    this.camera.status = currentCamera.status;
+                    this.updateAlerts();
+                }
+            });
     }
 
     private initializeApplyService(): void {
