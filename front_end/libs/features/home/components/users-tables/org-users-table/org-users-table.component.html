@@ -107,7 +107,7 @@
                                     : row.groupRoles[0]?.name
                             }}
                         } @else {
-                            {{ row.accessLevel.name }}
+                            {{ LANG.foldersCount | translate: { count: row.groupRoles.length } }}
                         }
                     }
                 </div>
