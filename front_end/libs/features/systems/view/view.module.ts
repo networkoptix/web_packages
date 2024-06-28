@@ -10,9 +10,6 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { AuthGuard } from '@guards/authGuard';
-import { SystemGuard } from '@guards/systemGuard';
-import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 
@@ -33,7 +30,6 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
             {
                 path: '',
                 component: NxSystemViewIndexPageComponent,
-                canActivate: [AuthGuard, TwofaGuard, SystemGuard],
                 children: [
                     {
                         path: ':cameraId',
