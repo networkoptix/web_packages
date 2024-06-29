@@ -41,10 +41,17 @@ export const colorGroupStorybookEventName = 'nx-components:storybook:set-group';
 export const createColorGroupStorybookEvent = (group: Show): CustomEvent<Show> =>
     new CustomEvent(colorGroupStorybookEventName, { detail: group });
 
+export const createComponentVariablesEventName = 'nx-components:component:variables';
+export const createComponentVariablesEvent = (
+    detail: Record<string, [string, string]>,
+): CustomEvent<Record<string, [string, string]>> =>
+    new CustomEvent(createComponentVariablesEventName, { detail });
+
 export interface CustomThemeEventMap {
     [themeUpdatedEventName]: ReturnType<typeof createThemeUpdateEvent>;
     [themePatchEventName]: ReturnType<typeof createThemePatchEvent>;
     [themeResetEventName]: ReturnType<typeof createThemePatchEvent>;
     [baseColorStorybookEventName]: ReturnType<typeof createColorStorybookEvent>;
     [colorGroupStorybookEventName]: ReturnType<typeof createColorGroupStorybookEvent>;
+    [createComponentVariablesEventName]: ReturnType<typeof createComponentVariablesEvent>;
 }

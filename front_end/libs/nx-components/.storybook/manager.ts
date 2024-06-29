@@ -1,7 +1,7 @@
 import { addons, types } from '@storybook/manager-api';
 import { create } from '@storybook/theming/create';
 
-import { ThemeConfiguration } from './panels';
+import { ThemeConfiguration, ComponentVariables } from './panels';
 
 addons.setConfig({
     theme: create({
@@ -21,5 +21,11 @@ addons.register('theme-configuration', () => {
         // 👇 Sets the type of UI element in Storybook
         type: types.PANEL,
         render: ThemeConfiguration,
+    });
+    addons.add('theme-configuration/component-variables', {
+        title: 'Component Variables',
+        // 👇 Sets the type of UI element in Storybook
+        type: types.PANEL,
+        render: ComponentVariables,
     });
 });

@@ -1,6 +1,8 @@
 import { Directive, ElementRef, Signal, effect, inject } from '@angular/core';
 
-import { CssColorVariables, ThemeOptions } from '../theme-provider/color-types';
+import { fontColorsCommon } from '../styles/fonts';
+import { CssColorVariables, ThemeOptions, stepCount } from '../theme-provider/color-types';
+import { createComponentVariablesEvent } from '../theme-provider/events';
 import { NxThemeProviderService } from '../theme-provider/theme-provider.service';
 
 @Directive()
@@ -33,13 +35,20 @@ export abstract class BaseComponent {
      */
     abstract variablesDeclaration: Signal<Record<string, CssColorVariables>>;
 
+    // Add common colors here
+    protected readonly commonColors = { ...fontColorsCommon } as const;
+
     protected readonly updateStyleEffect = effect(() => {
-        const variablesDeclaration = this.variablesDeclaration();
+        const colorVariablesDeclarations = {
+            ...this.commonColors,
+            ...this.variablesDeclaration(),
+        };
+
         const themeOverride = this.themeOptionOverride?.();
         const themeColors = themeOverride
             ? this.themeProvider.getColorsWithThemeOverride(themeOverride)
             : this.themeProvider.colors();
-        Object.entries(variablesDeclaration).forEach(([variableName, colorName]) => {
+        Object.entries(colorVariablesDeclarations).forEach(([variableName, colorName]) => {
             const baseVar = `${colorName.startsWith('--') ? colorName : `--${colorName}`}`;
             this.elRef.nativeElement.style.setProperty(baseVar, themeColors[colorName]);
             this.elRef.nativeElement.style.setProperty(
@@ -47,5 +56,36 @@ export abstract class BaseComponent {
                 `var(${baseVar})`,
             );
         });
+
+        // Theme option css variables
+
+        const { options } = this.themeProvider.currentTheme();
+        const offset = options.offset || 0;
+        const inverse = options.inverse || false;
+        const stepSize = (100 - offset * 2) / stepCount;
+        const otherDeclarations = {
+            '--step-size': `${stepSize.toPrecision(2)}%`,
+            '--color-mix-base': inverse ? 'black' : 'white',
+        };
+        Object.entries(otherDeclarations).forEach(([variableName, variableValue]) =>
+            this.elRef.nativeElement.style.setProperty(variableName, variableValue),
+        );
+
+        if (window.IS_STORYBOOK) {
+            window.dispatchEvent(
+                createComponentVariablesEvent(
+                    Object.fromEntries([
+                        ...Object.entries(colorVariablesDeclarations).map(([key, value]) => [
+                            key,
+                            [value, themeColors[value]],
+                        ]),
+                        ...Object.entries(otherDeclarations).map(([key, value]) => [
+                            key,
+                            [value, 'transparent'],
+                        ]),
+                    ]),
+                ),
+            );
+        }
     });
 }

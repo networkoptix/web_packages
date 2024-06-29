@@ -24,7 +24,6 @@ import {
 import { HexColorPicker } from 'react-colorful';
 
 import {
-    CustomThemeEventMap,
     createThemePatchEvent,
     themeUpdatedEventName,
     createThemeResetEvent,
@@ -32,6 +31,7 @@ import {
     createColorGroupStorybookEvent,
 } from '../../src/lib/theme-provider/events';
 import { clamp } from 'lodash-es';
+import { dispatch } from './common';
 
 const spaceButtons = {
     display: 'flex',
@@ -39,12 +39,6 @@ const spaceButtons = {
     justifyContent: 'center',
     gap: '4px',
 } as const;
-
-const getStoryBookWindow = () =>
-    document?.querySelector<HTMLIFrameElement>('iframe[data-is-storybook=true]')?.contentWindow;
-
-const dispatch = (event: CustomThemeEventMap[keyof CustomThemeEventMap]) =>
-    getStoryBookWindow()?.dispatchEvent(event);
 
 const resetTheme = () => dispatch(createThemeResetEvent({}));
 

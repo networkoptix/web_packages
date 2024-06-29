@@ -87,8 +87,10 @@ export type ShadeDefinition =
 
 export type ShadeDefinitions = ShadeDefinition[];
 
+export const stepCount = 38;
+
 export const generateShades = (every = 1): ShadeDefinitions => {
-    const step = (100 / 38) * every;
+    const step = (100 / stepCount) * every;
     const generate = (type: 'dark' | 'light'): ShadeDefinitions =>
         Array(18)
             .fill(0)

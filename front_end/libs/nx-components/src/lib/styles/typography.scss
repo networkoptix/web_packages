@@ -1,0 +1,204 @@
+@use 'sass:meta';
+@use 'sass:list';
+@use 'sass:map';
+
+// Configurable with importing.
+// Example: @use "../styles/typography" with ( $font-family-base: "some", "custom", "fonts")
+
+$font-family-base: 'robotoregular', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-regular: 'robotoregular', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-medium: 'robotomedium', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-light: 'robotolight', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-bold: 'robotobold', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$default-font-sizes: 12px, 13px, 14px, 15px, 18px, 24px, 32px;
+$font-sizes: $default-font-sizes !default;
+$rem-baseline: 16px !default;
+$default-families: base, regular, medium, light, bold;
+$font-families: $default-families !default;
+$default-font-families-mapping: (
+    list.nth($font-families, 1): $font-family-base,
+    list.nth($font-families, 2): $font-family-regular,
+    list.nth($font-families, 3): $font-family-medium,
+    list.nth($font-families, 4): $font-family-light,
+    list.nth($font-families, 5): $font-family-bold,
+);
+$font-families-mapping: $default-font-families-mapping !default;
+$color-prefix: font-color- !default;
+$default-font-colors: medium, regular, light, disabled, error, brand;
+$font-colors: $default-font-colors !default;
+
+@use 'sass-rem/rem' with (
+    $baseline: $rem-baseline,
+    $fallback: true
+);
+
+// Font property mixins
+
+@mixin font-size($size, $use-sizes: $font-sizes) {
+    @if not list.index($use-sizes, $size) {
+        @error "#{$size} is not a valid font-size. Expected one of #{$use-sizes}.";
+    }
+    @include rem.convert(font-size, $size);
+}
+
+@mixin font-family($family, $use-family-mapping: $font-families-mapping) {
+    $font-family: map.get($use-family-mapping, $family);
+    @if not $font-family {
+        @error "#{$family} is not a valid font family variant. Expected one of #{$use-family-mapping}.";
+    }
+    font-family: $font-family;
+}
+
+@mixin font-color($color, $use-font-colors: $font-colors) {
+    @if not list.index($use-font-colors, $color) {
+        @error "#{$color} is not a valid font color variant. Expected one of #{$use-font-colors}.";
+    }
+    color: var(--#{$color-prefix}#{$color});
+}
+
+// Predefined font variants
+// defined by variant name and list of (family, size, color) tuples
+$font-variants: (
+    h1: (
+        medium,
+        32px,
+        medium,
+    ),
+    h2: (
+        medium,
+        24px,
+        medium,
+    ),
+    h3: (
+        medium,
+        18px,
+        medium,
+    ),
+    h4: (
+        medium,
+        15px,
+        medium,
+    ),
+    h5: (
+        medium,
+        14px,
+        medium,
+    ),
+    h6: (
+        medium,
+        13px,
+        medium,
+    ),
+    body: (
+        regular,
+        14px,
+        regular,
+    ),
+    base: (
+        regular,
+        13px,
+        regular,
+    ),
+    base-light: (
+        light,
+        13px,
+        light,
+    ),
+    base-disabled: (
+        light,
+        13px,
+        disabled,
+    ),
+    small: (
+        light,
+        12px,
+        light,
+    ),
+);
+
+@mixin _create_font_variant($family, $size, $color) {
+    @include font-family($family, $default-font-families-mapping);
+    @include font-size($size, $default-font-sizes);
+    @include font-color($color, $default-font-colors);
+}
+
+@mixin variant($variant) {
+    $font-variant: map.get($font-variants, $variant);
+
+    @if not $font-variant {
+        @error "#{$variant} is not a valid font variant. Expected one of #{$font-variants}.";
+    }
+
+    @include _create_font_variant($font-variant...);
+}
+
+@mixin text-color-modifiers {
+    @each $color in $default-font-colors {
+        .text-color-#{$color} {
+            @include font-color($color, $default-font-colors);
+        }
+    }
+}
+
+@mixin text-size-modifiers {
+    @each $size in $default-font-sizes {
+        .text-size-#{$size} {
+            @include font-size($size, $default-font-sizes);
+        }
+    }
+}
+
+@mixin text-family-modifiers {
+    @each $family in $default-families {
+        .text-family-#{$family} {
+            @include font-size($family, $default-families);
+        }
+    }
+}
+
+@mixin text-modifiers {
+    @include text-color-modifiers;
+    @include text-size-modifiers;
+    @include text-family-modifiers;
+}
+
+@function offset-color-by($color, $offset) {
+    @return color-mix(
+        in hsl,
+        var(--color-mix-base) calc($offset * var(--step-size)),
+        $color
+    );
+}
+
+@mixin default-typography {
+    :host {
+        @include variant(body);
+    }
+
+    [disabled] {
+        @include font-color(disabled, $default-font-colors);
+    }
+
+    @for $i from 1 through 6 {
+        $variant-key: nth(map.keys($font-variants), $i);
+
+        #{$variant-key} {
+            @include variant($variant-key);
+        }
+    }
+
+    a {
+        @include font-color(brand, $default-font-colors);
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:visited {
+            @include font-color(regular, $default-font-colors);
+        }
+    }
+}
+
+@mixin defaults {
+    @include default-typography;
+    @include text-modifiers;
+}

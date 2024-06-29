@@ -1,0 +1,52 @@
+@use 'sass:meta';
+@use 'sass:list';
+
+
+$variants: top, bottom, left, right;
+
+@function with-variants($property) {
+    $property-with-variants: ();
+    @each $variant in $variants {
+        $property-with-variants: list.append($property-with-variants, $property + "-" + $variant);
+    }
+
+    @return $property-with-variants;
+}
+
+$base-space: 4px !default;
+$single-size-properties: (gap);
+$multi-size-properties: padding, margin;
+$multi-size-variants: ();
+@each $property in $multi-size-properties {
+    $multi-size-variants: list.join($multi-size-variants, with-variants($property));
+}
+$single-size-properties: list.join($multi-size-variants, $single-size-properties);
+$all-properties: list.join($single-size-properties, $multi-size-properties);
+
+@function get-size($size) {
+    @if not meta.type-of($size) == number {
+        @error "#{size} is not a valid size. Expected number.";
+    }
+
+    @return $base-space * $size;
+}
+
+@mixin with-spacing-for($property, $sizes...) {
+    @if not list.index($all-properties, $property) {
+        @error "#{$property} is not a valid property. Expected one of #{$all-properties}.";
+    }
+
+    @if list.index($single-size-properties, $property) {
+        @if length($sizes) != 1 {
+            @error "Expected 1 size for #{$property}.";
+        }
+    }
+
+    $mapped-sizes: ();
+
+    @each $size in $sizes {
+        $mapped-sizes: list.append($mapped-sizes, get-size($size));
+    }
+
+    #{$property}: $mapped-sizes;
+}
