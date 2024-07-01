@@ -1501,11 +1501,15 @@ class ChannelPartnerRecordsParamSerializer(serializers.Serializer):
     startTs = serializers.DateField(required=False)
     endTs = serializers.DateField(required=False)
 
+    @property
+    def default_end_ts(self):
+        return (timezone.now() + relativedelta(days=1)).date()
+
     def validate(self, attrs):
         if not attrs.get('startTs'):
-            attrs["startTs"] = attrs.get("endTs", timezone.now().date()) - relativedelta(months=1)
+            attrs["startTs"] = attrs.get("endTs", self.default_end_ts) - relativedelta(months=1)
         if not attrs.get('endTs'):
-            attrs["endTs"] = attrs.get("startTs", timezone.now().date()) + relativedelta(months=1)
+            attrs["endTs"] = attrs["startTs"] + relativedelta(months=1)
         if attrs["startTs"] > attrs.get('endTs'):
             raise ValidationError({'startTs': '"startTs" cannot be greater than "endTs".',
                                    'endTs': '"startTs" cannot be greater than "endTs".'})

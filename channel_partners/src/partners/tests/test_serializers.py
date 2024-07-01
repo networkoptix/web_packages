@@ -572,11 +572,11 @@ class TestChannelPartnerRecordsParamSerializer:
          assert ser.validated_data["endTs"] == self.ts
 
     def test_no_params(self):
-        today = datetime.date.today()
+        tomorrow = datetime.date.today() + relativedelta.relativedelta(days=1)
         params = {}
         ser = ChannelPartnerRecordsParamSerializer(data=params)
         assert ser.is_valid()
-        assert ser.validated_data["startTs"] == (today - relativedelta.relativedelta(months=1))
+        assert ser.validated_data["startTs"] == (tomorrow - relativedelta.relativedelta(months=1))
         assert ser.validated_data["endTs"] == ser.validated_data["startTs"] + relativedelta.relativedelta(months=1)
 
     def test_invalid_period(self):
