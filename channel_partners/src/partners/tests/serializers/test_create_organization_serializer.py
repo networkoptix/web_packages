@@ -105,3 +105,15 @@ class TestCreateOrganizationSerializer:
                 get_context_vars().get("request_id")
             ]
         )
+
+    def test_first_admin_is_parent_user(self, context_vars, cp_user_factory):
+        error_message = (f'User with this email has role in parent channel partner '
+                         f'{self.cp.name} and cannot be added to organization.')
+        parent_user = cp_user_factory(channel_partner=self.cp)
+        data = {
+            **self.valid,
+            'firstAdminEmail': parent_user.user.email
+        }
+        serializer = CreateOrganizationSerializer(data=data, context=self.context)
+        assert not serializer.is_valid()
+        assert error_message in serializer.errors['firstAdminEmail'][0]
