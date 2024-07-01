@@ -482,6 +482,21 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
                 f'User does not have {ChannelPartner.permissions.add_remove_organizations} permission')
         return value
 
+    def validate(self, attrs: dict):
+        if first_admin_email := attrs.get('firstAdminEmail'):
+            existing_partner_user = ChannelPartnerToUser.objects.filter(
+                user__email=first_admin_email,
+                channel_partner=attrs['channel_partner']
+            ).exists()
+            if existing_partner_user:
+                raise ValidationError(detail={
+                    "firstAdminEmail": [
+                       f'User with this email has role in parent channel partner '
+                       f'{attrs["channel_partner"].name} and cannot be added to organization.'
+                    ]
+                })
+        return attrs
+
     def create(self, validated_data):
         # Create without attributes
         validated_data_filtered = validated_data.copy()
