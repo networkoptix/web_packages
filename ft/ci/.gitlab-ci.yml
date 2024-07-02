@@ -1,10 +1,10 @@
 include:
   - local: "ci/.shared.yml"
 
-test-system-users:
+test-log-in-by-existing-user:
   stage: 'ft (#ask-ft)'
   needs: [ 'cloud-deploy' ]
-  script: [ 'test-system-users' ]
+  script: [ 'test-log-in-by-existing-user' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:
@@ -12,10 +12,10 @@ test-system-users:
       # noinspection YAMLSchemaValidation
       changes: !reference [ .frontend_changes ]
 
-test-enable-2fa:
+test-2fa:
   stage: 'ft (#ask-ft)'
   needs: [ 'cloud-deploy' ]
-  script: [ 'test-enable-2fa' ]
+  script: [ 'test-2fa' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:
