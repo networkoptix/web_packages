@@ -33,7 +33,6 @@ import { NxAccountService } from '@services/account.service';
 import {
     Organization,
     OrgRoleIds,
-    State,
     UpdateOrganization,
     OrgSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';

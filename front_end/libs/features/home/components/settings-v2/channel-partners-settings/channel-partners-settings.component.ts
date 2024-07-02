@@ -24,7 +24,6 @@ import { SettingsBase } from '@pages/home/components/settings-v2/settings-base/s
 import { settingsViews } from '@pages/home/home.types';
 import {
     ChannelPartner,
-    State,
     UpdateChannelPartner,
     CPSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
