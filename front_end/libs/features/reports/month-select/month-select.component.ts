@@ -30,12 +30,16 @@ export class NxMonthSelectComponent {
     }
     @Output() yearChange = toObservable<number>(this.year);
 
-    shortMonthYearFormat: Intl.DateTimeFormat;
+    yearFormat: Intl.DateTimeFormat;
+    longMonthYearFormat: Intl.DateTimeFormat;
     longMonths: string[] = [];
 
+    isMenuOpen = signal<boolean>(false);
     display = computed<string>(() => {
         const [year, monthIndex] = [this.year(), this.monthIndex()];
-        return this.shortMonthYearFormat.format(new Date(year, monthIndex));
+        const isMenuOpen = this.isMenuOpen();
+        const date = new Date(year, monthIndex);
+        return isMenuOpen ? this.yearFormat.format(date) : this.longMonthYearFormat.format(date);
     });
 
     constructor(nxDatetime: NxDateTimeFormatService) {
@@ -45,8 +49,11 @@ export class NxMonthSelectComponent {
             date.setMonth(i);
             this.longMonths.push(longMonth.format(date));
         }
-        this.shortMonthYearFormat = new Intl.DateTimeFormat(nxDatetime.locale, {
-            month: 'short',
+        this.yearFormat = new Intl.DateTimeFormat(nxDatetime.locale, {
+            year: 'numeric',
+        });
+        this.longMonthYearFormat = new Intl.DateTimeFormat(nxDatetime.locale, {
+            month: 'long',
             year: 'numeric',
         });
     }
