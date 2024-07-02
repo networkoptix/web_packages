@@ -1,22 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { switchMap } from 'rxjs';
 
-import {
-    selectCurrentPartnerParent,
-    selectSubchannelPartner,
-} from '@common/store/channel-partners/channel-partners.selectors';
+import { selectSubchannelPartner } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
-import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -33,31 +30,12 @@ import { icons } from '@variables/static-variables';
         TranslateModule,
     ],
 })
-export class NxSubchannelComponent implements OnInit {
+export class NxSubchannelComponent {
     LANG = staticLang;
     icons = icons;
 
     permissionStore = inject(PermissionsStore);
-    tabs: Tab[] = [
-        // We may use the 'information' tab in the future
-        // {
-        //     displayName: this.LANG.channelPartners.tabNames.information,
-        //     route: '',
-        // },
-    ];
-
-    @Input() currentTabRoute: string;
-    currentSubchannel$ = this.route.params.pipe(
-        switchMap(({ subChannelId }) => this.store.select(selectSubchannelPartner(subChannelId))),
-    );
-    currentParent$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartnerParent);
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private store: Store,
-    ) {}
-
-    ngOnInit(): void {
+    tabs = computed<Tab[]>(() => {
         const tabs: Tab[] = [];
         if (this.permissionStore.canViewPartnerReports$$()) {
             tabs.push({
@@ -71,11 +49,23 @@ export class NxSubchannelComponent implements OnInit {
                 route: 'settings',
             });
         }
-        this.tabs = tabs;
-    }
+        return tabs;
+    });
+    currentSubChannel$$ = toSignal(
+        this.route.params.pipe(
+            switchMap(({ subChannelId }) =>
+                this.store.select(selectSubchannelPartner(subChannelId)),
+            ),
+        ),
+    );
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private store: Store,
+    ) {}
 
     toRoot(): Promise<boolean> {
-        const id = this.currentParent$$().id;
+        const id = this.currentSubChannel$$()!.parentChannelPartner;
         return this.router.navigate([PartnerRedirect.toPartnerSubChannels(id)]);
     }
 }

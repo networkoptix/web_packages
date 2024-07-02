@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,18 +10,16 @@ import { settingsViews } from '@pages/home/home.types';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
-    ChannelPartner,
     State,
     OrgSettingsState,
     CPSettingsState,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { icons } from '@static-variables';
 import {
+    selectChannelPartners,
     selectCurrentPartner,
     selectCurrentPartnerId,
-    selectRootChannelPartners,
 } from '@store/channel-partners/channel-partners.selectors';
 
 @Component({
@@ -40,15 +38,12 @@ export abstract class SettingsBase {
 
     readonly LANG = staticLang;
     readonly icons = icons;
-    readonly canChangeStateUI = nxConfig.featureFlags.channelPartnersChangeStateUI;
     readonly settingsViews = settingsViews;
 
     permissionsStore = inject(PermissionsStore);
 
     // Abstract methods
     abstract currentState$$(): OrgSettingsState | CPSettingsState;
-
-    State = State;
 
     get generalForm(): FormGroup {
         return this.generalComponent?.generalForm;
@@ -58,25 +53,27 @@ export abstract class SettingsBase {
         return this.generalComponent?.stateForm;
     }
 
-    protected channelPartners$$ = this.store.selectSignal(selectRootChannelPartners);
-    protected currentPartner$$: Signal<ChannelPartner> =
-        this.store.selectSignal(selectCurrentPartner);
+    protected channelPartners$$ = this.store.selectSignal(selectChannelPartners);
+    protected currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     protected currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     protected permissions$$ = computed(() => {
         const {
             canChangeOrganizationState$$,
+            canConfigureChannelPartner$$,
             canConfigureOrganization$$,
             canChangePartnerState$$,
             canViewPartnerSettings$$,
             canUpdateOrgAccess$$,
         } = this.permissionsStore;
         return {
-            canAlterState: canChangeOrganizationState$$() || canChangePartnerState$$(),
+            canAlterStateOrg: canChangeOrganizationState$$(),
+            canAlterStateChannelPartner: canChangePartnerState$$(),
+            canConfigureChannelPartner: canConfigureChannelPartner$$(),
             canViewPartnerSettings: canViewPartnerSettings$$(),
             canConfigureOrg: canConfigureOrganization$$(),
             canUpdateAccess: canUpdateOrgAccess$$(),
         };
     });
-    protected effectiveState$$ = computed<State>(() => this.currentState$$().item.state);
-    protected name$$ = computed<string>(() => this.currentState$$().item.name);
+    protected effectiveState$$ = computed<State>(() => this.currentState$$()?.item?.state);
+    protected name$$ = computed<string>(() => this.currentState$$()?.item?.name);
 }

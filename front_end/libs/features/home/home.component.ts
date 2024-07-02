@@ -9,9 +9,9 @@ import { filter, map, switchMap } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectRootChannelPartners,
     selectRootOrganizations,
     selectAreChannelPartnersAndOrgsLoading,
+    selectChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -46,7 +46,7 @@ export class NxHomeComponent implements OnInit {
     );
 
     organizations$ = this.store.select<Organization[]>(selectRootOrganizations);
-    channelPartners$ = this.store.select<ChannelPartner[]>(selectRootChannelPartners);
+    channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
     isNoSystemsOrgOrChP: boolean = false;
 
@@ -97,12 +97,28 @@ export class NxHomeComponent implements OnInit {
         if (!homeNode) {
             return;
         }
-
-        const filteredChannelPartners = channelPartners.filter(
-            partner => !partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant),
+        const mappedPartners = channelPartners.reduce(
+            (partners, partner) => {
+                partners[partner.id] = partner;
+                return partners;
+            },
+            {} as Record<string, ChannelPartner>,
         );
+
+        const filteredChannelPartners = channelPartners.filter(partner => {
+            const parentPartner = mappedPartners[partner.parentChannelPartner];
+            // If a user has access to the parent and its admin access hide the SubChannel Partner
+            if (
+                parentPartner &&
+                parentPartner.ownPermissions.includes(PartnerRoles.field_access_cp_admin)
+            ) {
+                return false;
+            }
+            // Only hide a partner if the user has the report role.
+            return !partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant);
+        });
         const filteredOrganizations = organizations
-            .filter(org => !channelPartners.some(partner => org.channelPartner === partner.id))
+            .filter(org => !mappedPartners[org.channelPartner])
             .sort((a, b) => a.name.localeCompare(b.name));
 
         const nodes = [

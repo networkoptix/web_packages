@@ -125,13 +125,20 @@ export class NxSubchannelsComponent {
     }
 
     handleChannelClick(id: string): Promise<boolean> {
-        const redirectUrl =
-            !this.subchannels$$()
-                .find(partner => partner.id === id)
-                ?.ownPermissions?.includes(PartnerRoles.field_access_cp_accountant) &&
-            this.channelPartners$$().find(partner => partner.id === id)
-                ? PartnerRedirect.toPartner(id)
-                : PartnerRedirect.toSubChannelPartner(id);
+        const subChannel = this.subchannels$$().find(partner => partner.id === id);
+        const channelPartner = this.channelPartners$$().find(partner => partner.id === id);
+        const isPartner =
+            subChannel &&
+            !subChannel.ownPermissions?.includes(PartnerRoles.field_access_cp_accountant) &&
+            !!channelPartner;
+
+        const redirectUrl = isPartner
+            ? PartnerRedirect.toPartner(id)
+            : PartnerRedirect.toSubChannelPartner(id);
+
+        if (isPartner) {
+            this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: id }));
+        }
         return this.router.navigate([redirectUrl]);
     }
 }

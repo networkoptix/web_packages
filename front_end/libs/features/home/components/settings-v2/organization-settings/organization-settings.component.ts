@@ -107,8 +107,6 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         return (currentStateItem as Organization)?.channelPartnerAccessLevel || null;
     });
 
-    override State = State;
-
     ngOnInit(): void {
         this.initProcesses();
     }
