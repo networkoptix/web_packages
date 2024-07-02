@@ -101,7 +101,7 @@ $menu-width: 8rem;
     }
 
     &[aria-checked="true"] {
-        background-color: var(--dropdown-item-selected-bg);
+        background-color: var(--brand-core);
         color: var(--dropdown-item-selected-color);
     }
 }

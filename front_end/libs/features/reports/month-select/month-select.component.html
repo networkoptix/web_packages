@@ -10,6 +10,8 @@
     #monthsMenuTrigger
     data-escape-global-style
     [cdkMenuTriggerFor]="monthsMenu"
+    (cdkMenuClosed)="isMenuOpen.set(false)"
+    (cdkMenuOpened)="isMenuOpen.set(true)"
 >
     {{ display() }}
 </button>
