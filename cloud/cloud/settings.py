@@ -73,7 +73,6 @@ CUSTOMIZATION = None
 LOCAL_CUSTOMIZATION = None
 META_CUSTOMIZATION = 'metavms'
 DEF_CUSTOMIZATION = 'default'
-
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (

@@ -13,8 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 import waffle
 
-from cms.models import cloud_portal_customization_cache
-from cms.controllers.static_files import get_template
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
+from cms.models import cloud_portal_customization_cache, get_cloud_portal_asset, Context
+from cms.controllers.static_files import get_template, TemplatesCache
 from util.config import get_cloud_portal_url, get_cloud_db_url
 from util.helpers import detect_language_by_request
 from cms.models import Menu, Asset, Language
@@ -23,6 +24,26 @@ from cms.controllers import integration
 from cms.feature_flags.feature_flags import SWITCHES
 
 logger = logging.getLogger(__name__)
+
+# Static language file is always places in skin directory
+STATIC_LANG_PATH = os.path.join(
+    settings.STATIC_LOCATION, '_source/blue/static/language_i18n_static.json')
+# Compiled language files are placed in skin directory at instance
+COMPILED_LANG_PATH = os.path.join(
+    settings.STATIC_LOCATION, '_source/blue/static/lang_{language}/language_compiled.json')
+# Compiled en_US language file is placed in skin directory always and can be sed for fallback
+COMPILED_EN_US_PATH = os.path.join(
+    settings.STATIC_LOCATION, '_source/blue/static/language_compiled.json')
+if settings.LOCAL_ENVIRONMENT or settings.TESTING:
+    # Compiled language files in local development are placed in cloud_portal/translation/{language}/
+    COMPILED_LANG_PATH = os.path.join(os.path.dirname(
+        settings.BASE_DIR), 'translations/{language}/language_compiled.json')
+
+
+if not os.path.isfile(COMPILED_LANG_PATH):
+    # If file does not exist, use default en_US file
+    COMPILED_LANG_PATH = COMPILED_EN_US_PATH
+
 
 def get_route_meta(path, *args):
     root, *segments = path
@@ -144,13 +165,11 @@ def get_lang_meta(request, lang=None):
     try:
         if not lang:
             lang = detect_language_by_request(request)
-        lang_path = 'static/lang_{{language}}/language_compiled.json'
-        static_lang_path = 'static/language_i18n_static.json'
-        content = async_to_sync(get_template)(request, filename=static_lang_path)
-        meta_defaults = json.loads(content)['metaDefaults']
-
-        content = async_to_sync(get_template)(request, filename=lang_path, language_code=lang)
-        compiled_lang = json.loads(content)
+        with open(STATIC_LANG_PATH, 'r') as file:
+            content = json.load(file)
+        meta_defaults = content['metaDefaults']
+        with open(COMPILED_LANG_PATH.format(language=lang), 'r') as file:
+            compiled_lang = json.load(file)
 
         return sub_translated(meta_defaults, compiled_lang)
     except Exception as e:
@@ -178,15 +197,27 @@ def get_config_meta(request, config_path=None):
 
 
 def get_meta(request, config_path=None):
+    # language strings with customization variables and process it within global context it
     config = cloud_portal_customization_cache(request.CUSTOMIZATION)['config']
     lang_code = detect_language_by_request(request)
     lang = Language(code=lang_code)
+    cloud_portal = get_cloud_portal_asset(customization=request.CUSTOMIZATION)
+    template_cache = TemplatesCache(
+        customization_name=request.CUSTOMIZATION,
+        template_name=f'meta-{request.get_full_path()}',
+        language_code=lang_code,
+        skin=None,
+        version_id=cloud_portal.version_id(),
+    )
+    if cached := template_cache.get_value():
+        return cached
+
     lang_meta = get_lang_meta(request, lang=lang_code)
     config_meta = get_config_meta(request, config_path)
     base_meta = {
         **lang_meta['default'],
         **config_meta['default'],
-        'url': request.build_absolute_uri(request.path)
+        'url': request.build_absolute_uri(request.path),
     }
 
     generated_meta = {
@@ -200,10 +231,34 @@ def get_meta(request, config_path=None):
         )
     }
 
-    return {
-        'title': generated_meta['title'],
-        'meta': sorted(generated_meta.items())
-    }
+    processed_meta = process_meta(
+        meta={'title': generated_meta['title'],
+              'site_name': generated_meta.get('site_name', ''),
+              'site_url': f'{request.scheme}://{request.get_host()}/',
+              'meta': sorted([[k, v] for k, v in generated_meta.items()])},
+        cloud_portal_asset=get_cloud_portal_asset(customization=request.CUSTOMIZATION),
+        customization_name=request.CUSTOMIZATION,
+        language=lang)
+    template_cache.set_value(processed_meta)
+    return processed_meta
+
+
+def process_meta(meta, cloud_portal_asset,  customization_name, language):
+    # it is weird and ugly but serialization/deserialization is cheaper
+    # here than collecting language in app_view where template is rendered
+    global_contexts = Context.objects.filter(
+        asset_type=cloud_portal_asset.asset_type, is_global=True, hidden=False)
+    global_contexts_dict = global_contexts_to_dict(
+        global_contexts, cloud_portal_asset)
+    context_processor = ContextProcessor(
+        asset=cloud_portal_asset, preview=False,
+        version_id=cloud_portal_asset.version_id(),
+        global_contexts=global_contexts,
+        global_contexts_dict=global_contexts_dict
+    )
+    context_processor.process_global_contexts(
+        content=meta, language=language)
+    return meta
 
 
 def check_redirect(request):

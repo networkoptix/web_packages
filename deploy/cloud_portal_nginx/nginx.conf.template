@@ -272,6 +272,10 @@ http {
             try_files ${DOLLAR}uri @proxy_to_app;
         }
 
+        location /favicon.ico {
+            return 301 $scheme://$host/static/images/favicon.ico;
+        }
+
         location /static {
             error_page 404 /static/index.html;
         }
@@ -279,7 +283,9 @@ http {
         location / {
             include proxy.conf;
             index static/index.html;
-            include one_day_caching.conf;
+
+            # Temporary disable caching to check if translations will work with crawlers
+            # include one_day_caching.conf;
 
             if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot|(.*)AOLBuild(.*)|Baidu(.*)|(.*)bingbot(.*)|(.*)BingPreview(.*)|msnbot(.*)|DuckDuckBot(.*)|AdsBot-Google(.*)|(.*)Googlebot(.*)|(.*)Mediapartners-Google(.*)|(.*)Teoma(.*)|(.*)Slurp(.*)|(.*)Yandex(.*))$") {
                 proxy_pass http://app_server;
