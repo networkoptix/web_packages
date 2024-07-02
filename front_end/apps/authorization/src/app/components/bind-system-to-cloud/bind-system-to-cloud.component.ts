@@ -136,7 +136,9 @@ export class BindSystemToCloudComponent implements OnInit {
                 this.state$$.update(state => ({
                     ...state,
                     orgs,
-                    fsmState: BindDialogStates.initial,
+                    fsmState: orgs.length
+                        ? BindDialogStates.initial
+                        : BindDialogStates.confirmAccount,
                     email: this.bindService.getEmailFromToken(),
                 }));
             } else {
@@ -151,12 +153,16 @@ export class BindSystemToCloudComponent implements OnInit {
     });
 
     back(): void {
-        if (!this.channelPartnersEnabled || this.fsmState$$() === BindDialogStates.initial) {
-            this.setCurrentState.emit(AuthorizeState.email);
-            this.cleanup();
-        } else if (this.fsmState$$() === BindDialogStates.orgPromo) {
+        if (this.fsmState$$() === BindDialogStates.orgPromo) {
             this.fsmState = BindDialogStates.confirmAccount;
             return;
+        } else if (
+            !this.channelPartnersEnabled ||
+            this.fsmState$$() === BindDialogStates.initial ||
+            this.orgs$$().length === 0
+        ) {
+            this.setCurrentState.emit(AuthorizeState.email);
+            this.cleanup();
         }
         this.state$$.update(state => ({
             ...state,
