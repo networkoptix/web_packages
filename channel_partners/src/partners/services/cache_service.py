@@ -89,26 +89,38 @@ class CacheService:
     A service class for handling cache operations.
     """
 
+    @staticmethod
+    def keys() -> List[str]:
+        return cache.keys("*")
+
+    def ttl(self, key: str) -> int:
+        return cache.ttl(key)
+
     # Regular cache operations
     @staticmethod
-    def get_cache_fields(cache_key: str, fields: List[str]) -> Dict[str, Any]:
-        return cache.hmget(cache_key, *fields)
+    def get_cache_fields(cache_key: str, fields: List[str]) -> Union[Dict[str, Any], None]:
+        """
+        Retrieves cache fields for a given cache key. If specific fields are provided, only those fields are retrieved.
+        If no fields are provided, all fields are retrieved. If no fields are found, returns None.
+        """
+        result = cache.hgetall(cache_key) if not fields else cache.hmget(cache_key, *fields)
+        return None if result == {} else result
 
     @staticmethod
     def set_cache_fields(cache_key: str, fields: Dict) -> None:
         cache.hmset(cache_key, fields)
 
     @staticmethod
-    def get_bulk_cache(cache_keys: List[str]) -> Dict[str, Any]:
-        return cache.get_many(cache_keys)
-
-    @staticmethod
-    def set_bulk_cache(cache_data: Dict[str, Any]) -> None:
-        cache.set_many(cache_data)
-
-    @staticmethod
     def clear_cache(cache_key: str) -> None:
         cache.delete(cache_key)
+
+    @staticmethod
+    def set(cache_key: str, value: Any) -> None:
+        CacheService._set_versions_in_cache_lua({cache_key: value})
+
+    @staticmethod
+    def set_many(data: Dict[str, Any]) -> None:
+        CacheService._set_versions_in_cache_lua(data)
 
     # End regular cache operations
     @staticmethod
@@ -144,14 +156,14 @@ class CacheService:
         return CacheService._get_items_of_single_type([key], "descendant_version", DescendantVersionMixin)
 
     @staticmethod
-    def get_cached_paths(keys: List[VersionKey]) -> Dict[str, List[Tuple[str, str]]]:
+    def get_cached_paths(keys: List[VersionKey]) -> Dict[str, List[List[str]]]:
         """
         Fetches path versions for a list of keys from cache. If a key is not found in cache, fetches it from the database.
         """
         return CacheService._get_items_of_single_type(keys, "path", PathCacheMixin)
 
     @staticmethod
-    def get_cached_path(key: VersionKey) -> Dict[str, List[Tuple[str, str]]]:
+    def get_cached_path(key: VersionKey) -> Dict[str, List[List[str]]]:
         """
         Fetches path version for a key from cache. If key is not found in cache, fetches it from the database.
         """
@@ -271,8 +283,12 @@ class CacheService:
                         missing_objects[cache_key] = CacheService._build_path_value(instance)
 
                 # Set the values in the cache using set_many
-                cache.set_many(missing_objects)
-                inserted_objects.update(missing_objects)
+                # cache.set_many(missing_objects)
+                successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
+                logger.error(
+                    "Attempted to set versions in cache, but failed",
+                    unsuccessful_keys=list(unsuccessful))
+                inserted_objects.update(successful)
 
         return inserted_objects
 
@@ -314,8 +330,12 @@ class CacheService:
                             missing_objects[cache_key] = getattr(instance, group_item_type)
 
                 # Set the values in the cache
-                cache.set_many(missing_objects)
-                inserted_objects.update(missing_objects)
+                # cache.set_many(missing_objects)
+                successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
+                logger.error(
+                    "Attempted to set versions in cache, but failed",
+                    unsuccessful_keys=list(unsuccessful.keys()))
+                inserted_objects.update(successful)
         return inserted_objects
 
     @staticmethod
@@ -331,13 +351,88 @@ class CacheService:
         return grouped_keys
 
     @staticmethod
-    def _build_path_value(instance: Union[SystemGroup, CloudSystemId]) -> List[Tuple[str, str]]:
+    def _build_path_value(instance: Union[SystemGroup, CloudSystemId]) -> List[List[str]]:
         model_name = instance.__class__.__name__
 
         if model_name in ['ChannelPartner', 'Organization']:
-            return [('ChannelPartner', str(element)) for element in instance.path]
+            return [['ChannelPartner', str(element)] for element in instance.path]
         elif model_name in ['SystemGroup', 'CloudSystemId']:
             ## Ignore the lint warning; need to update the typings
             return instance.systems_path
         else:
             raise ValueError(f"Invalid model type: {model_name}")
+
+    @staticmethod
+    def _set_versions_in_cache_lua(
+            data: Dict[str, Union[int, str, List[str]]]
+    ) -> Tuple[
+        Dict[str, Union[int, str, List[str]]],
+        Dict[str, Union[int, str, List[str]]]
+    ]:
+        time_parts = cache.time()
+        start_time = int(f"{time_parts[0]}{time_parts[1]:06d}")
+
+        # Lua script to set the values only if the start_time is greater than the last set time
+        lua_script = """
+                    local start_time = tonumber(ARGV[1])
+                    local time_parts = redis.call('TIME')
+                    local current_time = tonumber(time_parts[1] .. string.format("%06d", time_parts[2]))
+                
+                    local keys_to_check = {}
+                    local values_to_set = {}
+                    local successful_keys = {}
+                    local unsuccessful_keys = {}
+                
+                    for i = 2, #ARGV, 2 do
+                        local key_to_set = ARGV[i]
+                        local value_to_set = ARGV[i + 1]
+                        table.insert(keys_to_check, key_to_set .. ':time')
+                        table.insert(values_to_set, {key_to_set, value_to_set})
+                    end
+                
+                    local stored_times = redis.call('MGET', unpack(keys_to_check))
+                
+                    for i = 1, #values_to_set do
+                        local key_to_set = values_to_set[i][1]
+                        local value_to_set = values_to_set[i][2]
+                        local key_to_check = keys_to_check[i]
+                        local stored_time = stored_times[i]
+                
+                        if value_to_set == '' or not stored_time or start_time > tonumber(stored_time) then
+                            redis.call('SET', key_to_set, value_to_set)
+                            redis.call('SET', key_to_check, current_time)
+                            table.insert(successful_keys, key_to_set)
+                        else
+                            table.insert(unsuccessful_keys, key_to_set)
+                        end
+                    end
+                
+                    return {successful_keys, unsuccessful_keys}
+                    """
+
+        # Prepare the arguments for the Lua script
+        args = [start_time]
+        for key, value in data.items():
+            validated_key = cache.make_and_validate_key(key, version=None)
+            args.append(validated_key)
+            args.append(cache.serializer.dumps(value))
+
+
+        # Execute the Lua script
+        try:
+            registered_script = cache.register_script(lua_script)
+            result = registered_script(args=args)
+
+            # Clean the keys
+            successful_keys = cache.clean_keys(*result[0])
+            unsuccessful_keys = cache.clean_keys(*result[1])
+
+            # Match the cleaned keys with their values from the original data
+            successful_pairs = {key: data[key] for key in successful_keys}
+            unsuccessful_pairs = {key: data[key] for key in unsuccessful_keys}
+
+            return successful_pairs, unsuccessful_pairs
+        except Exception as e:
+            print(e)
+            logger.error("Redis error when attempting to set via Lua", error=str(e))
+            return {}, data
