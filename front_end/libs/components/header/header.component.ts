@@ -40,6 +40,7 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxLoginService } from '@services/login.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -166,6 +167,7 @@ export class NxHeaderComponent implements OnInit {
         private sessionStorage: SessionStorageService,
         private cookieService: CookieService,
         public loginService: NxLoginService,
+        private channelPartnersService: NxChannelPartnersService,
     ) {
         translateService.onTranslationChange.pipe(takeUntilDestroyed()).subscribe(() => {
             setTimeout(() => {
@@ -334,7 +336,7 @@ export class NxHeaderComponent implements OnInit {
         this.menusService
             .getMenu(nxConfig.featureFlags.newHeader ? 'new header' : 'header', true)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(header => {
+            .subscribe(async header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 if (environment.isLocal) {
                     const permissions = this.systemService
@@ -360,10 +362,23 @@ export class NxHeaderComponent implements OnInit {
                         nodes.unshift(this.menusService.makeWelcomeNode());
                     } else {
                         if (
+                            this.accountService.account.is_authenticated &&
                             nxConfig.featureFlags.channelPartners &&
                             nxConfig.featureFlags.channelPartnersReportsUI
                         ) {
-                            nodes.unshift(this.menusService.makeReportsMenuNode());
+                            try {
+                                const structure = await firstValueFrom(
+                                    this.channelPartnersService.getChannelStructure(),
+                                );
+                                if (
+                                    structure.channelPartners.length ||
+                                    structure.organizations.length
+                                ) {
+                                    nodes.unshift(this.menusService.makeReportsMenuNode());
+                                }
+                            } catch (e) {
+                                console.error('Failed to load channel partner structure');
+                            }
                         }
                         nodes.unshift(this.menusService.makeSystemMenuNode());
                         nodes.push(this.menusService.makeAccountSettingsNode());
