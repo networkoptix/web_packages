@@ -422,6 +422,23 @@ export class WebRTCStreamManager {
         });
     }
 
+    static updateCameraPosition(cameraId: string, position = 0, withinChunk = false): Observable<number> {
+        const connection = WebRTCStreamManager.getInstance(cameraId);
+
+        if (!connection) {
+            return NEVER;
+        }
+
+        const connected = connection.updatePosition(position);
+
+        if (withinChunk && !connected) {
+            connection.start();
+        }
+
+        return connection.currentPosition$;
+
+    }
+
         /**
      * Updates the speed for stream for all WebRtcStreamManager instances.
      *
@@ -480,19 +497,20 @@ export class WebRTCStreamManager {
      * @param position - position in ms
      * @param clearStream - stop current stream immediately
      */
-    updatePosition(position: number, clearStream = false): void {
+    updatePosition(position: number, clearStream = false, withinChunk = false): boolean {
         if (clearStream) {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
         }
-        const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel && this.initialPositionSent;
+        const useDataChannelUpdate = withinChunk && this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel && this.initialPositionSent;
 
         if (useDataChannelUpdate) {
-            this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ position }));
+            this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ seek: position }));
         }
 
         this.initialPositionSent = true;
         this.position$.next(new WithSkip(position, useDataChannelUpdate));
+        return !!this.peerConnection?.remoteDataChannel;
     }
 
     /** Internal */
@@ -967,7 +985,7 @@ export class WebRTCStreamManager {
             }
 
             const position = this.position$.value.value;
-            const speed = this.speed$.value.value;
+            const speed = this.speed$.value.value || 1;
             const stream = this.currentStream();
             let webRtcUrl = this.webRtcUrlFactory({ position, speed: speed === Infinity ? 'unlimited' : speed });
 

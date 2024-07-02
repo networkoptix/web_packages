@@ -55,7 +55,9 @@ export class MosScoreTracker extends BaseTracker<number> {
             }
         }, issues => {
             this.logger?.info({ issues });
-            connection.reconnectionHandler(true);
+            if (issues.some(({ type }) => type !== 'cpu')) {
+                connection.reconnectionHandler(true);
+            }
         })
         this.updateMetric(performance.now());
     }
