@@ -20,6 +20,8 @@ class PathCacheMixin(models.Model):
     """
 
     def get_cached_path(self) -> List[Tuple[str, str]]:
+        from partners.services.cache_service import CacheService
+
         """
         This method retrieves the path version from the cache.
         If the path version is not found in the cache, it is generated using the _build_path_for_systems method
@@ -34,10 +36,12 @@ class PathCacheMixin(models.Model):
                 path_version = self.systems_path
             else:
                 path_version = self.build_path
-            cache.set(cache_key, path_version)
+            CacheService.set(cache_key, path_version)
         return path_version
 
     def update_cached_path(self) -> None:
+        from partners.services.cache_service import CacheService
+
         """
         This method updates the path version in the cache.
         """
@@ -48,22 +52,22 @@ class PathCacheMixin(models.Model):
             path_version = self.systems_path
         else:
             path_version = self.build_path
-        cache.set(cache_key, path_version)
+        CacheService.set(cache_key, path_version)
 
     @property
-    def build_path(self) -> List[Tuple[str, str]]:
+    def build_path(self) -> List[List[str]]:
         """
         This method builds the path version for the instance.
         The path version is a list of tuples, where each tuple contains a model name and an id.
         """
         path = []
         for id in self.path:
-            segment = ('ChannelPartner', str(id))
+            segment = ['ChannelPartner', str(id)]
             path.append(segment)
         return path
 
     @property
-    def systems_path(self) -> List[Tuple[str, str]]:
+    def systems_path(self) -> List[List[str]]:
         """
         This method builds the path version for the instance.
         The path version is a list of tuples, where each tuple contains a model name and an id.
@@ -72,10 +76,10 @@ class PathCacheMixin(models.Model):
         model = 'SystemGroup'
         for id in self.path:
             if id == self.organization_id:
-                segment = ('Organization', str(id))
+                segment = ['Organization', str(id)]
                 path.append(segment)
                 model = 'ChannelPartner'
             else:
-                segment = (model, str(id))
+                segment = [model, str(id)]
                 path.append(segment)
         return path

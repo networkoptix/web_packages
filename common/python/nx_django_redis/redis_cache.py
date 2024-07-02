@@ -30,6 +30,7 @@ def get_loop_id(loop=None):
     except RuntimeError:
         return None
 
+
 @edc.dataclass
 @dataclasses.dataclass
 class ContextConnectionPoolStorage:
@@ -63,7 +64,7 @@ class ContextConnectionPoolStorage:
 
     def print_state(self):
         logger.debug(f'self {id(self)} || thread {self.thread_id}={threading.get_native_id()} '
-                       f'|| {self.loop_id}={get_loop_id()}, pools: {self._pools.__len__()}')
+                     f'|| {self.loop_id}={get_loop_id()}, pools: {self._pools.__len__()}')
 
     def print_pools(self):
         # Use this on debug only, because `self._pools` can be changed concurrently
@@ -403,12 +404,12 @@ class RedisAsyncCommandsMixin:
 class AsyncCacheClient(RedisAsyncCommandsMixin):
 
     def __init__(
-        self,
-        servers,
-        serializer=None,
-        pool_class=None,
-        parser_class=None,
-        **options,
+            self,
+            servers,
+            serializer=None,
+            pool_class=None,
+            parser_class=None,
+            **options,
     ):
         import redis
         self._lib = redis.asyncio
@@ -650,15 +651,19 @@ class RedisSyncCommandsMixin:
     def time(self):
         return self.get_client(None).time()
 
+    def register_script(self, script):
+        client = self.get_client(None, write=True)
+        return client.register_script(script)
+
 
 class CustomRedisClient(RedisSyncCommandsMixin, RedisCacheClient):
     def __init__(
-        self,
-        servers,
-        serializer=None,
-        pool_class=None,
-        parser_class=None,
-        **options,
+            self,
+            servers,
+            serializer=None,
+            pool_class=None,
+            parser_class=None,
+            **options,
     ):
         # rewrite serializer class to custom one to avoid awaitable caching
         super().__init__(
@@ -678,6 +683,7 @@ class CustomRedisClient(RedisSyncCommandsMixin, RedisCacheClient):
                 **options,
             )
         return self._pools[index]
+
 
 class BackendAsyncCommandsMixin:
 
@@ -811,14 +817,13 @@ class BackendAsyncCommandsMixin:
 class BackendSyncCommandsMixin:
     def keys(self, pattern, version=None):
         key = self.make_and_validate_key(pattern, version=version)
-        return self.clean_keys(*self._cache.keys(key))
+        return self.clean_keys(*self._cache.keys(key), version)
 
     def hdel(self, key, *fields, version=None):
         key = self.make_and_validate_key(key, version=version)
         for f in fields:
             self.validate_key(f)
         return self._cache.hdel(key, *fields)
-
 
     def hexists(self, key, field, version=None):
         key = self.make_and_validate_key(key, version=version)
@@ -905,6 +910,9 @@ class BackendSyncCommandsMixin:
     def time(self):
         return self._cache.time()
 
+    def register_script(self, script):
+        return self._cache.register_script(script)
+
 
 def clean_keys(cache_backend, *keys, version=None):
     prefix = cache_backend.make_key('', version=version)
@@ -936,7 +944,6 @@ class SyncAsyncRedisBackend(BackendAsyncCommandsMixin, BackendSyncCommandsMixin,
 
     @cached_property
     def _cache(self):
-
         return self._class(self._servers, **self._options)
 
     def clean_keys(self, *keys, version=None):
@@ -955,6 +962,10 @@ class RedisSyncBackend(BackendSyncCommandsMixin, RedisCache):
     @cached_property
     def _cache(self):
         return self._class(self._servers, **self._options)
+
+    @property
+    def serializer(self) -> RedisSerializer:
+        return self._cache._serializer
 
     def clean_keys(self, *keys, version=None):
         return clean_keys(self, *keys, version=version)

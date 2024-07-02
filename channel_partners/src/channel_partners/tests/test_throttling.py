@@ -58,12 +58,11 @@ urlpatterns = [
     path('partners/internal/', NoAuthNoPermQuickResponseView.as_view(), name='test-internal'),
     path('partners/test-user/', UserQuickResponseView.as_view(), name='test-response'),
     path('partners/test-system/', SystemQuickResponseView.as_view(), name='test-system')
-
 ]
 
 
 ########################################
-###                 TESTS                      ###
+###                 TESTS            ###
 ########################################
 @override_settings(ROOT_URLCONF=__name__)
 class ThrottleTests(TestCase):

@@ -21,53 +21,70 @@ class VersionMixin(models.Model):
         abstract = True
 
     def get_version(self) -> int:
+        from partners.services.cache_service import CacheService
+
         cache = caches["dependent_cache"]
         cache_key = get_version_cache_key(self.__class__, self.id, "version")
         version = cache.get(cache_key)
         if version is None:
             version = self.version
-            cache.set(cache_key, version)
+            CacheService.set(cache_key, version)
         return version
 
     @transaction.atomic
     def set_version(self, version: int) -> None:
-        cache = caches["dependent_cache"]
+        from partners.services.cache_service import CacheService
+
         self.version = version
-        self.__class__.objects.filter(id=self.id).update(version=version)
+        (self.__class__.objects.select_for_update()
+         .filter(id=self.id)
+         .update(version=version))
         # This shows a warning because FieldChoiceEnum is not imported
         cache_key = get_version_cache_key(self.__class__, self.id, "version")
-        cache.set(cache_key, None)
+        CacheService().set(cache_key, version)
 
     @classmethod
     @transaction.atomic
     def increment_version_by_id(cls, id: Union[str, UUID]) -> None:
-        cache = caches["dependent_cache"]
-        cache_key = get_version_cache_key(cls, id, "version")
-        cls.objects.filter(id=id).update(version=F('version') + 1)
+        from partners.services.cache_service import CacheService
 
-        cache.set(cache_key, None)
+        cache_key = get_version_cache_key(cls, id, "version")
+        (cls.objects.select_for_update()
+         .filter(id=id)
+         .update(version=F('version') + 1))
+        updated_instance = cls.objects.get(id=id)
+        CacheService.set(cache_key, updated_instance.version)
 
     def increment_version(self):
-        cache = caches["dependent_cache"]
+        from partners.services.cache_service import CacheService
+
         # This shows a warning because FieldChoiceEnum is not imported
         cache_key = get_version_cache_key(self.__class__, self.id, "version")
         with transaction.atomic():
-            self.__class__.objects.filter(id=self.id).update(version=F('version') + 1)
-            cache.set(cache_key, None)
+            (self.__class__.objects.select_for_update()
+             .filter(id=self.id)
+             .update(version=F('version') + 1))
+            updated_instance = self.__class__.objects.get(id=self.id)
+            CacheService.set(cache_key, updated_instance.version)
 
     @staticmethod
     @transaction.atomic
     def increment_version_bulk(cls, ids: List[Union[str, UUID]]) -> None:
+        from partners.services.cache_service import CacheService
+
         if not ids:
             return
 
-        cache = caches["dependent_cache"]
         # Increment the version for all instances
-        cls.objects.filter(id__in=ids).update(version=F('version') + 1)
+        (cls.objects.select_for_update()
+         .filter(id__in=ids)
+         .update(version=F('version') + 1))
+
+        updated_instances = cls.objects.only("id", "version").in_bulk(ids)
         # Generate the cache data
         cache_data = {
-            get_version_cache_key(cls, id, "version"): None
-            for id in ids
+            get_version_cache_key(cls, instance.id, "version"): instance.version
+            for instance in updated_instances.values()
         }
         # Set the cache data
-        cache.set_many(cache_data)
+        CacheService.set_many(cache_data)

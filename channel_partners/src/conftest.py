@@ -57,6 +57,17 @@ from partners.models import (
 
 @pytest.fixture()
 def assert_all_responses_were_requested() -> bool:
+    """
+    Fixture that controls whether all mocked HTTP responses should be requested during the test.
+
+    When set to True, the test will fail if there are any mocked HTTP responses that were not requested during the test.
+    When set to False, the test will not fail if there are any mocked HTTP responses that were not requested.
+
+    Documentation: https://colin-b.github.io/pytest_httpx/
+
+    Returns:
+        bool: False, indicating that the test will not fail if there are any mocked HTTP responses that were not requested.
+    """
     return False
 
 

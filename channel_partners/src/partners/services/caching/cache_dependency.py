@@ -3,7 +3,6 @@ from typing import (
     Dict,
     List,
     Literal,
-    Tuple,
     Type,
     Union,
 )
@@ -169,7 +168,7 @@ class CacheDependency:
     def get_parent_key(
             self,
             instance_id: Union[str, uuid.UUID],
-            path_versions: Dict[str, List[Tuple[str, str]]]
+            path_versions: Dict[str, List[List[str]]]
     ) -> VersionKeyAndType:
         """
         Returns the parent key for the cache dependency.
@@ -179,7 +178,7 @@ class CacheDependency:
 
         Args:
             instance_id (Union[str, uuid.UUID]): The instance ID of the cache dependency.
-            path_versions (Dict[str, List[Tuple[str, str]]]): The path versions of the cache dependency.
+            path_versions (Dict[str, List[List[str]]]): The path versions of the cache dependency.
 
         Returns:
             VersionKeyAndType: The parent key for the cache dependency.
@@ -208,7 +207,7 @@ class CacheDependency:
 
     def get_ancestor_keys(
             self, instance_id: Union[str, uuid.UUID],
-            path_versions: Dict[str, List[Tuple[str, str]]]
+            path_versions: Dict[str, List[List[str]]]
     ) -> List[VersionKeyAndType]:
         """
         Returns the ancestor keys for the cache dependency.
@@ -218,7 +217,7 @@ class CacheDependency:
 
         Args:
             instance_id (Union[str, uuid.UUID]): The instance ID of the cache dependency.
-            path_versions (Dict[str, List[Tuple[str, str]]]): The path versions of the cache dependency.
+            path_versions (Dict[str, List[List[str]]]): The path versions of the cache dependency.
 
         Returns:
             List[VersionKeyAndType]: The ancestor keys for the cache dependency.
@@ -271,7 +270,7 @@ class CacheDependency:
     def process_target_parent(
             self,
             instance_id: Union[str, uuid.UUID],
-            path_versions: Dict[str, List[Tuple[str, str]]],
+            path_versions: Dict[str, List[List[str]]],
             versions: Dict[str, int]
     ) -> str:
         """
@@ -282,7 +281,7 @@ class CacheDependency:
 
         Args:
             instance_id (Union[str, uuid.UUID]): The instance ID of the cache dependency.
-            path_versions (Dict[str, List[Tuple[str, str]]]): The path versions of the cache dependency.
+            path_versions (Dict[str, List[List[str]]]): The path versions of the cache dependency.
             versions (Dict[str, int]): The versions of the cache dependency.
 
         Returns:
@@ -293,7 +292,7 @@ class CacheDependency:
             self._model,
             str(instance_id),
             CachedFieldChoiceEnum.PATH_VERSION)
-        path_versions: List[Tuple[str, str]] = path_versions.get(path_cache_key)
+        path_versions: List[List[str]] = path_versions.get(path_cache_key)
 
         if not path_versions:
             return None
@@ -318,7 +317,7 @@ class CacheDependency:
     def process_target_ancestor(
             self,
             instance_id: Union[str, uuid.UUID],
-            path_versions: Dict[str, List[Tuple[str, str]]],
+            path_versions: Dict[str, List[List[str]]],
             versions: Dict[str, int]
     ) -> str:
         """
@@ -329,7 +328,7 @@ class CacheDependency:
 
         Args:
             instance_id (Union[str, uuid.UUID]): The instance ID of the cache dependency.
-            path_versions (Dict[str, List[Tuple[str, str]]]): The path versions of the cache dependency.
+            path_versions (Dict[str, List[List[str]]]): The path versions of the cache dependency.
             versions (Dict[str, int]): The versions of the cache dependency.
 
         Returns:
@@ -337,7 +336,7 @@ class CacheDependency:
         """
         # Get the path versions for the instance
         path_cache_key = get_version_cache_key(self._model, str(instance_id), CachedFieldChoiceEnum.PATH_VERSION)
-        path_versions_list: List[Tuple[str, str]] = path_versions.get(path_cache_key)
+        path_versions_list: List[List[str]] = path_versions.get(path_cache_key)
         if not path_versions_list:
             raise ValueError(f"No path versions found for {path_cache_key}")
 

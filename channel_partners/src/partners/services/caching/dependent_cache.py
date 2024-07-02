@@ -28,6 +28,11 @@ class DependentCache:
     """
     Class for defining a dependent cache.
     """
+    name: str
+    key_params: list[str]
+    dependencies: list[CacheDependency]
+    validate_user: bool
+    protocol_version: int
 
     def __init__(
             self,
@@ -35,7 +40,7 @@ class DependentCache:
             key_params: List[str],
             dependencies: List[CacheDependency],
             validate_user: bool = True,
-            protocol_version: int = 1
+            protocol_version: int = 1  # Not currently used
     ) -> None:
         # Validate the input
         self._check_for_duplicate_key_params(key_params)
@@ -47,13 +52,18 @@ class DependentCache:
         self.validate_user = validate_user
         self.protocol_version = protocol_version
 
+    # ==================== #
+    # Main Processing methods
+    # ==================== #
     def set(
             self,
             keys: Dict[str, Any],
+            validation_sources: Dict[str, Any],
             data: Dict[str, Any],
             user: CloudUser = None
     ) -> None:
         # Validate the input
+        self._validate_key_params_against_keys(keys)
         if self.validate_user and not user:
             raise ValueError("User must be provided when validate_user is True")
         if "**validation_hash" in data:
@@ -62,11 +72,10 @@ class DependentCache:
         # Set the data in the cache
         try:
             # Generate cache key
-            key_parts = [f'{k}:{v}' for k, v in keys.items()]
-            cache_key = f'dependent_cache:{self.name}:' + ':'.join(key_parts)
+            cache_key = self._generate_cache_key(keys)
 
             # Calculate the validation hash and add it to the data
-            dependency_strings = self._generate_dependency_keys(self.dependencies, keys)
+            dependency_strings = self._generate_dependency_keys(self.dependencies, validation_sources)
 
             if self.validate_user:
                 version_key = VersionKey(model=CloudUser, id=str(user.id))
@@ -76,7 +85,6 @@ class DependentCache:
             validation_hash = hashlib.md5(str(dependency_strings).encode()).hexdigest()
             data = {**data, '**validation_hash': validation_hash}
 
-            # Set the data in the cache
             CacheService.set_cache_fields(cache_key, data)
         except Exception as e:
             if user:
@@ -103,9 +111,8 @@ class DependentCache:
 
         # Retrieve the data from the cache
         try:
-            # Generate the cache key
-            key_parts = [f'{k}:{v}' for k, v in keys.items()]
-            cache_key = f'dependent_cache:{self.name}:' + ':'.join(key_parts)
+            # Generate cache key
+            cache_key = self._generate_cache_key(keys)
 
             # Retrieve the data from the cache
             fields_to_get = data_fields + ['**validation_hash']
@@ -115,7 +122,7 @@ class DependentCache:
                 logger.debug("Cache hit", cache_key=cache_key)
 
                 # Check if the validation hash matches
-                dependency_strings = self._generate_dependency_keys(self.dependencies, keys)
+                dependency_strings = self._generate_dependency_keys(self.dependencies, validation_sources)
 
                 if self.validate_user:
                     version_key = VersionKey(model=CloudUser, id=str(user.id))
@@ -147,6 +154,9 @@ class DependentCache:
                 logger.error("Error validating and retrieving cache", error=str(e))
             return None
 
+    # ==================== #
+    # Dependency methods
+    # ==================== #
     def _generate_dependency_keys(
             self,
             dependencies: List[CacheDependency],
@@ -197,8 +207,20 @@ class DependentCache:
         return dependency_strings
 
     # ==================== #
+    # Utility methods
+    # ==================== #
+    def _generate_cache_key(self, keys: Dict[str, Any]) -> str:
+        key_parts = [f'{k}:{v}' for k, v in keys.items()]
+        return f'dependent_cache:{self.name}:' + ':'.join(key_parts)
+
+    # ==================== #
     # Validation methods
     # ==================== #
+    def _validate_key_params_against_keys(self, keys: Dict[str, Any]) -> None:
+        for key_param in self.key_params:
+            if key_param not in keys:
+                raise ValueError(f"Key param {key_param} not found in keys")
+
     @staticmethod
     def _check_for_duplicate_key_params(key_params: List[str]) -> None:
         if len(key_params) != len(set(key_params)):
