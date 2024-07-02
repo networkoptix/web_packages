@@ -5,12 +5,11 @@
                 <ng-container>
                     <nx-settings-general-v2
                         [inOrganization]="true"
+                        [lockState]="!currentState$$().canUpdateStatus"
                         [currentName]="name$$()"
                         [permissions]="permissions$$()"
                         [channelPartnerAccessLevel]="accessLevel$$()"
-                        [canChangeState]="permissionsStore.canChangeOrganizationState$$()"
-                        [currState]="effectiveState$$()"
-                        [settingsState]="currentState$$()"
+                        [currentState]="effectiveState$$()"
                         (updateAccess)="handleAccessUpdate()"
                         (disconnectOrg)="deleteUserFromOrg()"
                     >

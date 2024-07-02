@@ -59,6 +59,9 @@ export const PermissionsStore = signalStore(
     withState(() => inject(PERMISSION_STATE)),
     withComputed(({ orgPermissions, partnerPermissions, parentPartnerPermissions }) => ({
         // Channel Partner Action Signals
+        canConfigureChannelPartner$$: computed(
+            () => partnerPermissions().configure_channel_partner,
+        ),
         canCreateOrgs$$: computed(() => partnerPermissions().add_remove_organizations),
         canCreateSubChannels$$: computed(
             () =>
@@ -79,8 +82,12 @@ export const PermissionsStore = signalStore(
                 (partnerPermissions().view_service_reports ||
                     parentPartnerPermissions().view_service_reports),
         ),
-        canViewPartnerSupportUI$$: computed(() => nxConfig.featureFlags.channelPartnersSupportUI),
-        canViewPartnerSettings$$: computed(() => partnerPermissions().configure_channel_partner),
+        canViewPartnerSupportUI$$: computed(() => nxConfig.featureFlags.channelPartnersSupportUI!),
+        canViewPartnerSettings$$: computed(
+            () =>
+                parentPartnerPermissions().alter_state_sub_channel_partners ||
+                partnerPermissions().configure_channel_partner,
+        ),
         canViewSubChannels$$: computed(
             () =>
                 partnerPermissions().add_remove_sub_channel_partners ||

@@ -30,10 +30,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
-import { settingsViews } from '@pages/home/home.types';
 import {
-    ChannelPartner,
-    Organization,
     OrgRoleIds,
     State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -60,12 +57,6 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
     [OrgRoleIds.SysHealthViewer]: partnerAccess[1],
     null: partnerAccess[2],
 };
-
-interface SettingsState {
-    view?: string;
-    item?: ChannelPartner | Organization;
-    canUpdateStatus: boolean;
-}
 
 @Component({
     selector: 'nx-settings-general-v2',
@@ -95,6 +86,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     LANG = staticLang;
     icons = icons;
     State = State;
+
     generalForm: FormGroup = new FormGroup({
         name: new FormControl('', [Validators.required, Validators.maxLength(MAX_NAME_LENGTH)]),
         accessLevel: new FormControl(''),
@@ -108,25 +100,41 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
     readonly canDisconnectAccount = false; // Either add flag or update check in 23.3.4
 
     readonly partnerAccess = partnerAccess;
-    currState = input<State | null>(null);
-    inOrganization$$ = input.required<boolean>({ alias: 'inOrganization' });
+
+    inOrganization$$ = input<boolean>(false, { alias: 'inOrganization' });
+    inSubChannel$$ = input<boolean>(false, { alias: 'inSubChannel' });
+    lockState = input.required<boolean>();
+    currentState = input<State | null>(null);
     currentName = input.required<string>();
     channelPartnerAccessLevel = input<string>('');
-    canChangeState = input.required<boolean>();
+
     permissions = input.required<{
-        canAlterState: boolean;
-        canViewPartnerSettings: boolean;
+        canAlterStateChannelPartner: boolean;
+        canAlterStateOrg: boolean;
+        canConfigureChannelPartner: boolean;
         canConfigureOrg: boolean;
+        canViewPartnerSettings: boolean;
         canUpdateAccess: boolean;
     }>();
-    canConfigure$$ = computed<boolean>(() =>
+
+    canAlterState$$ = computed<boolean>(() =>
         this.inOrganization$$()
-            ? this.permissions().canConfigureOrg
-            : this.permissions().canViewPartnerSettings,
+            ? this.permissions().canAlterStateOrg
+            : this.permissions().canAlterStateChannelPartner,
     );
+    canConfigure$$ = computed<boolean>(
+        () =>
+            !this.inSubChannel$$() &&
+            (this.inOrganization$$()
+                ? this.permissions().canConfigureOrg
+                : this.permissions().canConfigureChannelPartner),
+    );
+
     canDeleteSelfFromOrg$$ = computed(() => this.inOrganization$$());
-    canUpdateAccess$$ = computed<boolean>(() => this.permissions().canUpdateAccess);
-    settingsState = input.required<SettingsState>();
+    canUpdateAccess$$ = computed<boolean>(
+        () => this.inOrganization$$() && this.permissions().canUpdateAccess,
+    );
+
     currAccess$$ = computed<DropdownItem<string | null>>(
         () => accessMap?.[this.channelPartnerAccessLevel()] || null,
     );
@@ -139,26 +147,27 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
             name: this.currentName(),
             accessLevel: this.currAccess$$(),
         });
-        this.stateForm.patchValue({ stateToggle: this.currState() });
-        this.updatePermissionDesc();
+        this.stateForm.patchValue({ stateToggle: this.currentState() });
+        if (this.canUpdateAccess$$()) {
+            this.updatePermissionDesc();
+        }
     }
 
     onSelect(value: string): void {
         this.updateAccess.emit(value);
-        this.updatePermissionDesc();
+        setTimeout(() => this.updatePermissionDesc());
     }
 
     updatePermissionDesc(): void {
-        const role =
-            this.LANG.channelPartners.orgs.permissionDescription[
-                this.generalForm?.get('accessLevel')?.value.name
-            ];
+        const accessLevel = (this.generalForm?.get('accessLevel')?.value?.name ?? '') as string;
+        const permissionDescription: Record<string, string> =
+            this.LANG.channelPartners.orgs.permissionDescription ?? {};
+        const role = permissionDescription[accessLevel];
         if (!role) {
             this.roleDescription = '';
         }
         this.roleDescription = this.translateService.instant(role)?.replaceAll('|', '');
     }
 
-    protected readonly settingsViews = settingsViews;
     protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
 }

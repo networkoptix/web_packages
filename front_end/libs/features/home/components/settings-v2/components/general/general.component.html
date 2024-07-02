@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-10">
-        <!--The plan is to remove subchannels logic once subchannels and channel partners are merged-->
-        @if (canConfigure$$() && settingsState().view !== settingsViews.SUBCHANNELS) {
+        @if (canConfigure$$()) {
             <nx-block>
                 <header>
                     <h4 translate>General</h4>
@@ -38,7 +37,6 @@
                                         class="fs-mask form-control"
                                         name="name"
                                         id="name"
-                                        [disabled]="!canConfigure$$()"
                                         nxFocusMe
                                     />
                                 </div>
@@ -99,15 +97,10 @@
         }
     </div>
 </div>
-<!--We'll replace settingsViews check with calAlterState check once we have the ability to check parent partner's permissions-->
-@if (
-    showStateChangeBlock &&
-    canConfigure$$() &&
-    settingsState().view !== settingsViews.CHANNEL_PARTNERS
-) {
+@if (showStateChangeBlock && canAlterState$$()) {
     <div class="row pt-3">
         <div class="col-10">
-            @if (!canChangeState()) {
+            @if (lockState()) {
                 <div class="change-unavailable">
                     <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
                     <div translate>

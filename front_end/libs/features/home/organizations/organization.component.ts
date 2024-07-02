@@ -43,7 +43,6 @@ import { NxTutorialDialogComponent } from '@dialogs/channel-partners/tutorial-di
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PipesModule } from '@pipes/pipes.module';
 import { Account } from '@services/account.service/account';
@@ -105,7 +104,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     isValidOrg = true;
-    orgUserStore = inject(OrgUsersStore);
 
     hasSupportInfo$$ = computed(() => {
         return Object.values(this.parentPartner$$()?.supportInformation || []).some(
@@ -144,8 +142,9 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
                     route: 'support',
                 });
             }
-
-            if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
+            // Use this statement when we support disconnecting from orgs.
+            // if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
+            if (this.permissionsStore.canViewOrgSettings$$()) {
                 tabs.push({
                     displayName: this.LANG.channelPartners.tabNames.settings,
                     route: 'settings',

@@ -3,19 +3,18 @@
         <div class="settings-container">
             @if (state.item) {
                 <nx-settings-general-v2
-                    [inOrganization]="false"
+                    [inSubChannel]="subchannelSettings()"
+                    [lockState]="!currentState$$().canUpdateStatus"
                     [currentName]="name$$()"
                     [permissions]="permissions$$()"
-                    [canChangeState]="permissionsStore.canChangePartnerState$$()"
-                    [currState]="effectiveState$$()"
-                    [settingsState]="currentState$$()"
+                    [currentState]="effectiveState$$()"
                 >
                     @if (name$$() !== generalForm?.get('name').value) {
                         <ng-container processButtons>
                             <div class="row m-0">
                                 <div class="footer pt-4 pl-2 pb-2">
                                     <nx-process-button
-                                        [buttonDisabled]="generalForm?.valid"
+                                        [buttonDisabled]="!generalForm?.valid"
                                         [removeMinWidth]="true"
                                         [process]="updateCPProcess"
                                         [buttonText]="'Save' | translate"

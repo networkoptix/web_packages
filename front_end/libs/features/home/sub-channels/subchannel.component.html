@@ -7,10 +7,10 @@
         All Partners</a
     >
     <div class="header">
-        <h2>{{ (currentSubchannel$ | async).name }}</h2>
+        <h2>{{ currentSubChannel$$()?.name }}</h2>
         @if (
-            (currentSubchannel$ | async)?.effectiveState !== 'active' &&
-                (currentSubchannel$ | async)?.effectiveState;
+            currentSubChannel$$()?.effectiveState !== 'active' &&
+                currentSubChannel$$()?.effectiveState;
             as state
         ) {
             <nx-tag
@@ -24,7 +24,7 @@
         }
     </div>
     <nx-tabs animated>
-        @for (tab of tabs; track $index) {
+        @for (tab of tabs(); track $index) {
             <nx-base-tab
                 [displayName]="tab.displayName"
                 [route]="tab.route"

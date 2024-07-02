@@ -10,7 +10,10 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
-import { selectCurrentSubchannelPartners } from '@common/store/channel-partners/channel-partners.selectors';
+import {
+    selectCurrentPartnerParent,
+    selectCurrentSubchannelPartners,
+} from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
@@ -53,6 +56,7 @@ import { NxSettingsGeneralV2Component } from '../../settings-v2/components/gener
     ],
 })
 export class NxChannelPartnersSettingsComponent extends SettingsBase implements OnInit {
+    parentPartner$$ = this.store.selectSignal(selectCurrentPartnerParent);
     subchannelPartners$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
     updateStateProcess: Process;
     updateCPProcess: Process;
@@ -68,8 +72,9 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
 
     currentState$$ = computed<CPSettingsState>(() => {
         const currentPartner = this.currentPartner$$();
+        const parentPartner = this.parentPartner$$();
         const state: CPSettingsState = {
-            canUpdateStatus: currentPartner?.effectiveState === 'active',
+            canUpdateStatus: parentPartner?.effectiveState === 'active',
         };
 
         // Leaving subChannels in this component for now because they will be removed altogether later on.

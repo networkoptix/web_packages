@@ -12,7 +12,7 @@
     *ngIf="routeData$ | async as routeData"
     [ngClass]="{ root: !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel }"
 >
-    @if (parentPartner$$(); as parentChannelPartner) {
+    @if (!routeData.parentData.inOrganization && parentPartner$$(); as parentChannelPartner) {
         <a
             class="back-link"
             [routerLink]="returnToParentLink$$()"

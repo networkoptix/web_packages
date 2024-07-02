@@ -1,16 +1,12 @@
 import { NgFor } from '@angular/common';
 import { Component, computed, HostBinding, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@language_static';
 import { Mode } from '@pages/home/components/reports/reports.types';
+import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { icons } from '@static-variables';
-import {
-    selectCurrentOrgId,
-    selectCurrentPartnerId,
-} from '@store/channel-partners/channel-partners.selectors';
 
 import { NxCardComponent } from '../card/card.component';
 
@@ -32,16 +28,23 @@ interface ServiceCard {
 })
 export class NxReportsComponent {
     @HostBinding('style.--channel-partners-header-height') headerHeight = '324px';
-    private store = inject(Store);
     mode$$ = input.required<`${Mode}`>({ alias: 'mode' });
 
-    private orgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
-    private partnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
+    private channelPartnerService = inject(NxChannelPartnersService);
+    private entityId$$ = computed(() => {
+        const params = this.channelPartnerService.paramStateHandler.state$$()?.params || {};
+        if (params?.organizationId) {
+            return params.organizationId;
+        } else if (params?.subChannelId) {
+            return params.subChannelId;
+        }
+        return params?.partnerId || '';
+    });
+
     private entityUrl$$ = computed<string>(() => {
+        const entityId = this.entityId$$();
         const mode = this.mode$$();
-        const orgId = this.orgId$$();
-        const partnerId = this.partnerId$$();
-        return mode === Mode.Partner ? `channel-partner/${partnerId}` : `organization/${orgId}`;
+        return (mode === Mode.Partner ? `channel-partner` : `organization`) + '/' + entityId;
     });
 
     services$$ = computed<ServiceCard[]>(() => {
