@@ -1,137 +1,150 @@
-<ng-template #showPlaceholder>
-    <nx-pre-loader [minHeight]="115"></nx-pre-loader>
-</ng-template>
-<div
-    class="d-flex flex-column timeline-container"
-    *ngIf="
-        dataModel.state$$()?.camerasCount && dataModel.state$$().allCamerasData?.length;
-        else showPlaceholder
-    "
->
-    <!--    <div>-->
-    <!--        <nx-timeline-zoom-->
-    <!--            (onZoom)="doZoom($event)"-->
-    <!--            (constantZoom)="constantZoom($event)"-->
-    <!--        ></nx-timeline-zoom>-->
-    <!--    </div>-->
+@defer (when !dataModel.state$$().loading) {
+    @if (dataModel.state$$().camerasCount && dataModel.state$$().allCamerasData.length) {
+        <div class="d-flex flex-column timeline-container">
+            <!--    <div>-->
+            <!--        <nx-timeline-zoom-->
+            <!--            (onZoom)="doZoom($event)"-->
+            <!--            (constantZoom)="constantZoom($event)"-->
+            <!--        ></nx-timeline-zoom>-->
+            <!--    </div>-->
 
-    <div class="nx-timeline-wrapper">
-        <div id="nx-x-axis-major"></div>
-        <div id="nx-x-axis-minor"></div>
-        <div
-            [ngClass]="{ 'multi-layer': dataModel.state$$().camerasCount > 1 }"
-            (mousemove)="renderStateModel.mouseMoveHandler($event)"
-            (mouseleave)="renderStateModel.mouseLeaveHandler()"
-            id="chart"
-            use-device-pixel-ratio
-        ></div>
-        <div
-            *ngIf="dataModel.state$$().camerasCount > 1"
-            (mousemove)="renderStateModel.mouseMoveHandler($event)"
-            (mouseleave)="renderStateModel.mouseLeaveHandler()"
-            id="chartAll"
-            use-device-pixel-ratio
-        ></div>
+            <div class="nx-timeline-wrapper">
+                <div
+                    [ngStyle]="{
+                        visibility: renderStateModel.timelineAxisEnabled$$() ? 'visible' : 'hidden'
+                    }"
+                    id="nx-x-axis-major"
+                    #axisMajor
+                ></div>
+                @if (renderStateModel.timelineAxisEnabled$$()) {
+                    <div
+                        id="nx-x-axis-minor"
+                        #axisMinor
+                    ></div>
+                }
+                <div
+                    [ngClass]="{ 'multi-layer': dataModel.state$$().camerasCount > 1 }"
+                    id="chart"
+                    #chart
+                    use-device-pixel-ratio
+                ></div>
+                <div
+                    *ngIf="dataModel.state$$().camerasCount > 1"
+                    id="chartAll"
+                    #chartAll
+                    use-device-pixel-ratio
+                ></div>
 
-        <div
-            class="canvas-camera-last-minute"
-            *ngIf="renderStateModel.lastMinuteWidth > 2"
-            [style.right.px]="
-                Math.trunc(
-                    -(
-                        renderStateModel.canvasVirtualWidth -
-                        webglService.canvasWidth$.value +
-                        renderStateModel.xPos
-                    ) || 0
-                )
-            "
-            [style.width.px]="renderStateModel.lastMinuteWidth"
-            [style.max-width.px]="webglService.canvasWidth$.value"
-        >
-            <svg
-                id="stripes-svg"
-                xmlns="http://www.w3.org/2000/svg"
-                width="100%"
-                height="100%"
-            >
-                <defs>
-                    <pattern
-                        id="svg-stripes-pattern-148"
-                        patternTransform="rotate(135)"
+                <div
+                    class="canvas-camera-last-minute"
+                    *ngIf="renderStateModel.lastMinuteWidth > 2"
+                    [style.right.px]="
+                        Math.trunc(
+                            -(
+                                renderStateModel.canvasVirtualWidth -
+                                webglService.canvasWidth$.value +
+                                renderStateModel.xPos
+                            ) || 0
+                        )
+                    "
+                    [style.width.px]="renderStateModel.lastMinuteWidth"
+                    [style.max-width.px]="webglService.canvasWidth$.value"
+                >
+                    <svg
+                        id="stripes-svg"
+                        xmlns="http://www.w3.org/2000/svg"
                         width="100%"
-                        height="20"
-                        x="0"
-                        y="0"
-                        patternUnits="userSpaceOnUse"
+                        height="100%"
                     >
-                        <animate
-                            attributeName="y"
-                            begin="0s"
-                            dur="400s"
-                            from="0"
-                            to="5000px"
-                            repeatCount="indefinite"
-                            fill="freeze"
-                        ></animate>
-                        <g>
-                            <rect
+                        <defs>
+                            <pattern
+                                id="svg-stripes-pattern-148"
+                                patternTransform="rotate(135)"
+                                width="100%"
+                                height="20"
                                 x="0"
                                 y="0"
-                                [style.width.px]="renderStateModel.lastMinuteWidth"
-                                height="20"
-                                fill="rgba(var(--green_l2--rgb), 0.1)"
-                            ></rect>
-                            <rect
-                                x="0"
-                                y="10"
-                                [style.width.px]="renderStateModel.lastMinuteWidth"
-                                height="20"
-                                fill="rgba(106, 155, 64, .5)"
-                            ></rect>
-                        </g>
-                    </pattern>
-                </defs>
-                <rect
-                    x="0"
-                    y="0"
-                    width="100%"
-                    height="100%"
-                    fill="url(#svg-stripes-pattern-148)"
-                ></rect>
-            </svg>
+                                patternUnits="userSpaceOnUse"
+                            >
+                                <animate
+                                    attributeName="y"
+                                    begin="0s"
+                                    dur="400s"
+                                    from="0"
+                                    to="5000px"
+                                    repeatCount="indefinite"
+                                    fill="freeze"
+                                ></animate>
+                                <g>
+                                    <rect
+                                        x="0"
+                                        y="0"
+                                        [style.width.px]="renderStateModel.lastMinuteWidth"
+                                        height="20"
+                                        fill="rgba(var(--green_l2--rgb), 0.1)"
+                                    ></rect>
+                                    <rect
+                                        x="0"
+                                        y="10"
+                                        [style.width.px]="renderStateModel.lastMinuteWidth"
+                                        height="20"
+                                        fill="rgba(106, 155, 64, .5)"
+                                    ></rect>
+                                </g>
+                            </pattern>
+                        </defs>
+                        <rect
+                            x="0"
+                            y="0"
+                            width="100%"
+                            height="100%"
+                            fill="url(#svg-stripes-pattern-148)"
+                        ></rect>
+                    </svg>
+                </div>
+
+                <div
+                    class="canvas-camera-name"
+                    [ngClass]="{ short: dataModel.state$$().camerasCount > 1 }"
+                >
+                    {{
+                        dataModel.state$$().selectedCamera?.name ||
+                            dataModel.state$$().selectedCamera?.model
+                    }}
+                </div>
+
+                <!--            <nx-timeline-interactions-->
+                <!--                [zoomInProcess]="renderStateModel.zoomInProcess"-->
+                <!--            ></nx-timeline-interactions>-->
+
+                <nx-timeline-scroll
+                    [barWidth]="renderStateModel.scrollBarWidth$$()"
+                    [barPos]="renderStateModel.scrollBarPos$$()"
+                    (scrollToPos)="renderStateModel.scrollByBarToPos($event)"
+                    (scrollEnd)="renderStateModel.scrollByBarEnd()"
+                >
+                </nx-timeline-scroll>
+
+                <nx-webgl-time-under-mouse></nx-webgl-time-under-mouse>
+                <nx-webgl-timeline-playback-indicator></nx-webgl-timeline-playback-indicator>
+            </div>
+
+            @if (renderStateModel.timelineActionsEnabled$$()) {
+                <nx-timeline-actions
+                    (onActions)="renderStateModel.onActions($event)"
+                ></nx-timeline-actions>
+            }
         </div>
+    }
+} @loading (after 1s) {
+    <nx-pre-loader [minHeight]="115"></nx-pre-loader>
+}
 
-        <div
-            class="canvas-camera-name"
-            [ngClass]="{ short: dataModel.state$$().camerasCount > 1 }"
-        >
-            {{
-                dataModel.state$$().selectedCamera?.name ||
-                    dataModel.state$$().selectedCamera?.model
-            }}
-        </div>
-
-        <nx-timeline-interactions
-            [zoomInProcess]="renderStateModel.zoomInProcess"
-            (scrollToPos)="renderStateModel.scrollToPos($event)"
-        ></nx-timeline-interactions>
-
-        <nx-timeline-scroll
-            [barWidth]="renderStateModel.scrollBarWidth$$()"
-            [barPos]="renderStateModel.scrollBarPos$$()"
-            [playbackPos]="renderStateModel.scrollPlaybackPosition"
-            (scrollToPos)="renderStateModel.scrollToPos($event)"
-            (scrollEnd)="renderStateModel.scrollEnd()"
-            (singleScroll)="renderStateModel.singleScroll($event)"
-            (constantScroll)="renderStateModel.constantScroll($event)"
-        >
-        </nx-timeline-scroll>
-    </div>
-
-    <nx-timeline-actions (onActions)="renderStateModel.onActions($event)"></nx-timeline-actions>
-</div>
-
-<nx-timeline-debug
-    [dataState]="dataModel"
-    [renderState]="renderStateModel"
-></nx-timeline-debug>
+@if (debugMode$$() || (nxConfig.timelineDebugData && dataModel.state$$()?.allCamerasData?.length)) {
+    @defer {
+        <nx-timeline-debug
+            [dataState]="dataModel"
+            [renderState]="renderStateModel"
+        ></nx-timeline-debug>
+    }
+}

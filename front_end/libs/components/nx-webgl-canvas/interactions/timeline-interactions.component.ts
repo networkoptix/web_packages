@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, OnChanges, Output } from '@angular/core';
+import { Component, effect, HostBinding, input, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NgChanges } from '@utils/ng-changes';
+import { NxClickDoubleDirective } from '@directives/nx-single-double-click.directive';
 
 import { ACTIONS, MODE } from '../actions/timeline-actions.types';
-import { SCROLL_DIRECTION } from '../scroll/scroll.types';
 import { NxWebGLService } from '../services/webgl.service';
 
 import { WebGlTimelinePlaybackIndicatorComponent } from './playback-indicator/timeline-playback-indicator.component';
@@ -23,90 +22,92 @@ import { WebGlTimeUnderMouseComponent } from './time-under-mouse/time-under-mous
         WebGlTimeUnderMouseComponent,
         WebGlTimelinePlaybackIndicatorComponent,
         WebGlTimelineSelectionComponent,
+        NxClickDoubleDirective,
     ],
 })
-export class WebGlTimelineInteractionsComponent implements OnChanges {
-    // eslint-disable-next-line nx/explicit-angular-boundary-types
-    @Input() zoomInProcess: boolean;
+export class WebGlTimelineInteractionsComponent {
     @Input() actions: ACTIONS = {
         mode: MODE.DRAG,
         jumpTo: 0,
     };
 
-    @Output() scrollToPos = new EventEmitter<{
-        direction: SCROLL_DIRECTION;
-        position: number;
-    }>();
+    zoomInProcess$$ = input<boolean>(false, { alias: 'zoomInProcess' });
+
+    // @Output() scrollToPos = new EventEmitter<{
+    //     direction: SCROLL_DIRECTION;
+    //     position: number;
+    // }>();
 
     @HostBinding('style') hostStyle: string;
 
-    cursorPosition: number | undefined;
     timeUnderPosition: number | undefined;
-    playbackPosition: number | undefined;
+    // playbackPosition: number | undefined;
     selectionHover: boolean = false;
 
-    constructor(private webglService: NxWebGLService) {}
+    protected readonly MODE = MODE;
 
-    ngOnChanges(changes: NgChanges<WebGlTimelineInteractionsComponent>): void {
-        if (changes.zoomInProcess) {
-            this.hostStyle = changes.zoomInProcess.currentValue ? 'pointer-events: none' : '';
-        }
+    constructor(private webglService: NxWebGLService) {
+        effect(() => {
+            if (this.zoomInProcess$$()) {
+                this.hostStyle = 'pointer-events: none';
+            }
+        });
     }
 
-    handleMouseMove(event: MouseEvent): void {
-        // avoid triggering at bottom scroll area
-        if (event.offsetY > 5) {
-            this.cursorPosition = event.offsetX;
-        }
+    // handleMouseMove(event: MouseEvent): void {
+    //     if (
+    //         !(
+    //             this.webglService.selectionDrag$.value ||
+    //             this.webglService.selection$.value.drag ||
+    //             this.selectionHover
+    //         )
+    //     ) {
+    //         this.timeUnderPosition = event.offsetX;
+    //     } else {
+    //         this.timeUnderPosition = undefined; // hide while dragging
+    //     }
+    //
+    //     this.webglService.currentPointer$.next(this.timeUnderPosition);
+    // }
 
-        if (
-            !(
-                this.webglService.selectionDrag$.value ||
-                this.webglService.selection$.value.drag ||
-                this.selectionHover
-            )
-        ) {
-            this.timeUnderPosition = this.cursorPosition;
-        } else {
-            this.timeUnderPosition = undefined; // hide while dragging
-        }
-    }
+    // handleMouseLeave(): void {
+    //     this.timeUnderPosition = undefined;
+    //     this.webglService.currentPointer$.next(undefined);
+    // }
+    //
+    // handleMouseEnter(event: MouseEvent): void {
+    //     this.timeUnderPosition = event.offsetX;
+    // }
 
-    handleMouseLeave(): void {
-        this.cursorPosition = undefined;
-        this.timeUnderPosition = undefined;
-    }
-
-    handleMouseWheel(event: WheelEvent): void {
-        event.preventDefault();
-        // leave this to canvas
-        this.hostStyle = 'pointer-events: none';
-    }
+    // handleMouseWheel(event: WheelEvent): void {
+    //     event.preventDefault();
+    //     // leave this to canvas
+    //     this.hostStyle = 'pointer-events: none';
+    // }
 
     handleSelectionOnHover(status: boolean): void {
         this.selectionHover = status;
     }
 
-    handleMouseClick(event: Event): void {
+    handleMouseClick(event: MouseEvent): void {
         if (!this.webglService.selectionDrag$.value && this.actions.mode === MODE.DRAG) {
-            this.playbackPosition = this.cursorPosition;
+            this.webglService.playbackPosition$$.set(event.offsetX);
         }
     }
 
-    handleMouseHold(event: Event, hold: boolean): void {
-        event.preventDefault();
-        if (hold) {
-            this.scrollToPos.emit({
-                direction: SCROLL_DIRECTION.scrollTo,
-                position: (event as MouseEvent).offsetX,
-            });
-        }
-    }
+    // Selection
+    // handleMouseHold(event: Event, hold: boolean): void {
+    //     event.preventDefault();
+    //     if (hold) {
+    //         this.scrollToPos.emit({
+    //             direction: SCROLL_DIRECTION.scrollTo,
+    //             position: (event as MouseEvent).offsetX,
+    //         });
+    //     }
+    // }
 
     // getSelectionDate(coordX: number): void {
     //     this.playbackPosition = undefined;
     //     this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
     // }
-
-    protected readonly MODE = MODE;
 }

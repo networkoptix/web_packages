@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { timer } from 'rxjs';
+import { Component, computed, signal } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { NxSystemCameraWithMappedFields } from '@components/layout-grid/layout-grid.types';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemsService } from '@services/systems.service';
 
 // SOFIA
-const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';
-const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b?time=live';
+const SYSTEM_ID = '6fc7257e-7dd9-465e-b898-c04a9a4fa531';
+const SERVER_ID = 'a29fc3f4-0de6-0ed6-be0a-a55bc0ea5393';
+const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b';
 // DESKTOP-UBUNTU
 // const SERVER_ID = '4087425b-f052-413d-96d9-79385ae2cdb6';
 // const CAMERA_ID = 'd4650aab-4812-f660-683e-a2c3f866028b?time=live';
@@ -35,9 +36,17 @@ export class WebglComponent {
 
     system: NxSystem;
 
+    cameras$$ = signal<NxSystemCameraWithMappedFields[]>([]);
+    currentCameras$$ = computed(() => {
+        return this.cameras$$().filter(({ id }) => CAMERA_ID === id);
+    });
+
+    selectedCameraId$$ = computed(() => {
+        return CAMERA_ID;
+    });
+
     constructor(
         private menuService: NxMenuService,
-        private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
     ) {
@@ -48,26 +57,33 @@ export class WebglComponent {
         this.menuService.selectedSection$$.set('colors');
         this.menuService.selectedDetailsSection$$.set('webgl');
 
-        await this.systemsService.getSystemAsPromise(SERVER_ID);
-        this.system = this.systemService.createSystem(this.accountService.account.email, SERVER_ID);
+        // await this.systemsService.getSystemAsPromise(SERVER_ID);
+        this.system = this.systemService.createSystem(
+            this.accountService.account.email,
+            SYSTEM_ID,
+            SERVER_ID,
+            false,
+            false,
+            6,
+        );
         await this.system.update();
 
-        this.system.mediaserver.getRecords(CAMERA_ID, 0, Date.now()).subscribe(records => {
-            this.data = records.reply[0].periods;
-            this.end = Date.now();
-        });
-
-        timer(3000, 5000)
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                // this.newData = [];
-                // this.newData.push({ durationMs: '-1', startTimeMs: `${this.end}` });
-                this.system.mediaserver
-                    .getRecords(CAMERA_ID, this.end, Date.now())
-                    .subscribe(records => {
-                        this.newData = records.reply.length ? records.reply[0].periods : [];
-                        this.end = Date.now();
-                    });
-            });
+        this.cameras$$.set(
+            this.system.cameraManager.cameras.map(
+                (camera: NxSystemCamera): NxSystemCameraWithMappedFields => {
+                    return {
+                        ...camera,
+                        id: camera.id,
+                        name: camera.name,
+                        online: true,
+                        requiresTranscoding: false,
+                        unauthorized: false,
+                        // type: camera.type,
+                        status: camera.status,
+                        // selected: true, // camera.id === CAMERA_ID,
+                    };
+                },
+            ),
+        );
     }
 }

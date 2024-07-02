@@ -206,21 +206,25 @@ export class NxVideoPlayerComponent {
     }
 
     syncAvailableStreams(connection: WebRTCStreamManager, hasSecondary: boolean): void {
-        runInInjectionContext(this.injector, () => {
-            effect(() => {
-                const resolution = this.resolution$$() || Resolution.AUTO;
-                const autoResStreams = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]
+        try {
+            runInInjectionContext(this.injector, () => {
+                effect(() => {
+                    const resolution = this.resolution$$() || Resolution.AUTO;
+                    const autoResStreams = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]
 
-                const streamLookup: Record<Resolution, AvailableStreams[]> = {
-                    [Resolution.AUTO]: autoResStreams,
-                    [Resolution.HIGH]: [autoResStreams[0]],
-                    [Resolution.LOW]: [autoResStreams[1] || autoResStreams[0]],
-                    [Resolution.CUSTOM]: autoResStreams
-                }
+                    const streamLookup: Record<Resolution, AvailableStreams[]> = {
+                        [Resolution.AUTO]: autoResStreams,
+                        [Resolution.HIGH]: [autoResStreams[0]],
+                        [Resolution.LOW]: [autoResStreams[1] || autoResStreams[0]],
+                        [Resolution.CUSTOM]: autoResStreams
+                    }
 
-                connection.updateAvailableStreams(streamLookup[resolution])
-            })
-        });
+                    connection.updateAvailableStreams(streamLookup[resolution])
+                })
+            });
+        } catch {
+            // Not sure why this sometimes throws an error.;
+        }
     }
 
     ngAfterViewInit(): void {

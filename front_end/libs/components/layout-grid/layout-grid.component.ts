@@ -72,6 +72,7 @@ import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
 import { NxLayoutGridItemPlaceholderComponent } from '@components/layout-grid-item-placeholder/layout-grid-item-placeholder.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
+import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -389,6 +390,8 @@ export class NxLayoutGridComponent {
 
     groupsCacheStore = inject(GroupsCacheStore);
 
+    webGlService = inject(NxWebGLService);
+
     detailsRef$$ = signal<HTMLDetailsElement | null>(null);
     otherSystemsOpen$$ = computed(() => {
         const otherSitesMenuOpen =
@@ -532,11 +535,15 @@ export class NxLayoutGridComponent {
 
     selectedCameraId$$ = computed(() => {
         const selectedLayoutItemId = this.selectedCameraStore.selectedLayoutItem$$();
-        const layoutItem = this.layout$$()?.items.find(
-            ({ id }) => cleanId(id) === selectedLayoutItemId.id,
-        );
+        const currentLayoutCameras = this.currentLayoutCameras$$();
+        const camera =
+            selectedLayoutItemId &&
+            currentLayoutCameras.find(
+                ({ id, systemId }) =>
+                    `cloud://${systemId}.${id}` === selectedLayoutItemId.resourcePath,
+            );
 
-        return layoutItem ? cleanId(layoutItem.resourceId) : '';
+        return camera ? cleanId(camera.id) : '';
     });
 
     #lastWidth: number = Infinity;
@@ -1562,13 +1569,18 @@ export class NxLayoutGridComponent {
         layoutItemLookup,
         errors,
         systems,
+        currentlyPlayingArchive,
     }: {
         item: ParsedLayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
         errors: Record<string, string>;
+        currentlyPlayingArchive: string;
         systems: NxSystemInfo[];
     }) => {
         const itemDetail = this.getItem({ item, layoutItemLookup });
+        if (currentlyPlayingArchive && itemDetail?.details.id === currentlyPlayingArchive) {
+            return itemDetail;
+        }
         const hasNoErrors = itemDetail && this.itemHasNoErrors({ itemDetail, errors });
         const hasSystem = this.getSystemInfo({ item, systems });
         return hasNoErrors && hasSystem ? itemDetail : null;

@@ -730,8 +730,13 @@
                                                         {
                                                             item: item,
                                                             layoutItemLookup: layoutItemLookup,
-                                                            errors: layoutItemsErrorsStore.statuses$$(),
-                                                            systems: systemsService.systems$$()
+                                                            systems: systemsService.systems$$(),
+                                                            currentlyPlayingArchive:
+                                                                (webGlService.playbackTimeMs$$() ||
+                                                                    0) > 0
+                                                                    ? webGlService.cameraId$$()
+                                                                    : '',
+                                                            errors: layoutItemsErrorsStore.statuses$$()
                                                         } | mapWith: getItemForDisplay;
                                                         as itemDetail
                                                     ) {
@@ -992,20 +997,19 @@
                         }
                     </div>
                 }
-
-                @if (CONFIG.featureFlags.layoutsTimeline) {
-                    @defer (when selectedCameraId$$() && currentLayoutCameras$$().length) {
-                        <nx-webgl-canvas
-                            [selectedCameraId]="selectedCameraId$$()"
-                            [cameras]="currentLayoutCameras$$()"
-                        ></nx-webgl-canvas>
-                    }
-                }
             </div>
         } @else {
             <nx-pre-loader></nx-pre-loader>
         }
     </div>
+    @if (CONFIG.featureFlags.layoutsTimeline) {
+        @defer (when selectedCameraId$$() && currentLayoutCameras$$().length) {
+            <nx-webgl-canvas
+                [selectedCameraId]="selectedCameraId$$()"
+                [cameras]="currentLayoutCameras$$()"
+            ></nx-webgl-canvas>
+        }
+    }
 } @else {
     <div class="portal-wrapper">
         <div

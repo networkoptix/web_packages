@@ -1,32 +1,18 @@
 import { ElementRef, computed, effect, inject, signal, untracked } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { chartCartesian } from '@d3fc/d3fc-chart';
 import * as d3 from 'd3';
 import { D3ZoomEvent, ScaleTime } from 'd3';
 import * as fc from 'd3fc';
-import {
-    animationFrameScheduler,
-    filter,
-    interval,
-    map,
-    NEVER,
-    shareReplay,
-    Subject,
-    switchMap,
-} from 'rxjs';
+import { animationFrameScheduler, interval, map, shareReplay } from 'rxjs';
 
 import { TimelineButtonAction } from '@components/nx-webgl-canvas/button/button.component.types';
-import {
-    CONSTANT_SCROLL_FACTOR_PX,
-    SCROLL_DIRECTION,
-    SCROLL_FACTOR_PX,
-} from '@components/nx-webgl-canvas/scroll/scroll.types';
+import { SCROLL_DIRECTION } from '@components/nx-webgl-canvas/scroll/scroll.types';
 import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { CHUNK_TYPE, DATA } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 
-import { AddedNodesObservable } from './added-nodes-observable';
 import { TimelineDataModel } from './timeline-data-model';
 import {
     formatYear,
@@ -49,35 +35,38 @@ import {
 const ZOOM_WINDOW_TO_ANIMATE_MS = 30 * 60 * 1000;
 const LAST_MINUTE_LENGTH = 1.5 * 60 * 1000; // 1.5 minutes
 
-export type CheckIfAdded = (selector: string) => false | HTMLElement;
-
 /**
  * Timeline rendering specific logic.
  */
 export class RenderStateModel {
-    private webglService = inject(NxWebGLService);
     protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
     // Public API: Properties
-
-    public scrollPlaybackPosition: number | undefined;
-
     public canvasVirtualWidth: number;
     public lastMinuteWidth: number;
 
+    public timelineActionsEnabled$$ = signal<boolean>(false);
+    public timelineAxisEnabled$$ = signal<boolean>(true);
     public scrollBarWidth$$ = signal<number>(0);
     public scrollBarPos$$ = signal<number>(0);
 
-    public zoomInProcess: boolean = false;
+    public scaleUpdateInProcess: boolean = false;
 
     public timeFrameInS: number;
     public start: number;
     public nowMs: number;
     public end: number;
 
-    public xPos: number;
+    public xPos: number = 0;
 
     // Public API: Action Handlers
+    public toggleTimelineActionsEnabled(enabled: boolean): void {
+        this.timelineActionsEnabled$$.set(enabled);
+    }
+
+    public toggleTimelineAxisEnabled(enabled: boolean): void {
+        this.timelineAxisEnabled$$.set(enabled);
+    }
 
     public onActions(actionParam: Record<string, unknown>): void {
         const { action, param } = actionParam;
@@ -106,29 +95,29 @@ export class RenderStateModel {
         }
     }
 
-    public singleScroll(direction: SCROLL_DIRECTION): void {
-        if (this.canvas) {
-            this.canvas.transition().call(this.zoom.transform, this.transform(direction));
-        }
-        if (this.canvasAll) {
-            this.canvasAll.transition().call(this.zoom.transform, this.transform(direction));
-        }
-    }
+    // public singleScroll(direction: SCROLL_DIRECTION): void {
+    //     if (this.canvas) {
+    //         this.canvas.transition().call(this.zoom.transform, this.transform(direction));
+    //     }
+    //     if (this.canvasAll) {
+    //         this.canvasAll.transition().call(this.zoom.transform, this.transform(direction));
+    //     }
+    // }
 
-    public scrollToPos(params: { direction: SCROLL_DIRECTION; position: number }): void {
+    public scrollByBarToPos(params: { direction: SCROLL_DIRECTION; position: number }): void {
         const doTransform = (): void => {
             const t = d3.zoomIdentity
                 .translate(this.xPos, 0)
-                .scale(this.webglService.levelZoom$.value);
+                .scale(this.webglService.levelZoom$$());
 
             this.canvas.call(this.zoom.transform, t);
             this.canvasAll?.call(this.zoom.transform, t);
         };
 
-        this.scrollInProcess = true;
+        this.scrollInProcessByBar = true;
 
         if (this.xPos <= 0) {
-            this.xPos = -params.position * this.webglService.levelZoom$.value;
+            this.xPos = -params.position * this.webglService.levelZoom$$();
         } else {
             this.xPos = 0;
         }
@@ -136,29 +125,18 @@ export class RenderStateModel {
         doTransform();
     }
 
-    public scrollEnd(): void {
-        this.scrollInProcess = false;
-        this.zoomInProcess = false;
+    public scrollByBarEnd(): void {
+        this.scrollInProcessByBar = false;
+        this.scaleUpdateInProcess = false;
 
         this.scrollBarPos$$.update(pos => {
-            return Math.trunc(-this.xPos / this.webglService.levelZoom$.value);
+            return Math.trunc(-this.xPos / this.webglService.levelZoom$$());
         });
     }
 
-    public constantScroll(params: { direction: SCROLL_DIRECTION; action: string }): void {
-        this.constantScroll$$.set(params);
-    }
-
-    public mouseMoveHandler(event: MouseEvent): void {
-        if (event.offsetY > 5) {
-            // avoid triggering at bottom scroll area
-            this.timeLabelPosition = event.offsetX;
-        }
-    }
-
-    public mouseLeaveHandler(): void {
-        this.timeLabelPosition = undefined;
-    }
+    // public constantScroll(params: { direction: SCROLL_DIRECTION; action: string }): void {
+    //     this.constantScroll$$.set(params);
+    // }
 
     /**
      * Private properties exposed for debugging purposes. Do not depend on these in application code.
@@ -167,12 +145,6 @@ export class RenderStateModel {
         ({
             get overallDays(): number {
                 return renderStateModel.overallDays;
-            },
-            get timeLabelPosition(): number | undefined {
-                return renderStateModel.timeLabelPosition;
-            },
-            get playbackLabelPosition(): number | undefined {
-                return renderStateModel.playbackLabelPosition;
             },
             get xScale() {
                 return renderStateModel.xScale;
@@ -183,8 +155,8 @@ export class RenderStateModel {
             get lastDataDateStart() {
                 return renderStateModel.lastDataDateStart;
             },
-            get playbackPointer() {
-                return renderStateModel.playbackPointer;
+            get playbackTime() {
+                return renderStateModel.playbackTime;
             },
         }) as const)(this);
 
@@ -210,19 +182,20 @@ export class RenderStateModel {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private canvasAll: d3.Selection<d3.BaseType, DATA[], HTMLElement, any>;
 
-    private container: HTMLDivElement | null;
+    private container: HTMLDivElement | undefined;
 
-    protected timeLabelPosition: number | undefined;
-    protected playbackLabelPosition: number | undefined;
+    protected playbackTime: number | undefined;
 
     private zoomEvent: D3ZoomEvent<never, never>;
     private xScaleOriginal: ScaleTime<number, number>;
     private xScale: ScaleTime<number, number>;
-    private scrollInProcess: boolean = false;
     private xAxisMajor: typeof fc.axisBottom;
     private nxXAxisMajor: typeof fc.axisBottom;
     private xAxisMinor: typeof fc.axisTop;
     private nxXAxisMinor: typeof fc.axisTop;
+
+    private scrollInProcessByBar: boolean = false;
+    private scrollInProcessByDrag: boolean = false;
 
     // Test data *********************
     // nowDate: Date;
@@ -241,59 +214,64 @@ export class RenderStateModel {
     private formatTime: (Date) => string;
     protected formatMinorTime: (Date) => string;
 
-    private playbackPointer: Date;
-
     private animationFrame$ = interval(0, animationFrameScheduler).pipe(
         shareReplay({ refCount: false, bufferSize: 1 }),
     );
 
-    // Dom node added notifiers
+    private updateOnAnimationNotifier$$ = toSignal(
+        this.animationFrame$.pipe(
+            map(count => (!this.xScaleOriginal || !this.zoomEvent || !count ? 0 : count)),
+            shareReplay({ refCount: false, bufferSize: 1 }),
+        ),
+    );
 
-    addedNodes$ = new AddedNodesObservable(this.elementRef);
-
-    private chartVisibleNotifier$$ = this.addedNodes$.getNotifierSignal('#chart', element => {
-        this.container = element as HTMLDivElement;
-        this.initContainer();
+    protected renderEffect = effect(() => {
+        if (this.updateOnAnimationNotifier$$()) {
+            untracked(() => this.update());
+        }
     });
-    // private chartAllVisibleNotifier$$ = this.addedNodes$.getNotifierSignal('#chartAll');
-    private axisMajorVisibleNotifier$$ = this.addedNodes$.getNotifierSignal('#nx-x-axis-major');
-    private axisMinorVisibleNotifier$$ = this.addedNodes$.getNotifierSignal('#nx-x-axis-minor');
 
-    private initChart$: Subject<number> = new Subject();
+    chartVisible$$ = signal(undefined);
+    axisMajorVisible$$ = signal(undefined);
+    axisMinorVisible$$ = signal(undefined);
 
-    protected canvasInitEffect = effect(
-        () => {
-            if (!this.chartVisibleNotifier$$()) {
-                return;
-            }
-
-            const { cameras, mainCameraData, allCamerasData } = this.modelState$$();
-
+    protected canvasInitEffect = effect(() => {
+        if (this.chartVisible$$()) {
             untracked(() => {
+                this.container = this.chartVisible$$() as unknown as HTMLDivElement;
+                this.initContainer();
+                this.initStartEndTime();
                 this.initXscale();
                 this.initZoom();
                 // ****************************
                 this.webglService.updateTimelineRange();
-                this.initMainCameraChart(mainCameraData);
-                this.initAllCamerasChart(cameras, allCamerasData);
-                this.redraw(mainCameraData, allCamerasData);
+                this.render();
+                // this.redraw(mainCameraData, allCamerasData);
             });
-        },
-        { allowSignalWrites: true },
-    );
+        }
+    });
+
+    // protected currentTimeSyncEffect = effect(
+    //     () => {
+    //         const { value: timestamp } = this.webglService.playbackTimeMs$$();
+    //         if (timestamp) {
+    //             this.playbackTime = timestamp;
+    //             this.updatePlaybackPosition();
+    //         }
+    //     },
+    //     { allowSignalWrites: true },
+    // );
 
     // Initialization
-    private initChart(): void {
-        this.initStartEndTime();
-        this.initChart$.next(Date.now());
-    }
 
     private initContainer(): void {
-        this.webglService.canvasWidth$.next(this.container.clientWidth);
-        this.webglService.canvasHeight$.next(this.container.clientHeight);
-        this.webglService.canvasRect$.next(this.container.getBoundingClientRect());
+        if (this.container) {
+            this.webglService.canvasWidth$.next(this.container.clientWidth);
+            this.webglService.canvasHeight$.next(this.container.clientHeight);
+            this.webglService.canvasRect$.next(this.container.getBoundingClientRect());
 
-        this.scrollBarWidth$$.update(width => this.container.clientWidth);
+            this.scrollBarWidth$$.update(width => this.container?.clientWidth || 0);
+        }
     }
 
     private initBars(
@@ -309,6 +287,7 @@ export class RenderStateModel {
             .crossValue(d => d.x + (xScale(d.x + d.width) - xScale(d.x)) / 2)
             .mainValue(d => d.y)
             .bandwidth(d => {
+                // console.log('=>', Math.max(1, xScale(d.x + d.width) - xScale(d.x)));
                 return Math.max(1, xScale(d.x + d.width) - xScale(d.x));
             })
             .decorate(context => {
@@ -338,10 +317,11 @@ export class RenderStateModel {
     }
 
     private initXscale(): void {
+        this.webglService.levelZoom$$.set(1);
         this.xScale = d3
             .scaleTime()
             .domain([this.start, this.nowMs])
-            .range([0, this.container.clientWidth]);
+            .range([0, this.container?.clientWidth || 0]);
 
         // TODO: test var  *********************** REMOVE
         this.overallDays = d3.timeDays(this.xScale.domain()[0], this.xScale.domain()[1]).length;
@@ -351,14 +331,19 @@ export class RenderStateModel {
     }
 
     private initStartEndTime(): void {
-        const [_mainCameraData, allCamerasData] = this.getRedrawParams();
         this.end = Date.now();
-        this.start = allCamerasData[0]?.x || 0;
+        this.start = this.modelState$$().allCamerasData[0]?.x || 0;
         this.nowMs = Date.now();
         this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
     }
 
-    private initAllCamerasChart = (cameras: NxSystemCamera[], allCamerasData: DATA[]): void => {
+    private render = (): void => {
+        const { cameras, mainCameraData, allCamerasData } = this.modelState$$();
+
+        if (!mainCameraData.length) {
+            return;
+        }
+
         if (cameras.length > 1) {
             const barSeriesAll = this.initBars(allCamerasData, this.xScale, d3.scaleLinear());
             this.chartAll = chartCartesian(this.xScale, d3.scaleLinear())
@@ -368,10 +353,11 @@ export class RenderStateModel {
                     context.enter().select('d3fc-canvas.webgl-plot-area').call(this.zoom),
                 );
         }
-    };
 
-    private initMainCameraChart = (mainCameraData: DATA[]): void => {
         const barSeries = this.initBars(mainCameraData, this.xScale, d3.scaleLinear());
+        this.webglService.currentPointer$$.set(undefined);
+        // this.webglService.playbackPosition$$.set(undefined);
+        // this.webglService.playbackTimeMs$$.set(undefined);
 
         this.chart = chartCartesian(this.xScale, d3.scaleLinear())
             .webglPlotArea(barSeries)
@@ -380,6 +366,18 @@ export class RenderStateModel {
                 context
                     .enter()
                     .select('d3fc-canvas.webgl-plot-area')
+                    // .on('mouseup', () => {
+                    //     doe not trigger
+                    // })
+                    .on('mousedown', () => {
+                        // debugger;
+                    })
+                    .on('mousemove', (event: MouseEvent) => {
+                        this.webglService.currentPointer$$.update(() => event.offsetX);
+                    })
+                    .on('mouseleave', () => {
+                        this.webglService.currentPointer$$.update(() => undefined);
+                    })
                     .on('measure', event => {
                         if (
                             this.webglService.canvasWidth$.value ===
@@ -404,52 +402,73 @@ export class RenderStateModel {
                         this.initZoom();
                     })
                     .on('click', event => {
-                        if (!this.zoomInProcess) {
-                            const currentTime = this.webglService.currentPointer$.value.getTime();
+                        if (!this.scaleUpdateInProcess) {
+                            const desiredTimeMs = this.webglService.xScale$.value
+                                .invert(event.offsetX)
+                                .getTime();
 
-                            const currentChuck = this.webglService.chunkSearch(
+                            const chunkFoundAt = this.webglService.chunkSearch(
                                 mainCameraData,
-                                currentTime,
+                                desiredTimeMs,
                             );
 
-                            if (typeof currentChuck === 'boolean') {
-                                // on chunk
-                                this.playbackPointer = this.webglService.currentPointer$.value;
-                                this.playbackLabelPosition = event.offsetX;
-                                this.scrollPlaybackPosition = this.xScaleOriginal(
-                                    this.webglService.currentPointer$.value,
-                                );
-                                return true;
-                            } else if (typeof currentChuck === 'number') {
-                                // next chunk
-                                this.playbackPointer = new Date(currentChuck);
-                                this.playbackLabelPosition = this.xScale(currentChuck);
-                                this.scrollPlaybackPosition = this.xScaleOriginal(currentChuck);
-                                return true;
-                            } else {
-                                this.playbackLabelPosition = undefined;
-                                this.scrollPlaybackPosition = undefined;
-                                return false;
-                            }
+                            this.webglService.playbackTimeMs$$.update(() => chunkFoundAt);
+                            this.webglService.playbackPosition$$.update(() =>
+                                chunkFoundAt ? this.xScale(chunkFoundAt) : undefined,
+                            );
+
+                            return !!chunkFoundAt;
                         }
                     })
                     .call(this.zoom),
             );
+        this.redraw(mainCameraData, cameras, allCamerasData);
     };
 
-    private redraw(currentCameraData: DATA[], allCamerasData: DATA[]): void {
+    private redraw(
+        mainCameraData: DATA[],
+        cameras: NxSystemCamera[],
+        allCamerasData: DATA[],
+    ): void {
+        // some failsafe code
+        if (!mainCameraData.length || !this.xScale) {
+            return;
+        } else if (!this.chart) {
+            this.render();
+            return;
+        }
+
+        // TODO: add functionality to filter out bookmarks, analytics and records
+        // i.e. d.type === CHUNK_TYPE.BOOKMARK && this.showBookmarks$$()
+        // const displayMainData = mainCameraData.filter(
+        //     d =>
+        //             d.type === CHUNK_TYPE.BOOKMARK ||
+        //             d.type === CHUNK_TYPE.ANALYTICS ||
+        //             d.type === CHUNK_TYPE.RECORDS
+        // );
+        //
+        // const displayAllData = allCamerasData.filter(
+        //     d =>
+        //         !(
+        //             d.type === CHUNK_TYPE.BOOKMARK ||
+        //             d.type === CHUNK_TYPE.ANALYTICS ||
+        //             d.type === CHUNK_TYPE.RECORDS
+        //         ),
+        // );
+        //
+        // if DATA was filtered by type, we need to re-render
+        // if (CONDITION) {
+        //     this.render();
+        //     return;
+        // }
+
         this.chart.xDomain(this.xScale.domain());
-        this.chartAll.xDomain(this.xScale.domain());
+        this.canvas = d3.select('#chart').datum(mainCameraData).call(this.chart);
 
-        this.canvas = d3
-            .select('#chart')
-            .datum(currentCameraData) // sampleData as datum kills chunks width
-            .call(this.chart);
-
-        this.canvasAll = d3
-            .select('#chartAll')
-            .datum(allCamerasData) // sampleData as datum kills chunks width
-            .call(this.chartAll);
+        if (cameras.length > 1) {
+            this.chartAll.xDomain(this.xScale.domain());
+            this.canvasAll = d3.select('#chartAll').datum(allCamerasData).call(this.chartAll);
+        }
     }
 
     private initAxisFormat(): void {
@@ -532,66 +551,75 @@ export class RenderStateModel {
     }
 
     initAxisMajorEffect = effect(() => {
-        this.axisMajorVisibleNotifier$$();
-        this.xAxisMajor = fc.axisBottom(this.xScale).tickSize(26);
+        if (this.axisMajorVisible$$()) {
+            if (!this.xScale) {
+                return;
+            }
+            this.xAxisMajor = fc.axisBottom(this.xScale).tickSize(26);
 
-        this.nxXAxisMajor = d3
-            .select('#nx-x-axis-major')
-            .append('d3fc-svg')
-            .attr('class', 'x-axis nx-x-axis-major')
-            .select('svg')
-            .append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0, 0)')
-            .call(this.xAxisMajor.ticks(this.periodMinorModifier));
+            this.nxXAxisMajor = d3
+                .select('#nx-x-axis-major')
+                .append('d3fc-svg')
+                .attr('class', 'x-axis nx-x-axis-major')
+                .select('svg')
+                .append('g')
+                .attr('class', 'x axis')
+                .attr('transform', 'translate(0, 0)')
+                .call(this.xAxisMajor.ticks(this.periodMinorModifier));
 
-        this.initAxisFormat();
+            this.initAxisFormat();
+        }
     });
 
     initAxisMinorEffect = effect(() => {
-        this.axisMinorVisibleNotifier$$();
-        const initAxisMinorFormat = (date: Date): string => {
-            // Define filter conditions
-            return (
-                d3.timeSecond(date) < date
-                    ? formatMinorMillisecond
-                    : d3.timeMinute(date) < date
-                      ? formatMinorSecond
-                      : d3.timeHour(date) < date
-                        ? formatMinorMinute
-                        : d3.timeDay(date) < date
-                          ? formatMinorHour
-                          : d3.timeMonth(date) < date
-                            ? d3.timeWeek(date) < date
-                                ? formatMinorDay
-                                : formatMinorWeek
-                            : d3.timeYear(date) < date
-                              ? formatMinorMonth
-                              : formatMinorYear
-            )(date);
-        };
-        this.xAxisMinor = fc
-            .axisOrdinalBottom(this.xScale)
-            .ticks(15)
-            .tickSize(26)
-            // .decorate(s => s.enter().select('text').style('transform', 'translate(25px, 10px)'));
-            .tickFormat(d => initAxisMinorFormat(d)); // xAxisMinorTicks(d));
+        if (this.axisMinorVisible$$()) {
+            const initAxisMinorFormat = (date: Date): string => {
+                // Define filter conditions
+                return (
+                    d3.timeSecond(date) < date
+                        ? formatMinorMillisecond
+                        : d3.timeMinute(date) < date
+                          ? formatMinorSecond
+                          : d3.timeHour(date) < date
+                            ? formatMinorMinute
+                            : d3.timeDay(date) < date
+                              ? formatMinorHour
+                              : d3.timeMonth(date) < date
+                                ? d3.timeWeek(date) < date
+                                    ? formatMinorDay
+                                    : formatMinorWeek
+                                : d3.timeYear(date) < date
+                                  ? formatMinorMonth
+                                  : formatMinorYear
+                )(date);
+            };
+            this.xAxisMinor = fc
+                .axisOrdinalBottom(this.xScale)
+                .ticks(15)
+                .tickSize(26)
+                // .decorate(s => s.enter().select('text').style('transform', 'translate(25px, 10px)'));
+                .tickFormat(d => initAxisMinorFormat(d)); // xAxisMinorTicks(d));
 
-        this.nxXAxisMinor = d3
-            .select('#nx-x-axis-minor')
-            .append('d3fc-svg')
-            .attr('class', 'x-axis nx-x-axis-minor')
-            .select('svg')
-            .append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0, 0)')
-            .call(this.xAxisMinor);
+            this.nxXAxisMinor = d3
+                .select('#nx-x-axis-minor')
+                .append('d3fc-svg')
+                .attr('class', 'x-axis nx-x-axis-minor')
+                .select('svg')
+                .append('g')
+                .attr('class', 'x axis')
+                .attr('transform', 'translate(0, 0)')
+                .call(this.xAxisMinor);
+        }
     });
 
     private initZoom(): void {
         // const removeMissingLabel = (): void => {
         //     this.nxXAxisMajor.select('g.missing-year').remove();
         // };
+
+        this.canvasVirtualWidth = this.webglService.canvasWidth$.value;
+        this.lastMinuteWidth = 0;
+
         const checkVisibleArea = (zoom: number): void => {
             this.webglService.canScroll$.next({
                 left:
@@ -603,13 +631,13 @@ export class RenderStateModel {
             });
         };
 
-        const checkZoomLevel = (zoom: number): void => {
-            this.webglService.levelZoom$.next(zoom);
-            this.webglService.canZoom$.next({
-                in: zoom >= 1,
-                out: zoom > 1,
-            });
-        };
+        // const checkZoomLevel = (zoom: number): void => {
+        //     this.webglService.levelZoom$$.update(()=> zoom);
+        //     this.webglService.canZoom$.next({
+        //         in: zoom >= 1,
+        //         out: zoom > 1,
+        //     });
+        // };
 
         this.zoom = d3
             .zoom()
@@ -623,11 +651,19 @@ export class RenderStateModel {
                 [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value],
             ])
             .on('start', event => {
-                this.zoomInProcess = true;
-                this.timeLabelPosition = undefined;
+                // eslint-disable-next-line no-console
+                console.log('start =>', event.sourceEvent?.type);
+                this.scaleUpdateInProcess = true;
 
                 if (event.sourceEvent?.type === 'mousedown') {
+                    this.scrollInProcessByDrag = true;
                     checkVisibleArea(0); // disable during mouse drag
+                }
+
+                if (this.webglService.playbackPosition$$()) {
+                    this.playbackTime = this.xScale
+                        .invert(this.webglService.playbackPosition$$() || 0)
+                        .getTime();
                 }
             })
             .on('zoom', event => {
@@ -636,6 +672,7 @@ export class RenderStateModel {
                 //     event.sourceEvent === null &&
                 //     this.zoomEvent.transform.k !== event.transform.k
                 // ) {
+                //     console.log('on ... shortcut');
                 //     // short circuit first event (weird data)
                 //     return;
                 // }
@@ -646,118 +683,57 @@ export class RenderStateModel {
                     return;
                 }
 
+                // eslint-disable-next-line no-console
+                console.log('on ... ', event.sourceEvent?.type, this.scrollInProcessByDrag);
+
+                this.webglService.currentPointer$$.update(() => undefined);
+
                 this.xPos = Math.trunc(event.transform.x);
                 this.zoomEvent = event;
 
-                // if (!this.scrollInProcess) {
-                checkZoomLevel(event.transform.k);
-                this.scrollBarWidth$$.update(width => {
-                    return Math.max(
-                        Math.trunc(
-                            this.webglService.canvasWidth$.value /
-                                this.webglService.levelZoom$.value,
-                        ),
-                        50,
-                    );
-                });
-                this.scrollBarPos$$.update(pos => {
-                    return Math.trunc(-this.xPos / this.webglService.levelZoom$.value);
-                });
-
-                if (
-                    this.scrollBarPos$$() >
-                    this.webglService.canvasWidth$.value - this.scrollBarWidth$$()
-                ) {
-                    this.scrollBarPos$$.update(pos => {
-                        return this.webglService.canvasWidth$.value - this.scrollBarWidth$$();
-                    });
+                if (this.webglService.playbackPosition$$()) {
+                    this.updatePlaybackPosition();
                 }
-                // }
+
+                if (!this.scrollInProcessByBar) {
+                    this.webglService.levelZoom$$.update(() => event.transform.k);
+                    this.scrollBarWidth$$.update(width => {
+                        return Math.max(
+                            Math.trunc(
+                                this.webglService.canvasWidth$.value /
+                                    this.webglService.levelZoom$$(),
+                            ),
+                            50,
+                        );
+                    });
+                    this.scrollBarPos$$.update(pos => {
+                        return Math.trunc(-this.xPos / this.webglService.levelZoom$$());
+                    });
+
+                    if (
+                        this.scrollBarPos$$() >
+                        this.webglService.canvasWidth$.value - this.scrollBarWidth$$()
+                    ) {
+                        this.scrollBarPos$$.update(pos => {
+                            return this.webglService.canvasWidth$.value - this.scrollBarWidth$$();
+                        });
+                    }
+                }
             })
             .on('end', event => {
-                if (this.scrollInProcess) {
+                // eslint-disable-next-line no-console
+                console.log('end ... ', event.sourceEvent?.type, this.scrollInProcessByDrag);
+                if (this.scrollInProcessByBar) {
                     return;
                 }
-                this.zoomInProcess = false;
-                checkVisibleArea(this.zoomEvent.transform.k);
+
+                this.webglService.currentPointer$$.update(() => event.sourceEvent?.offsetX);
+                this.scrollInProcessByDrag = false;
+                this.scaleUpdateInProcess = false;
+
+                checkVisibleArea(this.zoomEvent?.transform.k || 1);
             });
     }
-
-    // Action Handlers Helpers
-    private transform(direction: SCROLL_DIRECTION): d3.ZoomTransform {
-        let position: number;
-        switch (direction) {
-            case SCROLL_DIRECTION.left:
-                position = this.xPos + SCROLL_FACTOR_PX;
-                break;
-            case SCROLL_DIRECTION.constantLeft:
-                position = this.xPos + CONSTANT_SCROLL_FACTOR_PX;
-                break;
-            case SCROLL_DIRECTION.right:
-                position = this.xPos - SCROLL_FACTOR_PX;
-                break;
-            case SCROLL_DIRECTION.beginning:
-                position = this.xScaleOriginal.range()[0];
-                break;
-            case SCROLL_DIRECTION.end:
-                position = this.xScaleOriginal.range()[1];
-                break;
-            default:
-                position = 0;
-        }
-
-        this.xPos = position;
-
-        return d3.zoomIdentity.translate(position, 0).scale(this.webglService.levelZoom$.value);
-    }
-
-    protected constantScrollEffect = effect(() => {
-        const params = this.constantScrollNotifier$$();
-        if (params && params.action === 'start') {
-            this.constantScroll(this.constantScroll$$());
-            this.canvas.call(this.zoom.transform, this.transform(params.direction));
-        }
-    });
-
-    private constantScroll$$ = signal<{ direction: SCROLL_DIRECTION; action: string }>({
-        direction: SCROLL_DIRECTION.left,
-        action: 'stop',
-    });
-
-    private constantScrollNotifier$$ = toSignal(
-        toObservable(this.constantScroll$$).pipe(
-            filter(params => params.action === 'start'),
-            switchMap(params =>
-                params.action === 'start'
-                    ? this.animationFrame$.pipe(
-                          filter(() => !!this.canvas && !!this.zoom),
-                          map(time => ({ ...params, time })),
-                      )
-                    : NEVER,
-            ),
-        ),
-    );
-
-    private zoomRenderNotifier$$ = toSignal(
-        this.animationFrame$.pipe(
-            map(count => (!this.xScaleOriginal || !this.zoomEvent || !count ? 0 : count)),
-            shareReplay({ refCount: false, bufferSize: 1 }),
-        ),
-    );
-
-    protected zoomRenderEffect = effect(() => {
-        if (this.zoomRenderNotifier$$()) {
-            this.updateZoom(...this.getRedrawParams());
-        }
-    });
-
-    protected redrawEffect = effect(
-        () => {
-            this.getRedrawParams();
-            this.initChart();
-        },
-        { allowSignalWrites: true },
-    );
 
     private cameraIds$$ = computed(() => this.modelState$$().cameras.map(({ id }) => id));
 
@@ -766,7 +742,11 @@ export class RenderStateModel {
         this.end = 0;
     });
 
-    private updateZoom(...params: Parameters<RenderStateModel['redraw']>): void {
+    private updatePlaybackPosition(): void {
+        this.webglService.playbackPosition$$.update(() => this.xScale(this.playbackTime || 0));
+    }
+
+    private update(): void {
         this.xScaleOriginal.domain([this.start, this.nowMs]);
         const newScale: ScaleTime<number, number> = this.zoomEvent.transform.rescaleX(
             this.xScaleOriginal,
@@ -788,10 +768,10 @@ export class RenderStateModel {
             this.xScale?.domain()[1].getTime() >= this.nowMs - LAST_MINUTE_LENGTH &&
             periodMinutes < ZOOM_WINDOW_TO_ANIMATE_MS;
 
-        if (this.zoomEvent && (this.zoomInProcess || last10minutes)) {
+        if (this.zoomEvent && (this.scaleUpdateInProcess || last10minutes)) {
             const calcHelpers = (): void => {
                 this.canvasVirtualWidth = Math.trunc(
-                    this.webglService.canvasWidth$.value * this.webglService.levelZoom$.value,
+                    this.webglService.canvasWidth$.value * this.webglService.levelZoom$$(),
                 );
 
                 this.lastMinuteWidth = Math.trunc(
@@ -806,14 +786,69 @@ export class RenderStateModel {
             this.nxXAxisMinor.call(this.xAxisMinor.scale(newScale));
             this.nxXAxisMinor.call(this.xAxisMinor);
             this.initAxisFormat();
-            this.redraw(...params);
+            this.render();
         }
     }
 
-    private getRedrawParams = (): Parameters<RenderStateModel['redraw']> => {
-        const { mainCameraData, allCamerasData } = this.modelState$$();
-        return [mainCameraData, allCamerasData];
-    };
+    constructor(
+        private modelState$$: TimelineDataModel['state$$'],
+        private webglService: NxWebGLService,
+    ) {}
 
-    constructor(private modelState$$: TimelineDataModel['state$$']) {}
+    // Action Handlers Helpers
+
+    // Manual scroll by [scroll] buttons
+    // private transform(direction: SCROLL_DIRECTION): d3.ZoomTransform {
+    //     let position: number;
+    //     switch (direction) {
+    //         case SCROLL_DIRECTION.left:
+    //             position = this.xPos + SCROLL_FACTOR_PX;
+    //             break;
+    //         case SCROLL_DIRECTION.constantLeft:
+    //             position = this.xPos + CONSTANT_SCROLL_FACTOR_PX;
+    //             break;
+    //         case SCROLL_DIRECTION.right:
+    //             position = this.xPos - SCROLL_FACTOR_PX;
+    //             break;
+    //         case SCROLL_DIRECTION.beginning:
+    //             position = this.xScaleOriginal.range()[0];
+    //             break;
+    //         case SCROLL_DIRECTION.end:
+    //             position = this.xScaleOriginal.range()[1];
+    //             break;
+    //         default:
+    //             position = 0;
+    //     }
+    //
+    //     this.xPos = position;
+    //
+    //     return d3.zoomIdentity.translate(position, 0).scale(this.webglService.levelZoom$.value);
+    // }
+
+    // protected constantScrollEffect = effect(() => {
+    //     const params = this.constantScrollNotifier$$();
+    //     if (params && params.action === 'start') {
+    //         this.constantScroll(this.constantScroll$$());
+    //         this.canvas.call(this.zoom.transform, this.transform(params.direction));
+    //     }
+    // });
+    //
+    // private constantScroll$$ = signal<{ direction: SCROLL_DIRECTION; action: string }>({
+    //     direction: SCROLL_DIRECTION.left,
+    //     action: 'stop',
+    // });
+    //
+    // private constantScrollNotifier$$ = toSignal(
+    //     toObservable(this.constantScroll$$).pipe(
+    //         filter(params => params.action === 'start'),
+    //         switchMap(params =>
+    //             params.action === 'start'
+    //                 ? this.animationFrame$.pipe(
+    //                       filter(() => !!this.canvas && !!this.zoom),
+    //                       map(time => ({ ...params, time })),
+    //                   )
+    //                 : NEVER,
+    //         ),
+    //     ),
+    // );
 }

@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
-import { BehaviorSubject } from 'rxjs';
+import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
+import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
 
 import { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
 import { DATA } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { ZOOM_DIRECTIONS } from '@components/nx-webgl-canvas/zoom/zoom.types';
+import { pipeSignal } from '@utils/signals';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
 
@@ -27,8 +30,6 @@ export class NxWebGLService {
         in: true,
         out: false,
     });
-    currentPointer$ = new BehaviorSubject<Date>(new Date());
-    levelZoom$ = new BehaviorSubject<number>(1);
     selectionDrag$ = new BehaviorSubject<boolean>(false);
     scrollBarScroll$ = new BehaviorSubject<boolean>(false);
 
@@ -50,6 +51,53 @@ export class NxWebGLService {
         widthInPx: 0,
     };
     selection$ = new BehaviorSubject<ExportSelection>(this.selection);
+
+    levelZoom$$ = signal<number>(1);
+    levelZoom$ = toObservable(this.levelZoom$$);
+    currentPointer$$ = signal<number | undefined>(undefined);
+    playbackPosition$$ = signal<number>(undefined);
+    playbackPosition$ = toObservable(this.playbackPosition$$);
+    playbackTimeMs$$ = signal<number | undefined>(undefined);
+    cameraId$$ = signal('');
+
+    resetPosition(): void {
+        this.playbackPosition$$.set(undefined);
+        this.playbackTimeMs$$.set(undefined);
+    }
+
+    timestampFromPlayer$$ = pipeSignal(
+        this.cameraId$$,
+        cameraId$ =>
+            cameraId$.pipe(
+                map(cameraId => WebRTCStreamManager.getInstance(cameraId)),
+                filter(Boolean),
+                switchMap(instance => instance!.currentPosition$),
+            ),
+        -1,
+    );
+
+    syncTimestampEffect = effect(
+        () => {
+            const timestamp = this.timestampFromPlayer$$();
+            if (timestamp !== -1) {
+                const position = this.xScale$.value(new Date(timestamp / 1000));
+                console.info('syncTimestampEffect', timestamp, position);
+                this.playbackPosition$$.set(position);
+            }
+        },
+        { allowSignalWrites: true },
+    );
+
+    playbackEffect = effect(
+        () => {
+            const playbackTimeMs = this.playbackTimeMs$$() || 0;
+            const cameraId = this.cameraId$$();
+            if (playbackTimeMs && cameraId) {
+                WebRTCStreamManager.updateCameraPosition(cameraId, playbackTimeMs);
+            }
+        },
+        { allowSignalWrites: true },
+    );
 
     selectionReset(): void {
         this.selection$.next({
@@ -92,23 +140,16 @@ export class NxWebGLService {
         this.selection$.next(selection);
     }
 
-    chunkSearch(data: DATA[], target: number): boolean | number {
-        let left: number = 0;
-        let right: number = data.length - 1;
+    chunkSearch(data: DATA[], target: number): number | undefined {
+        const targetChunk = data.find(
+            chunk =>
+                chunk.realTimeMs >= target ||
+                (chunk.realTimeMs <= target && chunk.realTimeMs + chunk.width >= target),
+        );
 
-        while (left <= right) {
-            const mid: number = Math.floor((left + right) / 2);
-
-            if (data[mid].x <= target && data[mid].x + data[mid].width >= target) {
-                return true;
-            }
-            if (target < data[mid].x) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
+        if (!targetChunk) {
+            return;
         }
-
-        return data[left]?.x;
+        return Math.max(targetChunk.realTimeMs, target);
     }
 }

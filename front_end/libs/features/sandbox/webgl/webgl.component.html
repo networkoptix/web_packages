@@ -1,6 +1,10 @@
 <div
     class="mb-3 m-0 p-3"
-    style="border: 1px solid lightgray; height: 400px; background-color: white"
+    style="border: 1px solid lightgray; background-color: white; height: 500px; position: relative"
 >
-    To be updated...
+    <nx-webgl-canvas
+        [debugMode]="true"
+        [selectedCameraId]="selectedCameraId$$()"
+        [cameras]="currentCameras$$()"
+    ></nx-webgl-canvas>
 </div>

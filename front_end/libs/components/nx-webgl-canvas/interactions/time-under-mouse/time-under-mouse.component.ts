@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
 import { DATE_FORMAT, TIME_FORMAT } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NgChanges } from '@utils/ng-changes';
 
 import { NxWebGLService } from '../../services/webgl.service';
 
@@ -20,11 +19,15 @@ const PRIMARY_WIDTH = 140;
     standalone: true,
     imports: [CommonModule],
 })
-export class WebGlTimeUnderMouseComponent implements OnChanges {
-    @Input() position: number | undefined;
+export class WebGlTimeUnderMouseComponent {
+    position = this.webglService.currentPointer$$;
 
-    public date: string = '';
-    public time: string = '';
+    timeUnderMouse$$ = computed(() =>
+        this.webglService.xScale$.value.invert(this.webglService.currentPointer$$() || 0),
+    );
+
+    public date$$ = computed(() => dateFormat(this.timeUnderMouse$$(), DATE_FORMAT));
+    public time$$ = computed(() => dateFormat(this.timeUnderMouse$$(), TIME_FORMAT));
 
     svgArrow: string;
     vlPosition: number;
@@ -37,21 +40,18 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
         private webglService: NxWebGLService,
     ) {
         languageService.loadTimelineTranslations();
-    }
 
-    ngOnChanges(changes: NgChanges<WebGlTimeUnderMouseComponent>): void {
-        if (changes.position?.currentValue) {
-            this.setMarkerPosition();
-            const dateUnder = this.webglService.xScale$.value.invert(changes.position.currentValue);
-            this.time = dateFormat(dateUnder, TIME_FORMAT);
-            this.date = dateFormat(dateUnder, DATE_FORMAT);
-        } else {
-            this.timeUnderEar.nativeElement.style.opacity = '0';
-        }
+        effect(() => {
+            if (this.position()) {
+                this.setMarkerPosition();
+            } else {
+                this.timeUnderEar.nativeElement.style.opacity = '0';
+            }
+        });
     }
 
     private setMarkerPosition(): void {
-        if (this.position !== undefined) {
+        if (this.position()) {
             this.timeUnderEar.nativeElement.style.opacity = '1';
             this.svgArrow = this.svgArrowPoints();
         } else {
@@ -59,47 +59,47 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
             return;
         }
 
-        if (this.position - PRIMARY_WIDTH / 2 <= 0) {
+        if (this.position() - PRIMARY_WIDTH / 2 <= 0) {
             this.timeUnderEar.nativeElement.style.left = `${PRIMARY_WIDTH / 2}px`;
-            this.vlPosition = this.position;
-        } else if (this.position + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
+            this.vlPosition = this.position();
+        } else if (this.position() + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
             this.timeUnderEar.nativeElement.style.left = `${
                 this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2
             }px`;
             const padding =
-                this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
+                this.webglService.canvasWidth$.value - this.position() - PRIMARY_WIDTH / 2;
             this.vlPosition = PRIMARY_WIDTH / 2 - padding;
         } else {
-            this.timeUnderEar.nativeElement.style.left = `${this.position}px`;
+            this.timeUnderEar.nativeElement.style.left = `${this.position()}px`;
             this.vlPosition = PRIMARY_WIDTH / 2;
         }
     }
 
     public svgArrowPoints(): string {
-        if (this.position !== undefined) {
-            const offset = this.position - PRIMARY_WIDTH / 2;
+        if (this.position()) {
+            const offset = this.position() - PRIMARY_WIDTH / 2;
             let tl = Math.round((PRIMARY_WIDTH - ARROW_WIDTH) / 2); // top left vertex
             let tr = Math.round((PRIMARY_WIDTH + ARROW_WIDTH) / 2); // top right vertex
             let b = Math.round(PRIMARY_WIDTH / 2); // bottom vertex
 
             if (offset < 0) {
-                if (this.position < ARROW_WIDTH) {
+                if (this.position() < ARROW_WIDTH) {
                     tl = 0;
                     tr = ARROW_WIDTH;
-                    b = this.position;
+                    b = this.position();
                 } else {
                     tl += offset;
                     tr += offset;
                     b += offset;
                 }
-            } else if (this.webglService.canvasWidth$.value - this.position < PRIMARY_WIDTH / 2) {
-                if (this.webglService.canvasWidth$.value - this.position < ARROW_WIDTH) {
+            } else if (this.webglService.canvasWidth$.value - this.position() < PRIMARY_WIDTH / 2) {
+                if (this.webglService.canvasWidth$.value - this.position() < ARROW_WIDTH) {
                     tl = PRIMARY_WIDTH - ARROW_WIDTH;
                     tr = PRIMARY_WIDTH;
-                    b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position);
+                    b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position());
                 } else {
                     const padding =
-                        this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
+                        this.webglService.canvasWidth$.value - this.position() - PRIMARY_WIDTH / 2;
                     tl -= padding;
                     tr -= padding;
                     b -= padding;

@@ -1,16 +1,18 @@
-<div #timePlaybackEar>
-    <span class="date">{{ date }}</span>
-    <span class="time">{{ time }}</span>
-    <svg
-        class="bottom-arrow"
-        viewbox="0 0 180 5"
-    >
-        <polygon [attr.points]="svgArrow" />
-    </svg>
-    <div class="side-arrow"></div>
-    <div
-        #timePlaybackLine
-        class="vertical-line"
-        [ngStyle]="{ 'left.px': vlPosition }"
-    ></div>
-</div>
+@if (currentTimestamp$$()) {
+    <div #timePlaybackEar>
+        <span class="date">{{ date$$() }}</span>
+        <span class="time">{{ time$$() }}</span>
+        <svg
+            class="bottom-arrow"
+            viewbox="0 0 180 5"
+        >
+            <polygon [attr.points]="svgArrow" />
+        </svg>
+        <div class="side-arrow"></div>
+        <div
+            #timePlaybackLine
+            class="vertical-line"
+            [ngStyle]="{ 'left.px': vlPosition }"
+        ></div>
+    </div>
+}

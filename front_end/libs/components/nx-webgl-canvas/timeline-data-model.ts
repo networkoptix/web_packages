@@ -47,6 +47,7 @@ export class TimelineDataModel {
     public state$$ = computed(() => {
         const mainCameraData = this.mainCameraData$$();
         const allCamerasData = this.allCamerasData$$();
+        const loading = !this.timeDetails$$();
         const cameras = this.cameras$$();
         const selectedCameraId = this.selectedCameraId$$();
         const selectedCamera = cameras.find(
@@ -61,6 +62,7 @@ export class TimelineDataModel {
             selectedCameraId,
             selectedCamera,
             camerasCount,
+            loading,
         };
     });
 

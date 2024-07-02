@@ -31,7 +31,9 @@
     user-select: none;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: 'left middle right';
+    grid-template-areas:
+        'left middle right'
+        'left timeline right';
 
     nx-pre-loader {
         position: absolute;
@@ -43,11 +45,7 @@
 }
 
 nx-webgl-canvas {
-    height: 152px;
-    width: 100%;
-    display: block;
-    position: absolute;
-    bottom: 0;
+    grid-area: timeline;
 }
 
 .other-systems {
@@ -160,6 +158,7 @@ nx-webgl-canvas {
 }
 
 .sidebar-wrapper {
+    grid-area: left;
     height: 100%;
     width: 0px;
     display: flex;
@@ -446,6 +445,7 @@ h2.auto-save-overlay {
     flex-shrink: 1;
     overflow: hidden;
     position: relative;
+
     &.dragging {
         background-image: linear-gradient(
                 to right,
@@ -644,7 +644,7 @@ h2.auto-save-overlay {
     .layout-item,
     .layout-item-wrapper {
         &:not(.focused-item) {
-            outline: unset !important;
+            --border-style: unset !important;
         }
         cursor: unset !important;
     }
@@ -663,6 +663,18 @@ h2.auto-save-overlay {
     margin: 0;
     overflow: hidden;
     background: var(--placeholder-background);
+    &::after {
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        border-radius: 4px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        border: var(--border-style);
+    }
 
     &.wide {
         width: unset;
@@ -672,13 +684,13 @@ h2.auto-save-overlay {
     }
 
     &:hover {
-        outline: 2px solid var(--border-color);
+        --border-style: 2px solid var(--border-color);
     }
 
     &:active,
     :focus,
     &.focused-item {
-        outline: 2px solid var(--brand-core);
+        --border-style: 2px solid var(--brand-core);
     }
 
     ::ng-deep {

@@ -19,13 +19,13 @@ import { images } from '@static-variables';
 export class TimelineScrollComponent {
     @Input() barWidth: number;
     @Input() barPos: number;
-    @Input() playbackPos: number | undefined;
+    // @Input() playbackPos: number | undefined;
 
-    @Output() singleScroll = new EventEmitter<SCROLL_DIRECTION>();
-    @Output() constantScroll = new EventEmitter<{
-        direction: SCROLL_DIRECTION;
-        action: string;
-    }>();
+    // @Output() singleScroll = new EventEmitter<SCROLL_DIRECTION>();
+    // @Output() constantScroll = new EventEmitter<{
+    //     direction: SCROLL_DIRECTION;
+    //     action: string;
+    // }>();
     @Output() scrollToPos = new EventEmitter<{
         direction: SCROLL_DIRECTION;
         position: number;
@@ -53,25 +53,30 @@ export class TimelineScrollComponent {
     continuousScroll: boolean = false;
     public disabled: boolean = false;
     public isSelected: boolean = false;
+    public playbackPos: number | undefined;
 
-    SCROLL_DIRECTION = SCROLL_DIRECTION;
+    // SCROLL_DIRECTION = SCROLL_DIRECTION;
 
     constructor(public webglService: NxWebGLService) {
-        webglService.canScroll$.pipe(untilDestroyed(this)).subscribe(subject => {
-            this.canScrollLeft = subject.left;
-            if (!subject.left) {
-                this.constantScroll.emit({
-                    direction: SCROLL_DIRECTION.left,
-                    action: 'stop',
-                });
-            }
-            this.canScrollRight = subject.right;
-            if (!subject.right) {
-                this.constantScroll.emit({
-                    direction: SCROLL_DIRECTION.right,
-                    action: 'stop',
-                });
-            }
+        // webglService.canScroll$.pipe(untilDestroyed(this)).subscribe(subject => {
+        //     this.canScrollLeft = subject.left;
+        //     if (!subject.left) {
+        //         this.constantScroll.emit({
+        //             direction: SCROLL_DIRECTION.left,
+        //             action: 'stop',
+        //         });
+        //     }
+        //     this.canScrollRight = subject.right;
+        //     if (!subject.right) {
+        //         this.constantScroll.emit({
+        //             direction: SCROLL_DIRECTION.right,
+        //             action: 'stop',
+        //         });
+        //     }
+        // });
+
+        webglService.playbackPosition$.pipe(untilDestroyed(this)).subscribe(position => {
+            this.playbackPos = position;
         });
 
         webglService.selectionDrag$.pipe(untilDestroyed(this)).subscribe(value => {
@@ -157,20 +162,20 @@ export class TimelineScrollComponent {
         this.scrollEnd.emit(true);
     }
 
-    scrollTo(direction: SCROLL_DIRECTION): void {
-        if (
-            direction === SCROLL_DIRECTION.constantLeft ||
-            direction === SCROLL_DIRECTION.constantRight
-        ) {
-            this.continuousScroll = true;
-            this.constantScroll.emit({
-                direction,
-                action: 'start',
-            });
-            return;
-        }
-        this.singleScroll.emit(direction);
-    }
+    // scrollTo(direction: SCROLL_DIRECTION): void {
+    //     if (
+    //         direction === SCROLL_DIRECTION.constantLeft ||
+    //         direction === SCROLL_DIRECTION.constantRight
+    //     ) {
+    //         this.continuousScroll = true;
+    //         this.constantScroll.emit({
+    //             direction,
+    //             action: 'start',
+    //         });
+    //         return;
+    //     }
+    //     this.singleScroll.emit(direction);
+    // }
 
     // scrollStop(direction: SCROLL_DIRECTION): void {
     //     if (this.continuousScroll) {
