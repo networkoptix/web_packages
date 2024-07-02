@@ -547,6 +547,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         metadataStorageId: this.selectedStorage.id,
                     };
                     await this.system.serverManager.updateResource(this.selectedServer.id, params);
+                    this.system.serverManager.invalidateStorageAnalytics(this.selectedServer.id);
                     await this.system.update();
                     this.system.storageManager.update();
                     this.analyticsDbChanged = true;
