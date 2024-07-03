@@ -184,7 +184,6 @@ export type MoveGroupItem = DialogType<
     {
         item: GroupItem;
         organization: Organization;
-        groups: GroupItem[];
     },
     Group
 >;

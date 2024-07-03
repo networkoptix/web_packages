@@ -369,7 +369,6 @@ export class NxOrganizationCardContainerComponent {
                             .moveGroupItem({
                                 item: group,
                                 organization: this.currentOrg$$(),
-                                groups: this.groupsStore.groupsEntities(),
                             })
                             .then(newGroup => {
                                 if (newGroup) {

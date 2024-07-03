@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -9,6 +9,7 @@ import { AsyncAction, createAsyncAction } from '@dialogs/async-action-button/cre
 import type { MoveGroupItem as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import LANG from '@language_static';
+import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     Group,
@@ -34,8 +35,10 @@ import { OrgTreeStatusMap } from '../org-tree-selector/org-tree-selector.types';
 export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
     moveItemAction: AsyncAction<Group>;
 
+    private groupsStore = inject(GroupsStore);
+
     organization: Organization;
-    groups: GroupItem[];
+    groups: GroupItem[] = this.groupsStore.sortedGroups$$();
     orgTreeStatuses: OrgTreeStatusMap;
     folderControl = new FormControl<string | null>(null);
     formGroup = new FormGroup({ folder: this.folderControl });
@@ -43,12 +46,11 @@ export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
     constructor(
         cpService: NxChannelPartnersService,
         translate: TranslateService,
-        public override dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { organization, groups, item }: DT['data'],
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) { organization, item }: DT['data'],
     ) {
         super(dialogRef);
         this.organization = organization;
-        this.groups = groups;
 
         const orgTreeStatuses: OrgTreeStatusMap = new Map();
         const msg = translate.instant(LANG.dialogs.channelPartners.cannotMoveIntoSelf);
