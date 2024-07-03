@@ -186,7 +186,7 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
     ? Acc[number]
     : Enumerate<N, [...Acc, Acc['length']]>;
 
-type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
+export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
 export type Hue = IntRange<0, 361>;
 
@@ -204,6 +204,7 @@ export interface ThemeOptions {
     highContrast?: boolean;
     coreSaturation?: Percentage;
     backgroundLuminosity?: BackgroundLuminosity;
+    useHct?: boolean;
 }
 
 export type ThemeWithOptions = { theme: ThemeDefinition; options?: ThemeOptions };
@@ -251,4 +252,5 @@ export const initialOptions: ThemeOptions = {
     highContrast: false,
     coreSaturation: 20,
     backgroundLuminosity: 15,
+    useHct: false,
 };

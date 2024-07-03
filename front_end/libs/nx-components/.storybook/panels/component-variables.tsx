@@ -6,7 +6,7 @@ import {
     createComponentVariablesEvent,
     createComponentVariablesEventName,
 } from '../../src/lib/theme-provider/events';
-import { getStoryBookWindow } from './common';
+import { getStoryBookWindow } from '../../src/common';
 
 export const ComponentVariables: Addon_BaseType['render'] = ({ active }) => {
     const [variables, setVariables] = useState<[string, [string, string]][]>([])

@@ -1,11 +1,9 @@
-<h2>{{ testModel() }}</h2>
-<input
-    [ngModel]="testModel()"
-    (ngModelChange)="testModel.set($event)"
-/>
-
-<textarea
-    [ngModel]="testModel()"
-    (ngModelChange)="testModel.set($event)"
-></textarea>
-<button (click)="testModel.set(testInput()); themeProvider.toggleTheme()">{{ testInput() }}</button>
+<div class="wrapper">
+    <h1>{{ testModel() + ' h1' }}</h1>
+    <h2>{{ testModel() + ' h2' }}</h2>
+    <h3>{{ testModel() + ' h3' }}</h3>
+    <h4>{{ testModel() + ' h4' }}</h4>
+    <h5>{{ testModel() + ' h5' }}</h5>
+    <h6>{{ testModel() + ' h6' }}</h6>
+    <p>{{ testModel() + ' p' }}</p>
+</div>

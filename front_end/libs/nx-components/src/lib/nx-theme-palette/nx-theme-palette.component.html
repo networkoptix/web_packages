@@ -56,6 +56,11 @@
                                 class="full-palette"
                             >
                                 <span [style]="generateLabel(color)">{{ shade }}</span>
+                                @if (generateNote(color, shade); as note) {
+                                    @for (line of note.text; track line) {
+                                        <span [style]="note.style">{{ line }}</span>
+                                    }
+                                }
                             </td>
                         }
                     }

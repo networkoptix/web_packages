@@ -1,19 +1,14 @@
 @use "../styles/reset-mixins";
+@use "../styles/typography";
+@use "../styles/spacing";
 
 @include reset-mixins.reset-globals {
-    :host, * {
+    @include typography.defaults;
+
+    .wrapper {
+        @include spacing.with-spacing-for(padding, 8);
         background-color: var(--example-background-color, green);
-        color: var(--example-text-color, 'blue')
-    }
-
-    button {
-        font-size: 42px;
-        font-family: Impact;
-    }
-
-    h2 {
-        padding: 20px;
-        font-size: 69px;
-        max-width: 420px;
+        width: calc(100% - 144px);
+        border: 2px solid currentColor;
     }
 }

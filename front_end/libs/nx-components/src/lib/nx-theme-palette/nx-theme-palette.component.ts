@@ -14,6 +14,7 @@ import {
     themeColors,
     generatedThemeColors,
     GeneratedThemeColors,
+    IntRange,
 } from '../theme-provider/color-types';
 import {
     baseColorStorybookEventName,
@@ -113,6 +114,30 @@ export class NxThemePalette extends BaseComponent {
         return {
             'background-color': backgroundColor,
             color,
+        };
+    };
+
+    generateNote = (
+        base: ThemeColors,
+        shade: Shades,
+    ): { style: { color: string }; text: string[] } => {
+        const colors = this.themeProvider.colors();
+        const backgroundKey = generateCssVariableName(base, shade);
+        const shadeInt = Math.max(
+            19 - parseInt(shade.replace('dark', '').replace('light', '')),
+            6,
+        ) as IntRange<1, 19>;
+        const contrast = shade.includes('dark') ? 'light' : 'dark';
+        console.info({ shadeInt });
+        const colorKey = generateCssVariableName(base, `${contrast}${shadeInt}`);
+        const [h, s, l] = colors[backgroundKey]
+            .split('(')[1]
+            .split(')')[0]
+            .split(',')
+            .map(val => Math.round(parseFloat(val)));
+        return {
+            style: { color: `${colors[colorKey]} !important` },
+            text: ['HSL:', `${h}`, `${s}%`, `${l}%`],
         };
     };
 

@@ -1,3 +1,4 @@
+import { Hct, TonalPalette, argbFromRgb } from '@material/material-color-utilities';
 import { hex, hsl } from 'color-convert';
 import { HSL } from 'color-convert/conversions';
 import { clamp, memoize } from 'lodash-es';
@@ -130,11 +131,31 @@ const extractShade = memoize(
     hash,
 );
 
+export const getTonalPaletteInstance = memoize((hexColor: HexString): TonalPalette => {
+    return TonalPalette.fromInt(argbFromRgb(...hex.rgb(hexColor)));
+});
+
 export const extractOpacity = memoize((colorVariable: CssColorVariables): Percentage => {
     const opacity = parseInt(colorVariable.split('_opacity_')[1] || '100');
     const parsedOpacity = opacityMap[opacity as Opacity] || 100;
     return parsedOpacity;
 }, hash);
+
+export const hctToHsl = memoize((palette: Hct): [Hue, Percentage, Percentage] => {
+    return hex.hsl(`#${palette.toInt().toString(16).slice(2).toUpperCase()}`) as [
+        Hue,
+        Percentage,
+        Percentage,
+    ];
+});
+
+export const generateHslaStringUsingHct = memoize(
+    (color: HexString, luminosity: Percentage, opacity: Percentage = 100): HslaString => {
+        const palette = getTonalPaletteInstance(color).getHct(luminosity);
+        return generateHslaString(...hctToHsl(palette), opacity);
+    },
+    hash,
+);
 
 const generateHslaStringFromTheme = memoize(
     (
@@ -164,6 +185,12 @@ const generateHslaStringFromTheme = memoize(
         const luminosity =
             extractedLuminosity === 'initial' ? baseLuminosity : applyOffset(extractedLuminosity);
         const opacity = extractOpacity(colorVariable);
+        const baseColor = colorVariable.split('_')[0] as ThemeColors;
+        const useInitial = colorVariable.split('_shade_')[1]?.split('_')?.[0] === 'initial';
+
+        if (options.useHct && !useInitial) {
+            return generateHslaStringUsingHct(theme[baseColor], luminosity, opacity);
+        }
         return generateHslaString(hue, saturation, luminosity, opacity);
     },
     hash,
@@ -171,8 +198,8 @@ const generateHslaStringFromTheme = memoize(
 
 const applyCoreSaturation = memoize((base: HexString, options: ThemeOptions): HexString => {
     const { coreSaturation = 15 } = options;
-    const [hue, _, luminosity] = hex.hsl(base);
-    return hsl.hex([hue, coreSaturation, luminosity]) as HexString;
+    const [hue] = hex.hsl(base);
+    return hsl.hex([hue, coreSaturation, 50]) as HexString;
 }, hash);
 
 export const withGeneratedColors = memoize(

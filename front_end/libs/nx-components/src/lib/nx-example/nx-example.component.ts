@@ -4,14 +4,17 @@ import {
     Component,
     booleanAttribute,
     computed,
+    effect,
     input,
     model,
-    output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { dispatch } from '../../common';
 import { BaseComponent } from '../base-component';
+import { Percentage } from '../theme-provider';
 import { generateCssVariableName } from '../theme-provider/color-generator';
+import { createThemePatchEvent } from '../theme-provider/events';
 
 /**
  * An example Component
@@ -26,46 +29,48 @@ import { generateCssVariableName } from '../theme-provider/color-generator';
 })
 export class NxExampleComponent extends BaseComponent {
     /**
-     * A signal input example
-     */
-    testInput = input('test');
-
-    /**
-     * A signal output example
-     */
-    testOutput = output<string>();
-
-    /**
      * A signal model example
      */
 
     testModel = model('testModel');
 
-    /**
-     * Theme input example
-     */
+    useHct = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    variant = input<'normal' | 'funky'>('normal');
+    coreSaturation = input<Percentage>(20);
 
-    forceDark = input<boolean, unknown>(false, { transform: booleanAttribute });
+    initialHct = this.themeProvider.currentTheme().options.useHct;
+    initialCoreSaturation = this.themeProvider.currentTheme().options.coreSaturation;
 
-    override themeOptionOverride = computed(() =>
-        this.forceDark() ? { inverse: true } : undefined,
+    syncOptionOverridesEffect = effect(
+        () => {
+            if (window.location.href.endsWith('--docs')) {
+                return;
+            }
+            const useHct = this.useHct();
+            const coreSaturation = this.coreSaturation();
+            dispatch(createThemePatchEvent({ options: { useHct, coreSaturation } }));
+            return () =>
+                dispatch(
+                    createThemePatchEvent({
+                        options: {
+                            useHct: this.initialHct,
+                            coreSaturation: this.initialCoreSaturation,
+                        },
+                    }),
+                );
+        },
+        { allowSignalWrites: true },
     );
 
-    override variablesDeclaration = computed(() => {
-        const isFunky = this.variant() === 'funky';
-        return isFunky
-            ? ({
-                  '--example-background-color': generateCssVariableName(
-                      'attentionSuccessGreen',
-                      'light8',
-                  ),
-                  '--example-text-color': generateCssVariableName('core', 'dark8'),
-              } as const)
-            : ({
-                  '--example-background-color': generateCssVariableName('core', 'dark7'),
-                  '--example-text-color': generateCssVariableName('brand'),
-              } as const);
-    });
+    override themeOptionOverride = computed(() => ({
+        useHct: this.useHct(),
+        coreSaturation: this.coreSaturation(),
+    }));
+
+    override variablesDeclaration = computed(
+        () =>
+            ({
+                '--example-background-color': generateCssVariableName('core', 'dark3'),
+            }) as const,
+    );
 }

@@ -28,6 +28,19 @@ export class NxThemeProviderService {
     });
     public readonly colors = computed(() => this.colorGenerator.createTheme(this.currentTheme()));
 
+    public updateThemeOptions(options: ThemeOptions): void {
+        this.theme.update(({ theme, options: initialOptions = {} }: ThemeWithOptions) => {
+            return {
+                theme,
+                options: {
+                    ...initialOptions,
+                    ...options,
+                },
+            };
+        });
+        this.notify();
+    }
+
     public toggleTheme(inverse?: boolean): void {
         this.theme.update(({ theme, options = {} }: ThemeWithOptions) => {
             inverse = inverse ?? !options?.inverse;
@@ -44,12 +57,13 @@ export class NxThemeProviderService {
 
     public getColorsWithThemeOverride(options: ThemeOptions): GeneratedTheme {
         const { theme, options: baseOptions = {} } = this.currentTheme();
+        options = {
+            ...baseOptions,
+            ...options,
+        };
         return this.colorGenerator.createTheme({
-            theme,
-            options: {
-                ...baseOptions,
-                ...options,
-            },
+            theme: withGeneratedColors(theme, options),
+            options,
         });
     }
 
@@ -82,11 +96,13 @@ export class NxThemeProviderService {
                     const gray = updatedValue.includes('gray');
                     const highContrast = updatedValue.includes('high-contrast');
                     const options = {
+                        ...initialOptions,
                         offset: gray ? 10 : 0,
                         inverse: darkMode,
                         highContrast,
                         coreSaturation: 20,
                         backgroundLuminosity: 15,
+                        useHct: false,
                     };
 
                     if (resetInitial) {

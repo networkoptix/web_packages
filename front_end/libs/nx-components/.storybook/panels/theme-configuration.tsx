@@ -20,6 +20,7 @@ import {
     additionalColors,
     attentionColors,
     contrastColors,
+    initialOptions,
 } from '../../src/lib/theme-provider/color-types';
 import { HexColorPicker } from 'react-colorful';
 
@@ -31,7 +32,7 @@ import {
     createColorGroupStorybookEvent,
 } from '../../src/lib/theme-provider/events';
 import { clamp } from 'lodash-es';
-import { dispatch } from './common';
+import { dispatch } from '../../src/common';
 
 const spaceButtons = {
     display: 'flex',
@@ -126,9 +127,7 @@ const BaseThemeConfiguration = ({ theme, isOpen }: ThemeWithOptions & { isOpen: 
 
 const ThemeOptionsConfiguration = ({ options }: ThemeWithOptions) => {
     const normalizedOptions = Object.entries({
-        offset: 0,
-        inverse: false,
-        highContrast: false,
+        ...initialOptions,
         ...options,
     });
 

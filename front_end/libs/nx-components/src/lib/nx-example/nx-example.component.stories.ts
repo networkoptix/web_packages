@@ -12,26 +12,23 @@ const meta: Meta<NxExampleComponent> = {
         template: `<nx-example ${argsToTemplate(args)}></nx-example>`,
     }),
     argTypes: {
-        testInput: {
-            description: 'Test Input Description',
-        },
         testModel: {
             description: 'Test Model Description',
         },
-        variant: {
-            description: 'Variant',
-            control: 'select',
-            options: ['funky', 'normal'],
-            defaultValue: {
-                summary: 'normal',
-            },
-        },
-        forceDark: {
-            description: 'Force Dark Mode',
+        useHct: {
+            description: 'Use HCT Colors',
             control: 'select',
             options: [true, false],
             defaultValue: {
                 summary: false,
+            },
+        },
+        coreSaturation: {
+            description: 'Core color Saturation',
+            control: 'select',
+            options: [0, 5, 10, 15, 20, 25, 30],
+            defaultValue: {
+                summary: 20,
             },
         },
     },
@@ -40,12 +37,11 @@ const meta: Meta<NxExampleComponent> = {
 export default meta;
 type Story = StoryObj<NxExampleComponent>;
 
-export const Primary: Story = {
+export const UseHslColors: Story = {
     args: {
-        testInput: 'Primary Story',
-        testModel: 'Initial Model',
-        variant: 'normal',
-        forceDark: false,
+        testModel: 'Using HSL Luminosity Only',
+        useHct: false,
+        coreSaturation: 20,
     },
     parameters: {
         design: {
@@ -55,27 +51,11 @@ export const Primary: Story = {
     },
 };
 
-export const Secondary: Story = {
+export const UseHctColors: Story = {
     args: {
-        testInput: 'Secondary Story',
-        testModel: 'Initial Model',
-        variant: 'funky',
-        forceDark: false,
-    },
-    parameters: {
-        design: {
-            type: 'figma',
-            url: 'https://www.figma.com/file/g5g3gEjjNcg5YkxXiKNx9u/%F0%9F%9F%AA-Cloud-2.0-Design-System?node-id=5575-9725&t=9TS8o0KDvT5Yk7cf-0',
-        },
-    },
-};
-
-export const ForceDarkMode: Story = {
-    args: {
-        testInput: 'Force Dark Mode Story',
-        testModel: 'Force Dark Mode Example',
-        variant: 'normal',
-        forceDark: true,
+        testModel: 'Using HCT Chroma and Tone',
+        useHct: true,
+        coreSaturation: 5,
     },
     parameters: {
         design: {
