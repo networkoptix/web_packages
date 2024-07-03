@@ -222,3 +222,186 @@ class TestChannelPartnerGroupStructureService:
 
         assert len(actual_organizations) == 1
         assert actual_organizations[0]["name"] == "root_cp_org"
+
+    def test_channel_structure_ordering(self, multi_cp_user_factory, channel_partner_factory, organization_factory):
+        # Create a root channel partner
+        root_cp = channel_partner_factory(name='root_cp', cloud_host=self.host)
+
+        # Create a random channel partner with root_cp as parent
+        rando_cp = channel_partner_factory(parent_channel_partner=root_cp, name="rando_cp", cloud_host=self.host)
+
+        # Create a second level channel partner with rando_cp as parent
+        cp2 = channel_partner_factory(parent_channel_partner=rando_cp, name="a_cp_level_2_1", cloud_host=self.host)
+
+        # Create a first level channel partner with root_cp as parent and add organizations to it
+        cp1 = channel_partner_factory(parent_channel_partner=root_cp, name="b_cp_level_1_1", cloud_host=self.host)
+        organization_factory(channel_partner=cp1, name="org_level_1_1")
+        organization_factory(channel_partner=cp1, name="org_level_1_2")
+
+        # Change the parent of cp2 to cp1 and add organizations to it
+        cp2.parent_channel_partner = cp1
+        cp2.save()
+        organization_factory(channel_partner=cp2, name="org_level_2_1")
+        organization_factory(channel_partner=cp2, name="org_level_2_2")
+
+        # Save cp1 after making changes
+        cp1.save()
+
+        # Create a user associated with cp2 and cp1
+        user, multi_cp_user_links = multi_cp_user_factory(channel_partners=[cp2, cp1])
+
+        # Add user to an organization that's not related
+        user_org = OrganizationToUser.objects.create(
+            user=user,
+            organization=organization_factory(channel_partner=root_cp, name="root_cp_org"))
+        user_org.save()
+
+        # Process the full structure for the user
+        service = ChannelPartnerGroupStructureService()
+        actual = service.process_full_structure(user)
+
+        # Get the actual channel partners and organizations
+        actual_channel_partners = actual.get("channelPartners")
+        actual_organizations = actual.get("organizations")
+
+        # Assert that there is only one channel partner
+        assert len(actual_channel_partners) == 1
+
+    def test_channel_structure_one_level_deeper(self, multi_cp_user_factory, channel_partner_factory,
+                                                organization_factory):
+        # Create a root channel partner
+        root_cp = channel_partner_factory(name='root_cp', cloud_host=self.host)
+
+        # Create a random channel partner with root_cp as parent
+        rando_cp = channel_partner_factory(parent_channel_partner=root_cp, name="rando_cp", cloud_host=self.host)
+
+        # Create an intermediate channel partner with rando_cp as parent
+        inter_cp = channel_partner_factory(parent_channel_partner=root_cp, name="inter_cp", cloud_host=self.host)
+
+        # Create a second level channel partner with inter_cp as parent
+        cp2 = channel_partner_factory(parent_channel_partner=inter_cp, name="a_cp_level_2_1", cloud_host=self.host)
+        organization_factory(channel_partner=cp2, name="org_level_2_1")
+        organization_factory(channel_partner=cp2, name="org_level_2_2")
+
+        # Create a first level channel partner with inter_cp as parent and add organizations to it
+        cp1 = channel_partner_factory(parent_channel_partner=inter_cp, name="b_cp_level_1_1", cloud_host=self.host)
+        organization_factory(channel_partner=cp1, name="org_level_1_1")
+        organization_factory(channel_partner=cp1, name="org_level_1_2")
+
+        cp2.save()
+        # Create a user associated with cp2 and cp1
+        user, multi_cp_user_links = multi_cp_user_factory(channel_partners=[cp2, cp1])
+
+        # Add user to an organization that's not related
+        user_org = OrganizationToUser.objects.create(
+            user=user,
+            organization=organization_factory(channel_partner=root_cp, name="root_cp_org"))
+        user_org.save()
+
+        # Process the full structure for the user
+        service = ChannelPartnerGroupStructureService()
+        actual = service.process_full_structure(user)
+
+        # Get the actual channel partners and organizations
+        actual_channel_partners = actual.get("channelPartners")
+        actual_organizations = actual.get("organizations")
+
+        # Assert that there are two channel partners
+        assert len(actual_channel_partners) == 2
+        assert len(actual_organizations) == 1
+
+    def test_custom_channel_partner_group_structure(self, channel_partner_factory, organization_factory,
+                                                    cp_user_factory):
+
+        top_cp = channel_partner_factory(name='TOP CP', cloud_host=self.host)
+        user = cp_user_factory(channel_partner=top_cp)
+
+        cp1 = channel_partner_factory(parent_channel_partner=top_cp, name='CP 1', cloud_host=self.host)
+        cp2 = channel_partner_factory(parent_channel_partner=cp1, name='CP 2', cloud_host=self.host)
+
+        cp3 = channel_partner_factory(parent_channel_partner=cp2, name='CP 3', cloud_host=self.host)
+        cp_user_factory(email=user.user.email, channel_partner=cp3)
+        cp3_1 = channel_partner_factory(parent_channel_partner=cp3, name='CP 3-1', cloud_host=self.host)
+
+        cp4 = channel_partner_factory(parent_channel_partner=cp3, name='CP 4', cloud_host=self.host)
+        cp4_1 = channel_partner_factory(parent_channel_partner=cp4, name='CP 4-1', cloud_host=self.host)
+
+        cp5 = channel_partner_factory(parent_channel_partner=cp4, name='CP 5', cloud_host=self.host)
+        cp_user_factory(email=user.user.email, channel_partner=cp5)
+        cp5_1 = channel_partner_factory(parent_channel_partner=cp5, name='CP 5-1', cloud_host=self.host)
+        cp_user_factory(email=user.user.email, channel_partner=cp5_1)
+        cp5_1_1 = channel_partner_factory(parent_channel_partner=cp5_1, name='CP 5-1-1', cloud_host=self.host)
+
+        cp6 = channel_partner_factory(parent_channel_partner=cp5, name='CP 6', cloud_host=self.host)
+        cp6_1 = channel_partner_factory(parent_channel_partner=cp6, name='CP 6-1', cloud_host=self.host)
+
+        cp7 = channel_partner_factory(parent_channel_partner=cp6, name='CP 7', cloud_host=self.host)
+
+        organization_factory(channel_partner=cp1, name='Organization 1')
+        organization_factory(channel_partner=cp2, name='Organization 2')
+        organization_factory(channel_partner=cp3, name='Organization 3')
+        organization_factory(channel_partner=cp4, name='Organization 4')
+        organization_factory(channel_partner=cp5, name='Organization 5')
+        organization_factory(channel_partner=cp5_1, name='Organization 5-1')
+        organization_factory(channel_partner=cp6, name='Organization 6')
+
+        service = ChannelPartnerGroupStructureService()
+        actual_kevin = service.process_full_structure(user.user)
+        # actual_kyrylo = service.full_structure(user.user)
+
+        actual = actual_kevin
+        actual_channel_partners = actual.get("channelPartners")
+        actual_organizations = actual.get("organizations")
+
+        # Assertions for the top-level channel partners
+        assert len(actual_channel_partners) == 2
+
+        # Assertions for CP 3
+        cp3_actual = next(cp for cp in actual_channel_partners if cp["name"] == "CP 3")
+        assert cp3_actual["name"] == "CP 3"
+        assert len(cp3_actual["organizations"]) == 1
+        assert cp3_actual["organizations"][0]["name"] == "Organization 3"
+
+        # Assertions for CP 3-1
+        cp3_1_actual = next(cp for cp in cp3_actual["subChannels"] if cp["name"] == "CP 3-1")
+        assert cp3_1_actual["name"] == "CP 3-1"
+        assert len(cp3_1_actual["organizations"]) == 0
+
+        # Assertions for CP 4
+        cp4_actual = next(cp for cp in cp3_actual["subChannels"] if cp["name"] == "CP 4")
+        assert cp4_actual["name"] == "CP 4"
+        assert len(cp4_actual["organizations"]) == 0
+
+        # Assertions for CP 5
+        cp5_actual = next(cp for cp in cp4_actual["subChannels"] if cp["name"] == "CP 5")
+        assert cp5_actual["name"] == "CP 5"
+        assert len(cp5_actual["organizations"]) == 1
+        assert cp5_actual["organizations"][0]["name"] == "Organization 5"
+
+        # Assertions for CP 5-1
+        cp5_1_actual = next(cp for cp in cp5_actual["subChannels"] if cp["name"] == "CP 5-1")
+        assert cp5_1_actual["name"] == "CP 5-1"
+        assert len(cp5_1_actual["organizations"]) == 1
+
+        # Assertions for CP 5-1-1
+        cp5_1_1_actual = next(cp for cp in cp5_1_actual["subChannels"] if cp["name"] == "CP 5-1-1")
+        assert cp5_1_1_actual["name"] == "CP 5-1-1"
+        assert len(cp5_1_1_actual["organizations"]) == 0
+
+        # Assertions for CP 6
+        cp6_actual = next(cp for cp in cp5_actual["subChannels"] if cp["name"] == "CP 6")
+        assert cp6_actual["name"] == "CP 6"
+        assert len(cp6_actual["organizations"]) == 0
+
+        # Assertions for TOP CP
+        top_cp_actual = next(cp for cp in actual_channel_partners if cp["name"] == "TOP CP")
+        assert top_cp_actual["name"] == "TOP CP"
+        assert len(top_cp_actual["organizations"]) == 0
+
+        # Assertions for CP 1 under TOP CP
+        cp1_actual = next(cp for cp in top_cp_actual["subChannels"] if cp["name"] == "CP 1")
+        assert cp1_actual["name"] == "CP 1"
+        assert len(cp1_actual["organizations"]) == 0
+
+        # Assertions for organizations at the top level
+        assert len(actual_organizations) == 0
