@@ -24,7 +24,11 @@
             [update]="editMode"
         >
             <header>
-                @if (!(hasNoItems || editMode) && !readonlyInfo()) {
+                @if (readonlyInfo$$()) {
+                    <h4 class="float-left">
+                        {{ parentName }}
+                    </h4>
+                } @else if (!(hasNoItems || editMode)) {
                     <h4
                         class="float-left"
                         translate

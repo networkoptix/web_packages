@@ -29,8 +29,7 @@ export class NxFilterTagsComponent {
     });
 
     _changeFiltersEffect = effect(() => {
-        this.filters$$();
-        this.updateUri();
+        this.updateUri(this.filters$$() || []);
     });
 
     @Output() filterChange = new EventEmitter<{
@@ -43,9 +42,9 @@ export class NxFilterTagsComponent {
         this.filterChange.emit({ idx: filterIdx, value });
     }
 
-    updateUri(): void {
+    updateUri(filters: UserFilter[]): void {
         const queryParams: Record<string, string | string[] | undefined> = {};
-        this.filters$$()
+        filters
             .filter(filter => filter.selected)
             .forEach(filter => {
                 queryParams[filter.group] = filter.id as string;

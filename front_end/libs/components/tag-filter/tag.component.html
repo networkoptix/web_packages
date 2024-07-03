@@ -1,13 +1,15 @@
 <div>
     <div class="filter-wrapper">
         @for (filter of filters$$(); track filter.value; let i = $index) {
-            <nx-tag
-                [value]="filter.selected"
-                size="large"
-                (onClick)="removeFilter($event, i)"
-            >
-                {{ filter.value }}
-            </nx-tag>
+            @if (filter.value) {
+                <nx-tag
+                    [value]="filter?.selected || false"
+                    size="large"
+                    (onClick)="removeFilter($event, i)"
+                >
+                    {{ filter.value }}
+                </nx-tag>
+            }
         }
     </div>
 </div>

@@ -56,8 +56,7 @@ import { icons } from '@static-variables';
     ],
 })
 export class NxChannelPartnerInformationComponent {
-    // eslint-disable-next-line nx/signal-naming-convention
-    readonlyInfo = input<boolean>(false, {
+    readonlyInfo$$ = input<boolean>(false, {
         alias: 'readonlyInfo',
     });
 
@@ -69,6 +68,7 @@ export class NxChannelPartnerInformationComponent {
     hasNoItems: boolean = false;
     hasChanges: boolean = false;
     allValid: boolean = true;
+    parentName: string = '';
 
     informationData: SupportInformation;
     information: SupportInformation = {
@@ -155,7 +155,7 @@ export class NxChannelPartnerInformationComponent {
         });
     }
 
-    mapPartnerSupportInfo(psi: SupportInformationSever): void {
+    mapPartnerSupportInfo(psi: SupportInformationSever | undefined): void {
         if (psi) {
             [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(
                 type => {
@@ -163,6 +163,7 @@ export class NxChannelPartnerInformationComponent {
                     this.hasNoItems ||= psi[type].length > 0;
                 },
             );
+            this.parentName = this.currParentSupportInfo$$()?.name;
         }
     }
 
@@ -225,12 +226,11 @@ export class NxChannelPartnerInformationComponent {
     currParentSupportInfo$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
     currSupportInfoEffect = effect(() => {
-        const parentInfo = this.currParentSupportInfo$$()?.supportInformation;
-        const currentPartnerInfo = this.currPartnerSupportInfo$$();
-        const info = this.readonlyInfo() ? parentInfo : currentPartnerInfo;
-        if (info) {
-            this.mapPartnerSupportInfo(info);
-        }
+        const info = this.readonlyInfo$$()
+            ? this.currParentSupportInfo$$()?.supportInformation
+            : this.currPartnerSupportInfo$$();
+        this.mapPartnerSupportInfo(info);
+
         this.informationData = cloneDeep(this.information);
         this.hasNoItems = this.noItems();
     });
