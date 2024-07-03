@@ -77,7 +77,7 @@ export class NxReportsComponent implements OnInit {
                 ...urlSegments.slice(0, 2),
                 entityType,
                 entityId,
-                'service-usage',
+                'service-changes',
             ]);
         }
     }
