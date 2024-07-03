@@ -37,6 +37,7 @@ from nx_cloud_api_client.apis import CdbSystemAPIBase
 from nx_cloud_api_client.client import NxCloudAPISyncClient
 from rest_framework import (
     exceptions,
+    mixins,
     serializers,
     status,
 )
@@ -53,7 +54,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import (
     GenericViewSet,
     ModelViewSet,
-    mixins,
 )
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
@@ -96,7 +96,7 @@ from partners.permissions import (
     IsAuthenticatedSystem,
     IsInternalToken,
 )
-from partners.serializers import (
+from partners.serializers.v2.serializers import (
     AvailableChannelPartnerServiceSerializer,
     AvailableOrganizationServiceSerializer,
     BindLocalSystemSerializer,
@@ -167,8 +167,6 @@ from tools.utils import paginated_response
 
 
 VIEW_LOCK_WAIT_TIME = 2
-
-
 logger = structlog.get_logger(__name__)
 
 
@@ -250,7 +248,6 @@ class ParentLookUpMixin:
         parents_dict = self.get_parents_query_dict()
         m2m_key, val = list(parents_dict.items())[-1]
         return m2m_key, val
-
 
 
 @extend_schema(
@@ -414,6 +411,7 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
         channel_partner = get_object_or_404(ChannelPartner, pk=val)
         self.check_object_permissions(request, channel_partner)
 
+
 class ExternalIdBase:
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -542,6 +540,7 @@ class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, M
     def check_object_permissions(self, request, obj):
         pass
 
+
 @extend_schema(
     tags=['Service Management'],
     summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.',
@@ -657,6 +656,7 @@ class ChannelStructureViewSet(GenericViewSet):
         structured_data = service.process_full_structure(request.user)
         serializer = ChannelStructureResponseSerializer(structured_data)
         return Response(serializer.data)
+
 
 @extend_schema(
     tags=['Channel Partners']
@@ -1800,7 +1800,6 @@ def all_org_users(request):
     return Response(serializer.data)
 
 
-
 @extend_schema(
     summary='Submit a cloud storage usage report',
     request=CloudStorageUsageReportSerializer,
@@ -1815,5 +1814,3 @@ def cloud_storage_usage_report(request):
     caches['default'].delete(CloudSystemViewSet.get_service_quantity_cache_key(cloud_system))
     serializer.save_security_metrics()
     return Response(serializer.data)
-
-

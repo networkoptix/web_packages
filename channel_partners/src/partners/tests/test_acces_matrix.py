@@ -9,7 +9,7 @@ from partners.models import (
     FieldAccessPermissions,
     OrganizationRoles,
 )
-from partners.serializers import (
+from partners.serializers.v2.serializers import (
     ChannelPartnerSerializer,
     CloudSystemSerializer,
     OrganizationSerializer,

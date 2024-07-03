@@ -13,7 +13,7 @@ from partners.models import (
     MigrationRecord,
     ServiceRecordTypes,
 )
-from partners.serializers import (
+from partners.serializers.v2.serializers import (
     LegacyLicensesSerializer,
     MigrationResult,
 )

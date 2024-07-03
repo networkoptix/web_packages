@@ -13,7 +13,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-from partners.views import grant_access
+from partners.views.v2.views import grant_access
 
 
 swagger_ui = SpectacularSwaggerView.as_view(url_name='schema-internal')

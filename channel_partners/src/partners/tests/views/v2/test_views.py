@@ -51,7 +51,7 @@ from partners.models import (
     SystemServiceCurrentQuantity,
     VmsRoles,
 )
-from partners.views import (
+from partners.views.v2.views import (
     ChannelPartnerNestedViewSet,
     ChannelPartnerViewSet,
     CloudSystemViewSet,
@@ -599,7 +599,7 @@ class TestCloudSystemViewSet:
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
 
         # test failure request because of busy lock
-        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
+        mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=False)
         caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
         request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
         with transaction.atomic():
@@ -609,8 +609,8 @@ class TestCloudSystemViewSet:
 
         # test success request with freeing lock during waiting. it cannot be tested properly,
         # but we can catch side effect
-        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
-        cache_get_mock = mocker.patch('django.core.cache.backends.redis.RedisCache.get', return_value=None)
+        mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=False)
+        cache_get_mock = mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.get', return_value=None)
         caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
         request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
         raised_error = None
@@ -622,7 +622,7 @@ class TestCloudSystemViewSet:
         assert raised_error == RecursionError
 
         # test successful request and second service value
-        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=True)
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
         with transaction.atomic():
             response = view(request, id=str(system.system_id))
@@ -649,7 +649,7 @@ class TestCloudSystemViewSet:
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
 
         # test shutdown system change
-        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=True)
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
 
         response = view(request, id=str(system.system_id))

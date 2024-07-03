@@ -13,7 +13,7 @@ from partners.models import (
     ChannelPartnerToUser,
     CloudUser,
 )
-from partners.views import ChannelPartnerUserViewSet
+from partners.views.v2.views import ChannelPartnerUserViewSet
 
 
 class TestChannelPartnerUserViewSet:

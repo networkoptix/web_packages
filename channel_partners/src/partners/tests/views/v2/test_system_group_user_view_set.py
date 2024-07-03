@@ -12,7 +12,7 @@ from partners.models import (
     OrganizationToUser,
     SystemGroup,
 )
-from partners.views import SystemGroupUserViewSet
+from partners.views.v2.views import SystemGroupUserViewSet
 
 
 class TestSystemGroupUserViewSet:

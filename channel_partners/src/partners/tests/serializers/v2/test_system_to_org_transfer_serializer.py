@@ -12,7 +12,7 @@ from partners.models import (
     Organization,
     OrganizationRoles,
 )
-from partners.serializers import SystemToOrgTransferSerializer
+from partners.serializers.v2.serializers import SystemToOrgTransferSerializer
 
 
 class TestSystemToOrgTransferSerializer:

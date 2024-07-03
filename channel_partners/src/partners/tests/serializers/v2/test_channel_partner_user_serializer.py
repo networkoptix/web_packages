@@ -11,7 +11,7 @@ from partners.models import (
     CloudHost,
     CloudUser,
 )
-from partners.serializers import ChannelPartnerUserSerializer
+from partners.serializers.v2.serializers import ChannelPartnerUserSerializer
 
 
 # Utility

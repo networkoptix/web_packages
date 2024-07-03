@@ -29,7 +29,7 @@ from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import get_cached_report_key
 from partners.tasks.services import new_channel_partner_created
 from partners.tasks.usage_reports import calculate_all_reports
-from partners.viewsets.usage_reports_views import get_hierarchy_level
+from partners.views.v2.usage_reports_views import get_hierarchy_level
 from tools.helpers import get_today
 
 

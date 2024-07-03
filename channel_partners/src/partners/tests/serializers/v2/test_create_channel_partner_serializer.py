@@ -8,7 +8,7 @@ from partners.models import (
     ChannelPartnerRoles,
     ChannelPartnerToUser,
 )
-from partners.serializers import CreateChannelPartnerSerializer
+from partners.serializers.v2.serializers import CreateChannelPartnerSerializer
 from partners.utils.context_vars import get_context_vars
 
 

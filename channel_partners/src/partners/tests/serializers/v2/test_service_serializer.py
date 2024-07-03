@@ -1,7 +1,7 @@
 import pytest
 
 from partners.models import ChannelPartnerService
-from partners.serializers import ServiceSerializer
+from partners.serializers.v2.serializers import ServiceSerializer
 from tools.helpers import cast_uuid
 
 

@@ -6,7 +6,11 @@ from django.urls import (
 )
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from partners.views import (
+from partners.views.v2.usage_reports_views import (
+    ChannelPartnerServiceReportsViewSet,
+    OrganizationServiceReportsViewSet,
+)
+from partners.views.v2.views import (
     ChannelPartnerAvailableServiceViewSet,
     ChannelPartnerExternalIdViewSet,
     ChannelPartnerNestedViewSet,
@@ -34,10 +38,6 @@ from partners.views import (
     system_user,
     system_users,
     user_systems,
-)
-from partners.viewsets.usage_reports_views import (
-    ChannelPartnerServiceReportsViewSet,
-    OrganizationServiceReportsViewSet,
 )
 
 
