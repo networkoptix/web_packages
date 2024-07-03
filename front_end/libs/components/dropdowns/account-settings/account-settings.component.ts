@@ -27,7 +27,6 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { UserType } from '@services/system-user.types';
 import { icons } from '@static-variables';
@@ -83,7 +82,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
         type: undefined,
     });
 
-    readonly _accountDropdownStaff: AccountDropdown[] = [
+    readonly accountDropdownStaff: AccountDropdown[] = [
         {
             name: 'Administration',
             route: '/admin/',
@@ -94,14 +93,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
             route: '/nx-components-storybook/index.html',
             newWindow: true,
         },
-        {
-            name: 'Channel partners',
-            route: '/partners/',
-            newWindow: false,
-        },
     ];
     accountDropdown: AccountDropdown[];
-    accountDropdownStaff: AccountDropdown[];
 
     constructor(
         headerService: NxHeaderService,
@@ -110,10 +103,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     ) {
         super();
         this.accountDropdown = accountDropdown;
-        this.accountDropdownStaff = this._accountDropdownStaff.filter(
-            ({ name }) =>
-                nxConfig.featureFlags.channelPartners || !name.includes('Channel partners'),
-        );
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
         });
