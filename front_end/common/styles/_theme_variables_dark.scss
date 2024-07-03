@@ -154,6 +154,10 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --horizontal-sep-color : #2B383F; //$dark9;
 
     --label-color          : #E1E7EA; //light4;
+    /* This was the original value before it was changed to the one above without
+    design's approval. There are too many places using the new value now to flip
+    it back and risk breaking things on release, so using a different variable. */
+    --label-color-original : #A5B7C0; //light10;
     --label-disabled-color : #E1E7EA; //light4;
 
     --placehoder-cloud-color   : #171C1F; //$dark5
@@ -437,7 +441,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --dialog-bg : #171C1F; //$dark5;
     --dialog-border-color : #35464F; //$dark11;
     --dialog-header-bg : #1C2327; //$dark6;
-    --dialog-header-color: var(--dark17);
+    --dialog-header-color: #E1E7EA; //$light4
     --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
     --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 

@@ -135,6 +135,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --horizontal-sep-color : #404040; //$dark_gray_9;
 
     --label-color          : #E8E8E8; //light_gray_4;
+    --label-color-original : #B8B8B8; //light_gray_10;
     --label-disabled-color : #E8E8E8; //light_gray_4;
 
     --placehoder-cloud-color   : #202020; //$dark_gray_5
@@ -418,7 +419,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --dialog-bg : #202020; //$dark_gray_5;
     --dialog-border-color : #505050; //$dark_gray_11;
     --dialog-header-bg : #282828; //$dark_gray_6;
-    --dialog-header-color: var(--dark17);
+    --dialog-header-color: #{$light_gray_4};
     --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
     --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 

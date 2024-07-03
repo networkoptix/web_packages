@@ -5,6 +5,11 @@
 @use "theme_variables_common" as vars;
 @use '../../nx-modal';
 
+:host {
+    // Temporary fix for qa while migrating dialogs
+    --label-color: var(--label-color-original)
+}
+
 .header-title--muted {
     color: var(--light14); // TODO: Fix this with new variable generation
 }

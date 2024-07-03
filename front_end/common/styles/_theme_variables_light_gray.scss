@@ -134,6 +134,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --border-active-color: #{$light_gray_10};
     --horizontal-sep-color: #{$light_gray_6};
     --label-color: #{$dark_gray_9};
+    --label-color-original: #{$dark_gray_9};
 
     --placehoder-cloud-color: var(--brand-core);
     --placehoder-cloud-opacity: .1;
@@ -408,7 +409,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --dialog-bg: #{$light_gray_1};
     --dialog-border-color: #{$additional_light8};
     --dialog-header-bg: #{$additional_gray_light1};
-    --dialog-header-color: var(--dark17);
+    --dialog-header-color: #{$dark_gray_9};
     --dialog-overlay-bg: rgba(var(--dark15--rgb), 0.2);
     --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 
