@@ -50,11 +50,10 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
     action = input.required<AsyncAction<T>>();
     buttonColor = input<'default' | 'primary' | 'danger'>('primary');
 
-    /* Replace the signal with the input if you need to manually disable the button.
-    Disabled state is different from invalid state!! Use the manualInvalid input for
-    manual control of valid state */
-    // disabled = input<boolean>(false);
-    disabled = signal(false);
+    /* Disabled state is different from invalid state!
+    // Use the manualInvalid input for manual control of valid state.
+    */
+    disabled = input<boolean>(false);
 
     /* Manual escape hatches for disabling default behaviors */
     /** Disable all form functionality */

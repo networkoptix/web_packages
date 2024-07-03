@@ -24,7 +24,7 @@
             [update]="editMode"
         >
             <header>
-                @if (readonlyInfo$$()) {
+                @if (readOnlyInfo$$()) {
                     <h4 class="float-left">
                         {{ parentName }}
                     </h4>
@@ -90,23 +90,7 @@
                     [ngClass]="{ 'in-edit-mode': editMode }"
                 >
                     <div
-                        class="info-note"
-                        *ngIf="editMode"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'info.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
-                        <span translate
-                            >Remember that this information will be seen not only by your employees,
-                            but also by your partners and organizations.</span
-                        >
-                    </div>
-                    <div
-                        class="section-header"
-                        [ngClass]="{ 'in-edit-mode': editMode }"
+                        class="header-title"
                         translate
                     >
                         Phones
@@ -184,30 +168,10 @@
                         Custom
                     </div>
                     <div
-                        class="section-header"
-                        [ngClass]="{ 'in-edit-mode': editMode }"
                         class="clickable"
                         *ngIf="editMode"
                         (click)="addRecordTo(CPInfoType.CUSTOM)"
                     >
-                        <div
-                            class="header-title"
-                            translate
-                        >
-                            Custom
-                        </div>
-                        <div
-                            class="clickable"
-                            *ngIf="editMode"
-                            (click)="addRecordTo(CPInfoType.CUSTOM)"
-                        >
-                            <svg-icon
-                                nx-add-svg-src
-                                [src]="icons.dir + 'plus.svg'"
-                                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                                [applyClass]="true"
-                            ></svg-icon>
-                        </div>
                         <svg-icon
                             nx-add-svg-src
                             [src]="icons.dir + 'plus.svg'"
@@ -229,21 +193,37 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            @if (hasNoItems || (editMode && !hasDirty)) {
-                <nx-apply-back
-                    [visible]="true"
-                    [saveDisabled]="true"
-                    [discard]="discardDataChanges"
-                ></nx-apply-back>
-            } @else {
-                <nx-apply
-                    [visible]="true"
-                    [saveDisabled]="!allValid || hasNoItems || !hasDirty"
-                    [discard]="discardDataChanges"
-                    [save]="saveDataChanges"
-                ></nx-apply>
-            }
         </nx-block>
+        <div class="section-apply">
+            @if (hasNoItems) {
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    translate
+                    (click)="discardDataChanges()"
+                >
+                    Cancel
+                </button>
+            } @else if (editMode) {
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    [disabled]="busy$$()"
+                    translate
+                    (click)="discardDataChanges()"
+                >
+                    Cancel
+                </button>
+                <nx-async-action-button
+                    [action]="saveDataChanges"
+                    [disabled]="!allValid || hasNoItems || !hasDirty"
+                    [(busy)]="busy"
+                    translate
+                >
+                    Save
+                </nx-async-action-button>
+            }
+        </div>
     </div>
 }
 

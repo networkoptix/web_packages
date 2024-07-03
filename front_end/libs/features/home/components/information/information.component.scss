@@ -8,7 +8,7 @@
 
     .information {
         display: grid;
-        grid-template-columns: 60% 1fr;
+        grid-template-columns: 60%;
         grid-template-areas: 'description' 'contact';
         min-height: 20rem;
         padding: 0 0 82px;
@@ -46,6 +46,25 @@
             &+span {
                 color: var(--CP-state-color);
             }
+        }
+    }
+
+    .section-apply {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+
+        &--justify-between {
+            justify-content: space-between;
+        }
+
+        &--justify-end {
+            justify-content: flex-end;
+        }
+
+        // Assuming footer contents is only buttons
+        & > * {
+            min-width: 80px;
         }
     }
 }
