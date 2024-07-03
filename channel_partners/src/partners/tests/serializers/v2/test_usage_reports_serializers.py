@@ -7,7 +7,7 @@ from partners.models import (
     ChannelPartnerService,
     HierarchyLevels,
 )
-from partners.serialization.usage_reports_serializers import (
+from partners.serializers.v2.usage_reports_serializers import (
     ChannelPartnerExpiringServiceReportSerializer,
     ChannelPartnerServiceReportSerializer,
     ChannelPartnerUsageReportRecordSerializer,

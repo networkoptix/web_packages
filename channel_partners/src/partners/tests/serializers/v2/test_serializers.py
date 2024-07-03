@@ -28,7 +28,7 @@ from partners.models import (
     ServiceUsage,
     SystemServiceCurrentQuantity,
 )
-from partners.serializers import (
+from partners.serializers.v2.serializers import (
     ChannelPartnerAggDataSerializer,
     ChannelPartnerRecordsParamSerializer,
     ChannelPartnerSerializer,

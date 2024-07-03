@@ -4,7 +4,7 @@ from partners.models import (
     ChannelPartnerService,
     HierarchyLevels,
 )
-from partners.serializers import CodeChoiceField
+from partners.serializers.v2.serializers import CodeChoiceField
 from partners.services.usage_reports_service import (
     BeginningOfPeriodDate,
     TotalUsageDate,

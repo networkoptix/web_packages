@@ -11,7 +11,7 @@ from partners.models import (
     ChannelPartnerServiceRecord,
     ServiceUsage,
 )
-from partners.serializers import SaaSReportSerializer
+from partners.serializers.v2.serializers import SaaSReportSerializer
 
 
 class TestSaaSReportSerializer:

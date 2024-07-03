@@ -9,7 +9,7 @@ from partners.models import (
     Organization,
     OrganizationRoles,
 )
-from partners.serializers import BindLocalSystemSerializer
+from partners.serializers.v2.serializers import BindLocalSystemSerializer
 
 
 class TestBindLocalSystemSerializer:

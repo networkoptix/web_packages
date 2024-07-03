@@ -7,7 +7,7 @@ from partners.models import (
     OrganizationRoles,
     SystemGroup,
 )
-from partners.views import SystemGroupViewSet
+from partners.views.v2.views import SystemGroupViewSet
 
 
 class TestSystemGroupViewSet:

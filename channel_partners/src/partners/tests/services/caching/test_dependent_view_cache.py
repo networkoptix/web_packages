@@ -38,7 +38,7 @@ from partners.services.caching.dependent_view_cache import (
     dependent_view_cache,
 )
 from partners.tests.services.caching.test_dependent_cache import update_cache
-from partners.views import DefaultPagination
+from partners.views.v2.views import DefaultPagination
 
 
 """

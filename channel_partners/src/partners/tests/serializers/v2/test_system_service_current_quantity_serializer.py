@@ -10,7 +10,9 @@ from partners.models import (
     ServiceUsage,
     SystemServiceCurrentQuantity,
 )
-from partners.serializers import SystemServiceCurrentQuantitySerializer
+from partners.serializers.v2.serializers import (
+    SystemServiceCurrentQuantitySerializer,
+)
 
 
 class TestSystemServiceCurrentQuantitySerializer:

@@ -34,7 +34,7 @@ from partners.models import (
     HierarchyLevels,
     Organization,
 )
-from partners.serialization.usage_reports_serializers import (
+from partners.serializers.v2.usage_reports_serializers import (
     ChannelPartnerExpiringUsageSerializer,
     ChannelPartnerUsageReportRecordSerializer,
     ChannelPartnerUsageSerializer,

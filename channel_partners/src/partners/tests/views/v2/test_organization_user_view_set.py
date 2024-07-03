@@ -13,7 +13,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
 )
-from partners.views import OrganizationUserViewSet
+from partners.views.v2.views import OrganizationUserViewSet
 
 
 class TestOrganizationUserViewSet:

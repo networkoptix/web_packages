@@ -9,7 +9,7 @@ from partners.models import (
     OrganizationRoles,
     OrganizationToUser,
 )
-from partners.serializers import CreateOrganizationSerializer
+from partners.serializers.v2.serializers import CreateOrganizationSerializer
 from partners.utils.context_vars import get_context_vars
 
 

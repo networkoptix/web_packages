@@ -10,7 +10,7 @@ from partners.models import (
     CloudUser,
     Organization,
 )
-from partners.serializers import (
+from partners.serializers.v2.serializers import (
     ChannelPartnerSerializer,
     CloudSystemSerializer,
     OrganizationSerializer,

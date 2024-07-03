@@ -39,7 +39,7 @@ from partners.models import (
     Organization,
     OrganizationToUser,
 )
-from partners.serialization.usage_reports_serializers import (
+from partners.serializers.v2.usage_reports_serializers import (
     ChannelPartnerExpiringServiceReportSerializer,
     ChannelPartnerReportExportSerializer,
     ChannelPartnerServiceReportSerializer,
@@ -72,7 +72,7 @@ from partners.tasks.service_reports_export import (
     get_cached_report_key,
     get_report_result,
 )
-from partners.views import (
+from partners.views.v2.views import (
     DefaultPagination,
     ParentLookUpMixin,
 )
