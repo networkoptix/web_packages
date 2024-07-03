@@ -294,7 +294,7 @@ export const OrgUsersStore = signalStore(
                                                 userType: UserType.ORGANIZATION,
                                                 groupRoles: [],
                                             };
-                                        } else {
+                                        } else if ([org.id, folder].includes(currentGroupId)) {
                                             changes = {
                                                 accessLevel: user.accessLevel,
                                                 isOrgUser: false,
@@ -314,6 +314,8 @@ export const OrgUsersStore = signalStore(
                                                     existingUser.groupRoles,
                                                 ),
                                             };
+                                        } else {
+                                            return; // Do nothing if the user is not being added to the current group.
                                         }
                                         changes.roles = user.roles;
                                         changes.rolesIds = user.rolesIds;
@@ -328,7 +330,7 @@ export const OrgUsersStore = signalStore(
                                                 currentGroupUsersEntity,
                                             ),
                                         );
-                                    } else if (currentGroupId === folder) {
+                                    } else if ([org.id, folder].includes(currentGroupId)) {
                                         patchState(
                                             store,
                                             addEntity(
@@ -349,7 +351,19 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
-                        const user = store.currentGroupUsersEntityMap()[email];
+                        let userInCurrentGroup = true;
+                        let user = store.currentGroupUsersEntityMap()[email];
+                        // Handles the case when the user is not in the current group. IE not in the root of the org.
+                        // This happens when the user is being deleted from the access table.
+                        if (!user || user.accessLevel) {
+                            const cachedUser = store
+                                .usersCacheEntityMap()
+                                [orgId]?.users?.find(u => u.email === email);
+                            if (cachedUser) {
+                                userInCurrentGroup = false;
+                                user = cachedUser;
+                            }
+                        }
                         // No folders or folders === groupRoles effective means we are removing the user from the org.
                         const deleteFromOrg =
                             user!.isOrgUser ||
@@ -367,20 +381,41 @@ export const OrgUsersStore = signalStore(
                             ),
                         ).subscribe(() => {
                             if (deleteFromOrg || !!user.accessLevel) {
-                                patchState(store, removeEntity(email, currentGroupUsersEntity));
-                            } else {
-                                patchState(
+                                return patchState(
+                                    store,
+                                    removeEntity(email, currentGroupUsersEntity),
+                                );
+                            }
+
+                            // Remove the group roles from the user
+                            user.groupRoles = user.groupRoles?.filter(
+                                group => !folders.includes(group.groupId),
+                            );
+
+                            if (userInCurrentGroup) {
+                                return patchState(
                                     store,
                                     updateEntity(
                                         {
                                             id: user.email,
                                             changes: {
-                                                groupRoles: user.groupRoles?.filter(
-                                                    group => !folders.includes(group.groupId),
-                                                ),
+                                                groupRoles: user.groupRoles,
                                             },
                                         },
                                         currentGroupUsersEntity,
+                                    ),
+                                );
+                            }
+
+                            const users = store.usersCacheEntityMap()[orgId]?.users;
+                            const userIndex = users.findIndex(u => u.email === email);
+                            if (userIndex > -1) {
+                                users[userIndex] = user;
+                                patchState(
+                                    store,
+                                    updateEntity(
+                                        { id: orgId, changes: { users } },
+                                        usersCacheEntity,
                                     ),
                                 );
                             }
