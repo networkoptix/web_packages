@@ -68,7 +68,7 @@ const orgRoutes: Routes = withTabReporterResolver([
                 path: 'support',
                 canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, orgTabGuard],
                 component: NxChannelPartnerInformationComponent,
-                data: { readonlyInfo: true },
+                data: { readOnlyInfo: true },
             },
             {
                 path: 'group/:groupId',

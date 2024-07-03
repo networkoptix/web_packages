@@ -24,7 +24,7 @@
             [update]="editMode"
         >
             <header>
-                @if (readonlyInfo$$()) {
+                @if (readOnlyInfo$$()) {
                     <h4 class="float-left">
                         {{ parentName }}
                     </h4>
@@ -193,21 +193,37 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            @if (hasNoItems) {
-                <nx-apply-back
-                    [visible]="true"
-                    [saveDisabled]="true"
-                    [discard]="discardDataChanges"
-                ></nx-apply-back>
-            } @else {
-                <nx-apply
-                    [visible]="editMode"
-                    [saveDisabled]="!allValid || hasNoItems || !hasDirty"
-                    [discard]="discardDataChanges"
-                    [save]="saveDataChanges"
-                ></nx-apply>
-            }
         </nx-block>
+        <div class="section-apply">
+            @if (hasNoItems) {
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    translate
+                    (click)="discardDataChanges()"
+                >
+                    Cancel
+                </button>
+            } @else if (editMode) {
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    [disabled]="busy$$()"
+                    translate
+                    (click)="discardDataChanges()"
+                >
+                    Cancel
+                </button>
+                <nx-async-action-button
+                    [action]="saveDataChanges"
+                    [disabled]="!allValid || hasNoItems || !hasDirty"
+                    [(busy)]="busy"
+                    translate
+                >
+                    Save
+                </nx-async-action-button>
+            }
+        </div>
     </div>
 }
 

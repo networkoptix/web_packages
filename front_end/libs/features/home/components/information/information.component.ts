@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, input } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, effect, input, signal } from '@angular/core';
 import { ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
+import { firstValueFrom } from 'rxjs';
 
 import {
     selectCurrentPartnerId,
@@ -17,6 +19,8 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderNoInfoComponent } from '@components/placeholdersV2/page/no-info/page-placeholder.component';
 import { ToastType } from '@components/toast-container/toast.types';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxValidators } from '@libs/validators/input-validators';
 import { NxInfoGroupComponent } from '@pages/home/components/information/info-form/info-form.component';
@@ -53,16 +57,16 @@ import { icons } from '@static-variables';
         TranslateModule,
         NxPagePlaceholderNoInfoComponent,
         NxApplyBackComponent,
+        NxAsyncActionButtonComponent,
     ],
 })
 export class NxChannelPartnerInformationComponent {
-    readonlyInfo$$ = input<boolean>(false, {
-        alias: 'readonlyInfo',
+    readOnlyInfo$$ = input<boolean>(false, {
+        alias: 'readOnlyInfo',
     });
 
     protected readonly CPInfoType = CPInfoType;
-
-    icons = icons;
+    protected readonly icons = icons;
 
     hasDirty: boolean = false;
     hasNoItems: boolean = false;
@@ -70,8 +74,13 @@ export class NxChannelPartnerInformationComponent {
     allValid: boolean = true;
     parentName: string = '';
 
-    informationData: SupportInformation;
     information: SupportInformation = {
+        phones: [],
+        emails: [],
+        sites: [],
+        custom: [],
+    };
+    informationData: SupportInformation = {
         phones: [],
         emails: [],
         sites: [],
@@ -115,7 +124,7 @@ export class NxChannelPartnerInformationComponent {
         value: this.valueValidators,
     };
 
-    mapInfoFor(type: string, psi: InfoDataServer[]): void {
+    mapInfoFor(type: CPInfoType, psi: InfoDataServer[]): void {
         delete this.information[type];
         this.information[type] = [];
 
@@ -167,9 +176,9 @@ export class NxChannelPartnerInformationComponent {
         }
     }
 
-    formToServerData(formId: string): InfoRowServer[] {
+    formToServerData(type: CPInfoType): InfoRowServer[] {
         const serverData: InfoRowServer[] = [];
-        this.information[formId].map(({ data, description }): number =>
+        this.information[type].map(({ data, description }): number =>
             serverData.push({
                 value: data.value,
                 description: description?.value || '', // account for "sites"
@@ -198,35 +207,11 @@ export class NxChannelPartnerInformationComponent {
         };
     }
 
-    saveDataChanges = (): void => {
-        this.cpService
-            .updateChannelPartner(this.currPartnerId$$(), {
-                supportInformation: this.mapDataToServer(),
-            })
-            .subscribe({
-                next: () => {
-                    this.hasChanges = false;
-                    this.hasDirty = false;
-                    this.hasNoItems = this.noItems();
-
-                    if (!this.hasNoItems) {
-                        this.editMode = false;
-                    }
-
-                    this.informationData = cloneDeep(this.information);
-                },
-                error: err => {
-                    const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                    this.toastService.notify(msg, ToastType.Danger);
-                },
-            });
-    };
-
     currPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currParentSupportInfo$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
     currSupportInfoEffect = effect(() => {
-        const info = this.readonlyInfo$$()
+        const info = this.readOnlyInfo$$()
             ? this.currParentSupportInfo$$()?.supportInformation
             : this.currPartnerSupportInfo$$();
         this.mapPartnerSupportInfo(info);
@@ -236,6 +221,14 @@ export class NxChannelPartnerInformationComponent {
     });
 
     editMode: boolean = false;
+
+    busy$$ = signal(false);
+    get busy(): boolean {
+        return this.busy$$();
+    }
+    set busy(state: boolean) {
+        this.busy$$.set(state);
+    }
 
     constructor(
         private store: Store,
@@ -257,7 +250,7 @@ export class NxChannelPartnerInformationComponent {
         );
     }
 
-    addRecordTo(type: string): void {
+    addRecordTo(type: CPInfoType): void {
         const data = [...this.information[type]];
         const newRecord: InfoRow = {
             data: {
@@ -293,12 +286,38 @@ export class NxChannelPartnerInformationComponent {
     updateData(e: CPInfoDataEvent): void {
         const { formId, formData, status } = e;
 
-        this.mapInfoFor(formId, formData);
+        this.mapInfoFor(formId as CPInfoType, formData);
         this.validForms[formId] = status;
 
         this.hasChanges = !isEqual(this.informationData, this.information);
         this.allValid = !Object.values(this.validForms).some(item => !item);
     }
+
+    saveDataChanges = createAsyncAction({
+        action: () => {
+            return firstValueFrom(
+                this.cpService.updateChannelPartner(this.currPartnerId$$(), {
+                    supportInformation: this.mapDataToServer(),
+                }),
+            );
+        },
+        success: user => {
+            this.hasChanges = false;
+            this.hasDirty = false;
+            this.hasNoItems = this.noItems();
+
+            if (!this.hasNoItems) {
+                this.editMode = false;
+            }
+
+            this.informationData = cloneDeep(this.information);
+        },
+        error: (err: HttpErrorResponse) => {
+            // @ts-expect-error type error
+            const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
+            this.toastService.notify(msg, ToastType.Danger);
+        },
+    });
 
     discardDataChanges = (): void => {
         this.information = cloneDeep(this.informationData);

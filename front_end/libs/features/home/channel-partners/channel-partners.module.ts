@@ -75,6 +75,9 @@ const CPRoutes: Routes = withTabReporterResolver([
                 path: 'information',
                 canActivate: [cpTabGuard],
                 component: NxChannelPartnerInformationComponent,
+                canDeactivate: [
+                    (component: NxChannelPartnerInformationComponent) => !component.busy$$(),
+                ],
             },
             {
                 path: 'users',
@@ -93,7 +96,7 @@ const CPRoutes: Routes = withTabReporterResolver([
                 path: 'support',
                 canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, cpTabGuard],
                 component: NxChannelPartnerInformationComponent,
-                data: { readonlyInfo: true },
+                data: { readOnlyInfo: true },
             },
             { path: '**', redirectTo: '' },
         ],
