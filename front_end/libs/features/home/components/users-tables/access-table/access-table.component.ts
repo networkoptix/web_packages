@@ -204,6 +204,17 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         });
     };
 
+    private getFolderName(accessId: string | undefined): string {
+        if (!accessId) {
+            return '';
+        }
+        const path = this.groupsStore.groupPathMap$$()?.[accessId]?.path ?? [];
+        if (!path.length) {
+            return '';
+        }
+        return path[path.length - 1]?.name ?? '';
+    }
+
     deleteUser(row: UserRecord): void {
         let message: string;
         switch (row.groupRoles?.length) {
@@ -221,7 +232,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                     this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
                     {
                         name: row.email,
-                        folder: row.groupRoles[0].name,
+                        folder: row.groupRoles[0].name ?? this.getFolderName(row.accessId),
                     },
                 );
                 break;
