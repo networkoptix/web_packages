@@ -21,10 +21,10 @@ from partners.models import (
 class TestReceivers:
 
     @pytest.fixture(autouse=True, scope="function")
-    def setup(self):
+    def setup_method(self):
         caches["dependent_cache"].clear()
 
-    def teardown(self):
+    def teardown_method(self):
         caches["dependent_cache"].clear()
 
     def assert_both_versions(self, instance, expected_value):
@@ -78,7 +78,7 @@ class TestReceivers:
         self.assert_both_versions(system, 1)
         self.assert_path_version(system)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_system_move_to_organization_root(self, organization_factory, system_group_factory, system_factory):
         # Step 1: Create an organization and a system group within that organization
@@ -96,7 +96,7 @@ class TestReceivers:
         self.assert_both_versions(system, 1)
         self.assert_path_version(system)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_system_group_with_parent_group_increase_version_on_organization_to_user_change(
             self,
@@ -160,7 +160,7 @@ class TestReceivers:
         self.assert_both_versions(parent_system_group, 2)
         self.assert_both_descendant_versions(parent_system_group, 2)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_system_group_no_parent_increase_version_on_organization_to_user_change(
             self,
@@ -201,7 +201,7 @@ class TestReceivers:
         self.assert_both_versions(system_group, 2)
         self.assert_both_descendant_versions(system_group, 0)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_organization_increment_descendant_on_system_group_change(
             self,
@@ -237,7 +237,7 @@ class TestReceivers:
         self.assert_both_versions(organization, 0)
         self.assert_both_descendant_versions(organization, 2)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_organization_increment_descendant_on_cloud_system_change(
             self,
@@ -319,7 +319,7 @@ class TestReceivers:
         # Test after changing the service record
         self.assert_both_versions(system, 2)
 
-        self.teardown()
+        self.teardown_method()
 
     def test_system_group_move_group(
             self,
@@ -356,7 +356,7 @@ class TestReceivers:
         self.assert_both_versions(parent_group, 0)
         self.assert_both_versions(new_parent_group, 0)
         self.assert_both_versions(child_group, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_add_to_channel_partner_to_user(
             self,
@@ -387,7 +387,7 @@ class TestReceivers:
 
         # Test after delete
         self.assert_both_versions(user, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_add_to_channel_partner_to_user(
             self,
@@ -416,7 +416,7 @@ class TestReceivers:
 
         # Test after delete
         self.assert_both_versions(user, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_add_to_organization_to_user(
             self,
@@ -449,7 +449,7 @@ class TestReceivers:
 
         # Test after delete
         self.assert_both_versions(user, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_change_channel_partner_to_user_increment_channel_partner_version(
             self,
@@ -485,7 +485,7 @@ class TestReceivers:
         # Test after save
         self.assert_both_versions(user, 2)
         self.assert_both_versions(channel_partner, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_change_organization_to_user_increment_organization_version(
             self,
@@ -521,7 +521,7 @@ class TestReceivers:
         # Test after save
         self.assert_both_versions(user, 2)
         self.assert_both_versions(organization, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_channel_partner_increment_version_on_direct_attribute_change(
             self,
@@ -538,7 +538,7 @@ class TestReceivers:
 
         # Test after save
         self.assert_both_versions(channel_partner, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_organization_increment_version_on_direct_attribute_change(
             self,
@@ -556,7 +556,7 @@ class TestReceivers:
 
         # Test after save
         self.assert_both_versions(organization, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_cloud_system_id_increment_version_on_direct_attribute_change(
             self,
@@ -574,7 +574,7 @@ class TestReceivers:
 
         # Test after save
         self.assert_both_versions(system, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_system_group_increment_version_on_direct_attribute_change(
             self,
@@ -599,7 +599,7 @@ class TestReceivers:
         # Test after save
         self.assert_both_versions(system_group, 1)
         self.assert_both_descendant_versions(system_group, 0)
-        self.teardown()
+        self.teardown_method()
 
     def test_system_group_increment_descendant_version_on_descendant_grand_change_child(
             self,
@@ -665,7 +665,7 @@ class TestReceivers:
         # Assert that the descendant_version of the root system group is incremented to 3 after the update of the grandchild system group
         self.assert_both_versions(root_system_group, 0)
         self.assert_both_descendant_versions(root_system_group, 3)
-        self.teardown()
+        self.teardown_method()
 
     def test_channel_partner_increment_descendant_version_on_descendant_change(
             self,
@@ -703,7 +703,7 @@ class TestReceivers:
         # Root upon Child save
         self.assert_both_versions(root_channel_partner, 0)
         self.assert_both_descendant_versions(root_channel_partner, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_on_cloud_user_channel_partner_change(self, channel_partner_factory):
         # Test Setup
@@ -750,7 +750,7 @@ class TestReceivers:
         self.assert_both_versions(user, 4)
         self.assert_both_versions(channel_partner1, 2)
         self.assert_both_versions(channel_partner2, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_channel_partner_user_on_change_with_hierarchy(self, channel_partner_factory):
         """
@@ -824,7 +824,7 @@ class TestReceivers:
         ## Test child channel partner
         self.assert_both_versions(child_channel_partner, 2)
         self.assert_both_descendant_versions(child_channel_partner, 0)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_newly_added_organization_change(self, organization_factory):
         # Test Setup
@@ -852,7 +852,7 @@ class TestReceivers:
         # Test after create
         self.assert_both_versions(user, 1)
         self.assert_both_versions(organization, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_current_organization_change(self, organization_factory):
         # Test Setup
@@ -884,7 +884,7 @@ class TestReceivers:
         # Test after save
         self.assert_both_versions(user, 2)
         self.assert_both_versions(organization, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_removed_organization_change(self, organization_factory):
         # Test Setup
@@ -916,7 +916,7 @@ class TestReceivers:
 
         self.assert_both_versions(user, 2)
         self.assert_both_versions(organization, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_multiple_users_added_to_organization(self, organization_factory):
         # Test Setup
@@ -957,7 +957,7 @@ class TestReceivers:
         self.assert_both_versions(user1, 1)
         self.assert_both_versions(user2, 1)
         self.assert_both_versions(organization, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_organization_change_with_multiple_users(self, organization_factory):
         # Test Setup
@@ -1004,7 +1004,7 @@ class TestReceivers:
         self.assert_both_versions(user1, 2)
         self.assert_both_versions(user2, 2)
         self.assert_both_versions(organization, 3)
-        self.teardown()
+        self.teardown_method()
 
     def test_multiple_users_removed_from_organization(self, organization_factory):
         # Test Setup
@@ -1050,7 +1050,7 @@ class TestReceivers:
         self.assert_both_versions(user1, 2)
         self.assert_both_versions(user2, 2)
         self.assert_both_versions(organization, 4)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_current_channel_partner_change(self, channel_partner_factory):
         # Test Setup
@@ -1082,7 +1082,7 @@ class TestReceivers:
 
         # Test after save
         self.assert_both_versions(user, 2)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_newly_added_channel_partner_change(self, channel_partner_factory):
         # Test Setup
@@ -1106,7 +1106,7 @@ class TestReceivers:
         # Test after create
         self.assert_both_versions(user, 1)
         self.assert_both_versions(channel_partner, 1)
-        self.teardown()
+        self.teardown_method()
 
     def test_user_increment_version_on_removed_channel_partner_change(self, channel_partner_factory):
         # Test Setup
@@ -1137,4 +1137,4 @@ class TestReceivers:
         # Test after delete
         self.assert_both_versions(user, 2)
         self.assert_both_versions(channel_partner, 2)
-        self.teardown()
+        self.teardown_method()

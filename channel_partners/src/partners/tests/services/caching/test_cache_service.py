@@ -23,7 +23,7 @@ cache = caches["dependent_cache"]
 class TestCacheService:
 
     @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup_method(self):
         pass
 
     def test_get_cache_key_version(self):
