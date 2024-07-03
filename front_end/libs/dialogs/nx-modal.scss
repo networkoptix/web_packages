@@ -22,7 +22,7 @@ p {
 
     &-title {
         @include typography.medium14nocolor;
-        color: var(--card-header-text);
+        color: var(--dialog-header-color);
         line-height: vars.$modal-title-line-height;
 
     }

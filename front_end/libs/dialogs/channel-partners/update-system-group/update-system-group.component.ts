@@ -19,6 +19,7 @@ const FIELDS_MISSING = 'FIELDS_MISSING';
 @Component({
     selector: 'nx-modal-update-system-group-content',
     templateUrl: 'update-system-group.component.html',
+    styleUrl: 'update-system-group.component.scss',
     standalone: true,
     imports: [
         FormsModule,
