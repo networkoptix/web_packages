@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import staticLang from '@language_static';
 import { Mode } from '@pages/home/components/reports/reports.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
+import { nxConfig } from '@services/nx-config/config';
 import { icons } from '@static-variables';
 
 import { NxCardComponent } from '../card/card.component';
@@ -49,18 +50,21 @@ export class NxReportsComponent {
 
     services$$ = computed<ServiceCard[]>(() => {
         const entityUrl = this.entityUrl$$();
-        return [
+        const services = [
             {
                 name: staticLang.appHeader.headerMenuNodes.reports.nodes.serviceChanges.displayName,
                 icon: 'donut_chart.svg',
                 url: `/reports/${entityUrl}/service-changes`,
             },
-            {
+        ];
+        if (nxConfig.featureFlags.channelPartnersAccessServiceUsage) {
+            services.push({
                 name: staticLang.appHeader.headerMenuNodes.reports.nodes.serviceUsage.displayName,
                 icon: 'bar_chart.svg',
                 url: `/reports/${entityUrl}/service-usage`,
-            },
-        ];
+            });
+        }
+        return services;
     });
 
     protected readonly icons = icons;

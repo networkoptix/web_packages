@@ -53,12 +53,12 @@ export const entityResolver: ResolveFn<void> = async (
         const firstPartnerId = partners.get(partners.keys().next().value)?.id;
         const firstOrgId = organizations.get(organizations.keys().next().value)?.id;
         const defaultEntityId = partners.size ? firstPartnerId : firstOrgId;
-        await router.navigate(['reports', defaultEntityType, defaultEntityId, 'service-usage']);
+        await router.navigate(['reports', defaultEntityType, defaultEntityId, 'service-changes']);
     } else if (!urlHasValidEntityType || (!urlHasValidPartner && !urlHasValidOrg)) {
         await router.navigate(['404']);
     } else if (urlHasValidPartner && !tab) {
-        await router.navigate(['reports', 'channel-partner', entityIdFromUrl, 'service-usage']);
+        await router.navigate(['reports', 'channel-partner', entityIdFromUrl, 'service-changes']);
     } else if (urlHasValidOrg && !tab) {
-        await router.navigate(['reports', 'organization', entityIdFromUrl, 'service-usage']);
+        await router.navigate(['reports', 'organization', entityIdFromUrl, 'service-changes']);
     }
 };

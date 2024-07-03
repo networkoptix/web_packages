@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter, map, take } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystem } from '@services/system.service/system';
 import { reportsRegex } from '@static-variables';
 
@@ -47,6 +48,8 @@ export class NxHeaderService {
         this.nodes$.next(menunodes);
     }
 
+    reportsSub: Subscription | undefined;
+
     constructor(
         private router: Router,
         private menusService: NxMenusService,
@@ -63,7 +66,20 @@ export class NxHeaderService {
                     if (matches) {
                         const entityType = matches[1];
                         const entityID = matches[2];
-                        this.dynamicallyUpdateReportsNode(entityType, entityID);
+                        const reportsLang = this.LANG.appHeader.headerMenuNodes.reports;
+                        if (this.reportsSub) {
+                            this.reportsSub.unsubscribe();
+                        }
+                        this.reportsSub = this.nodes$
+                            .pipe(
+                                filter(nodes =>
+                                    nodes?.some(node => node.name === reportsLang.displayName),
+                                ),
+                                take(1),
+                            )
+                            .subscribe(() => {
+                                this.dynamicallyUpdateReportsNode(entityType, entityID);
+                            });
                     }
                 }
             }
@@ -177,6 +193,13 @@ export class NxHeaderService {
             if (serviceChangesNode) {
                 serviceChangesNode.url = `/reports/${entityType}/${entityId}/service-changes`;
             }
+
+            if (!nxConfig.featureFlags.channelPartnersAccessServiceUsage) {
+                reportsNode.nodes = reportsNode.nodes.filter(
+                    node => node.name !== reportsLang.nodes.serviceUsage.displayName,
+                );
+            }
+
             const newNodes = this.nodes.map(node =>
                 node.name === reportsLang.displayName ? reportsNode : node,
             );

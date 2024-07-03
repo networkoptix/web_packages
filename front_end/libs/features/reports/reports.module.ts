@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule, inject } from '@angular/core';
+import { Router, RouterModule, Routes } from '@angular/router';
+
+import { nxConfig } from '@services/nx-config/config';
 
 import { entityNameResolver } from './entity-name-resolver';
 import { entityResolver } from './entity-resolver';
@@ -22,6 +24,11 @@ const routes: Routes = [
                         children: [
                             {
                                 path: 'service-usage',
+                                canActivate: [
+                                    () =>
+                                        nxConfig.featureFlags.channelPartnersAccessServiceUsage ||
+                                        inject(Router).navigate(['/reports']),
+                                ],
                                 children: [
                                     {
                                         path: '',

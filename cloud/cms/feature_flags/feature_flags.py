@@ -98,6 +98,7 @@ class FLAGS(metaclass=_FlagType):
     channel_partners_change_services_ui = ('Channel Partners Change Services UI', 'channelPartnersChangeServicesUI')
     channel_partners_reports_ui = ('Channel Partners Reports UI', 'channelPartnersReportsUI')
     channel_partners_support_ui = ('Channel Partners Support UI', 'channelPartnersSupportUI')
+    channel_partners_access_service_usage = ('Channel Partners - Access Usage Reports', 'channelPartnersAccessServiceUsage')
 
     rest_cookie_login = ('Rest Cookie Login', 'restCookieLogin')
 
