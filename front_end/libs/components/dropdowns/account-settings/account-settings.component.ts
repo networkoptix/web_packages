@@ -84,20 +84,14 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
         type: undefined,
     });
 
-    readonly _accountDropdownStaff: AccountDropdown[] = [
+    readonly accountDropdownStaff: AccountDropdown[] = [
         {
             name: 'Administration',
             route: '/admin/',
             newWindow: true,
         },
-        {
-            name: 'Channel partners',
-            route: '/partners/',
-            newWindow: false,
-        },
     ];
     accountDropdown: AccountDropdown[];
-    accountDropdownStaff: AccountDropdown[];
 
     constructor(
         headerService: NxHeaderService,
@@ -106,10 +100,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     ) {
         super();
         this.accountDropdown = accountDropdown;
-        this.accountDropdownStaff = this._accountDropdownStaff.filter(
-            ({ name }) =>
-                nxConfig.featureFlags.channelPartners || !name.includes('Channel partners'),
-        );
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
         });
