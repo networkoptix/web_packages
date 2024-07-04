@@ -450,4 +450,10 @@ export class NxOrgTreeSelectorComponent
     onBlur(): void {
         this.onTouched();
     }
+
+    clearSearch(): void {
+        this.folderSearch = '';
+        this.searchGroups('');
+        this.focus();
+    }
 }
