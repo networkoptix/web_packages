@@ -693,7 +693,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     firstNonSystem(storage: DropdownStorage[]): DropdownStorage {
-        return storage.find(({ isNotSystem }) => isNotSystem) || storage[0];
+        return (
+            storage
+                .sort((a, b) => a.name.localeCompare(b.name, navigator.language, { numeric: true }))
+                .find(({ isNotSystem }) => isNotSystem) || storage[0]
+        );
     }
 
     highestFreeSpace(storage: DropdownStorage[]): DropdownStorage {
