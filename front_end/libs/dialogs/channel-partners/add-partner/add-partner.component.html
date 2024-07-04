@@ -1,114 +1,89 @@
-<form
-    #addPartnerForm="ngForm"
-    name="addPartnerForm"
-    novalidate
->
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            New Partner
-        </h1>
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+    >
+        New Partner
+    </span>
+    @if (closable) {
         <button
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             id="closeAddPartner"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
-        >
-            <div class="close-content"></div>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="form-group">
+        ></button>
+    }
+</div>
+<form
+    class="nx-modal__content"
+    name="addPartnerForm"
+    [formGroup]="formGroup"
+>
+    <div class="nx-modal__body">
+        <nx-form-field [errorMatcher]="nameErrorMatcher">
             <label
+                nx-label
                 for="partnerName"
                 translate
                 >Partner Name</label
             >
             <input
+                nx-input
                 class="form-control"
                 id="partnerName"
-                name="partnerName"
-                [(ngModel)]="name"
-                (ngModelChange)="onNameChange($event)"
-                #partnerName="ngModel"
-                [required]="addPartnerForm.submitted"
+                formControlName="name"
+                required
             />
-            <div class="warning-container">
-                @if (partnerName.invalid && partnerName.touched) {
-                    <div>
-                        @if (partnerName.errors?.required) {
-                            <span
-                                class="input-error"
-                                translate
-                                >Partner name is required</span
-                            >
-                        }
-                        @if (partnerName.errors?.tooLong) {
-                            <span class="input-error">{{
-                                LANG.customValidatorMsg.nameTooLong
-                                    | translate: { chars: MAX_NAME_LENGTH }
-                            }}</span>
-                        }
-                    </div>
-                }
-            </div>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Partner name is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
+        </nx-form-field>
 
+        <nx-form-field [errorMatcher]="emailErrorMatcher">
             <label
+                nx-label
                 for="ownerEmail"
                 translate
                 >Administrator email</label
             >
-            <nx-email-input
-                class="fs-mask form-component"
+            <input
+                nx-input
+                class="form-control"
+                type="email"
                 id="ownerEmail"
-                name="ownerEmail"
-                componentId="ownerEmail"
-                [(ngModel)]="firstAdminEmail"
-                [form]="addPartnerForm"
-                #ownerEmail="ngModel"
-                [required]="addPartnerForm.submitted"
-                [hideErrors]="!addPartnerForm.submitted && !ownerEmail.errors?.pattern"
-            >
-            </nx-email-input>
-            <div
-                class="warning-container"
-                *ngIf="
-                    ownerEmail.touched &&
-                    (ownerEmail.errors?.required || ownerEmail.errors?.pattern)
-                "
-            >
-                <ng-container *ngIf="ownerEmail.touched">
-                    <span
-                        *ngIf="ownerEmail.errors?.required"
-                        class="input-error"
-                        translate
-                        >Administrator email is required</span
-                    >
-                    <span
-                        *ngIf="ownerEmail.errors?.pattern"
-                        class="input-error"
-                        translate
-                        >Email is invalid</span
-                    >
-                </ng-container>
-            </div>
-        </div>
+                formControlName="email"
+                required
+            />
+            <nx-control-messages pattern="email">
+                <nx-control-message
+                    key="required"
+                    [text]="'Administrator email is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
+        </nx-form-field>
     </div>
-    <div class="modal-footer">
-        <nx-process-button
-            [process]="addPartnerProcess"
-            [buttonText]="'Create' | translate"
-            [buttonDisabled]="!!(partnerName.errors || ownerEmail.errors)"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="addPartnerProcess"
-            [cancelFn]="unlock"
-            [discardFn]="close"
-        ></nx-cancel-button>
+    <div class="nx-modal__footer">
+        <nx-async-action-button
+            [action]="addPartnerAction"
+            [(busy)]="busy"
+            [invalid]="!!(nameControl.errors || emailControl.errors)"
+            translate
+        >
+            Create
+        </nx-async-action-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy$$()"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
     </div>
 </form>
