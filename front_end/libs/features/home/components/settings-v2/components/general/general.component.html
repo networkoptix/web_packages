@@ -80,11 +80,17 @@
                                             formControlName="accessLevel"
                                             [componentId]="'channelPartnerAccessSelect'"
                                             [items]="partnerAccess"
-                                            (onSelected)="onSelect($event.value)"
+                                            (onSelected)="updateAccess.emit($event.value)"
                                         ></nx-select>
 
                                         <div class="accessLevel-description">
-                                            {{ roleDescription }}
+                                            {{
+                                                this.LANG.channelPartners.orgs
+                                                    .channelPartnerAccessInfo[
+                                                    this.generalForm?.get('accessLevel')?.value
+                                                        .value
+                                                ]?.accessDescription | translate
+                                            }}
                                         </div>
                                     </div>
                                 </div>

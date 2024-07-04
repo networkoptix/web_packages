@@ -26,6 +26,7 @@
         min-height: calc(2 * (var(--arrow-height) + var(--arrow-offset)));
         // The minimum height for the start/end arrows to not cross the center
         user-select: none;
+        white-space: pre-line;
 
         &--high-contrast {
             background-color: var(--tooltip-contrast-bg);

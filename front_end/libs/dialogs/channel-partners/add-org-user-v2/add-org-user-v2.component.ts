@@ -160,7 +160,11 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     });
     // The strings that contain "|" require a tooltip and need translateCut. Otherwise, no translateCut will be needed
     roleDescription = computed<string>(() => {
-        return LANG.channelPartners.orgs.permissionDescription[this.roleName()];
+        const roleId = this.roleId();
+        if (!roleId) {
+            return '';
+        }
+        return LANG.channelPartners.orgs.orgRoleInfo[roleId].description;
     });
 
     roleHasTooltip = computed<boolean>(() => {

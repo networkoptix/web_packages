@@ -54,15 +54,6 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     orgUserRecords$$ = this.orgUsersStore.currentGroupUsersEntities;
     filteredRecords$$ = this.orgUsersStore.filteredRecords$$;
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
-
-    // Since the code runs everytime the dom is updated, we'll pre-translate the descriptions here
-    translatedPermissionDesc = Object.entries(
-        this.LANG.channelPartners.orgs.permissionDescription,
-    ).reduce((roles, [key, value]) => {
-        roles[key.toLowerCase()] = this.translateService.instant(value).replaceAll('|', '');
-        return roles;
-    });
-
     searching$$ = computed(
         () =>
             !!this.orgUsersStore.searchQuery() ||
@@ -113,9 +104,11 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     );
 
     getRowRoleId(user: UserRecord): string {
-        return this.roles$$()
-            .find(role => role.name === this.getDisplayRole(user))
-            ?.id.toString();
+        return this.roles$$().find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+    }
+
+    getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
     }
 
     canDeleteUser(user: UserRecord): boolean {
@@ -144,10 +137,6 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     updateRole(user: UserRecord, roleId: string): void {
         const folder = user?.groupRoles?.[0]?.groupId || user.accessLevel?.id || '';
         this.orgUsersStore.updateUser(this.currentOrg$$().id, folder, user.email, roleId);
-    }
-
-    permissionDescription(roleName: string): string {
-        return this.translatedPermissionDesc[roleName.toLowerCase()] ?? '';
     }
 
     newUserDialog = (): void => {

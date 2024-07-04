@@ -98,7 +98,9 @@
                             <nx-select-item
                                 [value]="role.id"
                                 [selected]="roleIdControl.value === role.id"
-                                >{{ role.name }}</nx-select-item
+                                >{{
+                                    LANG.channelPartners.orgs.orgRoleInfo[role.id].name | translate
+                                }}</nx-select-item
                             >
                         }
                     </nx-select-v2>

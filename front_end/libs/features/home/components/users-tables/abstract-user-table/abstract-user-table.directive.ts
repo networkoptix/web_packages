@@ -16,6 +16,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { icons } from '@static-variables';
 
 import { UserRecord } from '../../users/channel-partner-users/channel-partner-users.types';
+import { TranslatedOrgPermissions } from '../../users/org-users/org-users.types';
 
 @Directive()
 export abstract class AbstractUserTableDirective {
@@ -34,11 +35,27 @@ export abstract class AbstractUserTableDirective {
 
     checkAllContainer = new BehaviorSubject<undefined | NxCheckAllContainerDirective>(undefined);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
+
+    // Since the code runs everytime the dom is updated, we'll pre-translate the descriptions and names here
+    // { roleId: { "name": roleName, "description": roleDescription }, .. }
+    translatedOrgPermissions = Object.entries(this.LANG.channelPartners.orgs.orgRoleInfo).reduce(
+        (roles, [key, value]) => {
+            roles[key] = {
+                name: this.translateService.instant(value.name),
+                description: this.translateService.instant(value.description).replaceAll('| ', ''),
+            };
+            return roles;
+        },
+        {} as TranslatedOrgPermissions[],
+    );
+
     @ViewChild(NxCheckAllContainerDirective) set setContainerRef(
         checkAllContainerRef: NxCheckAllContainerDirective,
     ) {
         this.checkAllContainer.next(checkAllContainerRef);
     }
+
+    protected abstract getDisplayRole(user: UserRecord): string;
 
     hasMultipleRoles(user: UserRecord): boolean {
         return user.groupRoles?.length > 1 || user.roles?.length > 1;
@@ -48,9 +65,11 @@ export abstract class AbstractUserTableDirective {
         this.checkAllContainer$$()?.toggleAllBoxes(true); // true = Unchecks all boxes
     }
 
-    getDisplayRole(user: UserRecord): string {
-        return this.hasMultipleRoles(user)
-            ? 'Multiple'
-            : user.groupRoles?.[0]?.roles?.[0] || user?.roles[0];
+    permissionName(roleId: string): string {
+        return this.translatedOrgPermissions[roleId].name ?? '';
+    }
+
+    permissionDescription(roleId: string): string {
+        return this.translatedOrgPermissions[roleId].description ?? '';
     }
 }

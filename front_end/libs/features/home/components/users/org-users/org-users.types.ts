@@ -5,3 +5,8 @@ export interface OrgUserExt extends OrganizationUser {
     fullName: string;
     accessLevel: string[];
 }
+
+export interface TranslatedOrgPermissions {
+    name: string;
+    description: string;
+}

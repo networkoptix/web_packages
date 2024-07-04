@@ -39,11 +39,11 @@ import { icons, MAX_NAME_LENGTH } from '@static-variables';
 
 const partnerAccess: DropdownItem<string | null>[] = [
     {
-        name: 'Organization Administrator',
+        name: 'Organization Administrators',
         value: OrgRoleIds.OrgAdmin,
     },
     {
-        name: 'System Health Viewer',
+        name: 'System Health Viewers',
         value: OrgRoleIds.SysHealthViewer,
     },
     {
@@ -148,25 +148,6 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
             accessLevel: this.currAccess$$(),
         });
         this.stateForm.patchValue({ stateToggle: this.currentState() });
-        if (this.canUpdateAccess$$()) {
-            this.updatePermissionDesc();
-        }
-    }
-
-    onSelect(value: string): void {
-        this.updateAccess.emit(value);
-        setTimeout(() => this.updatePermissionDesc());
-    }
-
-    updatePermissionDesc(): void {
-        const accessLevel = (this.generalForm?.get('accessLevel')?.value?.name ?? '') as string;
-        const permissionDescription: Record<string, string> =
-            this.LANG.channelPartners.orgs.permissionDescription ?? {};
-        const role = permissionDescription[accessLevel];
-        if (!role) {
-            this.roleDescription = '';
-        }
-        this.roleDescription = this.translateService.instant(role)?.replaceAll('|', '');
     }
 
     protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;

@@ -1,26 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild, computed, inject, OnDestroy } from '@angular/core';
+import { Component, Input, ViewChild, computed, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentOrganization } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import staticLang from '@language_static';
-import { GroupsStore } from '@pages/home/store/groups/groups.store';
-import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
-import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PipesModule } from '@pipes/pipes.module';
-import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
 
+import { AbstractUserTableDirective } from '../../users-tables/abstract-user-table/abstract-user-table.directive';
 import { NxUsersAccessTableComponent } from '../../users-tables/access-table/access-table.component';
+import { UserRecord } from '../channel-partner-users/channel-partner-users.types';
 
 @Component({
     selector: 'nx-access-table-container',
@@ -42,13 +36,10 @@ import { NxUsersAccessTableComponent } from '../../users-tables/access-table/acc
     ],
     standalone: true,
 })
-export class NxAccessTableContainerComponent implements OnDestroy {
-    LANG = staticLang;
-    icons = icons;
-    groupsStore = inject(GroupsStore);
-    orgUsersStore = inject(OrgUsersStore);
-    routerState = inject(ChannelPartnersRouteState);
-
+export class NxAccessTableContainerComponent
+    extends AbstractUserTableDirective
+    implements OnDestroy
+{
     @Input() email: string = '';
     @ViewChild(NxUsersAccessTableComponent) accessTable!: NxUsersAccessTableComponent;
     searchModel: SearchFilter = { query: '' };
@@ -81,11 +72,9 @@ export class NxAccessTableContainerComponent implements OnDestroy {
         return [currentOrg, ...groupsPath.reverse()];
     });
 
-    constructor(
-        private cpService: NxChannelPartnersService,
-        private store: Store,
-        private dialogService: NxDialogsService,
-    ) {}
+    getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
+    }
 
     ngOnDestroy(): void {
         this.setQuery({ query: '' });
@@ -96,10 +85,12 @@ export class NxAccessTableContainerComponent implements OnDestroy {
     }
 
     addAccess(): void {
+        const currentGroupId = this.currentGroupId$$();
         const organization = this.currentOrg$$()!;
         this.dialogService.addOrgUserV2({
             organization,
             email: this.email,
+            initialFolder: currentGroupId || organization.id,
         });
     }
 
