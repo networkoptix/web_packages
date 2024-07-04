@@ -1,4 +1,4 @@
-import { Injectable, Injector, computed } from '@angular/core';
+import { Injectable, computed } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -14,14 +14,7 @@ import {
     filter,
     withLatestFrom,
 } from 'rxjs';
-import {
-    distinctUntilChanged,
-    first,
-    map,
-    shareReplay,
-    startWith,
-    switchMap,
-} from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -32,10 +25,7 @@ import type { Organization } from '@services/nx-cloud-api/cloud-services/channel
 import { NxToastService } from '@services/toast.service';
 import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
-import { memoizeAsyncPersistent } from '@utils/memoize';
 import { isSystemMerging, isUserSystem } from '@utils/nx';
-
-// import * as SystemsActions from '../store/systems/systems.actions';
 
 import { updateInterval } from '../variables/static-variables';
 
@@ -45,7 +35,6 @@ import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import { NxStorageService } from './storage.service';
 import type { MergeInfo } from './system-api.types';
 import type { NxSystem } from './system.service/system';
-import { NxSystemService } from './system.service/system.service';
 import type { NxSystemInfo, NxUserSystemInfo } from './systems.service.types';
 import { NxUriService } from './uri.service';
 
@@ -127,7 +116,6 @@ export class NxSystemsService {
         private toastService: NxToastService,
         private uriService: NxUriService,
         private cloudApi: NxCloudApiService,
-        private injector: Injector,
         private store: Store,
     ) {
         this.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {
@@ -141,23 +129,6 @@ export class NxSystemsService {
             .subscribe(user => {
                 this.userEmail = user?.email;
             });
-
-        this.populateSystems();
-    }
-
-    @memoizeAsyncPersistent
-    private populateSystems(): void {
-        if (environment.isLocal) {
-            return;
-        }
-        this.systemsSubject.pipe(first(systems => systems.length > 0)).subscribe(systems => {
-            const systemService = this.injector.get(NxSystemService);
-            for (const { accessRole, stateOfHealth, id, system2faEnabled } of systems) {
-                if (stateOfHealth === 'online' && !system2faEnabled && accessRole !== 'none') {
-                    systemService.createSystem(this.userEmail, id, null, true, true);
-                }
-            }
-        });
     }
 
     get userDisconnectSystem(): boolean {
