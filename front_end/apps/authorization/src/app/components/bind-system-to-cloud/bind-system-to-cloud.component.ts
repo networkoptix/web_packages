@@ -136,6 +136,7 @@ export class BindSystemToCloudComponent implements OnInit {
                 this.state$$.update(state => ({
                     ...state,
                     orgs,
+                    bindType: orgs.length ? BindType.org : BindType.account,
                     fsmState: orgs.length
                         ? BindDialogStates.initial
                         : BindDialogStates.confirmAccount,
