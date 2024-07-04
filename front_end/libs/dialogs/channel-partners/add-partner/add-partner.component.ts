@@ -1,24 +1,30 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { NxEmailComponent } from '@components/email-input/email.component';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
+import { NxControlMessageComponent } from '@components/forms/control-messages/control-message/control-message.component';
+import { NxControlMessagesComponent } from '@components/forms/control-messages/control-messages.component';
+import {
+    errorMatcherFactory,
+    NxErrorMatches,
+} from '@components/forms/form-field/error-state-matcher';
+import { NxFormFieldComponent } from '@components/forms/form-field/form-field.component';
+import { NxInputComponent } from '@components/forms/input/input.component';
+import { NxLabelComponent } from '@components/forms/label/label.component';
+import { NxValidators } from '@components/forms/validators';
 import { ToastType } from '@components/toast-container/toast.types';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { NxProcessService } from '@services/process.service';
-import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
-import { MAX_NAME_LENGTH } from '@static-variables';
-
-const FIELDS_MISSING = 'FIELDS_MISSING';
 
 @Component({
     selector: 'nx-modal-add-partner-content',
@@ -29,72 +35,61 @@ const FIELDS_MISSING = 'FIELDS_MISSING';
         CommonModule,
         FormsModule,
         TranslateModule,
-
-        NxEmailComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
+        NxControlMessagesComponent,
+        NxFormFieldComponent,
+        NxInputComponent,
+        NxLabelComponent,
+        ReactiveFormsModule,
+        PipesModule,
+        NxAsyncActionButtonComponent,
+        NxControlMessageComponent,
     ],
 })
 export class AddPartnerModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
-    name: string = '';
-    firstAdminEmail: string = '';
-    @ViewChild('addPartnerForm') private form: NgForm;
+    nameErrorMatcher = errorMatcherFactory(NxErrorMatches.text(true));
+    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(true));
 
-    addPartnerProcess: Process;
+    nameControl = new FormControl('', { nonNullable: true });
+    emailControl = new FormControl('', {
+        validators: NxValidators.email(),
+        nonNullable: true,
+    });
+    formGroup = new FormGroup({
+        email: this.emailControl,
+        name: this.nameControl,
+    });
 
     /* Assuming no way to create top level partners for now, also assuming that
     create partner buttons will be all associated with a parent partner */
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) parentChannelPartner: DT['data'],
+        @Inject(DIALOG_DATA) private parentChannelPartner: DT['data'],
         private cpService: NxChannelPartnersService,
-        processService: NxProcessService,
-        toastService: NxToastService,
+        private toastService: NxToastService,
     ) {
         super(dialogRef);
-        this.addPartnerProcess = processService.createProcess(
-            () => {
-                this.lock();
-                if (!this.name || !this.firstAdminEmail) {
-                    return Promise.reject({ status: FIELDS_MISSING });
-                }
-                return firstValueFrom(
-                    this.cpService.createChannelPartner({
-                        name: this.name,
-                        parentChannelPartner,
-                        firstAdminEmail: this.firstAdminEmail,
-                    }),
-                );
-            },
-            { ignoreError: true },
-            res => this.close(res),
-            err => {
-                this.unlock();
-                if (err.status === FIELDS_MISSING) {
-                    this.form.form.markAllAsTouched();
-                    return;
-                }
-                console.error(err);
-                const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                toastService.notify(msg, ToastType.Danger);
-            },
-        );
     }
 
-    onNameChange(value: string): void {
-        const { partnerName } = this.form?.controls;
-
-        if (value.length > MAX_NAME_LENGTH) {
-            partnerName.setErrors({ tooLong: true });
-            partnerName.markAsTouched();
-            partnerName.markAsDirty();
-        } else {
-            partnerName.setErrors(null);
-        }
-    }
-    ngOnInit(): void {}
-
-    protected readonly MAX_NAME_LENGTH = MAX_NAME_LENGTH;
+    addPartnerAction = createAsyncAction({
+        action: () => {
+            return firstValueFrom(
+                this.cpService.createChannelPartner({
+                    name: this.nameControl.value,
+                    parentChannelPartner: this.parentChannelPartner,
+                    firstAdminEmail: this.emailControl.value,
+                }),
+            );
+        },
+        success: res => {
+            this.close(res);
+        },
+        error: (err: HttpErrorResponse) => {
+            console.error(err);
+            // @ts-expect-error "detail" property does not exist on HttpErrorResponse
+            const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
+            this.toastService.notify(msg, ToastType.Danger);
+        },
+    });
 }

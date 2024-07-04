@@ -1,16 +1,4 @@
-:host {
-    .warning-container {
-        height: 1.5rem;
-    }
+@use '../../nx-modal.scss';
+@use 'components/forms/forms.scss';
 
-    .modal-footer {
-        padding-top: 0.5rem !important;
-    }
-
-    .sub-text {
-        color: var(--add-partner-dialog-color);
-    }
-
-    // Temporary fix for qa while migrating dialogs
-    --label-color: var(--label-color-original)
-}
+@include forms.stacked-form-fields;
