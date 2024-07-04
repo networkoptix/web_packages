@@ -30,6 +30,7 @@ import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
 import { NxScrollHelperDirective } from '@directives/nx-scroll-helper';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
+import { CloudSessionTruncatedInterceptor } from '@interceptors/cloud-session-truncated-interceptor';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
@@ -40,6 +41,7 @@ import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.ser
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
+import { NxSessionTruncatedBannerService } from '@services/session-truncated-banner.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 
@@ -125,6 +127,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         {
             provide: HTTP_INTERCEPTORS,
+            useClass: CloudSessionTruncatedInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedUserInterceptor,
             multi: true,
         },
@@ -147,4 +154,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         provideHttpClient(withInterceptorsFromDi()),
     ],
 })
-export class AppModule {}
+export class AppModule {
+    // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
+    constructor(nxSessionTruncatedBannerService: NxSessionTruncatedBannerService) {}
+}
