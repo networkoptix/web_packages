@@ -19,6 +19,7 @@ import { accountSelectors } from '@store/account';
 
 import { AbstractUserTableDirective } from '../../users-tables/abstract-user-table/abstract-user-table.directive';
 import { NxUsersAccessTableComponent } from '../../users-tables/access-table/access-table.component';
+import { UserRecord } from '../channel-partner-users/channel-partner-users.types';
 
 @Component({
     selector: 'nx-access-table-container',
@@ -81,6 +82,10 @@ export class NxAccessTableContainerComponent
         const currentOrg = this.currentOrg$$()!;
         return [currentOrg, ...groupsPath.reverse()];
     });
+
+    getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
+    }
 
     ngOnDestroy(): void {
         this.setQuery({ query: '' });

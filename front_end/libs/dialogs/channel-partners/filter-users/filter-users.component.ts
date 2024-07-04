@@ -64,7 +64,11 @@ export class NxFilterUsersModalContent extends ModalBase<DT['return']> {
 
     roleIdControl = new FormControl<string | null>(null);
     roleDescription$$ = computed<string>(() => {
-        return this.LANG.channelPartners.orgs.permissionDescription[this.filterByRoleName$$()];
+        const filteredRoleId = this.filterByRoleId$$();
+        if (!filteredRoleId) {
+            return '';
+        }
+        return this.LANG.channelPartners.orgs.orgRoleInfo[filteredRoleId].description;
     });
 
     filterByRoleName$$ = computed<string>(() => {

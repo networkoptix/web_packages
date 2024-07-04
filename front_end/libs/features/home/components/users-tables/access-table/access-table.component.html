@@ -109,11 +109,11 @@
                                         <nx-select-item
                                             [value]="role.id"
                                             nxTooltipV2
-                                            [tooltipContent]="permissionDescription(role.name)"
+                                            [tooltipContent]="permissionDescription(role.id)"
                                             [tooltipPositions]="['N', 'center']"
                                             tooltipTheme="contrast"
                                         >
-                                            {{ role.name | translate }}
+                                            {{ permissionName(role.id) }}
                                         </nx-select-item>
                                     }
                                 </nx-select-v2>

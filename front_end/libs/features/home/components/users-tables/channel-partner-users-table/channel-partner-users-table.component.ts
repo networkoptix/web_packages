@@ -150,8 +150,18 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             });
     }
 
-    getRowRoleId(row: UserRecord): string {
-        return this.roles$$()?.find(role => role.name === this.getDisplayRole(row))?.id;
+    getRowRoleId(user: UserRecord): string {
+        const roles = this.roles$$();
+        if (!roles) {
+            return '';
+        }
+        return roles.find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+    }
+
+    getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user)
+            ? 'Multiple'
+            : user.groupRoles?.[0]?.roles?.[0] || user?.roles[0];
     }
 
     showRole(row: UserRecord): boolean {

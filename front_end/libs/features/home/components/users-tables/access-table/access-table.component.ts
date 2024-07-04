@@ -40,15 +40,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     email$$ = this.routerState.email;
     orgRoles$$ = this.cpService.organizationRoles$$;
-
-    // Since the code runs everytime the dom is updated, we'll pre-translate the descriptions here
-    translatedPermissionDesc = Object.entries(
-        this.LANG.channelPartners.orgs.permissionDescription,
-    ).reduce((roles, [key, value]) => {
-        roles[key.toLowerCase()] = this.translateService.instant(value).replaceAll('|', '');
-        return roles;
-    });
-
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
     accessTableRecords$$ = computed(() => {
         const orgRecords = this.orgRecords$$();
@@ -106,7 +97,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
     protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
-
     checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
     @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
@@ -192,8 +182,11 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     }
 
     getRowRoleId(user: UserRecord): string {
-        const displayRole = user.roles[0];
-        return this.orgRoles$$().find(role => role.name === displayRole)?.id;
+        return this.orgRoles$$().find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+    }
+
+    protected getDisplayRole(user: UserRecord): string {
+        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
     }
 
     newUserDialog = (): void => {
@@ -299,9 +292,5 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                     );
                 }
             });
-    }
-
-    permissionDescription(roleName: string): string {
-        return this.translatedPermissionDesc[roleName.toLowerCase()] ?? '';
     }
 }

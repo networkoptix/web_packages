@@ -1350,16 +1350,49 @@
                 "moveTo": "Move to...",
                 "rename": "Rename..."
             },
-            "permissionDescription": {
-                "Organization Administrator": "Can manage all aspects of the Organization and its Systems",
-                "Administrator": "Grants user | Administrator | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders.",
-                "Systems Administrator": "Grants user | Administrators | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders.",
-                "Power User": "Grants user | Power User | permissions in all Systems within the assigned Folder or the Organization",
-                "Advanced Viewer": "Grants user | Advanced Viewer | permissions in all Systems within the assigned Folder or the Organization",
-                "Viewer": "Grants user | Viewer | permissions in all Systems within the assigned Folder or the Organization",
-                "Live Viewer": "Grants user | Live Viewer | permissions in all Systems within the assigned Folder or the Organization",
-                "System Health Viewer": "Grants user | System Health Viewer | permissions in all Systems within the assigned Folder or the Organization",
-                "Service Subscription Manager": "Can manage Service Subscriptions in all Systems within all the Organization"
+            "channelPartnerAccessInfo": {
+                "00000000-0000-4000-8000-000000000001": {
+                    "name": "Organization Administrators",
+                    "accessDescription": "Can manage all aspects of the Organization and its Systems in addition to Service Subscription Management"
+                },
+                "00000000-0000-4000-8000-000000000004": {
+                    "name": "System Health Viewers",
+                    "accessDescription": "Can view System Health Monitoring information in all Systems within the Organization in addition to Service Subscription Management"
+                },
+                "null": {
+                    "name": "Service Subscription Managers",
+                    "accessDescription": "Can manage Service Subscriptions in all Systems within all the Organization"
+                }
+            },
+            "orgRoleInfo": {
+                "00000000-0000-4000-8000-000000000001": {
+                    "name": "Organization Administrators",
+                    "description": "Can manage all aspects of the Organization and its Systems"
+                },
+                "00000000-0000-4000-8000-000000000002": {
+                    "name": "Systems Administrators",
+                    "description": "Grants user | Administrators | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders."
+                },
+                "00000000-0000-4000-8000-000000000003": {
+                    "name": "Power Users",
+                    "description": "Grants user | Power Users | permissions in all Systems within the assigned Folder or the Organization"
+                },
+                "00000000-0000-4000-8000-000000000004": {
+                    "name": "System Health Viewers",
+                    "description": "Grants user | System Health Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                },
+                "00000000-0000-4000-8000-000000000005": {
+                    "name": "Advanced Viewers",
+                    "description": "Grants user | Advanced Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                },
+                "00000000-0000-4000-8000-000000000006": {
+                    "name": "Viewers",
+                    "description": "Grants user | Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                },
+                "00000000-0000-4000-8000-000000000007": {
+                    "name": "Live Viewers",
+                    "description": "Grants user | Live Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                }
             },
             "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
         }
