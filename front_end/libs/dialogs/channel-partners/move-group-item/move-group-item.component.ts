@@ -46,7 +46,7 @@ export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
     constructor(
         cpService: NxChannelPartnersService,
         translate: TranslateService,
-        public dialogRef: DialogRef<DT['return']>,
+        public override dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { organization, item }: DT['data'],
     ) {
         super(dialogRef);
