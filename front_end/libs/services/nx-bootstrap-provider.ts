@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 
 import { environment } from '@environments/environment';
 
@@ -21,7 +19,6 @@ export class NxBootstrapProvider {
     constructor(
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
-        private http: HttpClient,
     ) {
         this.#init();
     }
@@ -67,7 +64,7 @@ export class NxBootstrapProvider {
 
     private getModuleInfo(reload = true) {
         return this.environment.isLocal
-            ? firstValueFrom(this.http.get('/rest/v1/servers/this/info', {}))
+            ? fetch('/rest/v1/servers/this/info', {}).then(response => response.json())
             : Promise.resolve({});
     }
 

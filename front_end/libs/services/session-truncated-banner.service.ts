@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { SessionStorageService } from 'ngx-webstorage';
 import { of, timer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
@@ -10,11 +9,9 @@ import { SessionState } from '@dialogs/update-session/update-session.component.t
 import staticLang from '@language_static';
 import { MS } from '@utils/general';
 
-import { NxAccountService } from './account.service';
-import { OauthService } from './oauth.service';
+import { NxLoginService } from './login.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { NxSystemService } from './system.service/system.service';
-import { NxSystemsService } from './systems.service';
 
 const minutesToMilliseconds = (minutes: number): number => minutes * 60 * 1000;
 const millisecondsToMinutes = (milliseconds: number): number => milliseconds / 60 / 1000;
@@ -42,11 +39,8 @@ const INTERVAL_TIME = MS.second * 10;
 export class NxSessionTruncatedBannerService {
     private ribbonService = inject(NxRibbonService);
     private currentSystem = inject(NxSystemService).currentSystem$;
-    private oathService = inject(OauthService);
-    private systemsService = inject(NxSystemsService);
-    private accountService = inject(NxAccountService);
-    private sessionStorage = inject(SessionStorageService);
     private translateService = inject(TranslateService);
+    private loginService = inject(NxLoginService);
     private LANG = staticLang;
 
     private showingSessionBanner = false;
@@ -83,7 +77,7 @@ export class NxSessionTruncatedBannerService {
         }
 
         this.ribbonService.forceShow = true;
-        const timeForText = Math.floor(millisecondsToMinutes(timeRemaining));
+        const timeForText = Math.max(0, Math.floor(millisecondsToMinutes(timeRemaining)));
         const sessionTruncatedText = this.translateService.instant(
             this.LANG.ribbon.sessionTruncated,
             {
@@ -97,12 +91,11 @@ export class NxSessionTruncatedBannerService {
                     type: 'button',
                     text: this.LANG.ribbon.reauthenticate,
                     value: () => {
-                        this.sessionStorage.clear();
-                        this.accountService.logoutHelper(true, true);
-                        this.oathService.redirectOauth({
-                            state: SessionState.RenewWeb,
-                            email: this.systemsService.userEmail,
-                            redirectTo: window.location.href,
+                        if (!this.loginService.currentSystem && this.currentSystem.value) {
+                            this.loginService.currentSystem = this.currentSystem.value;
+                        }
+                        this.loginService.updateSession(SessionState.RenewWeb, true).then(() => {
+                            this.updateSessionBanner();
                         });
                     },
                 },

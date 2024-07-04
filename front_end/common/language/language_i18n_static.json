@@ -1609,7 +1609,7 @@
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation.",
-        "sessionTruncated": "Your session will expire in {count, plural, one{less than a minute} other{# minutes}}",
+        "sessionTruncated": "Your session will expire in {count, plural, =0{less than a minute} one{# minute} other{# minutes}}",
         "reauthenticate": "Re-authenticate"
     },
     "search": {

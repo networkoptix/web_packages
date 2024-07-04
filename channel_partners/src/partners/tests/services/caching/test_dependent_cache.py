@@ -44,11 +44,11 @@ def cache_keys() -> List[str]:
 @pytest.mark.django_db(transaction=True, reset_sequences=True, serialized_rollback=True)
 class TestDependentCache:
     @pytest.fixture(autouse=True, scope="function")
-    def setup(self):
+    def setup_method(self):
         caches["default"].clear()
         caches["dependent_cache"].clear()
 
-    def teardown(self):
+    def teardown_method(self):
         caches["default"].clear()
 
     def test_duplicate_dependencies(self):
@@ -109,7 +109,7 @@ class TestDependentCache:
                 user=None)
 
         assert "User must be provided when validate_user is True" in str(exc_info.value)
-        self.teardown()
+        self.teardown_method()
 
     def test_cache_set_and_retrieve_validate_user_false_no_dependencies(self, organization_factory):
         # Test Setup

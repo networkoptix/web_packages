@@ -1,10 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
-import { firstValueFrom } from 'rxjs';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
@@ -27,7 +25,6 @@ export class NxLanguageProviderService {
     CONFIG: IConfig = nxConfig;
     constructor(
         public translate: TranslateService,
-        private http: HttpClient,
         private cloudApi: NxCloudApiService,
         private toastService: NxToastService,
         private localStorageService: LocalStorageService,
@@ -78,11 +75,10 @@ export class NxLanguageProviderService {
 
     loadLanguage(): Promise<Language> {
         const lang = this.currentLang ?? this.translate.getDefaultLang();
-        return firstValueFrom(
-            environment.isLocal
-                ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
-                : this.http.get<Language>('/api/utils/language'),
-        );
+        const fetchUrl = environment.isLocal
+            ? `/static/lang_${lang}/language_compiled.json`
+            : '/api/utils/language';
+        return fetch(fetchUrl).then(response => response.json());
     }
 
     loadTimelineTranslations(): void {

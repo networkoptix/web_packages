@@ -75,7 +75,7 @@ class CloudUserSerializer(serializers.ModelSerializer):
     "retrieve": Dependencies(dependencies, validate_user=True),
     "sass_report": Dependencies(dependencies, validate_user=True)
 })
-class TestViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class DemoViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     http_method_names = ['get']
     serializer_class = CloudUserSerializer
@@ -106,10 +106,10 @@ def all_users(request):
 
 
 urlpatterns = [
-    # Paths from `TestViewSet`
-    path('partners/test/', TestViewSet.as_view({'get': 'list'}), name='test-list'),
-    path('partners/test/<int:pk>/', TestViewSet.as_view({'get': 'retrieve'}), name='test-detail'),
-    path('partners/test/<int:pk>/sass_report/', TestViewSet.as_view({'get': 'sass_report'}), name='test-sass-report'),
+    # Paths from `DemoViewSet`
+    path('partners/test/', DemoViewSet.as_view({'get': 'list'}), name='test-list'),
+    path('partners/test/<int:pk>/', DemoViewSet.as_view({'get': 'retrieve'}), name='test-detail'),
+    path('partners/test/<int:pk>/sass_report/', DemoViewSet.as_view({'get': 'sass_report'}), name='test-sass-report'),
 
     # Paths from `all_users` function
     path('partners/all_users/', all_users, name='all-users'),
@@ -205,7 +205,7 @@ class TestDependentViewCacheDecorator:
 
         client.get(path, headers=headers)
 
-        expected_cache_key = f'dependent_cache:TestViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:{self.user.id}:path:{path}'
+        expected_cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:{self.user.id}:path:{path}'
         cached_data = CacheService.get_cache_fields(expected_cache_key, ['content'])
         assert cached_data is not None
         assert 'content' in cached_data
@@ -227,7 +227,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:TestViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -248,7 +248,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:TestViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is None
 
@@ -271,7 +271,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:TestViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -306,7 +306,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:TestViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -346,7 +346,7 @@ class TestDependentViewCacheDecorator:
                                     b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
                                     b'lt_cp_admin@networkoptix.com","full_name":null}]}')
 
-        cache_key = f'dependent_cache:TestViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert cached_response is not {}
@@ -384,7 +384,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.json() == {"message": "This is the sass_report action"}
 
-        cache_key = f'dependent_cache:TestViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -449,7 +449,7 @@ class TestDependentViewCacheDecorator:
                                     b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
                                     b'lt_cp_admin@networkoptix.com","full_name":null}]}')
 
-        cache_key = f'dependent_cache:TestViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))

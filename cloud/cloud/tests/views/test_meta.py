@@ -1,3 +1,5 @@
+import cloud.views.meta
+import builtins
 import pytest
 from random import choice
 from uuid import uuid4
@@ -137,9 +139,10 @@ def test_get_doc_meta(mocker, db):
         'description': menu_description
     }
 
+
 @pytest.mark.no_db
-def test_get_lang_meta(arf, mocker, default_portal):
-    mocker.patch('cloud.views.meta.detect_language_by_request', return_value='en_US')
+def test_get_lang_meta(arf, mocker):
+    mocker.patch('cloud.views.meta.detect_language_by_request', return_value='da_DK')
     url = str(uuid4())
     request = arf.get(url)
     request.user = AnonymousUser()
@@ -147,17 +150,32 @@ def test_get_lang_meta(arf, mocker, default_portal):
     compiled_lang = generate_expected_lang_meta()
     meta_defaults = {str(uuid4()): key for key in compiled_lang}
     static_lang = json.dumps({'metaDefaults': meta_defaults})
-    ctx = baker.make(Context, name='test', asset_type=default_portal.asset_type,
-                     file_path='static/lang_{{language}}/language_compiled.json')
-    baker.make(ContextTemplate,
-               language=Language.by_code('en_US'), template=json.dumps(compiled_lang), skin='blue', context=ctx)
-    ctx = baker.make(Context, name='test static meta', asset_type=default_portal.asset_type,
-                     file_path='static/language_i18n_static.json')
-    baker.make(ContextTemplate,
-               language=None, template=static_lang, skin='blue', context=ctx)
+    with FileTest(content=static_lang) as static_lang_path:
+        with FileTest(content=json.dumps(compiled_lang)) as compiled_lang_path:
+            mocker.patch.object(cloud.views.meta, 'STATIC_LANG_PATH', static_lang_path)
+            mocker.patch.object(cloud.views.meta, 'COMPILED_LANG_PATH', compiled_lang_path)
 
-    lang_meta = get_lang_meta(request, lang='en_US')
+            spy_open = mocker.spy(builtins, 'open')
+            spy_sub_translated = mocker.spy(cloud.views.meta, 'sub_translated')
+            lang_meta = get_lang_meta(request, lang='da_DK')
+
+            assert spy_open.call_count == 2
+            spy_open.assert_has_calls([
+                mocker.call(static_lang_path, 'r'),
+                mocker.call(compiled_lang_path, 'r')
+            ])
+            spy_sub_translated.assert_called()
+
     assert lang_meta == {key: compiled_lang[val] for key, val in meta_defaults.items()}
+
+
+
+
+def test_sub_translated(arf, default_portal):
+    compiled_lang = generate_expected_lang_meta()
+    defaults = {str(uuid4()): key for key in compiled_lang}
+    lang_meta = sub_translated(defaults, compiled_lang)
+    assert lang_meta == {key: compiled_lang[val] for key, val in defaults.items()}
 
 
 def generate_expected_lang_meta():
@@ -216,7 +234,7 @@ def test_get_meta(arf, mocker, db):
     with FileTest(content=json.dumps(file_content)) as config_path:
         base_meta = {
             **expected_config_meta['default'],
-            'title': title
+            'title': title,
         }
 
         mocker.patch('waffle.switch_is_active', return_value=True)
@@ -227,9 +245,11 @@ def test_get_meta(arf, mocker, db):
 
     expected_meta = {
         'title': title,
+        'site_url': f'{image_prefix}/',
+        'site_name': expected_config_meta['default'].get('site_name', ''),
         'meta': [
-            *sorted(base_meta.items()),
-            ('url', request.build_absolute_uri(request.path))
+            *sorted([[k, v] for k,v in base_meta.items()]),
+            ['url', request.build_absolute_uri(request.path)],
         ]
     }
     assert meta == expected_meta
