@@ -16,6 +16,7 @@ import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { NxMenusService } from '@services/menus.service';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxSystemService } from '@services/system.service/system.service';
 
 const lazyRoutes: Routes = [
     {
@@ -57,69 +58,6 @@ const lazyRoutes: Routes = [
         },
     },
     {
-        path: 'systems/:systemId/view',
-        loadChildren: () =>
-            import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-    },
-    {
-        path: 'systems/:systemId/layouts',
-        loadChildren: () =>
-            import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
-        canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-        data: {
-            flag: FeatureFlagStrings.layouts,
-        },
-    },
-    {
-        path: 'systems/:systemId/services',
-        loadComponent: () =>
-            import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
-        canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-        canDeactivate: [
-            () => {
-                inject(NxMenusService).channelPartnerServiceMode$.next(false);
-                return true;
-            },
-        ],
-        title: SystemTitleResolver,
-        data: {
-            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
-        },
-    },
-    {
-        path: 'systems/:systemId/services-placeholder',
-        loadComponent: () =>
-            import('@pages/systems/services-placeholder/services.component').then(
-                c => c.NxServicesPlaceholderComponent,
-            ),
-        canMatch: [FeatureGuardMatch],
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-        title: SystemTitleResolver,
-        data: {
-            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
-        },
-    },
-    {
-        path: 'systems/:systemId/health',
-        loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule),
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-    },
-    {
-        path: 'systems/:systemId/bookmarks',
-        loadChildren: () =>
-            import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-    },
-    {
-        path: 'systems/:systemId/monitoring',
-        loadChildren: () =>
-            import('@pages/monitoring/monitoring.module').then(m => m.NxMonitoringModule),
-        canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
-    },
-    {
         path: 'systems/:systemId/noAccess/:systemName',
         loadComponent: () =>
             import('@components/placeholders/no-access/no-access.component').then(
@@ -127,18 +65,112 @@ const lazyRoutes: Routes = [
             ),
     },
     {
-        path: 'systems/:systemId',
-        loadChildren: () =>
-            import('@pages/systems/settings/settings.module').then(m => m.NxSettingsModule),
-    },
-    // Order matters when going to systems. When you click on a system in and org
-    // it will get stuck on the home page.
-    {
         path: 'systems',
-        title: 'systems',
-        canMatch: [ChannelPartnerGuard],
-        loadChildren: () =>
-            import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule),
+        canDeactivate: [
+            () => {
+                inject(NxSystemService).removeCurrentSystem();
+                return true;
+            },
+        ],
+        children: [
+            {
+                path: ':systemId',
+                canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
+                children: [
+                    {
+                        path: 'view',
+                        loadChildren: () =>
+                            import('@pages/systems/view/view.module').then(
+                                m => m.NxSystemViewModule,
+                            ),
+                    },
+                    {
+                        path: 'layouts',
+                        loadChildren: () =>
+                            import('@pages/systems/layout-view/layout-view.module').then(
+                                m => m.NxLayoutViewModule,
+                            ),
+                        canMatch: [FeatureGuardMatch],
+                        data: {
+                            flag: FeatureFlagStrings.layouts,
+                        },
+                    },
+                    {
+                        path: 'services',
+                        loadComponent: () =>
+                            import('@pages/systems/services/services.component').then(
+                                c => c.NxServicesComponent,
+                            ),
+                        canMatch: [FeatureGuardMatch],
+                        canDeactivate: [
+                            () => {
+                                inject(NxMenusService).channelPartnerServiceMode$.next(false);
+                                return true;
+                            },
+                        ],
+                        title: SystemTitleResolver,
+                        data: {
+                            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
+                        },
+                    },
+                    {
+                        path: 'services-placeholder',
+                        loadComponent: () =>
+                            import('@pages/systems/services-placeholder/services.component').then(
+                                c => c.NxServicesPlaceholderComponent,
+                            ),
+                        canMatch: [FeatureGuardMatch],
+                        title: SystemTitleResolver,
+                        data: {
+                            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
+                        },
+                    },
+                    {
+                        path: 'health',
+                        loadChildren: () =>
+                            import('@pages/health/health.module').then(m => m.NxHealthModule),
+                    },
+                    {
+                        path: 'bookmarks',
+                        canMatch: [FeatureGuardMatch],
+                        data: {
+                            flag: FeatureFlagStrings.bookmarks,
+                        },
+                        loadChildren: () =>
+                            import('@pages/systems/bookmarks/bookmarks.module').then(
+                                m => m.BookmarksModule,
+                            ),
+                    },
+                    {
+                        path: 'monitoring',
+                        loadChildren: () =>
+                            import('@pages/monitoring/monitoring.module').then(
+                                m => m.NxMonitoringModule,
+                            ),
+                    },
+                    {
+                        path: '',
+                        loadChildren: () =>
+                            import('@pages/systems/settings/settings.module').then(
+                                m => m.NxSettingsModule,
+                            ),
+                    },
+                    {
+                        path: '**',
+                        redirectTo: '',
+                    },
+                ],
+            },
+            // Order matters when going to systems. When you click on a system in an org
+            // it will get stuck on the home page.
+            {
+                path: '',
+                title: 'systems',
+                canMatch: [ChannelPartnerGuard],
+                loadChildren: () =>
+                    import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule),
+            },
+        ],
     },
     {
         path: 'integrations/:id',

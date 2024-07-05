@@ -20,7 +20,7 @@ import { NxSystem } from './system';
     providedIn: 'root',
 })
 export class NxSystemService {
-    private system: NxSystem;
+    private system: NxSystem | undefined;
     private systemsCache: { [systemId: string]: NxSystem } = {};
 
     constructor(
@@ -31,7 +31,7 @@ export class NxSystemService {
         NxSystemBase.INJECTOR ||= injector;
     }
 
-    currentSystem$ = new BehaviorSubject<NxSystem>(undefined);
+    currentSystem$ = new BehaviorSubject<NxSystem | undefined>(undefined);
 
     getCurrentSystem(): NxSystem {
         const system = this.currentSystem$$();
@@ -198,5 +198,11 @@ export class NxSystemService {
                 system.mediaserver.logout().catch(() => false),
             ),
         );
+    }
+
+    removeCurrentSystem(): void {
+        this.currentSystem$.value?.stopPoll();
+        this.currentSystem$.next(undefined);
+        this.system = undefined;
     }
 }
