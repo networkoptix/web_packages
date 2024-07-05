@@ -59,6 +59,7 @@ export class NxServiceDetailsTableComponent {
     totals = input.required<ServiceDetailTotals>();
     serviceId = input.required<string>();
     entityId = input.required<string>();
+    startTs = input<string>('');
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -72,23 +73,37 @@ export class NxServiceDetailsTableComponent {
     }: FormattedServiceDetailRecord): void {
         const serviceId = this.serviceId();
         const parentEntityId = this.entityId();
+        const startTs = this.startTs();
         let detailTableData$: Observable<DetailTableResponse>;
         switch (entityType) {
             case 'channel_partner':
-                detailTableData$ = this.CPService.getPartnerDetailTable(entityId, serviceId);
+                detailTableData$ = this.CPService.getPartnerDetailTable(
+                    entityId,
+                    serviceId,
+                    startTs,
+                );
                 break;
             case 'organization':
-                detailTableData$ = this.CPService.getOrganizationDetailTable(entityId, serviceId);
+                detailTableData$ = this.CPService.getOrganizationDetailTable(
+                    entityId,
+                    serviceId,
+                    startTs,
+                );
                 break;
             case 'system':
                 detailTableData$ = this.CPService.getOrgSystemDetailTable(
                     parentEntityId,
                     entityId,
                     serviceId,
+                    startTs,
                 );
                 break;
             default:
-                detailTableData$ = this.CPService.getPartnerDetailTable(entityId, serviceId);
+                detailTableData$ = this.CPService.getPartnerDetailTable(
+                    entityId,
+                    serviceId,
+                    startTs,
+                );
         }
 
         this.dialogsService.viewUsageDetails({ detailTableData$, entityName });

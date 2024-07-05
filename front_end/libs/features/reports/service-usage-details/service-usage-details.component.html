@@ -26,11 +26,16 @@
         </p>
     </div>
     <div class="service-details-table-wrapper">
-        <nx-service-details-table
-            [records]="formattedServiceDetailRecords$$()"
-            [totals]="serviceDetailTotals$$()"
-            [serviceId]="serviceId$$()"
-            [entityId]="entityId$$()"
-        ></nx-service-details-table>
+        @if (!hasError()) {
+            <nx-service-details-table
+                [records]="formattedServiceDetailRecords$$()"
+                [totals]="serviceDetailTotals$$()"
+                [serviceId]="serviceId$$()"
+                [entityId]="entityId$$()"
+                [startTs]="startTs()"
+            ></nx-service-details-table>
+        } @else {
+            <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
+        }
     </div>
 }

@@ -206,15 +206,20 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     /* Channel Partner Reports */
-    getPartnerServiceUsage = (partnerId: string): Observable<PartnerUsageReportEntry[]> => {
+    getPartnerServiceUsage = (
+        partnerId: string,
+        periodStartDate: string,
+    ): Observable<PartnerUsageReportEntry[]> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'reports', 'usage_report']),
+            { params: { periodStartDate } },
         );
     };
 
     getPartnerServiceReport = (
         partnerId: string,
         serviceId: string,
+        periodStartDate: string,
     ): Observable<PartnerServiceReportResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
@@ -223,12 +228,14 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_service_report',
             ]),
+            { params: { periodStartDate } },
         );
     };
 
     getPartnerDetailTable = (
         partnerId: string,
         serviceId: string,
+        periodStartDate: string,
     ): Observable<DetailTableResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
@@ -237,6 +244,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_detail_table',
             ]),
+            { params: { periodStartDate } },
         );
     };
 
@@ -331,13 +339,19 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
 
     /* Organization Reports */
-    getOrganizationServiceUsage = (orgId: string): Observable<OrgUsageReportEntry[]> => {
-        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report']));
+    getOrganizationServiceUsage = (
+        orgId: string,
+        periodStartDate: string,
+    ): Observable<OrgUsageReportEntry[]> => {
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report']), {
+            params: { periodStartDate },
+        });
     };
 
     getOrganizationServiceReport = (
         orgId: string,
         serviceId: string,
+        periodStartDate: string,
     ): Observable<OrgServiceReportResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -346,12 +360,14 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_service_report',
             ]),
+            { params: { periodStartDate } },
         );
     };
 
     getOrganizationDetailTable = (
         orgId: string,
         serviceId: string,
+        periodStartDate: string,
     ): Observable<DetailTableResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -360,6 +376,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_detail_table',
             ]),
+            { params: { periodStartDate } },
         );
     };
 
@@ -367,6 +384,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         orgId: string,
         systemId: string,
         serviceId: string,
+        periodStartDate: string,
     ): Observable<DetailTableResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -377,6 +395,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 systemId,
                 'regular_detail_table',
             ]),
+            { params: { periodStartDate } },
         );
     };
 

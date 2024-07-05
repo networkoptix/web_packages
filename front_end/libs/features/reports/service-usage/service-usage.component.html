@@ -17,9 +17,14 @@
         <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
     </div>
     <div class="service-usage-table-wrapper">
-        <nx-service-usage-table
-            [records]="formattedServiceUsageRecords$$()"
-        ></nx-service-usage-table>
+        @if (!hasError()) {
+            <nx-service-usage-table
+                [records]="formattedServiceUsageRecords$$()"
+                [startTs]="requestStartString()"
+            ></nx-service-usage-table>
+        } @else {
+            <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
+        }
     </div>
     <nx-month-select
         [monthIndex]="monthIndex()"

@@ -9,12 +9,17 @@ import {
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
+    AvailableService,
     EntityServiceChangeEntry,
+    OrgServiceReportResponse,
+    PartnerServiceReportResponse,
     Service,
     SystemServiceChangeEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 interface ServiceUsageDetailsState {
+    error: string;
+    hasError: boolean;
     isLoading: boolean;
     entityServiceChanges: EntityServiceChangeEntry[];
     systemServiceChanges: SystemServiceChangeEntry[];
@@ -22,6 +27,8 @@ interface ServiceUsageDetailsState {
 }
 
 const initialState: ServiceUsageDetailsState = {
+    error: '',
+    hasError: false,
     isLoading: true,
     entityServiceChanges: [],
     systemServiceChanges: [],
@@ -123,19 +130,35 @@ export const ServiceUsageDetailsStore = signalStore(
         ),
     })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
-        async loadPartnerServiceReport(partnerId: string, serviceId: string): Promise<void> {
-            patchState(store, { isLoading: true });
-            const serviceReportPromise = firstValueFrom(
-                CPService.getPartnerServiceReport(partnerId, serviceId),
-            );
-            const servicesPromise = firstValueFrom(
-                CPService.getChannelPartnerOwnedServices(partnerId),
-            );
-            const [serviceReportResponse, services] = await Promise.all([
-                serviceReportPromise,
-                servicesPromise,
-            ]);
-            const selectedService = services.find(service => service.id === serviceId);
+        async loadPartnerServiceReport(
+            partnerId: string,
+            serviceId: string,
+            startTs: string,
+        ): Promise<void> {
+            patchState(store, { error: '', hasError: false, isLoading: true });
+            let serviceReportResponse: PartnerServiceReportResponse;
+            let services: Service[];
+            let selectedService: Service | undefined;
+            try {
+                const serviceReportPromise = firstValueFrom(
+                    CPService.getPartnerServiceReport(partnerId, serviceId, startTs),
+                );
+                const servicesPromise = firstValueFrom(
+                    CPService.getChannelPartnerOwnedServices(partnerId),
+                );
+                [serviceReportResponse, services] = await Promise.all([
+                    serviceReportPromise,
+                    servicesPromise,
+                ]);
+                selectedService = services.find(service => service.id === serviceId);
+            } catch ({ error }) {
+                patchState(store, {
+                    error: error?.join('\n') ?? '',
+                    hasError: true,
+                    isLoading: false,
+                });
+                return;
+            }
             patchState(store, {
                 isLoading: false,
                 entityServiceChanges: serviceReportResponse.sub_entities,
@@ -143,19 +166,35 @@ export const ServiceUsageDetailsStore = signalStore(
                 selectedService,
             });
         },
-        async loadOrgServiceReport(orgId: string, serviceId: string): Promise<void> {
-            patchState(store, { isLoading: true });
-            const serviceReportPromise = firstValueFrom(
-                CPService.getOrganizationServiceReport(orgId, serviceId),
-            );
-            const servicesPromise = firstValueFrom(CPService.getOrganizationServices(orgId));
-            const [serviceReportResponse, servicesResponse] = await Promise.all([
-                serviceReportPromise,
-                servicesPromise,
-            ]);
-            const selectedService = servicesResponse.find(
-                ({ service }) => service.id === serviceId,
-            )?.service;
+        async loadOrgServiceReport(
+            orgId: string,
+            serviceId: string,
+            startTs: string,
+        ): Promise<void> {
+            patchState(store, { error: '', hasError: false, isLoading: true });
+            let serviceReportResponse: OrgServiceReportResponse;
+            let servicesResponse: AvailableService[];
+            let selectedService: Service | undefined;
+            try {
+                const serviceReportPromise = firstValueFrom(
+                    CPService.getOrganizationServiceReport(orgId, serviceId, startTs),
+                );
+                const servicesPromise = firstValueFrom(CPService.getOrganizationServices(orgId));
+                [serviceReportResponse, servicesResponse] = await Promise.all([
+                    serviceReportPromise,
+                    servicesPromise,
+                ]);
+                selectedService = servicesResponse.find(
+                    ({ service }) => service.id === serviceId,
+                )?.service;
+            } catch ({ error }) {
+                patchState(store, {
+                    error: error?.join('\n') ?? '',
+                    hasError: true,
+                    isLoading: false,
+                });
+                return;
+            }
             patchState(store, {
                 isLoading: false,
                 entityServiceChanges: [],
