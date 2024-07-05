@@ -10,12 +10,16 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 interface ServiceUsageState {
+    error: string;
+    hasError: boolean;
     isLoading: boolean;
     orgUsageReports: OrgUsageReportEntry[];
     partnerUsageReports: PartnerUsageReportEntry[];
 }
 
 const initialState: ServiceUsageState = {
+    error: '',
+    hasError: false,
     isLoading: true,
     orgUsageReports: [],
     partnerUsageReports: [],
@@ -73,26 +77,34 @@ export const ServiceUsageStore = signalStore(
         ),
     })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
-        async loadPartnerServiceUsage(
-            entityId: string,
-            startTs: string,
-            endTs: string,
-        ): Promise<void> {
-            patchState(store, { isLoading: true });
-            const serviceUsageRecords = await firstValueFrom(
-                CPService.getPartnerServiceUsage(entityId),
-            );
+        async loadPartnerServiceUsage(entityId: string, startTs: string): Promise<void> {
+            patchState(store, { error: '', hasError: false, isLoading: true });
+            let serviceUsageRecords: PartnerUsageReportEntry[];
+            try {
+                serviceUsageRecords = await firstValueFrom(
+                    CPService.getPartnerServiceUsage(entityId, startTs),
+                );
+            } catch ({ error }) {
+                patchState(store, { error: error?.detail ?? '', isLoading: false, hasError: true });
+                return;
+            }
             patchState(store, {
                 isLoading: false,
                 orgUsageReports: [],
                 partnerUsageReports: serviceUsageRecords,
             });
         },
-        async loadOrgServiceUsage(entityId: string, startTs: string, endTs: string): Promise<void> {
-            patchState(store, { isLoading: true });
-            const serviceUsageRecords = await firstValueFrom(
-                CPService.getOrganizationServiceUsage(entityId),
-            );
+        async loadOrgServiceUsage(entityId: string, startTs: string): Promise<void> {
+            patchState(store, { error: '', hasError: false, isLoading: true });
+            let serviceUsageRecords: OrgUsageReportEntry[];
+            try {
+                serviceUsageRecords = await firstValueFrom(
+                    CPService.getOrganizationServiceUsage(entityId, startTs),
+                );
+            } catch ({ error }) {
+                patchState(store, { error: error?.detail ?? '', isLoading: false, hasError: true });
+                return;
+            }
             patchState(store, {
                 isLoading: false,
                 orgUsageReports: serviceUsageRecords,

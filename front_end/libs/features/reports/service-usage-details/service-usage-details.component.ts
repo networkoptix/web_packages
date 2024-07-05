@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
@@ -26,6 +27,7 @@ import { FormattedServiceDetailRecord, ServiceDetailTotals } from './service-usa
         NxServiceDetailsTableComponent,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        NxPagePlaceholderGenericNewV2Component,
     ],
     providers: [ServiceUsageDetailsStore],
     standalone: true,
@@ -40,6 +42,10 @@ export class NxServiceUsageDetailsComponent {
     entityId$$ = input.required<string>({ alias: 'entityId' });
     serviceId$$ = input.required<string>({ alias: 'serviceId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
+    startTs = input<string>('');
+
+    error = this.serviceUsageDetailsStore.error;
+    hasError = this.serviceUsageDetailsStore.hasError;
 
     formattedServiceDetailRecords$$ = computed<FormattedServiceDetailRecord[]>(() => {
         const entityType = this.entityType$$();
@@ -64,11 +70,17 @@ export class NxServiceUsageDetailsComponent {
         const entityId = this.entityId$$();
         const serviceId = this.serviceId$$();
 
+        const startTs = this.startTs();
+
         untracked(() => {
             if (entityType === EntityType.channelPartner) {
-                this.serviceUsageDetailsStore.loadPartnerServiceReport(entityId, serviceId);
+                this.serviceUsageDetailsStore.loadPartnerServiceReport(
+                    entityId,
+                    serviceId,
+                    startTs,
+                );
             } else {
-                this.serviceUsageDetailsStore.loadOrgServiceReport(entityId, serviceId);
+                this.serviceUsageDetailsStore.loadOrgServiceReport(entityId, serviceId, startTs);
             }
         });
     });
@@ -76,6 +88,6 @@ export class NxServiceUsageDetailsComponent {
     goBack(): void {
         const urlSegments = this.router.url.split('/');
         urlSegments.pop();
-        this.router.navigate(urlSegments);
+        this.router.navigate(urlSegments, { queryParams: { startTs: this.startTs() } });
     }
 }

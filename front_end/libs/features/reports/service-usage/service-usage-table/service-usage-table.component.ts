@@ -62,10 +62,14 @@ export class NxServiceUsageTableComponent {
     ];
     selectedRecordId = '';
     records = input.required<FormattedUsageReportRecord[]>();
+    startTs = input<string>('');
 
     selectService(serviceId: string): void {
-        const urlSegments = this.router.url.split('/');
+        const urlSegments = this.router.url.split('?')[0].split('/');
         urlSegments.push(serviceId);
-        this.router.navigate(urlSegments);
+        this.router.navigate(urlSegments, {
+            queryParamsHandling: 'merge',
+            queryParams: { startTs: this.startTs() },
+        });
     }
 }
