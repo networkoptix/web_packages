@@ -28,6 +28,7 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import type { DraggableItem } from '@pages/home/home.types';
@@ -75,6 +76,7 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         NxResizeObserver,
         NxPagePlaceholderV2Component,
     ],
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxOrganizationCardContainerComponent {
     groupsStore = inject(GroupsStore);

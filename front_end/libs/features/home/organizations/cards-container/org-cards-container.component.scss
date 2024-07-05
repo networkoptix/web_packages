@@ -1,5 +1,20 @@
 @use '../../components/card/card.component' as system-card;
 @use "typography" as typography;
+@use "theme_generator" as tg;
+
+@include tg.generate-theme-vars((
+    '--card-dropdown-menu-bg': ('dark': 13, 'light': 'additional-light1', 'light_gray': 1),
+    '--card-dropdown-item-color': ('dark': -1, 'light': -9),
+), ':host');
+
+:host {
+    ::ng-deep .dropdown-menu {
+        background-color: var(--card-dropdown-menu-bg) !important;
+        .dropdown-item {
+            color: var(--card-dropdown-item-color) !important;
+        }
+    }
+}
 
 $org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
 $org-cards-hidden-spacing: 4px;
@@ -51,7 +66,6 @@ $org-cards-hidden-spacing: 4px;
 
     .cdk-drag-placeholder is present when mouse is over empty spot,
     can be first or second child */
-
 }
 
 .card-content {
