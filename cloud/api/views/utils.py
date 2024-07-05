@@ -451,6 +451,7 @@ async def downloads_releases(request):
         customized_updates_json = updates_json.get(customization, {})
         latest_version = customized_updates_json.get('download_version')
         release_notes_url = customized_updates_json.get('release_notes', '')
+        beta_notes_url = customized_updates_json.get('beta_notes', '')
 
         if release_notes_url == 'https://updates.hdwitness.com/release_notes.html':
             release_notes_url = ''
@@ -458,8 +459,10 @@ async def downloads_releases(request):
         downloads_data = await get_downloads_json(customization)
 
         release_types = ['betas', 'releases']
-        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url, available_version=latest_version)
-                 for release_type in release_types }
+        data = {}
+        for release_type in release_types:
+            notes_url = release_notes_url if release_type == 'releases' else beta_notes_url
+            data[release_type] = get_latest_vms_build_by_release_type(downloads_data, release_type, notes_url, available_version=latest_version)
         data['updatesPrefix'] = downloads_data['updatesPrefix']
         await global_cache.aset(cache_key, json.dumps(data))
     else:
