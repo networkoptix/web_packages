@@ -1,5 +1,7 @@
 <div class="nx-new-table-container CP-users">
-    @if (filteredRecords$$()?.length > 0) {
+    @if (!roles$$()) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else if (filteredRecords$$()?.length > 0) {
         <nx-table
             set-pagination
             set-sorting
@@ -79,7 +81,9 @@
                 >
                     <div class="div-container roles">
                         @if (showRole(row)) {
-                            {{ getDisplayRole(row) | translate }}
+                            <div class="readonly-role">
+                                {{ getDisplayRole(row) | translate }}
+                            </div>
                         } @else {
                             <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"

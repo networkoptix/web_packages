@@ -132,10 +132,12 @@
                 >
                     <div class="div-container roles">
                         @if (!canUpdateUserRole(row)) {
-                            <nx-search-highlight
-                                [text]="getDisplayRole(row)"
-                                [search]="searchingQuery$$()"
-                            ></nx-search-highlight>
+                            <div class="readonly-role">
+                                <nx-search-highlight
+                                    [text]="getDisplayRole(row)"
+                                    [search]="searchingQuery$$()"
+                                ></nx-search-highlight>
+                            </div>
                         } @else {
                             <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"

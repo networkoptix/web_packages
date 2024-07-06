@@ -99,7 +99,7 @@
                     >
                         <div class="div-container roles">
                             @if (!canManageUsers$$()) {
-                                {{ getDisplayRole(row) }}
+                                <div class="readonly-role">{{ getDisplayRole(row) }}</div>
                             } @else {
                                 <nx-select-v2
                                     [ngModel]="getRowRoleId(row)"

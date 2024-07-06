@@ -46,7 +46,7 @@ export abstract class AbstractUserTableDirective {
             };
             return roles;
         },
-        {} as TranslatedOrgPermissions[],
+        {} as Record<string, TranslatedOrgPermissions>,
     );
 
     @ViewChild(NxCheckAllContainerDirective) set setContainerRef(
@@ -66,10 +66,10 @@ export abstract class AbstractUserTableDirective {
     }
 
     permissionName(roleId: string): string {
-        return this.translatedOrgPermissions[roleId].name ?? '';
+        return this.translatedOrgPermissions[roleId]?.name ?? '';
     }
 
     permissionDescription(roleId: string): string {
-        return this.translatedOrgPermissions[roleId].description ?? '';
+        return this.translatedOrgPermissions[roleId]?.description ?? '';
     }
 }
