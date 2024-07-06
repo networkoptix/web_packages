@@ -114,7 +114,8 @@ export const PermissionsStore = signalStore(
         canViewOrgReports$$: computed(
             () =>
                 nxConfig.featureFlags.channelPartnersReportsUI &&
-                orgPermissions().view_service_reports,
+                (partnerPermissions().view_service_reports ||
+                    orgPermissions().view_service_reports),
         ),
         canViewOrgSettings$$: computed(
             () =>

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
@@ -35,6 +36,7 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxCheckAllContainerDirective,
         NxCheckAllDirective,
         NxSearchHighlightComponent,
+        NxPreLoaderComponent,
     ],
 })
 export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirective {
@@ -151,17 +153,11 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     }
 
     getRowRoleId(user: UserRecord): string {
-        const roles = this.roles$$();
-        if (!roles) {
-            return '';
-        }
-        return roles.find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+        return user?.rolesIds[0] ?? '';
     }
 
     getDisplayRole(user: UserRecord): string {
-        return this.hasMultipleRoles(user)
-            ? 'Multiple'
-            : user.groupRoles?.[0]?.roles?.[0] || user?.roles[0];
+        return user?.roles?.[0] ?? '';
     }
 
     showRole(row: UserRecord): boolean {

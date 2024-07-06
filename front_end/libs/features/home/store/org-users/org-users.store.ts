@@ -135,6 +135,7 @@ const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
         userId: user.email,
         fullName: user.fullName || 'N/A',
         roles: user.roles,
+        rolesIds: user.rolesIds,
         isOrgUser: user.hasAccessTo?.membershipType === 'organization',
         accessLevel: user.hasAccessTo,
         userType: UserType.GROUP,

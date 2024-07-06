@@ -104,11 +104,13 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     );
 
     getRowRoleId(user: UserRecord): string {
-        return this.roles$$().find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+        return user?.rolesIds?.[0] ?? user?.groupRoles?.[0]?.rolesIds?.[0] ?? '';
     }
 
     getDisplayRole(user: UserRecord): string {
-        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
+        return this.hasMultipleRoles(user)
+            ? this.translateService.instant('Multiple')
+            : this.permissionName(this.getRowRoleId(user));
     }
 
     canDeleteUser(user: UserRecord): boolean {

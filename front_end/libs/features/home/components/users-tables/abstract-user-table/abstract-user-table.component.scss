@@ -1,4 +1,5 @@
 @use "theme_variables_common" as *;
+@use "typography";
 
 .nx-new-table-container {
   margin: 0;
@@ -43,4 +44,11 @@ new-table-wrapper {
     path {
         stroke: var(--brand-core);
     }
+}
+
+.div-container.roles:has(.readonly-role) {
+    @include typography.medium13nocolor;
+    height: calc(2rem - 5px - 5px); // Used to match select-v2 .select-box
+    padding-top: 1px;
+    padding-left: 2px;
 }

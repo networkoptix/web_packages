@@ -174,11 +174,13 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     }
 
     getRowRoleId(user: UserRecord): string {
-        return this.orgRoles$$().find(role => role.id === user.rolesIds?.[0])?.id ?? '';
+        return user.rolesIds?.[0] ?? '';
     }
 
     protected getDisplayRole(user: UserRecord): string {
-        return this.hasMultipleRoles(user) ? 'Multiple' : this.permissionName(user?.rolesIds[0]);
+        return this.hasMultipleRoles(user)
+            ? this.translateService.instant('Multiple')
+            : this.permissionName(this.getRowRoleId(user));
     }
 
     newUserDialog = (): void => {
