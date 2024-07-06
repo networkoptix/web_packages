@@ -8,10 +8,15 @@
 ), ':host');
 
 :host {
-    ::ng-deep .dropdown-menu {
-        background-color: var(--card-dropdown-menu-bg) !important;
-        .dropdown-item {
-            color: var(--card-dropdown-item-color) !important;
+    ::ng-deep {
+        nx-three-dot {
+            .dropdown-menu {
+                background-color: var(--card-dropdown-menu-bg) !important;
+
+                .dropdown-item {
+                    color: var(--card-dropdown-item-color) !important;
+                }
+            }
         }
     }
 }
