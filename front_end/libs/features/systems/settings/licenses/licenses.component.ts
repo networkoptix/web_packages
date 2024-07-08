@@ -166,7 +166,7 @@ export class NxSystemLicensesComponent implements OnInit {
     private addLicenseSummary(item): void {
         // for license summary block
         const type = typeof item.info.type === 'function'
-            ? item.info.type()
+            ? item.info.type
             : item.info.type;
         const license = this.licenseSummaries.find(ls => ls.type === type);
 
@@ -232,14 +232,14 @@ export class NxSystemLicensesComponent implements OnInit {
                             : this.LANG.license.info.error;
 
                     // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
-                    if (item.info.type() === this.LANG.license.licenseTypeTitles.NVR) {
+                    if (item.info.type === this.LANG.license.licenseTypeTitles.NVR) {
                         if (maxNvrChannels < +item.info.count) {
                             maxNvrChannels = +item.info.count;
                         }
                         item.info.status = this.LANG.license.info.error;
                     }
                     // monkey patch -> turn off all STARTER licenses and then flip only the one with higher channels
-                    if (item.info.type() === this.LANG.license.licenseTypeTitles.Starter) {
+                    if (item.info.type === this.LANG.license.licenseTypeTitles.Starter) {
                         if (maxStarterChannels < +item.info.count) {
                             maxStarterChannels = +item.info.count;
                         }
@@ -258,14 +258,14 @@ export class NxSystemLicensesComponent implements OnInit {
             // since it's not possible to register new one with fewer channels
             // it's safe to assume that last one is the active
             const nvrs = licensesInfo.filter(item => {
-                return item.info.type() === this.LANG.license.licenseTypeTitles.NVR;
+                return item.info.type === this.LANG.license.licenseTypeTitles.NVR;
             });
             if (nvrs.length) {
                 nvrs[nvrs.length - 1].info.status = this.LANG.license.info.ok;
             }
 
             const starters = licensesInfo.filter(item => {
-                return item.info.type() === this.LANG.license.licenseTypeTitles.Starter;
+                return item.info.type === this.LANG.license.licenseTypeTitles.Starter;
             });
             if (starters.length) {
                 starters[starters.length - 1].info.status = this.LANG.license.info.ok;
