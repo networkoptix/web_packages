@@ -204,6 +204,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>): void {
         if (changes.system?.currentValue?.info && this.system.permissionManager.isAdmin$$()) {
+            this.showAnalytics ||= this.system.version >= 5.1;
             this.fullInfoPath =
                 this.uriService.getSystemSettingsRoute({
                     systemId: this.system.id,
@@ -625,7 +626,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             this.selectDefaultStorage();
                     }
                     this.storagesLoading = false;
-                    this.showAnalytics =
+                    this.showAnalytics ||=
                         !!currentAnalyticsDbLocation ||
                         hasAnalyticsData ||
                         hasCompatibleAnalyticsPlugins;
