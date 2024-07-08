@@ -48,6 +48,8 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
     @Input() search: boolean = false;
     @Input('aria-label') ariaLabel: string = '';
 
+    @Output() close = new EventEmitter<void>();
+
     @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     @ContentChildren(BaseSelectV2Item, { descendants: true }) dropdownItems = new QueryList<
@@ -140,6 +142,7 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
             .detachments()
             .pipe(take(1))
             .subscribe(() => {
+                this.close.emit();
                 this.openState$$.set(DropdownState.Closed);
             });
         this.overlayRef.detach();

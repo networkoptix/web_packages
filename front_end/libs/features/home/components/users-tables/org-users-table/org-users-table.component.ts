@@ -103,6 +103,8 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         () => new Map(this.selectedOrgUsers$$()?.map((user: UserRecord) => [user.email, user])),
     );
 
+    openedRoleTooltip?: NxTooltipV2Directive;
+
     getRowRoleId(user: UserRecord): string {
         return user?.rolesIds?.[0] ?? user?.groupRoles?.[0]?.rolesIds?.[0] ?? '';
     }

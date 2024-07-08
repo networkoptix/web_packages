@@ -142,14 +142,19 @@
                             <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"
                                 (ngModelChange)="updateRole(row, $event)"
+                                (close)="openedRoleTooltip?.close(0); openedRoleTooltip = undefined"
                             >
                                 @for (role of roles$$(); track role.id) {
                                     <nx-select-item
                                         [value]="role.id"
                                         nxTooltipV2
+                                        #roleSelectTooltip="nxTooltipV2"
                                         [tooltipContent]="permissionDescription(role.id)"
                                         [tooltipPositions]="['N', 'center']"
                                         tooltipTheme="contrast"
+                                        (tooltipOpenChange)="
+                                            $event ? (openedRoleTooltip = roleSelectTooltip) : null
+                                        "
                                     >
                                         <nx-search-highlight
                                             [text]="permissionName(role.id)"
