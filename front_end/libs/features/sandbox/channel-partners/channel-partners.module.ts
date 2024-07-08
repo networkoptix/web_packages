@@ -7,7 +7,7 @@ import { NxCpOfflineDataComponent } from './offline-data/offline-data.component'
 import { NxOrganizationComponent } from './organization/organization.component';
 import { NxSystemGroupComponent } from './system-group/system-group.component';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',

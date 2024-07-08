@@ -29,7 +29,7 @@
 }
 
 
-[data-whatintent="keyboard"] a:focus:not([disabled]):not(.btn):not(.disabled):not(.alternative) {
+[data-whatintent="keyboard"] a:focus:not([disabled]):not(.btn):not(.disabled):not(.alternative):not([data-escape-global-style]) {
     outline: none !important;
     @include outline;
 

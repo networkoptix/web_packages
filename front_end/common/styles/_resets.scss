@@ -7,3 +7,16 @@
         outline: none;
     }
 }
+
+@mixin anchor {
+    color: unset;
+    text-decoration: unset;
+    &:hover {
+        color: unset;
+        text-decoration: unset;
+    }
+    &.disabled {
+        color: unset;
+        pointer-events: unset;
+    }
+}

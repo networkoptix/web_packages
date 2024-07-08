@@ -2,10 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ApplyGuard } from '@guards/applyGuard';
-import { AuthGuard } from '@guards/authGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
-import { SvgResizeComponent } from '@pages/sandbox/svg-resize/svg.component';
-import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 
 import { NxGridLayoutComponent } from '../layout/layout.component';
@@ -22,12 +19,11 @@ import { FormApplyExampleComponent } from './form-apply-example/form-apply-examp
 import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
-import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
-import { NxComponents } from './nx-components/nx-components.component';
-import { NxSandboxComponent } from './sandbox.component';
+import { NxComponentLibrarySandboxComponent } from './nx-components/nx-components.component';
 import { SearchComponent } from './search/search.component';
 import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
 import { NxSignalsComponent } from './signals/signals.component';
+import { SvgResizeComponent } from './svg-resize/svg.component';
 import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { NxThemeVariableGeneratorSandboxComponent } from './theme-variable-generator/theme-variable-generator-sandbox.component';
@@ -35,20 +31,15 @@ import { ToasterComponent } from './toaster/toaster.component';
 import { NxTooltipSandboxComponent } from './tooltip/tooltip-sandbox.component';
 import { ValidationComponent } from './validation/validation.component';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
-        component: NxSandboxComponent,
-        canActivate: [AuthGuard],
+        loadComponent: () => import('./sandbox.component').then(c => c.NxSandboxComponent),
         children: [
             {
                 path: '',
-                component: FormElementsComponent,
-            },
-            {
-                path: 'basic-colors',
-                component: NxBasicColorsComponent,
-                canDeactivate: [ApplyGuard],
+                pathMatch: 'full',
+                redirectTo: 'form-elements',
             },
             {
                 path: 'buttons',
@@ -57,24 +48,6 @@ const appRoutes: Routes = [
             {
                 path: 'dialogs',
                 component: NxDialogsSandboxComponent,
-            },
-            {
-                path: 'webgl',
-                component: WebglComponent,
-            },
-            {
-                path: 'custom-colors',
-                component: NxCustomColorsComponent,
-                canDeactivate: [ApplyGuard],
-            },
-            {
-                path: 'theme-colors',
-                component: NxThemeColorsComponent,
-                canDeactivate: [ApplyGuard],
-            },
-            {
-                path: 'hsl-theme',
-                component: NxHSLThemeColorsComponent,
             },
             {
                 path: 'apply-service-form',
@@ -131,18 +104,12 @@ const appRoutes: Routes = [
                 component: NxTooltipSandboxComponent,
             },
             {
-                path: 'ngrx-demo',
-                loadChildren: () =>
-                    import('./ngrx-demo/ngrx-demo.module').then(m => m.NgrxDemoModule),
-            },
-            {
                 path: 'arch',
                 component: NxArchSvgComponent,
             },
             {
-                path: '_test',
-                loadComponent: () =>
-                    import('./test-box.component').then(m => m._NxTestBoxComponent),
+                path: 'signals',
+                component: NxSignalsComponent,
             },
             {
                 path: 'channel-partners',
@@ -156,27 +123,48 @@ const appRoutes: Routes = [
                 component: SandboxFiltersComponent,
             },
             {
-                path: 'css-variables',
-                component: NxCssVariablesComponent,
+                path: 'component-library',
+                component: NxComponentLibrarySandboxComponent,
             },
             {
-                path: 'signals',
-                component: NxSignalsComponent,
-            },
-            {
-                path: 'theme-variables',
-                component: NxThemeVariableGeneratorSandboxComponent,
-            },
-            {
-                path: 'components',
-                component: NxComponents,
+                path: 'colors',
+                children: [
+                    {
+                        path: 'basic-colors',
+                        component: NxBasicColorsComponent,
+                    },
+                    {
+                        path: 'css-variables',
+                        component: NxCssVariablesComponent,
+                    },
+                    {
+                        path: 'custom-colors',
+                        component: NxCustomColorsComponent,
+                    },
+                    {
+                        path: 'hsl-theme',
+                        component: NxHSLThemeColorsComponent,
+                    },
+                    {
+                        path: 'theme-colors',
+                        component: NxThemeColorsComponent,
+                    },
+                    {
+                        path: 'theme-variables',
+                        component: NxThemeVariableGeneratorSandboxComponent,
+                    },
+                    {
+                        path: 'webgl',
+                        component: WebglComponent,
+                    },
+                ],
             },
         ],
     },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(appRoutes), NgrxDemoModule],
+    imports: [RouterModule.forChild(appRoutes)],
     providers: [],
 
     declarations: [],

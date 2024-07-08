@@ -16,6 +16,8 @@ ruleTester.run('no-untyped-arg', rule, {
         { code: 'function foo(bar: number) {}' },
         { code: 'function foo(bar = 3) {}' },
         { code: 'const foo = (bar: number[] = []) => {}' },
+        { code: 'const foo: Foo = bar => {}' },
+        { code: classWrapper(' foo: Foo = bar => {}') },
         { code: 'function foo({ bar }: { bar: number }) {}' },
         { code: 'function foo(...bars: string[]) {}' },
     ],

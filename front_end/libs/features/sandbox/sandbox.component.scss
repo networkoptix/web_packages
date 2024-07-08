@@ -1,98 +1,69 @@
-@use "theme_variables_common" as *;
-@use "bootstrap_utils" as bootstrap;
+@use 'resets';
+@use 'typography';
 
-/* Palette spec is here: http://4yppjt.axshare.com/#p=colors */
-$theme-map : null;
-
-$themes : (default: (backgroundColor: white,
-        textColor: #408bbd,
-        buttonTextColor: #408bbd,
-        buttonTextTransform: none,
-        buttonTextHoverColor: #61b0e7,
-        buttonColor: #fff,
-        buttonBorder: 2px solid #408bbd),
-    dark: (backgroundColor: #222,
-        textColor: #ddd,
-        buttonTextColor: #aaa,
-        buttonTextTransform: uppercase,
-        buttonTextHoverColor: #ddd,
-        buttonColor: #333,
-        buttonBorder: 1px solid #333));
-
-$theme-map : null;
-
-@mixin themify($themes: $themes) {
-
-    @each $theme,
-    $map in $themes {
-
-        .theme-#{$theme} & {
-            $theme-map : () !global;
-
-            @each $key,
-            $submap in $map {
-                $value : map-get(map-get($themes, $theme), "#{$key}");
-                $theme-map : map-merge($theme-map, ($key: $value)) !global;
-            }
-
-            @content;
-            $theme-map : null !global;
-        }
-
-    }
-}
-
-@function themed($key) {
-    @return map-get($theme-map, $key);
-}
-
-:host {
-    height: calc(100% - 20px);
+[cdkAccordion] {
     display: block;
+    background-color: var(--left-menu-bg);
+    padding-bottom: 0.25rem;
 }
 
-.theme-container {
-    @include themify($themes) {
-        color: themed("textColor");
-        background-color: themed("backgroundColor");
-    }
+cdk-accordion-item {
+    display: flex;
+    flex-direction: column;
 
-    h3 {
-        @include themify($themes) {
-            color: themed("textColor");
+    .level-1 {
+        @include resets.button();
+
+        @include typography.medium15nocolor;
+        background-color: var(--left-menu-l1-bg);
+        color: var(--left-menu-l1-color);
+        line-height: 40px;
+        padding: 0 1rem;
+        cursor: pointer;
+        user-select: none;
+        text-align: start;
+
+        &:hover,
+        &:focus-visible {
+            background-color: var(--left-menu-l1-bg-hover);
+            outline: none;
+        }
+
+        &:active {
+            background-color: var(--left-menu-l1-bg-active);
+        }
+
+        &--route-active {
+            background-color: var(--left-menu-l1-bg-hover);
         }
     }
 
-    label {
-        @include themify($themes) {
-            color: themed("buttonTextColor");
+    .level-3 {
+        @include resets.anchor();
+
+        @include typography.medium13nocolor;
+        background-color: var(--left-menu-l3-bg);
+        color: var(--left-menu-l3-color);
+        line-height: 26px;
+        padding-left: 2rem;
+        padding-right: 1rem;
+
+        &:hover,
+        &:focus-visible {
+            background-color: var(--left-menu-l3-hover-bg);
+            color: var(--left-menu-l3-hover-color);
+            outline: none;
         }
-    }
 
-    nx-radio .nx-radio .check svg path.circle {
-        @include themify($themes) {
-            color: themed("buttonColor");
-        }
-    }
-}
+        &--route-active {
+            color: var(--left-menu-l3-selected-color);
+            background-color: var(--left-menu-l3-selected-bg);
 
-.grid-container {
-    display: grid;
-    grid-column-gap: .5rem;
-    grid-row-gap: .5rem;
-    grid-template-columns: max-content 240px;
-
-    @include bootstrap.media-breakpoint-down(md) {
-        grid-template-columns: 1fr;
-    }
-
-    .grid-item {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-
-        @include bootstrap.media-breakpoint-down(md) {
-            justify-content: flex-start;
+            &:hover,
+            &:focus-visible {
+                color: var(--light1);
+                background-color: var(--light16);
+            }
         }
     }
 }

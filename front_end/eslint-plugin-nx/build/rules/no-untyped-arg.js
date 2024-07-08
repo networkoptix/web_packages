@@ -53,6 +53,12 @@ module.exports = (0, utils_2.createRule)({
                 checkForUntypedArgs(node);
             },
             ArrowFunctionExpression(node) {
+                const { parent } = node;
+                if ((parent.type === utils_1.AST_NODE_TYPES.VariableDeclarator &&
+                    parent.id.typeAnnotation) ||
+                    (parent.type === utils_1.AST_NODE_TYPES.PropertyDefinition && parent.typeAnnotation)) {
+                    return;
+                }
                 checkForUntypedArgs(node);
             },
         };

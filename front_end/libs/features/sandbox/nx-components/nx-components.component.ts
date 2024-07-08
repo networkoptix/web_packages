@@ -10,4 +10,4 @@ import { NxExampleComponent } from 'nx-components';
         <nx-example variant="funky"></nx-example>
     `,
 })
-export class NxComponents {}
+export class NxComponentLibrarySandboxComponent {}
