@@ -1,187 +1,92 @@
+import { CdkAccordion, CdkAccordionModule } from '@angular/cdk/accordion';
 import { CommonModule } from '@angular/common';
-import { Component, effect } from '@angular/core';
+import { Component, ViewChild, effect, signal, untracked } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { capitalize } from 'lodash-es';
 
-import { MenuModule } from '@menu/menu.module';
-import { NxMenuService } from '@menu/menu.service';
-import type { Content } from '@menu/menu.types';
+import { alphaNumericSort } from '@utils/general';
+
+interface NavItem {
+    name: string;
+    link: string[];
+}
+
+function navName(componentName: string): string {
+    return componentName
+        .replace(/^Nx/, '')
+        .replace(/Component$/, '')
+        .replace(/sandbox/i, '')
+        .replace(/example/i, '')
+        .replaceAll(/([A-Z][a-z])/g, ' $1');
+}
 
 @Component({
     selector: 'sandbox-component',
     templateUrl: 'sandbox.component.html',
     styleUrls: ['sandbox.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule, MenuModule],
+    imports: [CommonModule, RouterModule, CdkAccordionModule],
 })
 export class NxSandboxComponent {
-    content: Content;
-    menuReady = false;
+    navSections = signal<Record<string, NavItem[]>>({});
+    nosort = (): 0 => 0;
 
-    constructor(private menuService: NxMenuService) {
-        effect(() => {
-            const selection = this.menuService.selectedSection$$();
-            const detailSelection = this.menuService.selectedDetailsSection$$();
-            if (
-                !this.content ||
-                (this.content.selectedSection === selection &&
-                    this.content.selectedDetailsSection === detailSelection)
-            ) {
-                return;
-            }
-            this.content.selectedSection = selection;
-            this.content.selectedDetailsSection = detailSelection;
-            this.content = { ...this.content }; // trigger onChange
-        });
-
-        effect(() => {
-            if (this.content) {
-                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection$$();
-                this.content = { ...this.content }; // trigger onChange
-            }
-        });
+    @ViewChild(CdkAccordion) set _accordion(a: CdkAccordion) {
+        this.cdkAccordion.set(a);
     }
+    private cdkAccordion = signal<CdkAccordion | null>(null);
 
-    ngOnInit(): void {
-        this.content = {
-            base: '/sandbox',
-            selectedSection: 'components',
-            selectedSubSection: 'table',
-            level1: [
-                {
-                    id: 'colors',
-                    svg: 'system',
-                    label: 'Colors',
-                    path: '',
-                    level3: [
-                        {
-                            id: 'basicColors',
-                            label: 'Basic',
-                            path: '/basic-colors',
-                        },
-                        {
-                            id: 'customColors',
-                            label: 'Customizations',
-                            path: '/custom-colors',
-                        },
-                        {
-                            id: 'themeColors',
-                            label: 'Themes',
-                            path: '/theme-colors',
-                        },
-                        {
-                            id: 'themeHSL',
-                            label: 'HSL colors',
-                            path: '/hsl-theme',
-                        },
-                        // {
-                        //     id: 'webgl',
-                        //     label: 'WebGL',
-                        //     path: '/webgl',
-                        // },
-                        {
-                            id: 'simple-webgl',
-                            label: 'Simple WebGL',
-                            path: '/simple-webgl',
-                        },
-                        {
-                            id: 'cssVariables',
-                            label: 'CSS Variables',
-                            path: '/css-variables',
-                        },
-                        {
-                            id: 'themeVariables',
-                            label: 'Theme Variables',
-                            path: '/theme-variables',
-                        },
-                    ],
-                },
-                {
-                    id: 'components',
-                    svg: 'system',
-                    label: 'Components',
-                    path: '',
-                    level3: [
-                        {
-                            id: 'applyServiceForm',
-                            label: 'Apply service (form)',
-                            path: '/apply-service-form',
-                        },
-                        {
-                            id: 'applyServiceSection',
-                            label: 'Apply service (section)',
-                            path: '/apply-service-section',
-                        },
-                        {
-                            id: 'buttons',
-                            label: 'Buttons',
-                            path: '/buttons',
-                        },
-                        { id: 'datetime', label: 'Datetime', path: '/datetime' },
-                        { id: 'dialogs', label: 'Dialogs', path: '/dialogs' },
-                        {
-                            id: 'dropdowns',
-                            label: 'Dropdowns',
-                            path: '/dropdowns',
-                        },
-                        {
-                            id: 'demoLayout',
-                            label: 'Demo layout',
-                            path: '/demo-layout',
-                        },
-                        {
-                            id: 'search',
-                            label: 'Search',
-                            path: '/search',
-                        },
-                        {
-                            id: 'masonryGrid',
-                            label: 'Masonry grid',
-                            path: '/masonry-grid',
-                        },
-                        {
-                            id: 'formElements',
-                            label: 'Form elements',
-                            path: '/form-elements',
-                        },
-                        {
-                            id: 'validation',
-                            label: 'Validation',
-                            path: '/validation',
-                        },
-                        {
-                            id: 'table',
-                            label: 'Table',
-                            path: '/table',
-                        },
-                        {
-                            id: 'tags',
-                            label: 'Tags',
-                            path: '/tags',
-                        },
-                        {
-                            id: 'toaster',
-                            label: 'Ribbon,  Banner, Toaster & Buttons',
-                            path: '/toaster',
-                        },
-                        {
-                            id: 'tooltip',
-                            label: 'Tooltip',
-                            path: '/tooltip',
-                        },
-                        {
-                            id: 'archsvg',
-                            label: 'Architecture (SVG)',
-                            path: '/arch',
-                        },
-                        {
-                            id: 'signals',
-                            label: 'Signals Utilities',
-                            path: '/signals',
-                        },
-                    ],
-                },
-            ],
-        };
-        this.menuReady = true;
+    private initialized = signal(false);
+    protected initialOpenEffect = effect(
+        () => {
+            const [navSections, cdkAccordion, initialized] = [
+                this.navSections(),
+                this.cdkAccordion(),
+                untracked(this.initialized),
+            ];
+            if (!initialized) {
+                if (Object.keys(navSections).length && cdkAccordion) {
+                    cdkAccordion.openAll();
+                    this.initialized.set(true);
+                }
+            }
+        },
+        { allowSignalWrites: true },
+    );
+
+    activeSection = 'sandbox';
+
+    constructor() {
+        import('./sandbox.module').then(m => {
+            const navAccordian: Record<string, NavItem[]> = { sandbox: [] };
+            for (const route of m.appRoutes[0].children!) {
+                const path = route.path!;
+                if (path === '') {
+                    /* Top level redirect */
+                    continue;
+                } else if (route.component) {
+                    const name = navName(route.component.name);
+                    const link = ['/sandbox', path];
+                    navAccordian.sandbox.push({ name, link });
+                } else if (route.children) {
+                    navAccordian[path] = [];
+                    for (const child of route.children) {
+                        const name = navName(child.component!.name);
+                        const link = ['/sandbox', path, child.path!];
+                        navAccordian[path].push({ name, link });
+                    }
+                    /* Only one level deep, no lazy loading */
+                } else {
+                    /* Lazy loaded module */
+                    const name = path.split('-').map(capitalize).join(' ');
+                    const link = ['/sandbox', path];
+                    navAccordian.sandbox.push({ name, link });
+                }
+            }
+            for (const key of Object.keys(navAccordian)) {
+                navAccordian[key].sort(alphaNumericSort(n => n.name));
+            }
+            this.navSections.set(navAccordian);
+        });
     }
 }

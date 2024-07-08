@@ -1,16 +1,43 @@
 <div class="h-100">
     <div class="h-100">
-        <div
-            class="block-container mt-3 h-100"
-            *ngIf="menuReady"
-        >
+        <div class="block-container mt-3 h-100">
             <h1>SANDBOX</h1>
             <div
                 class="row"
                 style="height: calc(100% - 100px)"
             >
                 <div class="col-12 col-md-4 col-xl-3">
-                    <nx-menu [content]="content"></nx-menu>
+                    <nav
+                        cdkAccordion
+                        multi
+                    >
+                        @for (navSection of navSections() | keyvalue: nosort; track $index) {
+                            <cdk-accordion-item #accordionItem="cdkAccordionItem">
+                                <button
+                                    data-escape-global-style
+                                    class="level-1"
+                                    [class.level-1--route-active]="navSection.key === activeSection"
+                                    (click)="accordionItem.toggle()"
+                                >
+                                    {{ navSection.key | titlecase }}
+                                </button>
+                                @if (accordionItem.expanded) {
+                                    @for (item of navSection.value; track $index) {
+                                        <a
+                                            data-escape-global-style
+                                            class="level-3"
+                                            [routerLink]="item.link"
+                                            routerLinkActive="level-3--route-active"
+                                            (isActiveChange)="
+                                                $event ? (activeSection = navSection.key) : null
+                                            "
+                                            >{{ item.name }}</a
+                                        >
+                                    }
+                                }
+                            </cdk-accordion-item>
+                        }
+                    </nav>
                 </div>
 
                 <div class="col-12 col-md-8 col-xl-9 pt-3 pt-md-0">

@@ -59,7 +59,6 @@ export = createRule({
             params.forEach(param => {
                 if (
                     nonAssignments.includes(param.type) &&
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                     !(param as NonAssignment).typeAnnotation
                 ) {
                     context.report({
@@ -87,6 +86,15 @@ export = createRule({
                 checkForUntypedArgs(node);
             },
             ArrowFunctionExpression(node) {
+                const { parent } = node;
+                if (
+                    (parent.type === AST_NODE_TYPES.VariableDeclarator &&
+                        parent.id.typeAnnotation) ||
+                    (parent.type === AST_NODE_TYPES.PropertyDefinition && parent.typeAnnotation)
+                ) {
+                    return;
+                    // Ignore if arrow function is explicitly typed
+                }
                 checkForUntypedArgs(node);
             },
         };

@@ -8,6 +8,7 @@ import { ChannelPartnerGuard } from '@guards/channelPartnerGuard';
 import { FeatureGuardActivate, FeatureGuardMatch } from '@guards/feature.guard';
 import { OrgStateGuard } from '@guards/orgStateGuard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
+import { SandboxCloudGuard } from '@guards/sandbox.guard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
@@ -172,6 +173,7 @@ const lazyRoutes: Routes = [
     {
         path: 'sandbox',
         loadChildren: () => import('@pages/sandbox/sandbox.module').then(m => m.SandboxModule),
+        canLoad: [SandboxCloudGuard],
     },
     {
         path: 'doc/developers/api-tool',
