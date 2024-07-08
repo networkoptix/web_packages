@@ -123,6 +123,8 @@ nx-webgl-canvas {
         }
 
         & > .other-sites-toggle {
+            all: unset;
+            cursor: pointer;
             background-color: var(--other-sites-heading-background);
             padding: 0;
             position: absolute;
