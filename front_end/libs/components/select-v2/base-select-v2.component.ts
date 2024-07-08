@@ -13,6 +13,7 @@ import {
     model,
     WritableSignal,
     effect,
+    output,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { take, Observable } from 'rxjs';
@@ -35,6 +36,8 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
     // TODO: Search is not implemented yet
     @Input() search: boolean = false;
     @Input('aria-label') ariaLabel: string = '';
+
+    close = output<void>();
 
     @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLDivElement>;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
@@ -128,6 +131,7 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
             .detachments()
             .pipe(take(1))
             .subscribe(() => {
+                this.close.emit();
                 this.openState$$.set(DropdownState.Closed);
             });
         this.overlayRef.detach();

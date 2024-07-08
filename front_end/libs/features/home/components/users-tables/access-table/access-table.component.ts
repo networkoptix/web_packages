@@ -159,6 +159,8 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         return true;
     });
 
+    openedRoleTooltip?: NxTooltipV2Directive;
+
     getGroupId(row: UserRecord): string {
         return row.isOrgUser ? this.currentOrg$$().id : row.groupRoles[0].groupId;
     }
