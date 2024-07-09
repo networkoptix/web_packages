@@ -410,19 +410,19 @@ export const menus: configTypes.Menus = {
         icon: '',
         releases: {
             id: 'releases',
-            path: '',
+            path: 'releases',
         },
         betas: {
             id: 'betas',
-            path: '/betas',
+            path: 'betas',
         },
         patches: {
             id: 'patches',
-            path: '/patches',
+            path: 'patches',
         },
         other: {
             id: 'other',
-            path: '/other',
+            path: 'other',
         },
     },
     systemHealth: {

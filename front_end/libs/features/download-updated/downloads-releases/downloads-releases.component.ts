@@ -114,11 +114,15 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
             level1: [],
         };
 
+        if (!platform) {
+            platform = 'x';
+        }
+
         if (this.downloadData.releases) {
             this.content.level1.push({
                 id: menus.download.releases.id,
                 label: this.LANG.menu.titles.releases,
-                path: `${menus.download.releases.id}/${platform}`,
+                path: `${menus.download.releases.path}/${platform}`,
             });
         }
 
