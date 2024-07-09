@@ -198,8 +198,8 @@ const generateHslaStringFromTheme = memoize(
 
 const applyCoreSaturation = memoize((base: HexString, options: ThemeOptions): HexString => {
     const { coreSaturation = 15 } = options;
-    const [hue] = hex.hsl(base);
-    return hsl.hex([hue, coreSaturation, 50]) as HexString;
+    const [hue, saturation] = hex.hsl(base);
+    return hsl.hex([hue, Math.min(coreSaturation, saturation), 50]) as HexString;
 }, hash);
 
 export const withGeneratedColors = memoize(
