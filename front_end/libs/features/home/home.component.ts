@@ -9,9 +9,9 @@ import { filter, map, switchMap } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectRootOrganizations,
     selectAreChannelPartnersAndOrgsLoading,
     selectChannelPartners,
+    selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -45,7 +45,7 @@ export class NxHomeComponent implements OnInit {
         selectAreChannelPartnersAndOrgsLoading,
     );
 
-    organizations$ = this.store.select<Organization[]>(selectRootOrganizations);
+    organizations$ = this.store.select<Organization[]>(selectOrganizations);
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
     isNoSystemsOrgOrChP: boolean = false;
@@ -82,7 +82,7 @@ export class NxHomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: false }));
+        this.store.dispatch(CPActions.loadChannelPartnersAndOrgs({ includeChildOrgs: true }));
     }
 
     private initChannelPartners(
@@ -152,7 +152,8 @@ export class NxHomeComponent implements OnInit {
             );
         }
 
-        if (systems.some(sys => sys.accessRole !== 'owner')) {
+        const orgSet = new Set<string>(organizations.map(org => org.id));
+        if (systems.some(sys => !('organizationId' in sys) || !orgSet.has(sys.organizationId))) {
             if (redirectPath !== 'personal') {
                 redirectPath = 'shared';
             }
