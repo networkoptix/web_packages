@@ -26,6 +26,41 @@ other-frontend-checks:
         popd
       popd
 
+publish-storybook:
+  extends: .frontend-node
+  stage: build
+  when: always
+  rules:
+  - if: !reference [ .enable_for_mr ]
+    changes:
+      - front_end/libs/nx-components/**/*
+  script:
+    - |
+      pushd "front_end"
+        npm run publish-storybook
+      popd
+
+comment-storybook-link:
+  extends: .frontend-node
+  needs:
+  - job: publish-storybook
+  stage: approval
+  when: always
+  rules:
+  - if: !reference [ .enable_for_mr ]
+    changes:
+      - front_end/libs/nx-components/**/*
+  script:
+    - |
+      COMMENTS=$(curl -s --header "PRIVATE-TOKEN: $CANCEL_PIPELINE_ACCESS_TOKEN" "https://gitlab.nxvms.dev/api/v4/projects/$CI_MERGE_REQUEST_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes")
+      STORYBOOK_URL="https://$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME--668572a3e0db1b2fc73844d3.chromatic.com/"
+
+      if echo $COMMENTS | grep -q $STORYBOOK_URL; then
+        exit 0;
+      fi
+
+      curl --location --request POST "https://gitlab.nxvms.dev/api/v4/projects/$CI_MERGE_REQUEST_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" --header "PRIVATE-TOKEN: $CANCEL_PIPELINE_ACCESS_TOKEN" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Storybook deployed to [$STORYBOOK_URL]($STORYBOOK_URL). If you haven't already created an account on chromatic use the [invitation link](https://www.chromatic.com/start?inviteToken=chpi_e204b780790c4ff192bf2e2349b45dfb&appId=668572a3e0db1b2fc73844d3) to sign up.\" }"
+
 frontend-lint:
   extends: .frontend-node
   stage: check

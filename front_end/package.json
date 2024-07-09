@@ -80,7 +80,9 @@
         "serve:setup-wizard:quick": "npm run setVarSkin && nx run setup-wizard:serve:development --proxy-config proxy.conf.setup-wizard.js",
         "esprint": "export NX_TASK_TARGET_TARGET=lint; node esprintLimiter.js && eslint --ext .ts --fix || esprint check --fix --workers=$?",
         "esprint4": "export NX_TASK_TARGET_TARGET=lint; esprint check --fix --workers=4",
-        "esprint8": "export NX_TASK_TARGET_TARGET=lint; esprint check --fix --workers=8"
+        "esprint8": "export NX_TASK_TARGET_TARGET=lint; esprint check --fix --workers=8",
+        "chromatic": "npx chromatic --project-token=chpt_fe9845fefe57026 -d=dist/nx-components-storybook",
+        "publish-storybook": "nx run nx-components:publish-storybook"
     },
     "private": true,
     "dependencies": {
@@ -220,6 +222,7 @@
         "@vendure/ngx-translate-extract": "9.0.3",
         "autoprefixer": "^10.4.0",
         "browser-sync": "^3.0.0",
+        "chromatic": "^11.5.4",
         "eslint": "8.57.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-config-standard": "17.1.0",

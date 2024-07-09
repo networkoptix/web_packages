@@ -64,3 +64,17 @@ export const UseHctColors: Story = {
         },
     },
 };
+
+export const NewStoryTest: Story = {
+    args: {
+        testModel: 'New Story Test',
+        useHct: true,
+        coreSaturation: 5,
+    },
+    parameters: {
+        design: {
+            type: 'figma',
+            url: 'https://www.figma.com/file/g5g3gEjjNcg5YkxXiKNx9u/%F0%9F%9F%AA-Cloud-2.0-Design-System?node-id=5575-9725&t=9TS8o0KDvT5Yk7cf-0',
+        },
+    },
+};
