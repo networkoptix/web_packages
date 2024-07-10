@@ -748,7 +748,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceRecordSerializer(many=True),
                    extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Channel Partner'})
-    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination, filterset_class=filters.CreatedTsFilter)
     def service_changes_history(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
@@ -758,6 +758,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by').order_by('created_ts')
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
+        service_changes = self.filter_queryset(service_changes)
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
                                   serializer_context=context)
 
@@ -765,7 +766,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
                    responses=ChannelPartnerServiceSummarySerializer(many=True),
                    extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports}'
                                                f' for Channel Partner'})
-    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination, filterset_class=None)
     def service_changes_summary(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
