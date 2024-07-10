@@ -28,12 +28,15 @@ function getUsersByFilters(
 ): UserRecord[] {
     if (records) {
         return records.filter(user => {
-            return (
-                (filters.email && caseInsensitiveSearch(user.email, filters.email)) ||
-                (filters.name && caseInsensitiveSearch(user.fullName, filters.name)) ||
-                (filters.role &&
-                    user.roles?.some(role => caseInsensitiveSearch(role, filters.role)))
-            );
+            return filters.email && caseInsensitiveSearch(user.email, filters.email);
+            // Commented out for 23.3.3
+            // https://networkoptix.atlassian.net/browse/CLOUD-14078
+            // return (
+            //     (filters.email && caseInsensitiveSearch(user.email, filters.email)) ||
+            //     (filters.name && caseInsensitiveSearch(user.fullName, filters.name)) ||
+            //     (filters.role &&
+            //         user.roles?.some(role => caseInsensitiveSearch(role, filters.role)))
+            // );
         });
     }
     return [];
