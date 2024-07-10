@@ -56,6 +56,10 @@ export const selectOrganizations = createSelector(
     selectChannelPartnersState,
     state => state.organizations,
 );
+export const selectAllOrganizations = createSelector(selectChannelPartnersState, state => [
+    ...state.organizations,
+    ...state.rootOrganizations,
+]);
 
 export const selectChannelStructure = createSelector(
     selectChannelPartnersState,

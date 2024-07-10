@@ -41,7 +41,11 @@ export const setRootOrganizations = createAction(
 
 export const setChannelPartnersAndOrgs = createAction(
     '[Channel Partners] Set Channel Partners and Orgs',
-    props<{ channelPartners: ChannelPartner[]; organizations: Organization[] }>(),
+    props<{
+        channelPartners: ChannelPartner[];
+        organizations: Organization[];
+        rootOrganizations: Organization[];
+    }>(),
 );
 
 export const setChannelPartnersAndRootOrgs = createAction(

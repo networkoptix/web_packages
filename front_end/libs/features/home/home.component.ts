@@ -9,9 +9,9 @@ import { filter, map, switchMap } from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
+    selectAllOrganizations,
     selectAreChannelPartnersAndOrgsLoading,
     selectChannelPartners,
-    selectOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -45,7 +45,7 @@ export class NxHomeComponent implements OnInit {
         selectAreChannelPartnersAndOrgsLoading,
     );
 
-    organizations$ = this.store.select<Organization[]>(selectOrganizations);
+    organizations$ = this.store.select<Organization[]>(selectAllOrganizations);
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
     isNoSystemsOrgOrChP: boolean = false;
@@ -176,7 +176,11 @@ export class NxHomeComponent implements OnInit {
                 }
             }
         }
+
         homeNode.nodes = nodes;
+        // For the l2 menu to reset itself.
+        this.headerService.cycleL2Menu$.next();
+
         if (redirect && redirectPath && this.isPageLoading) {
             this.router.navigateByUrl(`home/${redirectPath}`).then(() => {
                 this.isNoSystemsOrgOrChP = false;

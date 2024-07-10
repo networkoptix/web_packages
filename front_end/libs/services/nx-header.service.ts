@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -47,6 +47,7 @@ export class NxHeaderService {
     }
 
     reportsSub: Subscription | undefined;
+    cycleL2Menu$ = new Subject<void>();
 
     constructor(
         private router: Router,

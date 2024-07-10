@@ -26,11 +26,9 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectCurrentOrganization,
-    selectCurrentPartnerId,
-    selectCurrentPartnerOrgs,
-    selectRootOrganizations,
     selectBanner,
     selectCurrentParentPartnerForChild,
+    selectAllOrganizations,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
@@ -163,10 +161,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     @Input() inChannelPartner: boolean = false;
 
     private account$$ = this.store.selectSignal<Account>(selectCurrentUser);
-    organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
-    currentPartnerOrganizations$$ =
-        this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
-    currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
+    organizations$$ = this.store.selectSignal<Organization[]>(selectAllOrganizations);
 
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     currentGroupId$$ = computed(() => this.cpService.paramStateHandler.state$$()?.params?.groupId);
@@ -255,12 +250,8 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
             )
             .subscribe(id => {
                 const orgs = this.organizations$$();
-                const partnerOrgs = this.currentPartnerOrganizations$$();
                 const currOrg = this.currentOrganization$$();
-                if (
-                    (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) ||
-                    !currOrg
-                ) {
+                if (!orgs.find(o => o.id === id) || !currOrg) {
                     this.isValidOrg = false;
                     this.isLoading = false;
                     return;

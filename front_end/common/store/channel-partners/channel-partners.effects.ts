@@ -32,19 +32,25 @@ export class ChannelPartnersEffects {
                     this.CPService.getChannelPartners(),
                     this.CPService.getOrganizations(includeChildOrgs),
                 ]).pipe(
-                    map(([channelPartners, organizations]) =>
-                        includeChildOrgs
+                    map(([channelPartners, organizations]) => {
+                        const partnerIds = new Set(channelPartners.map(cp => cp.id));
+                        return includeChildOrgs
                             ? {
                                   type: ChannelPartnerActions.setChannelPartnersAndOrgs.type,
                                   channelPartners,
-                                  organizations,
+                                  organizations: organizations.filter(org =>
+                                      partnerIds.has(org.channelPartner),
+                                  ),
+                                  rootOrganizations: organizations.filter(
+                                      org => !partnerIds.has(org.channelPartner),
+                                  ),
                               }
                             : {
                                   type: ChannelPartnerActions.setChannelPartnersAndRootOrgs.type,
                                   channelPartners,
                                   rootOrganizations: organizations,
-                              },
-                    ),
+                              };
+                    }),
                 ),
             ),
         );

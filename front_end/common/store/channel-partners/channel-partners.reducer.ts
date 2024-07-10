@@ -78,12 +78,13 @@ export const channelPartnersReducer = createReducer(
     ),
     on(
         ChannelPartnerActions.setChannelPartnersAndOrgs,
-        (state, { channelPartners, organizations }): ChannelPartnersState => ({
+        (state, { channelPartners, organizations, rootOrganizations }): ChannelPartnersState => ({
             ...state,
             hasStoreLoaded: true,
             channelPartnersAndOrgsLoadState: LoadingState.LOADED,
             channelPartners: sortEntityByName(channelPartners),
             organizations: sortEntityByName(organizations),
+            rootOrganizations: sortEntityByName(rootOrganizations),
         }),
     ),
     on(
