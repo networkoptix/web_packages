@@ -11,11 +11,11 @@ from django.dispatch import receiver
 from channel_partners.mixins.descendant_version_mixin import (
     DescendantVersionMixin,
 )
-from partners.models import (
-    Organization,
-    SystemGroup,
+from partners.models import SystemGroup
+from partners.receivers.utils import (
+    disable_for_loaddata,
+    handle_organization_id_change,
 )
-from partners.receivers.utils import disable_for_loaddata
 from partners.services.cache_service import CacheService
 
 
@@ -36,7 +36,7 @@ def on_system_group_saved(
             instance.increment_version()
         else:
             logger.debug("System Group created - Not Incrementing Version", system=instance.id)
-        Organization.increment_descendant_version_by_id(instance.organization_id)
+        handle_organization_id_change(instance)
         increment_descendant_version_of_ancestors(instance)
 
     transaction.on_commit(on_commit_callback)
@@ -47,7 +47,7 @@ def on_system_group_saved(
 def on_system_group_deleted(sender: Type[SystemGroup], instance: SystemGroup, **kwargs):
     def on_commit_callback():
         logger.debug("System Group deleted - Incrementing Version", system=instance.id)
-        Organization.increment_descendant_version_by_id(instance.organization_id)
+        handle_organization_id_change(instance)
         increment_descendant_version_of_ancestors(instance)
 
     transaction.on_commit(on_commit_callback)

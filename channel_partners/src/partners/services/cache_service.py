@@ -186,7 +186,7 @@ class CacheService:
         if version_type == "version":
             VersionMixin.increment_version_bulk(model, ids)
         else:
-            DescendantVersionMixin.increment_descendant_version_bulk(model, ids)
+            model.increment_descendant_version_bulk(ids)
 
     @staticmethod
     def get_items_of_multiple_types(keys: List[VersionKeyAndType]) -> Dict[str, Any]:

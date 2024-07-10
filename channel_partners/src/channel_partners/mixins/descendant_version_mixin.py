@@ -71,7 +71,7 @@ class DescendantVersionMixin(models.Model):
             updated_instance = self.__class__.objects.only("descendant_version").get(id=self.id)
             CacheService.set(cache_key, updated_instance.descendant_version)
 
-    @staticmethod
+    @classmethod
     @transaction.atomic
     def increment_descendant_version_bulk(cls, ids: List[Union[str, UUID]]) -> None:
         from partners.services.cache_service import CacheService

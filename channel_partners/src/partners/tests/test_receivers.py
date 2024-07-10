@@ -321,6 +321,42 @@ class TestReceivers:
 
         self.teardown_method()
 
+    def test_cloud_system_disconnect(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            cp_service_factory,
+            service_record_factory,
+            system_factory
+    ) -> None:
+        # Test Setup
+        channel_partner = channel_partner_factory()
+
+        organization = organization_factory(
+            channel_partner=channel_partner)
+
+        self.assert_both_descendant_versions(organization, 0)
+
+        system = system_factory(
+            organization=organization)
+
+        self.assert_both_descendant_versions(organization, 1)
+
+        # Test CloudSystem upon creation
+        self.assert_both_versions(system, 0)
+
+        service = cp_service_factory(
+            channel_partner=channel_partner)
+
+        # Service isn't connected to the system yet
+        self.assert_both_versions(system, 0)
+
+        system.disconnect_system()
+
+        # Test after disconnecting the service
+        self.assert_both_versions(system, 1)
+        self.assert_both_descendant_versions(organization, 2)
+
     def test_system_group_move_group(
             self,
             system_group_factory,
