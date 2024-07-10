@@ -220,7 +220,7 @@ export const ServiceChangesStore = signalStore(
             [rootGroupId, parentGroupId, systemId] -> ['rootGroupName / parentGroupName', 'systemName']  
             [rootGroupId, nestedGroupId, parentGroupId, systemId] -> ['rootGroupName / ... / parentGroupName', 'systemName']  
             */
-            getFormattedGroupPath(systemId): string[] {
+            getFormattedGroupPath(systemId: string): string[] {
                 const {
                     groupMap: groupMap$$,
                     systemMap: systemMap$$,
@@ -230,8 +230,10 @@ export const ServiceChangesStore = signalStore(
                 const systemMap = systemMap$$();
                 const systemToGroupPathMap = systemToGroupPathMap$$();
 
-                const groupPath = systemToGroupPathMap.get(systemId)!;
-                const systemName = systemMap.get(systemId)!.name;
+                const groupPath = systemToGroupPathMap.get(systemId) ?? [];
+                // It's possible for a system to have been removed from an org, but to still be in the service change records.
+                // In that case we don't have any info for the system other than its ID, so we'll show that
+                const systemName = systemMap.get(systemId)?.name ?? systemId;
                 const formattedGroupPath: string[] = [systemName];
                 if (groupPath.length === 1) {
                     formattedGroupPath.unshift('');
