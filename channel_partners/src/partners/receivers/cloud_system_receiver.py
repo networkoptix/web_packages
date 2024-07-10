@@ -1,5 +1,7 @@
 import structlog
 
+from partners.receivers.utils import handle_organization_id_change
+
 
 logger = structlog.getLogger()
 
@@ -11,7 +13,6 @@ def on_cloud_system_saved(
         groups_changed: bool,
         **kwargs
 ) -> None:
-    from partners.models import Organization
     """
     This is not being used as a full signal. It's connected durectly to the transaction.on_commit signal in the CloudSystem model.
     """
@@ -22,7 +23,7 @@ def on_cloud_system_saved(
             id=instance.id,
             path=instance.path)
         instance.increment_version()
-    Organization.increment_descendant_version_by_id(instance.organization_id)
+    handle_organization_id_change(instance)
     if groups_changed:
         logger.debug(
             "Cloud System Group Changed - Updating path in cache",

@@ -532,12 +532,12 @@ class CloudSystemId(
             new = self._state.adding
 
             # Check if the organization associated with the instance has changed
-            orgs_are_different: bool = self.organization_id != self._original_organization_id
+            orgs_are_different: bool = self.organization_id != self.get_audit_history("organization_id", idx=0)
 
             # Check if the system group associated with the instance has changed
-            system_groups_are_different: bool = self.system_group_id != self._original_system_group_id
+            system_groups_are_different: bool = self.system_group_id != self.get_audit_history("system_group_id", idx=0)
             if system_groups_are_different:
-                old_path = [self._original_system_group_id] + (self.path or [])
+                old_path = [self.get_audit_history("system_group_id", idx=0)] + (self.path or [])
 
             # Convert system_id to a UUIDField type
             self.system_id = models.UUIDField().to_python(self.system_id)
@@ -559,7 +559,7 @@ class CloudSystemId(
             # If this is not a new record and the organization has changed,
             # invalidate the cache for both the original and new organizations
             if orgs_are_different:
-                CloudSystemId.invalidate_cache(str(self._original_organization_id))
+                CloudSystemId.invalidate_cache(str(self.get_audit_history("organization_id", idx=0)))
                 CloudSystemId.invalidate_cache(str(self.organization_id))
 
             # System group is changed
@@ -632,17 +632,17 @@ class CloudSystemId(
         if self._state.adding:
             return
         if (
-                self.state == self._original_state
-                and self.organization_id == self._original_organization_id
-                and self.system_state == self._original_system_state
+                self.state == self.get_audit_history("state", idx=0)
+                and self.organization_id == self.get_audit_history("organization_id", idx=0)
+                and self.system_state == self.get_audit_history("system_state", idx=0)
         ):
             return
         if (
-                self.organization_id != self._original_organization_id
+                self.organization_id != self.get_audit_history("organization_id", idx=0)
                 or self.state == ChannelPartnerStates.SHUTDOWN
                 or self.system_state == CloudSystemStates.DELETED
         ):
-            self.negate_all_service(self._original_organization_id)
+            self.negate_all_service(self.get_audit_history("organization_id", idx=0))
 
     class CurrentServices(TypedDict):
         services: Dict[str, Dict[str, int]]
@@ -655,13 +655,14 @@ class CloudSystemId(
             self.service_records
             .filter(organization_id=organization_id or self.organization.id)
             .values('service', 'service__type').annotate(quantity=Sum('quantity'))}
-        self.current_services = {
+        current_services = {
             'services': services,
             'last_update_ts': round(timezone.now().timestamp())
         }
+        self.current_services = current_services
         if save_results:
             self.save()
-        return self.current_services
+        return current_services
 
     def get_current_services(self) -> Dict[str, Dict[str, int]]:
         current_services = self.current_services or self.calculate_current_services()
@@ -1044,7 +1045,7 @@ class ChannelPartner(
         effective_state_changed = False
 
         if not new:
-            if self._original_effective_state != self.effective_state:
+            if self.get_audit_history("effective_state", idx=0) != self.effective_state:
                 effective_state_changed = True
 
         with transaction.atomic():
@@ -1053,8 +1054,8 @@ class ChannelPartner(
             if self.parent_channel_partner:
                 if self.parent_channel_partner.parent_channel_partner or not self.cloud_host_id:
                     self.cloud_host = self.parent_channel_partner.cloud_host
-            name_changed = not new and self.name != self._original_name
-            old_name = self._original_name
+            name_changed = not new and self.name != self.get_audit_history("name", idx=0)
+            old_name = self.get_audit_history("name", idx=0)
             if new:
                 if self.parent_channel_partner is None or self.parent_channel_partner_id is None:
                     if ChannelPartner.objects.filter(parent_channel_partner__isnull=True).exclude(pk=self.pk).exists():
@@ -1246,9 +1247,9 @@ class ChannelPartner(
         self.effective_state = max(self.state, getattr(self.parent_channel_partner, 'effective_state', 0))
         if self._state.adding:
             return
-        if self.state == self._original_state:
+        if self.state == self.get_audit_history("state", idx=0):
             return
-        if self.effective_state == self._original_effective_state:
+        if self.effective_state == self.get_audit_history("effective_state", idx=0):
             return
         updated_ids = Organization.update_effective_states(
             self.organizations,
@@ -1452,12 +1453,12 @@ class Organization(
 
     def save(self, *args, **kwargs):
         new = self._state.adding
-        name_changed = not new and self.name != self._original_name
-        old_name = self._original_name
+        name_changed = not new and self.name != self.get_audit_history("name", idx=0)
+        old_name = self.get_audit_history("name", idx=0)
         effective_state_changed = False
 
         if not new:
-            if self._original_effective_state != self.effective_state:
+            if self.get_audit_history("effective_state", idx=0) != self.effective_state:
                 effective_state_changed = True
 
         with transaction.atomic():
@@ -1746,9 +1747,9 @@ class Organization(
         self.effective_state = max(self.state, self.channel_partner.effective_state)
         if self._state.adding:
             return False
-        if self.state == self._original_state:
+        if self.state == self.get_audit_history("state", idx=0):
             return False
-        if self.effective_state == self._original_effective_state:
+        if self.effective_state == self.get_audit_history("effective_state", idx=0):
             return False
         self.update_systems_effective_states(organization_effective_state=self.effective_state)
         return True
@@ -1869,9 +1870,9 @@ class SystemGroup(
     ):
         with transaction.atomic():
             new = self._state.adding
-            if not new and self.organization_id != self._original_organization_id:
+            if not new and self.organization_id != self.get_audit_history("organization_id", idx=0):
                 raise ValueError('Organization cannot be changed for a group.')
-            group_changed = self.parent_id != self._original_parent_id
+            group_changed = self.parent_id != self.get_audit_history("parent_id", idx=0)
             old_path = self.path
             if new or group_changed:
                 if self.parent_id:
@@ -2481,7 +2482,7 @@ class ServiceToSubChannelProperties(FieldOriginalMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         new = self._state.adding
-        price_changed = self.price != self._original_price
+        price_changed = self.price != self.get_audit_history("price", idx=0)
         with transaction.atomic():
             super().save(force_insert=force_insert,
                          force_update=force_update,
@@ -2535,7 +2536,7 @@ class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         new = self._state.adding
-        price_changed = self.price != self._original_price
+        price_changed = self.price != self.get_audit_history("price", idx=0)
         with transaction.atomic():
             super().save(force_insert=force_insert,
                          force_update=force_update,

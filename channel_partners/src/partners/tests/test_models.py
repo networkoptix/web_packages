@@ -28,7 +28,7 @@ from partners.utils.cache_keys import (
 
 class TestChannelPartnerEvent:
     def test_new_event(self, cloud_test_host, channel_partner_factory, organization_factory,
-                    system_factory, cp_service_factory, service_record_factory):
+                       system_factory, cp_service_factory, service_record_factory):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         service = cp_service_factory(channel_partner=cp)
@@ -37,7 +37,8 @@ class TestChannelPartnerEvent:
 
         ChannelPartnerEvent.new_event(ChannelPartnerEvent.SYSTEM_UPDATED, system=system, service=None)
         assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).count() == 1
-        assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).first().cloud_host == cloud_test_host
+        assert ChannelPartnerEvent.objects.filter(service=None,
+                                                  cloud_system=system).first().cloud_host == cloud_test_host
         ChannelPartnerEvent.new_event(ChannelPartnerEvent.SYSTEM_UPDATED, system=system, service=None)
         assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).count() == 1
 
@@ -92,7 +93,7 @@ class TestChannelPartner:
 
         ancestors = ChannelPartner.get_ancestors(successor_id=partners[4].id)
 
-        assert ancestors.count() == 4 + 1 # 4 channel partners and root nx channel partner
+        assert ancestors.count() == 4 + 1  # 4 channel partners and root nx channel partner
         partners_ids = [channel_partner.id for channel_partner in ancestors]
         assert set(partners_ids) == set([p.id for p in partners[:4] + [root_nx_channel_partner]])
 
@@ -196,6 +197,7 @@ class TestChannelPartner:
 
         # Test the method with the ChannelPartner, it should return 3
         assert ChannelPartner.get_direct_organization_children_count(cp) == 3
+
     def test_get_direct_organization_children_count_cache(self, channel_partner_factory, organization_factory):
         cp = channel_partner_factory()
         cache_key = f'direct_organization_children_count_{str(cp.id)}'
@@ -262,7 +264,6 @@ class TestChannelPartner:
         assert child.can_modify_organization_service_quantities(child_user.user) is True
         assert root.can_modify_organization_service_quantities(child_user.user) is False
         assert child.can_modify_organization_service_quantities(root_user.user) is False
-
 
     def test_calculate_monthly_changes(self, channel_partner_factory, organization_factory, system_factory,
                                        cp_service_factory, service_record_factory):
@@ -383,10 +384,11 @@ class TestOrganization:
         systems[4].save()
         disabled_system = system_factory(organization=org)
         services = [cp_service_factory() for _ in range(3)]
-        org_service_properties = [org_service_factory(organization=org, service=service, price=10-i) for i, service in enumerate(services)]
+        org_service_properties = [org_service_factory(organization=org, service=service, price=10 - i) for i, service in
+                                  enumerate(services)]
         service_records = []
         for i, service in enumerate(services):
-            service_records += [service_record_factory(service, sys, quantity=1+i) for sys in systems[i:]]
+            service_records += [service_record_factory(service, sys, quantity=1 + i) for sys in systems[i:]]
             service_record_factory(service, disabled_system)
         disabled_system.state = ChannelPartnerStates.SHUTDOWN
         disabled_system.save()
@@ -397,7 +399,6 @@ class TestOrganization:
             assert current_services[str(service.id)]["price"] == 10 - i
             assert current_services[str(service.id)]["quantity"] == (1 + i) * (len(systems) - i)
             assert current_services[str(service.id)]["total"] == (1 + i) * (10 - i) * (len(systems) - i)
-
 
     def test_has_perm(self, channel_partner_factory, cp_user_factory, organization_factory):
         cp = channel_partner_factory()
@@ -434,8 +435,10 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
-    def test_get_groups_structure_for_user(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
-                    system_group_factory, sys_group_user_factory, system_factory, arf, mock_auth_with_user):
+    def test_get_groups_structure_for_user(self, channel_partner_factory, cp_user_factory, organization_factory,
+                                           org_user_factory,
+                                           system_group_factory, sys_group_user_factory, system_factory, arf,
+                                           mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         cp_user = cp_user_factory(channel_partner=cp)
@@ -485,7 +488,7 @@ class TestOrganization:
 
         def check_all(children, parent_id=None):
             parent_children = (SystemGroup.objects
-                                .filter(parent=parent_id, organization=org).values_list('id', flat=True))
+                               .filter(parent=parent_id, organization=org).values_list('id', flat=True))
             cnt = 1 if parent_id else 0
             for group in children:
                 assert group['parent_id'] == parent_id
@@ -549,7 +552,7 @@ class TestEffectiveStates:
         depth = 3
 
         def gen_from_cp(parent, cur_depth=0):
-            if (cur_depth := cur_depth+1) > depth:
+            if (cur_depth := cur_depth + 1) > depth:
                 return
             for _ in range(self.degree):
                 child = channel_partner_factory(parent_channel_partner=parent)
@@ -655,7 +658,8 @@ class TestEffectiveStates:
         self.last_system.save()
         self.last_system.refresh_from_db()
         assert self.last_system.service_records.count() == self.degree * 2
-        last_sys_current_services = self.last_system.calculate_current_services()['services']
+        calculated_current_services = self.last_system.calculate_current_services()
+        last_sys_current_services = calculated_current_services['services']
         assert len(last_sys_current_services) == self.degree
         for service, usage in last_sys_current_services.items():
             assert usage['quantity'] == 0
@@ -760,7 +764,7 @@ class TestSystemGroup:
         self.group_0 = system_group_factory(organization=self.organization)
         groups.append(self.group_0)
         self.rel_0 = sys_group_user_factory(organization=self.organization,
-                                              group=self.group_0, cloud_user=cloud_user_factory())
+                                            group=self.group_0, cloud_user=cloud_user_factory())
         self.group_1 = system_group_factory(organization=self.organization)
         groups.append(self.group_1)
         self.group_0_0 = system_group_factory(organization=self.organization, parent=self.group_0)
@@ -775,7 +779,6 @@ class TestSystemGroup:
                                               group=self.group_1_1, cloud_user=self.user)
         for group in groups:
             system_factory(organization=self.organization, system_group=group)
-
 
     def test_has_overlap(self):
         has_overlap = self.group_0_1.has_overlaps(self.user)
@@ -1170,7 +1173,6 @@ class TestServiceUsage:
             ts=now + timedelta(hours=1)
         )
 
-
         types_statuses = ServiceUsage.check_excess(self.system)['types']
         assert types_statuses[ChannelPartnerService.LOCAL_RECORDING] == ServiceUsage.STATUS_OK
         assert types_statuses[ChannelPartnerService.ANALYTICS] == ServiceUsage.STATUS_OVER_USE
@@ -1214,7 +1216,6 @@ class TestServiceUsage:
         services_statuses = ServiceUsage.check_excess(self.system)['services']
         self.system.refresh_from_db()
         assert self.system.usage_issue_detected is False
-
 
     def test_get_latest_usages(self, service_usage_factory, cloud_storage_usage_factory):
         now = timezone.now()
