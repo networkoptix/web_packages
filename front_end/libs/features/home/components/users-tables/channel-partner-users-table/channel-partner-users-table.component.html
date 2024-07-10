@@ -31,7 +31,7 @@
                         <span
                             class="head-title ellipsis caption"
                             title="{{ head.value }}"
-                            >{{ head.value | translate }}</span
+                            >{{ head.value | nxTranslate }}</span
                         >
                     </div>
                 }
@@ -68,10 +68,7 @@
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: fullName"
                 >
-                    <nx-search-highlight
-                        [text]="row.fullName"
-                        [search]="searchingQuery$$()"
-                    ></nx-search-highlight>
+                    {{ row.fullName }}
                 </div>
                 <div
                     class="div-container-wrapper roles-container"
@@ -82,7 +79,7 @@
                     <div class="div-container roles">
                         @if (showRole(row)) {
                             <div class="readonly-role">
-                                {{ getDisplayRole(row) | translate }}
+                                {{ getDisplayRole(row) | nxTranslate }}
                             </div>
                         } @else {
                             <nx-select-v2
@@ -91,10 +88,7 @@
                             >
                                 @for (role of roles$$(); track role.id) {
                                     <nx-select-item [value]="role.id">
-                                        <nx-search-highlight
-                                            [text]="role.name | nxTranslate"
-                                            [search]="searchingQuery$$()"
-                                        ></nx-search-highlight>
+                                        {{ role.name | nxTranslate }}
                                     </nx-select-item>
                                 }
                             </nx-select-v2>
@@ -121,7 +115,7 @@
                                 hasOneAdmin$$()
                                     ? LANG.channelPartners.usersTable.adminTooltip
                                     : LANG.channelPartners.usersTable.infoToolTip
-                                ) | translate
+                                ) | nxTranslate
                             "
                             [src]="icons.dirTextButtons + 'info.svg'"
                             [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"

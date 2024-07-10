@@ -36,76 +36,70 @@
             />
             <nx-control-messages pattern="email"> </nx-control-messages>
         </nx-form-field>
-        <nx-form-field>
-            <label
-                nx-label
-                for="filterByName"
-                translate
-                >Full Name</label
-            >
-            <input
-                nx-input
-                class="form-control"
-                id="filterByName"
-                formControlName="name"
-            />
-        </nx-form-field>
-        <nx-form-field>
-            <label
-                nx-label
-                for="fiterByPermissionGroup"
-                translate
-                >Permission Group</label
-            >
-            <nx-select-v2
-                id="fiterByPermissionGroup"
-                formControlName="roleId"
-                [placeholder]="'Select' | translate"
-            >
-                @for (role of orgRoles$$(); track role.id) {
-                    <nx-select-item
-                        [value]="role.id"
-                        [selected]="roleIdControl.value === role.id"
-                        >{{ role.name }}</nx-select-item
-                    >
-                }
-            </nx-select-v2>
-            <nx-control-messages [state]="roleDescription$$() ? 'description' : null">
-                <nx-control-message
-                    key="description"
-                    [text]="roleDescription$$()"
-                ></nx-control-message>
-            </nx-control-messages>
-        </nx-form-field>
-        @if (!groups$$()) {
-            <nx-form-field>
-                <label
-                    nx-label
-                    for="filterByTargetFolder"
-                    translate
-                    >Has access to</label
-                >
-                <nx-org-tree-selector
-                    #orgTree
-                    id="filterByTargetFolder"
-                    formControlName="folder"
-                    [organization]="organization$$()"
-                    [groups]="groups$$()"
-                    [ngModel]="treeValue$$()"
-                    (ngModelChange)="treeValue$$.set($event)"
-                ></nx-org-tree-selector>
-            </nx-form-field>
-        }
+        <!--   // Commented out for 23.3.3-->
+        <!--   // https://networkoptix.atlassian.net/browse/CLOUD-14078-->
+        <!--        <nx-form-field>-->
+        <!--            <label-->
+        <!--                nx-label-->
+        <!--                for="filterByName"-->
+        <!--                translate-->
+        <!--                >Full Name</label-->
+        <!--            >-->
+        <!--            <input-->
+        <!--                nx-input-->
+        <!--                class="form-control"-->
+        <!--                id="filterByName"-->
+        <!--                formControlName="name"-->
+        <!--            />-->
+        <!--        </nx-form-field>-->
+        <!--        <nx-form-field>-->
+        <!--            <label-->
+        <!--                nx-label-->
+        <!--                for="fiterByPermissionGroup"-->
+        <!--                translate-->
+        <!--                >Permission Group</label-->
+        <!--            >-->
+        <!--            <nx-select-v2-->
+        <!--                id="fiterByPermissionGroup"-->
+        <!--                formControlName="roleId"-->
+        <!--                [placeholder]="'Select' | translate"-->
+        <!--            >-->
+        <!--                @for (role of orgRoles$$(); track role.id) {-->
+        <!--                    <nx-select-item-->
+        <!--                        [value]="role.id"-->
+        <!--                        [selected]="roleIdControl.value === role.id"-->
+        <!--                        >{{ role.name }}</nx-select-item-->
+        <!--                    >-->
+        <!--                }-->
+        <!--            </nx-select-v2>-->
+        <!--            <nx-control-messages [state]="roleDescription$$() ? 'description' : null">-->
+        <!--                <nx-control-message-->
+        <!--                    key="description"-->
+        <!--                    [text]="roleDescription$$()"-->
+        <!--                ></nx-control-message>-->
+        <!--            </nx-control-messages>-->
+        <!--        </nx-form-field>-->
+        <!--        @if (!groups$$()) {-->
+        <!--            <nx-form-field>-->
+        <!--                <label-->
+        <!--                    nx-label-->
+        <!--                    for="filterByTargetFolder"-->
+        <!--                    translate-->
+        <!--                    >Has access to</label-->
+        <!--                >-->
+        <!--                <nx-org-tree-selector-->
+        <!--                    #orgTree-->
+        <!--                    id="filterByTargetFolder"-->
+        <!--                    formControlName="folder"-->
+        <!--                    [organization]="organization$$()"-->
+        <!--                    [groups]="groups$$()"-->
+        <!--                    [ngModel]="treeValue$$()"-->
+        <!--                    (ngModelChange)="treeValue$$.set($event)"-->
+        <!--                ></nx-org-tree-selector>-->
+        <!--            </nx-form-field>-->
+        <!--        }-->
     </div>
     <div class="nx-modal__footer">
-        <button
-            type="button"
-            class="btn btn-default"
-            (click)="close()"
-            translate
-        >
-            Cancel
-        </button>
         <button
             type="button"
             class="btn btn-primary"
@@ -113,6 +107,14 @@
             (click)="setFilters()"
         >
             <span>{{ 'Apply' | nxTranslate }}</span>
+        </button>
+        <button
+            type="button"
+            class="btn btn-default"
+            (click)="close()"
+            translate
+        >
+            Cancel
         </button>
     </div>
 </form>

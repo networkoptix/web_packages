@@ -166,14 +166,17 @@ function getUsersByFilters(
 ): OrgUser[] {
     if (records) {
         return records.filter(user => {
-            return (
-                (filters.email && caseInsensitiveSearch(user.email, filters.email)) ||
-                (filters.name && caseInsensitiveSearch(user.fullName, filters.name)) ||
-                (filters.role &&
-                    user.roles?.some(role => caseInsensitiveSearch(role, filters.role))) ||
-                (filters.folder &&
-                    user.groupRoles?.some(role => caseInsensitiveSearch(role.name, filters.folder)))
-            );
+            return filters.email && caseInsensitiveSearch(user.email, filters.email);
+            // Commented out for 23.3.3
+            // https://networkoptix.atlassian.net/browse/CLOUD-14078
+            // return (
+            //     (filters.email && caseInsensitiveSearch(user.email, filters.email)) ||
+            //     (filters.name && caseInsensitiveSearch(user.fullName, filters.name)) ||
+            //     (filters.role &&
+            //         user.roles?.some(role => caseInsensitiveSearch(role, filters.role))) ||
+            //     (filters.folder &&
+            //         user.groupRoles?.some(role => caseInsensitiveSearch(role.name, filters.folder)))
+            // );
         });
     }
     return [];
@@ -182,13 +185,16 @@ function getUsersByFilters(
 function getUsersByModel(records: OrgUser[] | undefined, query: string): OrgUser[] {
     if (records) {
         return records.filter(user => {
-            return (
-                query &&
-                (caseInsensitiveSearch(user.email, query) ||
-                    caseInsensitiveSearch(user.fullName, query) ||
-                    user.roles?.some(role => caseInsensitiveSearch(role, query)) ||
-                    user.groupRoles?.some(role => caseInsensitiveSearch(role.name, query)))
-            );
+            return query && caseInsensitiveSearch(user.email, query);
+            // Commented out for 23.3.3
+            // https://networkoptix.atlassian.net/browse/CLOUD-14078
+            // return (
+            //     query &&
+            //     (caseInsensitiveSearch(user.email, query) ||
+            //         caseInsensitiveSearch(user.fullName, query) ||
+            //         user.roles?.some(role => caseInsensitiveSearch(role, query)) ||
+            //         user.groupRoles?.some(role => caseInsensitiveSearch(role.name, query)))
+            // );
         });
     }
     return [];

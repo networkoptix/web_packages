@@ -63,10 +63,7 @@
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: fullName"
                 >
-                    <nx-search-highlight
-                        [text]="row.fullName"
-                        [search]="searchingQuery$$()"
-                    ></nx-search-highlight>
+                    {{ row.fullName }}
                 </div>
 
                 <div
@@ -100,25 +97,16 @@
                             [src]="icons.dir + 'organization_2.svg'"
                             [svgStyle]="{ 'width.px': '20px' }"
                         ></svg-icon>
-                        <nx-search-highlight
-                            [text]="currentOrg$$().name"
-                            [search]="searchingQuery$$()"
-                        ></nx-search-highlight>
+                        {{ currentOrg$$().name }}
                     } @else {
                         <svg-icon
                             [src]="icons.dir + 'folder2.svg'"
                             [svgStyle]="{ 'width.px': '20px' }"
                         ></svg-icon>
                         @if (!row?.groupRoles) {
-                            <nx-search-highlight
-                                [text]="row.accessLevel.name"
-                                [search]="searchingQuery$$()"
-                            ></nx-search-highlight>
+                            {{ row.accessLevel.name }}
                         } @else if (row.groupRoles.length === 1) {
-                            <nx-search-highlight
-                                [text]="row.groupRoles[0].name"
-                                [search]="searchingQuery$$()"
-                            ></nx-search-highlight>
+                            {{ row.groupRoles[0].name }}
                         } @else {
                             <span>{{
                                 LANG.systemsCount | translate: { count: row.groupRoles.length }
@@ -135,10 +123,7 @@
                     <div class="div-container roles">
                         @if (!canUpdateUserRole(row)) {
                             <div class="readonly-role">
-                                <nx-search-highlight
-                                    [text]="getDisplayRole(row)"
-                                    [search]="searchingQuery$$()"
-                                ></nx-search-highlight>
+                                {{ getDisplayRole(row) | nxTranslate }}
                             </div>
                         } @else {
                             <nx-select-v2
@@ -158,11 +143,7 @@
                                             $event ? (openedRoleTooltip = roleSelectTooltip) : null
                                         "
                                     >
-                                        <nx-search-highlight
-                                            [text]="permissionName(role.id)"
-                                            [search]="searchingQuery$$()"
-                                        >
-                                        </nx-search-highlight>
+                                        {{ role.name | nxTranslate }}
                                     </nx-select-item>
                                 }
                             </nx-select-v2>
