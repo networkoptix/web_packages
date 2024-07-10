@@ -9,6 +9,7 @@
     class="menu-trigger-btn"
     #monthsMenuTrigger
     data-escape-global-style
+    [cdkMenuPosition]="menuPosition"
     [cdkMenuTriggerFor]="monthsMenu"
     (cdkMenuClosed)="isMenuOpen.set(false)"
     (cdkMenuOpened)="isMenuOpen.set(true)"

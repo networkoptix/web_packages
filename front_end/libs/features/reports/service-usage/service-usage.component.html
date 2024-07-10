@@ -1,35 +1,33 @@
-@if (serviceUsageStore.isLoading()) {
-    <nx-pre-loader></nx-pre-loader>
-} @else {
-    <h2
-        translate
-        class="heading"
-    >
-        Service Usage
-    </h2>
-    <div class="info">
-        <p>
-            {{
-                LANG.channelPartnerReports.customerName
-                    | translate: { customerName: selectedEntityName$$() }
-            }}
-        </p>
-        <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
-    </div>
-    <div class="service-usage-table-wrapper">
-        @if (!hasError()) {
-            <nx-service-usage-table
-                [records]="formattedServiceUsageRecords$$()"
-                [startTs]="requestStartString()"
-            ></nx-service-usage-table>
-        } @else {
-            <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
-        }
-    </div>
-    <nx-month-select
-        [monthIndex]="monthIndex()"
-        (monthIndexChange)="monthIndex.set($event)"
-        [year]="year()"
-        (yearChange)="year.set($event)"
-    ></nx-month-select>
-}
+<h2
+    translate
+    class="heading"
+>
+    Service Usage
+</h2>
+<div class="info">
+    <p>
+        {{
+            LANG.channelPartnerReports.customerName
+                | translate: { customerName: selectedEntityName$$() }
+        }}
+    </p>
+    <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
+</div>
+<div class="service-usage-table-wrapper">
+    @if (serviceUsageStore.isLoading()) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else if (!hasError()) {
+        <nx-service-usage-table
+            [records]="formattedServiceUsageRecords$$()"
+            [startTs]="requestStartString()"
+        ></nx-service-usage-table>
+    } @else {
+        <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
+    }
+</div>
+<nx-month-select
+    [monthIndex]="monthIndex()"
+    (monthIndexChange)="monthIndex.set($event)"
+    [year]="year()"
+    (yearChange)="year.set($event)"
+></nx-month-select>

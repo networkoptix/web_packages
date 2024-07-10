@@ -1,41 +1,39 @@
-@if (serviceUsageDetailsStore.isLoading()) {
-    <nx-pre-loader></nx-pre-loader>
-} @else {
-    <div
-        class="go-back"
-        translate
-        (click)="goBack()"
-    >
-        <svg-icon
-            class="left-arrow-icon"
-            nx-add-svg-src
-            [src]="icons.dirTextButtons + 'arrow_left.svg'"
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-        ></svg-icon>
-        All Services
-    </div>
-    <h2 class="heading">
-        {{ serviceUsageDetailsStore.selectedService()?.displayName }}
-    </h2>
-    <div class="info">
-        <p>
-            {{
-                LANG.channelPartnerReports.customerName
-                    | translate: { customerName: selectedEntityName$$() }
-            }}
-        </p>
-    </div>
-    <div class="service-details-table-wrapper">
-        @if (!hasError()) {
-            <nx-service-details-table
-                [records]="formattedServiceDetailRecords$$()"
-                [totals]="serviceDetailTotals$$()"
-                [serviceId]="serviceId$$()"
-                [entityId]="entityId$$()"
-                [startTs]="startTs()"
-            ></nx-service-details-table>
-        } @else {
-            <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
-        }
-    </div>
-}
+<div
+    class="go-back"
+    translate
+    (click)="goBack()"
+>
+    <svg-icon
+        class="left-arrow-icon"
+        nx-add-svg-src
+        [src]="icons.dirTextButtons + 'arrow_left.svg'"
+        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+    ></svg-icon>
+    All Services
+</div>
+<h2 class="heading">
+    {{ serviceUsageDetailsStore.selectedService()?.displayName }}
+</h2>
+<div class="info">
+    <p>
+        {{
+            LANG.channelPartnerReports.customerName
+                | translate: { customerName: selectedEntityName$$() }
+        }}
+    </p>
+</div>
+<div class="service-details-table-wrapper">
+    @if (serviceUsageDetailsStore.isLoading()) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else if (!hasError()) {
+        <nx-service-details-table
+            [records]="formattedServiceDetailRecords$$()"
+            [totals]="serviceDetailTotals$$()"
+            [serviceId]="serviceId$$()"
+            [entityId]="entityId$$()"
+            [startTs]="startTs()"
+        ></nx-service-details-table>
+    } @else {
+        <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
+    }
+</div>
