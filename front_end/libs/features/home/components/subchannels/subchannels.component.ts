@@ -14,7 +14,7 @@ import * as CPActions from '@common/store/channel-partners/channel-partners.acti
 import {
     selectChannelPartners,
     selectCurrentPartnerId,
-    selectCurrentSubchannelPartners,
+    selectCurrentSubChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
@@ -67,7 +67,7 @@ export class NxSubchannelsComponent {
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
     currentPartnerId$$ = toSignal(this.currentPartnerId$);
     channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
-    subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
+    subchannels$$ = this.store.selectSignal(selectCurrentSubChannelPartners);
     filteredSubchannels$$ = computed(() => {
         const search = this.search$$();
         const currentSubchannels = this.subchannels$$();
@@ -104,7 +104,7 @@ export class NxSubchannelsComponent {
             )
             .subscribe(partners => {
                 this.store.dispatch(
-                    CPActions.setCurrentSubchannelPartners({
+                    CPActions.setCurrentSubChannelPartners({
                         currentSubchannels: partners.sort((a, b) => a.name.localeCompare(b.name)),
                     }),
                 );
@@ -119,7 +119,7 @@ export class NxSubchannelsComponent {
             }
             const updatedSubchannels = [...this.subchannels$$(), newSubchannel];
             this.store.dispatch(
-                CPActions.setCurrentSubchannelPartners({ currentSubchannels: updatedSubchannels }),
+                CPActions.setCurrentSubChannelPartners({ currentSubchannels: updatedSubchannels }),
             );
         });
     }

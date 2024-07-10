@@ -111,9 +111,9 @@ export const selectCurrentParentChannelPartnerId = createSelector(
     state => state.currentParentPartnerId,
 );
 
-export const selectCurrentSubchannelPartners = createSelector(
+export const selectCurrentSubChannelPartners = createSelector(
     selectChannelPartnersState,
-    state => state.currentSubchannels,
+    state => state.currentSubChannels,
 );
 
 export const selectCurrentPartner = createSelector(
@@ -122,9 +122,9 @@ export const selectCurrentPartner = createSelector(
     (partners, id) => partners?.find(partner => partner.id === id),
 );
 
-export const selectCurrentPartnerInfo = createSelector(
-    selectCurrentPartner,
-    partner => partner?.supportInformation,
+export const selectCurrentPartnerSupportInfo = createSelector(
+    selectChannelPartnersState,
+    state => state.currentPartnerSupportInformation,
 );
 
 export const selectCurrentOrganization = createSelector(
@@ -146,7 +146,7 @@ export const selectCurrentOrganization = createSelector(
 export const selectSubchannelPartner = (
     id: string,
 ): MemoizedSelector<ChannelPartnersState, ChannelPartner> =>
-    createSelector(selectCurrentSubchannelPartners, (partners: ChannelPartner[]) =>
+    createSelector(selectCurrentSubChannelPartners, (partners: ChannelPartner[]) =>
         partners.find(partner => partner.id === id),
     );
 

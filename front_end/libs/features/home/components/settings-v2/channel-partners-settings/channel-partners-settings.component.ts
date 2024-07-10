@@ -12,7 +12,7 @@ import { distinctUntilChanged, firstValueFrom, map, of } from 'rxjs';
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
     selectCurrentPartnerParent,
-    selectCurrentSubchannelPartners,
+    selectCurrentSubChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -57,7 +57,7 @@ import { NxSettingsGeneralV2Component } from '../../settings-v2/components/gener
 })
 export class NxChannelPartnersSettingsComponent extends SettingsBase implements OnInit {
     parentPartner$$ = this.store.selectSignal(selectCurrentPartnerParent);
-    subchannelPartners$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
+    subchannelPartners$$ = this.store.selectSignal(selectCurrentSubChannelPartners);
     updateStateProcess: Process;
     updateCPProcess: Process;
     // eslint-disable-next-line nx/signal-naming-convention
@@ -227,7 +227,7 @@ export class NxChannelPartnersSettingsComponent extends SettingsBase implements 
         );
         subchannelPartners[subchannelIndex] = updatedSubchannel;
         this.store.dispatch(
-            cpActions.setCurrentSubchannelPartners({
+            cpActions.setCurrentSubChannelPartners({
                 currentSubchannels: subchannelPartners,
             }),
         );
