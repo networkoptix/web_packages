@@ -9,7 +9,7 @@ import { HomeSystemListComponent } from '@pages/home/components/systems-list/sys
 import { Account } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import { selectOrganizations } from '@store/channel-partners/channel-partners.selectors';
+import { selectAllOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { NgChanges } from '@utils/ng-changes';
 
 import { SystemsDisplayMode } from '../home.types';
@@ -40,11 +40,11 @@ export class NxSystemsComponent implements OnChanges {
         const filterByIsMine = showPersonal
             ? (sys: NxSystemInfo) => sys.isMine
             : (sys: NxSystemInfo) => !sys.isMine;
-        const systems = this.systemsService.directAccessSystems$$().filter(filterByIsMine);
+        const systems = this.systemsService.directAccessSystems$$();
         if (!showPersonal) {
             const orgSet = new Set<string>(
                 this.store
-                    .selectSignal(selectOrganizations)()
+                    .selectSignal(selectAllOrganizations)()
                     .map(org => org.id),
             );
             return systems.filter(

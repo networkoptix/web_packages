@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxMenusService } from '@services/menus.service';
@@ -30,6 +31,19 @@ export class NxNewHeaderComponent {
     loggedIn$ = this.store.select(accountSelectors.selectIsAuthenticated);
     isMobile$ = new BehaviorSubject<boolean>(false);
     systemCount$: Observable<number>;
+
+    cycleSub = this.headerService.cycleL2Menu$
+        .pipe(debounceTime(500), takeUntilDestroyed())
+        .subscribe(() => {
+            const nodes = this.displayedNodes;
+            if (nodes) {
+                const nodes = this.displayedNodes;
+                this.selectedNode = this.findNodeBasedOnURL(
+                    nodes,
+                    this.headerService.currentLocation?.path || this.router.url,
+                );
+            }
+        });
 
     constructor(
         public headerService: NxHeaderService,
