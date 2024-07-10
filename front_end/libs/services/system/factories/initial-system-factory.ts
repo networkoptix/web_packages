@@ -53,6 +53,7 @@ export function nxSystemFactory(
     serverId?: string,
     userId?: string,
     version?: number,
+    skipSettingSystem?: boolean,
 ): SystemClasses & BaseModules {
     const nxSystemOld = new NxSystemOldModule(
         currentUserEmail,
@@ -60,6 +61,7 @@ export function nxSystemFactory(
         serverId,
         userId,
         version,
+        skipSettingSystem,
     );
     const baseSystem = getBaseSystem(version as SystemVersion, systemId).with(nxSystemOld);
 

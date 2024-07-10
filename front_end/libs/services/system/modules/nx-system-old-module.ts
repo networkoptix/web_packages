@@ -221,6 +221,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         serverId?: string,
         userId?: string,
         version?: number,
+        public skipSettingSystem = false,
     ) {
         super();
         const injector = NxSystemBase.INJECTOR;
@@ -375,6 +376,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 serverId,
                 unauthorizedCallback,
                 version: this.version,
+                skipSettingSystem: this.skipSettingSystem,
             });
         }
 

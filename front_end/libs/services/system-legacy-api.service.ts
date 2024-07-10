@@ -182,6 +182,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         healthService: NxHealthService,
         appState: NxAppStateService,
         injector: Injector,
+        public skipSettingSystem = false,
     ) {
         super();
         this.version = 0;

@@ -134,6 +134,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         healthService: NxHealthService,
         appState: NxAppStateService,
         injector: Injector,
+        skipSettingSystem = false,
     ) {
         super(
             http,
@@ -147,6 +148,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             healthService,
             appState,
             injector,
+            skipSettingSystem,
         );
         this.version = NxSystemRestAPI2.VERSION;
     }

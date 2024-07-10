@@ -210,7 +210,11 @@
                             @if (
                                 !otherSystems[0]
                                     ? 'noResults'
-                                    : otherSystems[0].details?.id === 'noResults'
+                                    : [
+                                            'noResults',
+                                            'twoFactorNotEnabled',
+                                            'twoFactorNotAvailable'
+                                        ].includes(otherSystems[0].details!.id)
                                       ? otherSystems[0].name
                                       : '';
                                 as placeholderName
@@ -235,6 +239,66 @@
                                                     translate
                                                 >
                                                     Retry
+                                                </nx-async-action-button>
+                                                <button
+                                                    class="btn btn-secondary"
+                                                    type="button"
+                                                    (click)="currentSite$$.set('')"
+                                                    translate
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        }
+
+                                        @case ('twoFactorNotEnabled') {
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    sitePlaceholder;
+                                                    context: {
+                                                        svg: 'lock',
+                                                        content:
+                                                            LANG.layouts.otherSystems.placeholders
+                                                                .twoFactorNotEnabled
+                                                    }
+                                                "
+                                            ></ng-container>
+                                            <div>
+                                                <nx-async-action-button
+                                                    [action]="authenticateTwoFactorAction"
+                                                    translate
+                                                >
+                                                    Authenticate
+                                                </nx-async-action-button>
+                                                <button
+                                                    class="btn btn-secondary"
+                                                    type="button"
+                                                    (click)="currentSite$$.set('')"
+                                                    translate
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        }
+
+                                        @case ('twoFactorNotAvailable') {
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    sitePlaceholder;
+                                                    context: {
+                                                        svg: 'lock',
+                                                        content:
+                                                            LANG.layouts.otherSystems.placeholders
+                                                                .twoFactorNotAvailable
+                                                    }
+                                                "
+                                            ></ng-container>
+                                            <div>
+                                                <nx-async-action-button
+                                                    [action]="enableTwoFactorAction"
+                                                    translate
+                                                >
+                                                    Enable Two-Factor
                                                 </nx-async-action-button>
                                                 <button
                                                     class="btn btn-secondary"

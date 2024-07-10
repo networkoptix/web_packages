@@ -40,12 +40,14 @@ export class NxSystemAPIService {
         serverId,
         unauthorizedCallback = () => Promise.resolve(),
         version = 0,
+        skipSettingSystem = false,
     }: {
         user?: string;
         systemId?: string;
         serverId?: string;
         unauthorizedCallback?: UnauthorizedCallback;
         version?: number;
+        skipSettingSystem?: boolean;
     } = {}):
         | NxSystemAPI
         | NxSystemRestAPI
@@ -75,6 +77,7 @@ export class NxSystemAPIService {
             this.healthService,
             this.appState,
             this.injector,
+            skipSettingSystem,
         ] as const;
 
         if (useRest || environment.isLocal) {

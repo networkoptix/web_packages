@@ -243,6 +243,14 @@
                 },
                 "noMatches": {
                     "title": "No Matches Found"
+                },
+                "twoFactorNotEnabled": {
+                    "title": "Two Factor Required",
+                    "description": "Two factor authentication is required to connect to this system. Please authenticate."
+                },
+                "twoFactorNotAvailable": {
+                    "title": "Two Factor Required",
+                    "description": "Two factor authentication is required to connect to this system. Please enable it in your account settings."
                 }
             }
         },

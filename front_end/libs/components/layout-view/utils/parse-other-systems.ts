@@ -3,6 +3,7 @@ import { groupBy } from 'lodash-es';
 import { ResourceType } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { OrganizationAndStructure } from '@pages/home/store/groups/groups-cache.store';
+import { Account } from '@services/account.service/account';
 import { CloudSystemLight } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
@@ -23,6 +24,7 @@ export const parseOtherSystems = (
     hasQuery = true,
     openNodes: string[] = [],
     orgStructures: OrganizationAndStructure[] = [],
+    account: Account | undefined = undefined,
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
     const allSystems = otherSystems
@@ -38,32 +40,49 @@ export const parseOtherSystems = (
 
             const normalizedSystem = normalizeSystemForLayout(system);
 
+            const requires2Fa = normalizedSystem.system2faEnabled;
+
+            const placeholder = [
+                {
+                    name: (() => {
+                        if (normalizedSystem.status === 'offline') {
+                            return staticLang.layouts.otherSystems.systemOffline;
+                        }
+
+                        if (loadedSystemIds.includes(system.id)) {
+                            if (!requires2Fa || account?.account2faEnabled) {
+                                return staticLang.layouts.otherSystems.noCameras;
+                            }
+
+                            return account?.totpExistsForAccount
+                                ? 'twoFactorNotEnabled'
+                                : 'twoFactorNotAvailable';
+                        }
+
+                        return staticLang.layouts.otherSystems.loadingCameras;
+                    })(),
+                    details: {
+                        id: (() => {
+                            if (
+                                normalizedSystem.status === 'offline' ||
+                                loadedSystemIds.includes(system.id)
+                            ) {
+                                return requires2Fa ? 'twoFactorNotEnabled' : 'noResults';
+                            }
+                            return 'loading;';
+                        })(),
+                    },
+                    type: null,
+                    aspectRatio: 0,
+                },
+            ];
+
             return {
                 id: system.id,
                 type: ResourceType.SYSTEM,
                 name: system.name,
                 details: normalizedSystem,
-                children: parsedCameras.length
-                    ? parsedCameras
-                    : [
-                          {
-                              name:
-                                  normalizedSystem.status === 'offline'
-                                      ? staticLang.layouts.otherSystems.systemOffline
-                                      : loadedSystemIds.includes(system.id)
-                                        ? staticLang.layouts.otherSystems.noCameras
-                                        : staticLang.layouts.otherSystems.loadingCameras,
-                              details: {
-                                  id:
-                                      normalizedSystem.status === 'offline' ||
-                                      loadedSystemIds.includes(system.id)
-                                          ? 'noResults'
-                                          : 'loading',
-                              },
-                              type: null,
-                              aspectRatio: 0,
-                          },
-                      ],
+                children: parsedCameras.length ? parsedCameras : placeholder,
             };
         });
 

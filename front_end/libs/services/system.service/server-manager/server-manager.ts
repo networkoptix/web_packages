@@ -37,7 +37,7 @@ import { NxSystemServer } from '../types/servers.types';
 
 type PartialSystem = Pick<
     NxSystemOldModule,
-    'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'
+    'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version' | 'skipSettingSystem'
 >;
 
 type LicenseBlockNames =
@@ -140,6 +140,7 @@ export class ServerManager {
                     serverId: server.id,
                     unauthorizedCallback,
                     version: this.system.version,
+                    skipSettingSystem: this.system.skipSettingSystem,
                 });
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);

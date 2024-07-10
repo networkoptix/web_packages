@@ -156,6 +156,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         healthService: NxHealthService,
         appState: NxAppStateService,
         injector: Injector,
+        skipSettingSystem = false,
     ) {
         super(
             http,
@@ -169,6 +170,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             healthService,
             appState,
             injector,
+            skipSettingSystem,
         );
         this.version = 5.0;
         this.injector = injector;
@@ -265,6 +267,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             catchError(e => {
                 const location = window.location;
                 if (
+                    !this.skipSettingSystem &&
                     !environment.isLocal &&
                     [401, 403, 422].includes(e.status) &&
                     location.href.includes(this.systemId) &&
@@ -282,7 +285,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         let cloudLoginObservable: Observable<any> = of(true);
         if (isSystem) {
             this.accessToken = tokens.access_token;
-            cloudLoginObservable = this.setAccessTokenAsCookie();
+            if (tokens.error !== 'second_factor_required') {
+                cloudLoginObservable = this.setAccessTokenAsCookie();
+            }
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }

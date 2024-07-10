@@ -9,7 +9,7 @@ import {
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
@@ -30,6 +30,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,6 +45,7 @@ import {
     from,
     fromEvent,
     interval,
+    lastValueFrom,
     Observable,
     of,
     Subject,
@@ -93,13 +95,16 @@ import {
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { GroupsCacheStore } from '@pages/home/store/groups/groups-cache.store';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
+import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types/layouts.types';
 import {
@@ -2293,6 +2298,44 @@ export class NxLayoutGridComponent {
             this.layoutStateService
                 .loadSite(this.currentSiteId$$()!, { cameras: true, servers: true })
                 .pipe(debounceTime(1_000), delay(new Date(Date.now() + 2_500))),
+        success: () => {},
+        error: () => {},
+    };
+
+    private dialogs = inject(NxDialogsService);
+    private accountService = inject(NxAccountService);
+    private cloudApi = inject(NxCloudApiService);
+    private oauthService = inject(OauthService);
+    private routerState = inject(Router);
+
+    enableTwoFactorAction = {
+        action: () =>
+            this.dialogs.account2faEnable().then(enabled => {
+                if (enabled) {
+                    return this.accountService.get(true);
+                }
+            }),
+        success: () => {
+            this.layoutStateService.loadSite(this.currentSiteId$$()!, {
+                cameras: true,
+                servers: true,
+            });
+        },
+        error: () => {},
+    };
+    authenticateTwoFactorAction = {
+        action: async () => {
+            const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
+            this.oauthService.redirectOauth({
+                state: 'system2faAuth',
+                email: this.accountService.account.email,
+                accessToken,
+                redirectTo: Location.joinWithSlash(
+                    window.location.origin,
+                    this.routerState.routerState.snapshot.url,
+                ),
+            });
+        },
         success: () => {},
         error: () => {},
     };
