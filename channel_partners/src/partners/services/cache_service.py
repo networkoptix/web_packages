@@ -1,3 +1,4 @@
+import hashlib
 from collections import defaultdict
 from typing import (
     Any,
@@ -12,6 +13,7 @@ from typing import (
 )
 from uuid import UUID
 
+import redis.exceptions
 import structlog
 from django.core.cache import caches
 from django.db import (
@@ -32,6 +34,7 @@ from partners.models import (
 )
 from partners.services.caching.cache_enums import CachedFieldChoiceEnum
 from partners.utils.cache_keys import get_version_cache_key
+from tools.helpers import Singleton
 
 
 cache = caches["dependent_cache"]
@@ -82,6 +85,89 @@ def validate_version_type(keys: List[VersionKeyAndType]) -> None:
             validate_model(model, mixin)
         else:
             raise ValueError(f"Invalid version type: {version_type}")
+
+
+def get_set_versions_in_cache_script() -> Tuple[str, str]:
+    script_name = "set_versions_in_cache_script"
+    script = """
+                    local start_time = tonumber(ARGV[1])
+                    local time_parts = redis.call('TIME')
+                    local current_time = tonumber(time_parts[1] .. string.format("%06d", time_parts[2]))
+                
+                    local keys_to_check = {}
+                    local values_to_set = {}
+                    local successful_keys = {}
+                    local unsuccessful_keys = {}
+                
+                    for i = 2, #ARGV, 2 do
+                        local key_to_set = ARGV[i]
+                        local value_to_set = ARGV[i + 1]
+                        table.insert(keys_to_check, key_to_set .. ':time')
+                        table.insert(values_to_set, {key_to_set, value_to_set})
+                    end
+                
+                    local stored_times = redis.call('MGET', unpack(keys_to_check))
+                
+                    for i = 1, #values_to_set do
+                        local key_to_set = values_to_set[i][1]
+                        local value_to_set = values_to_set[i][2]
+                        local key_to_check = keys_to_check[i]
+                        local stored_time = stored_times[i]
+                
+                        if value_to_set == '' or not stored_time or start_time > tonumber(stored_time) then
+                            redis.call('SET', key_to_set, value_to_set)
+                            redis.call('SET', key_to_check, current_time)
+                            table.insert(successful_keys, key_to_set)
+                        else
+                            table.insert(unsuccessful_keys, key_to_set)
+                        end
+                    end
+                
+                    return {successful_keys, unsuccessful_keys}
+                    """
+    return script_name, script
+
+
+class CacheScriptService(metaclass=Singleton):
+    def __init__(self):
+        self._registered_scripts: Dict[str, str] = {}
+        # Store original script texts
+        self._script_texts: Dict[str, str] = {}
+        self.register(*get_set_versions_in_cache_script())
+
+    def register(self, script_name: str, script: str) -> None:
+        sha1 = hashlib.sha1(script.encode()).hexdigest()
+        exists = cache.script_exists(sha1)[0]
+        if not exists:
+            sha1 = cache.script_load(script)
+            logger.info("Redis Lua script loaded", name=script_name, script=script, sha1=sha1)
+        else:
+            logger.info("Redis Lua script already exists", name=script_name, sha1=sha1)
+        self._registered_scripts[script_name] = sha1
+        # Store the original script text for potential re-registration
+        self._script_texts[script_name] = script
+
+    def get_script(self, script_name: str) -> str:
+        if script_name not in self._registered_scripts:
+            logger.error("Redis Lua script not found", name=script_name)
+            raise ValueError(f"Redis Lua script [{script_name}] not found")
+        return self._registered_scripts[script_name]
+
+    def execute(self, script_name: str, args: List[Any]) -> Any:
+        try:
+            script_sha1 = self.get_script(script_name)
+            return cache.evalsha(script_sha1, 0, *args)
+        except redis.exceptions.ResponseError as e:
+            if "NOSCRIPT" in str(e):
+                logger.info(f"Script {script_name} not found, re-registering and retrying.")
+                # Re-register the script
+                self.register(script_name, self._script_texts[script_name])
+                # Get the new SHA1 hash
+                script_sha1 = self.get_script(script_name)
+                # Retry execution
+                return cache.evalsha(script_sha1, 0, *args)
+            else:
+                raise
 
 
 class CacheService:
@@ -372,44 +458,6 @@ class CacheService:
         time_parts = cache.time()
         start_time = int(f"{time_parts[0]}{time_parts[1]:06d}")
 
-        # Lua script to set the values only if the start_time is greater than the last set time
-        lua_script = """
-                    local start_time = tonumber(ARGV[1])
-                    local time_parts = redis.call('TIME')
-                    local current_time = tonumber(time_parts[1] .. string.format("%06d", time_parts[2]))
-                
-                    local keys_to_check = {}
-                    local values_to_set = {}
-                    local successful_keys = {}
-                    local unsuccessful_keys = {}
-                
-                    for i = 2, #ARGV, 2 do
-                        local key_to_set = ARGV[i]
-                        local value_to_set = ARGV[i + 1]
-                        table.insert(keys_to_check, key_to_set .. ':time')
-                        table.insert(values_to_set, {key_to_set, value_to_set})
-                    end
-                
-                    local stored_times = redis.call('MGET', unpack(keys_to_check))
-                
-                    for i = 1, #values_to_set do
-                        local key_to_set = values_to_set[i][1]
-                        local value_to_set = values_to_set[i][2]
-                        local key_to_check = keys_to_check[i]
-                        local stored_time = stored_times[i]
-                
-                        if value_to_set == '' or not stored_time or start_time > tonumber(stored_time) then
-                            redis.call('SET', key_to_set, value_to_set)
-                            redis.call('SET', key_to_check, current_time)
-                            table.insert(successful_keys, key_to_set)
-                        else
-                            table.insert(unsuccessful_keys, key_to_set)
-                        end
-                    end
-                
-                    return {successful_keys, unsuccessful_keys}
-                    """
-
         # Prepare the arguments for the Lua script
         args = [start_time]
         for key, value in data.items():
@@ -417,11 +465,10 @@ class CacheService:
             args.append(validated_key)
             args.append(cache.serializer.dumps(value))
 
-
         # Execute the Lua script
         try:
-            registered_script = cache.register_script(lua_script)
-            result = registered_script(args=args)
+            script_service = CacheScriptService()
+            result = script_service.execute("set_versions_in_cache_script", args)
 
             # Clean the keys
             successful_keys = cache.clean_keys(*result[0])

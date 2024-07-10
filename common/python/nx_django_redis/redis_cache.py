@@ -20,6 +20,8 @@ from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnection
 from redis.asyncio.connection import DefaultParser
 from redis.backoff import NoBackoff
 from redis.asyncio.retry import Retry
+from redis.commands.core import Script, ResponseT
+from redis.typing import ScriptTextT
 
 logger = getLogger(__name__)
 
@@ -651,9 +653,25 @@ class RedisSyncCommandsMixin:
     def time(self):
         return self.get_client(None).time()
 
-    def register_script(self, script):
+    def eval(self, command: str, script: str, numkeys: int, *keys_and_args: list):
+        client = self.get_client(None, write=True)
+        return client.eval(command, script, numkeys, *keys_and_args)
+
+    def evalsha(self, sha1: str, numkeys: int, *keys_and_args: list):
+        client = self.get_client(None, write=True)
+        return client.evalsha(sha1, numkeys, *keys_and_args)
+
+    def register_script(self, script: ScriptTextT) -> Script:
         client = self.get_client(None, write=True)
         return client.register_script(script)
+
+    def script_exists(self, *args: str):
+        client = self.get_client(None, write=True)
+        return client.script_exists(*args)
+
+    def script_load(self, script: ScriptTextT) -> ResponseT:
+        client = self.get_client(None, write=True)
+        return client.script_load(script)
 
 
 class CustomRedisClient(RedisSyncCommandsMixin, RedisCacheClient):
@@ -910,8 +928,20 @@ class BackendSyncCommandsMixin:
     def time(self):
         return self._cache.time()
 
-    def register_script(self, script):
+    def eval(self, command: str, script: str, numkeys: int, *keys_and_args: list) -> str:
+        return self._cache.eval(command, script, numkeys, *keys_and_args)
+
+    def evalsha(self, sha1: str, numkeys: int, *keys_and_args: list) -> str:
+        return self._cache.evalsha(sha1, numkeys, *keys_and_args)
+
+    def register_script(self, script: ScriptTextT) -> Script:
         return self._cache.register_script(script)
+
+    def script_exists(self, *args: str):
+        return self._cache.script_exists(*args)
+
+    def script_load(self, script: ScriptTextT) -> ResponseT:
+        return self._cache.script_load(script)
 
 
 def clean_keys(cache_backend, *keys, version=None):
