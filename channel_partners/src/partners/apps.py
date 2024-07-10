@@ -80,7 +80,9 @@ class PartnersConfig(AppConfig):
     name = 'partners'
 
     def ready(self):
+        # Get list of receivers to then connect the signals
         connections = get_receivers()
+        # Connect the signals
         for model, signals in connections.items():
             if signals.get("post_save"):
                 post_save.connect(signals["post_save"], sender=model)
