@@ -48,6 +48,7 @@ export class LocalLoginComponent implements AfterViewInit {
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 if (!this.setAdminPasswordForm.form.controls.createPassword.value ||
+                    this.setAdminPasswordForm.form.controls.createPassword.value.length > this.CONFIG.credentialsValidation.passwordRequirements.maxLength ||
                     this.setAdminPasswordForm.form.controls.createPassword.value !== this.setAdminPasswordForm.form.controls.confirmPassword.value
                 ) {
                     this.wizardService.setupConfig.localLoginDataState = FORM_STATE.INVALID;

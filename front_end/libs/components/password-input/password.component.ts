@@ -98,6 +98,12 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
             };
         }
 
+        if (c.value.length > this.CONFIG.credentialsValidation.passwordRequirements.maxLength) {
+            return {
+                maxlength: true
+            };
+        }
+
         if (this.checkCommon(c.value)) {
             return {
                 common: true
