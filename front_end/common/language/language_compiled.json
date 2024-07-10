@@ -1190,6 +1190,7 @@
     "Password is required": "Password is required",
     "Password is set!": "Password is set!",
     "Password must contain at least 8 characters": "Password must contain at least 8 characters",
+    "Password must not be longer than 255 characters": "Password must not be longer than 255 characters",
     "Password protected": "Password protected",
     "Password saved": "Password saved",
     "Password successfully changed": "Password successfully changed",
