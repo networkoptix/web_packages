@@ -62,7 +62,7 @@ export interface ChannelPartner {
     parentChannelPartner: string;
     monthlyAdditionalServiceLimit: number | null;
     attributes: Record<string, unknown>;
-    supportInformation: SupportInformationSever;
+    supportInformation: SupportInformationServer;
     created: string;
     ownPermissions: string[];
     ownRoles: string[];
@@ -114,7 +114,8 @@ export interface InfoRow {
 
 export type InfoDataServer = InfoRowServer | CustomRowServer;
 
-export interface SupportInformationSever {
+// How info is presented in server response
+export interface SupportInformationServer {
     sites: InfoRowServer[];
     phones: InfoRowServer[];
     emails: InfoRowServer[];
@@ -156,7 +157,7 @@ export type UpdateChannelPartner = Partial<{
     attributes: Record<string, unknown>;
     canCreateSubChannels: boolean;
     name: string;
-    supportInformation: SupportInformationSever;
+    supportInformation: SupportInformationServer;
 }>;
 
 export interface ChannelPartnersStructure {

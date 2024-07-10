@@ -10,8 +10,9 @@ import { firstValueFrom } from 'rxjs';
 
 import {
     selectCurrentPartnerId,
-    selectCurrentPartnerInfo,
     selectCurrentParentPartnerForChild,
+    selectCurrentPartnerSupportInfo,
+    selectCurrentPartner,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxApplyBackComponent } from '@components/applyV2/apply-back/apply.component';
 import { NxApplyComponent } from '@components/applyV2/apply.component';
@@ -36,10 +37,11 @@ import {
     InfoRow,
     InfoRowServer,
     SupportInformation,
-    SupportInformationSever,
+    SupportInformationServer,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
+import * as cpActions from '@store/channel-partners/channel-partners.actions';
 
 @Component({
     selector: 'nx-channel-partner-information',
@@ -164,16 +166,16 @@ export class NxChannelPartnerInformationComponent {
         });
     }
 
-    mapPartnerSupportInfo(psi: SupportInformationSever | undefined): void {
-        if (psi) {
-            [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(
-                type => {
-                    this.mapInfoFor(type, psi[type]);
-                    this.hasNoItems ||= psi[type].length > 0;
-                },
-            );
-            this.parentName = this.currParentSupportInfo$$()?.name;
+    mapPartnerSupportInfo(psi: SupportInformationServer | undefined): void {
+        if (!psi) {
+            return;
         }
+
+        [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(type => {
+            this.mapInfoFor(type, psi[type]);
+            this.hasNoItems &&= !(psi[type].length > 0);
+        });
+        this.parentName = this.currParentSupportInfo$$()?.name || '';
     }
 
     formToServerData(type: CPInfoType): InfoRowServer[] {
@@ -198,7 +200,7 @@ export class NxChannelPartnerInformationComponent {
         return serverData;
     }
 
-    mapDataToServer(): SupportInformationSever {
+    mapDataToServer(): SupportInformationServer {
         return {
             sites: this.formToServerData(CPInfoType.URL),
             emails: this.formToServerData(CPInfoType.EMAIL),
@@ -208,16 +210,24 @@ export class NxChannelPartnerInformationComponent {
     }
 
     currPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
+    currPartner$$ = this.store.selectSignal(selectCurrentPartner);
     currParentSupportInfo$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
-    currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
+
     currSupportInfoEffect = effect(() => {
+        this.currPartnerId$$();
         const info = this.readOnlyInfo$$()
             ? this.currParentSupportInfo$$()?.supportInformation
-            : this.currPartnerSupportInfo$$();
+            : this.currentPartnerSupportInformation$$() || this.currPartner$$()?.supportInformation;
+
         this.mapPartnerSupportInfo(info);
 
         this.informationData = cloneDeep(this.information);
         this.hasNoItems = this.noItems();
+    });
+
+    currentPartnerSupportInformation$$ = this.store.selectSignal(selectCurrentPartnerSupportInfo);
+    currentPartnerSupportInformationEffect = effect(() => {
+        this.mapPartnerSupportInfo(this.currentPartnerSupportInformation$$());
     });
 
     editMode: boolean = false;
@@ -311,6 +321,11 @@ export class NxChannelPartnerInformationComponent {
             }
 
             this.informationData = cloneDeep(this.information);
+            this.store.dispatch(
+                cpActions.setCurrentPartnerSupportInfo({
+                    currentPartnerSupportInfo: this.mapDataToServer(),
+                }),
+            );
         },
         error: (err: HttpErrorResponse) => {
             // @ts-expect-error type error

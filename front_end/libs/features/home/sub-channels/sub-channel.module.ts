@@ -35,7 +35,7 @@ const setParentPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
                 ),
                 tap(partner =>
                     store.dispatch(
-                        CPActions.setCurrentSubchannelPartners({
+                        CPActions.setCurrentSubChannelPartners({
                             currentSubchannels: [partner],
                         }),
                     ),

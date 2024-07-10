@@ -2,6 +2,7 @@ import {
     ChannelPartner,
     ChannelPartnersStructure,
     Organization,
+    SupportInformationServer,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 export const enum LoadingState {
@@ -22,8 +23,9 @@ export interface ChannelPartnersState {
     channelPartnersAndOrgsLoadState: LoadingState;
     currentParentPartnerId: string;
     currentPartnerId: string;
+    currentPartnerSupportInformation: SupportInformationServer | undefined;
     currentOrgId: string;
-    currentSubchannels: ChannelPartner[];
+    currentSubChannels: ChannelPartner[];
     currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
     organizations: Organization[];
