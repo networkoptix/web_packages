@@ -77,13 +77,10 @@ export class NxSelectV2Component<T> extends BaseSelectV2Component<T, false> {
             this.setOverlayWidth();
             const selected = this.selected$$();
             const selectedItem = this.dropdownItems.find(item => item.value === selected);
-            if (selected === undefined || !selectedItem) {
-                const first = this.getFirstEnabled();
-                if (first) {
-                    this.highlightValue$$.set(first.value);
-                }
-            } else {
+            if (selected) {
                 this.highlightValue$$.set(selected);
+            }
+            if (selectedItem) {
                 this.scrollOptionIntoView(selectedItem);
             }
             this.openState$$.set(DropdownState.Open);
