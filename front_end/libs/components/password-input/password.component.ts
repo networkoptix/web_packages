@@ -112,6 +112,12 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
             };
         }
 
+        if (c.value.length > credentialsValidation.passwordRequirements.maxLength) {
+            return {
+                maxlength: true,
+            };
+        }
+
         if (this.checkCommon(c.value)) {
             return {
                 common: true,

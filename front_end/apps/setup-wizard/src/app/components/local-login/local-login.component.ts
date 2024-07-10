@@ -7,7 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
-import { icons } from '@variables/static-variables';
+import { credentialsValidation, icons } from '@variables/static-variables';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 import { FORM_STATE } from '../../types/wizard-state.types';
@@ -52,11 +52,17 @@ export class LocalLoginComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.setAdminPasswordForm.statusChanges.pipe(untilDestroyed(this)).subscribe(() => {
-            this.wizardService.setupConfig.localLoginDataState =
-                this.setAdminPasswordForm.form.controls.localPassword.value ===
-                this.setAdminPasswordForm.form.controls.confirmPassword.value
-                    ? FORM_STATE.VALID
-                    : FORM_STATE.INVALID;
+            if (
+                !this.setAdminPasswordForm.form.controls.createPassword.value ||
+                this.setAdminPasswordForm.form.controls.createPassword.value.length >
+                    credentialsValidation.passwordRequirements.maxLength ||
+                this.setAdminPasswordForm.form.controls.createPassword.value !==
+                    this.setAdminPasswordForm.form.controls.confirmPassword.value
+            ) {
+                this.wizardService.setupConfig.localLoginDataState = FORM_STATE.INVALID;
+            } else {
+                this.wizardService.setupConfig.localLoginDataState = FORM_STATE.VALID;
+            }
         });
 
         this.wizardService.formValidateSubject.pipe(untilDestroyed(this)).subscribe(() => {
