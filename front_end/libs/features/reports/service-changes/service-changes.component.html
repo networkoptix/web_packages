@@ -1,32 +1,32 @@
-@if (serviceChangesStore.isLoading()) {
-    <nx-pre-loader></nx-pre-loader>
-} @else {
-    <h2
-        translate
-        class="heading"
-    >
-        Service Changes
-    </h2>
-    <div class="info">
-        <p>
-            {{
-                LANG.channelPartnerReports.customerName
-                    | translate: { customerName: selectedEntityName$$() }
-            }}
-        </p>
-        <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
-    </div>
-    <div class="service-changes-table-wrapper">
+<h2
+    translate
+    class="heading"
+>
+    Service Changes
+</h2>
+<div class="info">
+    <p>
+        {{
+            LANG.channelPartnerReports.customerName
+                | translate: { customerName: selectedEntityName$$() }
+        }}
+    </p>
+    <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
+</div>
+<div class="service-changes-table-wrapper">
+    @if (serviceChangesStore.isLoading()) {
+        <nx-pre-loader></nx-pre-loader>
+    } @else {
         <nx-service-changes-table
             [entityType]="entityType$$()"
             [partnerRecords]="formattedPartnerServiceChangeRecords$$()"
             [orgRecords]="formattedOrgServiceChangeRecords$$()"
         ></nx-service-changes-table>
-    </div>
-    <nx-month-select
-        [monthIndex]="monthIndex()"
-        (monthIndexChange)="monthIndex.set($event)"
-        [year]="year()"
-        (yearChange)="year.set($event)"
-    ></nx-month-select>
-}
+    }
+</div>
+<nx-month-select
+    [monthIndex]="monthIndex()"
+    (monthIndexChange)="monthIndex.set($event)"
+    [year]="year()"
+    (yearChange)="year.set($event)"
+></nx-month-select>

@@ -1,9 +1,12 @@
 @use "resets";
 @use "typography";
 
+$menu-width: 234px;
+
 :host {
     display: flex;
     box-shadow: var(--btn-dropdown-toggle-shadow-color);
+    width: $menu-width;
 }
 
 button {
@@ -36,11 +39,10 @@ button {
     }
 }
 
-$menu-width: 8rem;
 
 .menu-trigger-btn {
+    flex: 1;
     padding: 0.5rem 1rem;
-    width: $menu-width;
     z-index: 10; // Don't cover outline with arrow buttons
 }
 

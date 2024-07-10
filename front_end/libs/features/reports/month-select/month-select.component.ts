@@ -1,4 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, Output, computed, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -6,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { icons } from '@static-variables';
+import { connectedPosition } from '@utils/nx';
 
 @Component({
     selector: 'nx-month-select',
@@ -41,6 +43,10 @@ export class NxMonthSelectComponent {
         const date = new Date(year, monthIndex);
         return isMenuOpen ? this.yearFormat.format(date) : this.longMonthYearFormat.format(date);
     });
+
+    menuPosition: ConnectedPosition[] = [
+        connectedPosition({ originPoint: 'S', overlayPoint: 'N' }),
+    ];
 
     constructor(nxDatetime: NxDateTimeFormatService) {
         const longMonth = new Intl.DateTimeFormat(nxDatetime.locale, { month: 'long' });
