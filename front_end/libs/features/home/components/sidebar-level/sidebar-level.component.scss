@@ -52,6 +52,9 @@
                 }
             }        
   
+            .icon-with-fill {
+                fill: var(--dropdown-item-selected-color)
+            }
         }
 
         &.cdk-drop-list-dragging {

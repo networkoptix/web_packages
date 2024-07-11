@@ -17,7 +17,7 @@
                 nx-add-svg-src
                 [src]="
                     icons.dirTextButtons +
-                    (openGroups[rootOrg.id] ? 'arrow_down.svg' : 'arrow_right.svg')
+                    (openGroups[rootOrg.id] ? 'arrow_open.svg' : 'arrow_close.svg')
                 "
                 [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                 svgClass="triangle"
@@ -62,7 +62,7 @@
                     nx-add-svg-src
                     [src]="
                         icons.dirTextButtons +
-                        (openGroups[group.id] ? 'arrow_down.svg' : 'arrow_right.svg')
+                        (openGroups[group.id] ? 'arrow_open.svg' : 'arrow_close.svg')
                     "
                     [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                     svgClass="triangle"
