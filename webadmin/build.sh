@@ -83,3 +83,4 @@ zip -qq -r "../$WEBADMIN_PACKAGE" ./static/
 popd
 
 echo -e "\nWebadmin build done" >&2
+# Bump lang for pipeline
