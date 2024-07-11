@@ -33,6 +33,7 @@ import {
     take,
     skip,
     merge,
+    distinctUntilKeyChanged,
 } from 'rxjs';
 
 import staticLang from '@language_static';
@@ -43,6 +44,7 @@ import {
     CloudSystemLight,
     Group,
     GroupItem,
+    GroupStructureItem,
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
@@ -420,18 +422,66 @@ export const GroupsStore = signalStore(
              * Initialize groups for store.
              *
              * @param orgId - OrganizationId to initialize groups for store
+             * @param groupId - Current group
              * @returns GroupItem[] - Array of groups
              */
-            initializeGroups: (orgId: string) => {
+            initializeGroups: (orgId: string, groupId: string) => {
                 const undo = store.initializeGroupsWithUndo();
                 return channelPartnerService.getGroupsStructure(orgId).pipe(
-                    tap(groups =>
+                    tap(groups => {
                         patchState(
                             store,
                             removeAllEntities(groupsEntity),
                             setEntities(groups as GroupItem[], groupsEntity),
-                        ),
-                    ),
+                        );
+
+                        const openGroupsEntities = [{ id: orgId, open: true }];
+                        if (groupId) {
+                            function findGroupPath(
+                                targetId: string,
+                                currentLevel: GroupStructureItem[],
+                                pathBase: string[] = [],
+                                targetPath: string[] = [],
+                            ): string[] {
+                                for (let i = 0; i < currentLevel.length; i++) {
+                                    if (targetPath.length) {
+                                        return targetPath;
+                                    }
+                                    /* TODO: Fix inefficiency here where if 1 level deep group
+                                    has no children the search doesn't terminate. This requires
+                                    more test modification to have valid structures, but
+                                    getting bug fix for CLOUD-14086 in is higher priority. */
+
+                                    const currentGroup = currentLevel[i];
+                                    const currentPath = pathBase.concat(currentGroup.id);
+                                    if (currentGroup.id === targetId) {
+                                        if (!currentGroup.children.length) {
+                                            currentPath.pop();
+                                            // Don't open current group if no children
+                                        }
+                                        return currentPath;
+                                    }
+
+                                    targetPath = findGroupPath(
+                                        targetId,
+                                        currentGroup.children,
+                                        currentPath,
+                                        targetPath,
+                                    );
+                                }
+                                return targetPath;
+                            }
+                            const path = findGroupPath(groupId, groups);
+                            openGroupsEntities.push(...path.map(id => ({ id, open: true })));
+                        }
+
+                        patchState(
+                            store,
+                            setEntities(openGroupsEntities, {
+                                collection: 'openGroups',
+                            }),
+                        );
+                    }),
                     catchError((_, caught) => {
                         undo();
                         return caught;
@@ -492,14 +542,14 @@ export const GroupsStore = signalStore(
                             toObservable(store.openGroupsEntities),
                         );
                     }),
-                    skip(1),
                     tap(openGroupsState => {
                         const openGroups = openGroupsState.flatMap(({ id, open }) =>
                             open ? [id] : [],
                         );
-                        channelPartnerService.paramStateHandler.state$$.set({
+                        channelPartnerService.paramStateHandler.state$$.update(state => ({
+                            ...state,
                             queryParams: { openGroups },
-                        });
+                        }));
                     }),
                 ),
         }),
@@ -517,9 +567,10 @@ export const GroupsStore = signalStore(
             );
             paramState$
                 .pipe(
-                    map(({ organizationId }) => organizationId),
-                    distinctUntilChanged(),
-                    switchMap(store.initializeGroups),
+                    distinctUntilKeyChanged('organizationId'),
+                    switchMap(({ organizationId, groupId }) =>
+                        store.initializeGroups(organizationId, groupId),
+                    ),
                     takeUntilDestroyed(),
                 )
                 .subscribe();
@@ -576,21 +627,6 @@ export const GroupsStore = signalStore(
                 };
             });
 
-            const processGroups = (orgGroups: GroupItem[]): GroupItem[] => {
-                const groups: GroupItem[] = [];
-                const getChildren = (group: GroupItem): void => {
-                    for (const child of group.children) {
-                        groups.push(child);
-                        getChildren(child);
-                    }
-                };
-                for (const group of orgGroups) {
-                    groups.push(group);
-                    getChildren(group);
-                }
-                return groups;
-            };
-
             const sortedGroups$$ = computed(() => sortGroups(store.groupsEntities()));
 
             const currentGroups$$ = computed(() => {
@@ -607,49 +643,11 @@ export const GroupsStore = signalStore(
                 () => findItem(store.groupsEntities(), currentGroupId$$().id)?.name,
             );
 
-            const flatGroups$$ = computed(() => {
-                const groups = store.groupsEntities();
-                return processGroups(groups).map(({ id, parentId }) => ({ id, parentId }));
-            });
-
-            function* getOpenGroups(
-                groups: { id: string; parentId: string | null }[],
-                currentGroupId: string,
-            ): Generator<string> {
-                while (currentGroupId) {
-                    yield currentGroupId;
-                    const group = groups.find(group => group.id === currentGroupId);
-                    if (group && group.parentId) {
-                        currentGroupId = group.parentId;
-                    } else {
-                        return;
-                    }
-                }
-            }
-
             const openGroups$$ = computed(() => {
-                const groups = flatGroups$$();
                 const openGroups = Object.fromEntries(
                     store.openGroupsEntities().map(({ id, open }) => [id, open]),
                 );
-                const currentGroup = currentGroupId$$();
-                const params = params$$();
-
-                const organizationId = params!.organizationId!;
-
-                const fromOpen = currentGroup.isRoot
-                    ? { [currentGroup.id]: true }
-                    : Object.fromEntries<boolean>(
-                          [...getOpenGroups(groups, currentGroup.id), organizationId].map(id => [
-                              id,
-                              true,
-                          ]),
-                      );
-
-                return {
-                    ...openGroups,
-                    ...fromOpen,
-                };
+                return openGroups;
             });
 
             const allOrgSystems$$ = computed(() => {
