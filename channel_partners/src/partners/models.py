@@ -14,6 +14,7 @@ from threading import Lock
 from typing import (
     Dict,
     List,
+    Self,
     TypedDict,
 )
 
@@ -97,6 +98,8 @@ class GroupStructure(TypedDict):
 
 
 class AuthToken(Token):
+    INTERNAL_TOKEN_NAME = 'internal_updatable_token'
+
     enabled = models.BooleanField(default=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255, blank=True)
@@ -106,6 +109,33 @@ class AuthToken(Token):
 
     # Remove user from original Token model
     user = None
+
+    def save(self, *args, **kwargs):
+        if self.name == self.INTERNAL_TOKEN_NAME:
+            # validating unique internal token
+            qs = AuthToken.objects.filter(name=self.INTERNAL_TOKEN_NAME)
+            if self.id:
+                qs = qs.exclude(id=self.id)
+            if qs.exists():
+                raise ValidationError(f'Internal token "{self.INTERNAL_TOKEN_NAME}" already exists.')
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def update_internal_token(cls, key: str = None) -> Self:
+        if key:
+            enabled = True
+            logger.info('Updating internal token')
+        else:
+            key = AuthToken.INTERNAL_TOKEN_NAME
+            enabled = False
+            logger.info('Disabling internal token')
+        auth_token, created = AuthToken.objects.get_or_create(name=AuthToken.INTERNAL_TOKEN_NAME)
+        auth_token.key = key
+        auth_token.internal = True
+        auth_token.enabled = enabled
+        auth_token.save()
+        logger.info('Internal token updated', created=created, enabled=enabled)
+        return auth_token
 
 
 class ChannelPartnerStates:
