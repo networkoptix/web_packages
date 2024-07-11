@@ -728,6 +728,22 @@ class TestCloudSystemViewSet:
         assert response.status_code == 401
         assert response.data['detail'] == 'Not an organization system.'
 
+    def test_services_no_organization_user_token(self, channel_partner_factory, organization_factory,
+                                                 system_factory, cloud_user_factory, arf,
+                                                 mock_cdb_token_introspect, mock_auth_with_user):
+
+        cp = channel_partner_factory()
+        request = arf.get('/')
+        system = system_factory(organization=None)
+        user = cloud_user_factory()
+        mock_cdb_token_introspect(user=user, system=system, system_role=VmsRoles.ADMINISTRATOR)
+        system_id = f'{system.system_id}'
+        view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
+        mock_auth_with_user(user)
+        response = view(request, id=system.system_id)
+        assert response.status_code == 403
+        assert response.data['detail'] == 'You do not have permission to perform this action.'
+
     def test_services_deleted_form_cps(self, channel_partner_factory, organization_factory, system_factory,
                                       mocker, arf_basic_auth):
         cp = channel_partner_factory()
