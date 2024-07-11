@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { ChannelPartnersApi as CpApi } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api';
-import type {
-    ChannelPartner,
-    Organization,
+import {
+    OrgRoleIds,
+    type ChannelPartner,
+    type Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
+import { alphaNumericSort } from '@utils/general';
 import { memoizeAsyncShort } from '@utils/memoize';
 
 @Injectable({
@@ -48,7 +50,22 @@ export class NxChannelPartnersService {
 
     /* Not associated with a specific partner/org and don't change  */
     channelPartnerRoles$$ = toSignal(this.cpApi.getChannelPartnerRoles(), { initialValue: [] });
-    organizationRoles$$ = toSignal(this.cpApi.getOrganizationRoles(), { initialValue: [] });
+    organizationRoles$$ = toSignal(
+        this.cpApi.getOrganizationRoles().pipe(
+            map(roles => {
+                const sysHealthViewer = roles.find(role => role.id === OrgRoleIds.SysHealthViewer);
+                const sortedRoles = roles
+                    .filter(role => role.id !== OrgRoleIds.SysHealthViewer)
+                    .sort(alphaNumericSort(role => role.id));
+
+                if (sysHealthViewer) {
+                    sortedRoles.push(sysHealthViewer);
+                }
+                return sortedRoles;
+            }),
+        ),
+        { initialValue: [] },
+    );
 
     /* Channel Partners */
     @memoizeAsyncShort
