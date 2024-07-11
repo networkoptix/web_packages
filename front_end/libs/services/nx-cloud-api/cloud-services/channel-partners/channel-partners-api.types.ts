@@ -462,6 +462,7 @@ interface PartnerServiceChangeEntry {
 }
 
 export interface PartnerServiceChangesResponse {
+    count: number;
     results: PartnerServiceChangeEntry[];
 }
 
@@ -476,6 +477,7 @@ interface OrgServiceChangeEntry {
 }
 
 export interface OrgServiceChangesResponse {
+    count: number;
     results: OrgServiceChangeEntry[];
 }
 
