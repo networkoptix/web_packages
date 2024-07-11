@@ -34,10 +34,12 @@ const entitiesToObject = (entities: Entity[]): Record<string, string> =>
 })
 export class LayoutItemsErrorsStore extends signalStore(
     withEntities({ entity: type<Entity>(), collection: 'status' }),
+    withEntities({ entity: type<Entity>(), collection: 'layoutError' }),
     withEntities({ entity: type<Entity>(), collection: 'icon' }),
     withEntities({ entity: type<Entity>(), collection: 'message' }),
     withComputed(store => ({
         statuses$$: computed(() => entitiesToObject(store.statusEntities())),
+        layoutErrors$$: computed(() => entitiesToObject(store.layoutErrorEntities())),
         icons$$: computed(() => entitiesToObject(store.iconEntities())),
         messages$$: computed(() => entitiesToObject(store.messageEntities())),
     })),
@@ -46,6 +48,7 @@ export class LayoutItemsErrorsStore extends signalStore(
             id: string,
             error: {
                 status?: string;
+                layoutError?: string;
                 icon?: string;
                 message?: Translatable;
             },
@@ -70,6 +73,7 @@ export class LayoutItemsErrorsStore extends signalStore(
                 | true
                 | {
                       status?: boolean;
+                      layoutError?: boolean;
                       icon?: boolean;
                       message?: boolean;
                   },
@@ -100,6 +104,7 @@ export class LayoutItemsErrorsStore extends signalStore(
             patchState(
                 store,
                 removeAllEntities({ collection: 'status' }),
+                removeAllEntities({ collection: 'layoutError' }),
                 removeAllEntities({ collection: 'icon' }),
                 setAllEntities(
                     Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).map(

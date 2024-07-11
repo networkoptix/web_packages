@@ -774,12 +774,17 @@
                                                 <ng-template
                                                     #itemStatusPlaceholder
                                                     let-itemDetail="itemDetail"
-                                                    let-systemInfo="systemInfo"
                                                     let-status="status"
                                                 >
                                                     <nx-layout-grid-item-placeholder
                                                         [itemDetail]="itemDetail"
-                                                        [systemInfo]="systemInfo"
+                                                        [layoutItemStatus]="
+                                                            {
+                                                                item: item,
+                                                                layoutErrors:
+                                                                    layoutItemsErrorsStore.layoutErrors$$()
+                                                            } | mapWith: getItemLayoutError
+                                                        "
                                                         [renderConfig]="item.renderConfig"
                                                         [systemStatus]="item.systemStatusOld$$()"
                                                         [status]="status"
@@ -795,13 +800,13 @@
                                                         {
                                                             item: item,
                                                             layoutItemLookup: layoutItemLookup,
-                                                            systems: systemsService.systems$$(),
+                                                            layoutErrors:
+                                                                layoutItemsErrorsStore.layoutErrors$$(),
                                                             currentlyPlayingArchive:
                                                                 (webGlService.playbackTimeMs$$() ||
                                                                     0) > 0
                                                                     ? webGlService.cameraId$$()
-                                                                    : '',
-                                                            errors: layoutItemsErrorsStore.statuses$$()
+                                                                    : ''
                                                         } | mapWith: getItemForDisplay;
                                                         as itemDetail
                                                     ) {
@@ -819,6 +824,8 @@
 
                                                         <div class="content-container">
                                                             @switch (itemDetail.type) {
+                                                                <!-- with a new placeholder ONLY camera and server and webpage are needed here -->
+                                                                <!-- 'else' placeholder is not needed due to checkLayoutItemsErrors -->
                                                                 @case (RESOURCE_TYPE.CAMERA) {
                                                                     @if (
                                                                         itemDetail
@@ -984,12 +991,6 @@
                                                                             item,
                                                                             layoutItemLookup
                                                                         } | mapWith: getItem,
-                                                                    systemInfo:
-                                                                        {
-                                                                            item,
-                                                                            systems:
-                                                                                systemsService.systems$$()
-                                                                        } | mapWith: getSystemInfo,
                                                                     status: null
                                                                 }
                                                             "

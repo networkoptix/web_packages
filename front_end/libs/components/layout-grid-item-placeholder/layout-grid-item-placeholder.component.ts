@@ -42,8 +42,7 @@ import {
     CameraTypeId,
     NxSystemCamera,
 } from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemInfo } from '@services/systems.service.types';
+import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
 
 const messagesLang = staticLang.layouts.itemPlaceholders.messages;
@@ -184,6 +183,7 @@ const SYSTEM_PLACEHOLDERS = {
     systemOffline: PLACEHOLDERS.offline_system,
     systemIncompatible: PLACEHOLDERS.incompatible,
     systemNoAccess: PLACEHOLDERS.noAccessToSystem,
+    systemNoPermission: PLACEHOLDERS.noAccess,
 };
 
 @UntilDestroy()
@@ -219,8 +219,8 @@ const SYSTEM_PLACEHOLDERS = {
 })
 export class NxLayoutGridItemPlaceholderComponent {
     status = input.required<string | null>();
+    layoutItemStatus = input.required<string | null>();
     itemDetail = input<LayoutResourceTree[string]>();
-    systemInfo = input<NxSystemInfo>();
     /** to be deprecated */
     renderConfig = input.required<ParsedLayoutItem['renderConfig']>();
     /** to be deprecated */
@@ -236,47 +236,40 @@ export class NxLayoutGridItemPlaceholderComponent {
 
     constructor(
         private layoutItemsErrorsStore: LayoutItemsErrorsStore,
-        private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
     ) {}
 
     adjustedStatus = computed(() => {
-        const status = this.status(); /* ?.toLowerCase() */
+        if (this.layoutsItemNewPlaceholder) {
+            return this.layoutItemStatus();
+        }
+
+        const status = this.status();
         const statuses = this.layoutItemsErrorsStore.statuses$$();
         const itemDetail = this.itemDetail();
-        const systemInfo = this.systemInfo();
+        if (!itemDetail) {
+            // this is for the old placeholder and the old placeholder handles no item in the html template
+            return;
+        }
 
-        const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
-        const isServer = !!itemDetail && assertResourceOfType.server(itemDetail);
+        const isCamera = assertResourceOfType.camera(itemDetail);
+        const isServer = assertResourceOfType.server(itemDetail);
         const isCamOrSrv = isCamera || isServer;
-        const isOffline = isCamOrSrv && !itemDetail.details.online;
+        const isOnline = isCamOrSrv && itemDetail.details.online;
         const isUnauthorized = isCamera && itemDetail.details.unauthorized;
         const isNotArchived = isCamOrSrv && itemDetail.details.status !== 'archive';
-        const itemDetailError = itemDetail ? statuses[itemDetail.details.id] : null;
-        const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
-        const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
-        let adjustedStatus = status || itemDetailError;
-
-        if (!systemInfo) {
-            if (isCamera) {
-                adjustedStatus = 'systemNoAccess';
-            }
-        }
+        let adjustedStatus = status || statuses[itemDetail.details.id];
 
         if (!adjustedStatus) {
             if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
                 adjustedStatus = 'virtualCamera';
             } else if (isUnauthorized) {
                 adjustedStatus = 'unauthorized';
-            } else if (isOffline) {
+            } else if (!isOnline) {
                 adjustedStatus = 'offline';
             } else if (isNotArchived) {
                 adjustedStatus = itemDetail.details.status;
-            } else if (isSystemOffline) {
-                adjustedStatus = 'systemOffline';
-            } else if (isSystemIncompatible) {
-                adjustedStatus = 'systemIncompatible';
-            } else if (itemDetail) {
-                // not sure if this is totally true but it makes sense at least for now
+            } else {
                 adjustedStatus = 'offline';
             }
         }
@@ -303,10 +296,12 @@ export class NxLayoutGridItemPlaceholderComponent {
             if (assertResourceOfType.server(itemDetail)) {
                 placeholder = SERVER_PLACEHOLDERS[status];
             }
-            if (assertResourceOfType.webpage(itemDetail) || status === ResourceType.WEB_PAGE) {
+            if (assertResourceOfType.webpage(itemDetail)) {
+                // hide web pages ff
                 placeholder = PLACEHOLDERS.webPage;
             }
-            if (assertResourceOfType.iodevice(itemDetail) || status === ResourceType.IO_DEVICE) {
+            if (assertResourceOfType.iodevice(itemDetail)) {
+                // hide ioDevice pages ff
                 placeholder = PLACEHOLDERS.ioDevice;
             }
         }
@@ -317,11 +312,11 @@ export class NxLayoutGridItemPlaceholderComponent {
 
         if (!placeholder) {
             // should be gone after statuses are typed
+            // ff to show broken placeholder rather than fail dramatically
             throw new Error(`Unknown status: ${status}`, {
                 cause: {
                     status,
                     itemDetail,
-                    systemInfo: this.systemInfo(),
                 },
             });
         }
@@ -355,17 +350,18 @@ export class NxLayoutGridItemPlaceholderComponent {
     hasAction = computed(() => {
         // this method is weird. We do not have any other actions though so it is fine so far
         const itemDetail = this.itemDetail();
-        const status = this.adjustedStatus();
-        const isEditable = this.isEditable();
-
         const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
+        const status = this.adjustedStatus();
+
         const hasAuthorize =
             isCamera &&
             (status === 'defaultPassword' || itemDetail.details.unauthorized) &&
             !!this.CONFIG.featureFlags.layoutsAuthorizeCamera &&
-            this.systemService.getCurrentSystem().permissionManager.permissions$$().editCameras;
+            this.systemsService
+                .systemsPermissionsManager$$()
+                [itemDetail.details.systemId].canEditDevice(itemDetail.details.id);
 
-        return isEditable && hasAuthorize;
+        return this.isEditable() && hasAuthorize;
     });
 
     notSupported = computed(() => {

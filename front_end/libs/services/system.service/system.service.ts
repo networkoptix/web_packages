@@ -105,8 +105,8 @@ export class NxSystemService {
         return forkJoin(update);
     }
 
-    createSystemById = (systemId: string): NxSystem =>
-        this.createSystem(this.systemsService.userEmail, systemId);
+    createSystemById = (systemId: string, skipPoll = true, skipSettingSystem = true): NxSystem =>
+        this.createSystem(this.systemsService.userEmail, systemId, '', skipPoll, skipSettingSystem);
 
     createSystem(
         currentUserEmail: string,

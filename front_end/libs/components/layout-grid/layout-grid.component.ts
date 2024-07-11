@@ -115,7 +115,6 @@ import {
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
@@ -625,6 +624,72 @@ export class NxLayoutGridComponent {
     #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
+    checkLayoutItemsErrors = (layout: ParsedLayoutWithItems): void => {
+        const layoutItemLookup = this.layoutItemLookup$$();
+        layout.items.forEach(item => {
+            const itemDetail = layoutItemLookup?.[item.resourceId];
+            const { systemId } = extractSystemAndResourceId(item.resourcePath);
+            const systemInfo = this.systemsService.systems$$()?.find(({ id }) => id === systemId);
+
+            const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
+            const isServer = !!itemDetail && assertResourceOfType.server(itemDetail);
+            const isWebPage = !!itemDetail && assertResourceOfType.webpage(itemDetail);
+            const isIoDevice = !!itemDetail && assertResourceOfType.iodevice(itemDetail);
+
+            const isUnauthorized = isCamera && itemDetail.details.unauthorized;
+            const isCamOrSrv = isCamera || isServer;
+            const isOffline = isCamOrSrv && !itemDetail.details.online;
+            const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
+            const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
+
+            let layoutItemStatus = itemDetail
+                ? this.layoutItemsErrorsStore.statuses$$()[itemDetail.details.id]
+                : null;
+
+            if (!systemInfo) {
+                layoutItemStatus = 'systemNoAccess';
+            } else if (isSystemOffline) {
+                layoutItemStatus = 'systemOffline';
+            } else if (isSystemIncompatible) {
+                layoutItemStatus = 'systemIncompatible';
+            } else if (itemDetail) {
+                const permissionManager =
+                    this.systemsService.systemsPermissionsManager$$()[systemInfo.id];
+                if (!permissionManager) {
+                    layoutItemStatus = 'systemNoAccess';
+                } else if (!permissionManager.canViewDevice(itemDetail.details.id)) {
+                    layoutItemStatus = 'noAccess';
+                }
+            }
+
+            if (!layoutItemStatus) {
+                if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
+                    layoutItemStatus = 'virtualCamera';
+                } else if (isUnauthorized) {
+                    layoutItemStatus = 'unauthorized';
+                } else if (isOffline) {
+                    layoutItemStatus = 'offline';
+                } else if (isWebPage && !nxConfig.featureFlags.layoutsWebpages) {
+                    layoutItemStatus = 'webPage';
+                } else if (isIoDevice) {
+                    layoutItemStatus = 'ioDevice';
+                } else if (
+                    isCamera &&
+                    !['archive', 'scheduled', 'recording', 'live', 'online'].includes(
+                        itemDetail.details.status,
+                    )
+                ) {
+                    // this one is weird. should be replaced or removed
+                    layoutItemStatus = itemDetail.details.status;
+                }
+            }
+
+            if (layoutItemStatus) {
+                this.layoutItemsErrorsStore.set(item.id, { layoutError: layoutItemStatus });
+            }
+        });
+    };
+
     layout$: Observable<ParsedLayoutWithItems> = combineLatest([
         this.initialLayout$,
         this.#wrapperSize$,
@@ -651,6 +716,7 @@ export class NxLayoutGridComponent {
             renderConfig,
             items: this.annotateWithRenderConfig({ items, renderConfig, ...layout }, size),
         })),
+        tap(this.checkLayoutItemsErrors),
         shareReplay({
             bufferSize: 1,
             refCount: true,
@@ -1087,6 +1153,7 @@ export class NxLayoutGridComponent {
             const cellHeight = height / layout.renderConfig.rows;
             const constraint = Math.min(cellWidth, cellHeight);
             const size = constraint * layout.cellSpacing;
+            // TODO: this looks to be a very expensive operation, should be optimized
             document.documentElement.style.setProperty(
                 '--current-layout-gap',
                 `${(size / 2) * this.CELL_SPACE_RATIO}px`,
@@ -1562,52 +1629,39 @@ export class NxLayoutGridComponent {
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
     }) => layoutItemLookup?.[item.resourceId];
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    getSystemInfo = ({ item, systems }: { item: ParsedLayoutItem; systems: NxSystemInfo[] }) => {
-        const { systemId } = extractSystemAndResourceId(item.resourcePath);
-        return systems?.find(({ id }) => id === systemId);
-    };
+    getItemLayoutError = ({
+        item,
+        layoutErrors,
+    }: {
+        item: ParsedLayoutItem;
+        layoutErrors: Record<string, string>;
+    }): string | null => layoutErrors?.[item.id] || null;
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     getItemForDisplay = ({
         item,
         layoutItemLookup,
-        errors,
-        systems,
+        layoutErrors,
         currentlyPlayingArchive,
     }: {
         item: ParsedLayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
-        errors: Record<string, string>;
+        layoutErrors: Record<string, string>;
         currentlyPlayingArchive: string;
-        systems: NxSystemInfo[];
     }) => {
         const itemDetail = this.getItem({ item, layoutItemLookup });
+        // what is it for?
         if (currentlyPlayingArchive && itemDetail?.details.id === currentlyPlayingArchive) {
             return itemDetail;
         }
-        const hasNoErrors = itemDetail && this.itemHasNoErrors({ itemDetail, errors });
-        const hasSystem = this.getSystemInfo({ item, systems });
-        return hasNoErrors && hasSystem ? itemDetail : null;
+        if (
+            nxConfig.featureFlags.layoutsItemNewPlaceholder &&
+            !!this.getItemLayoutError({ item, layoutErrors })
+        ) {
+            return false;
+        }
+        return itemDetail;
     };
-
-    itemHasNoErrors = ({
-        itemDetail,
-        errors,
-    }: {
-        itemDetail: ReturnType<NxLayoutGridComponent['getItem']>;
-        errors: Record<string, string>;
-    }): boolean =>
-        // this method is a kind of duplicate. We indicate here if the item has error giving no status
-        // and we do the same thing sometimes to define type of error in the placeholder
-        !errors[itemDetail.details.id] &&
-        !(
-            assertResourceOfType.camera(itemDetail) &&
-            (itemDetail.details.unauthorized || itemDetail.details.typeId === CameraTypeId.Virtual)
-        ) &&
-        (((assertResourceOfType.camera(itemDetail) || assertResourceOfType.server(itemDetail)) &&
-            itemDetail.details.online) ||
-            assertResourceOfType.webpage(itemDetail));
 
     generateItemRenderConfig =
         (layoutRenderConfig: LayoutRenderConfig, wrapperSize: Size, layout: ParsedLayout) =>

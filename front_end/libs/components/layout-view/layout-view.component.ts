@@ -164,7 +164,6 @@ export class NxLayoutViewComponent {
             ),
         ),
         map(generateResourceTree),
-        filter(lookup => !!lookup),
         shareReplay({
             bufferSize: 1,
             refCount: false,

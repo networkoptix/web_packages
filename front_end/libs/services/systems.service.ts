@@ -1,4 +1,4 @@
-import { Injectable, computed } from '@angular/core';
+import { Injectable, computed, Injector } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -22,6 +22,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import type { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
@@ -76,6 +77,18 @@ export class NxSystemsService {
         this.updateSystems$.next(this.systems$$().filter(system => system.id !== systemId));
 
     systems$$ = toSignal(this.systemsSubject, { initialValue: [] });
+    systemsPermissionsManager$$ = computed(() => {
+        const systemService = this.injector.get(NxSystemService);
+
+        return this.systems$$()?.reduce(
+            (map, systemInfo) => ({
+                ...map,
+                [systemInfo.id]: systemService.createSystemById(systemInfo.id, true, true)
+                    .permissionManager,
+            }),
+            {},
+        );
+    });
     systemInfoMap$$ = computed<Map<string, NxSystemInfo>>(() => {
         const systems = this.systems$$();
         return new Map(systems.map(s => [s.id, s]));
@@ -117,6 +130,7 @@ export class NxSystemsService {
         private uriService: NxUriService,
         private cloudApi: NxCloudApiService,
         private store: Store,
+        protected injector: Injector,
     ) {
         this.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {
             this.#systems = systems;
