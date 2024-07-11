@@ -1426,7 +1426,7 @@
                     "description": "Can manage all aspects of the Organization and its Systems"
                 },
                 "00000000-0000-4000-8000-000000000002": {
-                    "name": "Systems Administrators",
+                    "name": "System Administrators",
                     "description": "Grants user | Administrators | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders."
                 },
                 "00000000-0000-4000-8000-000000000003": {
