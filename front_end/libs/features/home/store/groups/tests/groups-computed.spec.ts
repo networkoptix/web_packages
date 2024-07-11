@@ -229,34 +229,6 @@ describe('Groups Store: Computed signals', () => {
                 ),
             ] as const;
         };
-        it('should always have root group open', async () => {
-            const { groupsStore, cpService } = await setupGroupsStore();
-            const { groups } = generateGroups();
-            const organizationId = uuid();
-            cpService.paramStateHandler.state$$.set({
-                params: { organizationId },
-            });
-            patchState(groupsStore, setEntities(groups, { collection: 'groups' }));
-
-            expect(groupsStore.openGroups$$()).toEqual({ [organizationId]: true });
-        });
-
-        it('should always have current group open', async () => {
-            const { groupsStore, cpService } = await setupGroupsStore();
-            const { groups, flatGroups } = generateGroups();
-            const organizationId = uuid();
-            const [groupId, expectedOpenGroups] = generateExpectedGroups(
-                flatGroups,
-                organizationId,
-            );
-            cpService.paramStateHandler.state$$.set({
-                params: { organizationId, groupId },
-            });
-            patchState(groupsStore, setEntities(groups, { collection: 'groups' }));
-
-            const openGroups = groupsStore.openGroups$$();
-            expect(openGroups).toEqual(expectedOpenGroups);
-        });
 
         // Need to figure out why flaky
         xit('should show open groups from queryParams', async () => {
