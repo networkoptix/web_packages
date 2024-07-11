@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, EventEmitter, Output, computed, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
+import { PageChange } from '@components/table/table.types';
 import { EntityType } from '@pages/reports/reports.types';
 
 import type {
@@ -47,4 +48,9 @@ export class NxServiceChangesTableComponent {
 
         return isPartnerTable ? partnerRecords : orgRecords;
     });
+
+    @Output() onPageChange = new EventEmitter<PageChange>();
+    handlePageChange(pageChange: PageChange): void {
+        this.onPageChange.emit(pageChange);
+    }
 }

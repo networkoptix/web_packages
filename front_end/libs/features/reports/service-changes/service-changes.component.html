@@ -16,11 +16,14 @@
 <div class="service-changes-table-wrapper">
     @if (serviceChangesStore.isLoading()) {
         <nx-pre-loader></nx-pre-loader>
+    } @else if (serviceChangesStore.errorMessage()) {
+        <p>{{ serviceChangesStore.errorMessage() }}</p>
     } @else {
         <nx-service-changes-table
             [entityType]="entityType$$()"
             [partnerRecords]="formattedPartnerServiceChangeRecords$$()"
             [orgRecords]="formattedOrgServiceChangeRecords$$()"
+            (onPageChange)="handlePageChange($event)"
         ></nx-service-changes-table>
     }
 </div>

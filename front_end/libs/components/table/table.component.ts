@@ -30,7 +30,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { SortParams } from '@components/table/table.types';
+import { PageChange, SortParams } from '@components/table/table.types';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import staticLang from '@language/language_i18n_static.json';
@@ -101,6 +101,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
 
     @Output() onRowExpand = new EventEmitter<string>();
     @Output() onRowClick = new EventEmitter<T>();
+    @Output() onPageChange = new EventEmitter<PageChange>();
 
     @ContentChild('header') header: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
@@ -186,7 +187,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
                     this.perPageOptions.push({ name: `${item}`, value: item });
                 });
                 this.perPageOptions.push({ name: this.LANG.search.All, value: this.data?.length });
-                this.perPageSelectedOption = this.perPageOptions[1]; // 10 items per page - we need to make it dynamic
+                this.perPageSelectedOption = this.perPageOptions[0]; // 10 items per page - we need to make it dynamic
             }
 
             this.numPages = Math.ceil(this.data?.length / this.perPageSelectedOption.value);
@@ -466,6 +467,11 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
                 this.renderer.appendChild(item.nativeElement, sort);
             }
         });
+    }
+
+    handlePageChange(page: number): void {
+        this.onPageChange.emit({ page, pageSize: this.perPageSelectedOption.value });
+        this.setPage(page);
     }
 
     setPage(page: number): void {

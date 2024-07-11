@@ -252,6 +252,9 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         partnerId: string,
         startTs: string,
         endTs: string,
+        page: number,
+        pageSize: number,
+        ordering: string,
     ): Observable<PartnerServiceChangesResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'service_changes_history']),
@@ -259,6 +262,9 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 params: {
                     startTs,
                     endTs,
+                    page,
+                    page_size: pageSize,
+                    ordering,
                 },
             },
         );
@@ -403,11 +409,17 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         orgId: string,
         startTs: string,
         endTs: string,
+        page: number,
+        pageSize: number,
+        ordering: string,
     ): Observable<OrgServiceChangesResponse> => {
         return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'service_changes_history']), {
             params: {
                 startTs,
                 endTs,
+                page,
+                page_size: pageSize,
+                ordering,
             },
         });
     };
