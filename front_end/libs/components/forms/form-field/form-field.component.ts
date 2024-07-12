@@ -36,13 +36,26 @@ import { NxFormFieldToken } from './form-field.token';
  *
  * Based on [Material form field](https://material.angular.io/components/form-field/overview).
  *
- * "field" refers to the wrapper element and "control" refers to the
- * component that the field is wrapping.
+ * "field" refers to the `nx-form-field` container element, "control" refers to the
+ * element that the field is wrapping, and "form control" refers to the `FormControl`
+ * registered with the element.
  *
- * Used with three child components:
+ * The field must be inside a reacive form.
+ *
+ * The field should be used with three child elements:
  * 1. `nx-label` for the control (required)
  * 2. The control with `NxControlDirective` (required)
  * 3. `nx-control-messages` for control state messages (optional)
+ *
+ * How validation works:
+ * 1. Add validator functions to the form control. The `NxValidators` class contains
+ *    sets for common use cases like email validation.
+ * 2. Create an error matcher function for the control using `errorMatcherFactory` and
+ *    pass it as an input to the field. This is what tells the field when to display
+ *    specific errors. Like `NxValidators`, the `NxErrorMatches` class contains common use cases.
+ * 3. Add messages to be displayed for errors with `nx-control-message` elements. The key input
+ *    should match the error key. There are certain preset messages in `nx-control-messages`
+ *    that cannot be overridden.
  */
 @Component({
     selector: 'nx-form-field',

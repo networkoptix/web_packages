@@ -17,13 +17,6 @@ export interface ControlState {
 /** A function for when to display errors — on change (immediately), control blur, or form submit.
  *
  * The first matching error from a control's validators array will be selected (ordering matters).
- *
- * Matching should follow the general pattern:
- * 1. Show errors that will not be resolved by further input immediately.
- *    This includes forbidden emails and max length errors.
- * 2. Show errors that can be caused by incomplete user input on blur.
- *    This includes pattern and min length errors.
- * 3. Show required errors on submit. So far this is the only error design wants shown on submit.
  */
 export type ErrorMatcher = (control: NgControl, form: FormGroupDirective) => ControlState | null;
 
@@ -72,6 +65,13 @@ export class NxErrorMatches {
 /** Factory to produce error matcher functions.
  *
  * At least one set of triggers is required. Multiple sets will be composed.
+ *
+ * Matching should follow the general pattern:
+ * 1. Show errors that will not be resolved by further input immediately.
+ *    This includes forbidden emails and max length errors.
+ * 2. Show errors that can be caused by incomplete user input on blur.
+ *    This includes pattern and min length errors.
+ * 3. Show required errors on submit. So far this is the only error design wants shown on submit.
  */
 export function errorMatcherFactory(
     trigger: ErrorMatches,

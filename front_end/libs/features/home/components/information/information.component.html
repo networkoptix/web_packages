@@ -217,7 +217,7 @@
                     </button>
                     <nx-async-action-button
                         [action]="saveDataChanges"
-                        [disabled]="!allValid || hasNoItems || !hasDirty"
+                        [invalid]="!allValid || hasNoItems || !hasDirty"
                         [(busy)]="busy"
                         translate
                     >
