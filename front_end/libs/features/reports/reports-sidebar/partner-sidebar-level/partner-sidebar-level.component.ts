@@ -10,10 +10,10 @@ import { highlightRegex } from '@components/search-highlight/highlight-regex';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { EntityType } from '@pages/reports/reports.types';
+import { PartnerStructure } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { NxOrgSidebarLevelComponent } from '../org-sidebar-level/org-sidebar-level.component';
-import { FormattedPartnerStructure } from '../reports-sidebar.types';
 
 @Component({
     selector: 'nx-partner-sidebar-level',
@@ -31,7 +31,8 @@ import { FormattedPartnerStructure } from '../reports-sidebar.types';
     standalone: true,
 })
 export class NxPartnerSidebarLevelComponent {
-    partnerStructure$$ = input.required<FormattedPartnerStructure>({ alias: 'partnerStructure' });
+    parentMap$$ = input.required<ReadonlyMap<string, string | null>>({ alias: 'parentMap' });
+    partnerStructure$$ = input.required<PartnerStructure>({ alias: 'partnerStructure' });
     openLevels$$ = input.required<Set<string>>({ alias: 'openLevels' });
     selectedEntityId$$ = input.required<string | undefined>({ alias: 'selectedEntityId' });
     search$$ = input.required<string>({ alias: 'search' });
@@ -50,7 +51,10 @@ export class NxPartnerSidebarLevelComponent {
         return subChannels.length > 0 || organizations.length > 0;
     });
     isOpenIconVisible$$ = computed<boolean>(() => this.hasChildren$$() && !this.search$$());
-    isSubchannel$$ = computed<boolean>(() => !!this.partnerStructure$$().parentPartner);
+    isSubChannel$$ = computed<boolean>(() => {
+        const parentMap = this.parentMap$$();
+        return !parentMap.size || !!parentMap.get(this.partnerStructure$$().id);
+    });
     isSelected$$ = computed<boolean>(
         () => this.partnerStructure$$().id === this.selectedEntityId$$(),
     );
@@ -81,22 +85,10 @@ export class NxPartnerSidebarLevelComponent {
     open(entityId: string): void {
         this.openEvent.emit(entityId);
     }
-    maybeOpenPartner($event: MouseEvent): void {
-        const partnerStructure = this.partnerStructure$$();
-        const isOpen = this.isOpen$$();
-        const openLevels = this.openLevels$$();
-        const isSubchannel = this.isSubchannel$$();
-        const { parentPartner } = partnerStructure;
-
+    openPartner($event: MouseEvent): void {
         $event.stopPropagation();
         // In the search view it's possible to select a child partner when its parent is not open. We want the parent to
         // be open after exiting the search
-        if (parentPartner && !openLevels.has(parentPartner)) {
-            this.open(parentPartner);
-        }
-        // If it's a root partner we want to open it if it isn't already
-        else if (!isSubchannel && !isOpen) {
-            this.open(partnerStructure.id);
-        }
+        this.open(this.partnerStructure$$().id);
     }
 }

@@ -9,6 +9,7 @@
     @for (partner of searchFilteredChannelStructure$$()?.channelPartners; track partner.id) {
         <nx-partner-sidebar-level
             [partnerStructure]="partner"
+            [parentMap]="parentMap$$()"
             [openLevels]="openLevels$$()"
             [selectedEntityId]="entityId$$()"
             [search]="search$$()"
