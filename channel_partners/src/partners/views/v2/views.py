@@ -1803,6 +1803,7 @@ def all_org_users(request):
 
 @extend_schema(
     summary='Submit a cloud storage usage report',
+    tags=['Internal'],
     request=CloudStorageUsageReportSerializer,
     responses=CloudStorageUsageReportSerializer)
 @api_view(['POST'])
