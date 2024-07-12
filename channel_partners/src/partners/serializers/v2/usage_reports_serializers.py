@@ -80,7 +80,7 @@ class SystemExpiringUsageSerializer(serializers.Serializer):
     report = ExpiringUsageDetailRecordSerializer(many=True)
 
 
-class OrganizationUsageReportRecordSerializer(FieldAccessSerializer):
+class OrganizationUsageReportRecordSerializer(serializers.Serializer):
     service_id = serializers.UUIDField()
     service_name = serializers.CharField()
     used_by = serializers.IntegerField()
@@ -93,9 +93,6 @@ class OrganizationUsageReportRecordSerializer(FieldAccessSerializer):
         choices=list(ChannelPartnerService.SUB_TYPES_CODES),
         required=False,
         source='service_sub_type')
-
-    def can_read_service_name(self, instance):
-        return self.context['hierarchy_level'] == HierarchyLevels.own
 
 
 class ChannelPartnerSubEntityServicesSerializer(FieldAccessSerializer):
@@ -162,7 +159,7 @@ class OrganizationExpiringUsageSerializer(FieldAccessSerializer):
         return self.context['hierarchy_level'] == HierarchyLevels.own
 
 
-class ChannelPartnerUsageReportRecordSerializer(FieldAccessSerializer):
+class ChannelPartnerUsageReportRecordSerializer(serializers.Serializer):
     service_id = serializers.UUIDField()
     service_name = serializers.CharField()
     parent_service_id = serializers.UUIDField()
@@ -173,12 +170,6 @@ class ChannelPartnerUsageReportRecordSerializer(FieldAccessSerializer):
     monthly_rate = serializers.IntegerField()
     daily_rate = serializers.IntegerField()
     sub_type = CodeChoiceField(choices=list(ChannelPartnerService.SUB_TYPES_CODES))
-
-    def can_read_service_name(self, instance):
-        return self.context['hierarchy_level'] == HierarchyLevels.own
-
-    def can_read_parent_service_name(self, instance):
-        return self.context['hierarchy_level'] == HierarchyLevels.own
 
 
 # Expiring Serializers
@@ -206,10 +197,14 @@ class ChannelPartnerExpiringServiceSummarySerializer(serializers.Serializer):
     organizations = serializers.IntegerField()
     channel_partners = serializers.IntegerField()
 
+
 class ChannelPartnerRegularUsageSerializer(FieldAccessSerializer):
     channel_partner_id = serializers.UUIDField()
     channel_partner_name = serializers.CharField()
     report = RegularUsageDetailRecordSerializer(many=True)
+
+    def can_read_channel_partner_name(self, instance):
+        return self.context['hierarchy_level'] == HierarchyLevels.own
 
 
 class ChannelPartnerExpiringServiceEntitiesSerializer(FieldAccessSerializer):

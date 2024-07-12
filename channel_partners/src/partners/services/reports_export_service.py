@@ -970,7 +970,7 @@ class ChannelPartnerReportGenerator:
         self.hierarchy_level = hierarchy_level
 
     def get_service_sheet_name(self, service: ChannelPartnerService):
-        sheet_name = service.name if self.hierarchy_level == HierarchyLevels.own else str(service.id)
+        sheet_name = service.name
         idx = 0
         while sheet_name in self.wb.sheetnames:
             idx += 1
