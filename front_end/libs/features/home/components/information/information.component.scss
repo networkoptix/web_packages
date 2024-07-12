@@ -11,7 +11,7 @@
         grid-template-columns: 60%;
         grid-template-areas: 'description' 'contact';
         min-height: 20rem;
-        padding: 0 0 82px;
+        padding: 0 0 35px;
         gap: 1rem;
 
         @include bootstrap.media-breakpoint-down(md) {
@@ -50,16 +50,13 @@
     }
 
     .section-apply {
+        position: absolute;
         display: flex;
         gap: 0.5rem;
-        justify-content: flex-end;
+        justify-content: flex-start;
 
-        &--justify-between {
-            justify-content: space-between;
-        }
-
-        &--justify-end {
-            justify-content: flex-end;
+        .btn-default {
+            order: 1; // make cancel button appear on the right
         }
 
         // Assuming footer contents is only buttons
