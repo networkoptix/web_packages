@@ -438,6 +438,7 @@ export const GroupsStore = signalStore(
 
                         const openGroupsEntities = [{ id: orgId, open: true }];
                         if (groupId) {
+                            let emptyActiveGroup = false;
                             function findGroupPath(
                                 targetId: string,
                                 currentLevel: GroupStructureItem[],
@@ -448,16 +449,12 @@ export const GroupsStore = signalStore(
                                     if (targetPath.length) {
                                         return targetPath;
                                     }
-                                    /* TODO: Fix inefficiency here where if 1 level deep group
-                                    has no children the search doesn't terminate. This requires
-                                    more test modification to have valid structures, but
-                                    getting bug fix for CLOUD-14086 in is higher priority. */
 
                                     const currentGroup = currentLevel[i];
                                     const currentPath = pathBase.concat(currentGroup.id);
                                     if (currentGroup.id === targetId) {
                                         if (!currentGroup.children.length) {
-                                            currentPath.pop();
+                                            emptyActiveGroup = true;
                                             // Don't open current group if no children
                                         }
                                         return currentPath;
@@ -473,6 +470,9 @@ export const GroupsStore = signalStore(
                                 return targetPath;
                             }
                             const path = findGroupPath(groupId, groups);
+                            if (emptyActiveGroup) {
+                                path.pop();
+                            }
                             openGroupsEntities.push(...path.map(id => ({ id, open: true })));
                         }
 
