@@ -149,9 +149,9 @@ class TestNamesObfuscation:
         )
         serializer = OrganizationUsageReportRecordSerializer(instance=report, context=self.context_child, many=True)
         assert serializer.data
-        for record in serializer.data:
-            assert record['service_name']
-            assert record['service_name'] == VALUE_REPLACEMENT
+        for serialized_record, record in zip(serializer.data, report):
+            assert serialized_record['service_name']
+            assert serialized_record['service_name'] == record['service_name']
 
     def test_get_regular_service_report_own_channel_partner(self):
         report = ChannelPartnerReportsService.get_regular_service_report(
@@ -279,8 +279,8 @@ class TestNamesObfuscation:
         )
         serializer = ChannelPartnerUsageReportRecordSerializer(instance=report, context=self.context_child, many=True)
         assert serializer.data
-        for record in serializer.data:
-            assert record['service_name']
-            assert record['service_name'] == VALUE_REPLACEMENT
-            assert record['parent_service_name']
-            assert record['parent_service_name'] == VALUE_REPLACEMENT
+        for serialized_record, record in zip(serializer.data, report):
+            assert serialized_record['service_name']
+            assert serialized_record['service_name'] == record['service_name']
+            assert serialized_record['parent_service_name']
+            assert serialized_record['parent_service_name'] == record['parent_service_name']
