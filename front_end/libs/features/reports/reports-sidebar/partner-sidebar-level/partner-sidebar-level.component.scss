@@ -5,9 +5,10 @@
     margin-bottom: 6px;
 
     &.is-subchannel {
-        padding-left: 25px;
+        padding-left: 4px;
     }
 
+    &:hover,
     &.is-selected {
         background-color: var(--reports-sidebar-highlight-background);
     }

@@ -10,13 +10,16 @@ import { take } from 'rxjs';
 
 import { selectChannelStructure } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
-import { ChannelPartnersStructure } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartnersStructure,
+    OrganizationStructure,
+    PartnerStructure,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { caseInsensitiveSearch } from '@utils/general';
 
 import { NxOrgSidebarLevelComponent } from './org-sidebar-level/org-sidebar-level.component';
 import { NxPartnerSidebarLevelComponent } from './partner-sidebar-level/partner-sidebar-level.component';
-import { FormattedChannelStructure, FormattedPartnerStructure } from './reports-sidebar.types';
 
 @UntilDestroy()
 @Component({
@@ -44,73 +47,68 @@ export class NxReportsSidebarComponent implements OnInit {
     entityId$$ = this.paramStateService.getStateHandler(({ params }) => params.entityId).state$$;
     search$$ = signal<string>('');
 
-    formattedChannelStructure$$ = computed<FormattedChannelStructure>(() => {
-        // Add a reference to the parent partner for child partners/orgs, so that we can open the parent when
-        // a child is selected while searching
-        const channelStructure = this.channelStructure$$();
-        const partnersWithParentReference =
-            channelStructure?.channelPartners.map(partner => {
-                const subChannels = partner.subChannels.map(subChannel => ({
-                    ...subChannel,
-                    parentPartner: partner.id,
-                    // for now a subchannel shouldn't have additional children
-                    subChannels: [],
-                    organizations: [],
-                }));
-                const organizations = partner.organizations.map(org => ({
-                    ...org,
-                    parentPartner: partner.id,
-                }));
-                return { ...partner, subChannels, organizations, parentPartner: null };
-            }) ?? [];
-        const organizationsWithParentReference =
-            channelStructure?.organizations.map(org => ({ ...org, parentPartner: null })) ?? [];
-        return {
-            channelPartners: partnersWithParentReference,
-            organizations: organizationsWithParentReference,
-        };
-    });
-    searchFilteredChannelStructure$$ = computed<FormattedChannelStructure>(() => {
-        const search = this.search$$();
-        const formattedChannelStructure = this.formattedChannelStructure$$();
+    private entityIdToEntityMap: Map<string, PartnerStructure | OrganizationStructure> = new Map();
+    private childToParentMap: Map<string, string | null> = new Map();
+    parentMap$$ = signal<ReadonlyMap<string, string | null>>(new Map());
 
-        if (!search) {
-            return formattedChannelStructure;
+    private buildPathToRoot(entityId: string): string[] {
+        const { childToParentMap } = this;
+        const visitedNodes: string[] = [entityId];
+
+        // Start from the selected entity and traverse up to the root partner.
+        let current = childToParentMap.get(entityId);
+        // For safety, limit the number of iterations to 1 million.
+        for (let i = 0; current && i < 1_000_000; i++) {
+            visitedNodes.push(current);
+            current = childToParentMap.get(current);
         }
+        return visitedNodes;
+    }
 
-        // Only incude root partners, child partners, and child orgs that match the search
-        // If a root partner matches the search but none if its children do, then none of the children will be shown
-        // If a child partner or child org matches the search, it will be shown along with its parent partner
-        const filteredPartners =
-            formattedChannelStructure?.channelPartners.reduce((filteredPartners, partner) => {
-                const partnerNameMatches = caseInsensitiveSearch(partner.name, search);
+    searchFilteredChannelStructure$$ = computed<ChannelPartnersStructure>(() => {
+        const search = this.search$$();
+        const channelStructure = this.channelStructure$$();
 
-                const filteredSubChannels = partner.subChannels.filter(subChannel =>
-                    caseInsensitiveSearch(subChannel.name, search),
-                );
-                const filteredOrgs = partner.organizations.filter(org =>
-                    caseInsensitiveSearch(org.name, search),
-                );
-                if (filteredSubChannels.length || filteredOrgs.length) {
-                    filteredPartners.push({
-                        ...partner,
-                        subChannels: filteredSubChannels,
-                        organizations: filteredOrgs,
-                    });
-                } else if (partnerNameMatches) {
-                    filteredPartners.push({ ...partner, subChannels: [], organizations: [] });
+        if (!search || !channelStructure) {
+            return channelStructure || { channelPartners: [], organizations: [] };
+        }
+        /* How search works
+            1. Add every match and their parents.
+            2. Remove the roots children that don't match.
+            3. Recursively removing sub channels and orgs that don't match.
+        * */
+        // Step 1: Mark all nodes that match the search query and their parents to the root.
+        const matches = Array.from(this.entityIdToEntityMap.entries()).reduce(
+            (matchingNodes, [key, node]) => {
+                if (caseInsensitiveSearch(node.name, search)) {
+                    this.buildPathToRoot(key).forEach(entityId => matchingNodes.add(entityId));
                 }
+                return matchingNodes;
+            },
+            new Set<string>(),
+        );
 
-                return filteredPartners;
-            }, [] as FormattedPartnerStructure[]) ?? [];
-        const filteredOrgs =
-            formattedChannelStructure?.organizations.filter(org =>
-                caseInsensitiveSearch(org.name, search),
-            ) ?? [];
+        // Step 2: Remove top level partners and orgs that don't match the search query before we recursively filter the tree.
+        const partners = channelStructure.channelPartners.filter(partner =>
+            matches.has(partner.id),
+        );
+        const organizations = channelStructure.organizations.filter(org => matches.has(org.id));
+
+        // Step 3: Method to filter out partners and organizations that don't match the search query.
+        const filterSubChannels = (node: PartnerStructure): PartnerStructure => {
+            const filteredNode = { ...node };
+            if (node.subChannels.length) {
+                filteredNode.subChannels = node.subChannels
+                    .filter(partner => matches.has(partner.id))
+                    .map(sub => filterSubChannels(sub));
+            }
+            filteredNode.organizations = node.organizations.filter(org => matches.has(org.id));
+            return filteredNode;
+        };
 
         return {
-            channelPartners: filteredPartners,
-            organizations: filteredOrgs,
+            organizations,
+            channelPartners: partners.map(filterSubChannels),
         };
     });
 
@@ -120,33 +118,50 @@ export class NxReportsSidebarComponent implements OnInit {
         private store: Store,
     ) {}
 
+    private buildTree(tree: ChannelPartnersStructure): void {
+        // Maps data at each node.
+        const entityIdToEntityMap = new Map<string, PartnerStructure | OrganizationStructure>();
+        // The tree represented as a map of child -> parent.
+        const childToParentMap = new Map<string, string | null>();
+        const traverseTree = (node: PartnerStructure): void => {
+            node.organizations.forEach(org => {
+                entityIdToEntityMap.set(org.id, org);
+                childToParentMap.set(org.id, node.id);
+            });
+            node.subChannels.forEach(channelPartner => {
+                entityIdToEntityMap.set(channelPartner.id, channelPartner);
+                childToParentMap.set(channelPartner.id, node.id);
+                traverseTree(channelPartner);
+            });
+        };
+
+        // Add the root nodes to the maps.
+        tree.channelPartners.forEach(partner => {
+            entityIdToEntityMap.set(partner.id, partner);
+            childToParentMap.set(partner.id, null);
+        });
+        tree.organizations.forEach(org => {
+            entityIdToEntityMap.set(org.id, org);
+            childToParentMap.set(org.id, null);
+        });
+
+        // Add the nested nodes to the maps.
+        tree.channelPartners.map(traverseTree);
+        this.childToParentMap = childToParentMap;
+        this.entityIdToEntityMap = entityIdToEntityMap;
+        const parentMap: ReadonlyMap<string, string | null> = childToParentMap;
+        this.parentMap$$.set(parentMap);
+    }
+
     ngOnInit(): void {
-        // Set the default open partner on load:
-        // - if a root partner is selected, it is open if it has children
-        // - if a nested partner/org is selected, its parent partner is open
+        // Set the default open partner / organization on load.
         this.channelStructure$.pipe(take(1), untilDestroyed(this)).subscribe(channelStructure => {
             const selectedEntityId = this.router.url.split('/')[3];
-            const entityToDefaultOpenPartnerMap: { [key: string]: string | null } = {};
-            channelStructure?.channelPartners.forEach(rootPartner => {
-                const hasChildren =
-                    rootPartner.subChannels.length > 0 || rootPartner.organizations.length > 0;
-                entityToDefaultOpenPartnerMap[rootPartner.id] = hasChildren ? rootPartner.id : null;
 
-                rootPartner.subChannels.forEach(subChannel => {
-                    entityToDefaultOpenPartnerMap[subChannel.id] = rootPartner.id;
-                });
-                rootPartner.organizations.forEach(org => {
-                    entityToDefaultOpenPartnerMap[org.id] = rootPartner.id;
-                });
-            });
-            channelStructure?.organizations.forEach(rootOrg => {
-                entityToDefaultOpenPartnerMap[rootOrg.id] = null;
-            });
+            this.buildTree(channelStructure!);
 
-            const defaultOpenPartners = entityToDefaultOpenPartnerMap[selectedEntityId]
-                ? [entityToDefaultOpenPartnerMap[selectedEntityId] as string]
-                : [];
-            this.openLevels$$.set(new Set(defaultOpenPartners));
+            const defaultOpenPartner = new Set(this.buildPathToRoot(selectedEntityId));
+            this.openLevels$$.set(defaultOpenPartner);
         });
     }
 
@@ -162,9 +177,8 @@ export class NxReportsSidebarComponent implements OnInit {
         });
     }
     open(entityId: string): void {
-        if (this.openLevels$$().has(entityId)) {
-            return;
-        }
-        this.openLevels$$.update(openLevels => new Set(openLevels).add(entityId));
+        const defaultOpenPartner = new Set(this.openLevels$$());
+        this.buildPathToRoot(entityId).forEach(entityId => defaultOpenPartner.add(entityId));
+        this.openLevels$$.set(defaultOpenPartner);
     }
 }

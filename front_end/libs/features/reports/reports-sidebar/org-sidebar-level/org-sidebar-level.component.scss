@@ -5,6 +5,7 @@
     margin-bottom: 6px;
     padding-left: 25px;
 
+    &:hover,
     &.is-selected {
         background-color: var(--reports-sidebar-highlight-background);
         color: var(--reports-sidebar-highlight-text);

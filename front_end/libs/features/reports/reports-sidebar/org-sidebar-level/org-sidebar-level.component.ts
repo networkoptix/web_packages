@@ -10,9 +10,8 @@ import { highlightRegex } from '@components/search-highlight/highlight-regex';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { EntityType } from '@pages/reports/reports.types';
+import { OrganizationStructure } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
-
-import { FormattedOrganizationStructure } from '../reports-sidebar.types';
 
 @Component({
     selector: 'nx-org-sidebar-level',
@@ -29,7 +28,7 @@ import { FormattedOrganizationStructure } from '../reports-sidebar.types';
     standalone: true,
 })
 export class NxOrgSidebarLevelComponent {
-    organization$$ = input.required<FormattedOrganizationStructure>({ alias: 'organization' });
+    organization$$ = input.required<OrganizationStructure>({ alias: 'organization' });
     openLevels$$ = input.required<Set<string>>({ alias: 'openLevels' });
     selectedEntityId$$ = input.required<string | undefined>({ alias: 'selectedEntityId' });
     search$$ = input.required<string>({ alias: 'search' });
@@ -59,12 +58,9 @@ export class NxOrgSidebarLevelComponent {
     constructor(private router: Router) {}
 
     handleSelection($event: MouseEvent): void {
-        const organization = this.organization$$();
         $event.stopPropagation();
         // In the search view we can select a child org when its parent partner is not open. We then want the parent to
         // be open after exiting the search
-        if (organization.parentPartner) {
-            this.openParentEvent.emit(organization.parentPartner);
-        }
+        this.openParentEvent.emit(this.organization$$().id);
     }
 }

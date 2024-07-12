@@ -1,24 +1,22 @@
 <div
     class="partner-level"
     [ngClass]="{
-        'is-subchannel': isSubchannel$$(),
+        'is-subchannel': isSubChannel$$(),
         'is-selected': isSelected$$()
     }"
 >
-    @if (!isSubchannel$$()) {
-        <svg-icon
-            (click)="toggleOpen(partnerStructure$$().id)"
-            nx-add-svg-src
-            [src]="icons.dirTextButtons + 'arrow_close.svg'"
-            [svgStyle]="{
-                'width.px': '20',
-                'height.px': '20',
-                transform: isOpen$$() ? 'rotate(90deg)' : 'rotate(0deg)'
-            }"
-            class="open-toggle"
-            [ngStyle]="{ visibility: isOpenIconVisible$$() ? 'visible' : 'hidden' }"
-        ></svg-icon>
-    }
+    <svg-icon
+        (click)="toggleOpen(partnerStructure$$().id)"
+        nx-add-svg-src
+        [src]="icons.dirTextButtons + 'arrow_close.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            transform: isOpen$$() ? 'rotate(90deg)' : 'rotate(0deg)'
+        }"
+        class="open-toggle"
+        [ngStyle]="{ visibility: isOpenIconVisible$$() ? 'visible' : 'hidden' }"
+    ></svg-icon>
     <svg-icon
         nx-add-svg-src
         [src]="icons.dir + 'partner_small.svg'"
@@ -27,7 +25,7 @@
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
-        (click)="maybeOpenPartner($event)"
+        (click)="openPartner($event)"
         [ngClass]="{
             'is-selected': isSelected$$()
         }"
@@ -41,6 +39,7 @@
     <div class="children">
         @for (subChannel of partnerStructure$$().subChannels; track subChannel.id) {
             <nx-partner-sidebar-level
+                [parentMap]="parentMap$$()"
                 [partnerStructure]="subChannel"
                 [openLevels]="openLevels$$()"
                 [selectedEntityId]="selectedEntityId$$()"
