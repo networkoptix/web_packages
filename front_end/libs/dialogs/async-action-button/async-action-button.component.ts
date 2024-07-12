@@ -29,15 +29,22 @@ import { AsyncAction } from './create-async-action';
 
 /** A button to handle asynchronous actions.
  *
- * If within a form, the button will match the status of the form after the first submit.
+ * There are currently three internal states:
+ *
+ * 1. Valid: No form errors detected. Can be focused and fired.
+ *
+ * 2. Invalid: Form errors detected. Can be focused but not fired.
+ *
+ * 3. Loading: Executing the action. Can be focused but not fired.
+ *
+ * Disabled is a potential fourth state, but there hasn't been a use case for it so far.
+ *
+ * If inside a form, the button will match the valid/invalid status of the form after the first submit.
  * This is because if button was always invalid for invalid forms, this would create
  * a blind spot if the last input was invalid and focused since error messages are only displayed
  * after control touched/form submit so there would be no obvious next step.
  *
- * When executing the action, form controls are disabled
- * and the button enters a loading state which can be focused, but not fired.
- *
- * Similarly, when the button is in an invalid state it can be focused but not fired.
+ * When executing the action, form controls are disabled.
  */
 @Component({
     selector: 'nx-async-action-button',
@@ -50,10 +57,12 @@ export class NxAsyncActionButtonComponent<T> implements OnInit {
     action = input.required<AsyncAction<T>>();
     buttonColor = input<'default' | 'primary' | 'danger'>('primary');
 
-    /* Disabled state is different from invalid state!
-    // Use the manualInvalid input for manual control of valid state.
-    */
-    disabled = input<boolean>(false);
+    /* NOT TO BE USED FOR PREVENTING INVALID FORM SUBMISSIONS.
+    Replace the signal with the input if you need to manually disable the button
+    for some other reason.
+    Use the manualInvalid input for manual control of button invalid state otherwise. */
+    // disabled = input<boolean>(false);
+    disabled = signal(false);
 
     /* Manual escape hatches for disabling default behaviors */
     /** Disable all form functionality */

@@ -156,10 +156,6 @@
                 [spacingLines]="3"
                 [state]="quoteControl.value ?? null"
             >
-                <nx-control-message
-                    key="required"
-                    text="Required"
-                ></nx-control-message>
                 @for (quote of quotes; track quote.source) {
                     <nx-control-message
                         [key]="quote.source"

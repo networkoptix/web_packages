@@ -68,6 +68,10 @@ export class NxControlMessagesComponent implements AfterViewInit {
         return this.spacingLines();
     }
 
+    /** For displaying non-error messages.
+     *
+     * Like with errors, the key should match the `nx-control-message` key.
+     */
     manualState = input<ControlState | null, string | ControlState | null>(null, {
         alias: 'state',
         transform: s => (typeof s === 'string' ? { key: s } : s),
@@ -86,17 +90,21 @@ export class NxControlMessagesComponent implements AfterViewInit {
     private projectedMessages = signal<NxMessage[]>([]);
 
     private messages = computed<Map<string, NxMessage>>(() => {
-        const [presetMessages, projectedMessages] = [
-            this.presetMessages(),
+        const [projectedMessages, presetMessages] = [
             this.projectedMessages(),
+            this.presetMessages(),
         ];
         const messages = new Map<string, NxMessage>();
-        for (let i = 0; i < presetMessages.length; i++) {
-            const message = presetMessages[i];
-            messages.set(message.key(), message);
-        }
         for (let i = 0; i < projectedMessages.length; i++) {
             const message = projectedMessages[i];
+            messages.set(message.key(), message);
+        }
+        for (let i = 0; i < presetMessages.length; i++) {
+            const message = presetMessages[i];
+            if (!environment.production && messages.has(message.key())) {
+                /* Potential pitfall: attempting to overwrite preset message */
+                console.warn(`Custom message for error \`${message.key()}\` ignored`);
+            }
             messages.set(message.key(), message);
         }
         return messages;
