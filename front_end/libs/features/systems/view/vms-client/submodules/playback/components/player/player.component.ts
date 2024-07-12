@@ -184,7 +184,7 @@ export class PlayerComponent implements OnDestroy, AfterViewInit {
                         } else if (error.name === 'HttpErrorResponse') {
                             this.playerErrorCount++;
                         }
-                        if (this.playerErrorCount > 1) {
+                        if (this.playerErrorCount > 2) {
                             this.playBackError.emit(this.LANG.common.cameraStates.errorLoading);
                         }
                     },
