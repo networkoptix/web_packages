@@ -65,13 +65,23 @@
                         }
                     </nx-card>
                 </ng-container>
+                @if (showInfiniteLoader$$() && !search$$()) {
+                    <div class="preloader-wrapper">
+                        <nx-pre-loader
+                            [intersectionDebounce]="500"
+                            (nxOnIntersect)="$event === 'Visible' && loadMore()"
+                        ></nx-pre-loader>
+                    </div>
+                }
             </div>
         </ng-container>
         <ng-template #noPartners>
             <div class="nothing-found-placeholder">
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                ></nx-page-placeholder-v2>
+                @if (!subChannelsSearchLoading$$()) {
+                    <nx-page-placeholder-v2 [type]="PAGE_PLACEHOLDER.NOTHING_FOUND" />
+                } @else {
+                    <nx-pre-loader />
+                }
             </div>
         </ng-template>
     </div>

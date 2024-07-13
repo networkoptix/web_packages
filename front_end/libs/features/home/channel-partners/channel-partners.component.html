@@ -59,7 +59,7 @@
             </nx-base-tab>
         </nx-tabs>
         <ng-container *ngIf="showOrganizations; else tabOutlet">
-            @if ((filteredOrganizations$ | async)?.length || search.value) {
+            @if ((filteredOrganizations$ | async)?.length || search$$()) {
                 <div class="actions">
                     <button
                         *ngIf="
@@ -79,8 +79,6 @@
                         "
                         class="input-overlay"
                         [style.width.px]="searchConfig.channelPartners.searchWidth"
-                        [ngModel]="search"
-                        (ngModelChange)="setSearch($event)"
                         layout="compact"
                         [placeholder]="'Search' | translate"
                         instant
@@ -130,13 +128,27 @@
                                 }
                             </nx-card>
                         </ng-container>
+                        @if (showInfiniteLoader$$() && !search$$()) {
+                            @defer (on timer(100)) {
+                                <div class="preloader-wrapper">
+                                    <nx-pre-loader
+                                        [intersectionDebounce]="500"
+                                        (nxOnIntersect)="$event === 'Visible' && loadMore()"
+                                    ></nx-pre-loader>
+                                </div>
+                            }
+                        }
                     </div>
                 </ng-container>
                 <ng-template #noOrgs>
-                    <ng-container *ngIf="search.value; else addOrg">
-                        <nx-page-placeholder-v2
-                            [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                        ></nx-page-placeholder-v2>
+                    <ng-container *ngIf="search$$(); else addOrg">
+                        @if ((organizationsFromApiState$ | async)?.loading) {
+                            <nx-pre-loader />
+                        } @else {
+                            <nx-page-placeholder-v2
+                                [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
+                            ></nx-page-placeholder-v2>
+                        }
                     </ng-container>
                     <ng-template #addOrg>
                         <nx-page-generic-placeholder-v2>

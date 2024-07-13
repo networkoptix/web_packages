@@ -88,6 +88,20 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
+        ChannelPartnerActions.addOrganizations,
+        (state, { organizations }): ChannelPartnersState => ({
+            ...state,
+            organizations: sortEntityByName(
+                (() => {
+                    const existingOrgIds = new Set<string>();
+                    return [...organizations, ...state.organizations].filter(org =>
+                        existingOrgIds.has(org.id) ? false : !!existingOrgIds.add(org.id),
+                    );
+                })(),
+            ),
+        }),
+    ),
+    on(
         ChannelPartnerActions.setChannelPartnersAndRootOrgs,
         (state, { channelPartners, rootOrganizations }): ChannelPartnersState => ({
             ...state,

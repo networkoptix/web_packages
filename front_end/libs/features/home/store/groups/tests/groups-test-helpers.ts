@@ -4,7 +4,7 @@ import { patchState } from '@ngrx/signals';
 import { setEntities } from '@ngrx/signals/entities';
 import { StoreModule } from '@ngrx/store';
 import { random, sample } from 'lodash-es';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -15,6 +15,7 @@ import {
     GroupItem,
     GroupStructureItem,
     PatchGroup,
+    WithPageUpdater,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { channelPartnersReducer } from '@store/channel-partners/channel-partners.reducer';
@@ -148,7 +149,10 @@ class CpServiceMock
         new MockParamStateHandler() as NxChannelPartnersService['paramStateHandler'];
     getGroupsStructure = jest.fn((_orgId: string) => of([] as GroupStructureItem[]));
     getGroup = jest.fn((id: string) => of(generateGroup({ id })));
-    getUserSystems = jest.fn((id: string, _rootOnly?: boolean) => of([] as CloudSystemLight[]));
+    getUserSystems = jest.fn(
+        (id: string, _rootOnly?: boolean) =>
+            of([] as CloudSystemLight[]) as WithPageUpdater<Observable<CloudSystemLight[]>>,
+    );
     patchGroup = jest.fn((id: string, body: PatchGroup) => of(generateGroup({ id, ...body })));
     updateSystemGroup = jest.fn((systemId: string, body: { groupId: string | number | null }) =>
         of({ id: uuid(), systemId, ...body } as unknown as CloudSystem),

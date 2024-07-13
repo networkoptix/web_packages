@@ -19,8 +19,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, map } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
+import { delay, switchMap } from 'rxjs/operators';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
@@ -246,18 +246,30 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
             .pipe(
                 map(({ params }) => params.organizationId),
                 distinctUntilChanged(),
+                switchMap(async id => {
+                    const loadedOrg =
+                        this.currentOrganization$$() ||
+                        this.organizations$$().find(o => o.id === id);
+
+                    if (loadedOrg) {
+                        return loadedOrg;
+                    }
+                    const fetchedOrg = await firstValueFrom(this.cpService.getOrganization(id));
+                    this.store.dispatch(
+                        CPActions.addOrganizations({ organizations: [fetchedOrg] }),
+                    );
+                    return fetchedOrg;
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(id => {
-                const orgs = this.organizations$$();
-                const currOrg = this.currentOrganization$$();
-                if (!orgs.find(o => o.id === id) || !currOrg) {
+            .subscribe(currentOrg => {
+                if (!currentOrg) {
                     this.isValidOrg = false;
                     this.isLoading = false;
                     return;
                 }
 
-                this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner).subscribe({
+                this.cpService.getSelfChannelPartnerUser(currentOrg?.channelPartner).subscribe({
                     next: () => this.isChannelPartnerUser$$.set(true),
                     error: () => {
                         this.isChannelPartnerUser$$.set(false);

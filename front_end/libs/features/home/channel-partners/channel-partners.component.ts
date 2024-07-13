@@ -10,15 +10,23 @@ import {
     HostBinding,
     effect,
     untracked,
+    signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, Subject, combineLatestWith, throwError } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { NEVER, combineLatest, combineLatestWith, throwError } from 'rxjs';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    mergeWith,
+    shareReplay,
+    switchMap,
+} from 'rxjs/operators';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
@@ -42,6 +50,7 @@ import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
@@ -52,7 +61,8 @@ import {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { caseInsensitiveSearch } from '@utils/general';
+import { alphaNumericSortByName, caseInsensitiveSearch } from '@utils/general';
+import { paramSignal } from '@utils/signals';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxCardComponent } from '../components/card/card.component';
@@ -85,6 +95,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxPagePlaceholderNoAccessComponent,
         NxPagePlaceholderGenericNewV2Component,
         NxAlertBlockComponent,
+        NxIntersectionObserver,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -98,10 +109,83 @@ export class NxChannelPartnersComponent implements OnInit {
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
+    currentPartner$ = this.store.select(selectCurrentPartner);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
     parentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartnerParent);
-    organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
-    filteredOrganizations$: Observable<Organization[]> | undefined;
+    showInfiniteLoader$$ = signal(false);
+    remaining$$ = signal(-1);
+    loadMore = (): void => {};
+    organizations$ = this.currentPartner$.pipe(
+        switchMap(partner => {
+            if (partner) {
+                const orgs$ = this.CPService.getPartnerOrganizations(partner.id).withPageUpdater();
+                this.loadMore = orgs$.loadMore;
+                orgs$.registerHasMoreNotifier((hasMore, remaining) => {
+                    this.showInfiniteLoader$$.set(hasMore);
+                    this.remaining$$.set(remaining);
+                });
+                return orgs$;
+            }
+
+            return NEVER;
+        }),
+        switchMap(orgs => {
+            this.store.dispatch(
+                CPActions.setCurrentPartner({
+                    currentPartnerId: this.currentPartner$$().id,
+                    currentPartnerOrganizations: orgs.sort(alphaNumericSortByName),
+                }),
+            );
+            return this.store.select(selectCurrentPartnerOrgs);
+        }),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    search$$ = paramSignal('search');
+    search$ = toObservable(this.search$$);
+
+    organizationsFromApiState$ = combineLatest([this.search$, this.currentPartner$]).pipe(
+        debounceTime(300),
+        switchMap(([query, currentPartner]) => {
+            if (query && currentPartner) {
+                return this.CPService.getPartnerOrganizations(currentPartner.id)
+                    .withQueryParams({
+                        name: query,
+                        page_size: '1000',
+                    })
+                    .pipe(
+                        map(results => ({
+                            loading: false,
+                            results,
+                        })),
+                    );
+            }
+
+            return NEVER;
+        }),
+        mergeWith(
+            this.search$.pipe(
+                map(() => ({
+                    loading: true,
+                    results: [] as Organization[],
+                })),
+            ),
+        ),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    filteredOrganizations$ = combineLatest([toObservable(this.remaining$$), this.search$]).pipe(
+        switchMap(([remaining, query]) => {
+            if (remaining && query) {
+                return this.organizationsFromApiState$.pipe(map(state => state.results));
+            }
+
+            return this.organizations$.pipe(
+                map(orgs => orgs.filter(({ name }) => caseInsensitiveSearch(name, query))),
+            );
+        }),
+    );
+
     destroyRef = inject(DestroyRef);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     banner$$ = this.store.selectSignal(selectBanner);
@@ -179,9 +263,6 @@ export class NxChannelPartnersComponent implements OnInit {
     isValidPartner = true;
     searchConfig = searchConfig;
 
-    search = { value: '' };
-    searchChanged = new Subject<void>();
-
     constructor(
         private store: Store,
         private route: ActivatedRoute,
@@ -232,14 +313,6 @@ export class NxChannelPartnersComponent implements OnInit {
                     }),
                 );
             });
-        this.searchChanged
-            .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.searchSystems();
-            });
-
-        this.search.value = this.route.snapshot.queryParams.search;
-        this.searchSystems();
     }
 
     get showOrganizations(): boolean {
@@ -259,23 +332,6 @@ export class NxChannelPartnersComponent implements OnInit {
                 }
             });
     };
-
-    searchSystems(): void {
-        const search = this.search.value;
-
-        if (search) {
-            this.filteredOrganizations$ = this.organizations$.pipe(
-                map(res => res.filter(org => caseInsensitiveSearch(org.name, search))),
-            );
-        } else {
-            this.filteredOrganizations$ = this.organizations$;
-        }
-    }
-
-    setSearch(model: { query: string }): void {
-        this.search.value = model.query;
-        this.searchChanged.next();
-    }
 
     @HostBinding('style.--channel-partners-header-height') headerHeight = '324px';
 

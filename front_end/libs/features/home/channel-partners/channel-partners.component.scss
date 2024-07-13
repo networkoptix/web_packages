@@ -24,6 +24,18 @@
 
         .cards-container {
             padding: 4px; // accommodate for :focus outline - and align
+            .preloader-wrapper {
+                position: relative;
+                height: 0px;
+                overflow: visible;
+                width: 100%;
+                nx-pre-loader {
+                    width: 100%;
+                    position: absolute;
+                    bottom: 0;
+                    background: linear-gradient(to bottom, transparent 20%, var(--body-bg));
+                }
+            }
         }
 
         .actions {

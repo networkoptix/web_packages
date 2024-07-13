@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, computed } from '@angular/core';
+import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -8,7 +8,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
+import { NEVER, debounceTime, distinctUntilChanged, filter, map, mergeWith, switchMap } from 'rxjs';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
@@ -18,10 +18,12 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -31,7 +33,8 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { icons } from '@static-variables';
-import { caseInsensitiveSearch } from '@utils/general';
+import { alphaNumericSortByName, caseInsensitiveSearch } from '@utils/general';
+import { pipeSignal } from '@utils/signals';
 import { search as searchConfig } from '@variables/static-variables';
 
 import { NxCardComponent } from '../card/card.component';
@@ -57,6 +60,8 @@ import { NxCardComponent } from '../card/card.component';
         NxCardComponent,
         NxTagComponent,
         NxPagePlaceholderV2Component,
+        NxIntersectionObserver,
+        NxPreLoaderComponent,
     ],
 })
 export class NxSubchannelsComponent {
@@ -68,7 +73,43 @@ export class NxSubchannelsComponent {
     currentPartnerId$$ = toSignal(this.currentPartnerId$);
     channelPartners$$ = this.store.selectSignal<ChannelPartner[]>(selectChannelPartners);
     subchannels$$ = this.store.selectSignal(selectCurrentSubChannelPartners);
+    search$$ = inject(NxParamStateService).getStateHandler(
+        ({ queryParams }) => queryParams.search?.[0] || '',
+    ).state$$;
+    searchState$$ = pipeSignal(
+        this.search$$,
+        query$ =>
+            query$.pipe(
+                debounceTime(300),
+                switchMap(query => {
+                    const partnerId = this.currentPartnerId$$();
+                    if (!partnerId || !query) {
+                        return NEVER;
+                    }
+                    return this.CPService.cpApi
+                        .getSubChannelPartners(partnerId)
+                        .withQueryParams({ name: query, page_size: '1000' });
+                }),
+                map(partners => ({
+                    loading: false,
+                    results: partners,
+                })),
+                mergeWith(
+                    query$.pipe(map(() => ({ loading: true, results: [] as ChannelPartner[] }))),
+                ),
+            ),
+        {
+            loading: true,
+            results: [] as ChannelPartner[],
+        },
+    );
+    subChannelsFromApi$$ = computed(() => this.searchState$$().results);
+    subChannelsSearchLoading$$ = computed(() => this.searchState$$().loading);
     filteredSubchannels$$ = computed(() => {
+        const partiallyLoaded = !!this.remaining$$();
+        if (partiallyLoaded && this.search$$()) {
+            return this.subChannelsFromApi$$();
+        }
         const search = this.search$$();
         const currentSubchannels = this.subchannels$$();
 
@@ -81,11 +122,11 @@ export class NxSubchannelsComponent {
     });
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
     destroyRef = inject(DestroyRef);
-    search$$ = inject(NxParamStateService).getStateHandler(
-        ({ queryParams }) => queryParams.search?.[0] || '',
-    ).state$$;
     subchannelsStoresLoaded = false;
     searchConfig = searchConfig;
+    remaining$$ = signal(-1);
+    showInfiniteLoader$$ = signal(false);
+    loadMore = (): void => {};
 
     constructor(
         private store: Store,
@@ -99,13 +140,21 @@ export class NxSubchannelsComponent {
                 distinctUntilChanged(),
                 filter(id => id !== undefined),
                 switchMap(id => {
-                    return this.CPService.getSubChannelPartners(id);
+                    const paginated$ = this.CPService.cpApi
+                        .getSubChannelPartners(id)
+                        .withPageUpdater();
+                    this.loadMore = paginated$.loadMore;
+                    paginated$.registerHasMoreNotifier((hasMore, remaining) => {
+                        this.showInfiniteLoader$$.set(hasMore);
+                        this.remaining$$.set(remaining);
+                    });
+                    return paginated$;
                 }),
             )
             .subscribe(partners => {
                 this.store.dispatch(
                     CPActions.setCurrentSubChannelPartners({
-                        currentSubchannels: partners.sort((a, b) => a.name.localeCompare(b.name)),
+                        currentSubchannels: partners.sort(alphaNumericSortByName),
                     }),
                 );
                 this.subchannelsStoresLoaded = true;
