@@ -215,7 +215,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.loadingNext = false;
     };
 
-    fetchNext = (event: IntersectionStatus = IntersectionStatus.Visible) => {
+    fetchNext = (event: `${IntersectionStatus}` = IntersectionStatus.Visible) => {
         if (event !== IntersectionStatus.Visible) {
             return;
         }

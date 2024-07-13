@@ -1,7 +1,7 @@
 import { patchState } from '@ngrx/signals';
 import { setEntities } from '@ngrx/signals/entities';
 import { random } from 'lodash-es';
-import { firstValueFrom, of } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 
 import staticLang from '@language_static';
 import { TranslateObject } from '@pipes/nx-translate.types';
@@ -9,6 +9,7 @@ import {
     CloudSystemLight,
     GroupItem,
     GroupStructureItem,
+    WithPageUpdater,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { mapToSystemItem } from '../groups-utils';
@@ -289,7 +290,9 @@ describe('Groups Store: Persistence Methods', () => {
             const { groupsStore, cpService, detectChanges } = await setupGroupsStore();
             const { systemsByOrgOrGroup, organizationId } = generateGroupsAndSystems();
             const systemsByOrg = systemsByOrgOrGroup.find(({ id }) => id === organizationId)!;
-            cpService.getUserSystems.mockReturnValueOnce(of(systemsByOrg.cloudSystems));
+            cpService.getUserSystems.mockReturnValueOnce(
+                of(systemsByOrg.cloudSystems) as WithPageUpdater<Observable<CloudSystemLight[]>>,
+            );
 
             cpService.paramStateHandler.state$$.set({ params: { organizationId } });
 

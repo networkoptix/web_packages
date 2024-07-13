@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, switchMap } from 'rxjs';
 
 import { environment } from '@environments/environment';
@@ -7,21 +7,7 @@ import { InterceptorManager } from '@utils/interceptor-manager';
 
 import { WithFreshSession } from '../nx-cloud-api.types';
 
-interface BaseRequestOptions {
-    headers?:
-        | HttpHeaders
-        | {
-              [header: string]: string | string[];
-          };
-    params?:
-        | HttpParams
-        | {
-              [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-          };
-    body?: unknown;
-}
-
-interface PostRequestOptions extends BaseRequestOptions {}
+import { BaseRequestOptions, PostRequestOptions } from './base-cloud-service-api.types';
 
 export type CreateApiFactory<ApiType = unknown> = (
     http: HttpClient,
@@ -66,10 +52,10 @@ export function disabledMethod(
 export abstract class BaseCloudServiceAPI {
     constructor(
         protected serverUrl: string,
-        private apiBase: string,
+        protected apiBase: string,
         public hostOrCustomization: () => string,
         protected http: HttpClient,
-        private withFreshSession: WithFreshSession,
+        protected withFreshSession: WithFreshSession,
     ) {
         if (this.serverUrl.endsWith('/') && this.apiBase.startsWith('/')) {
             this.serverUrl = this.serverUrl.slice(0, -1);

@@ -491,3 +491,17 @@ export type OwnedService = Service;
 export interface AvailableService {
     service: Service;
 }
+
+export type HasMoreNotifierCallback = (hasMore: boolean, remaining: number) => void;
+
+export type HasMoreNotifier = (notifier: HasMoreNotifierCallback) => void;
+
+export type PageUpdater = {
+    registerHasMoreNotifier: HasMoreNotifier;
+    loadMore: () => void;
+};
+
+export type WithPageUpdater<T> = T & {
+    withPageUpdater: () => T & PageUpdater;
+    withQueryParams: (params: Record<string, string>) => WithPageUpdater<T>;
+};

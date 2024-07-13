@@ -101,3 +101,16 @@ svg-icon svg .icon-with-fill {
         color: var(--placehoder-v2-message-color) !important;
     }
 }
+
+.preloader-wrapper {
+    position: relative;
+    height: 0px;
+    overflow: visible;
+    width: 100%;
+    nx-pre-loader {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent 20%, var(--body-bg));
+    }
+}

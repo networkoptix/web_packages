@@ -94,7 +94,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
     @Input() intersectionThreshold: number | number[];
     @Input({ transform: booleanAttribute }) emitVisibleOnlyOnce: boolean = false;
 
-    @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
+    @Output() nxOnIntersect = new EventEmitter<`${IntersectionStatus}`>();
 
     private destroy$ = new Subject<true>();
 

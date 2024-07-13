@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { HttpClient } from '@angular/common/http';
-import { Observable, OperatorFunction, map } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, OperatorFunction, concatMap, map, scan } from 'rxjs';
 
 import { slashJoin } from '@utils/general';
 import { memoizeAsyncMedium } from '@utils/memoize';
@@ -10,6 +11,7 @@ import {
     CreateApiFactory,
     implementsCloudServiceApi,
 } from '../base-cloud-service-api';
+import { BaseRequestOptions } from '../base-cloud-service-api.types';
 
 import {
     ChannelPartner,
@@ -51,9 +53,11 @@ import {
     PartnerServiceReportResponse,
     OrgServiceReportResponse,
     DetailTableResponse,
-    CloudSystemLight,
     PaginatedCloudSystemLightList,
     ChannelPartnersStructure,
+    PageUpdater,
+    WithPageUpdater,
+    HasMoreNotifierCallback,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -119,19 +123,84 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return slashJoin([base, ...parts], { leading: true, trailing });
     }
 
+    @memoizeAsyncMedium
+    private memoizedGetPaginated(endpoint: string, options?: BaseRequestOptions | undefined) {
+        return this.getPaginated(endpoint, options);
+    }
+
+    public getPaginated = <T extends Page<unknown>>(
+        endpoint: string,
+        options?: BaseRequestOptions | undefined,
+    ): T extends Page<infer R> ? WithPageUpdater<Observable<R[]>> : never =>
+        new Proxy(this.get<T>(endpoint, options).pipe(getResults()), {
+            get: (target, prop) => {
+                if (prop === 'withQueryParams') {
+                    return (query: Record<string, string>) => {
+                        return this.memoizedGetPaginated(endpoint, { params: query });
+                    };
+                }
+
+                if (prop === 'withPageUpdater') {
+                    return () => {
+                        let nextPage: string | null = null;
+                        let total = 0;
+                        let remaining = 0;
+                        const hasMoreNotifiers = new Set<HasMoreNotifierCallback>();
+                        const notifyHasMore = (hasMore: boolean, remaining: number) =>
+                            hasMoreNotifiers.forEach(notifier => notifier(hasMore, remaining));
+
+                        const endpoint$ = new BehaviorSubject<string>(endpoint);
+
+                        return new Proxy(
+                            endpoint$.pipe(
+                                concatMap(url => (url ? this.get<T>(url, options) : EMPTY)),
+                                map(page => {
+                                    nextPage = page.next?.split(this.apiBase)[1] ?? null;
+                                    total += page.results.length;
+                                    remaining = page.count - total;
+                                    notifyHasMore(!!nextPage, remaining);
+                                    return page.results;
+                                }),
+                                scan((acc, results) => acc.concat(results), [] as unknown[]),
+                            ),
+                            {
+                                get: (target, prop) => {
+                                    if (prop === 'registerHasMoreNotifier') {
+                                        return (notifier: HasMoreNotifierCallback): void => {
+                                            hasMoreNotifiers.add(notifier);
+                                        };
+                                    }
+                                    if (prop === 'loadMore') {
+                                        return () => {
+                                            if (nextPage) {
+                                                notifyHasMore(false, remaining);
+                                                endpoint$.next(nextPage);
+                                            }
+                                        };
+                                    }
+                                    return Reflect.get(target, prop);
+                                },
+                            },
+                        ) as T extends Page<infer R> ? Observable<R[]> & PageUpdater : never;
+                    };
+                }
+                return target[prop as keyof typeof target];
+            },
+        }) as T extends Page<infer R> ? WithPageUpdater<Observable<R[]>> : never;
+
     /* Channel Partners */
-    public getChannelPartners = (): Observable<ChannelPartner[]> => {
-        return this.get<PaginatedChannelPartnerList>('/channel_partners/').pipe(getResults());
+    public getChannelPartners = () => {
+        return this.getPaginated<PaginatedChannelPartnerList>('/channel_partners/');
     };
 
     public createChannelPartner = (body: CreateChannelPartner): Observable<ChannelPartner> => {
         return this.post('/channel_partners/', { body });
     };
 
-    getSubChannelPartners = (parentPartnerId: string): Observable<ChannelPartner[]> => {
-        return this.get<PaginatedChannelPartnerList>(
+    getSubChannelPartners = (parentPartnerId: string) => {
+        return this.getPaginated<PaginatedChannelPartnerList>(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [parentPartnerId, 'sub_channel_partners']),
-        ).pipe(getResults());
+        );
     };
 
     @memoizeAsyncMedium
@@ -271,16 +340,16 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     /* Organizations */
-    public getPartnerOrganizations = (partnerId: string): Observable<Organization[]> => {
-        return this.get<PaginatedOrganizationList>(
+    public getPartnerOrganizations = (partnerId: string) => {
+        return this.getPaginated<PaginatedOrganizationList>(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'organizations']),
-        ).pipe(getResults());
+        );
     };
 
-    getOrganizations = (includeChildOrgs = false): Observable<Organization[]> => {
-        return this.get<PaginatedOrganizationList>('/organizations/', {
+    getOrganizations = (includeChildOrgs = false) => {
+        return this.getPaginated<PaginatedOrganizationList>('/organizations/', {
             params: { includeChildOrgs },
-        }).pipe(getResults());
+        });
     };
 
     createOrganization = (body: CreateOrganization): Observable<Organization> => {
@@ -432,11 +501,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'services']));
 
     /* Systems */
-    getUserSystems = (orgId: string, rootOnly = false): Observable<CloudSystemLight[]> => {
-        return this.get<PaginatedCloudSystemLightList>(
+    getUserSystems = (orgId: string, rootOnly = false) => {
+        return this.getPaginated<PaginatedCloudSystemLightList>(
             this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'cloud_systems', 'user_systems']),
             { params: { rootOnly } },
-        ).pipe(getResults());
+        );
     };
 
     transferSystemToOrg = (orgId: string, systemId: string): Observable<CloudSystem> => {
@@ -445,11 +514,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
     };
 
-    getOrgSystems = (orgId: string, rootOnly = false): Observable<CloudSystem[]> => {
-        return this.get<PaginatedCloudSystemList>(
+    getOrgSystems = (orgId: string, rootOnly = false) => {
+        return this.getPaginated<PaginatedCloudSystemList>(
             this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'cloud_systems']),
             { params: { rootOnly } },
-        ).pipe(getResults());
+        );
     };
 
     disconnectSystem = (systemId: string): Observable<void> =>
