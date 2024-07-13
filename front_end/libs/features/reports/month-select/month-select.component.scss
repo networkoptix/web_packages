@@ -81,28 +81,28 @@ button {
 
 
 
-.cdk-menu {
+.month-menu {
     width: $menu-width;
     display: flex;
     flex-direction: column;
     background-color: var(--btn-dropdown-toggle-bg);
     box-shadow: var(--dropdown-menu-shadow);
+    border-top: 1px solid var(--control-color);
 }
 
-.cdk-menu-item {
+.month-menu-item {
     background-color: transparent;
     padding: 0.5rem;
     color: inherit;
     @include typography.medium13nocolor;
 
-    &[aria-checked="false"] {
-        &:hover,
-        &:focus {
+    &:not(.is-selected) {
+        &:hover {
             background-color: var(--btn-dropdown-toggle-hover-bg);
         }
     }
 
-    &[aria-checked="true"] {
+    &.is-selected {
         background-color: var(--brand-core);
         color: var(--dropdown-item-selected-color);
     }

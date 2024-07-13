@@ -1,5 +1,4 @@
-import { CdkMenuModule } from '@angular/cdk/menu';
-import { ConnectedPosition } from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, Output, computed, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -7,14 +6,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { icons } from '@static-variables';
-import { connectedPosition } from '@utils/nx';
 
 @Component({
     selector: 'nx-month-select',
     templateUrl: 'month-select.component.html',
     styleUrls: ['month-select.component.scss'],
     standalone: true,
-    imports: [CommonModule, CdkMenuModule, AngularSvgIconModule],
+    imports: [CommonModule, OverlayModule, AngularSvgIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxMonthSelectComponent {
@@ -44,10 +42,6 @@ export class NxMonthSelectComponent {
         return isMenuOpen ? this.yearFormat.format(date) : this.longMonthYearFormat.format(date);
     });
 
-    menuPosition: ConnectedPosition[] = [
-        connectedPosition({ originPoint: 'S', overlayPoint: 'N' }),
-    ];
-
     constructor(nxDatetime: NxDateTimeFormatService) {
         const longMonth = new Intl.DateTimeFormat(nxDatetime.locale, { month: 'long' });
         const date = new Date();
@@ -64,7 +58,15 @@ export class NxMonthSelectComponent {
         });
     }
 
+    toggleMenu(): void {
+        this.isMenuOpen.update(isOpen => !isOpen);
+    }
+
     decrementMonth(): void {
+        if (this.isMenuOpen()) {
+            this.year.update(y => y - 1);
+            return;
+        }
         if (this.monthIndex() === 0) {
             this.monthIndex.set(11);
             this.year.update(y => y - 1);
@@ -74,6 +76,10 @@ export class NxMonthSelectComponent {
     }
 
     incrementMonth(): void {
+        if (this.isMenuOpen()) {
+            this.year.update(y => y + 1);
+            return;
+        }
         if (this.monthIndex() === 11) {
             this.monthIndex.set(0);
             this.year.update(y => y + 1);
