@@ -153,7 +153,13 @@ export class NxHomeComponent implements OnInit {
         }
 
         const orgSet = new Set<string>(organizations.map(org => org.id));
-        if (systems.some(sys => !('organizationId' in sys) || !orgSet.has(sys.organizationId))) {
+
+        if (
+            systems.some(
+                sys =>
+                    !sys.isMine && (!('organizationId' in sys) || !orgSet.has(sys.organizationId)),
+            )
+        ) {
             if (redirectPath !== 'personal') {
                 redirectPath = 'shared';
             }
