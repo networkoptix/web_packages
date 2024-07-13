@@ -755,7 +755,9 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         end_ts = param_serializer.validated_data.get('endTs')
-        service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by').order_by('created_ts')
+        service_changes = (channel_partner.service_changes(start_ts, end_ts)
+                           .select_related('created_by')
+                           .order_by('-created_ts'))
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
         service_changes = self.filter_queryset(service_changes)
@@ -927,14 +929,17 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
                    summary='Get individual records of service changes in a single period',
                    responses=OrganizationServiceRecordSerializer(many=True),
                    extensions={'x-permission': f'{Organization.permissions.view_service_reports} for Organization'})
-    @action(methods=['GET'], detail=True)
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination, filterset_class=filters.CreatedTsFilter)
     def service_changes_history(self, request, pk=None):
         org: Organization = self.get_object()
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         end_ts = param_serializer.validated_data.get('endTs')
-        service_changes = org.service_changes(start_ts, end_ts).select_related('service', 'created_by', 'cloud_system')
+        service_changes = (org.service_changes(start_ts, end_ts)
+                           .select_related('service', 'created_by', 'cloud_system')
+                           .order_by('-created_ts'))
+        service_changes = self.filter_queryset(service_changes)
         return paginated_response(self, service_changes, serializer_class=OrganizationServiceRecordSerializer)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],

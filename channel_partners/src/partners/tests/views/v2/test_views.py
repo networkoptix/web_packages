@@ -1534,7 +1534,8 @@ class TestChannelPartnerViewSet:
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
-        records = [service_record_factory(service, system, created_ts=timezone.now() - relativedelta(days=idx)) for idx, service in enumerate(services)]
+        records = [service_record_factory(service, system, created_ts=timezone.now() - relativedelta(days=idx))
+                   for idx, service in enumerate(services)]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
         request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
         mock_auth_with_user(cp_user)
@@ -1728,9 +1729,10 @@ class TestOrganizationViewSet:
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
-        records = [service_record_factory(service, system) for service in services]
+        records = [service_record_factory(service, system, created_ts=timezone.now() - relativedelta(days=idx)) for
+                   idx, service in enumerate(services)]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}')
+        request = arf.get(f'/partners/organizations/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -1739,6 +1741,12 @@ class TestOrganizationViewSet:
         assert 'next' in response.data
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
+
+        assert response.data['results'][0]['date'] > response.data['results'][-1]['date']
+        request = arf.get(
+            f'/partners/organizations/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=created')
+        response = view(request, pk=org.id)
+        assert response.data['results'][0]['date'] < response.data['results'][-1]['date']
 
     def test_service_changes_summary_without_params(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
