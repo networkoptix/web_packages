@@ -25,6 +25,8 @@
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
+        [queryParams]="{ page: 1 }"
+        queryParamsHandling="merge"
         (click)="openPartner($event)"
         [ngClass]="{
             'is-selected': isSelected$$()
