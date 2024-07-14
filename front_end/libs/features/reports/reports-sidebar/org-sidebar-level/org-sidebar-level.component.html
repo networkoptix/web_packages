@@ -10,6 +10,8 @@
     ></svg-icon>
     <a
         [routerLink]="routerLink$$()"
+        [queryParams]="{ page: 1 }"
+        queryParamsHandling="merge"
         (click)="handleSelection($event)"
         [ngClass]="{
             'is-selected': isSelected$$()
