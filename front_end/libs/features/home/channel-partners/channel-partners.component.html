@@ -13,16 +13,18 @@
     [ngClass]="{ root: !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel }"
 >
     @if (!routeData.parentData.inOrganization && parentPartner$$(); as parentChannelPartner) {
-        <a
-            class="back-link"
-            [routerLink]="returnToParentLink$$()"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'arrow_left.svg'"
-            ></svg-icon>
-            {{ parentChannelPartner.name }}</a
-        >
+        @if (!parentChannelPartner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
+            <a
+                class="back-link"
+                [routerLink]="returnToParentLink$$()"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                ></svg-icon>
+                {{ parentChannelPartner.name }}</a
+            >
+        }
     }
     <ng-container
         *ngIf="

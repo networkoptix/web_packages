@@ -17,9 +17,9 @@ import { NxNoSystemsComponent } from '@components/no-systems/no-systems.componen
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
-import { PartnerRoles } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import type {
+import {
     ChannelPartner,
+    ChannelPartnerRoleIds,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -105,18 +105,9 @@ export class NxHomeComponent implements OnInit {
             {} as Record<string, ChannelPartner>,
         );
 
-        const filteredChannelPartners = channelPartners.filter(partner => {
-            const parentPartner = mappedPartners[partner.parentChannelPartner];
-            // If a user has access to the parent and its admin access hide the SubChannel Partner
-            if (
-                parentPartner &&
-                parentPartner.ownPermissions.includes(PartnerRoles.field_access_cp_admin)
-            ) {
-                return false;
-            }
-            // Only hide a partner if the user has the report role.
-            return !partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant);
-        });
+        const filteredChannelPartners = channelPartners.filter(
+            partner => !partner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER),
+        );
         const filteredOrganizations = organizations
             .filter(org => !mappedPartners[org.channelPartner])
             .sort((a, b) => a.name.localeCompare(b.name));
@@ -171,13 +162,13 @@ export class NxHomeComponent implements OnInit {
             );
         }
 
-        if (organizations?.length) {
-            const orgId = organizations[0].id;
+        if (filteredOrganizations?.length) {
+            const orgId = filteredOrganizations[0].id;
             redirectPath = `organization/${orgId}`;
         }
-        if (channelPartners?.length) {
-            for (const partner of channelPartners) {
-                if (!partner.ownPermissions.includes(PartnerRoles.field_access_cp_accountant)) {
+        if (filteredChannelPartners?.length) {
+            for (const partner of filteredChannelPartners) {
+                if (!partner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
                     redirectPath = `channelPartners/${partner.id}`;
                 }
             }
