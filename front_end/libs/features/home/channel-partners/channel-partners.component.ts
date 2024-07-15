@@ -60,6 +60,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
     Organization,
+    ChannelPartnerRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { alphaNumericSortByName, caseInsensitiveSearch } from '@utils/general';
 import { paramSignal } from '@utils/signals';
@@ -102,6 +103,7 @@ export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
     PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
+    ChannelPartnerRoleIds = ChannelPartnerRoleIds;
 
     permissionStore = inject(PermissionsStore);
     routerState = inject(ChannelPartnersRouteState);

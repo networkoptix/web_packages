@@ -41,7 +41,12 @@
             overflow: hidden;
         }
 
-        &:hover,
+        &:hover {
+            background-color: var(--groups-sidebar-highlight);
+            .group, a {
+                stroke: var(--groups-sidebar-highlight-color);
+            }
+        }
         &.selected {
             padding: .1rem;
             border-radius: 4px;
