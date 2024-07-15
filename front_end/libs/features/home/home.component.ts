@@ -170,6 +170,7 @@ export class NxHomeComponent implements OnInit {
             for (const partner of filteredChannelPartners) {
                 if (!partner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
                     redirectPath = `channelPartners/${partner.id}`;
+                    break;
                 }
             }
         }

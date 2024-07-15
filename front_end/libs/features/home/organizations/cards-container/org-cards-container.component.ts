@@ -2,7 +2,6 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, HostBinding, Input, booleanAttribute, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -10,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { groupBy, identity, zip } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { firstValueFrom, map, switchMap } from 'rxjs';
+import { firstValueFrom, switchMap } from 'rxjs';
 
 import {
     selectCurrentOrganization,
@@ -46,6 +45,7 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import { alphabeticalSort, caseInsensitiveSearch } from '@utils/general';
+import { paramSignal } from '@utils/signals';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
@@ -179,9 +179,9 @@ export class NxOrganizationCardContainerComponent {
         return this.#groupUsers[groupId] as Promise<GroupUser[]>;
     }
 
-    search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
+    search$$ = paramSignal('search');
     currentGroupGroupsSearchResults$$ = computed(() => {
-        const search = this.search$$() ?? '';
+        const search = this.search$$();
         const groups = this.groupsStore.currentGroups$$();
         if (!search) {
             return groups;
