@@ -181,7 +181,7 @@ export class NxOrganizationCardContainerComponent {
 
     search$$ = toSignal<string>(this.route.queryParams.pipe(map(({ search }) => search)));
     currentGroupGroupsSearchResults$$ = computed(() => {
-        const search = this.search$$();
+        const search = this.search$$() ?? '';
         const groups = this.groupsStore.currentGroups$$();
         if (!search) {
             return groups;
@@ -489,7 +489,7 @@ export class NxOrganizationCardContainerComponent {
                             .moveSystemItem({
                                 item: system,
                                 organization: this.currentOrg$$(),
-                                groups: this.groupsStore.groupsEntities(),
+                                groups: this.groupsStore.sortedGroups$$(),
                             })
                             .then(newSystem => {
                                 if (newSystem) {
