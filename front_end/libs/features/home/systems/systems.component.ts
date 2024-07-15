@@ -37,10 +37,10 @@ export class NxSystemsComponent implements OnChanges {
      */
     directAccessSystems$$ = computed<NxSystemInfo[]>(() => {
         const showPersonal = this.showPersonal$$();
-        const filterByIsMine = showPersonal
+        const filterByIsOwnership = showPersonal
             ? (sys: NxSystemInfo) => sys.isMine
             : (sys: NxSystemInfo) => !sys.isMine;
-        const systems = this.systemsService.directAccessSystems$$();
+        const systems = this.systemsService.directAccessSystems$$().filter(filterByIsOwnership);
         if (!showPersonal) {
             const orgSet = new Set<string>(
                 this.store
@@ -51,7 +51,7 @@ export class NxSystemsComponent implements OnChanges {
                 system => !('organizationId' in system) || !orgSet.has(system.organizationId),
             );
         }
-        return systems.filter(filterByIsMine);
+        return systems;
     });
 
     ngOnChanges(changes: NgChanges<NxSystemsComponent>): void {

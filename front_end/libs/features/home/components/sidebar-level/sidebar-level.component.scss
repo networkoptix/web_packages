@@ -32,6 +32,8 @@
     .group-drop-list {
         display: flex;
         align-items: center;
+        padding: 2px 4px 2px 0;
+        border-radius: 2px;
         
         .level-name {
             width:200px;
@@ -41,18 +43,10 @@
             overflow: hidden;
         }
 
-        &:hover {
-            background-color: var(--groups-sidebar-highlight);
-            .group, a {
-                stroke: var(--groups-sidebar-highlight-color);
-            }
-        }
+        &:hover,
         &.selected {
-            padding: .1rem;
-            border-radius: 4px;
             background-color: var(--groups-sidebar-highlight);
             .group, a {
-                font-size: 1rem;
                 .st0 {
                     stroke: var(--groups-sidebar-highlight-color);
                 }
@@ -69,7 +63,7 @@
 
         .spacer {
             width: 1px;
-            padding: 0 12px;
+            padding-left: 25px;
         }
     }
 

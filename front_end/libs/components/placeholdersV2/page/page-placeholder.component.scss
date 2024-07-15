@@ -55,6 +55,15 @@
         max-width: 560px;
     }
 
+    .button-container {
+        display: flex;
+        flex-direction: column;
+
+        button {
+            align-self: center;
+        }
+    }
+
     .text-contrast {
         color: var(--text-contrast) !important;
         opacity: 1 !important;
