@@ -417,18 +417,26 @@ jenkins-build-webadmin:
     when: on_success
     changes:
       - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
   - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
     when: on_success
     changes:
       - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
   - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
     when: on_success
     changes:
       - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
   - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
     when: on_success
     changes:
       - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
   script:
     - |
       set -ex
@@ -474,10 +482,14 @@ create-vms-mr:
     when: on_success
     changes:
     - front_end/**/*
+    - translations/**/*
+    - webadmin/**/*
   - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
     when: on_success
     changes:
     - front_end/**/*
+    - translations/**/*
+    - webadmin/**/*
   script:
     - runJenkinsJob.sh gitlab.vms.review.webadmin.create-vms-mr
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"

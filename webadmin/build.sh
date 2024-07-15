@@ -79,7 +79,7 @@ fi
 
 cat static/version.txt >&2
 
-#Pack
+# Pack
 echo -e "\nPack $WEBADMIN_PACKAGE" >&2
 zip -qq -r "../$WEBADMIN_PACKAGE" ./static/
 popd
