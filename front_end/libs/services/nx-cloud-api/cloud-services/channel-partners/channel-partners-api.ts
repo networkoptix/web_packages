@@ -74,6 +74,14 @@ function getResults<T>(): OperatorFunction<Page<T>, T[]> {
     return map(page => page.results);
 }
 
+const withDefaultSort = ({
+    params = {},
+    ...options
+}: BaseRequestOptions = {}): BaseRequestOptions => ({
+    ...options,
+    params: { ...params, ordering: 'ordering' in params ? params.ordering : 'name' },
+});
+
 const urlBases = {
     CHANNEL_PARTNERS: 'channel_partners',
     ORGANIZATIONS: 'organizations',
@@ -132,11 +140,14 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         endpoint: string,
         options?: BaseRequestOptions | undefined,
     ): T extends Page<infer R> ? WithPageUpdater<Observable<R[]>> : never =>
-        new Proxy(this.get<T>(endpoint, options).pipe(getResults()), {
+        new Proxy(this.get<T>(endpoint, withDefaultSort(options)).pipe(getResults()), {
             get: (target, prop) => {
                 if (prop === 'withQueryParams') {
                     return (query: Record<string, string>) => {
-                        return this.memoizedGetPaginated(endpoint, { params: query });
+                        return this.memoizedGetPaginated(
+                            endpoint,
+                            withDefaultSort({ params: query }),
+                        );
                     };
                 }
 
@@ -148,12 +159,13 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                         const hasMoreNotifiers = new Set<HasMoreNotifierCallback>();
                         const notifyHasMore = (hasMore: boolean, remaining: number) =>
                             hasMoreNotifiers.forEach(notifier => notifier(hasMore, remaining));
+                        const optionsWithSort = withDefaultSort(options);
 
                         const endpoint$ = new BehaviorSubject<string>(endpoint);
 
                         return new Proxy(
                             endpoint$.pipe(
-                                concatMap(url => (url ? this.get<T>(url, options) : EMPTY)),
+                                concatMap(url => (url ? this.get<T>(url, optionsWithSort) : EMPTY)),
                                 map(page => {
                                     nextPage = page.next?.split(this.apiBase)[1] ?? null;
                                     total += page.results.length;
@@ -172,6 +184,12 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                                     }
                                     if (prop === 'loadMore') {
                                         return () => {
+                                            if (
+                                                optionsWithSort.params &&
+                                                'ordering' in optionsWithSort.params
+                                            ) {
+                                                delete optionsWithSort.params.ordering;
+                                            }
                                             if (nextPage) {
                                                 notifyHasMore(false, remaining);
                                                 endpoint$.next(nextPage);
