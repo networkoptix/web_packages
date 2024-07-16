@@ -405,3 +405,18 @@ class TestChannelPartnerGroupStructureService:
 
         # Assertions for organizations at the top level
         assert len(actual_organizations) == 0
+
+
+    def test_user_org_in_sub_cp_without_roles(self, cloud_user_factory, cp_user_factory, org_user_factory):
+        user = cloud_user_factory()
+        cp_user_factory(email=user.email, channel_partner=self.cp_parent)
+        org_user_factory(email=user.email, organization=self.cp_org_1)
+        service = ChannelPartnerGroupStructureService()
+        struct = service.process_full_structure(user)
+        assert len(struct['organizations']) == 0
+        assert len(struct['channelPartners']) == 1
+        assert struct['channelPartners'][0]['name'] == 'cp_parent'
+        assert len(struct['channelPartners'][0]['organizations']) == 2
+        cp = next(filter(lambda cp: cp['name'] == 'cp', struct['channelPartners'][0]['subChannels']))
+        assert len(cp['organizations']) == 1
+        assert cp['organizations'][0]['name'] == 'cp_org_1'
