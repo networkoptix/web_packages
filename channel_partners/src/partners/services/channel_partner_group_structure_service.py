@@ -272,7 +272,14 @@ class ChannelPartnerGroupStructureService:
             for org in channel_partner.organizations.all():
                 data['organizations'].append(self._prepare_org_data(org))
                 organizations.pop(org.id, None)
-
+        else:
+            # If partner is visible in structure, but user have no access to it,
+            # add user's organizations to organizations list and remove them from
+            # toplevel organization list
+            user_orgs = list(organizations.values())
+            for org in filter(lambda org: org.channel_partner_id == channel_partner.id, user_orgs):
+                data['organizations'].append(self._prepare_org_data(org))
+                organizations.pop(org.id, None)
         return data
 
     def _get_user_roles(self, user: CloudUser) -> Set[uuid.UUID]:
