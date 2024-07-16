@@ -120,8 +120,7 @@ class TestDependentCache:
         # Add users to organization
         OrganizationToUser.objects.create(organization=organization, user=org_user_1)
 
-        update_cache([organization, org_user_1]
-                     )
+        update_cache([organization, org_user_1])
         # Create Cache
         cache: DependentCache = DependentCache(
             name="organization_users",
@@ -195,11 +194,11 @@ class TestDependentCache:
             validation_sources={"id": organization.id},
             data_fields=['name', 'description', 'should_be_empty'])
 
-        expected = {**data_to_set, 'should_be_empty': Empty()}
+        expected = {**data_to_set, 'should_be_empty': Empty}
         # Assert that the retrieved data is the same as the data that was set
         assert actual['name'] == expected['name']
         assert actual['description'] == expected['description']
-        assert isinstance(actual['should_be_empty'], Empty)
+        assert actual['should_be_empty'] is Empty
 
     def test_cache_set_and_retrieve_validate_user_false_all_fields_returned(
             self,

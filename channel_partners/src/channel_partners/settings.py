@@ -280,56 +280,10 @@ REDIS_THROTTLING_DB = 12
 REDIS_DEPENDENT_CACHE_DB = 13
 REDIS_CELERY_DB = 15
 
-class EnhancedDummyCache(DummyCache):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Initialize any additional attributes if needed
-
-    def make_and_validate_key(self, key, version=None):
-        # Simulate key validation and formatting
-        return key
-
-    def get(self, key, default=None, version=None):
-        return default
-
-    def set(self, key, value, timeout=None, version=None):
-        pass
-
-    def delete(self, key, version=None):
-        pass
-
-    def hset(self, key, field, value, version=None):
-        return 1  # Simulate successful hset operation
-
-    def expire(self, key, timeout, version=None):
-        pass
-
-    def scan_iter(self, match='*', count=None, version=None):
-        # Simulate scanning keys with a match pattern
-        return iter([])
-
-    def unlink(self, *keys, version=None):
-        pass
-
-    def script_exists(self, *args, **kwargs):
-        return [False] * len(args)
-
-    def script_load(self, script):
-        return "mocksha1hashforredis"
-
-    def eval(self, command: str, script: str, numkeys: int, *keys_and_args: list) -> str:
-        return "mock_eval_response"
-
-    def evalsha(self, sha1: str, numkeys: int, *keys_and_args: list) -> str:
-        return "mock_evalsha_response"
-
-    def clean_keys(self, *keys, version=None):
-        # Simulate cleaning of keys by removing a prefix
-        return keys
 
 if MIGRATING:
     # Avoid issues with redis on migrations
-    REDIS_CACHE_BACKEND = "channel_partners.settings.EnhancedDummyCache"
+    REDIS_CACHE_BACKEND = "django.core.cache.backends.dummy.DummyCache"
 
 CACHES = {
     "local": {

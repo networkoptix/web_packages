@@ -274,7 +274,10 @@ class TestDependentViewCacheDecorator:
         cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+
+        cached_content = json.loads(json.dumps(cached_response['content']))
+        response_content = json.loads(response.content.decode("utf-8"))
+        assert cached_content == response_content
 
         # Second request (follow-up)
         with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
@@ -351,7 +354,6 @@ class TestDependentViewCacheDecorator:
         assert cached_response is not None
         assert cached_response is not {}
 
-
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
         # Second request (follow-up)
@@ -396,6 +398,42 @@ class TestDependentViewCacheDecorator:
 
         assert second_response.status_code == 200
         assert second_response.json() == response.json()
+
+        assert "Validation hash mismatch -- clearing cache" not in caplog.text
+        assert len(pop_queries(second_queries)) == 0
+
+    def test_get_sass_report_2nd_request_has_etag(self, client, mock_auth_with_user, caplog):
+        mock_auth_with_user(self.user)
+        id: int = 1
+        headers = {
+            'X-Original-Host': self.cloud_host.hostname,
+            'Accept': 'application/json'
+        }
+        path = f"/partners/test/{id}/sass_report/"
+
+        # First request
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            with CaptureQueriesContext(connection) as first_queries:
+                response = client.get(path, headers=headers)
+
+        assert len(pop_queries(first_queries)) > 0
+
+        assert response.status_code == 200
+        assert response.json() == {"message": "This is the sass_report action"}
+
+        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+        assert cached_response is not None
+        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+
+        # Second request (follow-up)
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            with CaptureQueriesContext(connection) as second_queries:
+                headers["ETag"] = response['ETag']
+                second_response = client.get(path, headers=headers)
+
+        assert second_response.status_code == 304
+        assert second_response.content == b''
 
         assert "Validation hash mismatch -- clearing cache" not in caplog.text
         assert len(pop_queries(second_queries)) == 0

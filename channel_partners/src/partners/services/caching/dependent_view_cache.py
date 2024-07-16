@@ -1,17 +1,21 @@
 import json
 from dataclasses import dataclass
 from functools import wraps
+from hashlib import md5
 from typing import (
     Any,
     Callable,
     Dict,
     List,
+    Tuple,
     TypeVar,
     Union,
 )
 
 import structlog
+from django.utils.http import quote_etag
 from rest_framework.response import Response
+from rest_framework.status import HTTP_304_NOT_MODIFIED
 from rest_framework.views import APIView
 
 from partners.models import CloudUser
@@ -31,6 +35,9 @@ ViewAction = TypeVar('ViewAction', bound=str)
 # Key parameters used in the cache key
 KEY_PARAMS: List[str] = ["method", "host", "user_id", "path"]
 PROTOCOL_VERSION: int = 1
+E_TAG_CACHE_KEY: str = "**etag"
+CACHE_STATUS_HEADER_KEY: str = "X-CPS-Cache-Status"
+CACHE_ETAG_HEADER_KEY: str = "ETag"
 
 
 @dataclass
@@ -76,6 +83,19 @@ class ValidationSource:
         result[source] = data[key]
 
 
+def generate_etag(content: Any) -> str:
+    """
+    Generate an eTag for the given content by serializing it to JSON format,
+    encoding the JSON string to bytes, and then hashing the result.
+    """
+    # Convert the content to a JSON string and encode it to bytes
+    # content_bytes = json.dumps(content).encode('utf-8')
+    # Generate the MD5 hash of the bytes-like object
+    etag_hash = md5(content, usedforsecurity=False).hexdigest()
+    # Quote the ETag for use in HTTP headers
+    return quote_etag(etag_hash)
+
+
 def generate_cache_key_params(request: NxRequest, view_name: str) -> Dict[str, Any]:
     """
     Generate cache key parameters based on the request and view name.
@@ -99,7 +119,8 @@ def retrieve_from_cache(
         cache_key_params: Dict[str, Any],
         user: CloudUser,
         validation_sources: Dict[str, Any],
-) -> Union[List[Any], Dict[str, Any], None]:
+        verify_etag: bool = False
+) -> Tuple[Union[List[Any], Dict[str, Any], None], Union[str, None]]:
     """
     Attempt to retrieve a response from the cache.
     If found, deserialize and return the cached content.
@@ -107,18 +128,20 @@ def retrieve_from_cache(
     cached_response = cache.validate_and_retrieve(
         keys=cache_key_params,
         validation_sources=validation_sources,
-        data_fields=["content"],
+        data_fields=["content"] if not verify_etag else [E_TAG_CACHE_KEY],
         user=user
     )
 
     if cached_response:
-        content = cached_response["content"]
+        etag = cached_response.get(E_TAG_CACHE_KEY, None)
+        content = cached_response.get("content", None)
+        # TODO: This needs to be more robust
         if isinstance(content, str):
-            return json.loads(content)
+            return json.loads(content), etag
         else:
-            return content
+            return content, etag
 
-    return None
+    return None, None
 
 
 def store_in_cache(
@@ -126,18 +149,28 @@ def store_in_cache(
         cache_key_params: Dict[str, Any],
         response: Response,
         user: CloudUser,
-        validation_sources: Dict[str, Any]
+        validation_sources: Dict[str, Any],
+        etag: str
 ) -> None:
     """
     Store a successful response in the cache for future retrieval.
+
+    We use `response.data` instead of `response.content` for caching because:
+    - `response.data` contains the original data in a structured format (e.g., dict, list), which is more suitable for
+    serialization and deserialization when storing and retrieving from the cache.
+    - `response.content` is a rendered byte string, which includes serialized JSON data. Using `response.content`
+    directly could lead to issues with escaped characters (e.g., "\\" becomes "\\\\") when serialized, making the
+    data less readable and potentially causing issues when deserialized.
     """
     if response.status_code == 200:
+        # TODO: Review if i should be using response.data or response.content
+        # response.content gets escaped characters, such as "\\" when stored in cache...
         content = response.data
         logger.debug("Caching response")
         cache.set(
             keys=cache_key_params,
             validation_sources=validation_sources,
-            data={"content": content},
+            data={"content": content, E_TAG_CACHE_KEY: etag},
             user=user
         )
 
@@ -216,44 +249,93 @@ def create_caches(view: T, dependencies: Dict[str, Dependencies]) -> Dict[str, D
 def process_views(
         self: APIView,
         request: NxRequest,
+        cache: DependentCache,
+        validation_sources: Dict[str, Any],
+        cache_key_params: Dict[str, Any],
+        *args: Any,
+        **kwargs: Any
+) -> Response:
+    method = request.method.lower()
+
+    cached_response = None
+    etag = None
+
+    try:
+        request_etag = request.headers.get(CACHE_ETAG_HEADER_KEY, None)
+        if request_etag is not None:
+            _, etag = retrieve_from_cache(
+                cache,
+                cache_key_params,
+                request.user,
+                validation_sources,
+                verify_etag=True)
+            # Do comparison here.
+            if etag == request_etag:
+                return Response(status=HTTP_304_NOT_MODIFIED,
+                                headers={CACHE_ETAG_HEADER_KEY: etag, CACHE_STATUS_HEADER_KEY: "hit"})
+        cached_response, etag = retrieve_from_cache(cache, cache_key_params, request.user, validation_sources)
+    except Exception as exc:
+        # This would come from initial validation stages of retrieving from cache
+        logger.error("Error validating and retrieving cache", exc=exc)
+
+    if cached_response:
+        return Response(cached_response, headers={CACHE_ETAG_HEADER_KEY: etag, CACHE_STATUS_HEADER_KEY: "hit"})
+
+    # Not found in cache - proceed with the request
+    self.check_permissions(request)
+    handler = getattr(self, method, self.http_method_not_allowed)
+    response: Response = handler(request, *args, **kwargs)
+
+    # Return the response to the wrapper
+    return response
+
+
+def dispatch_with_cache(
+        self: APIView,
+        request: NxRequest,
         dependent_cache_name: str,
         cache: DependentCache,
         validation_sources: Dict[str, Any],
         *args: Any,
         **kwargs: Any
-) -> Response:
-    method = request.method.lower()
+):
     # Initialize request and perform initial steps
     request = initialize_request_and_perform_initial_steps(self, request, *args, **kwargs)
 
     # Get the cache for the action
     cache_key_params = generate_cache_key_params(request, dependent_cache_name)
 
-    cached_response = None
     try:
-        cached_response = retrieve_from_cache(cache, cache_key_params, request.user, validation_sources)
+        response: Response = process_views(
+            self,
+            request,
+            cache,
+            validation_sources,
+            cache_key_params,
+            *args,
+            **kwargs)
+
     except Exception as exc:
-        # This would come from initial validation stages of retrieving from cache
-        logger.error("Error validating and retrieving cache", exc=exc)
+        response = self.handle_exception(exc)
 
-    if cached_response:
-        return Response(cached_response)
+    # Finalize the response
+    self.response = self.finalize_response(request, response, *args, **kwargs)
 
-    else:
-        # Not found in cache - proceed with the request
-        self.check_permissions(request)
-        handler = getattr(self, method, self.http_method_not_allowed)
-        response = handler(request, *args, **kwargs)
-
-        # Attempt to store the response in the cache
+    if self.response.status_code == 200 and self.response.headers.get("ETag", None) is None:
+        # TODO: Add a detailed comment on how and why this is why it is.
         try:
+            # Attempt to store the response in the cache
             if cache is not None and validation_sources is not None:
-                store_in_cache(cache, cache_key_params, response, request.user, validation_sources)
+                if not self.response.is_rendered:
+                    self.response.render()
+                etag = generate_etag(self.response.content)
+                store_in_cache(cache, cache_key_params, response, request.user, validation_sources, etag)
+                self.response.headers[CACHE_ETAG_HEADER_KEY] = etag
+                self.response.headers[CACHE_STATUS_HEADER_KEY] = "miss"
         except Exception as exc:
             logger.error("Error storing in cache", exc=exc)
 
-        # Return the response to the wrapper
-        return response
+    return self.response
 
 
 # TODO: Add type hints
@@ -281,23 +363,14 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
             logger.error("Error building validation sources", exc_info=e)
             return original_dispatch(self, request, *args, **kwargs)
 
-        response = None
-        try:
-            response: Response = process_views(
-                self,
-                request,
-                dependent_cache_name,
-                cache,
-                validation_sources,
-                *args,
-                **kwargs)
-
-        except Exception as exc:
-            response = self.handle_exception(exc)
-
-        # Finalize the response
-        self.response = self.finalize_response(request, response, *args, **kwargs)
-        return self.response
+        return dispatch_with_cache(
+            self,
+            request,
+            dependent_cache_name,
+            cache,
+            validation_sources,
+            *args,
+            **kwargs)
 
     view.dispatch = _new_dispatch
     return view
@@ -306,7 +379,7 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
 # TODO: Add type hints
 def wrap_func_view(view, caches: Dict[ViewAction, DependentCache]) -> Callable:
     @wraps(view)
-    def _new_dispatch(request, *args, **kwargs):
+    def _new_dispatch(request: NxRequest, *args, **kwargs):
         method = request.method.lower()
         if method != 'get':
             return view(request, *args, **kwargs)
@@ -325,32 +398,22 @@ def wrap_func_view(view, caches: Dict[ViewAction, DependentCache]) -> Callable:
             logger.error("Error building validation sources", exc_info=e)
             return view(request, *args, **kwargs)
 
-        response = None
-        try:
-            response: Response = process_views(
-                self,
-                request,
-                dependent_cache_name,
-                cache,
-                validation_sources,
-                *args,
-                **kwargs)
-
-        except Exception as exc:
-            response = self.handle_exception(exc)
-
-        self.response = self.finalize_response(request, response, *args, **kwargs)
-        return self.response
+        return dispatch_with_cache(
+            self,
+            request,
+            dependent_cache_name,
+            cache,
+            validation_sources,
+            *args,
+            **kwargs)
 
     return _new_dispatch
 
 
 def dependent_view_cache(dependencies: Dict[ViewAction, Dependencies]) -> Callable[[T], T]:
-    # Should be hit 2 time. (1 class based view | 1 function based view)
     caches: Dict[ViewAction, DependentCache] = {}
 
     def decorator(view_or_cls: T) -> T:
-        # Should be hit 4 times (3 for class based view | 1 for function based view)
         validate_actions(dependencies, view_or_cls)
         caches = create_caches(view_or_cls, dependencies)
 
@@ -360,7 +423,6 @@ def dependent_view_cache(dependencies: Dict[ViewAction, Dependencies]) -> Callab
         elif callable(view_or_cls):
             @wraps(view_or_cls)
             def wrapped_view(*args, **kwargs):
-                # ....? need this level for it to work, I think....
                 return wrap_func_view(view_or_cls, caches)(*args, **kwargs)
 
             return wrapped_view

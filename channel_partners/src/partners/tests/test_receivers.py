@@ -949,7 +949,6 @@ class TestReceivers:
         organization_user.delete()
 
         # Test after delete
-
         self.assert_both_versions(user, 2)
         self.assert_both_versions(organization, 2)
         self.teardown_method()
@@ -993,6 +992,15 @@ class TestReceivers:
         self.assert_both_versions(user1, 1)
         self.assert_both_versions(user2, 1)
         self.assert_both_versions(organization, 2)
+
+        # Change the name of the user
+        user1.full_name = "New Name"
+        user1.save()
+
+        # Test after user change
+        self.assert_both_versions(user1, 2)
+        self.assert_both_versions(organization, 3)
+
         self.teardown_method()
 
     def test_organization_change_with_multiple_users(self, organization_factory):
@@ -1174,3 +1182,61 @@ class TestReceivers:
         self.assert_both_versions(user, 2)
         self.assert_both_versions(channel_partner, 2)
         self.teardown_method()
+
+    def test_create_organization_user_then_delete_organization(self, organization_factory):
+        # Test Setup
+        user = CloudUser.objects.create(
+            email="test@example.com",
+            full_name="Test User")
+
+        # Test User upon creation
+        self.assert_both_versions(user, 0)
+
+        organization = organization_factory()
+
+        # Test Organization upon creation
+        self.assert_both_versions(organization, 0)
+
+        # Add the user to the organization
+        organization_user = OrganizationToUser.objects.create(
+            user=user,
+            organization=organization)
+
+        # Test after create
+        self.assert_both_versions(user, 1)
+        self.assert_both_versions(organization, 1)
+
+        # Delete Organization
+        organization.delete()
+
+        # Test after delete
+        self.assert_both_versions(user, 2)
+
+    def test_create_channel_partner_user_then_delete_channel_partner(self, channel_partner_factory):
+        # Test Setup
+        user = CloudUser.objects.create(
+            email="test@example.com",
+            full_name="Test User")
+
+        # Test User upon creation
+        self.assert_both_versions(user, 0)
+
+        channel_partner = channel_partner_factory()
+
+        # Test Channel Partner upon creation
+        self.assert_both_versions(channel_partner, 0)
+
+        # Add the user to the channel partner
+        channel_partner_user = ChannelPartnerToUser.objects.create(
+            user=user,
+            channel_partner=channel_partner)
+
+        # Test after create
+        self.assert_both_versions(user, 1)
+        self.assert_both_versions(channel_partner, 1)
+
+        # Delete Channel Partner
+        channel_partner.delete()
+
+        # Test after delete
+        self.assert_both_versions(user, 2)
