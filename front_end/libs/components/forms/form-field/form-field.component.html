@@ -1,6 +1,6 @@
 <div class="label-container">
     <ng-content select="[nx-label]"></ng-content>
-    @if (maxLength()) {
+    @if (maxLength() && overMaxLength()) {
         <span
             class="character-count"
             [ngClass]="{ 'character-count--error': overMaxLength() }"

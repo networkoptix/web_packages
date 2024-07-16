@@ -10,7 +10,7 @@ import { NxFormFieldControlDirective } from '../form-field/form-field-control.di
     styleUrls: ['input.component.scss'],
     standalone: true,
     imports: [],
-    hostDirectives: [NxFormFieldControlDirective],
+    hostDirectives: [{ directive: NxFormFieldControlDirective, inputs: ['nxFormFieldMaxLength'] }],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxInputComponent {

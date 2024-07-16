@@ -115,10 +115,11 @@ export class NxFormFieldComponent implements AfterContentInit {
 
     ngAfterContentInit(): void {
         const nativeElement = this.nxControlDirective.host.nativeElement;
-        if (nativeElement.tagName === 'INPUT') {
+        const maxLength = this.nxControlDirective.maxLength();
+        if (nativeElement.tagName === 'INPUT' && maxLength) {
             const input = nativeElement as HTMLInputElement;
             const control = this.ngControl.control as FormControl<string>;
-            this.maxLength.set(InputMaxLength[input.type] ?? 0);
+            this.maxLength.set(maxLength === 'auto' ? InputMaxLength[input.type] ?? 0 : maxLength);
             runInInjectionContext(this.injector, () => {
                 this.valueLength = toSignal(control.valueChanges.pipe(map(v => v.length)), {
                     initialValue: control.value.length,
