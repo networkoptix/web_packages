@@ -53,12 +53,28 @@ def on_organization_to_user_deleted(
         instance: OrganizationToUser,
         **kwargs):
     def on_commit_callback():
+
+        organization_id = None
+        try:
+            instance.organization.increment_version()
+            organization_id = instance.organization_id
+        except Organization.DoesNotExist:
+            pass
+
+
+        user_id = None
+        try:
+            instance.user.increment_version()
+            user_id = instance.user_id
+        except CloudUser.DoesNotExist:
+            pass
+
         logger.debug(
             "Organization to User deleted - Incrementing Version",
-            organization=instance.organization,
-            user=instance.user_id)
-        CloudUser.increment_version_by_id(instance.user_id)
-        Organization.increment_version_by_id(instance.organization_id)
+            organization=organization_id,
+            user=user_id)
+
+
         increment_if_group(instance)
 
     transaction.on_commit(on_commit_callback)

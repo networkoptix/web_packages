@@ -48,13 +48,28 @@ def on_channel_partner_to_user_deleted(
         instance: ChannelPartnerToUser,
         **kwargs):
     def on_commit_callback():
+
+        channel_partner_id = None
+        try:
+            instance.channel_partner.increment_version()
+            increment_descendant_version_of_ancestors(instance.channel_partner)
+            channel_partner_id = instance.channel_partner_id
+        except ChannelPartner.DoesNotExist:
+            pass
+
+        user_id = None
+        try:
+            instance.user.increment_version()
+            user_id = instance.user_id
+        except CloudUser.DoesNotExist:
+            pass
+
+
         logger.debug(
             "Channel Partner to User deleted - Incrementing Version",
-            channel_partner=instance.channel_partner_id,
-            user=instance.user_id)
-        CloudUser.increment_version_by_id(instance.user_id)
-        ChannelPartner.increment_version_by_id(instance.channel_partner_id)
-        increment_descendant_version_of_ancestors(instance.channel_partner)
+            channel_partner=channel_partner_id,
+            user=user_id)
+
 
     transaction.on_commit(on_commit_callback)
 

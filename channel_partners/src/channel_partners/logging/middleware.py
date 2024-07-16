@@ -4,6 +4,10 @@ from typing import Callable
 import structlog
 from django import http
 
+from partners.services.caching.dependent_view_cache import (
+    CACHE_STATUS_HEADER_KEY,
+)
+
 
 logger = structlog.get_logger(__name__)
 
@@ -42,5 +46,10 @@ class RequestTimerMiddleware:
         # Calculate and log the duration.
         duration_ms = int((time.time() - start_time) * 1000)
         structlog.contextvars.bind_contextvars(request_duration_ms=duration_ms)
+
+        # Attempt to get the cps_cache header from the response and set it in the logger
+        cps_cache = response.get(CACHE_STATUS_HEADER_KEY, None)
+        if cps_cache:
+            structlog.contextvars.bind_contextvars(cps_cache=cps_cache)
 
         return response

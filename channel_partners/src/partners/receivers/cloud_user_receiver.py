@@ -8,8 +8,14 @@ from django.db.models.signals import (
 )
 from django.dispatch import receiver
 
-from partners.models import CloudUser
+from channel_partners.mixins.version_mixin import VersionMixin
+from partners.models import (
+    ChannelPartner,
+    CloudUser,
+    Organization,
+)
 from partners.receivers.utils import disable_for_loaddata
+from partners.services.cache_service import CacheService
 
 
 logger = structlog.getLogger()
@@ -22,6 +28,8 @@ def on_cloud_user_saved(sender: Type[CloudUser], instance: CloudUser, created: b
         if not created:
             logger.debug("Cloud User changed - Incrementing Version", user=instance.id)
             instance.increment_version()
+            handle_channel_partner_to_user(instance)
+            handle_organization_to_user(instance)
 
     transaction.on_commit(on_commit_callback)
 
@@ -34,3 +42,33 @@ def on_cloud_user_deleted(sender: Type[CloudUser], instance: CloudUser, **kwargs
         logger.debug("Cloud User deleted - Not Incrementing Version", user=instance.id)
 
     transaction.on_commit(on_commit_callback)
+
+
+def handle_channel_partner_to_user(instance: CloudUser):
+    # Get the ids of the related ChannelPartner instances
+    channel_partner_ids = instance.channel_partners.values_list('id', flat=True)
+    logger.debug(
+        "Incrementing version of related Channel Partner of Cloud User",
+        user=instance.id,
+        channel_partners=channel_partner_ids)
+    if channel_partner_ids:
+        CacheService.bulk_increment(
+            list(channel_partner_ids),
+            ChannelPartner,
+            'version',
+            VersionMixin)
+
+
+def handle_organization_to_user(instance: CloudUser):
+    # Get the ids of the related Organization instances
+    organization_ids = instance.organizations.values_list('id', flat=True)
+    logger.debug(
+        "Incrementing version of related Organization of Cloud User",
+        user=instance.id,
+        organizations=organization_ids)
+    if organization_ids:
+        CacheService.bulk_increment(
+            list(organization_ids),
+            Organization,
+            'version',
+            VersionMixin)

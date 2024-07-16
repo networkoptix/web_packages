@@ -23,7 +23,11 @@ from partners.services.caching.cache_enums import TargetTypeEnum
 
 logger = structlog.getLogger()
 
+# Constants
+VALIDATION_HASH_KEY = '**validation_hash'
 
+
+# ==================== #
 class DependentCache:
     """
     Class for defining a dependent cache.
@@ -66,7 +70,7 @@ class DependentCache:
         self._validate_key_params_against_keys(keys)
         if self.validate_user and not user:
             raise ValueError("User must be provided when validate_user is True")
-        if "**validation_hash" in data:
+        if VALIDATION_HASH_KEY in data:
             raise ValueError("Data cannot contain **validation_hash")
 
         # Set the data in the cache
@@ -82,8 +86,10 @@ class DependentCache:
                 user_version = CacheService.get_version(version_key)
                 dependency_strings.append(f'user__version:{user_version}')
 
+            # Add the validation hash and etag to the data
             validation_hash = hashlib.md5(str(dependency_strings).encode()).hexdigest()
-            data = {**data, '**validation_hash': validation_hash}
+
+            data = {**data, VALIDATION_HASH_KEY: validation_hash}
 
             CacheService.set_cache_fields(cache_key, data)
         except Exception as e:
@@ -106,7 +112,7 @@ class DependentCache:
                 raise ValueError(f"Key {key} is not a string")
         if self.validate_user and not user:
             raise ValueError("User must be provided when validate_user is True")
-        if "**validation_hash" in data_fields:
+        if VALIDATION_HASH_KEY in data_fields:
             raise ValueError("Data fields cannot contain **validation_hash")
 
         # Retrieve the data from the cache
@@ -115,10 +121,10 @@ class DependentCache:
             cache_key = self._generate_cache_key(keys)
 
             # Retrieve the data from the cache
-            fields_to_get = data_fields + ['**validation_hash']
+            fields_to_get = data_fields + [VALIDATION_HASH_KEY]
             cached_data = CacheService.get_cache_fields(cache_key, fields_to_get)
 
-            if cached_data:
+            if cached_data is not None:
                 logger.debug("Cache hit", cache_key=cache_key)
 
                 # Check if the validation hash matches
@@ -130,7 +136,7 @@ class DependentCache:
                     dependency_strings.append(f'user__version:{user_version}')
 
                 current_validation_hash = hashlib.md5(str(dependency_strings).encode()).hexdigest()
-                cached_validation_hash = cached_data.pop('**validation_hash', None)
+                cached_validation_hash = cached_data.pop(VALIDATION_HASH_KEY, None)
 
                 if current_validation_hash != cached_validation_hash:
                     logger.debug("Validation hash mismatch -- clearing cache", cache_key=cache_key)
@@ -142,7 +148,7 @@ class DependentCache:
                     if cached_data and field in cached_data:
                         result[field] = cached_data[field]
                     else:
-                        result[field] = Empty()
+                        result[field] = Empty
                 return result
             else:
                 logger.debug("Cache miss", cache_key=cache_key)
@@ -212,6 +218,8 @@ class DependentCache:
     def _generate_cache_key(self, keys: Dict[str, Any]) -> str:
         key_parts = [f'{k}:{v}' for k, v in keys.items()]
         return f'dependent_cache:{self.name}:' + ':'.join(key_parts)
+
+    # TODO: Add a method to get user version
 
     # ==================== #
     # Validation methods

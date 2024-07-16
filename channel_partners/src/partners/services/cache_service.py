@@ -140,7 +140,7 @@ class CacheScriptService(metaclass=Singleton):
         exists = cache.script_exists(sha1)[0]
         if not exists:
             sha1 = cache.script_load(script)
-            logger.info("Redis Lua script loaded", name=script_name, script=script, sha1=sha1)
+            logger.info("Redis Lua script loaded", name=script_name, sha1=sha1)
         else:
             logger.info("Redis Lua script already exists", name=script_name, sha1=sha1)
         self._registered_scripts[script_name] = sha1
@@ -369,11 +369,11 @@ class CacheService:
                         missing_objects[cache_key] = CacheService._build_path_value(instance)
 
                 # Set the values in the cache using set_many
-                # cache.set_many(missing_objects)
                 successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
-                logger.error(
-                    "Attempted to set versions in cache, but failed",
-                    unsuccessful_keys=list(unsuccessful))
+                if unsuccessful:
+                    logger.error(
+                        "Attempted to set versions in cache, but failed",
+                        unsuccessful_keys=list(unsuccessful.keys()))
                 inserted_objects.update(successful)
 
         return inserted_objects
@@ -418,9 +418,10 @@ class CacheService:
                 # Set the values in the cache
                 # cache.set_many(missing_objects)
                 successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
-                logger.error(
-                    "Attempted to set versions in cache, but failed",
-                    unsuccessful_keys=list(unsuccessful.keys()))
+                if unsuccessful:
+                    logger.error(
+                        "Attempted to set versions in cache, but failed",
+                        unsuccessful_keys=list(unsuccessful.keys()))
                 inserted_objects.update(successful)
         return inserted_objects
 
