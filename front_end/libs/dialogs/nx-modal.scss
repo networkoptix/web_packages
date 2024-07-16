@@ -95,6 +95,13 @@ p {
     flex: 1;
 }
 
+/* Pattern accoding to design:
+- Single step dialogs buttons are left-aligned, with action button on left
+- Multistep dialogs buttons are either right-aligned or spaced between
+  - If the other button closes the dialog, the buttons are right-aligned
+  - If the other button goes to a previous state, the buttons are spaced between
+  - In both cases, the action button is on the right
+*/
 .nx-modal__footer {
     display: flex;
     gap: 0.5rem;
