@@ -388,10 +388,7 @@ export const OrgUsersStore = signalStore(
                             ),
                         ).subscribe(() => {
                             if (deleteFromOrg || !!user.accessLevel) {
-                                return patchState(
-                                    store,
-                                    removeEntity(email, currentGroupUsersEntity),
-                                );
+                                patchState(store, removeEntity(email, currentGroupUsersEntity));
                             }
 
                             // Remove the group roles from the user
