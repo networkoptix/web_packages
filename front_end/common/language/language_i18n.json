@@ -687,7 +687,7 @@
     "Split text in chunks": "Split text in chunks",
     "Start": "Start",
     "State": "State",
-    "Status change is unavailable because it it inherited from the entity above": "Status change is unavailable because it it inherited from the entity above",
+    "Status change is unavailable because it is inherited from the entity above": "Status change is unavailable because it is inherited from the entity above",
     "Storage Locations": "Storage Locations",
     "Storage path is already added to this server": "Storage path is already added to this server",
     "Storages outdated. Reload page to update.": "Storages outdated. Reload page to update.",

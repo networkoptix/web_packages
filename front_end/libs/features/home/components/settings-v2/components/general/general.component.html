@@ -107,12 +107,19 @@
     <div class="row pt-3">
         <div class="col-10">
             @if (lockState()) {
-                <div class="change-unavailable">
-                    <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
-                    <div translate>
-                        Status change is unavailable because it it inherited from the entity above
-                    </div>
-                </div>
+                <nx-block>
+                    <nx-section>
+                        <div class="body">
+                            <div class="change-unavailable">
+                                <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
+                                <div translate>
+                                    Status change is unavailable because it is inherited from the
+                                    entity above
+                                </div>
+                            </div>
+                        </div>
+                    </nx-section>
+                </nx-block>
             } @else {
                 <div>
                     <nx-block>

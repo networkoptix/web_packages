@@ -1459,7 +1459,7 @@
     "Statistics report interval": "Statistics report interval",
     "Statistics server api": "Statistics server api",
     "Status": "Status",
-    "Status change is unavailable because it it inherited from the entity above": "Status change is unavailable because it it inherited from the entity above",
+    "Status change is unavailable because it is inherited from the entity above": "Status change is unavailable because it is inherited from the entity above",
     "Stay Logged In": "Stay Logged In",
     "Stay logged as {email} ": "Stay logged as {email} ",
     "Storage": "Storage",
