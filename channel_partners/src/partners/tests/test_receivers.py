@@ -357,6 +357,34 @@ class TestReceivers:
         self.assert_both_versions(system, 1)
         self.assert_both_descendant_versions(organization, 2)
 
+
+    def test_system_disconnect_several_users_2(
+                self,
+                channel_partner_factory,
+                organization_factory,
+                cp_service_factory,
+                service_record_factory,
+                system_factory,
+                system_group_factory
+        ) -> None:
+        # Test Setup
+        channel_partner = channel_partner_factory()
+
+        organization = organization_factory(
+            channel_partner=channel_partner)
+
+        group_1_0 = system_group_factory(organization=organization, name="Group 1.0")
+        group_1_1 = system_group_factory(organization=organization, name="Group 1.1", parent=group_1_0)
+        group_1_2 = system_group_factory(organization=organization, name="Group 1.2", parent=group_1_0)
+        group_1_3 = system_group_factory(organization=organization, name="Group 1.3", parent=group_1_0)
+
+        group_1_1.delete()
+
+        # Test after disconnecting the service
+        self.assert_both_versions(group_1_0, 0)
+        self.assert_both_descendant_versions(group_1_0, 4)
+
+
     def test_system_group_move_group(
             self,
             system_group_factory,

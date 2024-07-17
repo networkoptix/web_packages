@@ -1,3 +1,4 @@
+import contextlib
 import datetime
 import json
 import random
@@ -21,6 +22,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import (
 )
 from django.conf import settings
 from django.core.cache import caches
+from django.test import TestCase
 from django.utils import timezone
 from jwt.algorithms import RSAAlgorithm
 from jwt.utils import (
@@ -54,6 +56,14 @@ from partners.models import (
     VmsRoles,
 )
 
+
+@contextlib.contextmanager
+def auto_execute_on_commit_callbacks(using='default'):
+    with TestCase.captureOnCommitCallbacks(using=using, execute=True) as callbacks:
+        yield callbacks
+        # Execute all captured callbacks
+        for callback in callbacks:
+            callback()
 
 @pytest.fixture()
 def assert_all_responses_were_requested() -> bool:
