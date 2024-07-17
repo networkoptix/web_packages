@@ -61,7 +61,6 @@ def on_organization_to_user_deleted(
         except Organization.DoesNotExist:
             pass
 
-
         user_id = None
         try:
             instance.user.increment_version()
@@ -74,7 +73,6 @@ def on_organization_to_user_deleted(
             organization=organization_id,
             user=user_id)
 
-
         increment_if_group(instance)
 
     transaction.on_commit(on_commit_callback)
@@ -82,11 +80,11 @@ def on_organization_to_user_deleted(
 
 def increment_if_group(instance: OrganizationToUser):
     # TODO: Future enhancement, reduce the number of queries between this and the bulk increment
-    if instance.system_group is not None:
+    if instance.system_group_id is not None:
         system_group_ids: QuerySet[UUID] = (
             SystemGroup.objects.filter(
                 Q(id=instance.system_group_id) |
-                Q(parent=instance.system_group)
+                Q(parent_id=instance.system_group_id)
             ).values_list('id', flat=True))
 
         logger.debug("Incrementing System Group Versions", system_group_count=len(system_group_ids))
