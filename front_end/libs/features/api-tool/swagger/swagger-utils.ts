@@ -150,3 +150,14 @@ export const setCodeBlockHTML = (
     }
     return false;
 };
+
+/**
+ * Removes extra white space.
+ *
+ * Removed backslashes from a curl string preserving backslashes escaping double quotes.
+ *
+ * @param curl unsanitzed curl string
+ * @returns sanitized curl string
+ */
+export const sanitizeCurl = (curl: string): string =>
+    curl.replace(/\s\s+/g, '').replace(/\\(?=[-'])/g, '');
