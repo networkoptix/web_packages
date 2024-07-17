@@ -104,6 +104,7 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     );
 
     openedRoleTooltip?: NxTooltipV2Directive;
+    currAccessLevel = this.currentOrg$$()?.channelPartnerAccessLevel;
 
     getRowRoleId(user: UserRecord): string {
         return user?.rolesIds?.[0] ?? user?.groupRoles?.[0]?.rolesIds?.[0] ?? '';
@@ -116,6 +117,10 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     }
 
     canDeleteUser(user: UserRecord): boolean {
+        if (this.currAccessLevel === OrgRoleIds.OrgAdmin) {
+            return true;
+        }
+
         if (user.isOrgUser) {
             const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
             return !this.inGroup$$() && !userIsOnlyAdmin;
@@ -131,7 +136,9 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         const orgId = this.currentOrg$$()?.id;
         const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
         return (
-            (user.isOrgUser && !userIsOnlyAdmin && currentGroupId === orgId) ||
+            (user.isOrgUser &&
+                (!userIsOnlyAdmin || this.currAccessLevel === OrgRoleIds.OrgAdmin) &&
+                currentGroupId === orgId) ||
             (!user.isOrgUser &&
                 !this.hasMultipleRoles(user) &&
                 (user.accessLevel?.id === currentGroupId || currentGroupId === orgId))

@@ -37,6 +37,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     searchQueryModel = paramModel('search');
 
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    currAccessLevel = this.currentOrg$$()?.channelPartnerAccessLevel;
     email$$ = this.routerState.email;
     orgRoles$$ = this.cpService.organizationRoles$$;
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
@@ -133,9 +134,10 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         }
         const users = this.orgUsersStore.tableUsers$$();
         const currentUser = users.find(user => user.email === this.email$$());
-        if (!currentUser?.isOrgUser) {
+        if (this.currAccessLevel === OrgRoleIds.OrgAdmin || !currentUser?.isOrgUser) {
             return true;
         }
+
         const checkForOneAdmin = (): boolean => {
             let admins = 0;
             for (const user of users) {
