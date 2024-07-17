@@ -1,5 +1,5 @@
 <div class="nx-access-table-container access-table">
-    @if (accessTableRecords$$()?.length > 0) {
+    @if (accessTableRecords$$()?.length > 0 && filteredRecords$$()?.length > 0) {
         <nx-table
             [style.height]="'calc(100% - 12px)'"
             set-pagination
@@ -153,6 +153,8 @@
                 </div>
             </ng-template>
         </nx-table>
+    } @else if (accessTableRecords$$()?.length > 0 && filteredRecords$$()?.length === 0) {
+        <nx-page-placeholder-v2 [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"></nx-page-placeholder-v2>
     } @else {
         <nx-page-placeholder-v2
             [type]="PAGE_PLACEHOLDER.NO_USERS"
