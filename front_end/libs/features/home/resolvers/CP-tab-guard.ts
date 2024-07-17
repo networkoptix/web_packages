@@ -24,31 +24,32 @@ export const cpTabGuard: CanActivateFn = (
     const currPartner$$ = store.selectSignal(selectCurrentPartner);
     const permissionsStore = inject(PermissionsStore);
     const checkPermissions = (): boolean => {
-        if (path === 'subchannels') {
-            return permissionsStore.canViewSubChannels$$();
-        } else {
-            switch (path) {
-                case 'settings':
-                case 'information':
-                    if (permissionsStore.canViewPartnerSettings$$()) {
-                        return true;
-                    }
-                    break;
-                case 'users':
-                    if (permissionsStore.canViewPartnerUsers$$()) {
-                        return true;
-                    }
-                    break;
-                case 'reports':
-                    if (permissionsStore.canViewPartnerReports$$()) {
-                        return true;
-                    }
-                    break;
-                case 'support':
+        switch (path) {
+            case 'subchannels':
+                if (permissionsStore.canViewSubChannels$$()) {
                     return true;
-            }
+                }
+                break;
+            case 'settings':
+            case 'information':
+                if (permissionsStore.canViewPartnerSettings$$()) {
+                    return true;
+                }
+                break;
+            case 'users':
+                if (permissionsStore.canViewPartnerUsers$$()) {
+                    return true;
+                }
+                break;
+            case 'reports':
+                if (permissionsStore.canViewPartnerReports$$()) {
+                    return true;
+                }
+                break;
+            case 'support':
+                return true;
         }
-        router.navigate(['404']);
+        router.navigate([`home/channelPartners/${currPartner$$()?.id ?? ''}`]);
         return false;
     };
 
