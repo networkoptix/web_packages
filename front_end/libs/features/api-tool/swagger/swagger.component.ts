@@ -43,7 +43,7 @@ import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.
 import { NxSwaggerSpinnerComponent } from './swagger-spinner/swagger-spinner.component';
 import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 import type { componentMap, textareaMap } from './swagger-types';
-import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
+import { highlightAllCode, sanitizeCurl, setCodeBlockHTML } from './swagger-utils';
 
 @UntilDestroy()
 @Component({
@@ -404,7 +404,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit, OnDestroy {
                 !element.classList.contains('with-line-counter')
             ) {
                 if (element.classList.contains('curl')) {
-                    element.innerText = element.innerText.replace(/(\r\n|\n|\r|\\)/gm, '');
+                    element.innerText = sanitizeCurl(element.innerText);
                 }
                 if (
                     element.parentElement.tagName !== 'DIV' ||
