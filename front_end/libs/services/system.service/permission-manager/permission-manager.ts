@@ -467,12 +467,16 @@ export class PermissionManager {
      */
     public permissionsInitialized = (injector: Injector): Observable<CurrentUser | undefined> =>
         runInInjectionContext(injector, () => toObservable(this.currentUser$$)).pipe(
-            filter(
-                user =>
-                    (!!user && Object.values(user.permissions).some(identity)) ||
-                    ('resourceAccessRights' in user! &&
-                        Object.values(user.resourceAccessRights!).some(identity)),
-            ),
+            filter(user => {
+                if (user) {
+                    return (
+                        Object.values(user.permissions).some(identity) ||
+                        ('resourceAccessRights' in user &&
+                            Object.values(user.resourceAccessRights).some(identity))
+                    );
+                }
+                return false;
+            }),
             timeout({
                 first: environment.isLocal ? 10_000 : 5_000,
                 with: async () => {
