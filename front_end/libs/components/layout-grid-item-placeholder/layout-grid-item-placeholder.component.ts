@@ -221,6 +221,8 @@ export class NxLayoutGridItemPlaceholderComponent {
     status = input.required<string | null>();
     layoutItemStatus = input.required<string | null>();
     itemDetail = input<LayoutResourceTree[string]>();
+    /** for debug purposes only */
+    item = input<ParsedLayoutItem>();
     /** to be deprecated */
     renderConfig = input.required<ParsedLayoutItem['renderConfig']>();
     /** to be deprecated */
@@ -233,6 +235,7 @@ export class NxLayoutGridItemPlaceholderComponent {
     readonly icons = icons;
     readonly LANG = staticLang;
     readonly layoutsItemNewPlaceholder: boolean = !!nxConfig.featureFlags.layoutsItemNewPlaceholder;
+    readonly layoutsDebugPlaceholder: boolean = !!nxConfig.featureFlags.layoutsDebugPlaceholder;
 
     constructor(
         private layoutItemsErrorsStore: LayoutItemsErrorsStore,
@@ -280,10 +283,10 @@ export class NxLayoutGridItemPlaceholderComponent {
     placeholder = computed(() => {
         const status = this.adjustedStatus();
         const itemDetail = this.itemDetail();
-        let placeholder = PLACEHOLDERS.default;
+        let placeholder: Placeholder | undefined;
 
         if (!status) {
-            return this.getWithIconFullPath(placeholder);
+            return this.getDefaultPlaceholder();
         }
 
         if (itemDetail) {
@@ -311,17 +314,31 @@ export class NxLayoutGridItemPlaceholderComponent {
         }
 
         if (!placeholder) {
-            // should be gone after statuses are typed
-            // ff to show broken placeholder rather than fail dramatically
-            throw new Error(`Unknown status: ${status}`, {
-                cause: {
-                    status,
-                    itemDetail,
-                },
-            });
+            // this is an error state as a matter of fact
+            // we show a fallback placeholder to not to break the layout
+            // ff layoutsDebugPlaceholder can provide more info
+            return this.getDefaultPlaceholder();
         }
+
         return this.getWithIconFullPath(placeholder);
     });
+
+    getDefaultPlaceholder = (): Placeholder => {
+        const itemDetail = this.itemDetail();
+        const status = this.adjustedStatus();
+        const placeholder = this.getWithIconFullPath(PLACEHOLDERS.default);
+
+        if (this.layoutsDebugPlaceholder) {
+            placeholder.hint = `${placeholder.hint || ''}
+            layoutItemStatus: ${this.layoutItemStatus()}
+            adjustedStatus: ${status}
+            itemDetailsId: ${itemDetail?.details?.id}
+            itemType: ${itemDetail?.type}
+            resourcePath: ${this.item()?.resourcePath}`;
+        }
+
+        return placeholder;
+    };
 
     getWithIconFullPath = (placeholder: Placeholder): Placeholder => {
         if (!placeholder?.icon) {

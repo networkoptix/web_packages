@@ -619,6 +619,8 @@ export class NxLayoutGridComponent {
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
     readonly dirtyId = dirtyId;
 
+    readonly layoutsItemNewPlaceholder = nxConfig.featureFlags.layoutsItemNewPlaceholder;
+
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
     #fullscreenElement$ = new BehaviorSubject<Element>(null);
@@ -642,24 +644,28 @@ export class NxLayoutGridComponent {
             const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
             const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
 
-            let layoutItemStatus = itemDetail
-                ? this.layoutItemsErrorsStore.statuses$$()[itemDetail.details.id]
-                : null;
+            let layoutItemStatus: string;
 
-            if (!systemInfo) {
-                layoutItemStatus = 'systemNoAccess';
-            } else if (isSystemOffline) {
-                layoutItemStatus = 'systemOffline';
-            } else if (isSystemIncompatible) {
-                layoutItemStatus = 'systemIncompatible';
-            } else if (itemDetail) {
-                const permissionManager =
-                    this.systemsService.systemsPermissionsManager$$()[systemInfo.id];
-                if (!permissionManager) {
+            if (itemDetail) {
+                layoutItemStatus = this.layoutItemsErrorsStore.statuses$$()[itemDetail.details.id];
+
+                if (!systemInfo) {
                     layoutItemStatus = 'systemNoAccess';
-                } else if (!permissionManager.canViewDevice(itemDetail.details.id)) {
-                    layoutItemStatus = 'noAccess';
+                } else if (isSystemOffline) {
+                    layoutItemStatus = 'systemOffline';
+                } else if (isSystemIncompatible) {
+                    layoutItemStatus = 'systemIncompatible';
+                } else {
+                    const permissionManager =
+                        this.systemsService.systemsPermissionsManager$$()[systemInfo.id];
+                    if (!permissionManager) {
+                        layoutItemStatus = 'systemNoAccess';
+                    } else if (!permissionManager.canViewDevice(itemDetail.details.id)) {
+                        layoutItemStatus = 'noAccess';
+                    }
                 }
+            } else {
+                layoutItemStatus = 'systemDeviceNotAvailable';
             }
 
             if (!layoutItemStatus) {

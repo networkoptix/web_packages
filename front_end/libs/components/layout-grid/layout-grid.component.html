@@ -785,6 +785,7 @@
                                                                     layoutItemsErrorsStore.layoutErrors$$()
                                                             } | mapWith: getItemLayoutError
                                                         "
+                                                        [item]="item"
                                                         [renderConfig]="item.renderConfig"
                                                         [systemStatus]="item.systemStatusOld$$()"
                                                         [status]="status"
@@ -972,12 +973,26 @@
                                                                 }
                                                                 @default {
                                                                     <!-- should be a generic not supported placeholder -->
-                                                                    <div
-                                                                        class="not-supported"
-                                                                        translate
-                                                                    >
-                                                                        Not supported
-                                                                    </div>
+                                                                    @if (
+                                                                        layoutsItemNewPlaceholder
+                                                                    ) {
+                                                                        <ng-container
+                                                                            *ngTemplateOutlet="
+                                                                                itemStatusPlaceholder;
+                                                                                context: {
+                                                                                    itemDetail,
+                                                                                    status: null
+                                                                                }
+                                                                            "
+                                                                        ></ng-container>
+                                                                    } @else {
+                                                                        <div
+                                                                            class="not-supported"
+                                                                            translate
+                                                                        >
+                                                                            Not supported
+                                                                        </div>
+                                                                    }
                                                                 }
                                                             }
                                                         </div>

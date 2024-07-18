@@ -17,7 +17,7 @@
             {{ systemStatus() | nxTranslate }}
         </div>
     }
-} @else {
+} @else if (placeholder()) {
     <nx-layout-grid-item-placeholder-template
         *ngrxLet="placeholder() as placeholder"
         [icon]="placeholder.icon"

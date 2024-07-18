@@ -91,6 +91,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_updated_cross_system_menu = ('Layouts - Updated Cross System Menu (separated from the tree)', 'layoutsUpdatedCrossSystemMenu')
     layouts_camera_groups = ('Layouts - Tree Camera Groups', 'layoutsCameraGroups')
     layouts_item_new_placeholder = ('Layouts - New Items Placeholders', 'layoutsItemNewPlaceholder')
+    layouts_item_debug_placeholder = ('Layouts - Dev Debug Info Placeholders', 'layoutsDebugPlaceholder')
     layouts_fisheye = ('Layouts - Fisheye De-warping', 'layoutsFisheye')
     layouts_51_enabled = ('Layouts - Enabled for 5.1 Systems', 'layouts51Enabled')
 
