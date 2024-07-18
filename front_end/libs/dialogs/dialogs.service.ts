@@ -406,13 +406,14 @@ export class NxDialogsService {
         { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
     );
 
-    updateGroupName = this.dialogV1Factory<Dt.UpdateSystemGroup>(
+    updateGroupName = this.dialogV2Factory<Dt.UpdateSystemGroup>(
         () =>
             import('./channel-partners/update-system-group/update-system-group.component').then(
                 m => m.UpdateSystemGroupModalContent,
             ),
         {
-            width: '360px',
+            autoFocus: 'input',
+            width: DIALOG_SIZE.MICRO_SMALL,
         },
     );
 
