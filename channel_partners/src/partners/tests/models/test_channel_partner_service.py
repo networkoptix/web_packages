@@ -14,7 +14,6 @@ from partners.models import ChannelPartnerService
 from partners.tasks.services import new_channel_partner_service_created
 
 
-@pytest.mark.django_db(transaction=False)
 def test_channel_partner_service_creation_failure(channel_partner_factory, cp_service_factory,
                                                   django_capture_on_commit_callbacks):
     # Patch 'new_channel_partner_service_created' to track if it's called
@@ -51,7 +50,6 @@ def test_channel_partner_service_creation_1(
     assert ChannelPartnerService.objects.count() == 2
 
 
-@pytest.mark.django_db(transaction=False)
 def test_channel_partner_service_creation_2(
         caplog,
         channel_partner_factory,
@@ -80,7 +78,7 @@ def test_channel_partner_service_creation_2(
     assert len([log for log in logs if "Created new Channel Partner Service" in log.message]) == 3
 
 
-@pytest.mark.django_db(transaction=False)
+
 def test_channel_partner_service_creation_3(caplog, channel_partner_factory, cp_service_factory,
                                             django_capture_on_commit_callbacks):
     with django_capture_on_commit_callbacks(execute=True) as callbacks:
@@ -95,6 +93,8 @@ def test_channel_partner_service_creation_3(caplog, channel_partner_factory, cp_
             cp_service_factory(channel_partner=cp, service_type=ChannelPartnerService.LOCAL_RECORDING)
 
     assert ChannelPartnerService.objects.count() == 3
+    assert ChannelPartnerService.objects.filter(enabled=True).count() == 3
+
 
     with django_capture_on_commit_callbacks(execute=True) as callbacks:
         # Adding sub-channel partners and their subs should trigger additional services creation
@@ -306,3 +306,42 @@ class TestChannelPartnerService:
             )
             custom_service.save()
         assert ChannelPartnerService.objects.count() == 5
+
+
+def test_channel_partner_service_creation_service_disabled(channel_partner_factory, cp_service_factory,
+                                                         django_capture_on_commit_callbacks):
+    with django_capture_on_commit_callbacks(execute=True):
+        root_cp = channel_partner_factory(parent_channel_partner=None)
+        cp = channel_partner_factory(parent_channel_partner=root_cp)
+
+    assert ChannelPartnerService.objects.count() == 0
+
+    with django_capture_on_commit_callbacks(execute=True):
+        # Create multiple services for the same channel partner
+        for _ in range(3):
+            cp_service_factory(channel_partner=root_cp,
+                               service_type=ChannelPartnerService.LOCAL_RECORDING,
+                               is_enabled=False)
+
+    assert ChannelPartnerService.objects.count() == 6
+    assert ChannelPartnerService.objects.filter(enabled=False).count() == 6
+
+
+def test_channel_partner_creation_service_disabled(channel_partner_factory, cp_service_factory,
+                                                 django_capture_on_commit_callbacks):
+    with django_capture_on_commit_callbacks(execute=True):
+        root_cp = channel_partner_factory(parent_channel_partner=None)
+
+        for _ in range(3):
+            cp_service_factory(channel_partner=root_cp,
+                               service_type=ChannelPartnerService.LOCAL_RECORDING,
+                               is_enabled=False)
+
+    assert ChannelPartnerService.objects.count() == 3
+    assert ChannelPartnerService.objects.filter(enabled=False).count() == 3
+
+    with django_capture_on_commit_callbacks(execute=True):
+        cp = channel_partner_factory(parent_channel_partner=root_cp)
+
+    assert ChannelPartnerService.objects.count() == 6
+    assert ChannelPartnerService.objects.filter(enabled=False).count() == 6

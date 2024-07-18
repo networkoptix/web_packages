@@ -37,6 +37,7 @@ class ChannelPartnerServiceService:
             parent_service=original_service,
             sub_type=original_service.sub_type,
             duration=original_service.duration,
+            enabled=original_service.enabled,
             # Set cloned to True to indicate that this is a cloned service, and it can/must be cloned downward.
             cloned=True,
             # Do not set conversion_service here; it will be set later if applicable
