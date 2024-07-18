@@ -1,4 +1,1 @@
-:host {
-    // Temporary fix for qa while migrating dialogs
-    --label-color: var(--label-color-original)
-}
+@use '../../nx-modal';

@@ -1,63 +1,57 @@
-<form #updateSystemGroupFrom="ngForm">
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            Rename Folder
-        </h1>
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+    >
+        Rename Folder
+    </span>
+    @if (closable) {
         <button
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-        >
-            <span class="close-content"></span>
-        </button>
+        ></button>
+    }
+</div>
+
+<form
+    class="nx-modal__content"
+    [formGroup]="formGroup"
+>
+    <div class="nx-modal__body">
+        <nx-form-field>
+            <label
+                for="update-group-folder-name"
+                nx-label
+                translate
+                >Folder Name</label
+            >
+            <input
+                nx-input
+                id="update-group-folder-name"
+                formControlName="renameFolder"
+            />
+            <nx-control-messages></nx-control-messages>
+        </nx-form-field>
     </div>
-    <div class="modal-body">
-        <label
-            for="groupName"
+    <div class="nx-modal__footer">
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy"
+            (click)="close()"
             translate
         >
-            Folder Name
-        </label>
-        <input
-            class="form-control"
-            id="groupName"
-            name="groupName"
-            [(ngModel)]="name"
-            #groupName="ngModel"
-            autofocus
-            [required]="updateSystemGroupFrom.submitted"
-        />
-        @if (groupName.touched && groupName.errors?.required) {
-            <span
-                class="error-label"
-                translate
-            >
-                Name is required
-            </span>
-        } @else if (groupName.value?.length > 150) {
-            <span
-                class="error-label"
-                translate
-            >
-                Folder name shouldn't be more than 150 symbols
-            </span>
-        }
-    </div>
-    <div class="modal-footer">
-        <nx-process-button
-            [form]="updateSystemGroupFrom"
-            [process]="updateSystemGroupProcess"
-            [buttonText]="'Save' | translate"
-            [buttonDisabled]="groupName.value?.length > 150"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="updateSystemGroupProcess"
-            [discardFn]="close"
-        ></nx-cancel-button>
+            Cancel
+        </button>
+        <nx-async-action-button
+            [action]="updateSystemGroupProcess"
+            [(busy)]="busy"
+            translate
+        >
+            Save
+        </nx-async-action-button>
     </div>
 </form>

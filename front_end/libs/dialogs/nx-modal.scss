@@ -24,7 +24,6 @@ p {
         @include typography.medium14nocolor;
         color: var(--dialog-header-color);
         line-height: vars.$modal-title-line-height;
-
     }
 
     &-close-btn {
