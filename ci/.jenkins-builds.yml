@@ -94,6 +94,12 @@ cloud-deploy:
         "CLOUD_PORTAL_IMAGE_TAG=${CI_PIPELINE_ID}.gitlab"
         "CLOUD_BACKEND_IMAGE_TAG=${CLOUD_BACKEND_IMAGE_TAG}"
         "RELEASE_NAME=${K8S_PRODUCT_RELEASE}"
+        "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+        "GITLAB_COMMIT=$CI_COMMIT_SHA"
+        "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+        "GITLAB_JOB_ID=$CI_JOB_ID"
+        "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+        "GITLAB_JOB_URL=$CI_JOB_URL"
         "CUSTOMIZATIONS=default" 2>&1 | tee "deploy.log"
     - |
       JENKINS_JOB_URL="$(grep 'Job Url:' "deploy.log" | \
@@ -142,6 +148,12 @@ cloud-remove-deployment:no-bot-start:
       jq -r ".external_url")"
   - runJenkinsJob.sh gitlab.cloud.remove-deployment
     "CLOUD_HOST=${CLOUD_URL}"
+    "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+    "GITLAB_COMMIT=$CI_COMMIT_SHA"
+    "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+    "GITLAB_JOB_ID=$CI_JOB_ID"
+    "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+    "GITLAB_JOB_URL=$CI_JOB_URL"
   environment:
     name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
     action: stop
