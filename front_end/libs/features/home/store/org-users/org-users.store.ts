@@ -549,7 +549,10 @@ export const OrgUsersStore = signalStore(
             ),
             setSelectedGroup: rxMethod<string>(
                 pipe(
-                    switchMap(groupId => (groupId ? Promise.resolve(groupId) : NEVER)),
+                    switchMap(groupId =>
+                        // Empty string was added as an escape hatch to reset the current group.
+                        groupId || groupId === '' ? Promise.resolve(groupId) : NEVER,
+                    ),
                     distinctUntilChanged(),
                     tapResponse({
                         next: (groupId: string) => {
@@ -559,9 +562,11 @@ export const OrgUsersStore = signalStore(
                             patchState(
                                 store,
                                 removeAllEntities(currentGroupUsersEntity),
-                                {
-                                    selectedGroupId: groupId,
-                                },
+                                groupId
+                                    ? {
+                                          selectedGroupId: groupId,
+                                      }
+                                    : {},
                                 setEntity(
                                     { id, users },
                                     { collection: usersCacheEntity.collection },
@@ -575,6 +580,10 @@ export const OrgUsersStore = signalStore(
 
                         if (cached) {
                             store.setUsers(cached.users);
+                        } else if (groupId === '') {
+                            // In escape hatch scenario, update the current group.
+                            groupId =
+                                routerStateStore.groupId() || routerStateStore.organizationId();
                         }
 
                         return iif(

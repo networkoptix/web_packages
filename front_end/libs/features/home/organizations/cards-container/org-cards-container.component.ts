@@ -33,6 +33,7 @@ import { NxCardComponent } from '@pages/home/components/card/card.component';
 import type { DraggableItem } from '@pages/home/home.types';
 import { flattenGroups } from '@pages/home/store/groups/groups-utils';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
+import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PipesModule } from '@pipes/pipes.module';
@@ -80,6 +81,7 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
 })
 export class NxOrganizationCardContainerComponent {
     groupsStore = inject(GroupsStore);
+    usersStore = inject(OrgUsersStore);
     channelPartnersRouteStore = inject(ChannelPartnersRouteState);
 
     LANG = staticLang;
@@ -450,6 +452,7 @@ export class NxOrganizationCardContainerComponent {
                                                     group.id,
                                                     currentOrgId,
                                                 );
+                                                this.usersStore.setSelectedGroup('');
                                             },
                                             () => {
                                                 // TODO: Waiting for direction from design on error handling//
