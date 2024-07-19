@@ -1014,7 +1014,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
 
 @extend_schema(
     tags=['Organization Users'],
-    parameters=[OpenApiParameter('parent_lookup_organizations', location='path', type=OpenApiTypes.UUID)]
+    parameters=[OpenApiParameter('parent_lookup_organization', location='path', type=OpenApiTypes.UUID)]
 )
 @extend_schema_view(
     list=extend_schema(summary='Get list of users belonging to an organization',
