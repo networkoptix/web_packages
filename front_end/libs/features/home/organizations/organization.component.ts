@@ -113,7 +113,8 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
 
     tabs$$ = computed(() => {
         const tabs: Tab[] = [];
-        if (this.permissionsStore.canViewSystems$$()) {
+        const groups = this.groupsStore.groupsEntities();
+        if (this.permissionsStore.canViewSystems$$() || groups.length) {
             tabs.push({
                 displayName: this.LANG.channelPartners.tabNames.systems,
                 route: 'systems',
