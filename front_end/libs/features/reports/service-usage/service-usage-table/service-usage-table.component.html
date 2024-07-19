@@ -7,7 +7,7 @@
     [set-row-expand]="false"
     [set-selected-item-id]="selectedRecordId"
     [data]="records()"
-    (onRowClick)="selectService($event.serviceId)"
+    (onRowClick)="selectService($event.serviceId, $event.serviceType)"
 >
     <ng-template #header>
         @for (header of headers; track header.name) {

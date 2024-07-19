@@ -1,4 +1,4 @@
-export interface UsageDetailDialogRecord {
+export interface RegularServiceDialogRecord {
     changed: string;
     channels: number;
     monthlyRate: number;
@@ -6,7 +6,7 @@ export interface UsageDetailDialogRecord {
     isChangeRecord: boolean;
 }
 
-export interface UsageDetailDialogTotals {
+export interface RegularServiceDialogTotals {
     channels: number;
     monthlyRate: number;
     fractionalUsage: number;

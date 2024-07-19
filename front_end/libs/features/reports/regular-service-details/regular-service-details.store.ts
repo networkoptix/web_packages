@@ -3,35 +3,35 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { firstValueFrom } from 'rxjs';
 
 import {
-    FormattedServiceDetailRecord,
-    ServiceDetailTotals,
-} from '@pages/reports/service-usage-details/service-usage-details.types';
+    FormattedRegularServiceRecord,
+    RegularServiceTotals,
+} from '@pages/reports/regular-service-details/regular-service-details.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
     AvailableService,
-    EntityServiceChangeEntry,
-    OrgServiceReportResponse,
-    PartnerServiceReportResponse,
+    EntityRegularServiceEntry,
+    OrgRegularServiceReportResponse,
+    PartnerRegularServiceReportResponse,
     Service,
-    SystemServiceChangeEntry,
+    SystemRegularServiceEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-interface ServiceUsageDetailsState {
+interface RegularServiceDetailsState {
     error: string;
     hasError: boolean;
     isLoading: boolean;
-    entityServiceChanges: EntityServiceChangeEntry[];
-    systemServiceChanges: SystemServiceChangeEntry[];
+    entityRegularServices: EntityRegularServiceEntry[];
+    systemRegularServices: SystemRegularServiceEntry[];
     selectedService: Service | undefined;
 }
 
-const initialState: ServiceUsageDetailsState = {
+const initialState: RegularServiceDetailsState = {
     error: '',
     hasError: false,
     isLoading: true,
-    entityServiceChanges: [],
-    systemServiceChanges: [],
+    entityRegularServices: [],
+    systemRegularServices: [],
     selectedService: undefined,
 };
 
@@ -50,12 +50,12 @@ const getChangedColumnText = (
     }
 };
 
-export const ServiceUsageDetailsStore = signalStore(
+export const RegularServiceDetailsStore = signalStore(
     withState(initialState),
     withComputed((store, dateTimeFormat = inject(NxDateTimeFormatService)) => ({
-        entityServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
+        entityRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
             store
-                .entityServiceChanges()
+                .entityRegularServices()
                 .map(
                     ({
                         id,
@@ -77,8 +77,8 @@ export const ServiceUsageDetailsStore = signalStore(
                     }),
                 ),
         ),
-        entityServiceChangeTotals$$: computed<ServiceDetailTotals>(() =>
-            store.entityServiceChanges().reduce(
+        entityRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
+            store.entityRegularServices().reduce(
                 ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
                     channels: channels + serviceChangeEntry.channels,
                     monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
@@ -91,9 +91,9 @@ export const ServiceUsageDetailsStore = signalStore(
                 },
             ),
         ),
-        systemServiceChangesForTable$$: computed<FormattedServiceDetailRecord[]>(() =>
+        systemRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
             store
-                .systemServiceChanges()
+                .systemRegularServices()
                 .map(
                     ({
                         system_id,
@@ -114,8 +114,8 @@ export const ServiceUsageDetailsStore = signalStore(
                     }),
                 ),
         ),
-        systemServiceChangeTotals$$: computed<ServiceDetailTotals>(() =>
-            store.systemServiceChanges().reduce(
+        systemRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
+            store.systemRegularServices().reduce(
                 ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
                     channels: channels + serviceChangeEntry.channels,
                     monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
@@ -130,18 +130,18 @@ export const ServiceUsageDetailsStore = signalStore(
         ),
     })),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
-        async loadPartnerServiceReport(
+        async loadPartnerRegularServiceReport(
             partnerId: string,
             serviceId: string,
             startTs: string,
         ): Promise<void> {
             patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: PartnerServiceReportResponse;
+            let serviceReportResponse: PartnerRegularServiceReportResponse;
             let services: Service[];
             let selectedService: Service | undefined;
             try {
                 const serviceReportPromise = firstValueFrom(
-                    CPService.getPartnerServiceReport(partnerId, serviceId, startTs),
+                    CPService.getPartnerRegularServiceReport(partnerId, serviceId, startTs),
                 );
                 const servicesPromise = firstValueFrom(
                     CPService.getChannelPartnerOwnedServices(partnerId),
@@ -161,23 +161,23 @@ export const ServiceUsageDetailsStore = signalStore(
             }
             patchState(store, {
                 isLoading: false,
-                entityServiceChanges: serviceReportResponse.sub_entities,
-                systemServiceChanges: [],
+                entityRegularServices: serviceReportResponse.sub_entities,
+                systemRegularServices: [],
                 selectedService,
             });
         },
-        async loadOrgServiceReport(
+        async loadOrgRegularServiceReport(
             orgId: string,
             serviceId: string,
             startTs: string,
         ): Promise<void> {
             patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: OrgServiceReportResponse;
+            let serviceReportResponse: OrgRegularServiceReportResponse;
             let servicesResponse: AvailableService[];
             let selectedService: Service | undefined;
             try {
                 const serviceReportPromise = firstValueFrom(
-                    CPService.getOrganizationServiceReport(orgId, serviceId, startTs),
+                    CPService.getOrganizationRegularServiceReport(orgId, serviceId, startTs),
                 );
                 const servicesPromise = firstValueFrom(CPService.getOrganizationServices(orgId));
                 [serviceReportResponse, servicesResponse] = await Promise.all([
@@ -197,8 +197,8 @@ export const ServiceUsageDetailsStore = signalStore(
             }
             patchState(store, {
                 isLoading: false,
-                entityServiceChanges: [],
-                systemServiceChanges: serviceReportResponse.systems,
+                entityRegularServices: [],
+                systemRegularServices: serviceReportResponse.systems,
                 selectedService,
             });
         },

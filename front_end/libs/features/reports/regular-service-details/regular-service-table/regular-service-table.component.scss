@@ -1,0 +1,16 @@
+.table-header {
+    color: var(--reports-table-header-text-color);
+    font-size: 14px;
+    padding: 0 8px;
+}
+
+.hint-icon {
+    margin-left: 2px;
+    position: relative;
+    bottom: 1px;
+    color: var(--reports-hint-icon-color)
+}
+
+.align-right {
+    justify-content: flex-end;
+}

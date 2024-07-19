@@ -6,7 +6,7 @@
         <button
             type="button"
             class="close"
-            id="closeUsageDetailsModal"
+            id="closeRegularServiceDetailsDialog"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
@@ -18,10 +18,10 @@
         @if (isLoading$$()) {
             <nx-pre-loader></nx-pre-loader>
         } @else {
-            <nx-usage-details-dialog-table
+            <nx-regular-service-dialog-table
                 [records]="formattedRecords$$()"
                 [totals]="totals$$()"
-            ></nx-usage-details-dialog-table>
+            ></nx-regular-service-dialog-table>
         }
     </div>
 </div>

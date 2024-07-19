@@ -50,14 +50,16 @@ import {
     OwnedService,
     PartnerUsageReportEntry,
     OrgUsageReportEntry,
-    PartnerServiceReportResponse,
-    OrgServiceReportResponse,
-    DetailTableResponse,
+    PartnerRegularServiceReportResponse,
+    OrgRegularServiceReportResponse,
+    RegularServiceDetailDialogResponse,
     PaginatedCloudSystemLightList,
     ChannelPartnersStructure,
     PageUpdater,
     WithPageUpdater,
     HasMoreNotifierCallback,
+    PartnerExpiringServiceReportResponse,
+    OrgExpiringServiceReportResponse,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -303,11 +305,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
-    getPartnerServiceReport = (
+    getPartnerRegularServiceReport = (
         partnerId: string,
         serviceId: string,
         periodStartDate: string,
-    ): Observable<PartnerServiceReportResponse> => {
+    ): Observable<PartnerRegularServiceReportResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
                 partnerId,
@@ -319,17 +321,33 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
-    getPartnerDetailTable = (
+    getPartnerRegularServiceDetailDialog = (
         partnerId: string,
         serviceId: string,
         periodStartDate: string,
-    ): Observable<DetailTableResponse> => {
+    ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
                 partnerId,
                 'reports',
                 serviceId,
                 'regular_detail_table',
+            ]),
+            { params: { periodStartDate } },
+        );
+    };
+
+    getPartnerExpiringServiceReport = (
+        partnerId: string,
+        serviceId: string,
+        periodStartDate: string,
+    ): Observable<PartnerExpiringServiceReportResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                serviceId,
+                'expiring_service_report',
             ]),
             { params: { periodStartDate } },
         );
@@ -441,11 +459,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         });
     };
 
-    getOrganizationServiceReport = (
+    getOrganizationRegularServiceReport = (
         orgId: string,
         serviceId: string,
         periodStartDate: string,
-    ): Observable<OrgServiceReportResponse> => {
+    ): Observable<OrgRegularServiceReportResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
                 orgId,
@@ -457,11 +475,27 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
-    getOrganizationDetailTable = (
+    getOrganizationExpiringServiceReport = (
         orgId: string,
         serviceId: string,
         periodStartDate: string,
-    ): Observable<DetailTableResponse> => {
+    ): Observable<OrgExpiringServiceReportResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                serviceId,
+                'expiring_service_report',
+            ]),
+            { params: { periodStartDate } },
+        );
+    };
+
+    getOrganizationRegularServiceDetailDialog = (
+        orgId: string,
+        serviceId: string,
+        periodStartDate: string,
+    ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
                 orgId,
@@ -478,7 +512,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         systemId: string,
         serviceId: string,
         periodStartDate: string,
-    ): Observable<DetailTableResponse> => {
+    ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
                 orgId,

@@ -12,30 +12,33 @@ import { icons } from '@static-variables';
 import { EntityType } from '../reports.types';
 import { NxServiceUsageTableComponent } from '../service-usage/service-usage-table/service-usage-table.component';
 
-import { NxServiceDetailsTableComponent } from './service-details-table/service-details-table.component';
-import { ServiceUsageDetailsStore } from './service-usage-details.store';
-import { FormattedServiceDetailRecord, ServiceDetailTotals } from './service-usage-details.types';
+import { ExpiringServiceDetailsStore } from './expiring-service-details.store';
+import {
+    FormattedExpiringServiceRecord,
+    ExpiringServiceTotals,
+} from './expiring-service-details.types';
+import { NxExpiringServiceTableComponent } from './expiring-service-table/expiring-service-table.component';
 
 @Component({
-    selector: 'nx-service-usage-details',
-    templateUrl: './service-usage-details.component.html',
-    styleUrls: ['./service-usage-details.component.scss'],
+    selector: 'nx-expiring-service-details',
+    templateUrl: './expiring-service-details.component.html',
+    styleUrls: ['./expiring-service-details.component.scss'],
     imports: [
         TranslateModule,
         NxServiceUsageTableComponent,
         NxPreLoaderComponent,
-        NxServiceDetailsTableComponent,
+        NxExpiringServiceTableComponent,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
         NxPagePlaceholderGenericNewV2Component,
     ],
-    providers: [ServiceUsageDetailsStore],
+    providers: [ExpiringServiceDetailsStore],
     standalone: true,
 })
-export class NxServiceUsageDetailsComponent {
+export class NxExpiringServiceDetailsComponent {
     LANG = staticLang;
     icons = icons;
-    readonly serviceUsageDetailsStore = inject(ServiceUsageDetailsStore);
+    readonly expiringServiceDetailsStore = inject(ExpiringServiceDetailsStore);
     constructor(private router: Router) {}
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
@@ -44,50 +47,54 @@ export class NxServiceUsageDetailsComponent {
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
     startTs = input<string>('');
 
-    error = this.serviceUsageDetailsStore.error;
-    hasError = this.serviceUsageDetailsStore.hasError;
+    error = this.expiringServiceDetailsStore.error;
+    hasError = this.expiringServiceDetailsStore.hasError;
 
-    formattedServiceDetailRecords$$ = computed<FormattedServiceDetailRecord[]>(() => {
+    formattedExpiringServiceRecords$$ = computed<FormattedExpiringServiceRecord[]>(() => {
         const entityType = this.entityType$$();
         if (entityType === EntityType.channelPartner) {
-            return this.serviceUsageDetailsStore.entityServiceChangesForTable$$();
+            return this.expiringServiceDetailsStore.entityExpiringServicesForTable$$();
         } else {
-            return this.serviceUsageDetailsStore.systemServiceChangesForTable$$();
+            return this.expiringServiceDetailsStore.systemExpiringServicesForTable$$();
         }
     });
 
-    serviceDetailTotals$$ = computed<ServiceDetailTotals>(() => {
+    expiringServiceTotals$$ = computed<ExpiringServiceTotals>(() => {
         const entityType = this.entityType$$();
         if (entityType === EntityType.channelPartner) {
-            return this.serviceUsageDetailsStore.entityServiceChangeTotals$$();
+            return this.expiringServiceDetailsStore.entityExpiringServiceTotals$$();
         } else {
-            return this.serviceUsageDetailsStore.systemServiceChangeTotals$$();
+            return this.expiringServiceDetailsStore.systemExpiringServiceTotals$$();
         }
     });
 
-    loadServiceReportEffect = effect(() => {
+    loadExpiringServiceReportEffect = effect(() => {
         const entityType = this.entityType$$();
         const entityId = this.entityId$$();
         const serviceId = this.serviceId$$();
-
         const startTs = this.startTs();
 
         untracked(() => {
             if (entityType === EntityType.channelPartner) {
-                this.serviceUsageDetailsStore.loadPartnerServiceReport(
+                this.expiringServiceDetailsStore.loadPartnerExpiringServiceReport(
                     entityId,
                     serviceId,
                     startTs,
                 );
             } else {
-                this.serviceUsageDetailsStore.loadOrgServiceReport(entityId, serviceId, startTs);
+                this.expiringServiceDetailsStore.loadOrgExpiringServiceReport(
+                    entityId,
+                    serviceId,
+                    startTs,
+                );
             }
         });
     });
 
     goBack(): void {
         const urlSegments = this.router.url.split('/');
-        urlSegments.pop();
-        this.router.navigate(urlSegments, { queryParams: { startTs: this.startTs() } });
+        this.router.navigate(urlSegments.slice(0, urlSegments.indexOf('service-usage') + 1), {
+            queryParams: { startTs: this.startTs() },
+        });
     }
 }

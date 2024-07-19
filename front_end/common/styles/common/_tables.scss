@@ -429,7 +429,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
     }
 }
 
-.service-usage-details-table {
+.regular-service-details-table {
     .nx-new-table {
         .header {
             grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
@@ -462,7 +462,77 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
     }
 }
 
-.usage-details-dialog-table {
+.expiring-service-details-table {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 5fr 1fr 1fr;
+        }
+        
+        .big-row {
+            grid-template-columns: 5fr 1fr 1fr;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &.summary-row:hover {
+                cursor: default;
+            }
+
+            div:last-child {
+                border-right: none;
+            }
+        }
+
+        .summary-row {
+            background-color: var(--dark6);
+            color: var(--light16);
+        }
+
+        .header, .body {
+            width: 100% !important;
+        }
+    }
+}
+
+.regular-service-details-dialog-table {
+    .nx-new-table {
+        grid-template-rows: auto !important;
+
+        .header {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-left: none !important;
+            border-right: none !important;
+
+        }
+        
+        .big-row {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-left: none !important;
+            border-right: none !important;
+
+            div {
+                justify-content: flex-end;
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+        .summary-row {
+            background-color: var(--dark6);
+            color: var(--light16);
+            border-bottom: none !important;
+        }
+
+        .header, .body {
+            width: 100% !important;
+        }
+    }
+}
+
+.expiring-service-details-dialog-table {
     .nx-new-table {
         grid-template-rows: auto !important;
 

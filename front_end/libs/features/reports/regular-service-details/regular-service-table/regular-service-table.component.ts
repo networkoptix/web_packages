@@ -8,12 +8,12 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { DetailTableResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { RegularServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import {
-    ServiceDetailTotals,
-    type FormattedServiceDetailRecord,
-} from '../service-usage-details.types';
+    RegularServiceTotals,
+    type FormattedRegularServiceRecord,
+} from '../regular-service-details.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -23,13 +23,13 @@ interface HEADER_ITEM {
 }
 
 @Component({
-    selector: 'nx-service-details-table',
-    templateUrl: './service-details-table.component.html',
-    styleUrls: ['./service-details-table.component.scss'],
+    selector: 'nx-regular-service-table',
+    templateUrl: './regular-service-table.component.html',
+    styleUrls: ['./regular-service-table.component.scss'],
     imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
     standalone: true,
 })
-export class NxServiceDetailsTableComponent {
+export class NxRegularServiceTableComponent {
     LANG = staticLang;
     headers: HEADER_ITEM[] = [
         { value: 'Used By', name: 'usedBy', align: 'flex-start' },
@@ -55,8 +55,8 @@ export class NxServiceDetailsTableComponent {
         },
     ];
     selectedRecordId = '';
-    records = input.required<FormattedServiceDetailRecord[]>();
-    totals = input.required<ServiceDetailTotals>();
+    records = input.required<FormattedRegularServiceRecord[]>();
+    totals = input.required<RegularServiceTotals>();
     serviceId = input.required<string>();
     entityId = input.required<string>();
     startTs = input<string>('');
@@ -66,32 +66,32 @@ export class NxServiceDetailsTableComponent {
         private CPService: NxChannelPartnersService,
     ) {}
 
-    openDetailsDialog({
+    openRegularServiceDetailsDialog({
         id: entityId,
         type: entityType,
         usedBy: entityName,
-    }: FormattedServiceDetailRecord): void {
+    }: FormattedRegularServiceRecord): void {
         const serviceId = this.serviceId();
         const parentEntityId = this.entityId();
         const startTs = this.startTs();
-        let detailTableData$: Observable<DetailTableResponse>;
+        let regularServiceDialogData$: Observable<RegularServiceDetailDialogResponse>;
         switch (entityType) {
             case 'channel_partner':
-                detailTableData$ = this.CPService.getPartnerDetailTable(
+                regularServiceDialogData$ = this.CPService.getPartnerRegularDetailTable(
                     entityId,
                     serviceId,
                     startTs,
                 );
                 break;
             case 'organization':
-                detailTableData$ = this.CPService.getOrganizationDetailTable(
+                regularServiceDialogData$ = this.CPService.getOrganizationDetailTable(
                     entityId,
                     serviceId,
                     startTs,
                 );
                 break;
             case 'system':
-                detailTableData$ = this.CPService.getOrgSystemDetailTable(
+                regularServiceDialogData$ = this.CPService.getOrgSystemDetailTable(
                     parentEntityId,
                     entityId,
                     serviceId,
@@ -99,13 +99,13 @@ export class NxServiceDetailsTableComponent {
                 );
                 break;
             default:
-                detailTableData$ = this.CPService.getPartnerDetailTable(
+                regularServiceDialogData$ = this.CPService.getPartnerRegularDetailTable(
                     entityId,
                     serviceId,
                     startTs,
                 );
         }
 
-        this.dialogsService.viewUsageDetails({ detailTableData$, entityName });
+        this.dialogsService.viewRegularServiceDetails({ regularServiceDialogData$, entityName });
     }
 }

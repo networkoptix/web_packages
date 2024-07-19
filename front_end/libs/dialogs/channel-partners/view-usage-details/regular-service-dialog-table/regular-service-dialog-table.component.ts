@@ -7,7 +7,10 @@ import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-
 import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
 
-import type { UsageDetailDialogRecord, UsageDetailDialogTotals } from '../view-usage-details.types';
+import type {
+    RegularServiceDialogRecord,
+    RegularServiceDialogTotals,
+} from '../regular-service-details-dialog.types';
 
 interface HEADER_ITEM {
     name: string;
@@ -17,9 +20,9 @@ interface HEADER_ITEM {
 }
 
 @Component({
-    selector: 'nx-usage-details-dialog-table',
-    templateUrl: './usage-details-dialog-table.component.html',
-    styleUrls: ['./usage-details-dialog-table.component.scss'],
+    selector: 'nx-regular-service-dialog-table',
+    templateUrl: './regular-service-dialog-table.component.html',
+    styleUrls: ['./regular-service-dialog-table.component.scss'],
     imports: [
         TranslateModule,
         NxBaseTableComponent,
@@ -29,7 +32,7 @@ interface HEADER_ITEM {
     ],
     standalone: true,
 })
-export class NxUsageDetailsDialogTableComponent {
+export class NxRegularServiceDialogTable {
     LANG = staticLang;
     headers: HEADER_ITEM[] = [
         {
@@ -54,6 +57,6 @@ export class NxUsageDetailsDialogTableComponent {
         },
     ];
     selectedRecordId = '';
-    records = input.required<UsageDetailDialogRecord[]>();
-    totals = input.required<UsageDetailDialogTotals>();
+    records = input.required<RegularServiceDialogRecord[]>();
+    totals = input.required<RegularServiceDialogTotals>();
 }

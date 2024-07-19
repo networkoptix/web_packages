@@ -8,7 +8,6 @@ import staticLang from '@language_static';
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
-import { NxServiceUsageDetailsComponent } from '../service-usage-details/service-usage-details.component';
 
 import { NxServiceUsageTableComponent } from './service-usage-table/service-usage-table.component';
 import { ServiceUsageStore } from './service-usage.store';
@@ -22,7 +21,6 @@ import { FormattedUsageReportRecord } from './service-usage.types';
         TranslateModule,
         NxServiceUsageTableComponent,
         NxPreLoaderComponent,
-        NxServiceUsageDetailsComponent,
         NxMonthSelectComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
