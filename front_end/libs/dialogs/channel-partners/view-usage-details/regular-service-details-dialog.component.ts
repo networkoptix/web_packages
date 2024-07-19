@@ -6,37 +6,40 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import type { ViewUsageDetails as DT } from '@dialogs/dialogs.types';
+import type { ViewRegularServiceDetails as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
-import { DetailTableResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { RegularServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import { NxUsageDetailsDialogTableComponent } from './usage-details-dialog-table/usage-details-dialog-table.component';
-import { UsageDetailDialogRecord, UsageDetailDialogTotals } from './view-usage-details.types';
+import {
+    RegularServiceDialogRecord,
+    RegularServiceDialogTotals,
+} from './regular-service-details-dialog.types';
+import { NxRegularServiceDialogTable } from './regular-service-dialog-table/regular-service-dialog-table.component';
 
 @Component({
-    selector: 'nx-usage-details-content',
-    templateUrl: 'view-usage-details.component.html',
-    styleUrls: ['./view-usage-details.component.scss'],
+    selector: 'nx-regular-service-details-dialog',
+    templateUrl: 'regular-service-details-dialog.component.html',
+    styleUrls: ['./regular-service-details-dialog.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
         NxPreLoaderComponent,
-        NxUsageDetailsDialogTableComponent,
+        NxRegularServiceDialogTable,
     ],
 })
-export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
+export class NxRegularServiceDetailsDialog extends ModalBase<DT['return']> {
     entityName: string;
-    detailTableData$$: Signal<DetailTableResponse | undefined>;
-    isLoading$$ = computed<boolean>(() => !this.detailTableData$$());
-    formattedRecords$$ = computed<UsageDetailDialogRecord[]>(() => {
-        const records = this.detailTableData$$();
+    regularServiceDialogRecords$$: Signal<RegularServiceDetailDialogResponse | undefined>;
+    isLoading$$ = computed<boolean>(() => !this.regularServiceDialogRecords$$());
+    formattedRecords$$ = computed<RegularServiceDialogRecord[]>(() => {
+        const records = this.regularServiceDialogRecords$$();
         // previousPeriod is always assigned in the loop below because 'beginning' is always returned by the API
         // TypeScript however can't know that for certain and throws a warning below without the non null assertion
-        let previousPeriod!: UsageDetailDialogRecord;
-        const currentPeriodChanges: UsageDetailDialogRecord[] = [];
+        let previousPeriod!: RegularServiceDialogRecord;
+        const currentPeriodChanges: RegularServiceDialogRecord[] = [];
 
         if (!records) {
             return [];
@@ -65,8 +68,8 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
         });
         return [...currentPeriodChanges, previousPeriod];
     });
-    totals$$ = computed<UsageDetailDialogTotals>(() => {
-        const records = this.detailTableData$$();
+    totals$$ = computed<RegularServiceDialogTotals>(() => {
+        const records = this.regularServiceDialogRecords$$();
         const totalsRecord = records?.find(record => record.date === 'total');
         if (!totalsRecord) {
             return {
@@ -85,11 +88,11 @@ export class NxUsageDetailsModalContent extends ModalBase<DT['return']> {
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { detailTableData$, entityName }: DT['data'],
+        @Inject(DIALOG_DATA) { regularServiceDialogData$, entityName }: DT['data'],
         private dateTimeFormat: NxDateTimeFormatService,
     ) {
         super(dialogRef);
         this.entityName = entityName;
-        this.detailTableData$$ = toSignal(detailTableData$);
+        this.regularServiceDialogRecords$$ = toSignal(regularServiceDialogData$);
     }
 }

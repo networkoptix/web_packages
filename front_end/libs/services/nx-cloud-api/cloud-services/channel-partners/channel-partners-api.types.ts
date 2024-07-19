@@ -396,6 +396,18 @@ export interface SassReport {
 }
 
 /* Reports */
+export enum EntityType {
+    channelPartner = 'channel_partner',
+    organization = 'organization',
+}
+
+export enum ServiceType {
+    regular = 'regular',
+    trial = 'trial',
+    demo = 'demo',
+}
+
+// Reports - Service usage
 interface BaseUsageReportEntry {
     service_id: string;
     service_name: string;
@@ -403,6 +415,7 @@ interface BaseUsageReportEntry {
     expirations: string[];
     monthly_rate: number;
     daily_rate: number;
+    sub_type: ServiceType;
 }
 
 export interface PartnerUsageReportEntry extends BaseUsageReportEntry {
@@ -414,7 +427,8 @@ export interface OrgUsageReportEntry extends BaseUsageReportEntry {
     used_by: number;
 }
 
-export interface EntityServiceChangeEntry {
+// Reports - Regular service details
+export interface EntityRegularServiceEntry {
     id: string;
     type: string;
     name: string;
@@ -425,21 +439,11 @@ export interface EntityServiceChangeEntry {
     last_changed: string;
 }
 
-export interface PartnerServiceReportResponse {
-    sub_entities: EntityServiceChangeEntry[];
+export interface PartnerRegularServiceReportResponse {
+    sub_entities: EntityRegularServiceEntry[];
 }
 
-export interface DetailTableEntry {
-    date: string;
-    channels: number;
-    monthly_rate: number;
-    daily_rate: number;
-    transactions: number;
-}
-
-export type DetailTableResponse = DetailTableEntry[];
-
-export interface SystemServiceChangeEntry {
+export interface SystemRegularServiceEntry {
     system_id: string;
     system_name: string;
     channels: number;
@@ -449,10 +453,47 @@ export interface SystemServiceChangeEntry {
     last_changed: string;
 }
 
-export interface OrgServiceReportResponse {
-    systems: SystemServiceChangeEntry[];
+export interface OrgRegularServiceReportResponse {
+    systems: SystemRegularServiceEntry[];
 }
 
+// Reports - Regular service details - Detail table dialog
+export interface RegularServiceDetailDialogEntry {
+    date: string;
+    channels: number;
+    monthly_rate: number;
+    daily_rate: number;
+    transactions: number;
+}
+
+export type RegularServiceDetailDialogResponse = RegularServiceDetailDialogEntry[];
+
+// Reports - Expiring service details
+export interface SystemExpiringServiceEntry {
+    system_id: string;
+    system_name: string;
+    groups_path: { id: string; name: string }[];
+    channels: number;
+    expirations: string[];
+}
+
+export interface OrgExpiringServiceReportResponse {
+    systems: SystemExpiringServiceEntry[];
+}
+
+export interface EntityExpiringServiceEntry {
+    id: string;
+    type: EntityType;
+    name: string;
+    channels: number;
+    expirations: string[];
+}
+
+export interface PartnerExpiringServiceReportResponse {
+    sub_entities: EntityExpiringServiceEntry[];
+}
+
+// Reports - Service changes
 interface PartnerServiceChangeEntry {
     serviceId: string;
     organizationId: string;

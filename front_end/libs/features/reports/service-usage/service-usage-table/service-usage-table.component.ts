@@ -8,6 +8,7 @@ import { NxHintComponent } from '@components/hint/hint.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language/language_i18n_static.json';
+import { ServiceType } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import type { FormattedUsageReportRecord } from '../service-usage.types';
@@ -64,9 +65,14 @@ export class NxServiceUsageTableComponent {
     records = input.required<FormattedUsageReportRecord[]>();
     startTs = input<string>('');
 
-    selectService(serviceId: string): void {
+    selectService(serviceId: string, serviceType: ServiceType): void {
+        const isExpiringService = [ServiceType.demo, ServiceType.trial].includes(serviceType);
+        const serviceDetailsSegment = isExpiringService
+            ? 'expiring-service-details'
+            : 'regular-service-details';
+
         const urlSegments = this.router.url.split('?')[0].split('/');
-        urlSegments.push(serviceId);
+        urlSegments.push(serviceDetailsSegment, serviceId);
         this.router.navigate(urlSegments, {
             queryParamsHandling: 'merge',
             queryParams: { startTs: this.startTs() },

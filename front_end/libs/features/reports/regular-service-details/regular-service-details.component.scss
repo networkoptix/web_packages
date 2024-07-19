@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.go-back {
+    margin-bottom: 8px;
+    color: var(--light16);
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.left-arrow-icon {
+    position: relative;
+    bottom: 1px;
+}
+
+.heading {
+    margin-bottom: 14px;
+}
+
+.info {
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.service-details-table-wrapper {
+    flex-grow: 1;
+}

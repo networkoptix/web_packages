@@ -450,11 +450,11 @@ export class NxDialogsService {
 
     /* Channel Partner Reports */
 
-    viewUsageDetails = this.dialogV1Factory<Dt.ViewUsageDetails>(
+    viewRegularServiceDetails = this.dialogV1Factory<Dt.ViewRegularServiceDetails>(
         () =>
-            import('./channel-partners/view-usage-details/view-usage-details.component').then(
-                m => m.NxUsageDetailsModalContent,
-            ),
+            import(
+                './channel-partners/view-usage-details/regular-service-details-dialog.component'
+            ).then(m => m.NxRegularServiceDetailsDialog),
         { width: DIALOG_SIZE.EXTRA_LARGE },
     );
 

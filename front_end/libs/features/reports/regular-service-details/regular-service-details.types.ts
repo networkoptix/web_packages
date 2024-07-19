@@ -1,4 +1,4 @@
-export interface FormattedServiceDetailRecord {
+export interface FormattedRegularServiceRecord {
     id: string;
     type: string;
     usedBy: string;
@@ -8,7 +8,7 @@ export interface FormattedServiceDetailRecord {
     fractionalUsage: number;
 }
 
-export interface ServiceDetailTotals {
+export interface RegularServiceTotals {
     channels: number;
     monthlyRate: number;
     fractionalUsage: number;

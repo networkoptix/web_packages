@@ -15,7 +15,7 @@ import type {
     ChannelPartner,
     ChannelPartnerUser,
     CloudSystem,
-    DetailTableResponse,
+    RegularServiceDetailDialogResponse,
     Group,
     GroupItem,
     Organization,
@@ -223,8 +223,11 @@ export type ChangeService = DialogType<
 
 /* Channel Partner Reports */
 
-export type ViewUsageDetails = DialogType<
-    { detailTableData$: Observable<DetailTableResponse>; entityName: string },
+export type ViewRegularServiceDetails = DialogType<
+    {
+        regularServiceDialogData$: Observable<RegularServiceDetailDialogResponse>;
+        entityName: string;
+    },
     void
 >;
 

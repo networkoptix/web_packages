@@ -5,10 +5,11 @@ import { nxConfig } from '@services/nx-config/config';
 
 import { entityNameResolver } from './entity-name-resolver';
 import { entityResolver } from './entity-resolver';
+import { NxExpiringServiceDetailsComponent } from './expiring-service-details/expiring-service-details.component';
+import { NxRegularServiceDetailsComponent } from './regular-service-details/regular-service-details.component';
 import { NxReportsComponent } from './reports.component';
 import { NxServiceChangesComponent } from './service-changes/service-changes.component';
 import { NxServiceUsageComponent } from './service-usage/service-usage.component';
-import { NxServiceUsageDetailsComponent } from './service-usage-details/service-usage-details.component';
 
 const routes: Routes = [
     {
@@ -36,9 +37,24 @@ const routes: Routes = [
                                         resolve: { entityName: entityNameResolver },
                                     },
                                     {
-                                        path: ':serviceId',
-                                        component: NxServiceUsageDetailsComponent,
-                                        resolve: { entityName: entityNameResolver },
+                                        path: 'regular-service-details',
+                                        children: [
+                                            {
+                                                path: ':serviceId',
+                                                component: NxRegularServiceDetailsComponent,
+                                                resolve: { entityName: entityNameResolver },
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: 'expiring-service-details',
+                                        children: [
+                                            {
+                                                path: ':serviceId',
+                                                component: NxExpiringServiceDetailsComponent,
+                                                resolve: { entityName: entityNameResolver },
+                                            },
+                                        ],
                                     },
                                 ],
                             },
