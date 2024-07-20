@@ -42,7 +42,7 @@
                         <h3>{{ channel.name }}</h3>
 
                         @if (channel.effectiveState === 'active') {
-                            <div>
+                            <div class="card-counters">
                                 <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
                                 {{ channel.organizationCount }}
                                 <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
