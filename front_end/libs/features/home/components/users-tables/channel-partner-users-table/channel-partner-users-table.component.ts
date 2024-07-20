@@ -83,36 +83,18 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
 
     canManageUsers$$ = computed(() => this.permissionStore.canViewPartnerUsers$$());
 
-    hasOneAdmin$$ = computed(() => {
-        const users = this.channelPartnerUserRecords$$();
-        let count = 0;
-        for (const user of users) {
-            if (user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR)) {
-                count += 1;
-                if (count >= 2) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    });
+    admins$$ = computed(() =>
+        this.channelPartnerUserRecords$$().filter(({ rolesIds }) =>
+            rolesIds?.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
+        ),
+    );
 
-    onlyAdmin$$ = computed(() => {
-        if (!this.hasOneAdmin$$()) {
+    onlyAdminEmail$$ = computed(() => {
+        const admins = this.admins$$();
+        if (admins.length !== 1) {
             return '';
         }
-        return (
-            this.channelPartnerUserRecords$$().find(user =>
-                user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
-            )?.email || ''
-        );
-    });
-
-    adminCount$$ = computed(() => {
-        const adminUsers = this.channelPartnerUserRecords$$()?.filter(user =>
-            user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
-        );
-        return adminUsers?.length || 0;
+        return admins[0].email;
     });
 
     updateRole(user: UserRecord, roleId: string): void {
@@ -164,7 +146,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         if (!this.canManageUsers$$()) {
             return true;
         }
-        const userIsOnlyAdmin = this.onlyAdmin$$() === row.userId;
+        const userIsOnlyAdmin = this.onlyAdminEmail$$() === row.userId;
         return this.hasMultipleRoles(row) || userIsOnlyAdmin;
     }
 
@@ -222,7 +204,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             user.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR),
         );
 
-        if (adminUsers?.length === this.adminCount$$()) {
+        if (adminUsers?.length === this.admins$$().length) {
             this.store.dispatch(
                 cpActions.showBannerAction({
                     banner: {
