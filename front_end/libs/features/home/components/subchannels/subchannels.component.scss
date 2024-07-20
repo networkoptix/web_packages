@@ -58,12 +58,21 @@
     margin-bottom: 13px;
 }
 
-.card-content {
-    h3 {
-        max-width: 65% !important;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+.card {
+
+    &-content {
+        h3 {
+            max-width: 65% !important;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+
+    &-counters {
+        display: flex;
+        align-items: end;
+        gap: 2px;
     }
 }
 
