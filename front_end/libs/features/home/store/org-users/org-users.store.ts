@@ -480,8 +480,8 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     updateUser: (orgId: string, folder: string, email: string, roleId: string) => {
-                        const isGroupUser = !!folder && roleId !== OrgRoleIds.OrgAdmin;
-                        const isOrgUser = roleId === OrgRoleIds.OrgAdmin || !folder;
+                        const isGroupUser =
+                            !!folder && folder !== orgId && roleId !== OrgRoleIds.OrgAdmin;
                         iif(
                             () => isGroupUser,
                             chpService.updateGroupUser(folder, {
@@ -494,17 +494,21 @@ export const OrgUsersStore = signalStore(
                                 const { roles, rolesIds } = updatedUser;
                                 const user = store.currentGroupUsersEntityMap()[email];
                                 const { groupRoles } = user;
-                                let changes: Partial<OrgUser> = { roles, rolesIds, isOrgUser };
+                                const changes: Partial<OrgUser> = {
+                                    roles,
+                                    rolesIds,
+                                    isOrgUser: false,
+                                };
                                 const groupIndex =
                                     groupRoles?.findIndex(({ groupId }) => groupId === folder) ??
                                     -1;
                                 if (groupIndex !== -1) {
-                                    changes = { groupRoles };
                                     groupRoles[groupIndex] = {
                                         ...groupRoles[groupIndex],
                                         roles,
                                         rolesIds,
                                     };
+                                    changes.groupRoles = groupRoles;
                                 }
                                 patchState(
                                     store,
@@ -514,7 +518,10 @@ export const OrgUsersStore = signalStore(
                                 patchState(
                                     store,
                                     updateEntity(
-                                        { id: email, changes: { ...updatedUser, isOrgUser } },
+                                        {
+                                            id: email,
+                                            changes: { ...updatedUser, isOrgUser: true },
+                                        },
                                         currentGroupUsersEntity,
                                     ),
                                 );

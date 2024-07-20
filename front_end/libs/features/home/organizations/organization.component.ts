@@ -191,7 +191,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
 
     private fetchParentInfoOnLoad(): void {
         const currentOrg = this.currentOrganization$$();
-        if (currentOrg?.channelPartner) {
+        if (currentOrg?.channelPartner && currentOrg.channelPartner !== '**REDACTED**') {
             this.store.dispatch(
                 CPActions.loadCurrentParentPartnerForChild({
                     parentId: currentOrg.channelPartner,
@@ -208,7 +208,10 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         const parentPartner = this.parentPartner$$();
-        if (parentPartner?.parentChannelPartner) {
+        if (
+            parentPartner?.parentChannelPartner &&
+            parentPartner.parentChannelPartner !== '**REDACTED**'
+        ) {
             this.store.dispatch(
                 CPActions.loadCurrentParentPartnerForChild({
                     parentId: parentPartner.parentChannelPartner,

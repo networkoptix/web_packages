@@ -46,10 +46,7 @@
                 >
                     <nx-checkbox
                         componentId="checkBox{{ row[idPropName] }}"
-                        [disabled]="
-                            row.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR) &&
-                            hasOneAdmin$$()
-                        "
+                        [disabled]="row.email === onlyAdminEmail$$()"
                         [data]="row"
                     >
                     </nx-checkbox>
@@ -99,7 +96,7 @@
                     class="div-container-wrapper icon"
                     style="grid-area: delete"
                 >
-                    @if (canManageUsers$$() && onlyAdmin$$() !== row.email) {
+                    @if (canManageUsers$$() && onlyAdminEmail$$() !== row.email) {
                         <svg-icon
                             class="delete clickable"
                             nx-add-svg-src
@@ -112,7 +109,7 @@
                             class="info"
                             [nxTooltip]="
                                 (row.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR) &&
-                                hasOneAdmin$$()
+                                admins$$().length === 1
                                     ? LANG.channelPartners.usersTable.adminTooltip
                                     : LANG.channelPartners.usersTable.infoToolTip
                                 ) | nxTranslate

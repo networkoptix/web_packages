@@ -279,7 +279,10 @@ export class NxChannelPartnersComponent implements OnInit {
 
     private fetchParentInfoOnLoad(): void {
         const currentPartner = this.currentPartner$$();
-        if (currentPartner?.parentChannelPartner) {
+        if (
+            currentPartner?.parentChannelPartner &&
+            currentPartner.parentChannelPartner !== '**REDACTED**'
+        ) {
             this.store.dispatch(
                 CPActions.loadCurrentParentPartnerForChild({
                     parentId: currentPartner.parentChannelPartner,

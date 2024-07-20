@@ -80,7 +80,7 @@ export class NxCheckAllContainerDirective {
     );
 
     protected otherCheckBoxesAllToggled$$ = toSignal(
-        this.otherCheckBoxedToggleState$.pipe(map(ref => ref.length && ref.every(Boolean))),
+        this.otherCheckBoxedToggleState$.pipe(map(ref => ref.length > 0 && ref.every(Boolean))),
         { initialValue: false },
     );
 
