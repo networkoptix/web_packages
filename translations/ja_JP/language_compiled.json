@@ -1316,7 +1316,7 @@
     "Time license activated. Starting today, you can record up to 4 cameras for 30 days.": "期限付きライセンスが有効になりました。本日より、最大 4 台のカメラを 30 日間録画できます。",
     "Time on one or more servers is out of sync.": "1つ以上のサーバーの時刻が同期していません。",
     "Time synchronization enabled": "時刻同期有効",
-    "To": "宛先",
+    "To": "アカウント",
     "To access it from anywhere and enable additional features": "どこでもアクセス & 追加機能",
     "To continue log in to %CLOUD_NAME% in the tab that popped up.": "続行するには、ポップアップしたタブで %CLOUD_NAME% にログインしてください。",
     "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>.": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに確認コードを要求する」を無効にしてください。",
