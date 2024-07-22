@@ -313,7 +313,10 @@
 	.hidden,
 	.opblock-loading-animation,
 	textarea {
-		display: none !important;
+		margin: 12px 0;
+		.single-api-route-showing & {
+			display: none !important;
+		}
 	}
 
 	article,
