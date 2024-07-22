@@ -9,24 +9,33 @@ export const filterOtherSites = memoize(
     (
         otherSites: ResourceNodeWithMatches[],
         query: string,
+        parentMatches = false,
     ): { matches: number; results: ResourceNodeWithMatches[] } => {
         query = query.toLowerCase();
 
         const results = otherSites
             .map(result => {
+                const nameMatches =
+                    !['mySystems', 'sharedSystems'].includes(result.details?.id || '') &&
+                    result.name.toLowerCase().includes(query);
+
                 if (assertResourceParentNode(result)) {
-                    const { matches, results } = filterOtherSites(result.children, query);
+                    const { matches, results } = filterOtherSites(
+                        result.children,
+                        query,
+                        parentMatches || nameMatches,
+                    );
 
                     return {
                         ...result,
                         children: results as typeof result.children,
-                        matches: result.name.toLowerCase().includes(query) ? matches + 1 : matches,
+                        matches: nameMatches ? matches + 1 : matches,
                     };
                 }
 
-                return { ...result, matches: result.name.toLowerCase().includes(query) ? 1 : 0 };
+                return { ...result, matches: nameMatches ? 1 : 0 };
             })
-            .filter(({ matches }) => matches);
+            .filter(({ matches }) => matches || parentMatches);
         const matches = results.reduce((acc, result) => acc + (result.matches || 0), 0);
         return { matches, results };
     },

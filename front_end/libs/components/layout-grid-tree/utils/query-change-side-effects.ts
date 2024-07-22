@@ -1,5 +1,4 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { uniq } from 'lodash-es';
 
 import { ResourceNode, isResourceParentNode } from '@components/layout-grid/layout-grid.types';
 
@@ -24,41 +23,62 @@ export const hasItem = (items: ResourceNode[], id: string): boolean => {
     return false;
 };
 
-const findParentsWithResults = (
-    query: string,
-    nodes: ResourceNode[],
-    treeControl: NestedTreeControl<ResourceNode, string>,
-): ResourceNode[] => {
-    const flattened = nodes.flatMap(node => treeControl.getDescendants(node));
-    const matches = flattened.filter(node => node.name.toLowerCase().includes(query));
-    const matchesSet = new Set(matches);
-    return flattened.filter(node => {
-        if (matchesSet.has(node)) {
-            return true;
-        }
-
-        if (isResourceParentNode(node) && node.children.length) {
-            return matches.some(match => match.details && hasItem(node.children, match.details.id));
-        }
-
-        return false;
-    });
-};
-
 export const queryChangeSideEffectsFactory = (
     getTreeControl: () => NestedTreeControl<ResourceNode, string>,
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
-    const expanded: ResourceNode[] = [];
+    const expanded = new Set<ResourceNode>();
+
     return (query: string, nodes: ResourceNode[]): void => {
         const treeControl = getTreeControl();
+
+        const expandNode = (node?: ResourceNode): void => {
+            if (!node) {
+                return;
+            }
+            expanded.add(node);
+            treeControl.expand(node);
+        };
+
+        const collapseNode = (node?: ResourceNode): void => {
+            if (!node) {
+                return;
+            }
+            expanded.delete(node);
+            treeControl.collapse(node);
+        };
+
         if (query) {
-            // Add all root nodes to be expanded to expanded array
-            nodes.forEach(node => treeControl.isExpanded(node) || expanded.push(node));
-            expanded.push(...findParentsWithResults(query, nodes, treeControl));
-            uniq(expanded).forEach(node => treeControl.expand(node));
+            // Expand all root nodes
+            nodes.forEach(node => {
+                if (!treeControl.isExpanded(node)) {
+                    expandNode(node);
+                }
+            });
+
+            const flattened = nodes.flatMap(node => treeControl.getDescendants(node));
+
+            const nodeMatchesQuery = (node: ResourceNode): boolean =>
+                node.name.toLowerCase().includes(query);
+
+            const hasMatch = (node: ResourceNode): boolean =>
+                treeControl.getDescendants(node).some(nodeMatchesQuery);
+
+            flattened.forEach(node => {
+                if (hasMatch(node)) {
+                    if (!treeControl.isExpanded(node)) {
+                        expandNode(node);
+                    }
+                } else if (treeControl.isExpanded(node)) {
+                    collapseNode(
+                        [...expanded].find(
+                            expandedNode => node.details?.id === expandedNode.details?.id,
+                        ),
+                    );
+                }
+            });
         } else {
-            expanded.slice(0, expanded.length).forEach(node => treeControl.collapse(node));
+            expanded.forEach(collapseNode);
         }
     };
 };
