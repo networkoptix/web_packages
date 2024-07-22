@@ -1,4 +1,5 @@
 import {
+    CameraStatus,
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
@@ -27,8 +28,8 @@ describe('mapAdditionalCameraFieldsFactory', () => {
     const camera = {
         id: 'camera1',
         parentId: 'server1',
-        status: 'Online',
-        recordingStatus: 'Recording',
+        status: CameraStatus.Online,
+        recordingStatus: RecordingStatus.Recording,
         parameters: {
             mediaStreams: {
                 streams: [

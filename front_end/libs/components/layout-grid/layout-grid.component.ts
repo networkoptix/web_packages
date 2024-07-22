@@ -111,6 +111,7 @@ import {
     CameraStatus,
     CameraTypeId,
     NxSystemCamera,
+    Status,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -637,10 +638,12 @@ export class NxLayoutGridComponent {
             const isServer = !!itemDetail && assertResourceOfType.server(itemDetail);
             const isWebPage = !!itemDetail && assertResourceOfType.webpage(itemDetail);
             const isIoDevice = !!itemDetail && assertResourceOfType.iodevice(itemDetail);
-
-            const isUnauthorized = isCamera && itemDetail.details.unauthorized;
             const isCamOrSrv = isCamera || isServer;
-            const isOffline = isCamOrSrv && !itemDetail.details.online;
+
+            const isIncompatible = isServer && itemDetail.details.status === Status.Incompatible;
+            const isUnauthorized = isCamOrSrv && itemDetail.details.status === Status.Unauthorized;
+            const isOffline = isCamOrSrv && itemDetail.details.status === Status.Offline;
+
             const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
             const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
 
@@ -660,7 +663,7 @@ export class NxLayoutGridComponent {
                         this.systemsService.systemsPermissionsManager$$()[systemInfo.id];
                     if (!permissionManager) {
                         layoutItemStatus = 'systemNoAccess';
-                    } else if (!permissionManager.canViewDevice(itemDetail.details.id)) {
+                    } else if (!permissionManager.canViewDevice(cleanId(itemDetail.details.id))) {
                         layoutItemStatus = 'noAccess';
                     }
                 }
@@ -669,12 +672,14 @@ export class NxLayoutGridComponent {
             }
 
             if (!layoutItemStatus) {
-                if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
+                if (isOffline) {
+                    layoutItemStatus = 'offline';
+                } else if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
                     layoutItemStatus = 'virtualCamera';
                 } else if (isUnauthorized) {
                     layoutItemStatus = 'unauthorized';
-                } else if (isOffline) {
-                    layoutItemStatus = 'offline';
+                } else if (isIncompatible) {
+                    layoutItemStatus = 'incompatible';
                 } else if (isWebPage && !nxConfig.featureFlags.layoutsWebpages) {
                     layoutItemStatus = 'webPage';
                 } else if (isIoDevice) {

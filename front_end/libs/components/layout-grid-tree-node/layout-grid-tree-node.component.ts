@@ -233,7 +233,7 @@ export class NxLayoutGridTreeNode {
                               ? 'unauthorized'
                               : node.details?.online && node.details?.requiresTranscoding
                                 ? 'warning'
-                                : node.details?.online
+                                : node.details.online
                                   ? 'online'
                                   : 'offline'))
                 : '') +

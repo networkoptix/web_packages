@@ -175,8 +175,9 @@ const CAMERA_PLACEHOLDERS = {
 
 const SERVER_PLACEHOLDERS = {
     offline: PLACEHOLDERS.offline_server,
-    unauthorized: PLACEHOLDERS.unauthorized_server,
     incompatible: PLACEHOLDERS.incompatible,
+    unauthorized: PLACEHOLDERS.unauthorized_server,
+    noAccess: PLACEHOLDERS.noAccess,
 };
 
 const SYSTEM_PLACEHOLDERS = {
@@ -244,7 +245,10 @@ export class NxLayoutGridItemPlaceholderComponent {
 
     adjustedStatus = computed(() => {
         if (this.layoutsItemNewPlaceholder) {
-            return this.layoutItemStatus();
+            // the latter one `this.status()` is used when status changes
+            // on the fly.
+            // Like camera or server going offline
+            return this.layoutItemStatus() || this.status();
         }
 
         const status = this.status();

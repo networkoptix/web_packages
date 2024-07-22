@@ -174,10 +174,26 @@ export interface NxSystemCamera {
     dewarpingParams: DewarpingParams;
 }
 
+export enum Status {
+    Online = 'online',
+    Offline = 'offline',
+    Unauthorized = 'unauthorized',
+    Incompatible = 'incompatible',
+    MismatchedCertificate = 'mismatchedCertificate',
+}
+
 export enum CameraStatus {
-    Online = 'Online',
-    Offline = 'Offline',
-    Unauthorized = 'Unauthorized',
+    Online = Status.Online,
+    Offline = Status.Offline,
+    Unauthorized = Status.Unauthorized,
+}
+
+export enum ServerStatus {
+    Online = Status.Online,
+    Offline = Status.Offline,
+    Unauthorized = Status.Unauthorized,
+    Incompatible = Status.Incompatible,
+    MismatchedCertificate = Status.MismatchedCertificate,
 }
 
 export enum CameraTypeId {
