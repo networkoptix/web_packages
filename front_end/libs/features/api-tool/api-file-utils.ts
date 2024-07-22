@@ -219,14 +219,18 @@ const generateMenuNodesFromCategoryTags = (API: APIDoc, menuNodes: MenuNodeWithP
     Creates menuNodes from API routes such as /rest/v1/login/sessions
     and pushes them to the subMenuNode tag that they belong to.
  */
-const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWithParent[]) => {
+export const generateMenuNodesFromEndpoints = (
+    API: APIDoc,
+    parentMenuNodes: MenuNodeWithParent[],
+) => {
     Object.keys(API.paths).forEach(endpoint => {
         const endpointObj = Object.entries(API.paths[endpoint]);
         endpointObj.forEach((method: method) => {
-            const subMenuTag = method[1].tags[0];
-            if (!subMenuTag.includes('Proprietary')) {
+            // Update to set since sometimes multiple tags are present
+            const subMenuTags = new Set(method[1].tags);
+            if (!subMenuTags.values().next().value.includes('Proprietary')) {
                 const HTTPMethod = endpoint === RTSPRoute ? RTSPMethod : method[0];
-                const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
+                const subMenuNode = parentMenuNodes.find(node => subMenuTags.has(node.name));
 
                 const url = generateNodeURL(endpoint, HTTPMethod);
                 const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
