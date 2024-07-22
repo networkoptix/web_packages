@@ -165,6 +165,11 @@ export const createMenuContent = (API: APIDoc, seperator: string = '') => {
 export const generateMenu = (menu: MenuNodeWithParent[], json: APIDoc) => {
     generateMenuNodesFromCategoryTags(json, menu);
     generateMenuNodesFromEndpoints(json, menu);
+    menu.forEach(node => {
+        if (!node.name.includes('-seperator') && !node.nodes.length) {
+            menu.splice(menu.indexOf(node), 1);
+        }
+    });
     return menu;
 };
 
