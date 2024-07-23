@@ -643,6 +643,7 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelVie
 class ChannelStructureViewSet(GenericViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     queryset = ChannelPartner.objects.order_by('created_ts')
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]

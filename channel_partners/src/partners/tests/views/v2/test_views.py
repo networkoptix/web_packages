@@ -1010,6 +1010,16 @@ class TestChannelStructureViewSet:
 
         return self.client.get(path, SERVER_NAME=self.host.hostname)
 
+    def test_unauthorized(self):
+
+        view_name = "subchannels-channel-structure"
+
+
+        path = reverse(view_name)
+
+        response = self.client.get(path, SERVER_NAME=self.host.hostname)
+        assert response.status_code == 401
+
 
     def test_deep_nested_structure_with_multi_cp_user(
             self,
