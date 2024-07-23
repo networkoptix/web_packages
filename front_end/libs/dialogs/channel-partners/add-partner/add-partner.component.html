@@ -18,60 +18,44 @@
 </div>
 <form
     class="nx-modal__content"
-    name="addPartnerForm"
     [formGroup]="formGroup"
 >
     <div class="nx-modal__body">
         <nx-form-field [errorMatcher]="nameErrorMatcher">
             <label
                 nx-label
-                for="partnerName"
+                for="new-partner-name"
                 translate
                 >Partner Name</label
             >
             <input
                 nx-input
-                class="form-control"
-                id="partnerName"
+                id="new-partner-name"
                 formControlName="name"
-                required
             />
-            <nx-control-messages>
-                <nx-control-message
-                    key="required"
-                    [text]="'Partner name is required' | translate"
-                ></nx-control-message>
-            </nx-control-messages>
+            <nx-control-messages></nx-control-messages>
         </nx-form-field>
 
         <nx-form-field [errorMatcher]="emailErrorMatcher">
             <label
                 nx-label
-                for="ownerEmail"
+                for="new-partner-admin-email"
                 translate
                 >Administrator email</label
             >
             <input
                 nx-input
-                class="form-control"
                 type="email"
-                id="ownerEmail"
+                id="new-partner-admin-email"
                 formControlName="email"
-                required
             />
-            <nx-control-messages pattern="email">
-                <nx-control-message
-                    key="required"
-                    [text]="'Administrator email is required' | translate"
-                ></nx-control-message>
-            </nx-control-messages>
+            <nx-control-messages pattern="email"></nx-control-messages>
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">
         <nx-async-action-button
             [action]="addPartnerAction"
             [(busy)]="busy"
-            [invalid]="!!(nameControl.errors || emailControl.errors)"
             translate
         >
             Create

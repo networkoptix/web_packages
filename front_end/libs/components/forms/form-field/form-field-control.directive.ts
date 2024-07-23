@@ -1,4 +1,4 @@
-import { Directive, ElementRef, input } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 
 import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.directive';
 
@@ -17,7 +17,8 @@ export class NxFormFieldControlDirective {
      * Syncs with max lengths used in `NxValidators` if `auto` is used
      * AND `type` property is set on `<input />` element.
      */
-    maxLength = input<number | 'auto'>('auto', { alias: 'nxFormFieldMaxLength' });
+    // maxLength = input<number | 'auto'>('auto', { alias: 'nxFormFieldMaxLength' });
+    // Removing this for now
 
     constructor(public host: ElementRef<HTMLElement>) {}
 }

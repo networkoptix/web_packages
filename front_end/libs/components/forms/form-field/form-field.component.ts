@@ -5,23 +5,20 @@ import {
     Component,
     ContentChild,
     DestroyRef,
-    Injector,
     SkipSelf,
     computed,
     effect,
     forwardRef,
     input,
-    runInInjectionContext,
     signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroupDirective, NgControl } from '@angular/forms';
-import { map, merge, take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormGroupDirective, NgControl } from '@angular/forms';
+import { merge, take } from 'rxjs';
 
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 
 import { NxControlMessagesComponent as NxMessages } from '../control-messages/control-messages.component';
-import { InputMaxLength } from '../validators';
 
 import {
     ControlState,
@@ -108,24 +105,25 @@ export class NxFormFieldComponent implements AfterContentInit {
     overMaxLength = computed<boolean>(() => this.valueLength() > this.maxLength());
 
     constructor(
-        private injector: Injector,
+        // private injector: Injector,
         private destroyRef: DestroyRef,
         @SkipSelf() private formGroup: FormGroupDirective,
     ) {}
 
     ngAfterContentInit(): void {
-        const nativeElement = this.nxControlDirective.host.nativeElement;
-        const maxLength = this.nxControlDirective.maxLength();
-        if (nativeElement.tagName === 'INPUT' && maxLength) {
-            const input = nativeElement as HTMLInputElement;
-            const control = this.ngControl.control as FormControl<string>;
-            this.maxLength.set(maxLength === 'auto' ? InputMaxLength[input.type] ?? 0 : maxLength);
-            runInInjectionContext(this.injector, () => {
-                this.valueLength = toSignal(control.valueChanges.pipe(map(v => v.length)), {
-                    initialValue: control.value.length,
-                });
-            });
-        }
+        // Removing this for now
+        // const nativeElement = this.nxControlDirective.host.nativeElement;
+        // const maxLength = this.nxControlDirective.maxLength();
+        // if (nativeElement.tagName === 'INPUT' && maxLength) {
+        //     const input = nativeElement as HTMLInputElement;
+        //     const control = this.ngControl.control as FormControl<string>;
+        //     this.maxLength.set(maxLength === 'auto' ? InputMaxLength[input.type] ?? 0 : maxLength);
+        //     runInInjectionContext(this.injector, () => {
+        //         this.valueLength = toSignal(control.valueChanges.pipe(map(v => v.length)), {
+        //             initialValue: control.value.length,
+        //         });
+        //     });
+        // }
 
         merge(this.formGroup.ngSubmit.pipe(take(1)), this.ngControl.statusChanges!)
             .pipe(takeUntilDestroyed(this.destroyRef))

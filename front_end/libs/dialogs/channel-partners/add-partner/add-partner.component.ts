@@ -1,6 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,7 +15,6 @@ import { NxFormFieldComponent } from '@components/forms/form-field/form-field.co
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxLabelComponent } from '@components/forms/label/label.component';
 import { NxValidators } from '@components/forms/validators';
-import { ToastType } from '@components/toast-container/toast.types';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
@@ -24,7 +22,6 @@ import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'nx-modal-add-partner-content',
@@ -51,7 +48,10 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
     nameErrorMatcher = errorMatcherFactory(NxErrorMatches.text(true));
     emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(true));
 
-    nameControl = new FormControl('', { nonNullable: true });
+    nameControl = new FormControl('', {
+        validators: NxValidators.text(),
+        nonNullable: true,
+    });
     emailControl = new FormControl('', {
         validators: NxValidators.email(),
         nonNullable: true,
@@ -67,7 +67,6 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private parentChannelPartner: DT['data'],
         private cpService: NxChannelPartnersService,
-        private toastService: NxToastService,
     ) {
         super(dialogRef);
     }
@@ -84,12 +83,6 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
         },
         success: res => {
             this.close(res);
-        },
-        error: (err: HttpErrorResponse) => {
-            console.error(err);
-            // @ts-expect-error "detail" property does not exist on HttpErrorResponse
-            const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-            this.toastService.notify(msg, ToastType.Danger);
         },
     });
 }
