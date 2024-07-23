@@ -3653,6 +3653,15 @@ class TestChannelPartnerViewSetPermissions:
         response = self.client.post(path=path)
         assert response.status_code == 403
 
+    def test_invalid_method_405(self, mock_auth_with_user):
+
+        view_name = 'channelpartner-change-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 405
+
 
 class TestOrganizationViewSetPermissions:
     @pytest.fixture(autouse=True, scope='function')
@@ -4404,6 +4413,15 @@ class TestOrganizationViewSetPermissions:
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
+
+    def test_invalid_method_405(self, mock_auth_with_user):
+
+        view_name = 'organization-confirm-state'
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 405
 
 
 class TestOrganizationNestedViewSetPermissions:
@@ -5357,6 +5375,15 @@ class TestCloudSystemViewSetPermissions:
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         assert response.status_code == 403
+
+    def test_invalid_method_405(self, mock_cdb_basic_auth, mock_auth_with_user):
+        view_name = 'cloudsystem-system-usage-report'
+
+        auth = mock_cdb_basic_auth(self.system_lvl_1)
+        self.client.credentials(HTTP_AUTHORIZATION=auth)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 405
 
 
 

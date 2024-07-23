@@ -696,7 +696,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_view_service_reports))
         if self.action in ('change_state', 'confirm_state'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_alter_state))
-        if len(perms) == 1 and self.detail:
+        if self.action and len(perms) == 1 and self.detail:
             raise ImproperlyConfigured('Must add a permission for a detail view')
 
         return perms
@@ -887,7 +887,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             perms.append(CanPerformChannelPartnerAction(Organization.can_access))
         if self.action in ('change_state', 'confirm_state'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_alter_state))
-        if len(perms) == 1 and self.detail:
+        if self.action and len(perms) == 1 and self.detail:
             raise ImproperlyConfigured('Must add a permission for a detail view')
 
         return perms
@@ -1448,7 +1448,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
         if self.action == 'service_quantity' and self.request.method in ('PATCH'):
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
-        if len(perms) == 1 and self.detail:
+        if self.action and len(perms) == 1 and self.detail:
             raise ImproperlyConfigured('Must add a permission for a detail view')
 
         return perms
