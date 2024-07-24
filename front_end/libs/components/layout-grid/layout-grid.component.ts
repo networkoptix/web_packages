@@ -2242,7 +2242,8 @@ export class NxLayoutGridComponent {
                     !!this.layout.items.length &&
                     [x, y, resize.x, resize.y].every(change => !change);
                 this.addingItem$$.set(false);
-                if (unresolvedCollisions || notMoved) {
+
+                if (notMoved && !unresolvedCollisions) {
                     return this.updateLayout();
                 }
 
@@ -2250,7 +2251,14 @@ export class NxLayoutGridComponent {
                     ...this.layout.items,
                     ...(assertResourceOfType.layout(node)
                         ? createAddedItems(this.layout.items, node.details.items)
-                        : [this.generateLayoutItem(node, { x, y })]),
+                        : (() => {
+                              const item = [this.generateLayoutItem(node, { x, y })];
+                              if (!unresolvedCollisions) {
+                                  return item;
+                              }
+
+                              return createAddedItems(this.layout.items, item);
+                          })()),
                 ]).map(ensureLayoutItemResourcePath(this.system.id));
 
                 const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
