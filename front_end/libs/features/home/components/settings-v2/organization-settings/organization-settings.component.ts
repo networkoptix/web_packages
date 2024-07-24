@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     MatButtonToggle,
@@ -21,7 +21,6 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -33,29 +32,13 @@ import { NxAccountService } from '@services/account.service';
 import {
     Organization,
     OrgRoleIds,
-    UpdateOrganization,
     OrgSettingsState,
+    UpdateOrganization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { Process } from '@services/process.service/process';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
-const partnerAccess: DropdownItem<string | null>[] = [
-    {
-        name: 'Organization Administrator',
-        value: OrgRoleIds.OrgAdmin,
-    },
-    {
-        name: 'System Health Viewer',
-        value: OrgRoleIds.SysHealthViewer,
-    },
-    {
-        name: 'Service Management Only',
-        value: null,
-    },
-];
-
-/** @deprecated */
 @Component({
     selector: 'nx-organization-settings',
     templateUrl: 'organization-settings.component.html',
@@ -176,9 +159,14 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
     };
 
     override resetGeneralUpdates = (): void => {
+        const accessLevel = this.accessLevel$$();
+        const accessLevelInfo = {
+            name: this.LANG.channelPartners.orgs.channelPartnerAccessInfo[accessLevel].name,
+            value: accessLevel,
+        };
         this.generalForm.reset({
             name: this.name$$(),
-            accessLevel: partnerAccess.find(({ value }) => value === this.accessLevel$$()),
+            accessLevel: accessLevelInfo,
         });
         this.disableSave = false;
     };
