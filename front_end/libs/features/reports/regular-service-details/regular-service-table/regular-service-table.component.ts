@@ -84,7 +84,7 @@ export class NxRegularServiceTableComponent {
                 );
                 break;
             case 'organization':
-                regularServiceDialogData$ = this.CPService.getOrganizationDetailTable(
+                regularServiceDialogData$ = this.CPService.getOrganizationRegularDetailTable(
                     entityId,
                     serviceId,
                     startTs,
