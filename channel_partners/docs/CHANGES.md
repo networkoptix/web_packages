@@ -1,5 +1,10 @@
 *Put here changes you think can affect development*
 
+## 2024-07-13 - Reports snapshot schema version
+
+Any changes to usage reports data schema (data types and serializers) **must** 
+ be done with incrementing `partner.models.ReportSnapshot.CURRENT_SCHEMA_VERSION` constant.
+
 ## 2024-02-22 - Updated Notes About Environmental Variables
 
 - **CI Pipeline**: The GitLab CI Pipeline loads *Environmental Variables* from `./cloud_portal/.gitlab-ci.yml`, under the **variables** sections relating to **Channel Partner** pipelines.

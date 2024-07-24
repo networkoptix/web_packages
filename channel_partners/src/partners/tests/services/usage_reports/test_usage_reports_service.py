@@ -1182,7 +1182,7 @@ class TestReportSnapshotService:
             report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
             period_start=datetime.date(year=2020, month=1, day=1),
             service_id=self.cp_service.id,
-            generate=False
+            generate=False,
         )
         assert snapshot_service.is_provisional is False
         assert snapshot_service.needs_generation is False
@@ -1193,6 +1193,34 @@ class TestReportSnapshotService:
         assert snapshot_service.is_provisional is False
         assert snapshot_service.needs_generation is True
         assert snapshot_service.snapshot is None
+
+    def test_init_system_regular_report(self):
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.system.system_id,
+            report_type=ReportSnapshot.ReportType.system_regular_report,
+            period_start=datetime.date.today(),
+            service_id=self.cp_service.id,
+            organization_id=self.org.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+        assert snapshot_service.organization_id == self.org.id
+
+    def test_init_system_expiring_report(self):
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.system.system_id,
+            report_type=ReportSnapshot.ReportType.system_expiring_report,
+            period_start=datetime.date.today(),
+            service_id=self.cp_service.id,
+            organization_id=self.org.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is True
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot is None
+        assert snapshot_service.organization_id == self.org.id
 
     def test_init_no_existing_provisional(self):
         snapshot_service = ReportSnapshotService(
@@ -1273,6 +1301,29 @@ class TestReportSnapshotService:
         assert snapshot_service.is_provisional is False
         assert snapshot_service.needs_generation is False
         assert snapshot_service.snapshot == report_snapshot
+
+    def test_init_outdated_schema_not_provisional(self):
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            service_id=self.cp_service.id,
+            start_date=datetime.date(year=2020, month=1, day=1),
+            report_data={'key': uuid.uuid4()}
+        )
+        ReportSnapshot.objects.all().update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1)
+        assert report_snapshot.provisional is False
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.cp.id,
+            report_type=ReportSnapshot.ReportType.channel_partner_regular_service_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            service_id=self.cp_service.id,
+            generate=False
+        )
+        assert snapshot_service.is_provisional is False
+        assert snapshot_service.needs_generation is False
+        assert snapshot_service.snapshot == report_snapshot
+        snapshot_service.generate = True
+        assert snapshot_service.needs_generation is True
 
     def test_save_existing_with_service_id(self):
         old_value = f'{uuid.uuid4()}'

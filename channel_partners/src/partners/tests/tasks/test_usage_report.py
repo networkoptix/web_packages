@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from partners.models import (
     ChannelPartner,
+    ChannelPartnerService,
     CloudSystemId,
     Organization,
     ReportSnapshot,
@@ -16,7 +17,10 @@ from partners.services.usage_reports_service import (
     TotalUsageDate,
 )
 from partners.tasks.services import new_channel_partner_created
-from partners.tasks.usage_reports import calculate_all_reports
+from partners.tasks.usage_reports import (
+    calculate_all_reports,
+    regenerate_outdated_schema_reports,
+)
 
 
 class TestCalculateSystemReports:
@@ -184,3 +188,82 @@ class TestCalculateAllReport:
             for service_report in report.report_data:
                 assert service_report['service_id'] in [str(s.id) for s in services]
                 assert service_report['channels'] == channels_count
+
+
+
+class TestRegenerateOutdatedSchemaReports:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, system_factory,
+              cp_service_factory, service_record_factory, django_capture_on_commit_callbacks):
+        self.cp = channel_partner_factory()
+        self.org = organization_factory(channel_partner=self.cp)
+        self.sys = system_factory(organization=self.org)
+        self.regular_service = cp_service_factory(channel_partner=self.cp)
+        self.expiring_service = cp_service_factory(channel_partner=self.cp,
+                                                   duration=1,
+                                                   sub_type=ChannelPartnerService.DEMO)
+        self.service_record = service_record_factory(
+            service=self.regular_service,
+            organization=self.org,
+            cloud_system=self.sys,
+            quantity=100,
+        )
+        self.expiring_service_record = service_record_factory(
+            organization=self.org,
+            cloud_system=self.sys,
+            service=self.expiring_service,
+            quantity=100,
+        )
+        with django_capture_on_commit_callbacks(execute=True):
+            self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.sub_org = organization_factory(channel_partner=self.sub_cp)
+        self.sub_sys = system_factory(organization=self.sub_org)
+        for cp in (self.cp, self.sub_cp):
+            for service in cp.services.all():
+                service_record_factory(
+                    organization=self.sub_org,
+                    cloud_system=self.sub_sys,
+                    service=service,
+                    quantity=100,
+                )
+
+    @pytest.mark.parametrize('report_type', ReportSnapshot.ReportType.values)
+    def test_regeneration(self, report_type):
+        calculate_all_reports()
+        reports_query = ReportSnapshot.objects.filter(report_type=report_type)
+        outdated_reports_query = ReportSnapshot.get_outdated_schema_reports().filter(report_type=report_type)
+        reports_query.update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1)
+        # Test initial conditions
+        assert reports_query.count() > 0
+        assert outdated_reports_query.count() == reports_query.count()
+
+        regenerate_outdated_schema_reports()
+        assert reports_query.count() > 0
+        assert outdated_reports_query.count() == 0
+
+    def test_skipped_generation(self, mocker):
+        spy_report_snapshot_service = mocker.spy(ReportSnapshot, '__init__')
+        calculate_all_reports()
+        spy_report_snapshot_service.assert_called()
+        spy_report_snapshot_service.reset_mock()
+        regenerate_outdated_schema_reports()
+        spy_report_snapshot_service.assert_not_called()
+
+    def test_removing_reports_with_missed_organization(self):
+        system_reports = ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report
+        calculate_all_reports()
+        reports_query = ReportSnapshot.objects.filter(report_type__in=system_reports)
+        reports_query.update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1, organization=None)
+        assert reports_query.count() > 0
+        regenerate_outdated_schema_reports()
+        assert reports_query.count() == 0
+
+    def test_recreation_of_system_reports(self):
+        system_reports = ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report
+        calculate_all_reports()
+        reports_query = ReportSnapshot.objects.filter(report_type__in=system_reports)
+        reports_query.delete()
+        ReportSnapshot.objects.all().update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1)
+        assert reports_query.count() == 0
+        regenerate_outdated_schema_reports()
+        assert reports_query.count() > 0
