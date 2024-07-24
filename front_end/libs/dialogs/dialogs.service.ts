@@ -454,7 +454,7 @@ export class NxDialogsService {
     viewRegularServiceDetails = this.dialogV1Factory<Dt.ViewRegularServiceDetails>(
         () =>
             import(
-                './channel-partners/view-usage-details/regular-service-details-dialog.component'
+                './channel-partners/view-regular-service-details/regular-service-details-dialog.component'
             ).then(m => m.NxRegularServiceDetailsDialog),
         { width: DIALOG_SIZE.EXTRA_LARGE },
     );

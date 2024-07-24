@@ -121,7 +121,7 @@ export class NxChannelPartnersService {
     getOrganizationServiceUsage = this.cpApi.getOrganizationServiceUsage;
     getOrganizationRegularServiceReport = this.cpApi.getOrganizationRegularServiceReport;
     getOrganizationExpiringServiceReport = this.cpApi.getOrganizationExpiringServiceReport;
-    getOrganizationDetailTable = this.cpApi.getOrganizationRegularServiceDetailDialog;
+    getOrganizationRegularDetailTable = this.cpApi.getOrganizationRegularServiceDetailDialog;
     getOrgSystemDetailTable = this.cpApi.getOrgSystemDetailTable;
     getOrganizationServiceChanges = this.cpApi.getOrganizationServiceChanges;
 
