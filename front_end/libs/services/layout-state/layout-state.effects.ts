@@ -16,6 +16,7 @@ import {
     startWith,
     switchMap,
     take,
+    tap,
 } from 'rxjs';
 
 import { nxConfig } from '@services/nx-config/config';
@@ -261,6 +262,7 @@ export class LayoutStateEffects {
                         );
 
                         const errorLayouts: UnsavedLayoutState[] = [];
+                        const toDelete: string[] = [];
 
                         const savingLocalLayouts = layouts
                             .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
@@ -268,8 +270,9 @@ export class LayoutStateEffects {
                                 const {
                                     layout: { id, ...layout },
                                 } = unsavedLocalLayoutState;
+                                const layoutIdToOverwrite = overwriteLayouts[id];
                                 return firstValueFrom(
-                                    mediaserver.putLayout(overwriteLayouts[id] || id, layout).pipe(
+                                    mediaserver.putLayout(layoutIdToOverwrite || id, layout).pipe(
                                         catchError(() => {
                                             errorLayouts.push({
                                                 ...unsavedLocalLayoutState,
@@ -277,33 +280,44 @@ export class LayoutStateEffects {
                                             });
                                             return of(null);
                                         }),
+                                        tap(() => {
+                                            if (layoutIdToOverwrite) {
+                                                toDelete.push(id);
+                                            }
+                                        }),
                                     ),
                                 );
                             });
 
                         const savingCrossSystemLayouts = layouts
                             .filter(({ layoutType }) => layoutType === LayoutTypes.CROSS_SYSTEM)
-                            .map((unsavedLocalLayoutState: UnsavedCrossSystemLayoutState) => {
+                            .map((unsavedCrossSystemLayoutState: UnsavedCrossSystemLayoutState) => {
+                                const initialLayoutId = unsavedCrossSystemLayoutState.layout.id;
+                                const layoutIdToOverwrite = overwriteLayouts[initialLayoutId];
                                 const serialized =
-                                    this.layoutStateService.crossSystemLayoutSerializer.serialize(
-                                        unsavedLocalLayoutState.layout,
-                                    );
+                                    this.layoutStateService.crossSystemLayoutSerializer.serialize({
+                                        ...unsavedCrossSystemLayoutState.layout,
+                                        id: layoutIdToOverwrite || initialLayoutId,
+                                    });
                                 return firstValueFrom(
                                     this.layoutStateService.crossSystemLayoutApi
                                         .save(serialized)
                                         .pipe(
                                             catchError(() => {
                                                 errorLayouts.push({
-                                                    ...unsavedLocalLayoutState,
+                                                    ...unsavedCrossSystemLayoutState,
                                                     unsaved: UnsavedState.ERROR,
                                                 });
                                                 return of(null);
                                             }),
-                                            map(layout =>
-                                                this.layoutStateService.crossSystemLayoutSerializer.deserialize(
+                                            map(layout => {
+                                                if (layoutIdToOverwrite) {
+                                                    toDelete.push(initialLayoutId);
+                                                }
+                                                return this.layoutStateService.crossSystemLayoutSerializer.deserialize(
                                                     layout,
-                                                ),
-                                            ),
+                                                );
+                                            }),
                                         ),
                                 );
                             });
@@ -316,14 +330,13 @@ export class LayoutStateEffects {
                             await Promise.all(savingCrossSystemLayouts)
                         ).filter(Boolean);
 
-                        const toDelete = [...savedLocalLayouts, ...savedCrossSystemLayouts]
-                            .map(
-                                ({ id }) =>
-                                    Object.entries(overwriteLayouts).find(
-                                        ([_, value]) => value === id,
-                                    )?.[0],
-                            )
-                            .filter(Boolean) as string[];
+                        toDelete.push(
+                            ...([...savedLocalLayouts, ...savedCrossSystemLayouts]
+                                .map(({ id }) =>
+                                    Object.keys(overwriteLayouts).find(layoutId => layoutId === id),
+                                )
+                                .filter(Boolean) as string[]),
+                        );
 
                         const { params: { layoutId } = {} } =
                             this.layoutStateService.paramStateHandler.state$$();
@@ -336,7 +349,9 @@ export class LayoutStateEffects {
 
                         return [
                             LocalLayoutsActions.update({
-                                layouts: savedLocalLayouts,
+                                layouts: savedLocalLayouts.filter(
+                                    ({ id }) => !toDelete.includes(id),
+                                ),
                             }),
                             CrossSystemLayoutsActions.update({
                                 layouts: savedCrossSystemLayouts,
