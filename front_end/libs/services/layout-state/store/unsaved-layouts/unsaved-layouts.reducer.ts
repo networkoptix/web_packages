@@ -13,6 +13,10 @@ import {
     createNewUnsavedLocalLayout,
     createNewUnsavedLocalLayoutDuplicate,
 } from '../utils/create-new-local-layout';
+import {
+    ensureCellAspectRatio,
+    ensureCellAspectRatioOnUnsavedLayout,
+} from '../utils/ensure-cell-aspect-ratio';
 
 import * as UnsavedLayoutActions from './unsaved-layouts.actions';
 
@@ -62,7 +66,14 @@ export const reducer = createReducer(
         UnsavedLayoutActions.createNewLocalLayout,
         (state, { id, name, items }): UnsavedLayoutState[] => [
             ...state,
-            syncUnsavedLayoutState([createNewUnsavedLocalLayout(id, name, items)], 'save').pop(),
+            syncUnsavedLayoutState(
+                [
+                    ensureCellAspectRatioOnUnsavedLayout(
+                        createNewUnsavedLocalLayout(id, name, items),
+                    ),
+                ],
+                'save',
+            ).pop() as UnsavedLayoutState,
         ],
     ),
     on(
@@ -70,14 +81,21 @@ export const reducer = createReducer(
         (state, { id, name, items }): UnsavedLayoutState[] => [
             ...state,
             syncUnsavedLayoutState(
-                [createNewUnsavedCrossSystemLayout(id, name, items)],
+                [
+                    ensureCellAspectRatioOnUnsavedLayout(
+                        createNewUnsavedCrossSystemLayout(id, name, items),
+                    ),
+                ],
                 'save',
-            ).pop(),
+            ).pop() as UnsavedLayoutState,
         ],
     ),
     on(UnsavedLayoutActions.duplicateLayout, (state, { id, layout }): UnsavedLayoutState[] => [
         ...state,
-        syncUnsavedLayoutState([createNewUnsavedLocalLayoutDuplicate(id, layout)], 'save').pop(),
+        syncUnsavedLayoutState(
+            [createNewUnsavedLocalLayoutDuplicate(id, layout)],
+            'save',
+        ).pop() as UnsavedLayoutState,
     ]),
     on(
         UnsavedLayoutActions.remove,
@@ -102,7 +120,17 @@ export const reducer = createReducer(
         },
     ),
     on(UnsavedLayoutActions.update, (state, { layouts }): UnsavedLayoutState[] => {
-        const updatedLayouts = syncUnsavedLayoutState(layouts, 'save');
+        const updatedLayouts = syncUnsavedLayoutState(layouts, 'save').map(layoutState => {
+            const { layout } = layoutState;
+            if (!layout.cellAspectRatio) {
+                return {
+                    ...layoutState,
+                    layout: ensureCellAspectRatio(layout),
+                };
+            }
+            return layoutState;
+        });
+
         return [
             ...state.map(layout => {
                 const updatedLayout = updatedLayouts.findIndex(({ id }) => id === layout.id);
