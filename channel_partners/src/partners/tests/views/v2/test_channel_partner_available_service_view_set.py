@@ -33,7 +33,7 @@ class TestChannelPartnerAvailableServiceViewSet:
         for i in range(10):
             service_props.price = init_price + i
             service_props.save()
-        path = reverse('channelpartners-available-service-price-history', kwargs=kwargs)
+        path = reverse('v2:channelpartners-available-service-price-history', kwargs=kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.cp_user)
         response = self.client.get(path)

@@ -51,9 +51,9 @@ class TestOrganizationServiceViewSet:
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
         # Define the list path and detail view name
-        self.list_path = reverse('organizations-owned-service-list',
+        self.list_path = reverse('v2:organizations-owned-service-list',
                                  kwargs={'parent_lookup_organization': self.organization.id})
-        self.detail_view_name = 'organizations-owned-service-detail'
+        self.detail_view_name = 'v2:organizations-owned-service-detail'
 
         # Define default kwargs
         self.def_kwargs = {'parent_lookup_organization': self.organization.id}
@@ -124,7 +124,7 @@ class TestOrganizationServiceViewSet:
         for i in range(10):
             service_props.price = init_price + i
             service_props.save()
-        path = reverse('organizations-owned-service-price-history', kwargs=kwargs)
+        path = reverse('v2:organizations-owned-service-price-history', kwargs=kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.cp_user)
         response = self.client.get(path)

@@ -218,7 +218,7 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'channelpartner'
 
     class UsersField(serializers.HyperlinkedRelatedField):
-        view_name = 'channelpartners-user-list'
+        view_name = 'v2:channelpartners-user-list'
 
         def get_url(self, obj, view_name, request, format):
             url_kwargs = {
@@ -227,7 +227,7 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
 
     class OrganizationsField(serializers.HyperlinkedRelatedField):
-        view_name = 'channelpartners-organization-list'
+        view_name = 'v2:channelpartners-organization-list'
 
         def get_url(self, obj, view_name, request, format):
             url_kwargs = {
@@ -388,7 +388,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'organization'
 
     class CloudSystemsField(serializers.HyperlinkedRelatedField):
-        view_name = 'organizations-cloudsystem-list'
+        view_name = 'v2:organizations-cloudsystem-list'
 
         def get_url(self, obj, view_name, request, format):
             url_kwargs = {

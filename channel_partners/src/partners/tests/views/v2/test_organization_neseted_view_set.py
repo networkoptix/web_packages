@@ -34,7 +34,7 @@ class TestOrganizationNesetedViewSet:
             self.cp_user_lvl_3,
             self.org_user
         ]
-        self.list_url = reverse('channelpartners-organization-list',
+        self.list_url = reverse('v2:channelpartners-organization-list',
                                 kwargs={'parent_lookup_channel_partner': self.cp_lvl_2.id})
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 

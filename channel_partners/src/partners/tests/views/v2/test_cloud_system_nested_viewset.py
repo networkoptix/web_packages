@@ -48,7 +48,7 @@ class TestCloudSystemNestedViewSet:
         self.other_organization_group_sys = system_factory(organization=self.other_organization,
                                                            system_group=self.other_organization_group)
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        view_name = 'organizations-cloudsystem-user-systems'
+        view_name = 'v2:organizations-cloudsystem-user-systems'
         kwargs = {'parent_lookup_organization': self.organization.id}
         self.path = reverse(view_name, kwargs=kwargs)
 
@@ -156,7 +156,7 @@ class TestCloudSystemNestedViewSetPermissions:
         self.kwargs_lvl_2 = {'parent_lookup_organization': str(self.org_lvl_2.id)}
         self.kwargs_lvl_3 = {'parent_lookup_organization': str(self.org_lvl_3.id)}
         caches['default'].clear()
-        self.view_name = 'organizations-cloudsystem-list'
+        self.view_name = 'v2:organizations-cloudsystem-list'
 
     @property
     def auth(self):
@@ -267,7 +267,7 @@ class TestCloudSystemNestedViewSetRootOnlyParam:
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
 
         kwargs = {'parent_lookup_organization': str(self.organization.id)}
-        self.base_url = reverse('organizations-cloudsystem-list', kwargs=kwargs)
+        self.base_url = reverse('v2:organizations-cloudsystem-list', kwargs=kwargs)
 
     def test_no_param(self):
         response = self.client.get(self.base_url)

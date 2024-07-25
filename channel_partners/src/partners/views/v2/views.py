@@ -164,6 +164,9 @@ from partners.services.internal_grant_access_service import (
 from tools.exception import Conflict
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 from tools.utils import paginated_response
+from tools.versioning.decorators import version_range
+from tools.versioning.utils import Versions
+from tools.versioning.views import VersionedViewMixin
 
 
 VIEW_LOCK_WAIT_TIME = 2
@@ -224,6 +227,7 @@ class DefaultPagination(PageNumberPagination):
     summary='Get roles for Channel Partners',
     description='Returns list of available roles that can be assigned for a user of a Channel Partner'
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 def channel_partner_roles(request):
     queryset = ChannelPartnerRole.objects.all().prefetch_related('permissions')
@@ -236,6 +240,7 @@ def channel_partner_roles(request):
     summary='Get roles for Organizations',
     description='Returns list of available roles that can be assigned for a user of an Organization'
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 def organization_roles(request):
     queryset = OrganizationRole.objects.all().prefetch_related('permissions')
@@ -268,7 +273,8 @@ class ParentLookUpMixin:
                           description='Delete a user of a Channel Partner by id',
                           extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Channel Partner'})
 )
-class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = ChannelPartnerUserSerializer
     http_method_names = ['get', 'post', 'delete']
@@ -379,7 +385,8 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     description='Returns list of sub Channel Partners of a Channel Partner by id',
     parameters=[OpenApiParameter('parent_lookup_parent_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, GenericViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, VersionedViewMixin, GenericViewSet):
     http_method_names = ['get']
     serializer_class = ChannelPartnerSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -449,7 +456,8 @@ class ExternalIdBase:
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class ChannelPartnerExternalIdViewSet(ExternalIdBase, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = ChannelPartnerExternalIdSerializer
     queryset = ChannelPartnerExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -467,7 +475,8 @@ class ChannelPartnerExternalIdViewSet(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = ChannelPartnerServiceExternalIdSerializer
     queryset = ChannelPartnerServiceExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -485,7 +494,8 @@ class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class OrganizationrExternalIdViewSet(ExternalIdBase, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationrExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
     queryset = OrganizationExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -503,7 +513,8 @@ class OrganizationrExternalIdViewSet(ExternalIdBase, ModelViewSet):
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
-class CloudSystemExternalIdViewSet(ExternalIdBase, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class CloudSystemExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = CloudSystemIdExternalIdSerializer
     queryset = CloudSystemExternalId.objects.all().select_related('cloud_system')
     filter_backends = [DjangoFilterBackend]
@@ -515,7 +526,8 @@ class CloudSystemExternalIdViewSet(ExternalIdBase, ModelViewSet):
     summary='Services that belong to channel partner queried',
     parameters=[OpenApiParameter('parent_lookup_created_by_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = ServiceSerializer
@@ -546,7 +558,8 @@ class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, M
     summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.',
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableChannelPartnerServiceSerializer
@@ -592,7 +605,8 @@ class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixi
         type=OpenApiTypes.UUID)
     ]
 )
-class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableOrganizationServiceSerializer
@@ -640,7 +654,8 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelVie
 
 
 @extend_schema(tags=["Channel Partners"])
-class ChannelStructureViewSet(GenericViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelStructureViewSet(VersionedViewMixin, GenericViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -674,7 +689,8 @@ class ChannelStructureViewSet(GenericViewSet):
     service_changes_summary=extend_schema(summary='Get summary of service changes in a single period'),
     service_changes_history=extend_schema(summary='Get individual records of service changes in a single period')
 )
-class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     queryset = ChannelPartner.objects.order_by('created_ts')
@@ -828,7 +844,12 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
     summary='Get a list of organizations belonging to a Channel Partner',
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
-class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, GenericViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationNesetedViewSet(NestedViewSetMixin,
+                                 mixins.ListModelMixin,
+                                 ParentLookUpMixin,
+                                 VersionedViewMixin,
+                                 GenericViewSet):
     http_method_names = ['get']
     serializer_class = OrganizationSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -860,7 +881,8 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{Organization.permissions.configure_organization} for Organization'}),
     service_changes_history=extend_schema()
 )
-class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -1025,7 +1047,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     create=extend_schema(summary='Add/update user of an organization', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
     destroy=extend_schema(summary='Remove a user from an organization', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
 )
-class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = OrganizationUserSerializer
     http_method_names = ['get', 'delete', 'post']
@@ -1179,7 +1202,14 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
         OpenApiParameter('parent_lookup_organization', location='path', type=OpenApiTypes.UUID)
     ]
 )
-class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.ListModelMixin, GenericViewSet):
+@version_range(Versions(min_version="v2"))
+class CloudSystemNestedViewSet(
+    ParentLookUpMixin,
+    NestedViewSetMixin,
+    mixins.ListModelMixin,
+    VersionedViewMixin,
+    GenericViewSet
+):
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -1247,11 +1277,13 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     destroy=extend_schema(summary='Delete a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
 @extend_schema(tags=['Groups'])
+@version_range(Versions(min_version="v2"))
 class SystemGroupViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
                          mixins.DestroyModelMixin,
+                         VersionedViewMixin,
                          GenericViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     serializer_class = GroupSerializer
@@ -1292,12 +1324,14 @@ class SystemGroupViewSet(NestedViewSetMixin,
     create=extend_schema(summary='Add/update user of a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
     destroy=extend_schema(summary='Remove a user from a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
 )
+@version_range(Versions(min_version="v2"))
 class SystemGroupUserViewSet(ParentLookUpMixin,
                              NestedViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.RetrieveModelMixin,
                              mixins.ListModelMixin,
                              mixins.DestroyModelMixin,
+                             VersionedViewMixin,
                              GenericViewSet):
     http_method_names = ['get', 'post']
     serializer_class = SystemGroupUserSerializer
@@ -1386,7 +1420,12 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
     bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
 @extend_schema(tags=['Systems'])
-class CloudSystemViewSet(NestedViewSetMixin,
+@version_range(
+    Versions(min_version="v2"),
+    actions={'list': Versions(min_version="v2", deprecated_in="v2", max_version="v2")}
+)
+class CloudSystemViewSet(VersionedViewMixin,
+                         NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
@@ -1659,7 +1698,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
 @extend_schema(
     tags=['Services Management']
 )
-class ServiceRecordsViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
+@version_range(Versions(min_version="v2"))
+class ServiceRecordsViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get']
 
 
@@ -1670,6 +1710,7 @@ class ServiceRecordsViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
     summary='Events related to channel partners',
     tags=['Internal']
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxTokenAuthentication])
 @permission_classes([IsAuthenticated, IsInternalToken])
@@ -1697,6 +1738,7 @@ def partner_events(request):
     summary='All services for a particular cloud instance',
     tags=['Internal'],
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxTokenAuthentication])
 @permission_classes([IsAuthenticated, IsInternalToken])
@@ -1734,6 +1776,7 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
     summary='Get Systems By User Email',
     tags=['Internal'],
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -1750,6 +1793,7 @@ def user_systems(request, email):
     summary='Get a specific user for a system',
     tags=['Internal'],
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -1774,6 +1818,7 @@ def system_user(request, system_id, email):
     summary='Get users for a system',
     tags=['Internal'],
 )
+@version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -1790,8 +1835,8 @@ def system_users(request, system_id):
     responses=UserListSerializer,
     summary='Get all users that have access to some channel partner or organization',
     tags=['Internal'],
-    deprecated=True,
 )
+@version_range(Versions(min_version="v2", deprecated_in="v2"))
 @api_view(['GET'])
 @authentication_classes([NxTokenAuthentication])
 @permission_classes([IsInternalToken])
@@ -1811,7 +1856,9 @@ def all_org_users(request):
     summary='Submit a cloud storage usage report',
     tags=['Internal'],
     request=CloudStorageUsageReportSerializer,
-    responses=CloudStorageUsageReportSerializer)
+    responses=CloudStorageUsageReportSerializer,
+)
+@version_range(Versions(min_version="v2"))
 @api_view(['POST'])
 @authentication_classes([NxTokenAuthentication])
 @permission_classes([IsAuthenticated])

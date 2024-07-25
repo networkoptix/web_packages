@@ -142,6 +142,12 @@ else:
     RSA_KEY4 = env.str('RSA_KEY_PRIVATE', multiline=True)
 # End environment variables section
 
+# Versioning
+AVAILABLE_VERSIONS = [
+    'v2',
+    'v3',
+]
+
 
 MIN_LOGGING_LEVEL = logging.DEBUG if DEBUG and (LOCAL_ENV or LOCAL_DOCKER) else logging.INFO
 
@@ -362,6 +368,8 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
     ],
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_VERSION': 'v2', # We need it for testing
     **configure_throttling(USER_RATE_LIMIT, ANON_RATE_LIMIT, SYSTEM_RATE_LIMIT)
 }
 
@@ -373,7 +381,7 @@ SPECTACULAR_SETTINGS = {
     'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
     'SERVERS': [
         {
-            'url': f'https://{DOMAIN_NAME}/partners/api/v2' if DOMAIN_NAME else '/partners/api/v2'
+            'url': f'https://{DOMAIN_NAME}/partners/api' if DOMAIN_NAME else '/partners/api'
         }
     ],
     'SWAGGER_UI_SETTINGS': {
