@@ -495,7 +495,7 @@ class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, VersionedViewMixin,
     update=extend_schema(summary='Update an external id fully')
 )
 @version_range(Versions(min_version="v2"))
-class OrganizationrExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
+class OrganizationExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
     queryset = OrganizationExternalId.objects.all()
     filter_backends = [DjangoFilterBackend]
