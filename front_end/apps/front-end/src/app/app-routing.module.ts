@@ -67,16 +67,16 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'systems',
-        canDeactivate: [
-            () => {
-                inject(NxSystemService).removeCurrentSystem();
-                return true;
-            },
-        ],
         children: [
             {
                 path: ':systemId',
                 canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
+                canDeactivate: [
+                    () => {
+                        inject(NxSystemService).removeCurrentSystem();
+                        return true;
+                    },
+                ],
                 children: [
                     {
                         path: 'view',
