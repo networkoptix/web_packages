@@ -1,0 +1,8 @@
+@use "../../forms.scss";
+@use '../buttons.scss';
+
+:host {
+    min-width: forms.$form-button-min-width;
+    @include buttons.nx-button();
+    @include buttons.nx-button--default();
+}

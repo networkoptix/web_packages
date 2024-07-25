@@ -20,7 +20,6 @@ import { NxControlMessagesToken } from '../control-messages.token';
     styleUrls: ['control-message.component.scss'],
     standalone: true,
     imports: [CommonModule, TranslateModule],
-    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
         class: 'nx-control-message',
         '[class.nx-control-message--info]': 'type() === "info"',

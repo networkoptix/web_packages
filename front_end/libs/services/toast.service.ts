@@ -30,7 +30,7 @@ export class NxToastService {
      */
     show(
         content: Toast['content'],
-        type: ToastType = ToastType.Info,
+        type: `${ToastType}` = ToastType.Info,
         options: ToastOptions = this.defaultOpts,
     ): void {
         options = { ...this.defaultOpts, ...options };
@@ -51,7 +51,7 @@ export class NxToastService {
     /** Display a notification toast that hides itself. */
     notify(
         message: Translatable,
-        type: ToastType = ToastType.Info,
+        type: `${ToastType}` = ToastType.Info,
         delay: number = alertTimeout,
         showHTML: boolean = false,
     ): void {

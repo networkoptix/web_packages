@@ -2,7 +2,7 @@ import type { Observable } from 'rxjs';
 
 export interface AsyncAction<T> {
     /** The asynchonous action to be executed */
-    action: (() => Promise<T> | Observable<T>) | Observable<T>;
+    action: () => Promise<T> | Observable<T>;
     /** The callback for action success */
     success: (res: T) => void;
     /** The callback for action error */

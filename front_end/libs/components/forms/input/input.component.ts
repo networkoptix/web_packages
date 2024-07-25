@@ -3,7 +3,14 @@ import { FormControl, NgControl } from '@angular/forms';
 
 import { NxFormFieldControlDirective } from '../form-field/form-field-control.directive';
 
-/** Native <input> element enhanced for form field. */
+/** Native `<input>` element enhanced for form field.
+ *
+ * PITFALL: If you forget to import this in a component before using it the error will be
+ *
+ * `ERROR TypeError: can't access property "host", this.nxControlDirective is undefined`
+ *
+ * in the console and not a `'nx-input' is not a known element` error in the template.
+ */
 @Component({
     selector: 'input[nx-input]',
     template: '', // No internals for <input />
