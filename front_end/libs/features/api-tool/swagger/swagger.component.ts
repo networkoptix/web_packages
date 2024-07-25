@@ -127,6 +127,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit, OnDestroy {
     #swaggerUI: (opts: SwaggerUIOptions) => SwaggerUI;
 
     private async getSwagger(): Promise<(opts: SwaggerUIOptions) => SwaggerUI> {
+        (window as any).global ||= window;
         this.#swaggerUI ||= await import('swagger-ui').then(m => m.default);
         return this.#swaggerUI;
     }
