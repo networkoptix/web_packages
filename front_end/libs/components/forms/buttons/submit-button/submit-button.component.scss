@@ -1,0 +1,6 @@
+@use "../../forms.scss";
+
+:host {
+    @include forms.form-action-button();
+    position: relative;
+}

@@ -1,0 +1,80 @@
+@use "resets";
+@use "theme_variables_common" as vars;
+
+@mixin nx-button {
+    height: 2rem;
+    @include resets.button();
+    border-radius: vars.$border-radius-base;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+
+    font-family: vars.$font-family-medium;
+    font-size: vars.$h6-font-size;
+    line-height: 1rem;
+
+    &:disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}
+
+@mixin nx-button-base($color) {
+    color: var(--btn-#{$color}-color);
+    background-color: var(--btn-#{$color}-bg);
+    box-shadow: var(--btn-#{$color}-shadow);
+}
+
+@mixin nx-button--hover($color) {
+    color: var(--btn-#{$color}-hover-color);
+    background-color: var(--btn-#{$color}-hover-bg);
+    box-shadow: var(--btn-#{$color}-hover-shadow);
+}
+
+@mixin nx-button--active($color) {
+    color: var(--btn-#{$color}-active-color);
+    background-color: var(--btn-#{$color}-active-bg);
+    box-shadow: var(--btn-#{$color}-active-shadow);
+}
+
+@mixin nx-button--focus-visible($color) {
+    outline: 2px solid var(--btn-#{$color}-focus-outline-rgb);
+    outline-offset: 2px;
+    box-shadow: var(--btn-#{$color}-focus-shadow);
+}
+
+@mixin nx-button-alt-states($color) {
+    &:hover {
+        @include nx-button--hover($color);
+    }
+
+    &:active {
+        @include nx-button--active($color);
+    }
+
+    &:focus-visible {
+        @include nx-button--focus-visible($color);
+    }
+}
+
+@mixin nx-button-variant($color) {
+    @include nx-button-base($color);
+
+    &:not(:disabled) {
+        @include nx-button-alt-states($color);
+    }
+}
+
+@mixin nx-button--primary {
+    @include nx-button-variant('primary')
+}
+
+@mixin nx-button--danger {
+    @include nx-button-variant('danger')
+}
+
+@mixin nx-button--default {
+    @include nx-button-variant('default')
+}

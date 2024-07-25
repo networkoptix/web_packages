@@ -1,0 +1,27 @@
+<div
+    [ngStyle]="{
+        visibility: busy() ? 'hidden' : undefined
+    }"
+>
+    @if (isApplyButton()) {
+        {{ 'Save' | translate }}
+    } @else {
+        <ng-content></ng-content>
+    }
+</div>
+@if (busy()) {
+    <!-- TODO: Pull button loading dots into separate component -->
+    <div
+        class="loading-dots"
+        [ngClass]="{
+            'loading-dots--light-default': !CONFIG.isDarkTheme && color() === 'default'
+        }"
+    >
+        @for (_ of [].constructor(3); track $index) {
+            <div
+                class="loading-dots__dot"
+                [ngClass]="'loading-dots__dot--' + $index"
+            ></div>
+        }
+    </div>
+}

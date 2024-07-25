@@ -24,6 +24,12 @@ ruleTester.run('explicit-angular-boundary-types', rule, {
                 '@Output() validO4: EventEmitter<string> = new EventEmitter<string>();',
             ),
         },
+        {
+            code: classWrapper('@Output() validO5 = this.output$;'),
+        },
+        {
+            code: classWrapper('@Output() validO6 = toObervable(this.output)'),
+        },
     ],
     invalid: [
         {

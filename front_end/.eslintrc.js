@@ -274,6 +274,7 @@ module.exports = {
                 '@angular-eslint/contextual-lifecycle': 'off',
                 '@angular-eslint/directive-class-suffix': 'off',
                 '@angular-eslint/no-empty-lifecycle-method': 'off',
+                '@angular-eslint/no-host-metadata-property': 'off',
                 '@angular-eslint/no-input-rename': 'off',
                 '@angular-eslint/no-output-native': 'off',
                 '@angular-eslint/no-output-on-prefix': 'off',

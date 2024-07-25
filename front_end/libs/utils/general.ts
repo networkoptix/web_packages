@@ -467,6 +467,11 @@ export function scrollItemIntoView(item: HTMLElement, container: HTMLElement): v
     }
 }
 
+export type AriaDisabledValue = 'true' | 'false';
+export function ariaDisabledValue(state: boolean): AriaDisabledValue {
+    return state ? 'true' : 'false';
+}
+
 /* Async */
 /**
  * Use for async tasks that run quickly but for the UI you'd like to delay initial output of stream.

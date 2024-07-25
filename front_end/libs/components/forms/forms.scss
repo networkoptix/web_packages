@@ -1,7 +1,49 @@
+@use "./buttons/buttons.scss";
+
 $form-field-margin: 0.25rem;
+$form-button-min-width: 80px;
+/* Ensure minimum clickable area for short verbs like "Add"
+and prevent loading animation from clipping */
 
 @mixin stacked-form-fields {
     nx-form-field + nx-form-field {
         margin-top: 1rem;
+    }
+}
+
+@mixin form-action-button {
+    min-width: $form-button-min-width;
+
+    @include buttons.nx-button();
+
+    &.nx-button--primary {
+        @include buttons.nx-button-base('primary');
+    }
+
+    &.nx-button--danger {
+        @include buttons.nx-button-base('danger');
+    }
+
+    &.nx-button--default {
+        @include buttons.nx-button-base('default');
+    }
+
+    &[aria-disabled="false"] {
+        &.nx-button--primary {
+            @include buttons.nx-button-alt-states('primary');
+        }
+
+        &.nx-button--danger {
+            @include buttons.nx-button-alt-states('danger');
+        }
+
+        &.nx-button--default {
+            @include buttons.nx-button-alt-states('default');
+        }
+    }
+
+    &.nx-button--form-error {
+        opacity: 0.3; // Match disabled styling
+        cursor: not-allowed;
     }
 }

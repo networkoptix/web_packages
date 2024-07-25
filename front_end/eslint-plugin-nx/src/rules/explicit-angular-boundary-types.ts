@@ -81,9 +81,11 @@ export = createRule({
                 );
                 if (isOutput) {
                     const typeAnnotation = node.typeAnnotation as TypeAnnotation;
-                    const value = node.value as TSESTree.NewExpression;
+                    const value = node.value;
                     if (!value) {
                         // Not initialized yet
+                    } else if (value.type !== AST_NODE_TYPES.NewExpression) {
+                        // Not a new EventEmitter;
                     } else if (!typeAnnotation) {
                         if (!value.typeParameters) {
                             context.report({

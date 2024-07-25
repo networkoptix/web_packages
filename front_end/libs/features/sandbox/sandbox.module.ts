@@ -17,6 +17,7 @@ import { NxDialogsSandboxComponent } from './dialogs/dialogs-sandbox.component';
 import { SandboxFiltersComponent } from './filters/sandbox-filters.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
+import { NxFormFieldSandboxComponent } from './form-field/form-field-sandbox.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NxComponentLibrarySandboxComponent } from './nx-components/nx-components.component';
@@ -86,6 +87,10 @@ export const appRoutes: Routes = [
             {
                 path: 'form-elements',
                 component: FormElementsComponent,
+            },
+            {
+                path: 'form-field',
+                component: NxFormFieldSandboxComponent,
             },
             {
                 path: 'validation',

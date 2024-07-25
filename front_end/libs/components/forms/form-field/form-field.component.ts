@@ -5,6 +5,8 @@ import {
     Component,
     ContentChild,
     DestroyRef,
+    OnDestroy,
+    Optional,
     SkipSelf,
     computed,
     effect,
@@ -14,11 +16,12 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl } from '@angular/forms';
-import { merge, take } from 'rxjs';
+import { merge, filter, tap } from 'rxjs';
 
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 
 import { NxControlMessagesComponent as NxMessages } from '../control-messages/control-messages.component';
+import { NxFormObserverDirective } from '../form-observer.directive';
 
 import {
     ControlState,
@@ -69,7 +72,7 @@ import { NxFormFieldToken } from './form-field.token';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NxFormFieldComponent implements AfterContentInit {
+export class NxFormFieldComponent implements AfterContentInit, OnDestroy {
     /** A function for when to display errors.
      *
      * See `error-state-matcher.ts`.
@@ -108,8 +111,12 @@ export class NxFormFieldComponent implements AfterContentInit {
         // private injector: Injector,
         private destroyRef: DestroyRef,
         @SkipSelf() private formGroup: FormGroupDirective,
-    ) {}
+        @SkipSelf() @Optional() private formObserver: NxFormObserverDirective | null,
+    ) {
+        formObserver?.formFields.update(ff => ff.concat(this));
+    }
 
+    submitted = false;
     ngAfterContentInit(): void {
         // Removing this for now
         // const nativeElement = this.nxControlDirective.host.nativeElement;
@@ -125,11 +132,28 @@ export class NxFormFieldComponent implements AfterContentInit {
         //     });
         // }
 
-        merge(this.formGroup.ngSubmit.pipe(take(1)), this.ngControl.statusChanges!)
+        // `formGroup.submitted` is already true when `ngSubmit` emits
+        merge(
+            this.formGroup.ngSubmit.pipe(
+                filter(_ => !this.submitted),
+                tap(() => {
+                    this.submitted = true;
+                }),
+            ),
+            this.ngControl.statusChanges!,
+        )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 const errorState = this.errorMatcher()(this.ngControl, this.formGroup);
                 this.errorState.set(errorState);
             });
+
+        this.formObserver?.reset$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.submitted = false;
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.formObserver?.formFields.update(ff => ff.filter(f => f !== this));
     }
 }

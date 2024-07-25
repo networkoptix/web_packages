@@ -57,6 +57,8 @@ module.exports = (0, utils_2.createRule)({
                     const value = node.value;
                     if (!value) {
                     }
+                    else if (value.type !== utils_1.AST_NODE_TYPES.NewExpression) {
+                    }
                     else if (!typeAnnotation) {
                         if (!value.typeParameters) {
                             context.report({

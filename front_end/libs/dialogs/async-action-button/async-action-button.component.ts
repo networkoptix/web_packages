@@ -27,7 +27,11 @@ import { NxToastService } from '@services/toast.service';
 
 import { AsyncAction } from './create-async-action';
 
-/** A button to handle asynchronous actions.
+/** Not actually @deprecated yet, but to be soon in favor of `NxAsyncSubmitButtonComponent`.
+ *
+ * ---
+ *
+ * A button to handle asynchronous actions.
  *
  * There are currently three internal states:
  *
