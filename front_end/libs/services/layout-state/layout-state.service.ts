@@ -265,6 +265,15 @@ export class LayoutStateService {
             .select(SharedLayoutsSelectors.selectLayoutsState)
             .pipe(take(1))
             .subscribe((layouts: LayoutState[]) => {
+                if (
+                    layoutType === LayoutTypes.LOCAL &&
+                    layouts.find(
+                        ({ id, layoutType }) =>
+                            id === layout.id && layoutType === LayoutTypes.CROSS_SYSTEM,
+                    )
+                ) {
+                    layoutType = LayoutTypes.CROSS_SYSTEM;
+                }
                 const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
                 const existingNames = layouts
                     .filter(layout => layout.layoutType === layoutType)
