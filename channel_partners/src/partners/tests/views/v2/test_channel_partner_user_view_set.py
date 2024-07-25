@@ -401,7 +401,7 @@ class TestChannelPartnerUserViewSetFilter:
         self.user_may.last_modified = self.may
         ChannelPartnerToUser.objects.bulk_update([self.user_january, self.user_march, self.user_may], ['last_modified'])
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('channelpartners-user-list',
+        self.path = reverse('v2:channelpartners-user-list',
                             kwargs={'parent_lookup_channel_partner': self.channel_partner.id})
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {uuid4()}')
         mock_auth_with_user(self.user_january)

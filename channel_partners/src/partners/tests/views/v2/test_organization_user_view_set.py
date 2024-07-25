@@ -1178,7 +1178,7 @@ class TestOrganizationUserViewSetFilter:
             [self.user_january, self.group_user_march, self.user_may, self.group_user_may],
             ['last_modified'])
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('organizations-user-list',
+        self.path = reverse('v2:organizations-user-list',
                             kwargs={'parent_lookup_organization': self.organization.id})
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {uuid4()}')
         mock_auth_with_user(self.user_january)

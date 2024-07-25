@@ -125,7 +125,7 @@ class TestCloudSystemViewSetRetrieve:
         self.auth_cred = f'Bearer {self.token}'
 
         # Generate URL for cloud system detail
-        self.url = reverse('cloudsystem-detail', kwargs={'id': self.group_system.system_id})
+        self.url = reverse('v2:cloudsystem-detail', kwargs={'id': self.group_system.system_id})
 
         # Clear caches
         caches['default'].clear()
@@ -141,7 +141,7 @@ class TestCloudSystemViewSetRetrieve:
         api_client.credentials(HTTP_AUTHORIZATION=bearer_token)
 
         path = reverse(
-            'cloudsystem-services',
+            'v2:cloudsystem-services',
             kwargs={'id': str(self.org_system.system_id)}
         )
         response = api_client.get(path=path)
@@ -334,7 +334,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         self.auth = f'Basic {uuid4()}'
         self.url = f'{settings.LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy'
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
+        self.path = reverse('v2:cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
         self.lic_response_data = [{
             "key": "key",
             "count": 10,
@@ -836,7 +836,7 @@ class TestCloudSystemViewSetSystemCurrentUsage:
             quantity=30,
         )
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
+        self.path = reverse('v2:cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
         self.client.credentials(HTTP_AUTHORIZATION=f'Basic {uuid4()}')
         mock_auth_with_system(self.system)
 
@@ -962,7 +962,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_own_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('channelpartners-subchannelpartner-list',
+        path = reverse('v2:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.root_cp.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 200
@@ -970,7 +970,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_lowest_lvl_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('channelpartners-subchannelpartner-list',
+        path = reverse('v2:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.grand_child.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 200
@@ -978,7 +978,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_other_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('channelpartners-subchannelpartner-list',
+        path = reverse('v2:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.other_cp.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 403
@@ -1002,7 +1002,7 @@ class TestChannelStructureViewSet:
         self.mock_auth(user)
 
         bearer = f"Bearer {uuid4()}"
-        view_name = "subchannels-channel-structure"
+        view_name = "v2:subchannels-channel-structure"
 
         self.client.credentials(HTTP_AUTHORIZATION=bearer)
 
@@ -1012,7 +1012,7 @@ class TestChannelStructureViewSet:
 
     def test_unauthorized(self):
 
-        view_name = "subchannels-channel-structure"
+        view_name = "v2:subchannels-channel-structure"
 
 
         path = reverse(view_name)
@@ -1203,7 +1203,7 @@ class TestChannelPartnerStructureNestedViewSet:
         self.mock_auth(user)
 
         bearer = f"Bearer {uuid4()}"
-        view_name = "channelpartner-channel-structure"
+        view_name = "v2:channelpartner-channel-structure"
 
         self.client.credentials(HTTP_AUTHORIZATION=bearer)
 
@@ -2068,7 +2068,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.group_user.user.email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert (response.data['vmsRoles'][0] ==
@@ -2080,7 +2080,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.group_user.user.email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert (response.data['vmsRoles'][0] ==
@@ -2092,7 +2092,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 403
 
@@ -2102,7 +2102,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 403
 
@@ -2116,7 +2116,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
 
@@ -2130,7 +2130,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': user_email
         }
-        path = reverse('system_user', kwargs=url_args)
+        path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert response.data['vmsRoles'] == []
@@ -2163,7 +2163,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_admin.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_admin.user)
         response = self.client.get(url)
         actual_records = response.data
@@ -2178,7 +2178,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_admin.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2188,7 +2188,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_admin.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2203,7 +2203,7 @@ class TestUserSystems:
         url_args = {
             "email": self.group_user.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.group_user.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2213,7 +2213,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_viewer.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2223,7 +2223,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 403
@@ -2232,7 +2232,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("user_systems", kwargs=url_args)
+        url = reverse("v2:user_systems", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 401
 
@@ -2262,7 +2262,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.cp_admin.user)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2270,7 +2270,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
@@ -2280,7 +2280,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.org_admin.user)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2288,7 +2288,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
@@ -2298,7 +2298,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.group_user.user)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2306,7 +2306,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2315,14 +2315,14 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.org_viewer.user)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2333,7 +2333,7 @@ class TestSystemUsers:
 
         auth = mock_cdb_basic_auth(self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
 
@@ -2342,7 +2342,7 @@ class TestSystemUsers:
         }
         auth = mock_cdb_basic_auth(self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
 
@@ -2353,7 +2353,7 @@ class TestSystemUsers:
 
         auth = mock_cdb_basic_auth(self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2362,7 +2362,7 @@ class TestSystemUsers:
         }
         auth = mock_cdb_basic_auth(self.org_sys, status='deleted')
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         # will return 200 OK as soon as cache still have authorization
         assert response.status_code == 200
@@ -2378,14 +2378,14 @@ class TestSystemUsers:
 
         user_email = mock_cdb_token_introspect(user=cloud_user_factory(), system=self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
 
         user_email = mock_cdb_token_introspect(user=None, system=self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2397,19 +2397,19 @@ class TestSystemUsers:
         # invalid role
         user_email = mock_cdb_token_introspect(user=None, system=self.group_sys, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
         # invalid system id
         user_email = mock_cdb_token_introspect(user=None, system=self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
         # missing system role in cdb response
         user_email = mock_cdb_token_introspect(user=None)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("system_users", kwargs=url_args)
+        url = reverse("v2:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2914,7 +2914,7 @@ class TestCloudStorageUsageReport:
         self.token = f'{uuid4()}'
         self.auth_token = mock_internal_token_auth(self.token)
         self.auth = f'Bearer {self.token}'
-        self.path = reverse('cloud_storage_usage_report')
+        self.path = reverse('v2:cloud_storage_usage_report')
         self.headers = {"Authorization": self}
 
     def device_data(self, service_id):
@@ -3059,7 +3059,7 @@ class TestChannelPartnerViewSetPermissions:
         self.org_user_other = org_user_factory(organization=self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('channelpartner-list')
+        self.path_list = reverse('v2:channelpartner-list')
         self.kwargs_lvl_1 = {'pk': str(self.cp_lvl_1.id)}
         self.kwargs_lvl_2 = {'pk': str(self.cp_lvl_2.id)}
         self.kwargs_lvl_3 = {'pk': str(self.cp_lvl_3.id)}
@@ -3086,7 +3086,7 @@ class TestChannelPartnerViewSetPermissions:
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'channelpartner-detail'
+        view_name = 'v2:channelpartner-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -3118,7 +3118,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'channelpartner-detail'
+        view_name = 'v2:channelpartner-detail'
 
         mock_auth_with_user(self.org_user_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3145,7 +3145,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-detail'
+        view_name = 'v2:channelpartner-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3196,7 +3196,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_partial_update_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-detail'
+        view_name = 'v2:channelpartner-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3225,7 +3225,7 @@ class TestChannelPartnerViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_changes_history_cp_users(self, mock_auth_with_user):
-        view_name = 'channelpartner-service-changes-history'
+        view_name = 'v2:channelpartner-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3279,7 +3279,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_history_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-service-changes-history'
+        view_name = 'v2:channelpartner-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3309,7 +3309,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_summary_cp_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-service-changes-summary'
+        view_name = 'v2:channelpartner-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3363,7 +3363,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_summary_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-service-changes-summary'
+        view_name = 'v2:channelpartner-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3393,7 +3393,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_aggregate_cp_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-aggregate'
+        view_name = 'v2:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3447,7 +3447,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_aggregate_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-aggregate'
+        view_name = 'v2:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3477,7 +3477,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_change_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-change-state'
+        view_name = 'v2:channelpartner-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3536,7 +3536,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_change_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-change-state'
+        view_name = 'v2:channelpartner-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3566,7 +3566,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_confirm_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-confirm-state'
+        view_name = 'v2:channelpartner-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3625,7 +3625,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_confirm_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-confirm-state'
+        view_name = 'v2:channelpartner-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3655,11 +3655,12 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_invalid_method_405(self, mock_auth_with_user):
 
-        view_name = 'channelpartner-change-state'
+        view_name = 'v2:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        mock_auth_with_user(self.root_user)
+
+        mock_auth_with_user(self.org_user_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
-        response = self.client.get(path=path)
+        response = self.client.post(path=path)
         assert response.status_code == 405
 
 
@@ -3704,7 +3705,7 @@ class TestOrganizationViewSetPermissions:
         self.group_user_other = sys_group_user_factory(self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('organization-list')
+        self.path_list = reverse('v2:organization-list')
         self.kwargs_lvl_1 = {'pk': str(self.org_lvl_1.id)}
         self.kwargs_lvl_2 = {'pk': str(self.org_lvl_2.id)}
         self.kwargs_lvl_3 = {'pk': str(self.org_lvl_3.id)}
@@ -3732,7 +3733,7 @@ class TestOrganizationViewSetPermissions:
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'organization-detail'
+        view_name = 'v2:organization-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -3764,7 +3765,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'organization-detail'
+        view_name = 'v2:organization-detail'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3813,7 +3814,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-detail'
+        view_name = 'v2:organization-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3864,7 +3865,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_partial_update_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-detail'
+        view_name = 'v2:organization-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -3894,7 +3895,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_history_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-service-changes-history'
+        view_name = 'v2:organization-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3948,7 +3949,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_history_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-service-changes-history'
+        view_name = 'v2:organization-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -3978,7 +3979,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_summary_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-service-changes-summary'
+        view_name = 'v2:organization-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4032,7 +4033,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_summary_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-service-changes-summary'
+        view_name = 'v2:organization-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4062,7 +4063,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_aggregate_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-aggregate'
+        view_name = 'v2:organization-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4116,7 +4117,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_aggregate_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-aggregate'
+        view_name = 'v2:organization-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4146,7 +4147,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_change_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-change-state'
+        view_name = 'v2:organization-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4210,7 +4211,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_change_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-change-state'
+        view_name = 'v2:organization-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4240,7 +4241,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_confirm_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'organization-confirm-state'
+        view_name = 'v2:organization-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4304,7 +4305,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_confirm_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'organization-confirm-state'
+        view_name = 'v2:organization-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4335,7 +4336,7 @@ class TestOrganizationViewSetPermissions:
     def test_groups_structure_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'organization-groups-structure'
+        view_name = 'v2:organization-groups-structure'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -4367,7 +4368,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_groups_structure_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'organization-groups-structure'
+        view_name = 'v2:organization-groups-structure'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4415,12 +4416,11 @@ class TestOrganizationViewSetPermissions:
         assert response.status_code == 403
 
     def test_invalid_method_405(self, mock_auth_with_user):
-
-        view_name = 'organization-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
+        view_name = 'v2:organization-groups-structure'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
-        response = self.client.get(path=path)
+        response = self.client.post(path=path)
         assert response.status_code == 405
 
 
@@ -4469,7 +4469,7 @@ class TestOrganizationNestedViewSetPermissions:
         self.kwargs_lvl_2 = {'parent_lookup_channel_partner': str(self.cp_lvl_2.id)}
         self.kwargs_lvl_3 = {'parent_lookup_channel_partner': str(self.cp_lvl_3.id)}
         caches['default'].clear()
-        self.view_name = 'channelpartners-organization-list'
+        self.view_name = 'v2:channelpartners-organization-list'
 
     @property
     def auth(self):
@@ -4587,7 +4587,7 @@ class TestCloudSystemViewSetPermissions:
         self.group_user_other = sys_group_user_factory(self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('cloudsystem-list')
+        self.path_list = reverse('v2:cloudsystem-list')
         self.kwargs_lvl_1 = {'id': str(self.system_lvl_1.system_id)}
         self.kwargs_lvl_2 = {'id': str(self.system_lvl_2.system_id)}
         self.kwargs_lvl_3 = {'id': str(self.system_lvl_3.system_id)}
@@ -4617,7 +4617,7 @@ class TestCloudSystemViewSetPermissions:
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -4649,7 +4649,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4703,7 +4703,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4753,7 +4753,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_system_usage_report_org_users(self, mock_cdb_basic_auth, mock_auth_with_user):
-        view_name = 'cloudsystem-system-usage-report'
+        view_name = 'v2:cloudsystem-system-usage-report'
 
         auth = mock_cdb_basic_auth(self.system_lvl_1)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
@@ -4778,7 +4778,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_service_quantity_cp_users(self, mock_auth_with_user):
 
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4832,7 +4832,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_service_quantity_org_users(self, mock_auth_with_user):
 
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4867,7 +4867,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_services_cp_users(self, mock_auth_with_user):
 
-        view_name = 'cloudsystem-services'
+        view_name = 'v2:cloudsystem-services'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4921,7 +4921,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_services_org_users(self, mock_auth_with_user):
 
-        view_name = 'cloudsystem-services'
+        view_name = 'v2:cloudsystem-services'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4965,7 +4965,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_quantity_patch_org_users(self, mock_auth_with_user):
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4994,7 +4994,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_quantity_patch_cp_user(self, mock_auth_with_user):
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.cp_admin_lvl_1)
@@ -5033,7 +5033,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_destroy_cp_users(self, mock_auth_with_user, mocker):
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         cdb_response = MagicMock()
         cdb_response.status_code = 200
         mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
@@ -5090,7 +5090,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_destroy_org_users(self, mock_auth_with_user, mocker):
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         cdb_response = MagicMock()
         cdb_response.status_code = 200
         mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
@@ -5122,7 +5122,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_saas_report_org_users(self, mock_auth_with_user, mocker):
-        view_name = 'cloudsystem-saas-report'
+        view_name = 'v2:cloudsystem-saas-report'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -5167,7 +5167,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_saas_report_cp_users(self, mock_auth_with_user, mocker):
 
-        view_name = 'cloudsystem-saas-report'
+        view_name = 'v2:cloudsystem-saas-report'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -5223,7 +5223,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, jwt_is_valid=False)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 401
@@ -5232,7 +5232,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5241,7 +5241,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5250,7 +5250,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -5259,7 +5259,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-detail'
+        view_name = 'v2:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5268,7 +5268,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-saas-report'
+        view_name = 'v2:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5277,7 +5277,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-saas-report'
+        view_name = 'v2:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5286,7 +5286,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-saas-report'
+        view_name = 'v2:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -5295,7 +5295,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5304,7 +5304,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5313,7 +5313,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-service-quantity'
+        view_name = 'v2:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5322,7 +5322,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-services'
+        view_name = 'v2:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5331,7 +5331,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-services'
+        view_name = 'v2:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5340,7 +5340,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-services'
+        view_name = 'v2:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5349,7 +5349,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-migrate-legacy-licenses'
+        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         # validation error expected
@@ -5360,7 +5360,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-migrate-legacy-licenses'
+        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         # validation error expected
@@ -5371,20 +5371,16 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'cloudsystem-migrate-legacy-licenses'
+        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         assert response.status_code == 403
 
     def test_invalid_method_405(self, mock_cdb_basic_auth, mock_auth_with_user):
-        view_name = 'cloudsystem-system-usage-report'
+        view_name = 'v2:cloudsystem-system-usage-report'
 
         auth = mock_cdb_basic_auth(self.system_lvl_1)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 405
-
-
-
-

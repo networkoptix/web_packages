@@ -85,7 +85,7 @@ class TestOrganizationServiceReportsViewSet:
             "parent_lookup_organization": self.org.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('organizations-reports-regular-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_viewer)
         response = self.client.get(path)
@@ -100,7 +100,7 @@ class TestOrganizationServiceReportsViewSet:
             "parent_lookup_organization": self.org.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('organizations-reports-regular-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -123,7 +123,7 @@ class TestOrganizationServiceReportsViewSet:
             "parent_lookup_organization": self.org.pk,
             "service_id": self.expiring_service.pk,
         }
-        path = reverse('organizations-reports-expiring-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-expiring-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -146,7 +146,7 @@ class TestOrganizationServiceReportsViewSet:
             "parent_lookup_organization": self.org.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('organizations-reports-regular-service-report', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-regular-service-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -170,7 +170,7 @@ class TestOrganizationServiceReportsViewSet:
             "service_id": self.expiring_service.pk,
         }
 
-        path = reverse('organizations-reports-expiring-service-report', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-expiring-service-report', kwargs=path_kwargs)
 
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
@@ -196,7 +196,7 @@ class TestOrganizationServiceReportsViewSet:
     #         "parent_lookup_organization": self.org.pk,
     #         "service_id": self.service.pk,
     #     }
-    #     path = reverse('organizations-reports-system-reports', kwargs=path_kwargs)
+    #     path = reverse('v2:organizations-reports-system-reports', kwargs=path_kwargs)
     #     self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
     #     mock_auth_with_user(self.org_admin)
     #     response = self.client.get(path + self.period_query_param)
@@ -218,7 +218,7 @@ class TestOrganizationServiceReportsViewSet:
             "service_id": self.service.pk,
             "cloud_system_id": self.system.system_id,
         }
-        path = reverse('organizations-reports-system-regular-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-system-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -247,7 +247,7 @@ class TestOrganizationServiceReportsViewSet:
             "service_id": self.expiring_service.pk,
             "cloud_system_id": self.system.system_id,
         }
-        path = reverse('organizations-reports-system-expiring-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-system-expiring-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -270,7 +270,7 @@ class TestOrganizationServiceReportsViewSet:
         path_kwargs = {
             "parent_lookup_organization": self.org.pk,
         }
-        path = reverse('organizations-reports-usage-report', kwargs=path_kwargs)
+        path = reverse('v2:organizations-reports-usage-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.org_admin)
         response = self.client.get(path + self.period_query_param)
@@ -355,7 +355,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path_kwargs = {
             "parent_lookup_channel_partner": self.channel_partner.pk,
         }
-        path = reverse('channelpartners-reports-usage-report', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-usage-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.organization_viewer)
         response = self.client.get(path)
@@ -370,7 +370,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.parent_channel_service.pk,
         }
-        path = reverse('channelpartners-reports-regular-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-regular-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -395,7 +395,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.expiring_service.pk,
         }
-        path = reverse('channelpartners-reports-expiring-detail-table', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-expiring-detail-table', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -419,7 +419,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('channelpartners-reports-regular-service-report', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-regular-service-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -442,7 +442,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.expiring_service.pk,
         }
-        path = reverse('channelpartners-reports-expiring-service-report', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-expiring-service-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -464,7 +464,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('channelpartners-reports-channel-partner-usages', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-channel-partner-usages', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -492,7 +492,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('channelpartners-reports-channel-partner-usages', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-channel-partner-usages', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -519,7 +519,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": sub_cp.pk,
             "service_id": sub_cp_service.id,
         }
-        path = reverse('channelpartners-reports-organization-usages', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-organization-usages', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -544,7 +544,7 @@ class TestChannelPartnerServiceReportsViewSet:
             "parent_lookup_channel_partner": self.channel_partner.pk,
             "service_id": self.service.pk,
         }
-        path = reverse('channelpartners-reports-organization-usages', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-organization-usages', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -564,7 +564,7 @@ class TestChannelPartnerServiceReportsViewSet:
         path_kwargs = {
             "parent_lookup_channel_partner": self.channel_partner.pk,
         }
-        path = reverse('channelpartners-reports-usage-report', kwargs=path_kwargs)
+        path = reverse('v2:channelpartners-reports-usage-report', kwargs=path_kwargs)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.channel_partner_admin)
         response = self.client.get(path + self.report_date_query_param)
@@ -589,7 +589,7 @@ class TestOrganizationGenerateReport:
         self.period_start = last_month.replace(day=1).date()
         self.organization = organization_factory()
         self.organization_admin = org_user_factory(organization=self.organization)
-        self.view_name = 'organizations-reports-generate-report'
+        self.view_name = 'v2:organizations-reports-generate-report'
         self.kwargs = {'parent_lookup_organization': self.organization.pk}
         self.path = reverse(self.view_name, kwargs=self.kwargs)
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
@@ -752,7 +752,7 @@ class TestChannelPartnerGenerateReport:
         self.channel_partner = channel_partner_factory()
 
         self.admin = cp_user_factory(channel_partner=self.channel_partner.parent_channel_partner)
-        self.view_name = 'channelpartners-reports-generate-report'
+        self.view_name = 'v2:channelpartners-reports-generate-report'
         self.kwargs = {'parent_lookup_channel_partner': self.channel_partner.pk}
         self.path = reverse(self.view_name, kwargs=self.kwargs)
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)

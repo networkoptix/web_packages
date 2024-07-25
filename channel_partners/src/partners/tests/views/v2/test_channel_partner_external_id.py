@@ -25,10 +25,10 @@ class TestChannelPartnerExternalIdViewsetPermission:
             )
             for _ in range(5)
         ]
-        self.list_view_name = 'channelpartner-externalid-list'
+        self.list_view_name = 'v2:channelpartner-externalid-list'
         # self.list_url = reverse(self.list_view_name, kwargs={'channel_partner_id': str(self.cp.id)})
         self.list_url = f'/partners/api/v2/channel_partners/{self.cp.id}/external_ids/'
-        self.detail_view_name = 'channelpartner-externalid-detail'
+        self.detail_view_name = 'v2:channelpartner-externalid-detail'
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
 

@@ -49,8 +49,8 @@ class TestChannelPartnerOwnedServiceViewSet:
         self.sub_organization_admin = org_user_factory(organization=self.sub_organization)
 
         # Define the names of the list and detail views
-        self.list_view_name = 'channelpartners-owned-service-list'
-        self.detail_view_name = 'channelpartners-owned-service-detail'
+        self.list_view_name = 'v2:channelpartners-owned-service-list'
+        self.detail_view_name = 'v2:channelpartners-owned-service-detail'
 
         # Initialize the APIClient with the server name
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)

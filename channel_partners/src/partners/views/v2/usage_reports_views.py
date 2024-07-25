@@ -77,6 +77,9 @@ from partners.views.v2.views import (
     ParentLookUpMixin,
 )
 from tools.helpers import get_path_from_parent
+from tools.versioning.decorators import version_range
+from tools.versioning.utils import Versions
+from tools.versioning.views import VersionedViewMixin
 
 
 logger = structlog.get_logger(__name__)
@@ -191,7 +194,8 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
                                  description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'}
 )
-class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
+@version_range(Versions(min_version="v2"))
+class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseViewSet):
     report_entity_model = Organization
     lookup_url_kwarg = 'service_id'
     entity_kwarg = 'organization'
@@ -420,7 +424,8 @@ class OrganizationServiceReportsViewSet(UsageReportsBaseViewSet):
                                  description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for ChannelPartner'}
 )
-class ChannelPartnerServiceReportsViewSet(UsageReportsBaseViewSet):
+@version_range(Versions(min_version="v2"))
+class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseViewSet):
     report_entity_model = ChannelPartner
     lookup_url_kwarg = 'service_id'
     entity_kwarg = 'channel_partner'
