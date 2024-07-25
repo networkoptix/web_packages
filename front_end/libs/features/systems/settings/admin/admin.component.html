@@ -180,7 +180,9 @@
                     </div>
                 </nx-section>
             </ng-template>
-            <nx-section *ngIf="canManageSystem$$(); else notMine">
+            <nx-section
+                *ngIf="canManageSystem$$() && !system.permissionManager.isAdmin$$(); else notMine"
+            >
                 <div class="row m-0">
                     <div class="col-lg-6 pl-0">
                         <div class="float-left mr-2">
