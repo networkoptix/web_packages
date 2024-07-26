@@ -1,7 +1,10 @@
 <style>
     .form-container {
         width: 50%;
-        margin: auto;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: 16px;
         padding: 16px;
         border: 1px solid #ddd;
         border-radius: 4px;
@@ -37,6 +40,10 @@
         font-size: 24px;
         margin-bottom: 16px;
     }
+
+    .warning {
+        color: red;
+    }
 </style>
 
 <div class="form-container">
@@ -52,52 +59,51 @@
     </form>
 </div>
 
-{% if nx_admin and cp_admin and org_admin and nx_cp and cp and org and meta_admin and meta_cp_admin and meta_org_admin and meta_nx_cp and meta_cp and meta_org %}
-    <table style="width: 100%; border-collapse: collapse;">
+{% if customizations %}
+    <div class="form-container">
+        <h3>Available Customizations</h3>
+        <ul>
+            {% for customization, hostname in customizations.items %}
+                <li>{{ customization }} - {{ hostname }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% if submitted %}
+    {% if result %}
+    <div class="form-container">
+       <table style="width: 100%; border-collapse: collapse;">
+       {% for customization in result %}
         <thead>
-        <tr style="background-color: #f2f2f2; text-align: left;">
-            <th style="padding: 8px;">User Email</th>
-            <th style="padding: 8px;">Channel Partner Name (Added to)</th>
-            <th style="padding: 8px;">Channel Partner ID</th>
-        </tr>
+            <tr style="background-color: white; text-align: left;">
+                <th style="padding: 8px; text-align: center" colspan="3">Customization: {{ customization.customization }}. Hostname: {{ customization.cloud_host }}</th>
+            </tr>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <th style="padding: 8px;">User Email</th>
+                <th style="padding: 8px;">Channel Partner or Organization Name (Added to)</th>
+                <th style="padding: 8px;">Channel Partner or Organization ID</th>
+            </tr>
         </thead>
         <tbody>
-        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ nx_admin.email }}</td>
-            <td style="padding: 8px;">{{ nx_cp.name }}</td>
-            <td style="padding: 8px;">{{ nx_cp.id }}</td>
-        </tr>
-
-        <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ cp_admin.email }}</td>
-            <td style="padding: 8px;">{{ cp.name }}</td>
-            <td style="padding: 8px;">{{ cp.id }}</td>
-        </tr>
-
-        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ org_admin.email }}</td>
-            <td style="padding: 8px;">{{ org.name }}</td>
-            <td style="padding: 8px;">{{ org.id }}</td>
-        </tr>
-
-        {# Meta Users #}
-        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ meta_admin.email }}</td>
-            <td style="padding: 8px;">{{ meta_nx_cp.name }}</td>
-            <td style="padding: 8px;">{{ meta_nx_cp.id }}</td>
-        </tr>
-
-        <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ meta_cp_admin.email }}</td>
-            <td style="padding: 8px;">{{ meta_cp.name }}</td>
-            <td style="padding: 8px;">{{ meta_cp.id }}</td>
-        </tr>
-
-        <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
-            <td style="padding: 8px;">{{ meta_org_admin.email }}</td>
-            <td style="padding: 8px;">{{ meta_org.name }}</td>
-            <td style="padding: 8px;">{{ meta_org.id }}</td>
-        </tr>
+            {% for user_relation in customization.users %}
+            <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+                <td style="padding: 8px;">{{ user_relation.user.email }}</td>
+                {% if user_relation.channel_partner_id %}
+                    <td style="padding: 8px;">{{ user_relation.channel_partner.name }}</td>
+                    <td style="padding: 8px;">{{ user_relation.channel_partner_id }}</td>
+                {% else %}
+                    <td style="padding: 8px;">{{ user_relation.organization.name }}</td>
+                    <td style="padding: 8px;">{{ user_relation.organization_id }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
         </tbody>
-    </table>
+       {% endfor %}
+       </table>
+    </div>
+    {%  else %}
+        <div class="form-container">
+            <h2 class="title warning">Nothing added. Please contact web development team.</h2>
+        </div>
+    {% endif %}
 {% endif %}

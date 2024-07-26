@@ -158,7 +158,7 @@ from partners.services.channel_partner_group_structure_service import (
 )
 from partners.services.cloud_system_service import CloudSystemService
 from partners.services.internal_grant_access_service import (
-    InternalGrantAccessResult,
+    CustomizationUsers,
     InternalGrantAccessService,
 )
 from tools.exception import Conflict
@@ -176,17 +176,27 @@ logger = structlog.get_logger(__name__)
 def grant_access(request):
     if not settings.DEBUG:
         return HttpResponseForbidden()
-
     form: GrantAccessForm = GrantAccessForm(request.POST or None)
+    grant_service = InternalGrantAccessService()
+    if not grant_service.root_partner or not grant_service.customizations:
+        return render(request,
+                      'grant_access_error.html',
+                      {'root_partner': grant_service.root_partner,
+                       'customizations': grant_service.customizations})
+
     if request.method == 'POST' and form.is_valid():
 
         email: str = form.cleaned_data.get("email")
-        result: InternalGrantAccessResult = InternalGrantAccessService.process(email)
+        result: List[CustomizationUsers] = grant_service.new_process(email)
 
-        context = {'form': form, **result}
+        context = {'form': form, 'result': result, 'submitted': True}
+        # Refreshing the resulting page leads to resubmitting form.
+        # But, it is not a problem here. Just because it generates the same result.
         return render(request, 'grant_access.html', context)
 
-    return render(request, 'grant_access.html', {'form': form})
+    return render(request,
+                  template_name='grant_access.html',
+                  context={'form': form, 'customizations': grant_service.customizations})
 
 
 class DefaultPagination(PageNumberPagination):
