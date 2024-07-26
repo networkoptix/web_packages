@@ -1,5 +1,6 @@
 include:
   - local: "ci/.shared.yml"
+  - local: "ft/ci/.gitlab-ci.yml"
 
 jenkins-build-webadmin:
   extends: .jenkins-builds
@@ -45,7 +46,7 @@ jenkins-build-frontend:
       "REVISION=$CI_COMMIT_SHA"
   rules:
   - if: !reference [ .enable_for_mr ]
-    changes: !reference [ .frontend_changes ]
+    changes: !reference [ .require_testing ]
 
 jenkins-build-notification:
   extends: .jenkins-builds
@@ -122,7 +123,7 @@ cloud-deploy:
     on_stop: cloud-remove-deployment:no-bot-start
   rules:
   - if: !reference [ .functional_tests_required ]
-    changes: !reference [ .frontend_changes ]
+    changes: !reference [ .require_testing ]
 
 # stop deployment and clean all data, manual UI action. may be used to verify clean deployment
 # may be invoked using manual UI action to verify clean deployment
@@ -159,7 +160,7 @@ cloud-remove-deployment:no-bot-start:
     action: stop
   rules:
   - if: !reference [ .functional_tests_required ]
-    changes: !reference [ .frontend_changes ]
+    changes: !reference [ .require_testing ]
     when: manual
     # ref: https://docs.gitlab.com/ee/ci/yaml/#rulesallow_failure
     # the directive also impacts pipeline stage representation on top level

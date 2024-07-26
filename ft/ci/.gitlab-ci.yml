@@ -1,6 +1,13 @@
 include:
   - local: "ci/.shared.yml"
 
+.functional_tests_required: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^releases_23\.3\./ )'
+
+.require_testing:
+  - front_end/**/*
+  - ft/**/*
+
 test-log-in-by-existing-user:
   stage: 'ft (#ask-ft)'
   needs: [ 'cloud-deploy' ]
@@ -10,7 +17,7 @@ test-log-in-by-existing-user:
   rules:
     - if: !reference [ .functional_tests_required ]
       # noinspection YAMLSchemaValidation
-      changes: !reference [ .frontend_changes ]
+      changes: !reference [ .require_testing ]
 
 test-2fa:
   stage: 'ft (#ask-ft)'
@@ -21,4 +28,4 @@ test-2fa:
   rules:
     - if: !reference [ .functional_tests_required ]
       # noinspection YAMLSchemaValidation
-      changes: !reference [ .frontend_changes ]
+      changes: !reference [ .require_testing ]
