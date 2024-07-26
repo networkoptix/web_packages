@@ -14,7 +14,7 @@ def on_cloud_system_saved(
         **kwargs
 ) -> None:
     """
-    This is not being used as a full signal. It's connected durectly to the transaction.on_commit signal in the CloudSystem model.
+    This is not being used as a full signal. It's connected directly to the transaction.on_commit signal in the CloudSystem model.
     """
     # instance is being updated, not created
     if not is_new:
