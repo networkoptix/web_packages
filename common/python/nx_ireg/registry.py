@@ -13,7 +13,7 @@ class IReg:
         self._customizations: t.List[t.Tuple[str, str]] = get_customizations(instance_name)
 
     @property
-    def customizations(self) -> dict:
+    def customizations(self) -> t.Dict[str, str]:
         return dict(self._customizations)
 
     def get_default_host(self) -> t.Optional[str]:
