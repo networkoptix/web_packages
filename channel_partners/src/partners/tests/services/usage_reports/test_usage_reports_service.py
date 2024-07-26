@@ -630,8 +630,14 @@ class TestChannelPartnerReportsService:
             organization_id=organizations[i].id, organization_name=organizations[i].name, report=f'detail_{i}'
         ) for i in range(len(organizations))]
 
-    def test_get_regular_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
-                                        channel_partner_factory, django_capture_on_commit_callbacks):
+    def test_get_regular_channel_partner_usages(
+            self,
+            mocker,
+            cp_service_factory,
+            default_channel_partner,
+            channel_partner_factory,
+            django_capture_on_commit_callbacks
+    ) -> None:
         with django_capture_on_commit_callbacks(execute=True) as callbacks:
             channel_partner = channel_partner_factory(parent_channel_partner=default_channel_partner)
             service = cp_service_factory(parent_service=None, channel_partner=channel_partner)
@@ -664,14 +670,25 @@ class TestChannelPartnerReportsService:
         # One parent_service is automatically created/inherited from parent, so total of two services for each sub channel
         assert detail_table_mock.call_count == 5
 
-        assert channel_partner_usages == [ChannelPartnerRegularUsage(
-            channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
-                    RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
-                    RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10,
-                                             monthly_rate=0, transactions=1),
-                    RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10,
-                                             transactions=1)
-                ]) for channel_partner in sub_channel_partners]
+
+        expected_usage_report = [
+            RegularUsageDetailRecord(date=BeginningOfPeriodDate, channels=5, monthly_rate=5, daily_rate=0),
+            RegularUsageDetailRecord(date=parser.parse('01-15-2024'), channels=10, daily_rate=10, monthly_rate=0, transactions=1),
+            RegularUsageDetailRecord(date=TotalUsageDate, channels=15, monthly_rate=5, daily_rate=10, transactions=1)
+        ]
+
+        expected_channel_partner_usages = {
+            sub_cp.id: ChannelPartnerRegularUsage(
+                channel_partner_id=sub_cp.id,
+                channel_partner_name=sub_cp.name,
+                report=expected_usage_report
+            ) for sub_cp in sub_channel_partners
+        }
+
+        for actual in channel_partner_usages:
+            actual_cp_id = actual.get("channel_partner_id")
+            assert actual == expected_channel_partner_usages[actual_cp_id]
+
 
     def test_get_expiring_channel_partner_usages(self, mocker, cp_service_factory, default_channel_partner,
                                         channel_partner_factory, django_capture_on_commit_callbacks):

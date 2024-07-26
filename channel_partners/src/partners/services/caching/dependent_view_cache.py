@@ -51,36 +51,48 @@ class ValidationSource:
     def build(req: NxRequest, dependencies: Union[Dependencies, List[CacheDependency]], **kwargs) -> Dict[str, Any]:
         result: Dict[str, Any] = {}
 
-        source_handlers: Dict[str, Callable] = {
-            "path": lambda source: ValidationSource._handle_path_or_query_param(source, result, kwargs),
-            "query": lambda source: ValidationSource._handle_path_or_query_param(source, result, req.query_params),
-            "cloud_user": lambda _: ValidationSource._handle_cloud_user(req, result)
-        }
-
         if isinstance(dependencies, Dependencies):
             dependencies = dependencies.dependencies
 
         for dependency in dependencies:
-            source_type: str = dependency.source.split(".")[0]
-            if source_type not in source_handlers:
-                raise ValueError(f"Unknown source type [{dependency.source}] in dependencies")
-            source_handlers[source_type](dependency.source)
+            if dependency.source.count(".") != 1:
+                # Defend against invalid source format
+                logger.error("Invalid source format", source=dependency.source)
+
+            source_type, source_key = dependency.source.split(".", 1)
+
+            if source_type == "path":
+                ValidationSource._handle_path_param(source_key, result, kwargs)
+            elif source_type == "query":
+                ValidationSource._handle_query_param(source_key, result, req.query_params)
+            elif source_type == "cloud_user":
+                ValidationSource._handle_cloud_user(req, result)
+            else:
+                raise ValueError(f"Unknown source type [{source_type}] in dependencies")
+
         return result
 
     @staticmethod
     def _handle_cloud_user(request: NxRequest, result: Dict[str, Any]) -> None:
-        if "cloud_user" in result:
-            raise ValueError("Duplicate cloud_user found in dependencies")
-        result["cloud_user"] = request.user.id
+        if "cloud_user" not in result:
+            result["cloud_user"] = request.user.id
 
     @staticmethod
-    def _handle_path_or_query_param(source: str, result: Dict[str, Any], data: Dict[str, Any]) -> None:
-        key = source.split(".")[1]
-        if key not in data:
-            raise ValueError(f"{source.split('.')[0].capitalize()} key {key} not found")
-        if source in result:
-            raise ValueError(f"Duplicate {source.split('.')[0]} key {key} found in dependencies")
-        result[source] = data[key]
+    def _handle_path_param(source_key: str, result: Dict[str, Any], data: Dict[str, Any]) -> None:
+        ValidationSource._handle_param(source_key, result, data, "Path")
+
+    @staticmethod
+    def _handle_query_param(source_key: str, result: Dict[str, Any], data: Dict[str, Any]) -> None:
+        ValidationSource._handle_param(source_key, result, data, "Query")
+
+    @staticmethod
+    def _handle_param(source_key: str, result: Dict[str, Any], data: Dict[str, Any], param_type: str) -> None:
+        if source_key not in data:
+            raise ValueError(f"{param_type} key {source_key} not found")
+
+        source = f"{param_type.lower()}.{source_key}"
+        if source not in result:
+            result[source] = data[source_key]
 
 
 def generate_etag(content: Any) -> str:
@@ -175,19 +187,25 @@ def store_in_cache(
         )
 
 
-def initialize_request_and_perform_initial_steps(
-        self: APIView,
-        request: NxRequest,
-        *args: Any,
-        **kwargs: Any
-) -> NxRequest:
+def initialize(self: APIView, request: NxRequest, *args: Any, **kwargs: Any) -> NxRequest:
+    """
+    Initialize the request object with the given arguments and keyword arguments.
+    """
     # Initialize the request
     self.args = args
     self.kwargs = kwargs
     request = self.initialize_request(request, *args, **kwargs)
     self.request = request
     self.headers = self.default_response_headers  # deprecate? (used in the original dispatch method)
+    return request
 
+
+def perform_initial_steps(
+        self: APIView,
+        request: NxRequest,
+        *args: Any,
+        **kwargs: Any
+) -> NxRequest:
     # Perform initial steps
     self.format_kwarg = self.get_format_suffix(**kwargs)
     neg = self.perform_content_negotiation(request)
@@ -300,7 +318,12 @@ def dispatch_with_cache(
         **kwargs: Any
 ):
     # Initialize request and perform initial steps
-    request = initialize_request_and_perform_initial_steps(self, request, *args, **kwargs)
+    request = initialize(self, request, *args, **kwargs)
+    try:
+        request = perform_initial_steps(self, request, *args, **kwargs)
+    except Exception as exc:
+        response = self.handle_exception(exc)
+        return self.finalize_response(request, response, *args, **kwargs)
 
     # Get the cache for the action
     cache_key_params = generate_cache_key_params(request, dependent_cache_name)
@@ -410,7 +433,7 @@ def wrap_func_view(view, caches: Dict[ViewAction, DependentCache]) -> Callable:
     return _new_dispatch
 
 
-def dependent_view_cache(dependencies: Dict[ViewAction, Dependencies]) -> Callable[[T], T]:
+def DependentViewCache(dependencies: Dict[ViewAction, Dependencies]) -> Callable[[T], T]:
     caches: Dict[ViewAction, DependentCache] = {}
 
     def decorator(view_or_cls: T) -> T:

@@ -8,6 +8,7 @@ from django.db.models.signals import (
 def get_receivers():
     from partners.models import (
         ChannelPartner,
+        ChannelPartnerService,
         ChannelPartnerServiceRecord,
         ChannelPartnerToUser,
         CloudSystemId,
@@ -18,6 +19,10 @@ def get_receivers():
     )
     from partners.receivers.channel_partner_receiver import (
         on_channel_partner_saved,
+    )
+    from partners.receivers.channel_partner_service_receiver import (
+        on_channel_partner_service_deleted,
+        on_channel_partner_service_saved,
     )
     from partners.receivers.channel_partner_service_record_receiver import (
         on_channel_partner_service_record_change,
@@ -71,6 +76,10 @@ def get_receivers():
         ChannelPartnerServiceRecord: {
             "post_save": on_channel_partner_service_record_change,
             "post_delete": on_channel_partner_service_record_deleted,
+        },
+        ChannelPartnerService: {
+            "post_save": on_channel_partner_service_saved,
+            "post_delete": on_channel_partner_service_deleted,
         }
     }
 

@@ -35,7 +35,7 @@ from partners.services.caching.cache_dependency import CacheDependency
 from partners.services.caching.cache_enums import CachedDependencyFieldTypeEnum
 from partners.services.caching.dependent_view_cache import (
     Dependencies,
-    dependent_view_cache,
+    DependentViewCache,
 )
 from partners.tests.services.caching.test_dependent_cache import update_cache
 from partners.views.v2.views import DefaultPagination
@@ -70,7 +70,7 @@ class CloudUserSerializer(serializers.ModelSerializer):
     retrieve=extend_schema(summary="Retrieve a user", description="Retrieve a user"),
     sass_report=extend_schema(summary="Sass report", description="Sass report")
 )
-@dependent_view_cache({
+@DependentViewCache({
     "list": Dependencies([], validate_user=True),
     "retrieve": Dependencies(dependencies, validate_user=True),
     "sass_report": Dependencies(dependencies, validate_user=True)
@@ -95,7 +95,7 @@ class DemoViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     summary="Get all users",
     description="Get all users",
     responses={200: CloudUserSerializer(many=True)})
-@dependent_view_cache({"all_users": Dependencies([], validate_user=True)})
+@DependentViewCache({"all_users": Dependencies([], validate_user=True)})
 @api_view(['GET'])
 @authentication_classes([NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
