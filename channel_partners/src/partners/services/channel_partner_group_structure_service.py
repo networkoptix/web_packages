@@ -6,7 +6,6 @@ from typing import (
     Iterable,
     List,
     Set,
-    Union,
 )
 
 from django.core.exceptions import PermissionDenied
@@ -15,11 +14,13 @@ from django.db.models import (
     Q,
     QuerySet,
 )
+from django.db.models.functions import Lower
 
 from partners.models import (
     ChannelPartner,
     ChannelPartnerStates,
     ChannelPartnerToUser,
+    CloudHost,
     CloudUser,
     Organization,
 )
@@ -28,7 +29,9 @@ from partners.models import (
 class ChannelPartnerGroupStructureService:
     CACHE_TIMEOUT = 3600  # Cache timeout duration in seconds
 
-    def process_descendants(self, channel_partner: ChannelPartner, user: CloudUser) -> List[Dict[str, Any]]:
+    def process_descendants(self,
+                            channel_partner: ChannelPartner,
+                            user: CloudUser) -> List[Dict[str, Any]]:
         """
         Process and return the descendants of a given channel partner for a specific user.
 
@@ -58,7 +61,7 @@ class ChannelPartnerGroupStructureService:
         computed_data = self._compute_descendants(channel_partner, user)
         return computed_data
 
-    def process_full_structure(self, user: CloudUser) -> Dict[str, Any]:
+    def process_full_structure(self, user: CloudUser, cloud_host: CloudHost) -> Dict[str, Any]:
         """
         Process and return the full structure of channel partners and organizations for a specific user.
 
@@ -79,6 +82,7 @@ class ChannelPartnerGroupStructureService:
 
         Args:
             user (CloudUser): The user requesting the full structure data.
+            cloud_host (CloudHost): The cloud host for which the structure is to be computed.
 
         Returns:
             Dict[str, Any]: A dictionary containing two keys:
@@ -89,10 +93,13 @@ class ChannelPartnerGroupStructureService:
             PermissionDenied: If the user does not have the necessary permissions.
         """
         # TODO: Implement caching and clearing of cache in future
-        computed_data = self._compute_full_structure(user)
+        computed_data = self._compute_full_structure(user, cloud_host)
         return computed_data
 
-    def _compute_descendants(self, channel_partner: ChannelPartner, user: CloudUser, single_root: bool = True) -> List[
+    def _compute_descendants(self,
+                             channel_partner: ChannelPartner,
+                             user: CloudUser,
+                             single_root: bool = True) -> List[
         Dict[str, Any]]:
         """
         Compute the descendants of a channel partner and return their structured data.
@@ -122,7 +129,7 @@ class ChannelPartnerGroupStructureService:
 
         return root_data
 
-    def _compute_full_structure(self, user: CloudUser) -> Dict[str, Any]:
+    def _compute_full_structure(self, user: CloudUser, cloud_host: CloudHost) -> Dict[str, Any]:
         """
         Compute the full structure of channel partners and organizations for a specific user.
 
@@ -149,29 +156,36 @@ class ChannelPartnerGroupStructureService:
                 - 'channelPartners': A list of dictionaries representing the structured data of the channel partners.
                 - 'organizations': A list of dictionaries representing the structured data of the organizations.
         """
-        partners = self._get_partners(user)
-        organizations = self._get_organizations(user)
+        partners = self._get_partners(user, cloud_host)
+        organizations = self._get_organizations(user, cloud_host)
         structured_data = self._build_full_structure(partners, organizations)
 
         return {
-            'channelPartners': sorted(structured_data.values(), key=lambda x: x['name']),
+            'channelPartners': sorted(structured_data.values(), key=lambda x: x['name'].lower()),
             'organizations': [self._prepare_org_data(org) for org in organizations.values()]
         }
 
-    def _get_partners(self, user: CloudUser) -> QuerySet[ChannelPartner]:
+    def _get_partners(self, user: CloudUser, cloud_host: CloudHost) -> QuerySet[ChannelPartner]:
         """
-        Retrieve all channel partners associated with the user.
+        Retrieve all channel partners associated with the user in current cloud host.
+        If user is a member of root channel partner, prefetch all direct children.
         """
-        return ChannelPartner.objects.filter(channelpartnertouser__user=user).prefetch_related(
-            Prefetch('organizations', queryset=Organization.objects.all().order_by('name')),
-            Prefetch('channel_partners', queryset=ChannelPartner.objects.all().order_by('name'))
-        ).order_by('path__len', 'name')
+        organizations_query = Organization.objects.all().order_by(Lower('name'))
+        channel_partners_query = ChannelPartner.objects.all().order_by(Lower('name'))
+        return ChannelPartner.objects.filter(
+            channelpartnertouser__user=user, cloud_host=cloud_host
+        ).prefetch_related(
+            Prefetch('organizations', queryset=organizations_query),
+            Prefetch('channel_partners', queryset=channel_partners_query)
+        ).order_by('path__len', Lower('name'))
 
-    def _get_organizations(self, user: CloudUser) -> Dict[uuid.UUID, Organization]:
+    def _get_organizations(self, user: CloudUser, cloud_host: CloudHost) -> Dict[uuid.UUID, Organization]:
         """
-        Retrieve all organizations associated with the user.
+        Retrieve all organizations associated with the user in current cloud host.
         """
-        user_organizations = Organization.objects.filter(users=user).order_by('name')
+        user_organizations = (Organization.objects
+                              .filter(users=user, channel_partner__cloud_host=cloud_host)
+                              .order_by(Lower('name')))
         return {org.id: org for org in user_organizations}
 
     def _build_full_structure(
@@ -321,14 +335,15 @@ class ChannelPartnerGroupStructureService:
 
     def _get_descendants(
             self,
-            channel_partner: Union[ChannelPartner, QuerySet[ChannelPartner]]
+            channel_partner: ChannelPartner,
     ) -> List[ChannelPartner]:
         """
         Retrieve all descendants of a given channel partner.
         """
         descendants = ChannelPartner.objects.filter(
             Q(path__contains=[channel_partner.id]) |
-            Q(id=channel_partner.id)).order_by('path__len', 'name')
+            Q(id=channel_partner.id)
+        ).order_by('path__len', 'name')
         descendants = descendants.prefetch_related(
             Prefetch('organizations', queryset=Organization.objects
                      .filter(organizationtouser__system_group__isnull=True)
