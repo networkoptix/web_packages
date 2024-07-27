@@ -998,7 +998,7 @@ class TestChannelStructureViewSet:
         self.host = cloud_test_host
         self.mock_auth = mock_auth_with_user
 
-    def __make_request_get_response(self, user: CloudUser):
+    def __make_request_get_response(self, user: CloudUser, cloud_host_name: str = None):
         self.mock_auth(user)
 
         bearer = f"Bearer {uuid4()}"
@@ -1008,7 +1008,7 @@ class TestChannelStructureViewSet:
 
         path = reverse(view_name)
 
-        return self.client.get(path, SERVER_NAME=self.host.hostname)
+        return self.client.get(path, SERVER_NAME=cloud_host_name or self.host.hostname)
 
     def test_unauthorized(self):
 
@@ -1095,6 +1095,39 @@ class TestChannelStructureViewSet:
 
         assert len(actual_organizations) == 1
         assert actual_organizations[0]["name"] == "root_cp_org"
+
+    def test_different_hosts(self, channel_partner_factory, organization_factory,
+                             org_user_factory, cp_user_factory, cloud_test_host,
+                             cloud_host_factory, root_nx_channel_partner,
+                             default_channel_partner):
+        host_1 = cloud_host_factory('host-1.cloud.hdw.mx')
+        host_2 = cloud_host_factory('host-2.cloud.hdw.mx')
+        cp_host_default = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                                  name='cp_default', cloud_host=cloud_test_host)
+        cp_host_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                            name='cp_1', cloud_host=host_1)
+        cp_host_2 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                            name='cp_2', cloud_host=host_2)
+        cp_host_1_child = channel_partner_factory(
+            parent_channel_partner=cp_host_1,
+            name='cp_1_child', cloud_host=host_1
+        )
+        user = cp_user_factory(channel_partner=cp_host_default)
+        cp_user_factory(email=user.user.email, channel_partner=cp_host_1)
+        cp_user_factory(email=user.user.email, channel_partner=cp_host_2)
+
+        response = self.__make_request_get_response(user=user.user, cloud_host_name=host_1.hostname)
+        assert response.status_code == 200
+        assert len(response.data['channelPartners']) == 1
+        assert response.data['channelPartners'][0]['name'] == 'cp_1'
+        response = self.__make_request_get_response(user=user.user, cloud_host_name=host_2.hostname)
+        assert response.status_code == 200
+        assert len(response.data['channelPartners']) == 1
+        assert response.data['channelPartners'][0]['name'] == 'cp_2'
+        response = self.__make_request_get_response(user=user.user, cloud_host_name=cloud_test_host.hostname)
+        assert response.status_code == 200
+        assert len(response.data['channelPartners']) == 1
+        assert response.data['channelPartners'][0]['name'] == 'cp_default'
 
 class TestChannelPartnerStructureNestedViewSet:
     @pytest.fixture(autouse=True)
@@ -3649,6 +3682,60 @@ class TestChannelPartnerViewSetPermissions:
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         assert response.status_code == 403
+
+    def test_channel_structure(self, mock_auth_with_user):
+        view_name = "v2:channelpartner-channel-structure"
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        mock_auth_with_user(self.root_user)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_1)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_2)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        response = self.client.get(path=path)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_2)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_admin_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.cp_accountant_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_1)
+        response = self.client.get(path=path)
+        assert response.status_code == 403
+
 
     def test_invalid_method_405(self, mock_auth_with_user):
 

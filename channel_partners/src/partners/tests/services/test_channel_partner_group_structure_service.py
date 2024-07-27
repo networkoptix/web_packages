@@ -207,7 +207,7 @@ class TestChannelPartnerGroupStructureService:
 
         # Use the final_cp and multi_cp_user for making a request and asserting the structure
         service = ChannelPartnerGroupStructureService()
-        actual = service.process_full_structure(user)
+        actual = service.process_full_structure(user, self.host)
 
         actual_channel_partners = actual.get("channelPartners")
         actual_organizations = actual.get("organizations")
@@ -258,7 +258,7 @@ class TestChannelPartnerGroupStructureService:
 
         # Process the full structure for the user
         service = ChannelPartnerGroupStructureService()
-        actual = service.process_full_structure(user)
+        actual = service.process_full_structure(user, self.host)
 
         # Get the actual channel partners and organizations
         actual_channel_partners = actual.get("channelPartners")
@@ -300,7 +300,7 @@ class TestChannelPartnerGroupStructureService:
 
         # Process the full structure for the user
         service = ChannelPartnerGroupStructureService()
-        actual = service.process_full_structure(user)
+        actual = service.process_full_structure(user, self.host)
 
         # Get the actual channel partners and organizations
         actual_channel_partners = actual.get("channelPartners")
@@ -346,7 +346,7 @@ class TestChannelPartnerGroupStructureService:
         organization_factory(channel_partner=cp6, name='Organization 6')
 
         service = ChannelPartnerGroupStructureService()
-        actual_kevin = service.process_full_structure(user.user)
+        actual_kevin = service.process_full_structure(user.user, self.host)
         # actual_kyrylo = service.full_structure(user.user)
 
         actual = actual_kevin
@@ -406,13 +406,12 @@ class TestChannelPartnerGroupStructureService:
         # Assertions for organizations at the top level
         assert len(actual_organizations) == 0
 
-
     def test_user_org_in_sub_cp_without_roles(self, cloud_user_factory, cp_user_factory, org_user_factory):
         user = cloud_user_factory()
         cp_user_factory(email=user.email, channel_partner=self.cp_parent)
         org_user_factory(email=user.email, organization=self.cp_org_1)
         service = ChannelPartnerGroupStructureService()
-        struct = service.process_full_structure(user)
+        struct = service.process_full_structure(user, self.host)
         assert len(struct['organizations']) == 0
         assert len(struct['channelPartners']) == 1
         assert struct['channelPartners'][0]['name'] == 'cp_parent'
@@ -420,3 +419,109 @@ class TestChannelPartnerGroupStructureService:
         cp = next(filter(lambda cp: cp['name'] == 'cp', struct['channelPartners'][0]['subChannels']))
         assert len(cp['organizations']) == 1
         assert cp['organizations'][0]['name'] == 'cp_org_1'
+
+class TestChannelPartnerGroupStructureServiceWithHosts:
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory,
+                                              org_user_factory, cp_user_factory, cloud_test_host,
+                                              cloud_host_factory, root_nx_channel_partner,
+                                              default_channel_partner):
+        self.host_1 = cloud_host_factory('host-1.cloud.hdw.mx')
+        self.host_2 = cloud_host_factory('host-2.cloud.hdw.mx')
+        self.cp_host_default = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                                  name='cp_default', cloud_host=cloud_test_host)
+        self.cp_host_1 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                            name='cp_1', cloud_host=self.host_1)
+        self.cp_host_2 = channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
+                                            name='cp_2', cloud_host=self.host_2)
+        other_user = cp_user_factory(
+            channel_partner=self.cp_host_default,
+        )
+        cp_user_factory(email=other_user.user.email, channel_partner=self.cp_host_1)
+        cp_user_factory(email=other_user.user.email, channel_partner=self.cp_host_2)
+
+        self.cp_host_default_child = channel_partner_factory(
+            parent_channel_partner=self.cp_host_default,
+            name='cp_default_child', cloud_host=cloud_test_host
+        )
+        self.org_host_default_child = organization_factory(
+            channel_partner=self.cp_host_default_child,
+            name='org_default_child'
+        )
+        self.cp_host_default_grand_child = channel_partner_factory(
+            parent_channel_partner=self.cp_host_default_child,
+            name='cp_default_grandchild', cloud_host=cloud_test_host
+        )
+
+        self.cp_host_1_child = channel_partner_factory(
+            parent_channel_partner=self.cp_host_1,
+            name='cp_1_child', cloud_host=self.host_1
+        )
+
+        self.cp_host_2_child = channel_partner_factory(
+            parent_channel_partner=self.cp_host_2,
+            name='cp_2_child', cloud_host=self.host_2
+        )
+        self.org_host_2_child = organization_factory(
+            channel_partner=self.cp_host_2_child,
+            name='org_2_child'
+        )
+
+        self.cp_host_2_grand_child = channel_partner_factory(
+            parent_channel_partner=self.cp_host_2_child,
+            name='cp_2_grandchild', cloud_host=self.host_2
+        )
+
+    def test_root_cp_user(self, cp_user_factory, org_user_factory, cloud_test_host,
+                          root_nx_channel_partner, default_channel_partner):
+        user = cp_user_factory(channel_partner=root_nx_channel_partner)
+
+        # Organization is show on a top level
+        org_user_factory(email=user.user.email, organization=self.org_host_default_child)
+        # This is shown on a top level
+        cp_user_factory(email=user.user.email, channel_partner=self.cp_host_default_grand_child)
+        # This CP is not shown in the structure
+        cp_user_factory(email=user.user.email, channel_partner=self.cp_host_1_child)
+        # Organization is not shown in the structure
+        org_user_factory(email=user.user.email, organization=self.org_host_2_child)
+        # This CP is not shown in the structure
+        cp_user_factory(email=user.user.email, channel_partner=self.cp_host_2_grand_child)
+
+        service = ChannelPartnerGroupStructureService()
+        struct = service.process_full_structure(user.user, cloud_test_host)
+        assert len(struct['organizations']) == 1
+        assert struct['organizations'][0]['name'] == 'org_default_child'
+        assert len(struct['channelPartners']) == 2
+        assert struct['channelPartners'][0]['name'] == 'cp_default_grandchild'
+        assert struct['channelPartners'][1]['name'] == root_nx_channel_partner.name
+        assert len(struct['channelPartners'][1]['subChannels']) == 4
+        assert struct['channelPartners'][1]['subChannels'][0]['name'] == 'cp_1'
+        assert struct['channelPartners'][1]['subChannels'][1]['name'] == 'cp_2'
+        assert struct['channelPartners'][1]['subChannels'][2]['name'] == 'cp_default'
+        assert struct['channelPartners'][1]['subChannels'][3]['name'] == default_channel_partner.name  # Default CP
+        for sub_channel in struct['channelPartners'][1]['subChannels']:
+            assert len(sub_channel['organizations']) == 0
+            assert len(sub_channel['subChannels']) == 0
+
+    def test_customization_user(self, org_user_factory, cp_user_factory):
+        other_user = cp_user_factory(
+            channel_partner=self.cp_host_default,
+        )
+        cp_user_factory(email=other_user.user.email, channel_partner=self.cp_host_1)
+        cp_user_factory(email=other_user.user.email, channel_partner=self.cp_host_2)
+
+        org_user_factory(email=other_user.user.email, organization=self.org_host_default_child)
+        org_user_factory(email=other_user.user.email, organization=self.org_host_2_child)
+        cp_user_factory(email=other_user.user.email, channel_partner=self.cp_host_1_child)
+
+        service = ChannelPartnerGroupStructureService()
+
+        struct = service.process_full_structure(other_user.user, self.host_2)
+        assert len(struct['organizations']) == 0
+        assert len(struct['channelPartners']) == 1
+        assert struct['channelPartners'][0]['name'] == 'cp_2'
+        assert len(struct['channelPartners'][0]['subChannels']) == 1
+        assert struct['channelPartners'][0]['subChannels'][0]['name'] == 'cp_2_child'
+
+        assert len(struct['channelPartners'][0]['subChannels'][0]['organizations']) == 1
+        assert struct['channelPartners'][0]['subChannels'][0]['organizations'][0]['name'] == 'org_2_child'

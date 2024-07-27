@@ -679,7 +679,7 @@ class ChannelStructureViewSet(VersionedViewMixin, GenericViewSet):
     @action(detail=False, methods=['get'],)
     def channel_structure(self, request):
         service = ChannelPartnerGroupStructureService()
-        structured_data = service.process_full_structure(request.user)
+        structured_data = service.process_full_structure(request.user, request.cloud_host)
         serializer = ChannelStructureResponseSerializer(structured_data)
         return Response(serializer.data)
 
@@ -744,10 +744,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedView
 
     @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
     def channel_structure(self, request, pk=None):
-        try:
-            channel_partner = ChannelPartner.objects.get(id=pk)
-        except ChannelPartner.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        channel_partner = self.get_object()
 
         service = ChannelPartnerGroupStructureService()
         try:
