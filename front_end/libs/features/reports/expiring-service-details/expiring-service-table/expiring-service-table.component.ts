@@ -30,14 +30,14 @@ export class NxExpiringServiceTableComponent {
     headers: HEADER_ITEM[] = [
         { value: 'Used By', name: 'usedBy', align: 'flex-start' },
         {
-            value: 'Expiration Date',
+            value: this.LANG.channelPartnerReports.tableHeaders.expirationDate,
             name: 'expirationDate',
-            tooltip: this.LANG.channelPartnerReports.expirationDateTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.expirationDate,
         },
         {
-            value: 'Channels',
+            value: this.LANG.channelPartnerReports.tableHeaders.channels,
             name: 'channels',
-            tooltip: this.LANG.channelPartnerReports.channelsTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.channels,
         },
     ];
     selectedRecordId = '';

@@ -43,21 +43,21 @@ export class NxServiceUsageTableComponent {
         { value: 'Service Name', name: 'serviceName' },
         { value: 'Used By', name: 'usedBy' },
         {
-            value: 'Channels',
+            value: this.LANG.channelPartnerReports.tableHeaders.channels,
             name: 'channels',
-            tooltip: this.LANG.channelPartnerReports.channelsTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.channels,
             align: 'flex-end',
         },
         {
-            value: 'Monthly Rate',
+            value: this.LANG.channelPartnerReports.tableHeaders.monthlyRate,
             name: 'monthlyRate',
-            tooltip: this.LANG.channelPartnerReports.monthlyRateTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.monthlyRate,
             align: 'flex-end',
         },
         {
-            value: 'Fractional Usage',
+            value: this.LANG.channelPartnerReports.tableHeaders.fractionalUsage,
             name: 'fractionalUsage',
-            tooltip: this.LANG.channelPartnerReports.fractionalUsageTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.fractionalUsage,
             align: 'flex-end',
         },
     ];

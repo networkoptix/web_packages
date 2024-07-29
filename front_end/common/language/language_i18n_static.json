@@ -1399,11 +1399,24 @@
     },
     "channelPartnerReports": {
             "customerName": "Customer: {customerName}",
-            "changedTooltip": "Date of adding or deleting channels using this service.",
-            "channelsTooltip": "Total number of channels in all systems using this service.",
-            "monthlyRateTooltip": "The total number of services used by one channel during the period. The Monthy Rate changes when services are added in a previous period or when more channels are deleted than added in the current period.",
-            "fractionalUsageTooltip": "The sum of all channel days for the current period. Only channels added or removed within this period are taken into account. The Fractional Usage changes if channels are added or removed during the current period.",
-            "expirationDateTooltip": "Date of service expiration for the specified number of channels."
+            "tooltips": {
+                "changed": "Date of adding or deleting channels using this service.",
+                "channels": "Total number of channels in all systems using this service.",
+                "monthlyRate": "The total number of services used by one channel during the period. The Monthy Rate changes when services are added in a previous period or when more channels are deleted than added in the current period.",
+                "fractionalUsage": "The sum of all channel days for the current period. Only channels added or removed within this period are taken into account. The Fractional Usage changes if channels are added or removed during the current period.",
+                "expirationDate": "Date of service expiration for the specified number of channels."
+            },
+            "tableHeaders": {
+                "serviceName": "Service Name",
+                "amount": "Amount",
+                "changedAt": "Changed At",
+                "date": "Date",
+                "channels": "Channels",
+                "monthlyRate": "Monthly Rate",
+                "fractionalUsage": "Fractional Usage",
+                "changed": "Changed",
+                "expirationDate": "Expiration Date"
+            }
     },
     "menu": {
         "titles": {
