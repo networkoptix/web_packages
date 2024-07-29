@@ -244,8 +244,6 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             this.folderControl.setValue(path);
         });
     });
-
-    private parentAccessMsg = this.translate.instant(LANG.dialogs.channelPartners.parentAccess);
     private directOverwriteMsg = this.translate.instant(
         LANG.dialogs.channelPartners.directOverwrite,
     );
@@ -288,7 +286,13 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
                     msg: this.directOverwriteMsg,
                 });
                 groups.forEach(group =>
-                    cascadeGroupStatus(group.id, 'disable', this.parentAccessMsg),
+                    cascadeGroupStatus(
+                        group.id,
+                        'disable',
+                        this.translate.instant(dialogMessages.parentAccess, {
+                            email,
+                        }),
+                    ),
                 );
             } else if (existingUserRoles.size) {
                 const overwriteCount = new Map<string, string[]>();
@@ -307,7 +311,13 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
                     });
 
                     groupFlatMap[groupId].children.forEach(childId =>
-                        cascadeGroupStatus(childId, 'disable', this.parentAccessMsg),
+                        cascadeGroupStatus(
+                            childId,
+                            'disable',
+                            this.translate.instant(dialogMessages.parentAccess, {
+                                email,
+                            }),
+                        ),
                     );
 
                     let parentId = groupFlatMap[groupId].parentId;
