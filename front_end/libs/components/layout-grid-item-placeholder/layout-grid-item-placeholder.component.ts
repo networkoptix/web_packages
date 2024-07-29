@@ -142,6 +142,11 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         ...unavailable,
         message: messagesLang.systemIsOffline,
     },
+    versionNotSupported: {
+        ...not_supported,
+        description: descriptionsLang.systemVersionNotCompatible,
+        hint: hintsLang.systemVersionNotCompatible,
+    },
     default: {
         ...unavailable,
     },
@@ -185,6 +190,7 @@ const SYSTEM_PLACEHOLDERS = {
     systemIncompatible: PLACEHOLDERS.incompatible,
     systemNoAccess: PLACEHOLDERS.noAccessToSystem,
     systemNoPermission: PLACEHOLDERS.noAccess,
+    systemVersionNotSupported: PLACEHOLDERS.not_supported,
 };
 
 @UntilDestroy()

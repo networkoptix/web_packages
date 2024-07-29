@@ -121,6 +121,7 @@ import { icons } from '@static-variables';
 import { SystemResourcesSelectors } from '@store/system-resources';
 import { SystemResourcesTypeMap } from '@store/system-resources/system-resources.types';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
+import { canViewLayouts } from '@utils/can-view-layouts';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanId, cleanIdLegacy, dirtyId } from '@utils/general';
@@ -648,13 +649,15 @@ export class NxLayoutGridComponent {
             const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
             const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
 
-            let layoutItemStatus: string;
+            let layoutItemStatus: string = '';
 
             if (itemDetail) {
                 layoutItemStatus = this.layoutItemsErrorsStore.statuses$$()[itemDetail.details.id];
 
                 if (!systemInfo) {
                     layoutItemStatus = 'systemNoAccess';
+                } else if (!canViewLayouts(systemInfo)) {
+                    layoutItemStatus = 'versionNotSupported';
                 } else if (isSystemOffline) {
                     layoutItemStatus = 'systemOffline';
                 } else if (isSystemIncompatible) {
@@ -668,7 +671,7 @@ export class NxLayoutGridComponent {
                         layoutItemStatus = 'noAccess';
                     }
                 }
-            } else {
+            } else if (systemInfo) {
                 layoutItemStatus = 'systemDeviceNotAvailable';
             }
 

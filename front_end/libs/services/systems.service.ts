@@ -83,8 +83,7 @@ export class NxSystemsService {
         return this.systems$$()?.reduce(
             (map, systemInfo) => ({
                 ...map,
-                [systemInfo.id]: systemService.createSystemById(systemInfo.id, true, true)
-                    .permissionManager,
+                [systemInfo.id]: systemService.createSystemById(systemInfo.id).permissionManager,
             }),
             {},
         );

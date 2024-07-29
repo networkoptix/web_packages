@@ -462,7 +462,8 @@
                 "intercom": "Intercom devices are not currently supported in the Web client.",
                 "virtualCamera": "Virtual cameras do not provide a Live stream.",
                 "noAccess": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
-                "noAccessToSystem": "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system."
+                "noAccessToSystem": "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system.",
+                "systemVersionNotCompatible": "This Device must be connected to at least a version 6 Server to be viewed on the Layouts page."
             },
             "actions": {
                 "defaultPassword": "Setup",
@@ -470,7 +471,8 @@
             },
             "descriptions": {
                 "expectInFutureVersions": "expect in future versions",
-                "fullScreenAction": "Maximize Item to use available action"
+                "fullScreenAction": "maximize Item to use available action",
+                "systemVersionNotCompatible": "incompatible system version"
             }
         }
     },
