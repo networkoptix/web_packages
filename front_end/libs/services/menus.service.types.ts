@@ -20,6 +20,10 @@ export class MenuNode {
     public queryParamsHandling: QueryParamsHandling = '';
     public htmlID?: string;
     public version?: number;
+    public tag?: {
+        type: string;
+        value: string;
+    };
 
     constructor(
         public name = '',
