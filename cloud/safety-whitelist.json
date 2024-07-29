@@ -264,5 +264,31 @@
   "71199": {
     "name": "anyio",
     "note": "Affected spec: <4.4.0 ADVISORY: Anyio version 4.4.0 addresses a thread race condition in `_eventloop.get_asynclib()` that caused crashes when multiple event loops of the same backend were running in separate threads and simultaneously attempted to use AnyIO for the first time. This fix ensures more stable and reliable performance in multi-threaded environments."
+  },
+  "71591": {
+    "name": "jinja2",
+    "note": "Jinja is an extensible templating engine. The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for CVE-2024-22195 only addressed spaces but not other characters. Accepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe."
+  },
+  "71594": {
+    "name": "werkzeug",
+    "note": "Werkzeug is a comprehensive WSGI web application library. The debugger in affected versions of Werkzeug can allow an attacker to execute code on a developer's machine under some circumstances. This requires the attacker to get the developer to interact with a domain and subdomain they control, and enter the debugger PIN, but if they are successful it allows access to the debugger even if it is only running on localhost. This also requires the attacker to guess a URL in the developer's application that will trigger the debugger."
+
+  },
+  "71595": {
+    "name": "werkzeug",
+    "note": "Werkzeug is a comprehensive WSGI web application library. If an upload of a file that starts with CR or LF and then is followed by megabytes of data without these characters: all of these bytes are appended chunk by chunk into internal bytearray and lookup for boundary is performed on growing buffer. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests."
+  },
+  "71600": {
+    "name": "gunicorn",
+    "note": "Gunicorn fails to properly validate Transfer-Encoding headers, leading to HTTP Request Smuggling (HRS) vulnerabilities. By crafting requests with conflicting Transfer-Encoding headers, attackers can bypass security restrictions and access restricted endpoints. This issue is due to Gunicorn's handling of Transfer-Encoding headers, where it incorrectly processes requests with multiple, conflicting Transfer-Encoding headers, treating them as chunked regardless of the final encoding specified. This vulnerability allows for a range of attacks including cache poisoning, session manipulation, and data exposure."
+  },
+  "71608": {
+    "name": "urllib3",
+    "note": "Urllib3's ProxyManager ensures that the Proxy-Authorization header is correctly directed only to configured proxies. However, when HTTP requests bypass urllib3's proxy support, there's a risk of inadvertently setting the Proxy-Authorization header, which remains ineffective without a forwarding or tunneling proxy. Urllib3 does not recognize this header as carrying authentication data, failing to remove it during cross-origin redirects. While this scenario is uncommon and poses low risk to most users, urllib3 now proactively removes the Proxy-Authorization header during cross-origin redirects as a precautionary measure. Users are advised to utilize urllib3's proxy support or disable automatic redirects to handle the Proxy-Authorization header securely. Despite these precautions, urllib3 defaults to stripping the header to safeguard users who may inadvertently misconfigure requests."
+  },
+  "71849": {
+    "name": "djangorestframework",
+    "note": "Affected versions of the package djangorestframework are vulnerable to Cross-site Scripting (XSS) via the break_long_headers template filter due to improper input sanitization before splitting and joining with <br> tags."
   }
+
 }
