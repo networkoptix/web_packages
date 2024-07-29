@@ -1,0 +1,33 @@
+@use "components/forms/forms";
+
+@mixin settings-page-base {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    gap: 1rem;
+}
+
+$block-max-width: 40rem;
+
+@mixin settings-block {
+    nx-block {
+        max-width: $block-max-width;
+    }
+
+    .block-content--form {
+        padding: 1.5rem;
+
+        @include forms.stacked-form-fields();
+        nx-form-field {
+            max-width: 20rem;
+        }
+
+        nx-apply-v3 {
+            margin-top: 1.5rem;
+        }
+    }
+
+    .block-content--text {
+        padding: 1rem;
+    }
+}

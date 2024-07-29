@@ -22,6 +22,7 @@ import {
     selectCurrentPartnerId,
 } from '@store/channel-partners/channel-partners.selectors';
 
+/** @deprecated */
 @Component({
     template: '',
 })

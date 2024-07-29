@@ -32,6 +32,7 @@ import { Process } from '@services/process.service/process';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
+/** @deprecated */
 @Component({
     selector: 'nx-channel-partners-settings',
     templateUrl: 'channel-partners-settings.component.html',

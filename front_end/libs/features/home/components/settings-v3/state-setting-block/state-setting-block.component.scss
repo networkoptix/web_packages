@@ -1,0 +1,29 @@
+@use '../settings.scss';
+
+:host {
+    max-width: settings.$block-max-width;
+}
+@include settings.settings-block();
+
+.state-toggle-block__state-info {
+    padding-left: 0.25rem;
+    margin-top: 0.5rem;
+    color: var(--CP-state-help-color);
+
+    li {
+        list-style-type: '-';
+        padding-left: 0.25rem;
+        font-size: 14px;
+        line-height: 18px;
+
+        .red-warning {
+            color: var(--red_l1);
+        }
+    }
+}
+
+.state-inherited-block__content {
+    @extend .block-content--text;
+    display: flex;
+    gap: .5rem;
+}

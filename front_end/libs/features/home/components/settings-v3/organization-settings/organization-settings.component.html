@@ -1,0 +1,88 @@
+@if (canConfigureOrg()) {
+    <nx-block>
+        <header>
+            <h4 translate>General</h4>
+        </header>
+        <form
+            class="block-content--form"
+            [formGroup]="generalFormGroup"
+            nxFormObserver
+        >
+            <nx-form-field>
+                <label
+                    id="organization-name-input"
+                    nx-label
+                    translate
+                    >Name</label
+                >
+                <input
+                    nx-input
+                    formControlName="name"
+                    id="organization-name-input"
+                />
+                <nx-control-messages [spacingLines]="0"></nx-control-messages>
+            </nx-form-field>
+            @if (canUpdateOrgAccess()) {
+                <nx-form-field [errorMatcher]="accessLevelErrorMatcher">
+                    <label
+                        nx-label
+                        translate
+                        >Channel Partner Access</label
+                    >
+                    <nx-select-v2 formControlName="accessLevel">
+                        @for (item of accessItems2 | keyvalue: nosort; track item.key) {
+                            <nx-select-item
+                                [value]="item.key"
+                                [selected]="accessLevel() === item.key"
+                                >{{ item.value.name | translate }}</nx-select-item
+                            >
+                        }
+                    </nx-select-v2>
+                    <nx-control-messages
+                        [spacingLines]="3"
+                        [state]="accessLevelMessageKey()"
+                    >
+                        @for (item of accessItems2 | keyvalue: nosort; track item.key) {
+                            <nx-control-message
+                                [key]="item.key"
+                                [text]="item.value.accessDescription | translate"
+                                type="info"
+                            ></nx-control-message>
+                        }
+                    </nx-control-messages>
+                </nx-form-field>
+            }
+            <nx-apply-v3 [action]="saveGeneralAction"></nx-apply-v3>
+        </form>
+    </nx-block>
+}
+
+@if (canChangeOrgState()) {
+    <nx-state-setting-block
+        [saveStateAction]="saveStateAction"
+        [inheritedState]="inactiveChannelPartner()"
+        [state]="selectedState()"
+        (onStateChange)="selectedState.set($event)"
+    ></nx-state-setting-block>
+}
+
+@if (disconnectAccountFlag && canDisconnectAccount()) {
+    <nx-block>
+        <header>
+            <h4 translate>Disconnection</h4>
+        </header>
+        <div class="disconnect-block__content">
+            <div translate>
+                You can disconnect Organization from your account if access to Organization was
+                granted accidentally.
+            </div>
+            <button
+                class="btn btn-default"
+                (click)="disconnect()"
+                translate
+            >
+                Disconnect from My Account
+            </button>
+        </div>
+    </nx-block>
+}

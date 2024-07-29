@@ -1,0 +1,37 @@
+@if (canConfigureChannelPartner()) {
+    <nx-block>
+        <header>
+            <h4 translate>General</h4>
+        </header>
+        <form
+            class="block-content--form"
+            [formGroup]="generalFormGroup"
+            nxFormObserver
+        >
+            <nx-form-field>
+                <label
+                    id="partner-name-input"
+                    nx-label
+                    translate
+                    >Name</label
+                >
+                <input
+                    nx-input
+                    formControlName="name"
+                    id="partner-name-input"
+                />
+                <nx-control-messages [spacingLines]="0"></nx-control-messages>
+            </nx-form-field>
+            <nx-apply-v3 [action]="saveGeneralAction"></nx-apply-v3>
+        </form>
+    </nx-block>
+}
+
+@if (canChangePartnerState()) {
+    <nx-state-setting-block
+        [saveStateAction]="saveStateAction"
+        [inheritedState]="inactiveParentPartner()"
+        [state]="selectedState()"
+        (onStateChange)="selectedState.set($event)"
+    ></nx-state-setting-block>
+}

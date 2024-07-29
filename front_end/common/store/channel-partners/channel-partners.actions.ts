@@ -113,3 +113,18 @@ export const setCurrentParentPartnerForChild = createAction(
     '[Channel Partners] Set current parent partner for a child partner or org',
     props<{ parentPartnerForCurrentChild: ChannelPartner | null }>(),
 );
+
+export const patchOrganization = createAction(
+    '[Channel Partners] Patch an organization',
+    props<{ patch: Organization }>(),
+);
+
+export const removeRootOrganization = createAction(
+    '[Channel Partners] Remove a root organization',
+    props<{ id: string }>(),
+);
+
+export const patchPartner = createAction(
+    '[Channel Partners] Patch a channel partner',
+    props<{ patch: ChannelPartner }>(),
+);

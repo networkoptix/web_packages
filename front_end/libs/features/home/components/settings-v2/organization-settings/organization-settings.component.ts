@@ -40,6 +40,7 @@ import { Process } from '@services/process.service/process';
 
 import { NxSettingsGeneralV2Component } from '../../settings-v2/components/general/general.component';
 
+/** @deprecated */
 @Component({
     selector: 'nx-organization-settings',
     templateUrl: 'organization-settings.component.html',

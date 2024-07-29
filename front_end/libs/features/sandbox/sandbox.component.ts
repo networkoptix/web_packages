@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { capitalize } from 'lodash-es';
 
 import { alphaNumericSort } from '@utils/general';
+import { keyValueNoSort } from '@utils/nx';
 
 interface NavItem {
     name: string;
@@ -29,7 +30,7 @@ function navName(componentName: string): string {
 })
 export class NxSandboxComponent {
     navSections = signal<Record<string, NavItem[]>>({});
-    nosort = (): 0 => 0;
+    nosort = keyValueNoSort;
 
     @ViewChild(CdkAccordion) set _accordion(a: CdkAccordion) {
         this.cdkAccordion.set(a);

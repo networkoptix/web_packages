@@ -10,6 +10,7 @@ import {
     NxErrorMatches,
     errorMatcherFactory,
 } from '@components/forms/form-field/error-state-matcher';
+import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
@@ -31,6 +32,7 @@ import { NxToastService } from '@services/toast.service';
         NxAsyncSubmitButtonComponent,
         NxSubmitButtonComponent,
         NxResetButtonComponent,
+        NxFormObserverDirective,
     ],
 })
 export class NxFormFieldSandboxComponent {
