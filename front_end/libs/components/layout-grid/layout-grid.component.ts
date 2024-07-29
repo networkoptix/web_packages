@@ -2269,7 +2269,7 @@ export class NxLayoutGridComponent {
                 ) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
-                    if (!currentUser!.isAdmin) {
+                    if (this.layout.parentId !== currentUser?.id && !currentUser!.isAdmin) {
                         // If user doesn't have permissions to edit a layout then create duplicate local layout
                         this.layoutStateService.duplicateAsNewLayout({
                             ...this.layout,
