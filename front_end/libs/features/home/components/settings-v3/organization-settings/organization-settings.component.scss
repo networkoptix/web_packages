@@ -1,0 +1,14 @@
+@use '../settings.scss';
+
+:host {
+    @include settings.settings-page-base();
+}
+@include settings.settings-block();
+
+.disconnect-block__content {
+    @extend .block-content--text;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}

@@ -181,4 +181,41 @@ export const channelPartnersReducer = createReducer(
             parentPartnerForCurrentChild,
         }),
     ),
+    on(ChannelPartnerActions.patchOrganization, (state, { patch }): ChannelPartnersState => {
+        const { rootOrganizations, currentPartnerOrganizations } = state;
+        const rootIndex = rootOrganizations.findIndex(org => org.id === patch.id);
+        if (rootIndex !== -1) {
+            const newRoot = rootOrganizations.slice();
+            newRoot.splice(rootIndex, 1, patch);
+            return {
+                ...state,
+                rootOrganizations: newRoot,
+            };
+        }
+
+        const partnerOrgIndex = currentPartnerOrganizations.findIndex(org => org.id === patch.id);
+        const patchedPartnerOrgs = currentPartnerOrganizations.slice();
+        patchedPartnerOrgs.splice(partnerOrgIndex, 1, patch);
+        return {
+            ...state,
+            currentPartnerOrganizations: patchedPartnerOrgs,
+        };
+    }),
+    on(ChannelPartnerActions.removeRootOrganization, (state, { id }): ChannelPartnersState => {
+        const { rootOrganizations } = state;
+        return {
+            ...state,
+            rootOrganizations: rootOrganizations.filter(org => org.id !== id),
+        };
+    }),
+    on(ChannelPartnerActions.patchPartner, (state, { patch }): ChannelPartnersState => {
+        const { channelPartners } = state;
+        const patchIndex = channelPartners.findIndex(p => p.id === patch.id);
+        const patchedPartners = channelPartners.slice();
+        patchedPartners.splice(patchIndex, 1, patch);
+        return {
+            ...state,
+            channelPartners: patchedPartners,
+        }
+    }),
 );

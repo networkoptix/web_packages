@@ -11,6 +11,8 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'lodash-es';
 
+import { NxFormFieldControlDirective } from '@components/forms/form-field/form-field-control.directive';
+
 import { NX_BUTTON_TOGGLE_GROUP } from './button-toggle-group.token';
 import { NxButtonToggleComponent as ButtonToggle } from './button-toggle.component';
 
@@ -36,6 +38,7 @@ import { NxButtonToggleComponent as ButtonToggle } from './button-toggle.compone
         },
     ],
     standalone: true,
+    hostDirectives: [NxFormFieldControlDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxButtonToggleGroupComponent<T> implements ControlValueAccessor {

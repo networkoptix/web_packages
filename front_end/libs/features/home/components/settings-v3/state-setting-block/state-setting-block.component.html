@@ -1,0 +1,101 @@
+@if (!inheritedState()) {
+    <ng-container [ngTemplateOutlet]="stateToggleBlock"></ng-container>
+} @else {
+    <ng-container [ngTemplateOutlet]="stateInheritedBlock"></ng-container>
+}
+
+<ng-template #stateToggleBlock>
+    <nx-block>
+        <header>
+            <h4 translate>State</h4>
+        </header>
+
+        <form
+            class="block-content--form"
+            [formGroup]="stateFormGroup"
+            nxFormObserver
+            [initialFormValue]="initialFormValue()"
+            (initialFormValueChange)="initialFormValue.set($event)"
+        >
+            <nx-form-field>
+                <nx-button-toggle-group formControlName="state">
+                    <nx-button-toggle [value]="State.Active">
+                        <svg-icon [src]="icons.dir + 'play.svg'"></svg-icon>
+                        <span translate>Active</span>
+                    </nx-button-toggle>
+                    <nx-button-toggle [value]="State.Suspended">
+                        <svg-icon [src]="icons.dir + 'pause.svg'"></svg-icon>
+                        <span translate>Suspended</span>
+                    </nx-button-toggle>
+                    <nx-button-toggle [value]="State.ShutDown">
+                        <svg-icon [src]="icons.dir + 'stop.svg'"></svg-icon>
+                        <span translate>Shutdown</span>
+                    </nx-button-toggle>
+                </nx-button-toggle-group>
+            </nx-form-field>
+            <ul class="state-toggle-block__state-info">
+                @switch (selectedState()) {
+                    @case (State.Active) {
+                        <li>
+                            {{ LANG.dialogs.channelPartners.usersAccess | translate }}
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.systemsAccess | translate }}
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.recordingEnabled | translate }}
+                        </li>
+                    }
+                    @case (State.Suspended) {
+                        <li
+                            *ngrxLet="LANG.dialogs.channelPartners.usersNoAccess | translate as una"
+                        >
+                            <span>{{ una | translateCut: 0 }}</span
+                            ><span class="red-warning">{{ una | translateCut: 1 }}</span
+                            ><span>{{ una | translateCut: 2 }}</span>
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.systemsLocalAccess | translate }}
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.recordingSuspended | translate }}
+                        </li>
+                    }
+                    @case (State.ShutDown) {
+                        <li
+                            *ngrxLet="LANG.dialogs.channelPartners.usersNoAccess | translate as una"
+                        >
+                            <span>{{ una | translateCut: 0 }}</span
+                            ><span class="red-warning">{{ una | translateCut: 1 }}</span
+                            ><span>{{ una | translateCut: 2 }}</span>
+                        </li>
+                        <li>
+                            {{ LANG.dialogs.channelPartners.systemsLocalAccess | translate }}
+                        </li>
+                        <li
+                            *ngrxLet="
+                                LANG.dialogs.channelPartners.recordingDisabled | translate as rd
+                            "
+                        >
+                            <span>{{ rd | translateCut: 0 }}</span
+                            ><span class="red-warning">{{ rd | translateCut: 1 }}</span
+                            ><span>{{ rd | translateCut: 2 }}</span>
+                        </li>
+                    }
+                }
+            </ul>
+            <nx-apply-v3 [action]="saveStateAction()"></nx-apply-v3>
+        </form>
+    </nx-block>
+</ng-template>
+
+<ng-template #stateInheritedBlock>
+    <nx-block>
+        <div class="state-inherited-block__content">
+            <svg-icon [src]="icons.dirNonStandard + 'warning.svg'"></svg-icon>
+            <span translate>
+                Status change is unavailable because it is inherited from the entity above
+            </span>
+        </div>
+    </nx-block>
+</ng-template>

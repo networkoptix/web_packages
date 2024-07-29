@@ -58,6 +58,7 @@ const accessMap: { [key: string]: DropdownItem<string | null> } = {
     null: partnerAccess[2],
 };
 
+/** @deprecated */
 @Component({
     selector: 'nx-settings-general-v2',
     templateUrl: 'general.component.html',

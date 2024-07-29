@@ -55,6 +55,7 @@ const partnerAccess: DropdownItem<string | null>[] = [
     },
 ];
 
+/** @deprecated */
 @Component({
     selector: 'nx-organization-settings',
     templateUrl: 'organization-settings.component.html',

@@ -22,6 +22,7 @@ import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive
 
 import { NxControlMessagesComponent as NxMessages } from '../control-messages/control-messages.component';
 import { NxFormObserverDirective } from '../form-observer.directive';
+import { NxLabelComponent } from '../label/label.component';
 
 import {
     ControlState,
@@ -43,7 +44,7 @@ import { NxFormFieldToken } from './form-field.token';
  * The field must be inside a reacive form.
  *
  * The field should be used with three child elements:
- * 1. `nx-label` for the control (required)
+ * 1. `nx-label` for the control (optional, but usually used)
  * 2. The control with `NxControlDirective` (required)
  * 3. `nx-control-messages` for control state messages (optional)
  *
@@ -80,6 +81,11 @@ export class NxFormFieldComponent implements AfterContentInit, OnDestroy {
      * Defaults to `NxErrorMatches.text()` matchter.
      */
     errorMatcher = input<ErrorMatcher>(errorMatcherFactory(NxErrorMatches.text()));
+
+    @ContentChild(NxLabelComponent) protected set _label(label: NxLabelComponent) {
+        this.hasLabel.set(!!label);
+    }
+    hasLabel = signal(false);
 
     @ContentChild(NxControlDirective) private nxControlDirective: NxControlDirective;
     @ContentChild(NgControl) private ngControl: NgControl;

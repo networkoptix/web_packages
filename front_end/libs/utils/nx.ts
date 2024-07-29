@@ -538,3 +538,6 @@ export function connectedPosition(
 export function formControlValueSignal<C>(control: FormControl<C>): Signal<C> {
     return toSignal(control.valueChanges, { initialValue: control.value });
 }
+
+/** https://github.com/angular/angular/issues/42490 */
+export const keyValueNoSort = (): 0 => 0;

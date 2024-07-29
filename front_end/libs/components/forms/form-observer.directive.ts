@@ -1,4 +1,14 @@
-import { DestroyRef, Directive, Host, Input, Output, computed, input, signal } from '@angular/core';
+import {
+    DestroyRef,
+    Directive,
+    Host,
+    Input,
+    OnInit,
+    Output,
+    computed,
+    input,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormGroupDirective } from '@angular/forms';
 import { Observable, Subject, combineLatest, map } from 'rxjs';
@@ -19,7 +29,7 @@ const strictEquality: CompareFn = (a, b): boolean => a === b;
     exportAs: 'nxFormObserver',
     standalone: true,
 })
-export class NxFormObserverDirective {
+export class NxFormObserverDirective implements OnInit {
     initialValue = signal<UnknownRecord>({});
     initialValue$ = toObservable(this.initialValue);
 
