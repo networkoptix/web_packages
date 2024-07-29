@@ -193,14 +193,18 @@ export class LayoutStateService {
     }
 
     createNewCrossSystemLayout(items?: LayoutItem[]): string;
-    createNewCrossSystemLayout(name: string, items?: LayoutItem[]): string;
+    createNewCrossSystemLayout(name: string, items?: LayoutItem[], copy?: boolean): string;
     createNewCrossSystemLayout(
         nameOrItems: string | LayoutItem[] = staticLang.layouts.newLayout,
         items: LayoutItem[] = [],
+        copy = false,
     ): string {
         const isName = typeof nameOrItems === 'string';
+
         const name = isName
-            ? nameOrItems
+            ? copy
+                ? this.translate.instant(staticLang.layouts.layoutCopy, { name: nameOrItems })
+                : nameOrItems
             : this.translate.instant(staticLang.layouts.newCrossSystemLayout);
         items = isName ? items : nameOrItems;
         const id = uuid();

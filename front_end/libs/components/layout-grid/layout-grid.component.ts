@@ -2282,7 +2282,11 @@ export class NxLayoutGridComponent {
                     if (isLocalLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
-                        this.layoutStateService.createNewCrossSystemLayout(items);
+                        this.layoutStateService.createNewCrossSystemLayout(
+                            this.layout.name,
+                            items,
+                            true,
+                        );
                     }
                 }
                 if (this.layoutItemLookup[`{${this.layout.id}}`]) {
