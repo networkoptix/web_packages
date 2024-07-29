@@ -24,13 +24,19 @@ $body-blue: rgba(theme_vars.$blue10, 0.1);
     font-weight: bold;
 }
 
+$content-height: 350px;
+
 .preloader-container {
-    height: 300px; // Match stepper content height
+    height: $content-height;
     background-color: var(--dialog-bg);
 
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+nx-transfer-stepper {
+    height: $content-height;
 }
 
 .nx-modal__body {
@@ -219,11 +225,11 @@ $body-blue: rgba(theme_vars.$blue10, 0.1);
 
 .transfer-result-main-text {
     @include typography.medium16nocolor;
-    color: var(--body-text-color); // dark9
+    color: var(--light-text-color);
     margin-top: 1rem;
     margin-bottom: 0.5rem;
 }
 
-.nx-modal__content {
-    height: 350px;
+.nx-modal__body--transfer-fail .transfer-result-main-text {
+    color: var(--error-label)
 }
