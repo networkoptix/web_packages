@@ -56,6 +56,20 @@
 </div>
 
 <ng-template
+    #tag
+    let-node="node"
+>
+    @if (node.tag) {
+        <span
+            class="header-tag"
+            [ngClass]="node.tag.type"
+        >
+            {{ node.tag.value | translate }}</span
+        >
+    }
+</ng-template>
+
+<ng-template
     #menuItem
     let-node="node"
 >
@@ -65,6 +79,7 @@
         [href]="node.url"
     >
         {{ node.display_name | translate }}
+        <ng-container *ngTemplateOutlet="tag; context: { node: node }"></ng-container>
         <svg-icon
             *ngIf="node.new_window"
             [src]="images.dirHeader + 'external_link.svg'"
@@ -79,6 +94,7 @@
 >
     <div class="inner-menu-item active">
         {{ node.display_name | translate }}
+        <ng-container *ngTemplateOutlet="tag; context: { node: node }"></ng-container>
         <svg-icon
             *ngIf="node.new_window"
             [src]="images.dirHeader + 'external_link.svg'"

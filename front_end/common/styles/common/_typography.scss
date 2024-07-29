@@ -456,6 +456,10 @@ p {
 // MEDIUM
 
 // BOLD
+@mixin bold10dark3 {
+    @include font-source($font-family-bold, $font-size-10, $dark3);
+}
+
 @mixin bold13dark9 {
     @include font-source($font-family-bold, $font-size-base, $dark9);
 }

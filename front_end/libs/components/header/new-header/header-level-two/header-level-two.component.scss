@@ -65,6 +65,16 @@
                         stroke: var(--brand-core) !important;
                     }
                 }
+
+                .header-tag {
+                    margin-left: 4px;
+                    padding: 3px 5px;
+                    border-radius: 6px;
+                    &.beta {
+                        @include typography.bold10dark3;
+                        background-color: var(--badge-warning-bright-bg);
+                    }
+                }
             }
         }
     }

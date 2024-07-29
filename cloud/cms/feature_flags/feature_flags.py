@@ -94,6 +94,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_item_debug_placeholder = ('Layouts - Dev Debug Info Placeholders', 'layoutsDebugPlaceholder')
     layouts_fisheye = ('Layouts - Fisheye De-warping', 'layoutsFisheye')
     layouts_51_enabled = ('Layouts - Enabled for 5.1 Systems', 'layouts51Enabled')
+    layouts_show_beta_tag = ('Layouts - Show Beta Tag in header', 'layoutsShowBetaTag')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

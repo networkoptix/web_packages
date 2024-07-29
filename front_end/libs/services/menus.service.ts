@@ -400,6 +400,12 @@ export class NxMenusService {
                 this.LANG?.serverTabTitles.Layouts,
                 this.endpoint.layouts || false,
             );
+            if (nxConfig.featureFlags.layoutsShowBetaTag) {
+                layoutsNode.tag = {
+                    type: 'beta',
+                    value: 'BETA',
+                };
+            }
             nodes.splice(1, 0, layoutsNode);
         }
 
