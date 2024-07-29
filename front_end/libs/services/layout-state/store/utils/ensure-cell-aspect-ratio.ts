@@ -27,6 +27,7 @@ export const ensureCellAspectRatio = (layout: Layout): Layout => {
                         SystemResourcesSelectors.selectCamerasBySystemId(systemId),
                     )(),
                 )
+                .filter(device => device)
                 .map(device => {
                     const id = device.id;
                     const aspect = device.parameters.overrideAr || device.defaultRatio || 0;

@@ -628,6 +628,7 @@ export class NxLayoutGridComponent {
     unsubTooltip$ = new Subject<string>();
 
     checkLayoutItemsErrors = (layout: ParsedLayoutWithItems): void => {
+        this.layoutItemsErrorsStore.reset();
         const layoutItemLookup = this.layoutItemLookup$$();
         layout.items.forEach(item => {
             const itemDetail = layoutItemLookup?.[item.resourceId];
@@ -2200,7 +2201,7 @@ export class NxLayoutGridComponent {
             resourceId: dirtyId(resourceId),
             resourcePath: `cloud://${
                 'systemId' in details ? details.systemId : this.system.id
-            }.${resourceId}`,
+            }.${cleanId(resourceId)}`,
             right,
             rotation,
             top,

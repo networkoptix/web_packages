@@ -1,16 +1,18 @@
 import {
     Component,
     ElementRef,
+    Injector,
     Input,
     OnChanges,
     TemplateRef,
     booleanAttribute,
+    inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
-import { of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { catchError, delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -18,10 +20,8 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import staticLang from '@language_static';
-import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemsService } from '@services/systems.service';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -87,9 +87,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     constructor(
-        private systemsService: NxSystemsService,
         private systemService: NxSystemService,
-        private accountService: NxAccountService,
         private elRef: ElementRef,
     ) {
         this.setupDefaults();
@@ -105,6 +103,8 @@ export class NxMonitoringGraphComponent implements OnChanges {
         }
     }
 
+    private injector = inject(Injector);
+
     async ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): Promise<void> {
         if (
             changes.system?.currentValue ||
@@ -115,15 +115,10 @@ export class NxMonitoringGraphComponent implements OnChanges {
 
             if (this.systemIdOrResourcePath && !this.system) {
                 const systemId = extractSystemAndResourceId(this.systemIdOrResourcePath).systemId;
-                await this.systemsService.getSystemAsPromise(systemId);
-                this.system = this.systemService.createSystem(
-                    this.accountService.account.email,
-                    systemId,
-                    this.selectedServerId,
-                    true,
-                    true,
+                this.system = this.systemService.createSystemById(systemId);
+                await firstValueFrom(
+                    this.system.permissionManager.permissionsInitialized(this.injector),
                 );
-                await this.system.update();
                 // await this.system.serverManager.initSystemMediaServers();
             }
 

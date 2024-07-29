@@ -1,7 +1,9 @@
 import { inject, NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
+import { NxLayoutViewComponent } from '@components/layout-view/layout-view.component';
 import { AuthGuard } from '@guards/authGuard';
 import { BuildGuard } from '@guards/buildGuard';
 import { ChannelPartnerGuard } from '@guards/channelPartnerGuard';
@@ -72,8 +74,13 @@ const lazyRoutes: Routes = [
                 path: ':systemId',
                 canActivate: [AuthGuard, OrgStateGuard, SystemGuard, TwofaGuard],
                 canDeactivate: [
-                    () => {
-                        inject(NxSystemService).removeCurrentSystem();
+                    activated => {
+                        if (!(activated instanceof NxLayoutViewComponent)) {
+                            // The change where current system could now be undefined seems to break stuff with layouts
+                            // Not sure if this change could affect other features, if so we might want to revert the
+                            // change that added undefined.
+                            inject(NxSystemService).removeCurrentSystem();
+                        }
                         return true;
                     },
                 ],
