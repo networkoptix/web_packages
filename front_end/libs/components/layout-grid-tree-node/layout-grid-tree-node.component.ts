@@ -31,6 +31,7 @@ import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxAccountService } from '@services/account.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
@@ -38,6 +39,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CameraTypeId } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 
 @UntilDestroy()
@@ -211,13 +213,36 @@ export class NxLayoutGridTreeNode {
         return id && unsavedLayoutsIds[id];
     });
 
+    accountService = inject(NxAccountService);
+
     iconSrc$$ = computed(() => {
         const node = this.node$$();
+        const account = this.accountService.account;
+        const statusFromLayoutItemsStore =
+            node.details?.id && this.layoutItemsStore.icons$$()[node.details?.id];
+        const statusForDevice =
+            (assertResourceOfType.camera(node) || assertResourceOfType.server(node)) &&
+            node.details.status;
+        const statusForCrossSiteSystem = (() => {
+            if (assertResourceOfType.system_cloud(node)) {
+                const { status, system2faEnabled, version } = node.details as NxSystemInfo;
+                const minimumVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6;
+                const incompatible = status === 'incompatible' || version < minimumVersion;
+                const requires2fa = system2faEnabled && !account?.sessionVerified;
+                if (incompatible || requires2fa) {
+                    return 'unauthorized';
+                }
+            }
+            return '';
+        })();
         const status =
-            (node.details?.id && this.layoutItemsStore.icons$$()[node.details?.id]) ||
-            ((assertResourceOfType.camera(node) || assertResourceOfType.server(node)) &&
-                node.details.status) ||
-            '';
+            [statusFromLayoutItemsStore, statusForDevice, statusForCrossSiteSystem].find(
+                status => status,
+            ) || '';
+
+        if (statusForCrossSiteSystem) {
+            console.info('Cross site system status:', statusForCrossSiteSystem);
+        }
 
         return (
             this.icons.dirLayouts +

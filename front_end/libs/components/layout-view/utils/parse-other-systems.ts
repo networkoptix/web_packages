@@ -5,6 +5,7 @@ import staticLang from '@language_static';
 import { OrganizationAndStructure } from '@pages/home/store/groups/groups-cache.store';
 import { Account } from '@services/account.service/account';
 import { CloudSystemLight } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -42,11 +43,19 @@ export const parseOtherSystems = (
 
             const requires2Fa = normalizedSystem.system2faEnabled;
 
+            const supportedVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6.0;
+
+            const systemVersionSupported = normalizedSystem.version >= supportedVersion;
+
             const placeholder = [
                 {
                     name: (() => {
                         if (normalizedSystem.status === 'offline') {
                             return staticLang.layouts.otherSystems.systemOffline;
+                        }
+
+                        if (!systemVersionSupported) {
+                            return 'siteOutdated';
                         }
 
                         if (loadedSystemIds.includes(system.id)) {
@@ -63,13 +72,17 @@ export const parseOtherSystems = (
                     })(),
                     details: {
                         id: (() => {
+                            if (!systemVersionSupported) {
+                                return 'siteOutdated';
+                            }
+
                             if (
                                 normalizedSystem.status === 'offline' ||
                                 loadedSystemIds.includes(system.id)
                             ) {
                                 return requires2Fa ? 'twoFactorNotEnabled' : 'noResults';
                             }
-                            return 'loading;';
+                            return staticLang.layouts.otherSystems.loadingCameras;
                         })(),
                     },
                     type: null,
@@ -82,7 +95,8 @@ export const parseOtherSystems = (
                 type: ResourceType.SYSTEM,
                 name: system.name,
                 details: normalizedSystem,
-                children: parsedCameras.length ? parsedCameras : placeholder,
+                children:
+                    parsedCameras.length && systemVersionSupported ? parsedCameras : placeholder,
             };
         });
 

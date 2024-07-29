@@ -192,18 +192,16 @@
                             #sitePlaceholder
                             let-svg="svg"
                             let-content="content"
+                            let-small="small"
                         >
                             <svg-icon
                                 nx-add-svg-src
-                                [svgStyle]="{
-                                    'width.px': '64',
-                                    'height.px': '64'
-                                }"
+                                [svgClass]="small ? 'small' : 'large'"
                                 [src]="icons.dirLayouts + svg + '.svg'"
                             ></svg-icon>
                             <h3>{{ content.title | translate }}</h3>
                             @if (content.description) {
-                                <h4>{{ content.description | translate }}</h4>
+                                <h4 [innerHtml]="content.description | translate"></h4>
                             }
                         </ng-template>
                         @if (filteredOtherSystems$$(); as otherSystems) {
@@ -213,7 +211,9 @@
                                     : [
                                             'noResults',
                                             'twoFactorNotEnabled',
-                                            'twoFactorNotAvailable'
+                                            'twoFactorNotAvailable',
+                                            'siteOutdated',
+                                            LANG.layouts.otherSystems.loadingCameras
                                         ].includes(otherSystems[0].details!.id)
                                       ? otherSystems[0].name
                                       : '';
@@ -227,6 +227,7 @@
                                                     sitePlaceholder;
                                                     context: {
                                                         svg: 'warning',
+                                                        small: true,
                                                         content:
                                                             LANG.layouts.otherSystems.placeholders
                                                                 .cantConnectToSite
@@ -286,29 +287,31 @@
                                                 *ngTemplateOutlet="
                                                     sitePlaceholder;
                                                     context: {
-                                                        svg: 'lock',
+                                                        svg: 'sitelock',
                                                         content:
                                                             LANG.layouts.otherSystems.placeholders
                                                                 .twoFactorNotAvailable
                                                     }
                                                 "
                                             ></ng-container>
-                                            <div>
-                                                <nx-async-action-button
-                                                    [action]="enableTwoFactorAction"
-                                                    translate
-                                                >
-                                                    Enable Two-Factor
-                                                </nx-async-action-button>
-                                                <button
-                                                    class="btn btn-secondary"
-                                                    type="button"
-                                                    (click)="currentSite$$.set('')"
-                                                    translate
-                                                >
-                                                    Cancel
-                                                </button>
-                                            </div>
+                                        }
+
+                                        @case ('siteOutdated') {
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    sitePlaceholder;
+                                                    context: {
+                                                        svg: 'nosite',
+                                                        content:
+                                                            LANG.layouts.otherSystems.placeholders
+                                                                .siteOutdated
+                                                    }
+                                                "
+                                            ></ng-container>
+                                        }
+
+                                        @case (LANG.layouts.otherSystems.loadingCameras) {
+                                            <nx-lines-loader randomWidth></nx-lines-loader>
                                         }
 
                                         @default {
@@ -317,6 +320,7 @@
                                                     sitePlaceholder;
                                                     context: {
                                                         svg: 'no_results',
+                                                        small: true,
                                                         content: search$$()
                                                             ? LANG.layouts.otherSystems.placeholders
                                                                   .noMatches

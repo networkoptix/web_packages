@@ -19,7 +19,7 @@
     background: var(--background-color);
     opacity: var(--node-opacity);
 
-    .primary-icon svg path:last-child {
+    .primary-icon svg path.st0 {
         // multi colored icons have the last path to be the primary element
         // which color is to be changed
         fill: var(--main-color);

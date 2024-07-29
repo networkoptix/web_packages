@@ -15,6 +15,7 @@ import {
     Output,
     viewChild,
     ElementRef,
+    inject,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -66,6 +67,7 @@ import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
@@ -74,6 +76,7 @@ import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
@@ -424,6 +427,8 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     unsubTooltips = (): void => this.unsubTooltip$.next('unsub');
 
+    accountService = inject(NxAccountService);
+
     serverStats$: ServerStatsObservable = this.tooltipTarget$.pipe(
         filter(id => !!id),
         distinctUntilChanged(),
@@ -462,6 +467,22 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         }
         if (type === ResourceType.SERVER && nxConfig.featureFlags.layoutsDemo) {
             return selectFrom.tooltips.server;
+        }
+        if (type === ResourceType.SYSTEM) {
+            const node = selectFrom.node;
+            if (assertResourceOfType.system_cloud(node)) {
+                const { version, system2faEnabled } = node.details as NxSystemInfo;
+                const minimumVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6;
+                const sessionVerified = this.accountService.account.sessionVerified;
+
+                if (system2faEnabled && !sessionVerified) {
+                    return staticLang.layouts.otherSystems.tooltips.twoFactor;
+                }
+
+                if (version < minimumVersion) {
+                    return staticLang.layouts.otherSystems.tooltips.updateSite;
+                }
+            }
         }
 
         return '';

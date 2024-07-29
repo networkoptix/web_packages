@@ -124,7 +124,10 @@
                             showTooltip &&
                             ({
                                 node,
-                                tooltips: { camera: cameraTooltip, server: serverTooltip }
+                                tooltips: {
+                                    camera: cameraTooltip,
+                                    server: serverTooltip
+                                }
                             } | mapWith: pickTooltip)
                         "
                         (mouseenter)="updateTooltipTarget(node.details.id)"
