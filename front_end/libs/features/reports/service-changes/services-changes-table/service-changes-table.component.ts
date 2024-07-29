@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { PageChange } from '@components/table/table.types';
+import staticLang from '@language/language_i18n_static.json';
 import { EntityType } from '@pages/reports/reports.types';
 
 import type {
@@ -27,11 +28,20 @@ interface HEADER_ITEM {
     standalone: true,
 })
 export class NxServiceChangesTableComponent {
+    LANG = staticLang;
     headers: HEADER_ITEM[] = [
-        { value: 'Service Name', name: 'serviceName', align: 'flex-start' },
-        { value: 'Amount', name: 'amount' },
-        { value: 'Changed At', name: 'changedAtName', align: 'flex-start' },
-        { value: 'Date', name: 'date' },
+        {
+            value: this.LANG.channelPartnerReports.tableHeaders.serviceName,
+            name: 'serviceName',
+            align: 'flex-start',
+        },
+        { value: this.LANG.channelPartnerReports.tableHeaders.amount, name: 'amount' },
+        {
+            value: this.LANG.channelPartnerReports.tableHeaders.changedAt,
+            name: 'changedAtName',
+            align: 'flex-start',
+        },
+        { value: this.LANG.channelPartnerReports.tableHeaders.date, name: 'date' },
     ];
     selectedRecordId = '';
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });

@@ -36,24 +36,24 @@ export class NxRegularServiceDialogTable {
     LANG = staticLang;
     headers: HEADER_ITEM[] = [
         {
-            value: 'Changed',
+            value: this.LANG.channelPartnerReports.tableHeaders.changed,
             name: 'changed',
-            tooltip: this.LANG.channelPartnerReports.changedTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.changed,
         },
         {
-            value: 'Channels',
+            value: this.LANG.channelPartnerReports.tableHeaders.channels,
             name: 'channels',
-            tooltip: this.LANG.channelPartnerReports.channelsTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.channels,
         },
         {
-            value: 'Monthly Rate',
+            value: this.LANG.channelPartnerReports.tableHeaders.monthlyRate,
             name: 'monthlyRate',
-            tooltip: this.LANG.channelPartnerReports.monthlyRateTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.monthlyRate,
         },
         {
-            value: 'Fractional Usage',
+            value: this.LANG.channelPartnerReports.tableHeaders.fractionalUsage,
             name: 'fractionalUsage',
-            tooltip: this.LANG.channelPartnerReports.fractionalUsageTooltip,
+            tooltip: this.LANG.channelPartnerReports.tooltips.fractionalUsage,
         },
     ];
     selectedRecordId = '';
