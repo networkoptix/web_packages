@@ -32,11 +32,13 @@ class PathCacheMixin(models.Model):
         cache_key: str = get_version_cache_key(self.__class__, self.id, "path")
         path_version = cache.get(cache_key)
         if path_version is None:
+            timestamp = CacheService.timestamp()
+            self.refresh_from_db()
             if self.__class__.__name__ in ['SystemGroup', 'CloudSystemId']:
                 path_version = self.systems_path
             else:
                 path_version = self.build_path
-            CacheService.set(cache_key, path_version)
+            CacheService.set(timestamp, cache_key, path_version)
         return path_version
 
     def update_cached_path(self) -> None:
@@ -47,12 +49,13 @@ class PathCacheMixin(models.Model):
         """
         # This shows a warning because FieldChoiceEnum is not imported
         cache = caches["dependent_cache"]
+        timestamp = CacheService.timestamp()
         cache_key: str = get_version_cache_key(self.__class__, self.id, "path")
         if self.__class__.__name__ in ['SystemGroup', 'CloudSystemId']:
             path_version = self.systems_path
         else:
             path_version = self.build_path
-        CacheService.set(cache_key, path_version)
+        CacheService.set(timestamp, cache_key, path_version)
 
     @property
     def build_path(self) -> List[List[str]]:

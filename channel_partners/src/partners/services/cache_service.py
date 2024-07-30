@@ -176,6 +176,11 @@ class CacheService:
     """
 
     @staticmethod
+    def timestamp() -> int:
+        time_parts = cache.time()
+        return int(f"{time_parts[0]}{time_parts[1]:06d}")
+
+    @staticmethod
     def keys() -> List[str]:
         return cache.keys("*")
 
@@ -201,12 +206,12 @@ class CacheService:
         cache.delete(cache_key)
 
     @staticmethod
-    def set(cache_key: str, value: Any) -> None:
-        CacheService._set_versions_in_cache_lua({cache_key: value})
+    def set(timestamp: int, cache_key: str, value: Any) -> None:
+        CacheService._set_versions_in_cache_lua(timestamp, {cache_key: value})
 
     @staticmethod
-    def set_many(data: Dict[str, Any]) -> None:
-        CacheService._set_versions_in_cache_lua(data)
+    def set_many(timestamp: int, data: Dict[str, Any]) -> None:
+        CacheService._set_versions_in_cache_lua(timestamp, data)
 
     # End regular cache operations
     @staticmethod
@@ -349,7 +354,7 @@ class CacheService:
         for model_class, ids in grouped_keys.items():
             # NOTE: if version_type is path, may want to do some additional
             #       processing to get the path from another method
-
+            timestamp = CacheService.timestamp()
             with transaction.atomic():
                 missing_objects = {}
 
@@ -369,7 +374,7 @@ class CacheService:
                         missing_objects[cache_key] = CacheService._build_path_value(instance)
 
                 # Set the values in the cache using set_many
-                successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
+                successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
                 if unsuccessful:
                     logger.error(
                         "Attempted to set versions in cache, but failed",
@@ -392,37 +397,37 @@ class CacheService:
         for model_class, group_items in grouped_keys.items():
             ids = list(group_items.keys())
 
-            with transaction.atomic():
-                missing_objects = {}
+            timestamp = CacheService.timestamp()
+            missing_objects = {}
 
-                # Fetch missing ids from database
-                instances: QuerySet[models.Model] = model_class.objects.filter(id__in=ids)
+            # Fetch missing ids from database
+            instances: QuerySet[models.Model] = model_class.objects.filter(id__in=ids)
 
-                # Assuming all are returned
-                instance: models.Model
-                for instance in instances:
-                    instance_id: str = str(instance.id)
-                    # Get the current group that can contain 1 or more items
-                    current_group: List[VersionKeyAndType] = group_items[instance_id]
+            # Assuming all are returned
+            instance: models.Model
+            for instance in instances:
+                instance_id: str = str(instance.id)
+                # Get the current group that can contain 1 or more items
+                current_group: List[VersionKeyAndType] = group_items[instance_id]
 
-                    for group_item in current_group:
-                        group_item_type: CachedFieldChoiceEnum = group_item["version_type"]
-                        # Get the cache key
-                        cache_key = get_version_cache_key(model_class, str(instance.id), group_item_type)
+                for group_item in current_group:
+                    group_item_type: CachedFieldChoiceEnum = group_item["version_type"]
+                    # Get the cache key
+                    cache_key = get_version_cache_key(model_class, str(instance.id), group_item_type)
 
-                        if group_item_type == CachedFieldChoiceEnum.PATH_VERSION:
-                            missing_objects[cache_key] = CacheService._build_path_value(instance)
-                        else:
-                            missing_objects[cache_key] = getattr(instance, group_item_type)
+                    if group_item_type == CachedFieldChoiceEnum.PATH_VERSION:
+                        missing_objects[cache_key] = CacheService._build_path_value(instance)
+                    else:
+                        missing_objects[cache_key] = getattr(instance, group_item_type)
 
-                # Set the values in the cache
-                # cache.set_many(missing_objects)
-                successful, unsuccessful = CacheService._set_versions_in_cache_lua(missing_objects)
-                if unsuccessful:
-                    logger.error(
-                        "Attempted to set versions in cache, but failed",
-                        unsuccessful_keys=list(unsuccessful.keys()))
-                inserted_objects.update(successful)
+            # Set the values in the cache
+            # cache.set_many(missing_objects)
+            successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
+            if unsuccessful:
+                logger.error(
+                    "Attempted to set versions in cache, but failed",
+                    unsuccessful_keys=list(unsuccessful.keys()))
+            inserted_objects.update(successful)
         return inserted_objects
 
     @staticmethod
@@ -451,16 +456,14 @@ class CacheService:
 
     @staticmethod
     def _set_versions_in_cache_lua(
+            timestamp: int,
             data: Dict[str, Union[int, str, List[str]]]
     ) -> Tuple[
         Dict[str, Union[int, str, List[str]]],
         Dict[str, Union[int, str, List[str]]]
     ]:
-        time_parts = cache.time()
-        start_time = int(f"{time_parts[0]}{time_parts[1]:06d}")
-
         # Prepare the arguments for the Lua script
-        args = [start_time]
+        args = [timestamp]
         for key, value in data.items():
             validated_key = cache.make_and_validate_key(key, version=None)
             args.append(validated_key)
@@ -478,6 +481,9 @@ class CacheService:
             # Match the cleaned keys with their values from the original data
             successful_pairs = {key: data[key] for key in successful_keys}
             unsuccessful_pairs = {key: data[key] for key in unsuccessful_keys}
+
+            if unsuccessful_pairs:
+                logger.debug("Failed to set versions in cache", unsuccessful_keys=list(unsuccessful_keys))
 
             return successful_pairs, unsuccessful_pairs
         except Exception as e:

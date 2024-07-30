@@ -1,3 +1,4 @@
+import logging
 from uuid import uuid4
 
 import pytest
@@ -294,3 +295,17 @@ class TestCacheService:
         for instance in instances:
             instance.refresh_from_db()
             assert instance.get_version() == 1
+
+    @pytest.mark.django_db
+    def test_lua_script_logic(self, caplog):
+        # Test Setup
+        caplog.set_level(logging.DEBUG)
+
+        old_timestamp = CacheService.timestamp()
+
+        CacheService.set(CacheService.timestamp(), "test_key", 1000)
+        CacheService.set(old_timestamp, "test_key", 100)
+
+        actual = cache.get("test_key")
+        assert actual == 1000
+        assert "Failed to set versions in cache" in caplog.text

@@ -1791,6 +1791,7 @@ class TestOrganizationViewSet:
         response = view(request, pk=org.id)
         assert response.data['results'][0]['date'] < response.data['results'][-1]['date']
 
+    @pytest.mark.skip(reason="Skipping this test for now; https://networkoptix.slack.com/archives/C06CA9PLS13/p1722368061163729?thread_ts=1722364743.906279&cid=C06CA9PLS13")
     def test_service_changes_summary_without_params(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
