@@ -45,30 +45,8 @@
 
         .no-orgs-placeholder {
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100%;
-
-            .placeholder-container {
-                text-align: center;
-            }
-
-            h3 {
-                color: var(--placehoder-v2-title-color) !important;
-            }
-
-             svg-icon svg .icon-with-fill {
-                fill: var(--placehoder-body-color) !important;
-            }
-
-            p {
-              color: var(--placehoder-v2-message-color)!important;
-            }
-
-            .new-org-btn {
-              display: inline-block !important;
-              margin-top: 10px;
-            }
+            flex-direction: column;
         }
 
         .card-content {

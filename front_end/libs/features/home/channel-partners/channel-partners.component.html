@@ -154,24 +154,24 @@
                     </ng-container>
                     <ng-template #addOrg>
                         <nx-page-generic-placeholder-v2>
-                            <svg-icon
-                                [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
-                                [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
-                            ></svg-icon>
-                            <div
-                                class="title"
-                                translate
-                            >
-                                No Organization
-                            </div>
-                            <div
-                                class="message"
-                                translate
-                            >
-                                You have not yet created any organizations
-                            </div>
-                            @if (permissionStore.canCreateOrgs$$()) {
-                                <div class="button-container">
+                            <div class="no-orgs-placeholder">
+                                <svg-icon
+                                    [src]="icons.dirPageV2Placeholder + 'no_organizations.svg'"
+                                    [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+                                ></svg-icon>
+                                <div
+                                    class="title"
+                                    translate
+                                >
+                                    No Organizations
+                                </div>
+                                <div
+                                    class="message"
+                                    translate
+                                >
+                                    You have not yet created any organizations
+                                </div>
+                                @if (permissionStore.canCreateOrgs$$()) {
                                     <button
                                         type="button"
                                         class="button btn btn-default"
@@ -180,8 +180,8 @@
                                     >
                                         New Organization
                                     </button>
-                                </div>
-                            }
+                                }
+                            </div>
                         </nx-page-generic-placeholder-v2>
                     </ng-template>
                 </ng-template>
