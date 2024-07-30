@@ -163,7 +163,12 @@ const generateHslaStringFromTheme = memoize(
         colorVariable: CssColorVariables,
         options: ThemeOptions,
     ): HslaString => {
-        const { offset = 0, inverse = false, highContrast = false } = options;
+        const {
+            offset = 0,
+            inverse = false,
+            highContrast = false,
+            ignoreInverseForOffset = false,
+        } = options;
         const [hue, saturation, baseLuminosity] = extractBaseHexColor(theme, colorVariable) as [
             Hue,
             Percentage,
@@ -172,7 +177,7 @@ const generateHslaStringFromTheme = memoize(
 
         const applyOffset = (luminosity: Percentage): Percentage => {
             if (offset && luminosity) {
-                if (inverse) {
+                if (inverse && !ignoreInverseForOffset) {
                     luminosity += offset;
                 } else {
                     luminosity -= offset;

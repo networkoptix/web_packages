@@ -66,10 +66,12 @@ export type GeneratedThemeColors = (typeof generatedThemeColors)[number];
  */
 export type ThemeColors = (typeof themeColors)[number] | GeneratedThemeColors;
 
+export type ShadeRange = IntRange<1, 19>;
+
 /**
  * Shade offset keys
  */
-export type Shades = `${'dark' | 'light'}${IntRange<1, 19>}` | Initial;
+export type Shades = `${'dark' | 'light'}${ShadeRange}` | Initial;
 
 /**
  * Shade offset values
@@ -205,9 +207,16 @@ export interface ThemeOptions {
     coreSaturation?: Percentage;
     backgroundLuminosity?: BackgroundLuminosity;
     useHct?: boolean;
+    ignoreInverseForOffset?: boolean;
 }
 
-export type ThemeWithOptions = { theme: ThemeDefinition; options?: ThemeOptions };
+export type ThemeWithOptions<
+    PartialColors extends boolean = false,
+    Theme = PartialColors extends true ? Partial<ThemeDefinition> : ThemeDefinition,
+> = {
+    theme: Theme;
+    options?: ThemeOptions;
+};
 
 export type ThemeWithGeneratedAndOptions = {
     theme: ThemeDefinitionWithGenerated;

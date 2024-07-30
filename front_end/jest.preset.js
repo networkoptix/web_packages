@@ -13,7 +13,7 @@ module.exports = {
             },
         ],
     },
-    transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+    transformIgnorePatterns: ['node_modules/(?!.*\\.(js|mjs)$)'],
     moduleNameMapper: {
         'lodash-es': 'lodash',
     },

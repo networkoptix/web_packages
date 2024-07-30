@@ -76,6 +76,156 @@
         </div>
     </nx-section>
 </nx-block>
+@if (useNewColors && account.is_staff) {
+    <nx-block>
+        <header>
+            <h4 translate>Presets</h4>
+        </header>
+        <nx-section>
+            <div class="theme-options">
+                <label
+                    nx-label
+                    for="selectPreset"
+                    translate
+                    >Select Preset</label
+                >
+                <nx-select-v2
+                    id="selectPreset"
+                    (ngModelChange)="selectedPreset$$.set($event)"
+                    [ngModel]="selectedPreset$$()"
+                >
+                    @for (preset of presets; track preset.name) {
+                        <nx-select-item [value]="preset.name">{{ preset.name }}</nx-select-item>
+                    }
+                </nx-select-v2>
+            </div>
+        </nx-section>
+        @if (customDisabled$$()) {
+            <nx-section>
+                <button
+                    class="btn btn-primary ml-auto"
+                    (click)="customizePreset()"
+                    translate
+                >
+                    Customize
+                </button>
+            </nx-section>
+        }
+    </nx-block>
+    <nx-block>
+        <header>
+            <h4 translate>Theme Options</h4>
+        </header>
+        <nx-section>
+            <div class="theme-options">
+                <nx-checkbox
+                    componentId="useHct"
+                    [ngModel]="themeProvider.currentTheme().options.useHct"
+                    (ngModelChange)="updateCustomOptions({ useHct: $event })"
+                    [disabled]="customDisabled$$()"
+                ></nx-checkbox
+                ><label
+                    class="mb-0"
+                    for="useHct"
+                    translate
+                >
+                    Use HCT Colors</label
+                >
+            </div>
+            <div class="theme-options">
+                <label
+                    nx-label
+                    for="coreSaturation"
+                    translate
+                    >Core Saturation</label
+                >
+                <nx-select-v2
+                    id="coreSaturation"
+                    (ngModelChange)="updateCustomOptions({ coreSaturation: $event })"
+                    [ngModel]="themeProvider.currentTheme().options.coreSaturation || 20"
+                    [disabled]="customDisabled$$()"
+                >
+                    @for (saturation of [0, 1, 2, 3, 4, 5, 10, 15, 20]; track saturation) {
+                        <nx-select-item [value]="saturation">{{ saturation }}</nx-select-item>
+                    }
+                </nx-select-v2>
+            </div>
+            <div class="theme-options">
+                <label
+                    nx-label
+                    for="offset"
+                    translate
+                    >Luminosity Offset</label
+                >
+                <nx-select-v2
+                    id="offset"
+                    (ngModelChange)="updateCustomOptions({ offset: $event })"
+                    [ngModel]="themeProvider.currentTheme().options.offset || 0"
+                    [disabled]="customDisabled$$()"
+                >
+                    @for (offset of [0, 5, 10, 15, 20]; track offset) {
+                        <nx-select-item [value]="offset">{{ offset }}</nx-select-item>
+                    }
+                </nx-select-v2>
+            </div>
+        </nx-section>
+    </nx-block>
+    <nx-block>
+        <header>
+            <h4 translate>Theme Colors</h4>
+        </header>
+        <nx-section>
+            <div class="theme-options">
+                <label
+                    for="brandColor"
+                    translate
+                    >Brand Color</label
+                >
+                <input
+                    id="brandColor"
+                    cpOutputFormat="hex"
+                    cpAlphaChannel="disabled"
+                    [disabled]="customDisabled$$()"
+                    [cpDisabled]="customDisabled$$()"
+                    [value]="themeProvider.currentTheme().theme.brand"
+                    [style.background]="themeProvider.currentTheme().theme.brand"
+                    (colorPickerChange)="updateThemeColor('brand', $any($event))"
+                    [colorPicker]="themeProvider.currentTheme().theme.brand"
+                />
+            </div>
+            <div class="theme-options">
+                <label
+                    for="brandBg"
+                    translate
+                    >Brand Background Color</label
+                >
+                <input
+                    id="brandBg"
+                    cpOutputFormat="hex"
+                    cpAlphaChannel="disabled"
+                    [disabled]="customDisabled$$()"
+                    [cpDisabled]="customDisabled$$()"
+                    [value]="themeProvider.currentTheme().theme.brandBg"
+                    [style.background]="themeProvider.currentTheme().theme.brandBg"
+                    (colorPickerChange)="updateThemeColor('brandBg', $any($event))"
+                    [colorPicker]="themeProvider.currentTheme().theme.brandBg"
+                />
+            </div>
+        </nx-section>
+    </nx-block>
+    @if (unmappedColors$$().length) {
+        <nx-block>
+            <header>
+                <h4 translate>Unmapped Colors</h4>
+            </header>
+            <nx-section>
+                @for (color of unmappedColors$$(); track color) {
+                    <div>{{ color }}</div>
+                }
+            </nx-section>
+        </nx-block>
+    }
+}
 
 <!-- test component -->
 <div *ngIf="layout === 'test'">

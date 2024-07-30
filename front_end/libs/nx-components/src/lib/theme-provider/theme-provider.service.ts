@@ -9,6 +9,9 @@ import {
     ThemeWithOptions,
     initialTheme,
     initialOptions,
+    ThemeColors,
+    HexString,
+    ThemeDefinition,
 } from './color-types';
 import { createThemeUpdateEvent, themePatchEventName, themeResetEventName } from './events';
 
@@ -36,6 +39,28 @@ export class NxThemeProviderService {
                     ...initialOptions,
                     ...options,
                 },
+            };
+        });
+        this.notify();
+    }
+
+    public updateThemeColor(theme: Partial<ThemeDefinition>): void;
+    public updateThemeColor(colorName: ThemeColors, colorValue: HexString): void;
+    public updateThemeColor(
+        colorNameOrThemePartial: ThemeColors | Partial<ThemeDefinition>,
+        colorValue?: HexString,
+    ): void {
+        const updatedValues =
+            typeof colorNameOrThemePartial === 'string'
+                ? { [colorNameOrThemePartial]: colorValue }
+                : colorNameOrThemePartial;
+        this.theme.update(({ theme, options = {} }: ThemeWithOptions) => {
+            return {
+                theme: {
+                    ...theme,
+                    ...updatedValues,
+                },
+                options,
             };
         });
         this.notify();

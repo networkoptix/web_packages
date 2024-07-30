@@ -257,7 +257,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             fromEvent<Event>(window, 'resize')
                 .pipe(debounceTime(100))
                 .subscribe(event => {
-                    const { innerHeight, innerWidth } = event.target as Window;
+                    const { innerHeight, innerWidth } = window;
                     this.windowLargeEnough =
                         innerWidth > ViewportBreakpoints.Tablet.height &&
                         innerHeight > ViewportBreakpoints.Tablet.width &&

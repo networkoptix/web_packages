@@ -1,4 +1,13 @@
+@use "css-variables/legacy-theme-provider";
+@use "theme_variables_common";
+
 @import "theme_variables_light";
 @import "theme_variables_dark";
 @import "theme_variables_dark_gray";
 @import "theme_variables_light_gray";
+
+@include legacy-theme-provider.with-legacy-theme;
+
+html {
+    @include theme_variables_common.with-html;
+}

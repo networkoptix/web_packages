@@ -2,7 +2,7 @@
 @use "../../native-theme/_theme_palette.scss" as *;
 @use "../../_theme_palette.scss" as palette;
 
-:root {
+@mixin with-root {
 	@include generateVarAndRgb(--bluez-light, $bluez-light);
 	@include generateVarAndRgb(--bluez-light-dim, $bluez-light-dim);
 	@include generateVarAndRgb(--bluez-bright, $bluez-bright);
@@ -111,7 +111,7 @@
 	@include generateVarAndRgb(--green_l2, palette.$green_l2);
 	@include generateVarAndRgb(--green_l3, palette.$green_l3);
 	@include generateVarAndRgb(--green_l4, palette.$green_l4);
-	
+
 	@include generateVarAndRgb(--red_main, $red_main);
 
 	@include generateVarAndRgb(--yellow_main, $yellow_main);

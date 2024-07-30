@@ -2,7 +2,7 @@
 @use "../theme_palette.scss" as *;
 @use "../native-theme/theme_palette.scss" as native;
 
-:root {
+@mixin with-root {
 	--brand-core-t10: rgba(var(--brand-core--rgb), 0.1);
 	--brand-core-t20: rgba(var(--brand-core--rgb), 0.2);
 	--brand-core-t30: rgba(var(--brand-core--rgb), 0.3);

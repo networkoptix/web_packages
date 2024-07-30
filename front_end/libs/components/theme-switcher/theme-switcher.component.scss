@@ -3,6 +3,10 @@
 
 @include nx-components.wrap-app-globals {
     :host {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
         .themes {
             flex-wrap: wrap;
 
@@ -48,6 +52,20 @@
                         }
                     }
                 }
+            }
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            label {
+                white-space: nowrap;
+                min-width: 50%;
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 8px;
             }
         }
     }

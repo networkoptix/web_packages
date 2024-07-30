@@ -1,0 +1,11 @@
+@use "css-variables/native-theme/theme_palette" as native_palette;
+@use "css-variables/theme_palette" as theme_palette;
+@use "css-variables/theme_variables" as theme_variables;
+
+@mixin with-legacy-theme {
+    :root:not(.new-cloud-colors) {
+        @include theme_palette.with-root;
+        @include native_palette.with-root;
+        @include theme_variables.with-root;
+    }
+}

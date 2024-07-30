@@ -228,6 +228,7 @@ const FeatureFlagKeys = [
     'layoutsFisheye',
     'layouts51Enabled',
     'layoutsShowBetaTag',
+    'newCloudColorProvider',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

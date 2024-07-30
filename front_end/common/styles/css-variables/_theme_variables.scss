@@ -1,7 +1,7 @@
 @use "../utils" as *;
 @use "../_theme_variables_common.scss" as *;
 
-:root {
+@mixin with-root {
 	@include generateVarAndRgb(--gray-light, $gray-light);
 	@include generateVarAndRgb(--text-color, $text-color);
 	@include generateVarAndRgb(--navbar-default-bg, $navbar-default-bg);

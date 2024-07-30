@@ -1,4 +1,6 @@
 @use "_theme_variables_common" as *;
+@use "css-variables/legacy-theme-provider";
+@use "theme_variables_common" as theme_variables_common;
 @use "css-variables/native-theme/theme_palette" as *;
 @use "css-variables/theme_palette" as *;
 @use "css-variables/theme_variables" as *;
@@ -6,6 +8,11 @@
 @import "theme_variables_light";
 @import "theme_variables_dark";
 
+@include legacy-theme-provider.with-legacy-theme;
+
+html {
+    @include theme_variables_common.with-html;
+}
 
 nx-app {
     .mainContainer {

@@ -122,6 +122,9 @@ class FLAGS(metaclass=_FlagType):
     access_developers = ('Enable For Developers pages.', 'accessDevelopers', '%DEVELOPERS_ENABLED%')
     enhanced_downloads = ('Enable Enhanced Downloads pages.', 'enhancedDownloads')
 
+    # Cloud 2.0
+    new_cloud_color_provider = ('Cloud 2.0 - New Cloud Color Provider', 'newCloudColorProvider')
+
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************
