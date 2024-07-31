@@ -1,5 +1,6 @@
 import { Component, Output, computed } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { escape } from 'lodash-es';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
@@ -175,7 +176,7 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
                     this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
                     {
                         name: user.email,
-                        folder: user.groupRoles[0].name,
+                        folder: escape(user.groupRoles[0].name),
                     },
                 );
                 break;
