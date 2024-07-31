@@ -218,12 +218,14 @@ class TestRegenerateOutdatedSchemaReports:
             self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
         self.sub_org = organization_factory(channel_partner=self.sub_cp)
         self.sub_sys = system_factory(organization=self.sub_org)
+        yesterday = timezone.now() - datetime.timedelta(days=1)
         for cp in (self.cp, self.sub_cp):
             for service in cp.services.all():
                 service_record_factory(
                     organization=self.sub_org,
                     cloud_system=self.sub_sys,
                     service=service,
+                    created_ts=yesterday,
                     quantity=100,
                 )
 
@@ -237,7 +239,7 @@ class TestRegenerateOutdatedSchemaReports:
         assert reports_query.count() > 0
         assert outdated_reports_query.count() == reports_query.count()
 
-        regenerate_outdated_schema_reports()
+        regenerate_outdated_schema_reports(ReportSnapshot.get_outdated_schema_reports())
         assert reports_query.count() > 0
         assert outdated_reports_query.count() == 0
 
@@ -246,7 +248,7 @@ class TestRegenerateOutdatedSchemaReports:
         calculate_all_reports()
         spy_report_snapshot_service.assert_called()
         spy_report_snapshot_service.reset_mock()
-        regenerate_outdated_schema_reports()
+        regenerate_outdated_schema_reports(ReportSnapshot.get_outdated_schema_reports())
         spy_report_snapshot_service.assert_not_called()
 
     def test_removing_reports_with_missed_organization(self):
@@ -255,7 +257,7 @@ class TestRegenerateOutdatedSchemaReports:
         reports_query = ReportSnapshot.objects.filter(report_type__in=system_reports)
         reports_query.update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1, organization=None)
         assert reports_query.count() > 0
-        regenerate_outdated_schema_reports()
+        regenerate_outdated_schema_reports(ReportSnapshot.get_outdated_schema_reports())
         assert reports_query.count() == 0
 
     def test_recreation_of_system_reports(self):
@@ -265,5 +267,5 @@ class TestRegenerateOutdatedSchemaReports:
         reports_query.delete()
         ReportSnapshot.objects.all().update(schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION - 1)
         assert reports_query.count() == 0
-        regenerate_outdated_schema_reports()
+        regenerate_outdated_schema_reports(ReportSnapshot.get_outdated_schema_reports())
         assert reports_query.count() > 0
