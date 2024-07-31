@@ -1,0 +1,27 @@
+<div class="modal-content-wrapper">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            {{ entityName }}
+        </h1>
+        <button
+            type="button"
+            class="close"
+            id="closeExpiringServiceDetailsDialog"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div>
+        @if (isLoading$$()) {
+            <nx-pre-loader></nx-pre-loader>
+        } @else {
+            <nx-expiring-service-dialog-table
+                [records]="formattedRecords$$()"
+                [totals]="totals$$()"
+            ></nx-expiring-service-dialog-table>
+        }
+    </div>
+</div>
