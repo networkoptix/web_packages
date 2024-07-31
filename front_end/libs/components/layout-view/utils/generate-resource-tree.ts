@@ -1,4 +1,5 @@
 import {
+    LayoutPlaceholder,
     LayoutResourceTree,
     ResourceType,
     SharableResourceLeafNode,
@@ -167,7 +168,7 @@ export const generateResourceTree = ([
         tree: [
             {
                 name: staticLang.layouts.titles.resourceTypes[ResourceType.LAYOUTS],
-                details: { id: ResourceType.LAYOUTS },
+                details: { id: LayoutPlaceholder.NO_LAYOUTS },
                 type: ResourceType.LAYOUTS,
                 children: layoutsForTree,
             },
