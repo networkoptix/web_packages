@@ -58,6 +58,18 @@ const lazyRoutes: Routes = [
         },
     },
     {
+        path: 'systems/no-access',
+        loadComponent: () =>
+            import('@components/placeholders/page/page-placeholder.component').then(
+                c => c.NxPagePlaceholderComponent,
+            ),
+        resolve: {
+            type: () => 'FAILED_TO_ACCESS_SYSTEM',
+            withFooter: () => true,
+            showMainButton: () => true,
+        },
+    },
+    {
         path: 'systems/:systemId/view',
         loadChildren: () =>
             import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),

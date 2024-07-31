@@ -116,12 +116,14 @@ export const SystemGuard: CanActivateFn = (
                             cloudApiService.cloudChannelPartnersApi.getSystem(systemId),
                         );
                         menusService.serviceMode(systemId, info.name);
+                        return true;
                     } catch {
-                        console.error('User is trying to access a system w/o permission!');
-                        return false;
+                        return router.navigate(['systems', 'no-access'], {
+                            skipLocationChange: true,
+                        });
                     }
-                    return true;
                 }
+
                 // TODO: Clean up create system args
                 currSystem = systemService.createSystem(
                     account.email,
