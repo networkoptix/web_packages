@@ -16,6 +16,8 @@ from django.core.cache import (
     caches,
 )
 from django.db import connection
+from django.db.models import QuerySet
+from django.utils import timezone
 
 from partners.models import (
     ChannelPartner,
@@ -36,7 +38,7 @@ logger = structlog.getLogger(__name__)
 
 WORKERS_NUMBER = 4
 TASK_LOCK_KEY = "report-calculation-daily"
-
+REGEN_TASK_LOCK_KEY = "report-regeneration-daily"
 
 def close_thread_db_connections(func):
     @wraps(func)
@@ -282,11 +284,11 @@ def calculate_partner_reports(channel_partner: ChannelPartner, period_start: dat
         generate=True)
 
 
-def regenerate_outdated_schema_reports():
-    outdated_reports = ReportSnapshot.get_outdated_schema_reports()
+def regenerate_outdated_schema_reports(outdated_reports: QuerySet[ReportSnapshot] = None):
     if not outdated_reports.exists():
         logger.info("No outdated reports found")
         return
+    logger.debug(f"Regenerating outdated reports.", reports_count=outdated_reports.count())
     for report in outdated_reports:
         # refresh report from db to check if it has not been updated by another process
         report.refresh_from_db()
@@ -438,6 +440,22 @@ def regenerate_outdated_schema_reports():
                 )
 
 
+@shared_task()
+def regenerate_outdated_reports_task(batch_size: int = 500):
+    # limiting the number of reports to regenerate to avoid long running tasks
+    logger.info(f"Regenerating outdated reports.", batch_size=batch_size)
+    outdated_reports = ReportSnapshot.get_outdated_schema_reports()
+    outdated_reports = outdated_reports[:batch_size]
+    regenerate_outdated_schema_reports(outdated_reports)
+    if ReportSnapshot.get_outdated_schema_reports().exists():
+        # if there are still outdated reports, schedule another task
+        logger.info("Scheduling another task to regenerate more outdated reports.")
+        regenerate_outdated_reports_task.delay(batch_size=batch_size)
+    else:
+        logger.info("All outdated reports have been regenerated.")
+        cache.delete(REGEN_TASK_LOCK_KEY)
+
+
 def calculate_all_reports():
     period_start = get_today() - relativedelta(days=1)
     period_start.replace(day=1)
@@ -451,10 +469,19 @@ def calculate_all_reports():
 @shared_task(max_retries=3)
 def report_daily_calculation_task():
     if not caches['default'].add(TASK_LOCK_KEY, f'{uuid4()}', timeout=3600):
-        logger.warning(f'Daily calculation task if already running.')
+        logger.warning(f'Daily calculation task is already running.')
         return
     try:
         calculate_all_reports()
-        regenerate_outdated_schema_reports()
+        logger.info("All reports have been calculated.")
+        logger.info("Checking for outdated reports.")
+        if ReportSnapshot.get_outdated_schema_reports().exists():
+            logger.info("Scheduling task to regenerate outdated reports.")
+            if caches['default'].add(REGEN_TASK_LOCK_KEY, timezone.now().timestamp()):
+                regenerate_outdated_reports_task.delay()
+            else:
+                logger.warning("Regeneration task is already running.")
+        else:
+            logger.info("No outdated reports found.")
     finally:
         cache.delete(TASK_LOCK_KEY)
