@@ -61,7 +61,7 @@ const lazyRoutes: Routes = [
         },
     },
     {
-        path: 'systems/:systemId/noAccess/:systemName',
+        path: 'systems/:systemId/no-access/:systemName',
         loadComponent: () =>
             import('@components/placeholders/no-access/no-access.component').then(
                 c => c.NxSystemNoAccessComponent,

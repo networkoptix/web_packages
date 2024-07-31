@@ -49,7 +49,7 @@ export const cpTabGuard: CanActivateFn = (
             case 'support':
                 return true;
         }
-        router.navigate([`home/channelPartners/${currPartner$$()?.id ?? ''}`]);
+        router.navigate([`home/channel-partners/${currPartner$$()?.id ?? ''}`]);
         return false;
     };
 

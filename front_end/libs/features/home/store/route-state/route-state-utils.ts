@@ -11,11 +11,11 @@ export const generateRoute = ({
     const segments = ['/home'];
 
     if (partnerId) {
-        segments.push('channelPartners', partnerId);
+        segments.push('channel-partners', partnerId);
     }
 
     if (subChannelId) {
-        segments.push('subChannel', subChannelId);
+        segments.push('subchannel', subChannelId);
     }
 
     if (organizationId) {
