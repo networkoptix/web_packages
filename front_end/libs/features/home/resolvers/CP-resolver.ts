@@ -5,5 +5,5 @@ export const CPResovler: ResolveFn<boolean> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ): boolean | Observable<boolean> | Promise<boolean> => {
-    return state.url.includes('channelPartners/');
+    return state.url.includes('channel-partners/');
 };

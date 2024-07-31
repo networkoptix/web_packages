@@ -115,7 +115,7 @@ export class NxHomeComponent implements OnInit {
         const nodes = [
             new MenuNode('', '/home'),
             ...filteredChannelPartners.map(
-                partner => new MenuNode(partner.name, `/home/channelPartners/${partner.id}`),
+                partner => new MenuNode(partner.name, `/home/channel-partners/${partner.id}`),
             ),
             ...filteredOrganizations.map(
                 org => new MenuNode(org.name, `/home/organization/${org.id}`),
@@ -169,7 +169,7 @@ export class NxHomeComponent implements OnInit {
         if (filteredChannelPartners?.length) {
             for (const partner of filteredChannelPartners) {
                 if (!partner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
-                    redirectPath = `channelPartners/${partner.id}`;
+                    redirectPath = `channel-partners/${partner.id}`;
                     break;
                 }
             }

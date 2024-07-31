@@ -22,7 +22,7 @@ const TabIdReporterResolver: ResolveFn<string> = (
         tabId = pathSegments.pop();
     }
 
-    if (tabId === 'channelPartners' || !tabId) {
+    if (tabId === 'channel-partners' || !tabId) {
         tabId = DEFAULT_TAB_ID;
     }
 

@@ -129,7 +129,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                         ownRoles: updatedUser.roles,
                     };
                     this.store.dispatch(cpActions.setChannelPartners({ channelPartners }));
-                    this.router.navigate(['home', 'channelPartners', this.currentPartner$$().id]);
+                    this.router.navigate(['home', 'channel-partners', this.currentPartner$$().id]);
                 }
             });
     }

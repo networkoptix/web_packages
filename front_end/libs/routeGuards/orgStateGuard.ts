@@ -60,7 +60,7 @@ export const OrgStateGuard: CanActivateFn = async (
                 ['suspended', 'shutdown'].includes(system.effectiveState) &&
                 !route.queryParams.orgState
             ) {
-                await router.navigate([`/systems/${systemId}/noAccess/${system.name}`]);
+                await router.navigate([`/systems/${systemId}/no-access/${system.name}`]);
                 return true;
             }
         } catch (e) {
