@@ -387,7 +387,10 @@ export const GroupsStore = signalStore(
 
                 const targetGroupId = store.getTargetGroupId(movedItem);
 
-                if (targetGroupId === targetItem.id) {
+                if (
+                    targetGroupId === targetItem.id ||
+                    ('id' in movedItem && movedItem.id === targetItem.id)
+                ) {
                     const value = targetGroupId ? errorMsg.alreadyInFolder : errorMsg.alreadyInRoot;
                     store.showRibbon({ value, params: { type } });
                     return from(Promise.reject(value));
