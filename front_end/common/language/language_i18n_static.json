@@ -1341,7 +1341,7 @@
         "orgs": {
             "groupAction": {
                 "cancel": "Cancel",
-                "deleteMessage": "Are you sure you want to delete the folder {folderName}?",
+                "deleteMessage": "Are you sure you want to delete the folder <span class=\"text-contrast-bold\">{folderName}</span>?",
                 "delete": "Delete",
                 "deleteWarning": {
                     "title": "WARNING",

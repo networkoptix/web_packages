@@ -7,7 +7,7 @@ import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/route
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { groupBy, identity, zip } from 'lodash-es';
+import { groupBy, identity, zip, escape } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { firstValueFrom, switchMap } from 'rxjs';
 
@@ -430,7 +430,7 @@ export class NxOrganizationCardContainerComponent {
                                     message: this.translateService.instant(
                                         staticLang.channelPartners.orgs.groupAction.deleteMessage,
                                         {
-                                            folderName: `<span class=\"text-contrast-bold\">${group.name}</span>`,
+                                            folderName: escape(group.name),
                                         },
                                     ),
                                 },
