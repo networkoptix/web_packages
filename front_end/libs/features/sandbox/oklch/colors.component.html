@@ -1,0 +1,149 @@
+<div
+    class="content-block"
+    style="padding: 2rem"
+>
+    <h1>
+        Oklch Colors
+        <div style="margin-left: 40px; margin-bottom: 10px">
+            <nx-switch [(ngModel)]="isDarkTheme"></nx-switch>
+        </div>
+        <div
+            class="d-flex"
+            style="margin-left: 40px; margin-bottom: -4px; gap: 20px"
+        >
+            <nx-checkbox
+                [(ngModel)]="showPlus90"
+                (ngModelChange)="generateAllPalettes()"
+                labelText="hue + 90"
+            ></nx-checkbox>
+            <nx-checkbox
+                [(ngModel)]="showPlus180"
+                (ngModelChange)="generateAllPalettes()"
+                labelText="hue + 180"
+            ></nx-checkbox>
+            <h4
+                class="d-flex align-items-center"
+                style="margin: 0"
+            >
+                Color picker and gamut graphs&nbsp;->&nbsp;
+                <a
+                    href="https://oklch.com/"
+                    target="_blank"
+                >
+                    https://oklch.com
+                </a>
+            </h4>
+        </div>
+    </h1>
+
+    <div
+        class="d-flex flex-row"
+        style="gap: 40px"
+    >
+        <div>
+            @for (palette of schemas; track $index) {
+                <div class="mt-5">
+                    <h2 class="text-center text-slate-600 text-sm mb-2">{{ palette.label }}</h2>
+
+                    @if (palette.label === 'HSL') {
+                        <div class="d-flex">
+                            <div
+                                class="d-flex align-items-center"
+                                style="width: 80px"
+                            >
+                                Hue:
+                            </div>
+                            <input
+                                class="grow"
+                                [(ngModel)]="hue"
+                                [ngModelOptions]="{ standalone: true }"
+                                (input)="generateAllPalettes()"
+                                min="0"
+                                max="360"
+                                type="range"
+                            />
+                            <h2 class="ml-4">{{ hue }}</h2>
+                        </div>
+                    }
+
+                    @if (palette.label === 'OKLCH (Fixed chroma)') {
+                        <div class="d-flex">
+                            <div
+                                class="d-flex align-items-center"
+                                style="width: 80px"
+                            >
+                                Chroma:
+                            </div>
+                            <input
+                                class="grow"
+                                [(ngModel)]="fixedChroma"
+                                [ngModelOptions]="{ standalone: true }"
+                                (input)="generateAllPalettes()"
+                                min="0"
+                                max="40"
+                                type="range"
+                            />
+                            <h2 class="ml-4">{{ fixedChroma / 100 }}</h2>
+                        </div>
+                    }
+
+                    <div class="d-flex flex-row">
+                        <div style="width: 80px">Shade:</div>
+                        @for (shade of shades; track $index) {
+                            <div class="item-cell item-cell--shade">{{ shade }}</div>
+                        }
+                    </div>
+                </div>
+                @for (array of palette.paletteArray; track $index; let idx = $index) {
+                    @if (array.length) {
+                        <div class="d-flex flex-row">
+                            <div style="width: 80px">
+                                @if ($index === 0) {
+                                    Color No.:<br />
+                                    Lightness:
+                                }
+                                @if ($index === 1) {
+                                    HUE + 90:
+                                }
+                                @if ($index === 2) {
+                                    HUE + 180:
+                                }
+                            </div>
+                            @for (color of array; track $index) {
+                                <div
+                                    class="item-cell text-color--{{ $index + 1 }}"
+                                    [ngStyle]="{
+                                        'background-color': color.css,
+                                        color: color.text,
+                                        border:
+                                            selected === $index
+                                                ? '1px solid ' + selectedColor
+                                                : 'none'
+                                    }"
+                                    (click)="setShade(palette.label, $index)"
+                                >
+                                    @if (idx === 0) {
+                                        <span>{{ $index + 1 }}</span>
+                                        <span>{{ color.lightness }}</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            }
+        </div>
+
+        <div
+            style="padding: 50px"
+            [ngStyle]="{ 'background-color': pageStyle }"
+        >
+            <h1>Components</h1>
+            <!--            <button [ngClass]="getClass()">Accept</button>-->
+            <input
+                [ngStyle]="{ 'background-color': inputBgColor, color: inputTextColor }"
+                [value]="palette"
+            />
+        </div>
+    </div>
+</div>

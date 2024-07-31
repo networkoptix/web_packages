@@ -1,0 +1,45 @@
+
+:host {
+    --new-button-primary-text-color-500: #000000;
+    --new-button-primary-color-500: #f5f5f5;
+
+    .item-cell {
+        border-top: transparent !important;
+        border-bottom: transparent !important;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 50px;
+        width: 25px;
+
+        &--shade {
+            justify-content: center;
+            height: 25px;
+            font-size: 8px;
+        }
+    }
+
+    .text-color {
+        &--1 {
+            color: var(--new-text-color-1);
+        }
+    }
+
+    .btn {
+        &--primary {
+            background-color: var(--new-button-primary-color-500);
+            color: var(--new-button-primary-text-color-500);
+        }
+    }
+
+    .entry {
+        &--dark {
+            background-color: var(--new-entry-dark);
+        }
+
+        &light {
+            background-color: var(--new-entry-light);
+        }
+    }
+}

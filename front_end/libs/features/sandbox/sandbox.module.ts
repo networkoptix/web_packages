@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ApplyGuard } from '@guards/applyGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
+import { NxOklchColorsComponent } from '@pages/sandbox/oklch/colors.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 
 import { NxGridLayoutComponent } from '../layout/layout.component';
@@ -40,7 +41,7 @@ export const appRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'form-elements',
+                redirectTo: 'colors/oklch-colors',
             },
             {
                 path: 'buttons',
@@ -132,6 +133,10 @@ export const appRoutes: Routes = [
                 component: NxComponentLibrarySandboxComponent,
             },
             {
+                path: 'webgl',
+                component: WebglComponent,
+            },
+            {
                 path: 'colors',
                 children: [
                     {
@@ -155,12 +160,12 @@ export const appRoutes: Routes = [
                         component: NxThemeColorsComponent,
                     },
                     {
-                        path: 'theme-variables',
-                        component: NxThemeVariableGeneratorSandboxComponent,
+                        path: 'oklch-colors',
+                        component: NxOklchColorsComponent,
                     },
                     {
-                        path: 'webgl',
-                        component: WebglComponent,
+                        path: 'theme-variables',
+                        component: NxThemeVariableGeneratorSandboxComponent,
                     },
                 ],
             },
