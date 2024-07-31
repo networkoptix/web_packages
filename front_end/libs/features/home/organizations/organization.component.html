@@ -142,6 +142,9 @@
                     >
                     </nx-alert-block>
                 }
+                <nx-ribbon-standalone
+                    [context]="groupsStore.currentRibbonContext$$()"
+                ></nx-ribbon-standalone>
                 <div class="content-container">
                     <nx-pre-loader
                         *ngIf="isLoading && !currentOrganization$$(); else cards"

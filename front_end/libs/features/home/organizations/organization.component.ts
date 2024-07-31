@@ -34,6 +34,7 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
+import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -89,6 +90,7 @@ interface SidebarSettings {
         NxAlertBlockComponent,
         NxTutorialDialogComponent,
         NxPagePlaceholderGenericNewV2Component,
+        NxRibbonStandaloneComponent,
     ],
 })
 export class NxOrganizationsComponent implements OnInit, OnDestroy {
