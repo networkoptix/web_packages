@@ -64,16 +64,6 @@
                 }
             }
         },
-        "publish-storybook": {
-            "executor": "nx:run-commands",
-            "options": {
-                "commands": [
-                    { "command": "npx chromatic --project-token=chpt_fe9845fefe57026 -d=dist/nx-components-storybook --exit-zero-on-changes" },
-                    { "command": "exit 0; npx chromatic --project-token=chpt_fe9845fefe57026 -d=dist/nx-components-storybook --exit-zero-on-changes --patch-build=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME...$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" }
-                ]
-            },
-            "dependsOn": ["build-storybook"]
-        },
         "test-storybook": {
             "executor": "nx:run-commands",
             "options": {

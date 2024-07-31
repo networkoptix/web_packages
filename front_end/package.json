@@ -81,8 +81,7 @@
         "esprint": "export NX_TASK_TARGET_TARGET=lint; node esprintLimiter.js && eslint --ext .ts --fix || esprint check --fix --workers=$?",
         "esprint4": "export NX_TASK_TARGET_TARGET=lint; esprint check --fix --workers=4",
         "esprint8": "export NX_TASK_TARGET_TARGET=lint; esprint check --fix --workers=8",
-        "chromatic": "npx chromatic --project-token=chpt_fe9845fefe57026 -d=dist/nx-components-storybook",
-        "publish-storybook": "nx run nx-components:publish-storybook"
+        "chromatic": "npx chromatic --project-token=chpt_fe9845fefe57026 -d=dist/nx-components-storybook"
     },
     "private": true,
     "dependencies": {
