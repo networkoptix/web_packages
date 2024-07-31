@@ -60,6 +60,7 @@ import {
     HasMoreNotifierCallback,
     PartnerExpiringServiceReportResponse,
     OrgExpiringServiceReportResponse,
+    ExpiringServiceDetailDialogResponse,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -353,6 +354,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
+    getPartnerExpiringServiceDetailDialog = (
+        partnerId: string,
+        serviceId: string,
+        periodStartDate: string,
+    ): Observable<ExpiringServiceDetailDialogResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                serviceId,
+                'expiring_detail_table',
+            ]),
+            { params: { periodStartDate } },
+        );
+    };
+
     getPartnerServiceChanges = (
         partnerId: string,
         startTs: string,
@@ -502,6 +519,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 'reports',
                 serviceId,
                 'regular_detail_table',
+            ]),
+            { params: { periodStartDate } },
+        );
+    };
+
+    getOrganizationExpiringServiceDetailDialog = (
+        orgId: string,
+        serviceId: string,
+        periodStartDate: string,
+    ): Observable<ExpiringServiceDetailDialogResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                serviceId,
+                'expiring_detail_table',
             ]),
             { params: { periodStartDate } },
         );

@@ -24,6 +24,7 @@ import type {
     State,
     SystemItem,
     SystemService,
+    ExpiringServiceDetailDialogResponse,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     CloudResponse,
@@ -226,6 +227,14 @@ export type ChangeService = DialogType<
 export type ViewRegularServiceDetails = DialogType<
     {
         regularServiceDialogData$: Observable<RegularServiceDetailDialogResponse>;
+        entityName: string;
+    },
+    void
+>;
+
+export type ViewExpiringServiceDetails = DialogType<
+    {
+        expiringServiceDialogData$: Observable<ExpiringServiceDetailDialogResponse>;
         entityName: string;
     },
     void

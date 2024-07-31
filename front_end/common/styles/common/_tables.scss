@@ -472,6 +472,9 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             grid-template-columns: 5fr 1fr 1fr;
 
             &:hover {
+                .no-hover {
+                    cursor: default;
+                }
                 cursor: pointer;
             }
 
@@ -537,14 +540,14 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         grid-template-rows: auto !important;
 
         .header {
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             border-left: none !important;
             border-right: none !important;
 
         }
         
         .big-row {
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             border-left: none !important;
             border-right: none !important;
 

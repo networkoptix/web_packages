@@ -474,7 +474,7 @@ export interface SystemExpiringServiceEntry {
     system_name: string;
     groups_path: { id: string; name: string }[];
     channels: number;
-    expirations: string[];
+    expiration_date: string;
 }
 
 export interface OrgExpiringServiceReportResponse {
@@ -492,6 +492,14 @@ export interface EntityExpiringServiceEntry {
 export interface PartnerExpiringServiceReportResponse {
     sub_entities: EntityExpiringServiceEntry[];
 }
+
+// Reports - Expiring service details - Detail table dialog
+export interface ExpiringServiceDetailDialogEntry {
+    channels: number;
+    expiration_date: string;
+}
+
+export type ExpiringServiceDetailDialogResponse = ExpiringServiceDetailDialogEntry[];
 
 // Reports - Service changes
 interface PartnerServiceChangeEntry {

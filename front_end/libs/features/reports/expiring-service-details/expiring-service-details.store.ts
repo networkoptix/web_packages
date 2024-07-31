@@ -55,11 +55,13 @@ export const ExpiringServiceDetailsStore = signalStore(
     withState(initialState),
     withComputed((store, dateTimeFormat = inject(NxDateTimeFormatService)) => ({
         entityExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
-            store.entityExpiringServices().map(({ id, name, channels, expirations }) => ({
+            store.entityExpiringServices().map(({ id, type, name, channels, expirations }) => ({
                 id,
+                type,
                 usedBy: name,
                 channels,
                 expirationDate: formatExpirations(expirations, dateTimeFormat),
+                hasMultipleExpirations: expirations.length > 1,
             })),
         ),
         entityExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
@@ -75,11 +77,13 @@ export const ExpiringServiceDetailsStore = signalStore(
         systemExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
             store
                 .systemExpiringServices()
-                .map(({ system_id, system_name, channels, expirations }) => ({
+                .map(({ system_id, system_name, channels, expiration_date }) => ({
                     id: system_id,
+                    type: 'system',
                     usedBy: system_name,
                     channels,
-                    expirationDate: formatExpirations(expirations, dateTimeFormat),
+                    expirationDate: expiration_date,
+                    hasMultipleExpirations: false,
                 })),
         ),
         systemExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>

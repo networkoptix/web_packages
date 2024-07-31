@@ -459,6 +459,14 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.EXTRA_LARGE },
     );
 
+    viewExpiringServiceDetails = this.dialogV1Factory<Dt.ViewExpiringServiceDetails>(
+        () =>
+            import(
+                './channel-partners/view-expiring-service-details/expiring-service-details-dialog.component'
+            ).then(m => m.NxExpiringServiceDetailsDialog),
+        { width: DIALOG_SIZE.EXTRA_LARGE },
+    );
+
     /* Admin */
     connectLocalToCloud = this.dialogV1Factory<Dt.ConnectLocalToCloud>(() =>
         import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),
