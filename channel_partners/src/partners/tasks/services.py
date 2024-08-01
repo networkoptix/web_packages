@@ -145,7 +145,7 @@ NEGATION_LOCK_KEY = "service_negation_lock_{organization_id}"
 def organization_systems_negation_task(
         organization_id: str | uuid.UUID,
         systems_ids: List[int]
-):
+) -> List[uuid.UUID]:
     """
     Negates service for given systems id in organization.
     :param organization_id: Organization id which services need to be negated for
@@ -162,7 +162,7 @@ def organization_systems_negation_task(
     except Organization.DoesNotExist:
         logger.warning("Cannot find organization. Task cancelled",
                        organization_id=organization_id)
-        return None
+        return []
     if not caches['default'].add(lock_key, f"{uuid.uuid4()}", timeout=300):
         raise Retry(message=f"There is running negation for organization {organization_id}")
     service_records = ChannelPartnerServiceRecord.objects.filter(
@@ -174,7 +174,8 @@ def organization_systems_negation_task(
     )
     try:
         with transaction.atomic():
-            return ChannelPartnerServiceRecord.negate_services(service_records)
+            negation_records = ChannelPartnerServiceRecord.negate_services(service_records)
+            return [record.id for record in negation_records]
     except Exception as ex:
         logger.critical("Exception occurred while negating service records",
                         organization_id=organization_id,
