@@ -424,7 +424,7 @@ class ReportSnapshotService:
             A report needs to be generated if generate=True and either:
                 - The snapshot does not exist (i.e., it has never been generated before).
                 - The report is provisional and was last updated on a different day than today.
-
+                - The report schema version is outdated.
         """
 
         if not self.generate:
