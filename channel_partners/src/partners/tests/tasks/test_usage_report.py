@@ -190,14 +190,14 @@ class TestCalculateAllReport:
                 assert service_report['channels'] == channels_count
 
 
-
 class TestRegenerateOutdatedSchemaReports:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, organization_factory, system_factory,
               cp_service_factory, service_record_factory, django_capture_on_commit_callbacks):
+        yesterday = timezone.now() - datetime.timedelta(days=1)
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
-        self.sys = system_factory(organization=self.org)
+        self.sys = system_factory(organization=self.org, created_ts=yesterday)
         self.regular_service = cp_service_factory(channel_partner=self.cp)
         self.expiring_service = cp_service_factory(channel_partner=self.cp,
                                                    duration=1,
@@ -217,8 +217,7 @@ class TestRegenerateOutdatedSchemaReports:
         with django_capture_on_commit_callbacks(execute=True):
             self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
         self.sub_org = organization_factory(channel_partner=self.sub_cp)
-        self.sub_sys = system_factory(organization=self.sub_org)
-        yesterday = timezone.now() - datetime.timedelta(days=1)
+        self.sub_sys = system_factory(organization=self.sub_org, created_ts=yesterday)
         for cp in (self.cp, self.sub_cp):
             for service in cp.services.all():
                 service_record_factory(

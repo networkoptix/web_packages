@@ -455,11 +455,12 @@ def system_factory(cloud_test_host, default_organization):
             system_id=None,
             state=ChannelPartnerStates.ACTIVE,
             system_group=None,
-            name=None
+            name=None,
+            created_ts=None,
     ) -> CloudSystemId:
         sys_id = system_id or f'{uuid4()}'
         system_name = name or f'System {sys_id}'
-        return baker.make(
+        sys = baker.make(
             CloudSystemId,
             system_id=sys_id,
             system_group=system_group,
@@ -468,7 +469,9 @@ def system_factory(cloud_test_host, default_organization):
             state=state,
             system_state=CloudSystemStates.ACTIVATED,
             name=system_name)
-
+        if created_ts:
+            CloudSystemId.objects.filter(id=sys.id).update(created_ts=created_ts)
+        return sys
     return factory
 
 
