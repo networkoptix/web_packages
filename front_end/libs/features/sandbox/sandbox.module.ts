@@ -35,6 +35,7 @@ export const appRoutes: Routes = [
         path: '',
         loadComponent: () => import('./sandbox.component').then(c => c.NxSandboxComponent),
         children: [
+            /* Note: The path is converted from kebab-case to Title Case for left menu nav */
             {
                 path: '',
                 pathMatch: 'full',
@@ -67,7 +68,7 @@ export const appRoutes: Routes = [
                 component: MultiSelectComponent,
             },
             {
-                path: 'demo-layout',
+                path: 'grid-layout',
                 component: NxGridLayoutComponent,
             },
             {
@@ -103,7 +104,7 @@ export const appRoutes: Routes = [
                 component: NxTooltipSandboxComponent,
             },
             {
-                path: 'arch',
+                path: 'architecture',
                 component: NxArchSvgComponent,
             },
             {
@@ -133,7 +134,7 @@ export const appRoutes: Routes = [
                         component: NxCustomColorsComponent,
                     },
                     {
-                        path: 'hsl-theme',
+                        path: 'hsl-theme-colors',
                         component: NxHSLThemeColorsComponent,
                     },
                     {
@@ -141,7 +142,7 @@ export const appRoutes: Routes = [
                         component: NxThemeColorsComponent,
                     },
                     {
-                        path: 'theme-variables',
+                        path: 'theme-variable-generator',
                         component: NxThemeVariableGeneratorSandboxComponent,
                     },
                     // {
