@@ -12,13 +12,8 @@ interface NavItem {
     link: string[];
 }
 
-function navName(componentName: string): string {
-    return componentName
-        .replace(/^Nx/, '')
-        .replace(/Component$/, '')
-        .replace(/sandbox/i, '')
-        .replace(/example/i, '')
-        .replaceAll(/([A-Z][a-z])/g, ' $1');
+function navName(path: string): string {
+    return path.split('-').map(capitalize).join(' ');
 }
 
 @Component({
@@ -58,6 +53,8 @@ export class NxSandboxComponent {
     activeSection = 'sandbox';
 
     constructor() {
+        /* Automatically generate menu for navigation.
+        The path is converted from kebab-case to Title Case. */
         import('./sandbox.module').then(m => {
             const navAccordian: Record<string, NavItem[]> = { sandbox: [] };
             for (const route of m.appRoutes[0].children!) {
@@ -66,13 +63,13 @@ export class NxSandboxComponent {
                     /* Top level redirect */
                     continue;
                 } else if (route.component) {
-                    const name = navName(route.component.name);
+                    const name = navName(route.path!);
                     const link = ['/sandbox', path];
                     navAccordian.sandbox.push({ name, link });
                 } else if (route.children) {
                     navAccordian[path] = [];
                     for (const child of route.children) {
-                        const name = navName(child.component!.name);
+                        const name = navName(child.path!);
                         const link = ['/sandbox', path, child.path!];
                         navAccordian[path].push({ name, link });
                     }
