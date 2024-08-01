@@ -279,6 +279,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
                     msg: this.translate.instant(dialogMessages.directAccess2, {
                         folder: this.organization.name,
                         role: existingUserRoles.get(this.organization.id)!,
+                        email,
                     }),
                 });
                 stepSelectStatuses.set(this.organization.id, {
@@ -303,6 +304,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
                         msg: this.translate.instant(dialogMessages.directAccess2, {
                             folder: groupFlatMap[groupId].name,
                             role: existingUserRoles.get(groupId)!,
+                            email,
                         }),
                     });
                     stepSelectStatuses.set(groupId, {
