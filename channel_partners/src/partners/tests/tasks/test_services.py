@@ -65,7 +65,7 @@ class TestOrganizationSystemsNegationTask:
 
     def test_non_existing_organization(self):
         negation_records = organization_systems_negation_task(f'{uuid4()}', self.system_ids)
-        assert negation_records is None
+        assert negation_records == []
 
     def test_non_existing_system(self, organization_factory):
         organization = organization_factory()
