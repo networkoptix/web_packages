@@ -1,16 +1,16 @@
 import { DomPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
+    AfterViewInit,
     Component,
     ElementRef,
     EventEmitter,
     Input,
-    OnInit,
+    OnDestroy,
     Output,
-    QueryList,
     ViewChild,
-    ViewChildren,
     booleanAttribute,
+    computed,
     effect,
     forwardRef,
     input,
@@ -21,7 +21,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@static-variables';
-import { paramSortFunc } from '@utils/general';
+
+type SpanRef = ElementRef<HTMLSpanElement>;
 
 @Component({
     selector: 'nx-org-step-select',
@@ -37,43 +38,65 @@ import { paramSortFunc } from '@utils/general';
         },
     ],
 })
-export class NxOrgStepSelectComponent implements OnInit, ControlValueAccessor {
+export class NxOrgStepSelectComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
     @ViewChild('pathContainer') private pathContainer: ElementRef<HTMLDivElement>;
-    @ViewChildren('path') protected set _paths(value: QueryList<ElementRef<HTMLSpanElement>>) {
-        this.paths.set(value.map(p => p.nativeElement));
+    private containerObserver = new ResizeObserver(([container]) => {
+        const [borderBoxSize] = container.borderBoxSize;
+        this.containerWidth.set(borderBoxSize.inlineSize);
+    });
+    private containerWidth = signal(0);
+
+    @ViewChild('ellipsesSpan') private ellipsesSpan: SpanRef;
+    private fullPathSpan = signal<HTMLSpanElement | undefined>(undefined);
+    @ViewChild('fullPathSpan') set _fullPathSpan(child: SpanRef | undefined) {
+        this.fullPathSpan.set(child?.nativeElement);
     }
-    private paths = signal<HTMLSpanElement[]>([]);
-    protected _pathsEffect = effect(() => {
-        let paths = this.paths();
-        if (!paths.length) {
-            this.selectedPath = undefined;
-            return;
-        }
-        paths = paths.slice().sort(paramSortFunc(p => p.scrollWidth, false));
-        if (paths.length === 1) {
-            this.selectedPath = new DomPortal(paths[0]);
-            return;
-        }
+    private shortPathSpan = signal<HTMLSpanElement | undefined>(undefined);
+    @ViewChild('shortPathSpan') set _shortPathSpan(child: SpanRef | undefined) {
+        this.shortPathSpan.set(child?.nativeElement);
+    }
+    @ViewChild('shortPathCenterSpan') private shortPathCenterSpan?: SpanRef;
+    @ViewChild('shortPathTailSpan') private shortPathTailSpan?: SpanRef;
+    @ViewChild('extraShortPathSpan') private extraShortPathSpan?: SpanRef;
 
-        // Folder names might be shorter than ellipses, try full path first
-        const [fullPath] = paths.splice(
-            paths.findIndex(p => p.hasAttribute('data-full-path')),
-            1,
-        );
-        if (fullPath.clientWidth < this.pathContainer.nativeElement.clientWidth) {
-            this.selectedPath = new DomPortal(fullPath);
-            return;
-        }
+    protected _pathEffect = effect(() => {
+        const [containerWidth, fullPathSpan, shortPathSpan] = [
+            this.containerWidth(),
+            this.fullPathSpan(),
+            this.shortPathSpan(),
+        ];
 
-        for (let i = 0; i < paths.length; i++) {
-            const path = paths[i];
-            if (path.clientWidth < this.pathContainer.nativeElement.clientWidth) {
-                this.selectedPath = new DomPortal(paths[i]);
-                return;
+        let selectedPath: HTMLSpanElement | undefined;
+
+        if (!fullPathSpan) {
+            // No value
+        } else if (!shortPathSpan) {
+            selectedPath = fullPathSpan; // Org only
+        } else {
+            const ellipsesSpan = this.ellipsesSpan.nativeElement;
+            const shortPathCenterSpan = this.shortPathCenterSpan!.nativeElement;
+            const shortPathTailSpan = this.shortPathTailSpan!.nativeElement;
+            const extraShortPathSpan = this.extraShortPathSpan!.nativeElement;
+
+            const fullPathWidth = Math.floor(fullPathSpan.getBoundingClientRect().width);
+            // Using fullPathWidth.scrollWidth is 0 on Chrome only for some reason
+
+            if (fullPathWidth < containerWidth) {
+                selectedPath = fullPathSpan;
+            } else if (
+                containerWidth - (shortPathCenterSpan.clientWidth + shortPathTailSpan.scrollWidth) >
+                ellipsesSpan.clientWidth
+            ) {
+                /* If the entire tail end fits and leaves more space than ellipses,
+                shorten the head (org name) */
+                selectedPath = shortPathSpan;
+            } else {
+                selectedPath = extraShortPathSpan;
             }
         }
 
-        this.selectedPath = new DomPortal(paths.pop()!);
+        this.selectedPath?.detach();
+        this.selectedPath = selectedPath ? new DomPortal(selectedPath) : undefined;
     });
 
     selectedPath?: DomPortal<HTMLSpanElement>;
@@ -101,7 +124,19 @@ export class NxOrgStepSelectComponent implements OnInit, ControlValueAccessor {
     readOnly = input<boolean>(false);
     click = new EventEmitter<void>();
 
-    value: string[];
+    private value = signal<string[]>([]);
+    fullPath = computed<string>(() => this.value().join('/'));
+    shortPath = computed<{ head: string; center: string; tail: string } | undefined>(() => {
+        const value = this.value();
+        if (value.length === 2) {
+            const [head, tail] = value;
+            return { head, center: '/', tail };
+        } else if (value.length > 2) {
+            const head = value[0];
+            const tail = value[value.length - 1];
+            return { head, center: '/.../', tail };
+        }
+    });
 
     onClick(): void {
         if (!this.readOnly()) {
@@ -109,10 +144,22 @@ export class NxOrgStepSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    ngOnInit(): void {}
+    ngAfterViewInit(): void {
+        this.containerWidth.set(this.pathContainer.nativeElement.clientWidth);
+        // Observer doesn't write until after first path effect
+
+        this.containerObserver.observe(this.pathContainer.nativeElement);
+    }
+
+    ngOnDestroy(): void {
+        this.containerObserver.disconnect();
+    }
 
     writeValue(value: string[]): void {
-        this.value = value;
+        if (value === null) {
+            return;
+        }
+        this.value.set(value);
     }
 
     protected onChange = (_: string[]): void => {};

@@ -27,13 +27,21 @@
             overflow: visible;
         }
 
-        span {
+        .full-path,
+        .short-path__head,
+        .extra-short-path {
+            text-overflow: ellipsis;
+            overflow: hidden;
             white-space: nowrap;
         }
 
-        & > span {
-            text-overflow: ellipsis;
-            overflow: hidden;
+        .short-path {
+            display: flex;
+            min-width: 0;
+
+            &__head {
+                flex-shrink: 1;
+            }
         }
     }
 

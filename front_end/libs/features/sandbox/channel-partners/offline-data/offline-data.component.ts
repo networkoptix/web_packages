@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
+import { NxOrgStepSelectComponent } from '@dialogs/channel-partners/add-org-user-v2/org-step-select/org-step-select.component';
 import { NxOrgTreeSelectorComponent } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.component';
 import type { OrgTreeStatusMap } from '@dialogs/channel-partners/org-tree-selector/org-tree-selector.types';
 import type {
@@ -158,7 +160,7 @@ const dummyGroups2 = [
     templateUrl: 'offline-data.component.html',
     styleUrls: ['offline-data.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxOrgTreeSelectorComponent],
+    imports: [CommonModule, FormsModule, NxOrgTreeSelectorComponent, NxOrgStepSelectComponent],
 })
 export class NxCpOfflineDataComponent {
     organization = dummyOrg;
@@ -182,4 +184,28 @@ export class NxCpOfflineDataComponent {
         ['FellowHumane', { status: 'warn', msg: 'Warning message' }],
         ['DreamingGlow', { status: 'warn', msg: 'Warning message' }],
     ]);
+
+    paths = [
+        ['A', 'B', 'C', 'D', 'E'],
+        ['AthleticGarden', 'SizzlingMentor'],
+        [
+            'HotDetectiveSolderingHippoRobotKittenWittySloganFollowerMossBandedCourage',
+            'SavoryTuber',
+        ],
+        [
+            'HotDetectiveSolderingHippoRobotKittenWittySloganFollowerMossBandedCourage',
+            'SavoryTuber',
+            'DaringCapitalist',
+        ],
+        ['HotDetectiveSolderingHippoRobotKittenWittySloganFollowerMossBandedCourage'],
+        [
+            'HotDetectiveSolderingHippoRobotKitten',
+            'WittySloganFollowerMossBandedCourageUnsavoryDynamoChatterboxGhostChatterboxGhost',
+        ],
+        [
+            'HotDetectiveSolderingHippoRobotKitten',
+            'WittySloganFollowerMossBandedCourage',
+            'UnsavoryDynamoChatterboxGhostChatterboxGhost',
+        ],
+    ];
 }
