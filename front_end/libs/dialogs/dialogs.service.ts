@@ -350,12 +350,12 @@ export class NxDialogsService {
         ),
     );
 
-    createOrganization = this.dialogV1Factory<Dt.AddOrganization>(
+    createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
         () =>
             import('./channel-partners/add-organization/add-organization.component').then(
                 m => m.AddOrganizationModalContent,
             ),
-        { autoFocus: 'input' },
+        { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
     );
 
     updateOrganization = this.dialogV1Factory<Dt.EditOrganization>(() =>
