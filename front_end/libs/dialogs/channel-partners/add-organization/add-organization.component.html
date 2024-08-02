@@ -1,59 +1,55 @@
-<form
-    #addOrganizationForm="ngForm"
-    name="addOrganizationForm"
-    novalidate
->
-    <div class="modal-header">
-        <h1
-            class="modal-title"
-            translate
-        >
-            New Organization
-        </h1>
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+        >New Organization</span
+    >
+    @if (closable) {
         <button
             type="button"
-            class="close"
-            id="closeAddPartner"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="closable"
-        >
-            <div class="close-content"></div>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="form-group">
-            <label translate>Name</label>
-            <input
-                class="form-control"
-                id="partnerName"
-                name="partnerName"
-                [(ngModel)]="name"
-                #partnerName="ngModel"
-                [required]="addOrganizationForm.submitted"
-            />
-            <div
-                class="warning-container"
-                *ngIf="partnerName.touched && partnerName.errors?.required"
+        ></button>
+    }
+</div>
+<form
+    class="nx-modal__content"
+    [formGroup]="formGroup"
+>
+    <div class="nx-modal__body">
+        <nx-form-field>
+            <label
+                for="add-organization-name"
+                nx-label
+                translate
+                >Name</label
             >
-                <span
-                    class="input-error"
-                    translate
-                    >Organization name is required</span
-                >
-            </div>
-        </div>
+            <input
+                nx-input
+                id="add-organization-name"
+                formControlName="orgName"
+            />
+            <nx-control-messages></nx-control-messages>
+        </nx-form-field>
     </div>
-    <div class="modal-footer">
-        <nx-process-button
-            [process]="addOrganizationProcess"
-            [buttonText]="'Create' | translate"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="addOrganizationProcess"
-            [cancelFn]="unlock"
-            [discardFn]="close"
-        ></nx-cancel-button>
+    <div class="nx-modal__footer">
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
+        <nx-async-action-button
+            [action]="addOrganizationProcess"
+            [(busy)]="busy"
+            translate
+        >
+            Create
+        </nx-async-action-button>
     </div>
 </form>
