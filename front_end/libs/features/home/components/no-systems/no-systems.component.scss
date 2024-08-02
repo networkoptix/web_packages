@@ -2,6 +2,11 @@
 @use "theme_palette" as colors;
 
 nx-no-systems-cards {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     .no-systems-header {
         text-align: center;
         margin: 25px 0;
