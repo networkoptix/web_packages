@@ -629,7 +629,8 @@ export class NxLayoutGridComponent {
     unsubTooltip$ = new Subject<string>();
 
     checkLayoutItemsErrors = (layout: ParsedLayoutWithItems): void => {
-        this.layoutItemsErrorsStore.reset();
+        this.layoutItemsErrorsStore.reset(['layoutError']);
+
         const layoutItemLookup = this.layoutItemLookup$$();
         layout.items.forEach(item => {
             const itemDetail = layoutItemLookup?.[item.resourceId];
@@ -2019,8 +2020,15 @@ export class NxLayoutGridComponent {
         }>,
         error: string,
     ): void {
-        const itemId = itemDetail.details.id;
+        if (!itemDetail || !itemDetail.details) {
+            return;
+        }
+
+        const itemId = itemDetail.details?.id;
         const showOfflineError = (): void => {
+            if (!itemDetail.details) {
+                return;
+            }
             itemDetail.details.online = false;
             this.layoutItemsErrorsStore.set(itemId, {
                 status: staticLang.common.cameraStates.unavailable.toLowerCase(),

@@ -175,11 +175,11 @@ export interface NxSystemCamera {
 }
 
 export enum Status {
-    Online = 'online',
-    Offline = 'offline',
-    Unauthorized = 'unauthorized',
-    Incompatible = 'incompatible',
-    MismatchedCertificate = 'mismatchedCertificate',
+    Online = 'Online',
+    Offline = 'Offline',
+    Unauthorized = 'Unauthorized',
+    Incompatible = 'Incompatible',
+    MismatchedCertificate = 'MismatchedCertificate',
 }
 
 export enum CameraStatus {

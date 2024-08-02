@@ -33,6 +33,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language_static';
+import { ConnectionError } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
@@ -77,14 +78,14 @@ const unauthorized: Placeholder = {
 };
 
 const PLACEHOLDERS: Record<string, Placeholder> = {
-    offline_camera: {
+    offlineCamera: {
         ...offline,
         hint: hintsLang.offlineCamera,
     },
-    offline_server: {
+    offlineServer: {
         ...offline,
     },
-    offline_system: {
+    offlineSystem: {
         ...offline,
         icon: 'unavailable',
         message: messagesLang.systemIsOffline,
@@ -95,19 +96,19 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         actionName: actionsLang.defaultPassword,
         hint: hintsLang.defaultPassword,
     },
-    unauthorized_camera: {
+    unauthorizedCamera: {
         ...unauthorized,
         actionName: actionsLang.unauthorizedCamera,
         hint: hintsLang.unauthorizedCamera,
     },
-    unauthorized_server: {
+    unauthorizedServer: {
         ...unauthorized,
     },
     incompatible: {
         message: messagesLang.incompatible,
         isError: true,
     },
-    unavailable_camera: {
+    unavailableCamera: {
         ...unavailable,
         hint: hintsLang.unavailableCamera,
     },
@@ -123,7 +124,7 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         ...not_supported,
         hint: hintsLang.intercom,
     },
-    virtual_camera: {
+    virtualCamera: {
         message: messagesLang.noLiveStream,
         isError: false,
         hint: hintsLang.virtualCamera,
@@ -146,6 +147,11 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         ...not_supported,
         description: descriptionsLang.systemVersionNotCompatible,
         hint: hintsLang.systemVersionNotCompatible,
+    },
+    codecNotSupported: {
+        ...not_supported,
+        description: '',
+        hint: hintsLang.codecNotSupported,
     },
     default: {
         ...unavailable,
@@ -170,23 +176,25 @@ const KNOWN_STATUSES = [
 ];
 
 const CAMERA_PLACEHOLDERS = {
-    offline: PLACEHOLDERS.offline_camera,
+    offline: PLACEHOLDERS.offlineCamera,
     defaultPassword: PLACEHOLDERS.defaultPassword,
-    unauthorized: PLACEHOLDERS.unauthorized_camera,
+    unauthorized: PLACEHOLDERS.unauthorizedCamera,
     incompatible: PLACEHOLDERS.incompatible,
-    unavailable: PLACEHOLDERS.unavailable_camera,
-    virtualCamera: PLACEHOLDERS.virtual_camera,
+    unavailable: PLACEHOLDERS.unavailableCamera,
+    virtualCamera: PLACEHOLDERS.virtualCamera,
+    [ConnectionError.transcodingDisabled]: PLACEHOLDERS.codecNotSupported,
+    [ConnectionError.mjpegDisabled]: PLACEHOLDERS.codecNotSupported,
 };
 
 const SERVER_PLACEHOLDERS = {
-    offline: PLACEHOLDERS.offline_server,
+    offline: PLACEHOLDERS.offlineServer,
     incompatible: PLACEHOLDERS.incompatible,
-    unauthorized: PLACEHOLDERS.unauthorized_server,
+    unauthorized: PLACEHOLDERS.unauthorizedServer,
     noAccess: PLACEHOLDERS.noAccess,
 };
 
 const SYSTEM_PLACEHOLDERS = {
-    systemOffline: PLACEHOLDERS.offline_system,
+    systemOffline: PLACEHOLDERS.offlineSystem,
     systemIncompatible: PLACEHOLDERS.incompatible,
     systemNoAccess: PLACEHOLDERS.noAccessToSystem,
     systemNoPermission: PLACEHOLDERS.noAccess,

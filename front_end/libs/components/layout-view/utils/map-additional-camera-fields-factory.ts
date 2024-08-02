@@ -15,6 +15,7 @@ export const mapAdditionalCameraFieldsFactory =
         const parentServer = servers.find(({ id }) => id === camera.parentId);
         const useV2api = parseFloat(parentServer?.version || '0') >= 6;
         const parentServerOnline = parentServer?.status === 'Online';
+
         const online =
             isIoOnly(camera) || (camera.status === CameraStatus.Online && parentServerOnline);
         const unauthorized = camera.status === CameraStatus.Unauthorized && parentServerOnline;

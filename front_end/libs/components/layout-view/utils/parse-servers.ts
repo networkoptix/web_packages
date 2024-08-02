@@ -36,7 +36,7 @@ export const parseServers = (
                 details: {
                     ...server,
                     status: getServerStatus(server.status),
-                    online: server.status.toLowerCase() === ServerStatus.Online.toLowerCase(),
+                    online: getServerStatus(server.status) === ServerStatus.Online,
                     resourceType: staticLang.layouts.titles.resourceTypes[ResourceType.SERVER],
                 },
                 aspectRatio,

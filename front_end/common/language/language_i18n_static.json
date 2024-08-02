@@ -463,7 +463,8 @@
                 "virtualCamera": "Virtual cameras do not provide a Live stream.",
                 "noAccess": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
                 "noAccessToSystem": "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system.",
-                "systemVersionNotCompatible": "This Device must be connected to at least a version 6 Server to be viewed on the Layouts page."
+                "systemVersionNotCompatible": "This Device must be connected to at least a version 6 Server to be viewed on the Layouts page.",
+                "codecNotSupported": "Camera codec is currently not supported in Cloud portal."
             },
             "actions": {
                 "defaultPassword": "Setup",

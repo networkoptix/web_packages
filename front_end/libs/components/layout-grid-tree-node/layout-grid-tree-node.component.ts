@@ -113,7 +113,7 @@ export class NxLayoutGridTreeNode {
     }));
 
     constructor(
-        public layoutItemsStore: LayoutItemsErrorsStore,
+        public layoutItemsErrorsStore: LayoutItemsErrorsStore,
         public layoutStateService: LayoutStateService,
     ) {}
 
@@ -218,11 +218,11 @@ export class NxLayoutGridTreeNode {
     iconSrc$$ = computed(() => {
         const node = this.node$$();
         const account = this.accountService.account;
-        const statusFromLayoutItemsStore =
-            node.details?.id && this.layoutItemsStore.icons$$()[node.details?.id];
+        const statusIcon =
+            node.details?.id && this.layoutItemsErrorsStore.icons$$()[node.details?.id];
         const statusForDevice =
             (assertResourceOfType.camera(node) || assertResourceOfType.server(node)) &&
-            node.details.status;
+            node.details.status.toLowerCase();
         const statusForCrossSiteSystem = (() => {
             if (assertResourceOfType.system_cloud(node)) {
                 const { status, system2faEnabled, version } = node.details as NxSystemInfo;
@@ -236,9 +236,7 @@ export class NxLayoutGridTreeNode {
             return '';
         })();
         const status =
-            [statusFromLayoutItemsStore, statusForDevice, statusForCrossSiteSystem].find(
-                status => status,
-            ) || '';
+            [statusIcon, statusForDevice, statusForCrossSiteSystem].find(status => status) || '';
 
         if (statusForCrossSiteSystem) {
             console.info('Cross site system status:', statusForCrossSiteSystem);

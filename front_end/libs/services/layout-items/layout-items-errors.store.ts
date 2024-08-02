@@ -20,6 +20,9 @@ import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 
 type Entity = { id: string; value: string };
+type Collection = 'status' | 'layoutError' | 'icon' | 'message';
+type Collections = [Collection];
+
 const entitiesToObject = (entities: Entity[]): Record<string, string> =>
     entities.reduce(
         (obj: Record<string, string>, { id, value }) => ({
@@ -47,10 +50,9 @@ export class LayoutItemsErrorsStore extends signalStore(
         set: (
             id: string,
             error: {
-                status?: string;
-                layoutError?: string;
-                icon?: string;
-                message?: Translatable;
+                // only message can and should be translatable
+                // ts did not let me shorthand that well
+                [key in Collection]?: string | Translatable;
             },
         ) => {
             const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
@@ -59,9 +61,9 @@ export class LayoutItemsErrorsStore extends signalStore(
                 return;
             }
 
-            Object.keys(error).forEach(key => {
-                if (error?.[key]) {
-                    updates.push(setEntity({ id, value: error[key] }, { collection: key }));
+            Object.keys(error).forEach(collection => {
+                if (error?.[collection]) {
+                    updates.push(setEntity({ id, value: error[collection] }, { collection }));
                 }
             });
 
@@ -72,10 +74,7 @@ export class LayoutItemsErrorsStore extends signalStore(
             clear:
                 | true
                 | {
-                      status?: boolean;
-                      layoutError?: boolean;
-                      icon?: boolean;
-                      message?: boolean;
+                      [key in Collection]?: boolean;
                   },
         ) => {
             const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
@@ -85,12 +84,12 @@ export class LayoutItemsErrorsStore extends signalStore(
             }
 
             if (clear === true) {
-                clear = { status: true, icon: true, message: true };
+                clear = { status: true, icon: true, message: true, layoutError: true };
             }
 
-            Object.keys(clear).forEach(key => {
-                if (clear?.[key]) {
-                    updates.push(removeEntity(id, { collection: key }));
+            Object.keys(clear).forEach(collection => {
+                if (clear?.[collection]) {
+                    updates.push(removeEntity(id, { collection }));
                 }
             });
 
@@ -100,20 +99,26 @@ export class LayoutItemsErrorsStore extends signalStore(
 
             return patchState(store, ...updates);
         },
-        reset: () =>
+        reset: (collection?: Collections) =>
             patchState(
                 store,
-                removeAllEntities({ collection: 'status' }),
-                removeAllEntities({ collection: 'layoutError' }),
-                removeAllEntities({ collection: 'icon' }),
-                setAllEntities(
-                    Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).map(
-                        ([id, value]: [string, string]) => ({
-                            id,
-                            value,
-                        }),
-                    ),
-                    { collection: 'message' },
+                ...(collection ?? ['status', 'layoutError', 'icon', 'message']).map(
+                    (collection: Collection) => {
+                        switch (collection) {
+                            case 'message':
+                                return setAllEntities(
+                                    Object.entries(
+                                        staticLang.layouts.itemPlaceholders.additionalErrorMessages,
+                                    ).map(([id, value]: [string, string]) => ({
+                                        id,
+                                        value,
+                                    })),
+                                    { collection },
+                                );
+                            default:
+                                return removeAllEntities({ collection });
+                        }
+                    },
                 ),
             ),
     })),
