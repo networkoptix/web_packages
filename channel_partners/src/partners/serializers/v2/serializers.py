@@ -1518,7 +1518,7 @@ class ChannelPartnerRecordsParamSerializer(serializers.Serializer):
 
     @property
     def default_end_ts(self):
-        return (timezone.now() + relativedelta(days=1)).date()
+        return (datetime.datetime.now(datetime.timezone.utc) + relativedelta(days=1)).date()
 
     def validate(self, attrs):
         if not attrs.get('startTs'):
