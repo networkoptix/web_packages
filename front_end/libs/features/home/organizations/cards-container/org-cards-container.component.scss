@@ -12,6 +12,9 @@
         nx-three-dot {
             .dropdown-menu {
                 background-color: var(--card-dropdown-menu-bg) !important;
+                top: 0;
+                min-width: 16rem;
+                box-shadow: 0 .5rem .5rem 0 var(--dropdown-placeholder-color);
 
                 .dropdown-item {
                     color: var(--card-dropdown-item-color) !important;
