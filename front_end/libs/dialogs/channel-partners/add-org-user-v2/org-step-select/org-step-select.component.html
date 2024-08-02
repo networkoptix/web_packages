@@ -16,22 +16,36 @@
             <span translate>Select</span>
         }
         <div class="hidden-paths">
-            <!-- Using control flow adds whitespace between path parts -->
-            <!-- eslint-disable @angular-eslint/template/prefer-control-flow -->
-            <span
-                *ngIf="value.length"
-                #path
-                data-full-path
-                ><ng-container *ngFor="let part of value; last as last"
-                    >{{ part }}{{ !last ? '/' : '' }}</ng-container
-                ></span
-            >
-            <!-- eslint-enable @angular-eslint/template/prefer-control-flow -->
-            @if (value.length > 1) {
-                <span #path>.../{{ value[1] }}</span>
+            <span #ellipsesSpan>...</span>
+            @if (fullPath()) {
+                <span
+                    #fullPathSpan
+                    class="full-path"
+                    >{{ fullPath() }}</span
+                >
             }
-            @if (value.length > 2) {
-                <span #path>{{ value[0] }}/.../{{ value[value.length - 1] }}</span>
+            @if (shortPath(); as shortPath) {
+                <span
+                    #shortPathSpan
+                    class="short-path"
+                >
+                    <span class="short-path__head">{{ shortPath.head }}</span
+                    ><span
+                        class="short-path__center"
+                        #shortPathCenterSpan
+                        >{{ shortPath.center }}</span
+                    ><span
+                        class="short-path__tail"
+                        #shortPathTailSpan
+                        >{{ shortPath.tail }}</span
+                    >
+                </span>
+
+                <span
+                    #extraShortPathSpan
+                    class="extra-short-path"
+                    >.../{{ shortPath.tail }}</span
+                >
             }
         </div>
     </div>

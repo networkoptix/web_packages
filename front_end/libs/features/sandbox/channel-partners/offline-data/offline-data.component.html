@@ -9,5 +9,14 @@
     [organization]="org2"
     [groups]="groups2"
     [statuses]="statuses2"
-    style="width: 300px; height: 300px; margin-top: 1rem"
+    style="width: 300px; height: 300px"
 ></nx-org-tree-selector>
+
+<div
+    class="paths-test-container"
+    style="width: 300px; display: flex; flex-direction: column; gap: 0.5rem"
+>
+    @for (path of paths; track $index) {
+        <nx-org-step-select [ngModel]="path"></nx-org-step-select>
+    }
+</div>
