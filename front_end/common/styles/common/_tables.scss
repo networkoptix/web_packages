@@ -159,8 +159,11 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             border-right: 1px solid var(--border-color);
             padding-left: 8px;
 
-            &:last-child {
+            &.groups-container {
                 min-width: $permission-cell-size;
+            }
+
+            &:last-child {
                 border-right: none;
             }
 

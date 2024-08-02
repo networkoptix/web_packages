@@ -24,6 +24,7 @@
                 @for (head of headers; track head.value) {
                     <div
                         #sortItem
+                        [ngClass]="{ 'groups-container': head.name === 'groups' }"
                         [attr.id]="head.name"
                         [attr.data-sort]="head.sort"
                         [style.justify-content]="head.align || 'flex-start'"
