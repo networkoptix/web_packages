@@ -6,6 +6,9 @@ import httpx
 import structlog
 from django.conf import settings
 from django.utils import timezone
+from drf_standardized_errors.handler import ExceptionHandler
+from drf_standardized_errors.handler import \
+    exception_handler as standardized_exception_handler
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
@@ -25,7 +28,15 @@ def get_path_from_parent(parent) -> typing.List[uuid.UUID]:
     return path
 
 
-def custom_exception_handler(exc, context):
+class CustomExceptionHandler(ExceptionHandler):
+
+    def set_rollback(self) -> None:
+        if isinstance(self.exc, APIErrorWithoutRollback):
+            return
+        super().set_rollback()
+
+
+def custom_exception_handler_v2(exc, context):
     if isinstance(exc, APIErrorWithoutRollback):
         headers = {}
         if getattr(exc, 'auth_header', None):
@@ -40,6 +51,26 @@ def custom_exception_handler(exc, context):
 
         return Response(data, status=exc.status_code, headers=headers)
     return exception_handler(exc, context)
+
+
+def custom_exception_handler(exc, context):
+    version = getattr(context.get('request'), 'version', 'v2')
+    if (
+            version == 'v2'
+            or not isinstance(exc, APIException)
+            or isinstance(exc, APIForwardException)
+            or isinstance(exc, APIErrorWithoutRollback)
+    ):
+        # v2 exception handler must be used to pass some data to the client when
+        #   - forward_cdb_resp is used
+        #   - APIErrorWithoutRollback is raised within system authentication to pass resultCode
+        #   - to render unexpected exceptions in a regular DRF way
+        return custom_exception_handler_v2(exc, context)
+    return standardized_exception_handler(exc, context)
+
+
+class APIForwardException(APIException):
+    pass
 
 
 def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
@@ -65,7 +96,7 @@ def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
         else:
             detail = None
     if via_exception:
-        exception = APIException(detail=detail)
+        exception = APIForwardException(detail=detail)
         exception.status_code = response.status_code
         raise exception
     return Response(

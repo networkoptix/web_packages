@@ -1034,6 +1034,33 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "drf-standardized-errors"
+version = "0.14.0"
+description = "Standardize your API error responses."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "drf_standardized_errors-0.14.0-py3-none-any.whl", hash = "sha256:60f83597094b16fe3c99a1085a33c54e721bb14f258399c2f3271e453c4a5ba9"},
+    {file = "drf_standardized_errors-0.14.0.tar.gz", hash = "sha256:2cc6d5c89cbd1b9a45865c56d115b8b6dacd717319b132eeff1a24bdef9e2669"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+djangorestframework = ">=3.12"
+
+[package.extras]
+dev = ["pre-commit"]
+doc = ["myst-parser", "sphinx (!=5.2.0.post0)", "sphinx-autobuild", "sphinx-rtd-theme (>=1.1.0)"]
+openapi = ["drf-spectacular (>=0.27.0)", "inflection"]
+release = ["flit", "keyring", "tbump"]
+test = ["tox", "tox-gh-actions"]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "et-xmlfile"
 version = "1.1.0"
 description = "An implementation of lxml.xmlfile for the standard library"
@@ -2799,4 +2826,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "8d1dcbaf22e16dd6b593fa642882d29ab65c7ac1565e700fe97b9cd4e2755e99"
+content-hash = "37cabf9d235bc4be08ca8b9a0b029239662191b4b0c0848d6d6d7d516351942d"

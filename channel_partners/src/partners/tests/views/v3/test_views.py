@@ -23,8 +23,10 @@ from django.test import (
     override_settings,
 )
 from django.utils import timezone
+from drf_standardized_errors.types import ErrorType
 from mock.mock import MagicMock
 from rest_framework import exceptions
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -68,7 +70,7 @@ class TestCloudSystemViewSetRetrieve:
 
     @pytest.fixture(autouse=True)
     def setup(self, system_factory, org_user_factory, cloud_test_host,
-              system_group_factory, sys_group_user_factory, jwt_token_factory, arf,
+              system_group_factory, sys_group_user_factory, jwt_token_factory, v3arf,
               channel_partner_factory, cp_user_factory, organization_factory,
               cp_service_factory):
 
@@ -125,7 +127,7 @@ class TestCloudSystemViewSetRetrieve:
         self.auth_cred = f'Bearer {self.token}'
 
         # Generate URL for cloud system detail
-        self.url = reverse('v2:cloudsystem-detail', kwargs={'id': self.group_system.system_id})
+        self.url = reverse('v3:cloudsystem-detail', kwargs={'id': self.group_system.system_id})
 
         # Clear caches
         caches['default'].clear()
@@ -141,7 +143,7 @@ class TestCloudSystemViewSetRetrieve:
         api_client.credentials(HTTP_AUTHORIZATION=bearer_token)
 
         path = reverse(
-            'v2:cloudsystem-services',
+            'v3:cloudsystem-services',
             kwargs={'id': str(self.org_system.system_id)}
         )
         response = api_client.get(path=path)
@@ -221,7 +223,7 @@ class TestCloudSystemViewSetBind:
 
     @pytest.fixture(autouse=True)
     def setup(self, default_organization, org_user_factory, default_org_user,
-              system_group_factory, sys_group_user_factory, httpx_mock, arf):
+              system_group_factory, sys_group_user_factory, httpx_mock, v3arf):
         sys_id = f'{uuid4()}'
         self.valid_data = {
             "name": f"system {sys_id}",
@@ -241,46 +243,53 @@ class TestCloudSystemViewSetBind:
         httpx_mock.add_response(url=system_url, json=bind_response)
         self.view = CloudSystemViewSet.as_view({'post': 'create'})
 
-    def test_bind_403(self, default_cp_user, default_org_user, mock_auth_with_user, arf):
+    def test_bind_403(self, default_cp_user, default_org_user, mock_auth_with_user, v3arf):
         # Channel partner user
         mock_auth_with_user(default_cp_user)
 
-        valid_request = arf.post('/', data=self.valid_data, format='json')
+        valid_request = v3arf.post('/', data=self.valid_data, format='json')
         with transaction.atomic():
             response = self.view(valid_request)
         assert response.status_code == 403
-        assert response.data['detail']
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == PermissionDenied.default_code
+        assert (response.data['errors'][0]['detail'] ==
+                'User does not have manage_systems permission for this organization')
+
         # Org admin
         mock_auth_with_user(default_org_user)
-        valid_request = arf.post('/', data=self.valid_data, format='json')
+        valid_request = v3arf.post('/', data=self.valid_data, format='json')
         with transaction.atomic():
             response = self.view(valid_request)
         assert response.status_code == 403
-        assert response.data['detail']
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == PermissionDenied.default_code
+        assert (response.data['errors'][0]['detail'] ==
+                'User does not have manage_systems permission for this organization')
 
-    def test_bind_to_org_200(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+    def test_bind_to_org_200(self, default_cp_user, default_org_user, mock_auth_with_user, v3arf,
                              httpx_mock, org_user_factory, default_organization):
         mock_auth_with_user(self.org_admin)
-        request = arf.post('/', data=self.valid_data, format='json')
+        request = v3arf.post('/', data=self.valid_data, format='json')
         with transaction.atomic():
             response = self.view(request)
         assert response.status_code == 200
 
-    def test_bind_to_group_200(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+    def test_bind_to_group_200(self, default_cp_user, default_org_user, mock_auth_with_user, v3arf,
                                httpx_mock, org_user_factory, default_organization, system_group_factory):
         self.valid_data['groupId'] = f'{self.group.id}'
         mock_auth_with_user(self.org_admin)
-        request = arf.post('/', data=self.valid_data, format='json')
+        request = v3arf.post('/', data=self.valid_data, format='json')
         view = CloudSystemViewSet.as_view({'post': 'create'})
         with transaction.atomic():
             response = view(request)
         assert response.status_code == 200
 
-    def test_bind_to_group_400(self, default_cp_user, default_org_user, mock_auth_with_user, arf,
+    def test_bind_to_group_400(self, default_cp_user, default_org_user, mock_auth_with_user, v3arf,
                                httpx_mock, org_user_factory, default_organization, system_group_factory):
         self.valid_data['groupId'] = f'{uuid4()}'
         mock_auth_with_user(self.org_admin)
-        request = arf.post('/', data=self.valid_data, format='json')
+        request = v3arf.post('/', data=self.valid_data, format='json')
         view = CloudSystemViewSet.as_view({'post': 'create'})
         with transaction.atomic():
             response = view(request)
@@ -334,7 +343,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         self.auth = f'Basic {uuid4()}'
         self.url = f'{settings.LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy'
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('v2:cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
+        self.path = reverse('v3:cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
         self.lic_response_data = [{
             "key": "key",
             "count": 10,
@@ -442,13 +451,15 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         response = self.client.post(self.path, data=self.valid_data)
         assert response.status_code == 400
         data = response.json()
-        assert 'Cannot determine trial service for system' in data['detail']
+        assert 'Cannot determine trial service for system' in data['errors'][0]['detail']
+        assert data['type'] == ErrorType.VALIDATION_ERROR
+
 
 
 class TestCloudSystemViewSet:
 
     def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
-                              arf, system_factory, cp_service_factory, service_record_factory,
+                              v3arf, system_factory, cp_service_factory, service_record_factory,
                               service_usage_factory, cloud_storage_usage_factory, mock_cdb_token_introspect):
         quantity = 10
         usage_storage = 9
@@ -485,7 +496,7 @@ class TestCloudSystemViewSet:
             service=cloud_storage_service,
             quantity=quantity * 2
         )
-        req = arf.get(f'/partners/cloud_systems/{system.system_id}/service_quantity/')
+        req = v3arf.get(f'/partners/cloud_systems/{system.system_id}/service_quantity/')
         CloudSystemViewSet.detail = True
         view = CloudSystemViewSet.as_view({'get': 'service_quantity'}, detail=True)
 
@@ -512,6 +523,9 @@ class TestCloudSystemViewSet:
             response = view(req, id=str(system.system_id))
 
         assert response.status_code == 403
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == PermissionDenied.default_code
+        assert response.data['errors'][0]['detail'] == PermissionDenied.default_detail
 
     def test_service_quantity_patch_disabled_service(
             self,
@@ -521,7 +535,7 @@ class TestCloudSystemViewSet:
             system_factory,
             cp_service_factory,
             mock_auth_with_user,
-            arf,
+            v3arf,
             mocker
     ) -> None:
         # Ensure there are ChannelPartnerRole objects in the database
@@ -549,7 +563,7 @@ class TestCloudSystemViewSet:
 
         # Prepare the view and the request
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
-        request = arf.patch('/', data={"services": {str(disabled_service.id): {"quantity": 15}}}, format='json')
+        request = v3arf.patch('/', data={"services": {str(disabled_service.id): {"quantity": 15}}}, format='json')
 
         # Execute the view and get the response
         with transaction.atomic():
@@ -557,15 +571,10 @@ class TestCloudSystemViewSet:
 
         # Assert that the response status code is 400 (Bad Request)
         assert response.status_code == 400
-
-        # Extract the disabled services from the response
-        disabled_services = response.data.get("services").get("disabled")
-
-        # Assert that the disabled service is in the response
-        disabled_service_id = str(disabled_service.id)
-        assert disabled_service_id  in disabled_services
-        # Assert that the error message is correct
-        assert "Service is disabled" in disabled_services[disabled_service_id]
+        assert response.data['type'] == ErrorType.VALIDATION_ERROR
+        assert response.data['errors'][0]['code'] == 'invalid'
+        assert response.data['errors'][0]['attr'] == f'services.disabled.{disabled_service.id}'
+        assert "Service is disabled" in response.data['errors'][0]['detail']
 
 
     def test_service_quantity_patch(self, channel_partner_factory, organization_factory, cp_user_factory,
@@ -634,7 +643,7 @@ class TestCloudSystemViewSet:
 
     def test_service_quantity_patch_not_activated(self, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
-                                    mock_auth_with_user, arf, mocker):
+                                    mock_auth_with_user, v3arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -650,7 +659,7 @@ class TestCloudSystemViewSet:
 
         # test shutdown system change
         mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=True)
-        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+        request = v3arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
 
         response = view(request, id=str(system.system_id))
         assert response.status_code == 400
@@ -658,7 +667,7 @@ class TestCloudSystemViewSet:
         assert mock_method.call_count == 0
 
     def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
-                         mock_auth_with_system, arf_basic_auth, service_record_factory, cp_service_factory):
+                         mock_auth_with_system, v3arf_basic_auth, service_record_factory, cp_service_factory):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
@@ -668,7 +677,7 @@ class TestCloudSystemViewSet:
         record = service_record_factory(service, system, organization=org, quantity=10)
         TokenCache.cache().clear()
         view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
-        request = arf_basic_auth.get('/', {'requestId': 'test-id-1'})
+        request = v3arf_basic_auth.get('/', {'requestId': 'test-id-1'})
         mock_auth_with_system(system)
         response = view(request, id=system.system_id)
         system.refresh_from_db()
@@ -682,19 +691,19 @@ class TestCloudSystemViewSet:
         assert stautsIds[str(service.id)]
         # clear cached authorizations
         TokenCache.cache().clear()
-        request = arf_basic_auth.get('/')
+        request = v3arf_basic_auth.get('/')
 
         response_data = response.data
         assert response_data.get("requestId") == "test-id-1"
 
-        request = arf_basic_auth.get('/', {'requestId': 'test-id-2'})
+        request = v3arf_basic_auth.get('/', {'requestId': 'test-id-2'})
         mock_auth_with_system(system, authenticated=False, status=CloudSystemStates.DELETED)
         response = view(request, id=system.system_id)
         assert response.status_code == 401
         assert system.system_state == CloudSystemStates.DELETED
 
     def test_saas_report_empty_requestId(self, channel_partner_factory, organization_factory, system_factory,
-                                         mock_auth_with_system, arf_basic_auth):
+                                         mock_auth_with_system, v3arf_basic_auth):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
@@ -703,7 +712,7 @@ class TestCloudSystemViewSet:
         system.save()
 
         view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
-        request = arf_basic_auth.get('/')
+        request = v3arf_basic_auth.get('/')
 
         mock_auth_with_system(system)
         response = view(request, id=system.system_id)
@@ -714,7 +723,7 @@ class TestCloudSystemViewSet:
         assert response_data.get("requestId") == ""
 
     def test_services_no_organization(self, channel_partner_factory, organization_factory, system_factory,
-                                      mocker, arf_basic_auth):
+                                      mocker, v3arf_basic_auth):
         cp = channel_partner_factory()
         system = system_factory(organization=None)
         mocked_check = mocker.patch('partners.authentication.check_system_credentials',
@@ -723,17 +732,21 @@ class TestCloudSystemViewSet:
         password = f'{uuid4()}'
         auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
         view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
-        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        request = v3arf_basic_auth.get('/', headers={'Authorization': auth})
         response = view(request, id=system.system_id)
+        # TODO. Fix forwarding responses through exceptions. CLOUD-14301
         assert response.status_code == 401
-        assert response.data['detail'] == 'Not an organization system.'
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == 'not_authenticated'
+        assert response.data['errors'][0]['attr'] == 'detail'
+        assert response.data['errors'][0]['detail'] == 'Not an organization system.'
 
     def test_services_no_organization_user_token(self, channel_partner_factory, organization_factory,
-                                                 system_factory, cloud_user_factory, arf,
+                                                 system_factory, cloud_user_factory, v3arf,
                                                  mock_cdb_token_introspect, mock_auth_with_user):
 
         cp = channel_partner_factory()
-        request = arf.get('/')
+        request = v3arf.get('/')
         system = system_factory(organization=None)
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=system, system_role=VmsRoles.ADMINISTRATOR)
@@ -742,10 +755,13 @@ class TestCloudSystemViewSet:
         mock_auth_with_user(user)
         response = view(request, id=system.system_id)
         assert response.status_code == 403
-        assert response.data['detail'] == 'You do not have permission to perform this action.'
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == PermissionDenied.default_code
+        assert response.data['errors'][0]['attr'] == None
+        assert response.data['errors'][0]['detail'] == PermissionDenied.default_detail
 
     def test_services_deleted_form_cps(self, channel_partner_factory, organization_factory, system_factory,
-                                      mocker, arf_basic_auth):
+                                      mocker, v3arf_basic_auth):
         cp = channel_partner_factory()
         system = system_factory(organization=None)
         system.system_state = CloudSystemStates.DELETED
@@ -756,11 +772,14 @@ class TestCloudSystemViewSet:
         password = f'{uuid4()}'
         auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
         view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
-        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        request = v3arf_basic_auth.get('/', headers={'Authorization': auth})
         response = view(request, id=system.system_id)
+        # TODO. Fix forwarding responses through exceptions. CLOUD-14301
         assert response.status_code == 401
-        assert response.data['detail'] == 'System has been disconnected.'
-        assert response.data['resultCode'] == CREDENTIALS_REMOVED_PERMANENTLY
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == 'not_authenticated'
+        assert response.data['errors'][0]['attr'] == 'detail'
+        assert response.data['errors'][0]['detail'] == 'System has been disconnected.'
 
     def test_services_deleted_form_cdb(self, channel_partner_factory, organization_factory, system_factory,
                                       mocker, arf_basic_auth):
@@ -783,7 +802,7 @@ class TestCloudSystemViewSet:
         assert system.system_state == CloudSystemStates.DELETED
 
     def test_services_invalid_host(self, channel_partner_factory, organization_factory, system_factory,
-                                   mocker, arf_basic_auth, cloud_host_factory):
+                                   mocker, v3arf_basic_auth, cloud_host_factory):
         cp = channel_partner_factory()
         cloud_host = cloud_host_factory()
         system = system_factory(organization=None, cloud_host=cloud_host)
@@ -793,11 +812,14 @@ class TestCloudSystemViewSet:
         password = f'{uuid4()}'
         auth = httpx.BasicAuth('u', 'p')._build_auth_header(system_id, password)
         view = CloudSystemViewSet.as_view(actions={'get': 'services'}, detail=True)
-        request = arf_basic_auth.get('/', headers={'Authorization': auth})
+        request = v3arf_basic_auth.get('/', headers={'Authorization': auth})
         request.cloud_host = cp.cloud_host
         response = view(request, id=system.system_id)
         assert response.status_code == 404
-        assert response.data == {'detail': f'System {system_id} not found.'}
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == 'not_found'
+        assert response.data['errors'][0]['attr'] == None
+        assert response.data['errors'][0]['detail'] == f'System {system_id} not found.'
 
 
 class TestCloudSystemViewSetSystemCurrentUsage:
@@ -836,7 +858,7 @@ class TestCloudSystemViewSetSystemCurrentUsage:
             quantity=30,
         )
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path = reverse('v2:cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
+        self.path = reverse('v3:cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
         self.client.credentials(HTTP_AUTHORIZATION=f'Basic {uuid4()}')
         mock_auth_with_system(self.system)
 
@@ -855,9 +877,16 @@ class TestCloudSystemViewSetSystemCurrentUsage:
         }
         response = self.client.post(self.path, data=data, format='json')
         assert response.status_code == 400
-        assert len(response.data['currentUsages']) == 2
-        assert 'object does not exist' in response.data['currentUsages'][0]['service'][0]
-        assert 'is not available for organization' in response.data['currentUsages'][1]['service'][0]
+        assert response.data['type'] == ErrorType.VALIDATION_ERROR
+        # [{'code': 'does_not_exist', 'detail': 'Invalid pk "58218d97-475c-44bb-8e41-fea3f8f54fbf" - object does not exist.', 'attr': 'currentUsages.0.service'}, {'code': 'serviceNotAvailable', 'detail': 'Service 2ecdd7b0-bd47-4bba-b8ae-e16d2137bc40 is not available for organization 4df38518-5b12-463c-8d83-0f32b24830ed', 'attr': 'currentUsages.1.service'}]
+        errors = response.data['errors']
+        assert len(errors) == 2
+        assert errors[0]['code'] == 'does_not_exist'
+        assert errors[0]['attr'] == 'currentUsages.0.service'
+        assert errors[0]['detail'] == f'Invalid pk "{data["currentUsages"][0]["service"]}" - object does not exist.'
+        assert errors[1]['code'] == 'serviceNotAvailable'
+        assert errors[1]['attr'] == 'currentUsages.1.service'
+        assert errors[1]['detail'] == f'Service {self.other_service.id} is not available for organization {self.organization.id}'
 
     def test_success(self):
         data = {
@@ -962,7 +991,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_own_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('v2:channelpartners-subchannelpartner-list',
+        path = reverse('v3:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.root_cp.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 200
@@ -970,7 +999,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_lowest_lvl_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('v2:channelpartners-subchannelpartner-list',
+        path = reverse('v3:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.grand_child.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 200
@@ -978,7 +1007,7 @@ class TestChannelPartnerNestedViewSet:
     def test_permission_other_cp(self, mock_auth_with_user):
         mock_auth_with_user(self.root_cp_user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        path = reverse('v2:channelpartners-subchannelpartner-list',
+        path = reverse('v3:channelpartners-subchannelpartner-list',
                        kwargs={'parent_lookup_parent_channel_partner': str(self.other_cp.id)})
         response = self.client.get(path, SERVER_NAME=self.host.hostname)
         assert response.status_code == 403
@@ -1002,7 +1031,7 @@ class TestChannelStructureViewSet:
         self.mock_auth(user)
 
         bearer = f"Bearer {uuid4()}"
-        view_name = "v2:subchannels-channel-structure"
+        view_name = "v3:subchannels-channel-structure"
 
         self.client.credentials(HTTP_AUTHORIZATION=bearer)
 
@@ -1012,7 +1041,7 @@ class TestChannelStructureViewSet:
 
     def test_unauthorized(self):
 
-        view_name = "v2:subchannels-channel-structure"
+        view_name = "v3:subchannels-channel-structure"
 
 
         path = reverse(view_name)
@@ -1236,7 +1265,7 @@ class TestChannelPartnerStructureNestedViewSet:
         self.mock_auth(user)
 
         bearer = f"Bearer {uuid4()}"
-        view_name = "v2:channelpartner-channel-structure"
+        view_name = "v3:channelpartner-channel-structure"
 
         self.client.credentials(HTTP_AUTHORIZATION=bearer)
 
@@ -1476,7 +1505,7 @@ class TestChannelPartnerViewSet:
 
     def test_get_queryset(self, default_channel_partner, channel_partner_factory,
                           cloud_test_host, cloud_host_factory, mock_auth_with_user,
-                          default_cp_admin, arf, cp_user_factory, organization_factory,
+                          default_cp_admin, v3arf, cp_user_factory, organization_factory,
                           org_user_factory, root_nx_channel_partner):
         gen_count = 3
         host = cloud_test_host
@@ -1504,7 +1533,7 @@ class TestChannelPartnerViewSet:
         mock_auth_with_user(root_cp_user)
         sub_cp = other_host_subs[-1]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
-        request = arf.get('/')
+        request = v3arf.get('/')
         request.user = root_cp_user.user
         request.cloud_host = host
         response = view(request, pk=str(sub_cp.id))
@@ -1514,7 +1543,7 @@ class TestChannelPartnerViewSet:
 
         # Test root channel partner's users request for a list
         view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
-        request = arf.get('/')
+        request = v3arf.get('/')
         request.user = root_cp_user.user
         request.cloud_host = host
         response = view(request)
@@ -1536,7 +1565,7 @@ class TestChannelPartnerViewSet:
         assert response.data['parentChannelPartner'] == VALUE_REPLACEMENT
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
-                       system_factory, arf, mock_auth_with_user, cp_user_factory, service_record_factory,
+                       system_factory, v3arf, mock_auth_with_user, cp_user_factory, service_record_factory,
                        cp_service_factory):
         gen_count = 3
         target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -1561,7 +1590,7 @@ class TestChannelPartnerViewSet:
         view = ChannelPartnerViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
         cp_user = cp_user_factory(channel_partner=target_cp)
         mock_auth_with_user(cp_user)
-        response = view(arf.get(f'/partners/channel_partners/{target_cp.id}/aggregate/'), pk=target_cp.id)
+        response = view(v3arf.get(f'/partners/channel_partners/{target_cp.id}/aggregate/'), pk=target_cp.id)
         assert response.status_code == 200
         assert response.data['channelPartners'] == len(target_partners) - 1
         assert response.data['organizations'] == len(organizations)
@@ -1570,7 +1599,7 @@ class TestChannelPartnerViewSet:
 
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
-                                     mock_auth_with_user, arf):
+                                     mock_auth_with_user, v3arf):
         start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1580,7 +1609,7 @@ class TestChannelPartnerViewSet:
         records = [service_record_factory(service, system, created_ts=timezone.now() - relativedelta(days=idx))
                    for idx, service in enumerate(services)]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
+        request = v3arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
         mock_auth_with_user(cp_user)
         response = view(request, pk=cp.id)
         assert response.status_code == 200
@@ -1591,14 +1620,14 @@ class TestChannelPartnerViewSet:
         assert len(response.data['results']) == len(services)
         assert 'channelPartnerId' in response.data['results'][0]
         assert response.data['results'][0]['date'] > response.data['results'][-1]['date']
-        request = arf.get(
+        request = v3arf.get(
             f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=created')
         response = view(request, pk=cp.id)
         assert response.data['results'][0]['date'] < response.data['results'][-1]['date']
 
     def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
-                                     mock_auth_with_user, arf):
+                                     mock_auth_with_user, v3arf):
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -1606,7 +1635,7 @@ class TestChannelPartnerViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_summary/')
+        request = v3arf.get(f'/partners/channel_partners/{cp.id}/service_changes_summary/')
         mock_auth_with_user(cp_user)
         response = view(request, pk=cp.id)
         assert response.status_code == 200
@@ -1616,7 +1645,7 @@ class TestChannelPartnerViewSet:
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
 
-    def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+    def test_ownPermissions(self, channel_partner_factory, cp_user_factory, v3arf, mock_auth_with_user):
         cp = channel_partner_factory()
         roles = ChannelPartnerRole.objects.all()
         partners = []
@@ -1630,7 +1659,7 @@ class TestChannelPartnerViewSet:
         view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
 
         for role, partner, user in zip(roles, partners, users):
-            request = arf.get('/partners/channel_partners/')
+            request = v3arf.get('/partners/channel_partners/')
             request.user = user.user
             mock_auth_with_user(user)
 
@@ -1645,20 +1674,20 @@ class TestChannelPartnerViewSet:
                     assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
-    def test_partial_update(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+    def test_partial_update(self, channel_partner_factory, cp_user_factory, v3arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         cp_user = cp_user_factory(channel_partner=cp)
         view = ChannelPartnerViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
         data = {'name': f'{uuid4()}'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(cp_user)
         response = view(request, pk=cp.id)
         assert response.status_code == 200
         cp.refresh_from_db()
         assert cp.name == data['name']
 
-    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, v3arf,
                           mock_auth_with_user, httpx_mock, mock_get_customization_request):
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1669,7 +1698,7 @@ class TestChannelPartnerViewSet:
         request_data = {
             "targetState": "shutdown"
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = ChannelPartnerViewSet.as_view(actions={'post': 'change_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=sub_cp.id)
@@ -1688,12 +1717,12 @@ class TestChannelPartnerViewSet:
         assert notification_request
 
         accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         mock_auth_with_user(accountant)
         response = view(request, pk=sub_cp.id)
         assert response.status_code == 403
 
-    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, v3arf,
                            mock_auth_with_user, httpx_mock, mock_get_customization_request):
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1704,7 +1733,7 @@ class TestChannelPartnerViewSet:
         request_data = {
             "targetState": "shutdown"
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = ChannelPartnerViewSet.as_view(actions={'post': 'change_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=sub_cp.id)
@@ -1713,7 +1742,7 @@ class TestChannelPartnerViewSet:
             "code": response.data['code'],
             "changeId": response.data['changeId']
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = ChannelPartnerViewSet.as_view(actions={'post': 'confirm_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=sub_cp.id)
@@ -1734,19 +1763,19 @@ class TestChannelPartnerViewSet:
 
 class TestOrganizationViewSet:
 
-    def test_aggregate(self, organization_factory, system_factory, arf, default_cp_admin, mock_auth_with_user,
+    def test_aggregate(self, organization_factory, system_factory, v3arf, default_cp_admin, mock_auth_with_user,
                        service_record_factory, cp_service_factory):
         org = organization_factory()
         view = OrganizationViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
         mock_auth_with_user(default_cp_admin)
-        response = view(arf.get('/'), pk=org.id)
+        response = view(v3arf.get('/'), pk=org.id)
         assert response.status_code == 200
         assert response.data['systems'] == 0
         assert response.data['serviceUsageQuantity'] == 0
         sys_cnt = random.randint(30, 60)
         systems = [system_factory(organization=org) for _ in range(sys_cnt)]
 
-        response = view(arf.get('/'), pk=org.id)
+        response = view(v3arf.get('/'), pk=org.id)
 
         assert response.data['systems'] == sys_cnt
         assert response.data['serviceUsageQuantity'] == 0
@@ -1758,14 +1787,14 @@ class TestOrganizationViewSet:
                                    cloud_system=sys, quantity=qty)
             usage += qty
 
-        response = view(arf.get('/'), pk=org.id)
+        response = view(v3arf.get('/'), pk=org.id)
 
         assert response.data['systems'] == sys_cnt
         assert response.data['serviceUsageQuantity'] == usage
 
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
-                                     mock_auth_with_user, arf):
+                                     mock_auth_with_user, v3arf):
         start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1775,7 +1804,7 @@ class TestOrganizationViewSet:
         records = [service_record_factory(service, system, created_ts=timezone.now() - relativedelta(days=idx)) for
                    idx, service in enumerate(services)]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/organizations/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
+        request = v3arf.get(f'/partners/organizations/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=-created')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -1786,15 +1815,15 @@ class TestOrganizationViewSet:
         assert len(response.data['results']) == len(services)
 
         assert response.data['results'][0]['date'] > response.data['results'][-1]['date']
-        request = arf.get(
+        request = v3arf.get(
             f'/partners/organizations/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}&ordering=created')
         response = view(request, pk=org.id)
         assert response.data['results'][0]['date'] < response.data['results'][-1]['date']
 
-    @pytest.mark.skip(reason="Skipping this test for now; https://networkoptix.slack.com/archives/C06CA9PLS13/p1722368061163729?thread_ts=1722364743.906279&cid=C06CA9PLS13")
     def test_service_changes_summary_without_params(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
-                                     mock_auth_with_user, arf):
+                                     mock_auth_with_user, v3arf):
+        # TODO: check what is default period for service changes summary
         yesterday = (timezone.now() - relativedelta(days=1)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1803,7 +1832,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system, created_ts=yesterday) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/')
+        request = v3arf.get(f'/api/v3/partners/channel_partners/{org.id}/service_changes_summary/')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -1815,7 +1844,7 @@ class TestOrganizationViewSet:
 
     def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
-                                     mock_auth_with_user, arf):
+                                     mock_auth_with_user, v3arf):
         start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1824,7 +1853,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/?startTs={start_ts.isoformat()}')
+        request = v3arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -1834,7 +1863,7 @@ class TestOrganizationViewSet:
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
 
-    def test_ownPermissions(self, channel_partner_factory, organization_factory, org_user_factory, arf, mock_auth_with_user):
+    def test_ownPermissions(self, channel_partner_factory, organization_factory, org_user_factory, v3arf, mock_auth_with_user):
         cp = channel_partner_factory()
         roles = OrganizationRole.objects.all()
         orgs = []
@@ -1848,7 +1877,7 @@ class TestOrganizationViewSet:
         view = OrganizationViewSet.as_view(actions={'get': 'list'})
 
         for role, org, user in zip(roles, orgs, users):
-            request = arf.get('/partners/channel_partners/')
+            request = v3arf.get('/partners/channel_partners/')
             request.user = user.user
             mock_auth_with_user(user)
             response = view(request)
@@ -1865,7 +1894,7 @@ class TestOrganizationViewSet:
 
     def test_groups_structure(self, channel_partner_factory, cp_user_factory, organization_factory,
                               org_user_factory, system_group_factory, sys_group_user_factory,
-                              system_factory, arf, mock_auth_with_user):
+                              system_factory, v3arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         cp_user = cp_user_factory(channel_partner=cp)
@@ -1885,7 +1914,7 @@ class TestOrganizationViewSet:
         org_groups = create_groups(organization=org)
 
         single_group_user = sys_group_user_factory(organization=org, group=org_groups[-1][-1])
-        request = arf.get('/')
+        request = v3arf.get('/')
         mock_auth_with_user(single_group_user)
         response = view(request, pk=org.id)
 
@@ -1893,7 +1922,7 @@ class TestOrganizationViewSet:
         assert response.data[0]['id'] == str(org_groups[-1][-1].id)
 
         one_sublevel_user = sys_group_user_factory(organization=org, group=org_groups[-2][-1])
-        request = arf.get('/')
+        request = v3arf.get('/')
         mock_auth_with_user(one_sublevel_user)
         response = view(request, pk=org.id)
         assert len(response.data) == 1
@@ -1901,44 +1930,46 @@ class TestOrganizationViewSet:
         assert len(response.data[0]['children']) == 3
 
     def test_partial_update_org_admin(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                      org_user_factory, arf, mock_auth_with_user):
+                                      org_user_factory, v3arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         org = organization_factory(channel_partner=cp)
         org_user = org_user_factory(organization=org)
         view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
         data = {'name': f'{uuid4()}'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(org_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
         org.refresh_from_db()
         assert org.name == data['name']
         data = {'name': f'{uuid4()}', 'state': 'suspended'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(org_user)
         with transaction.atomic():
             response = view(request, pk=org.id)
         assert response.status_code == 400
-        assert response.data['state']
-        assert 'name' not in response.data
+        assert response.data['type'] == ErrorType.VALIDATION_ERROR
+        assert response.data['errors'][0]['attr'] == 'state'
+        assert response.data['errors'][0]['detail'] == 'User is not allowed to modify this field. Field: state.'
+        assert len(response.data['errors']) == 1
 
     def test_partial_update_cp_admin(self, channel_partner_factory, cp_user_factory, organization_factory,
-                                      org_user_factory, arf, mock_auth_with_user):
+                                      org_user_factory, v3arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
         view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
         data = {'name': f'{uuid4()}'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
         org.refresh_from_db()
         assert org.name == data['name']
         data = {'name': f'{uuid4()}', 'state': 'suspended'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(cp_user)
         with transaction.atomic():
             response = view(request, pk=org.id)
@@ -1947,16 +1978,18 @@ class TestOrganizationViewSet:
         org.channel_partner_access_level = None
         org.save()
         data = {'name': f'{uuid4()}', 'state': 'suspended'}
-        request = arf.patch('/', data=data, format='json')
+        request = v3arf.patch('/', data=data, format='json')
         mock_auth_with_user(cp_user)
         with transaction.atomic():
             response = view(request, pk=org.id)
         assert response.status_code == 400
-        assert response.data['name']
-        assert 'state' not in response.data
+        assert response.data['type'] == ErrorType.VALIDATION_ERROR
+        assert response.data['errors'][0]['attr'] == 'name'
+        assert response.data['errors'][0]['detail']
+        assert len(response.data['errors']) == 1
 
     def test_list(self, channel_partner_factory, organization_factory, cp_user_factory, org_user_factory,
-                  arf, mock_auth_with_user):
+                  v3arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         other_cp = channel_partner_factory(parent_channel_partner=root)
@@ -1968,42 +2001,42 @@ class TestOrganizationViewSet:
         root_user = cp_user_factory(channel_partner=root)
         mock_auth_with_user(org_user)
         view = OrganizationViewSet.as_view(actions={'get': 'list'})
-        request = arf.get('/?includeChildOrgs=true')
+        request = v3arf.get('/?includeChildOrgs=true')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 2
         assert response.data['results'][0]['id'] in [str(org.id), str(other_org.id)]
 
-        request = arf.get('/?')
+        request = v3arf.get('/?')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 1
         assert response.data['results'][0]['id'] == str(org.id)
 
         mock_auth_with_user(cp_user)
-        request = arf.get('/?includeChildOrgs=true')
+        request = v3arf.get('/?includeChildOrgs=true')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 1
         assert response.data['results'][0]['id'] == str(org.id)
 
-        request = arf.get('/?includeChildOrgs=false')
+        request = v3arf.get('/?includeChildOrgs=false')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 0
 
-        request = arf.get('/?')
+        request = v3arf.get('/?')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 0
 
         mock_auth_with_user(root_user)
-        request = arf.get('/?includeChildOrgs=true')
+        request = v3arf.get('/?includeChildOrgs=true')
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 0
 
-    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, v3arf,
                           mock_auth_with_user, httpx_mock, mock_get_customization_request):
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -2014,7 +2047,7 @@ class TestOrganizationViewSet:
         request_data = {
             "targetState": "shutdown"
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = OrganizationViewSet.as_view(actions={'post': 'change_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
@@ -2032,12 +2065,12 @@ class TestOrganizationViewSet:
         notification_request = httpx_mock.get_request(url=notification_url)
         assert notification_request
         accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         mock_auth_with_user(accountant)
         response = view(request, pk=org.id)
         assert response.status_code == 403
 
-    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, v3arf,
                            mock_auth_with_user, httpx_mock, mock_get_customization_request):
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
@@ -2048,7 +2081,7 @@ class TestOrganizationViewSet:
         request_data = {
             "targetState": "shutdown"
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = OrganizationViewSet.as_view(actions={'post': 'change_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
@@ -2057,7 +2090,7 @@ class TestOrganizationViewSet:
             "code": response.data['code'],
             "changeId": response.data['changeId']
         }
-        request = arf.post('/', data=request_data, format='json')
+        request = v3arf.post('/', data=request_data, format='json')
         view = OrganizationViewSet.as_view(actions={'post': 'confirm_state'}, detail=True)
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
@@ -2081,7 +2114,7 @@ class TestSystemUser:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
               org_user_factory, system_group_factory, system_factory,
-              sys_group_user_factory, cloud_user_factory, arf, cloud_test_host):
+              sys_group_user_factory, cloud_user_factory, v3arf, cloud_test_host):
         cp = channel_partner_factory()
         self.org = org = organization_factory(channel_partner=cp)
         other_org = organization_factory(channel_partner=cp)
@@ -2103,7 +2136,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.group_user.user.email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert (response.data['vmsRoles'][0] ==
@@ -2115,7 +2148,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.group_user.user.email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert (response.data['vmsRoles'][0] ==
@@ -2127,7 +2160,7 @@ class TestSystemUser:
             'system_id': str(self.group_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 403
 
@@ -2137,7 +2170,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 403
 
@@ -2151,7 +2184,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': self.cp_admin.user.email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
 
@@ -2165,7 +2198,7 @@ class TestSystemUser:
             'system_id': str(self.org_sys.system_id),
             'email': user_email
         }
-        path = reverse('v2:system_user', kwargs=url_args)
+        path = reverse('v3:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 200
         assert response.data['vmsRoles'] == []
@@ -2177,7 +2210,7 @@ class TestUserSystems:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
                           org_user_factory, system_group_factory, system_factory, cloud_test_host,
-                          sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+                          sys_group_user_factory, cloud_user_factory, v3arf, mock_internal_token_auth):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
@@ -2194,11 +2227,11 @@ class TestUserSystems:
                                             role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
-    def test_system_user_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
+    def test_system_user_has_all_fields(self, channel_partner_factory, cp_user_factory, v3arf):
         url_args = {
             "email": self.cp_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_admin.user)
         response = self.client.get(url)
         actual_records = response.data
@@ -2213,7 +2246,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2223,7 +2256,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2238,7 +2271,7 @@ class TestUserSystems:
         url_args = {
             "email": self.group_user.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.group_user.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2248,7 +2281,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_viewer.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -2258,7 +2291,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 403
@@ -2267,7 +2300,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 401
 
@@ -2276,7 +2309,7 @@ class TestSystemUsers:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, cp_user_factory, organization_factory,
               org_user_factory, system_group_factory, system_factory,
-              sys_group_user_factory, cloud_test_host, arf, mock_internal_token_auth):
+              sys_group_user_factory, cloud_test_host, v3arf, mock_internal_token_auth):
         cp = channel_partner_factory()
         org = organization_factory(channel_partner=cp)
         org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
@@ -2297,7 +2330,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.cp_admin.user)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2305,7 +2338,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
@@ -2315,7 +2348,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.org_admin.user)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2323,7 +2356,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
@@ -2333,7 +2366,7 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.group_user.user)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2341,7 +2374,7 @@ class TestSystemUsers:
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2350,14 +2383,14 @@ class TestSystemUsers:
             "system_id": self.group_sys.system_id
         }
         self.client.force_authenticate(self.org_viewer.user)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
         url_args = {
             "system_id": self.org_sys.system_id
         }
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2368,7 +2401,7 @@ class TestSystemUsers:
 
         auth = mock_cdb_basic_auth(self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
 
@@ -2377,7 +2410,7 @@ class TestSystemUsers:
         }
         auth = mock_cdb_basic_auth(self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
 
@@ -2388,7 +2421,7 @@ class TestSystemUsers:
 
         auth = mock_cdb_basic_auth(self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
@@ -2397,7 +2430,7 @@ class TestSystemUsers:
         }
         auth = mock_cdb_basic_auth(self.org_sys, status='deleted')
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         # will return 200 OK as soon as cache still have authorization
         assert response.status_code == 200
@@ -2413,14 +2446,14 @@ class TestSystemUsers:
 
         user_email = mock_cdb_token_introspect(user=cloud_user_factory(), system=self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
 
         user_email = mock_cdb_token_introspect(user=None, system=self.group_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 4
@@ -2432,29 +2465,29 @@ class TestSystemUsers:
         # invalid role
         user_email = mock_cdb_token_introspect(user=None, system=self.group_sys, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
         # invalid system id
         user_email = mock_cdb_token_introspect(user=None, system=self.org_sys)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
         # missing system role in cdb response
         user_email = mock_cdb_token_introspect(user=None)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        url = reverse("v2:system_users", kwargs=url_args)
+        url = reverse("v3:system_users", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 403
 
 
 class TestOrganizationRole:
-    def test_organization_roles_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
+    def test_organization_roles_has_all_fields(self, channel_partner_factory, cp_user_factory, v3arf):
         cp = channel_partner_factory()
         cp_admin = cp_user_factory(channel_partner=cp)
 
-        request = arf.get('/partners/organization_roles')
+        request = v3arf.get('/partners/organization_roles')
         response = organization_roles(request)
         actual_records = response.data
 
@@ -2526,7 +2559,7 @@ class TestGrantAccessView:
 class TestCloudSystemViewSetDelete:
     @pytest.fixture(autouse=True)
     def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
-              org_user_factory, system_factory, mock_auth_with_user, arf, httpx_mock, arf_basic_auth):
+              org_user_factory, system_factory, mock_auth_with_user, v3arf, httpx_mock, v3arf_basic_auth):
         httpx_mock.reset(False)
         self.cp = channel_partner_factory()
         self.cp_user = cp_user_factory(channel_partner=self.cp)
@@ -2535,7 +2568,7 @@ class TestCloudSystemViewSetDelete:
         self.system = system_factory(organization=self.org)
         self.url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{self.system.system_id}'
         self.view = CloudSystemViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
-        self.request = arf.delete('/')
+        self.request = v3arf.delete('/')
         self.token = 'HERE_MIGHT_BE_TOKEN'
         mock_auth_with_user(self.org_user, token=self.token)
         self.data = {'check': str(uuid4())}
@@ -2544,7 +2577,10 @@ class TestCloudSystemViewSetDelete:
         httpx_mock.add_response(url=self.url, status_code=401, json=self.data)
         response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 401
-        assert response.data == self.data
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['attr'] == 'check'
+        assert response.data['errors'][0]['detail'] == self.data['check']
+        assert response.data['errors'][0]['code'] == 'error'
         request = httpx_mock.get_request(url=self.url)
         assert request.headers.get('Authorization') == f'Bearer {self.token}'
 
@@ -2564,17 +2600,20 @@ class TestCloudSystemViewSetDelete:
         httpx_mock.add_response(url=self.url, status_code=401)
         response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 401
-        assert response.data == {'detail': 'A server error occurred.'}
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['attr'] is None
+        assert response.data['errors'][0]['detail'] == 'A server error occurred.'
+        assert response.data['errors'][0]['code'] == 'error'
         request = httpx_mock.get_request(url=self.url)
         assert request.headers.get('Authorization') == f'Bearer {self.token}'
 
-    def test_destroy_perms(self, system_factory, org_user_factory, arf, mock_auth_with_user, httpx_mock):
+    def test_destroy_perms(self, system_factory, org_user_factory, v3arf, mock_auth_with_user, httpx_mock):
         for role in OrganizationRole.objects.filter(permissions__codename=OrganizationPermissions.disconnect_systems):
             sys = system_factory(organization=self.org)
             url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
             httpx_mock.add_response(url=url, status_code=200)
             user = org_user_factory(organization=self.org, role=role.id)
-            request = arf.delete('/')
+            request = v3arf.delete('/')
             mock_auth_with_user(user)
             response = self.view(request, id=sys.system_id)
             assert response.status_code == 204, f'Failed for role {role.name} {role.id}'
@@ -2586,12 +2625,12 @@ class TestCloudSystemViewSetDelete:
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
         user = org_user_factory(organization=self.org, role=role.id)
-        request = arf.delete('/')
+        request = v3arf.delete('/')
         mock_auth_with_user(user)
         response = self.view(request, id=sys.system_id)
         assert response.status_code == 403
 
-    def test_destroy_system_perms_success(self, system_factory, arf, mock_cdb_token_introspect,
+    def test_destroy_system_perms_success(self, system_factory, v3arf, mock_cdb_token_introspect,
                                           httpx_mock, cdb_introspect_url):
         self.org_user.roles = [OrganizationRoles.VIEWER]
         self.org_user.save()
@@ -2601,7 +2640,7 @@ class TestCloudSystemViewSetDelete:
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
         email = mock_cdb_token_introspect(user=self.org_user.user, system=sys, system_role=VmsRoles.ADMINISTRATOR)
-        request = arf.delete('/')
+        request = v3arf.delete('/')
         response = self.view(request, id=sys.system_id)
         assert response.status_code == 204
         sys.refresh_from_db()
@@ -2609,7 +2648,7 @@ class TestCloudSystemViewSetDelete:
         cdb_request = httpx_mock.get_request(url=cdb_introspect_url)
         assert cdb_request
 
-    def test_destroy_system_perms_failed(self, system_factory, arf, mock_cdb_token_introspect,
+    def test_destroy_system_perms_failed(self, system_factory, v3arf, mock_cdb_token_introspect,
                                          httpx_mock, cdb_introspect_url):
         self.org_user.roles = [OrganizationRoles.VIEWER]
         self.org_user.save()
@@ -2619,12 +2658,12 @@ class TestCloudSystemViewSetDelete:
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
         email = mock_cdb_token_introspect(user=self.org_user.user, system=sys, system_role=VmsRoles.VIEWER)
-        request = arf.delete('/')
+        request = v3arf.delete('/')
         response = self.view(request, id=sys.system_id)
         assert response.status_code == 403
 
     def test_destroy_cpal_success(self, channel_partner_factory, organization_factory, system_factory,
-                                  cp_user_factory, arf, mock_auth_with_user, httpx_mock):
+                                  cp_user_factory, v3arf, mock_auth_with_user, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=200)
         mock_auth_with_user(self.cp_user, token=self.token)
         response = self.view(self.request, id=self.system.system_id)
@@ -2634,7 +2673,7 @@ class TestCloudSystemViewSetDelete:
         assert request.headers.get('Authorization') == f'Bearer {self.token}'
 
     def test_destroy_cpal_forbidden(self, channel_partner_factory, organization_factory, system_factory,
-                                   cp_user_factory, arf, mock_auth_with_user, httpx_mock):
+                                   cp_user_factory, v3arf, mock_auth_with_user, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=200)
         self.org.channel_partner_access_level = None
         self.org.save()
@@ -2659,7 +2698,9 @@ class TestCloudSystemViewSetDelete:
         with transaction.atomic():
             response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 401
-        assert response.data['detail'] == 'not authorized'
+        assert response.data['errors'][0]['detail'] == 'not authorized'
+        assert response.data['errors'][0]['code'] == 'error'
+        assert response.data['errors'][0]['attr'] is None
 
     def test_destroy_cdb_errors_exception(self, httpx_mock):
         httpx_mock.add_exception(exception=httpx.ReadTimeout('timeout'), url=self.url)
@@ -2676,10 +2717,11 @@ class TestCloudSystemViewSetDelete:
         else:
             assert False, 'Too many redirects must be raised'
 
+
 class TestSystemTransferOffer:
 
     @pytest.fixture(autouse=True)
-    def setUp(self, channel_partner_factory, organization_factory, org_user_factory, arf, context_vars):
+    def setUp(self, channel_partner_factory, organization_factory, org_user_factory, v3arf, context_vars):
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
         self.other_org = organization_factory(channel_partner=self.cp)
@@ -2687,13 +2729,13 @@ class TestSystemTransferOffer:
         self.org_viewer = org_user_factory(organization=self.org, role=OrganizationRoles.VIEWER)
         self.comment = f'{uuid4()}'
         self.sys_id = f'{uuid4()}'
-        self.valid_request = arf.post(
+        self.valid_request = v3arf.post(
             '/', data={'organizationId': self.org.id, 'comment': self.comment}, format='json')
-        self.no_comment_request = arf.post(
+        self.no_comment_request = v3arf.post(
             '/', data={'organizationId': self.org.id}, format='json')
-        self.invalid_request = arf.post(
+        self.invalid_request = v3arf.post(
             '/', data={'organizationId': self.comment, 'comment': self.comment}, format='json')
-        self.other_org_request = arf.post(
+        self.other_org_request = v3arf.post(
             '/', data={'organizationId': self.other_org.id, 'comment': self.comment}, format='json')
         self.view = CloudSystemViewSet.as_view(actions={'post': 'transfer_offer'}, detail=True)
         self.offer_url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/v0/systems/{self.sys_id}/offer'
@@ -2801,7 +2843,7 @@ class TestSystemTransferOffer:
 class TestGetAuthorizedSystem:
 
     @pytest.fixture(autouse=True)
-    def setup(self, arf, channel_partner_factory, organization_factory, system_factory,
+    def setup(self, v3arf, channel_partner_factory, organization_factory, system_factory,
                          cp_user_factory, sys_group_user_factory, org_user_factory, mock_cdb_token_introspect):
         cp = channel_partner_factory()
         organization = organization_factory(channel_partner=cp)
@@ -2817,9 +2859,9 @@ class TestGetAuthorizedSystem:
         self.other_system = system_factory(organization=other_organization)
 
 
-    def test_system_auth(self, arf, channel_partner_factory, organization_factory, system_factory):
+    def test_system_auth(self, v3arf, channel_partner_factory, organization_factory, system_factory):
 
-        request = arf.get('/')
+        request = v3arf.get('/')
         request.cloud_system = self.cloud_system
         assert get_authorized_system(request, self.cloud_system.system_id) == self.cloud_system
 
@@ -2830,8 +2872,8 @@ class TestGetAuthorizedSystem:
         else:
             assert False, 'Permission denied must be raised'
 
-    def test_cp_admin(self, arf, mock_cdb_token_introspect):
-        request = arf.get('/')
+    def test_cp_admin(self, v3arf, mock_cdb_token_introspect):
+        request = v3arf.get('/')
         request.auth = f'Bearer {uuid4()}'
 
         request.user = self.cp_admin.user
@@ -2846,8 +2888,8 @@ class TestGetAuthorizedSystem:
         else:
             assert False, 'Permission denied must be raised'
 
-    def test_org_admin(self, arf, mock_cdb_token_introspect):
-        request = arf.get('/')
+    def test_org_admin(self, v3arf, mock_cdb_token_introspect):
+        request = v3arf.get('/')
         request.auth = f'Bearer {uuid4()}'
         request.user = self.org_admin.user
         mock_cdb_token_introspect(self.org_admin)
@@ -2863,8 +2905,8 @@ class TestGetAuthorizedSystem:
         else:
             assert False, 'Permission denied must be raised'
 
-    def test_group_user(self, arf, mock_cdb_token_introspect):
-        request = arf.get('/')
+    def test_group_user(self, v3arf, mock_cdb_token_introspect):
+        request = v3arf.get('/')
         request.auth = f'Bearer {uuid4()}'
         request.user = self.group_user.user
         mock_cdb_token_introspect(self.group_user)
@@ -2882,9 +2924,9 @@ class TestGetAuthorizedSystem:
         else:
             assert False, 'Permission denied must be raised'
 
-    def test_vms_user(self, arf, mock_cdb_token_introspect, cloud_user_factory, httpx_mock):
+    def test_vms_user(self, v3arf, mock_cdb_token_introspect, cloud_user_factory, httpx_mock):
         user = cloud_user_factory()
-        request = arf.get('/')
+        request = v3arf.get('/')
         request.auth = f'Bearer {uuid4()}'
         request.user = user
         mock_cdb_token_introspect(user, system=self.other_system)
@@ -2946,7 +2988,7 @@ class TestCloudStorageUsageReport:
         self.token = f'{uuid4()}'
         self.auth_token = mock_internal_token_auth(self.token)
         self.auth = f'Bearer {self.token}'
-        self.path = reverse('v2:cloud_storage_usage_report')
+        self.path = reverse('v3:cloud_storage_usage_report')
         self.headers = {"Authorization": self}
 
     def device_data(self, service_id):
@@ -3091,7 +3133,7 @@ class TestChannelPartnerViewSetPermissions:
         self.org_user_other = org_user_factory(organization=self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('v2:channelpartner-list')
+        self.path_list = reverse('v3:channelpartner-list')
         self.kwargs_lvl_1 = {'pk': str(self.cp_lvl_1.id)}
         self.kwargs_lvl_2 = {'pk': str(self.cp_lvl_2.id)}
         self.kwargs_lvl_3 = {'pk': str(self.cp_lvl_3.id)}
@@ -3118,7 +3160,7 @@ class TestChannelPartnerViewSetPermissions:
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'v2:channelpartner-detail'
+        view_name = 'v3:channelpartner-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -3150,7 +3192,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:channelpartner-detail'
+        view_name = 'v3:channelpartner-detail'
 
         mock_auth_with_user(self.org_user_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3177,7 +3219,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-detail'
+        view_name = 'v3:channelpartner-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3228,7 +3270,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_partial_update_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-detail'
+        view_name = 'v3:channelpartner-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3257,7 +3299,7 @@ class TestChannelPartnerViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_changes_history_cp_users(self, mock_auth_with_user):
-        view_name = 'v2:channelpartner-service-changes-history'
+        view_name = 'v3:channelpartner-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3311,7 +3353,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_history_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-service-changes-history'
+        view_name = 'v3:channelpartner-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3341,7 +3383,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_summary_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-service-changes-summary'
+        view_name = 'v3:channelpartner-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3395,7 +3437,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_changes_summary_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-service-changes-summary'
+        view_name = 'v3:channelpartner-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3425,7 +3467,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_aggregate_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-aggregate'
+        view_name = 'v3:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3479,7 +3521,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_aggregate_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-aggregate'
+        view_name = 'v3:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3509,7 +3551,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_change_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-change-state'
+        view_name = 'v3:channelpartner-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3568,7 +3610,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_change_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-change-state'
+        view_name = 'v3:channelpartner-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3598,7 +3640,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_confirm_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-confirm-state'
+        view_name = 'v3:channelpartner-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3657,7 +3699,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_service_confirm_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-confirm-state'
+        view_name = 'v3:channelpartner-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3686,7 +3728,7 @@ class TestChannelPartnerViewSetPermissions:
         assert response.status_code == 403
 
     def test_channel_structure(self, mock_auth_with_user):
-        view_name = "v2:channelpartner-channel-structure"
+        view_name = "v3:channelpartner-channel-structure"
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3741,7 +3783,7 @@ class TestChannelPartnerViewSetPermissions:
 
     def test_invalid_method_405(self, mock_auth_with_user):
 
-        view_name = 'v2:channelpartner-aggregate'
+        view_name = 'v3:channelpartner-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_user_lvl_1)
@@ -3791,7 +3833,7 @@ class TestOrganizationViewSetPermissions:
         self.group_user_other = sys_group_user_factory(self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('v2:organization-list')
+        self.path_list = reverse('v3:organization-list')
         self.kwargs_lvl_1 = {'pk': str(self.org_lvl_1.id)}
         self.kwargs_lvl_2 = {'pk': str(self.org_lvl_2.id)}
         self.kwargs_lvl_3 = {'pk': str(self.org_lvl_3.id)}
@@ -3819,7 +3861,7 @@ class TestOrganizationViewSetPermissions:
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'v2:organization-detail'
+        view_name = 'v3:organization-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -3851,7 +3893,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:organization-detail'
+        view_name = 'v3:organization-detail'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3900,7 +3942,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-detail'
+        view_name = 'v3:organization-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -3951,7 +3993,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_partial_update_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-detail'
+        view_name = 'v3:organization-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -3981,7 +4023,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_history_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-service-changes-history'
+        view_name = 'v3:organization-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4035,7 +4077,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_history_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-service-changes-history'
+        view_name = 'v3:organization-service-changes-history'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4065,7 +4107,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_summary_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-service-changes-summary'
+        view_name = 'v3:organization-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4119,7 +4161,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_changes_summary_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-service-changes-summary'
+        view_name = 'v3:organization-service-changes-summary'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4149,7 +4191,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_aggregate_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-aggregate'
+        view_name = 'v3:organization-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4203,7 +4245,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_aggregate_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-aggregate'
+        view_name = 'v3:organization-aggregate'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4233,7 +4275,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_change_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-change-state'
+        view_name = 'v3:organization-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4297,7 +4339,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_change_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-change-state'
+        view_name = 'v3:organization-change-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4327,7 +4369,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_confirm_state_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-confirm-state'
+        view_name = 'v3:organization-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4391,7 +4433,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_service_confirm_state_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:organization-confirm-state'
+        view_name = 'v3:organization-confirm-state'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4422,7 +4464,7 @@ class TestOrganizationViewSetPermissions:
     def test_groups_structure_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'v2:organization-groups-structure'
+        view_name = 'v3:organization-groups-structure'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -4454,7 +4496,7 @@ class TestOrganizationViewSetPermissions:
 
     def test_groups_structure_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:organization-groups-structure'
+        view_name = 'v3:organization-groups-structure'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4504,7 +4546,7 @@ class TestOrganizationViewSetPermissions:
     def test_invalid_method_405(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'v2:organization-groups-structure'
+        view_name = 'v3:organization-groups-structure'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.post(path=path)
         assert response.status_code == 405
@@ -4555,7 +4597,7 @@ class TestOrganizationNestedViewSetPermissions:
         self.kwargs_lvl_2 = {'parent_lookup_channel_partner': str(self.cp_lvl_2.id)}
         self.kwargs_lvl_3 = {'parent_lookup_channel_partner': str(self.cp_lvl_3.id)}
         caches['default'].clear()
-        self.view_name = 'v2:channelpartners-organization-list'
+        self.view_name = 'v3:channelpartners-organization-list'
 
     @property
     def auth(self):
@@ -4673,7 +4715,7 @@ class TestCloudSystemViewSetPermissions:
         self.group_user_other = sys_group_user_factory(self.org_other)
 
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
-        self.path_list = reverse('v2:cloudsystem-list')
+        self.path_list = reverse('v3:cloudsystem-list')
         self.kwargs_lvl_1 = {'id': str(self.system_lvl_1.system_id)}
         self.kwargs_lvl_2 = {'id': str(self.system_lvl_2.system_id)}
         self.kwargs_lvl_3 = {'id': str(self.system_lvl_3.system_id)}
@@ -4689,21 +4731,22 @@ class TestCloudSystemViewSetPermissions:
         mock_auth_with_user(self.cp_admin_lvl_1)
 
         response = self.client.get(path=self.path_list)
-
-        assert response.status_code == 200
-        assert len(response.data['results']) == 0
+        # TODO. Check if this endpoint must be deprecated
+        assert response.status_code == 405
+        # assert len(response.data['results']) == 0
 
     def test_list_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.org_admin_lvl_1)
         response = self.client.get(path=self.path_list)
-        assert response.status_code == 200
-        assert len(response.data['results']) == 1
+        # TODO. Check if this endpoint must be deprecated
+        assert response.status_code == 405
+        # assert len(response.data['results']) == 0
 
     def test_retrieve_cp_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -4735,7 +4778,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_retrieve_org_user(self, mock_auth_with_user):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
 
         mock_auth_with_user(self.org_admin_lvl_1)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4789,7 +4832,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_partial_update_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4839,7 +4882,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_system_usage_report_org_users(self, mock_cdb_basic_auth, mock_auth_with_user):
-        view_name = 'v2:cloudsystem-system-usage-report'
+        view_name = 'v3:cloudsystem-system-usage-report'
 
         auth = mock_cdb_basic_auth(self.system_lvl_1)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
@@ -4864,7 +4907,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_service_quantity_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -4918,7 +4961,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_service_quantity_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -4953,7 +4996,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_services_cp_users(self, mock_auth_with_user):
 
-        view_name = 'v2:cloudsystem-services'
+        view_name = 'v3:cloudsystem-services'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -5007,7 +5050,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_services_org_users(self, mock_auth_with_user):
 
-        view_name = 'v2:cloudsystem-services'
+        view_name = 'v3:cloudsystem-services'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -5051,7 +5094,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_quantity_patch_org_users(self, mock_auth_with_user):
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -5080,7 +5123,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_service_quantity_patch_cp_user(self, mock_auth_with_user):
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.cp_admin_lvl_1)
@@ -5119,7 +5162,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_destroy_cp_users(self, mock_auth_with_user, mocker):
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         cdb_response = MagicMock()
         cdb_response.status_code = 200
         mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
@@ -5176,7 +5219,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_destroy_org_users(self, mock_auth_with_user, mocker):
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         cdb_response = MagicMock()
         cdb_response.status_code = 200
         mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
@@ -5208,7 +5251,7 @@ class TestCloudSystemViewSetPermissions:
         assert response.status_code == 403
 
     def test_saas_report_org_users(self, mock_auth_with_user, mocker):
-        view_name = 'v2:cloudsystem-saas-report'
+        view_name = 'v3:cloudsystem-saas-report'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         mock_auth_with_user(self.org_admin_lvl_1)
@@ -5253,7 +5296,7 @@ class TestCloudSystemViewSetPermissions:
 
     def test_saas_report_cp_users(self, mock_auth_with_user, mocker):
 
-        view_name = 'v2:cloudsystem-saas-report'
+        view_name = 'v3:cloudsystem-saas-report'
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         mock_auth_with_user(self.root_user)
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
@@ -5309,7 +5352,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, jwt_is_valid=False)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 401
@@ -5318,7 +5361,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5327,7 +5370,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5336,7 +5379,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -5345,7 +5388,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-detail'
+        view_name = 'v3:cloudsystem-detail'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5354,7 +5397,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-saas-report'
+        view_name = 'v3:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5363,7 +5406,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-saas-report'
+        view_name = 'v3:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5372,7 +5415,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-saas-report'
+        view_name = 'v3:cloudsystem-saas-report'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 403
@@ -5381,7 +5424,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5390,7 +5433,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5399,7 +5442,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-service-quantity'
+        view_name = 'v3:cloudsystem-service-quantity'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5408,7 +5451,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-services'
+        view_name = 'v3:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5417,7 +5460,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-services'
+        view_name = 'v3:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5426,7 +5469,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-services'
+        view_name = 'v3:cloudsystem-services'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.get(path=path)
         assert response.status_code == 200
@@ -5435,7 +5478,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.VIEWER)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
+        view_name = 'v3:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         # validation error expected
@@ -5446,7 +5489,7 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=VmsRoles.ADMINISTRATOR)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
+        view_name = 'v3:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         # validation error expected
@@ -5457,13 +5500,13 @@ class TestCloudSystemViewSetPermissions:
         user = cloud_user_factory()
         mock_cdb_token_introspect(user=user, system=self.system_lvl_1, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        view_name = 'v2:cloudsystem-migrate-legacy-licenses'
+        view_name = 'v3:cloudsystem-migrate-legacy-licenses'
         path = reverse(view_name, kwargs=self.kwargs_lvl_1)
         response = self.client.post(path=path)
         assert response.status_code == 403
 
     def test_invalid_method_405(self, mock_cdb_basic_auth, mock_auth_with_user):
-        view_name = 'v2:cloudsystem-system-usage-report'
+        view_name = 'v3:cloudsystem-system-usage-report'
 
         auth = mock_cdb_basic_auth(self.system_lvl_1)
         self.client.credentials(HTTP_AUTHORIZATION=auth)

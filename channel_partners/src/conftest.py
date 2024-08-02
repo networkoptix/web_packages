@@ -416,11 +416,27 @@ def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_ema
 
 
 class RequestFactory(APIRequestFactory):
+    def __init__(self, *args, **kwargs):
+        self.version = kwargs.pop('version', 'v2')
+        super().__init__(*args, **kwargs)
+
     def request(self, **kwargs):
         request = super().request(**kwargs)
         if not hasattr(request, 'cloud_host'):
             request.cloud_host = self.defaults.get('cloud_host')
+        request.version = self.version
         return request
+
+
+@pytest.fixture()
+def mock_determine_version(mocker):
+    """
+    It really hard mocking. We suppose that version determination
+     is done well in the same way as in the tests with APIClient.
+    """
+    def mock(version: str):
+        return mocker.patch('rest_framework.versioning.NamespaceVersioning.determine_version', return_value=version)
+    return mock
 
 
 @pytest.fixture()
@@ -430,9 +446,28 @@ def arf(cloud_test_host):
 
 
 @pytest.fixture()
+def v3arf(cloud_test_host, mock_determine_version):
+    api_factory = RequestFactory(cloud_host=cloud_test_host,
+                                 headers={"Authorization": "Bearer HERE_MIGHT_BE_TOKEN"},
+                                 version='v3')
+    mock_determine_version('v3')
+    return api_factory
+
+
+@pytest.fixture()
 def arf_basic_auth(cloud_test_host):
     auth = httpx.BasicAuth(username='username', password='password')._auth_header
     api_factory = RequestFactory(cloud_host=cloud_test_host, headers={"Authorization": auth})
+    return api_factory
+
+
+@pytest.fixture()
+def v3arf_basic_auth(cloud_test_host, mock_determine_version):
+    auth = httpx.BasicAuth(username='username', password='password')._auth_header
+    api_factory = RequestFactory(cloud_host=cloud_test_host,
+                                 headers={"Authorization": auth},
+                                 version='v3')
+    mock_determine_version('v3')
     return api_factory
 
 

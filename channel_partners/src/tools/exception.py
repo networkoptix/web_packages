@@ -11,7 +11,7 @@ class Conflict(APIException):
     default_code = 'conflict'
 
 
-class APIErrorWithoutRollback(Exception):
+class APIErrorWithoutRollback(APIException):
     """
     Base class for REST framework exceptions.
     Subclasses should provide `.status_code` and `.default_detail` properties.

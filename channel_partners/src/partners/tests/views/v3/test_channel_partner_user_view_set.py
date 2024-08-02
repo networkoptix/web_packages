@@ -1,0 +1,447 @@
+import datetime
+import json
+from uuid import uuid4
+
+import pytest
+from dateutil import parser
+from django.db import transaction
+from drf_standardized_errors.types import ErrorType
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
+
+from partners.models import (
+    ChannelPartnerRoles,
+    ChannelPartnerToUser,
+    CloudUser,
+)
+from partners.views.v2.views import ChannelPartnerUserViewSet
+from tools.exception import Conflict
+
+
+class TestChannelPartnerUserViewSet:
+    @pytest.fixture(autouse=True)
+    def setup_method(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory):
+        self.parent_cp = channel_partner_factory()
+        self.parent_cp_user = cp_user_factory(channel_partner=self.parent_cp)
+        self.parent_org = organization_factory(channel_partner=self.parent_cp)
+        self.parent_org_user = org_user_factory(organization=self.parent_org)
+        self.cp = channel_partner_factory(parent_channel_partner=self.parent_cp)
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.org = organization_factory(channel_partner=self.cp)
+        self.org_user = org_user_factory(organization=self.org)
+        self.child_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.child_cp_user = cp_user_factory(channel_partner=self.child_cp)
+
+    def test_destroy_last_admin(self, mock_auth_with_user, v3arf, cp_user_factory):
+        user_2 = cp_user_factory(channel_partner=self.cp)
+        request = v3arf.delete('/')
+        mock_auth_with_user(self.parent_cp_user)
+        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=user_2.user.email)
+        assert response.status_code == 403
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == PermissionDenied.default_code
+
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=user_2.user.email)
+        assert response.status_code == 204
+        assert not ChannelPartnerToUser.objects.filter(user__email=user_2.user.email).exists()
+        assert CloudUser.objects.filter(email=user_2.user.email).exists()
+
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=self.cp_user.user.email)
+        assert ChannelPartnerToUser.objects.filter(user__email=self.cp_user.user.email).exists()
+        assert response.status_code == 409
+        assert response.data['type'] == ErrorType.CLIENT_ERROR
+        assert response.data['errors'][0]['code'] == Conflict.default_code
+        assert "is the only Administrator and may not be demoted or removed" in response.data['errors'][0]['detail']
+
+    def test_destroy_user_with_no_admin(self, mock_auth_with_user, v3arf, cp_user_factory):
+        user_2 = cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        request = v3arf.delete('/')
+        mock_auth_with_user(self.parent_cp_user)
+        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=user_2.user.email)
+        assert response.status_code == 403
+
+        self.cp_user.delete()
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=user_2.user.email)
+        assert response.status_code == 204
+        assert not ChannelPartnerToUser.objects.filter(user__email=user_2.user.email).exists()
+        assert CloudUser.objects.filter(email=user_2.user.email).exists()
+
+    def test_destroy_self(self, channel_partner_factory, cp_user_factory, default_channel_partner,
+                                mock_auth_with_user, v3arf, default_cp_admin):
+        # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
+        cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
+        user = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.REPORTS_VIEWER)
+        request = v3arf.delete('/')
+        mock_auth_with_user(user)
+        view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
+        assert response.status_code == 204
+        assert not ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
+        assert CloudUser.objects.filter(email=user.user.email).exists()
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_with_partner_admin(self,cp_user_factory, mock_auth_with_user, v3arf, random_email,
+                                       mock_account_status, mock_get_customization_request,
+                                       mock_post_notification, httpx_mock):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = v3arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert notification_data['type'] == 'cps_partner_invite'
+        assert notification_data['user_email'] == email
+        assert notification_data['message']['partner_name'] == self.cp.name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == self.cp_user.user.email
+
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_with_partner_admin_with_attributes(self,cp_user_factory, mock_auth_with_user, v3arf, random_email,
+                                       mock_account_status, mock_get_customization_request,
+                                       mock_post_notification, httpx_mock):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': 'test'
+            }
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = v3arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert response.data.get("attributes").get("test") == "test"
+        assert notification_data['type'] == 'cps_partner_invite'
+        assert notification_data['user_email'] == email
+        assert notification_data['message']['partner_name'] == self.cp.name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == self.cp_user.user.email
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_and_update_with_partner_admin_with_attributes(
+            self,
+            cp_user_factory,
+            mock_auth_with_user,
+            v3arf,
+            random_email,
+            mock_account_status,
+            mock_get_customization_request,
+            mock_post_notification,
+            httpx_mock
+    ):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': 'test'
+            }
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = v3arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        mock_post_notification()
+        mock_auth_with_user(self.cp_user)
+
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert response.data.get("attributes").get("test") == "test"
+
+        # Request #2
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user',
+            'attributes': {
+                'test': '*unset*'
+            }
+        }
+        request = v3arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert "test" not in response.data.get("attributes")
+
+    @pytest.mark.no_tasks_autofix
+    def test_create_with_parent_admin(self,cp_user_factory, mock_auth_with_user, v3arf, random_email,
+                                      mock_account_status, mock_get_customization_request,
+                                      mock_post_notification, httpx_mock):
+        email = random_email
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = v3arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        mock_auth_with_user(self.parent_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 403
+
+        # Check if it is possible to add user when there is no admins
+        self.cp_user.delete()
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert notification_data['type'] == 'cps_partner_invite'
+        assert notification_data['user_email'] == email
+        assert notification_data['message']['partner_name'] == self.cp.name
+        # Checking against Email since, by default full_name is None
+        assert notification_data['message']['sharer_name'] == self.parent_cp_user.user.email
+
+    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
+                             mock_auth_with_user, v3arf, org_user_factory, random_email):
+        email = random_email
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        mock_auth_with_user(cp_admin)
+
+        organization = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(email=email, organization=organization)
+        request = v3arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 400
+        assert response.data['type'] == ErrorType.VALIDATION_ERROR
+        assert response.data['errors'][0]['code'] == 'invalid'
+        assert response.data['errors'][0]['attr'] == 'email'
+        assert f"User {email} has a role in the channel partner child organization" in response.data['errors'][0]['detail']
+
+    def test_bulk_delete_403(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, v3arf):
+        other_cp = channel_partner_factory()
+        users = [cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        other_user = cp_user_factory(channel_partner=other_cp)
+        data = emails + [other_user.user.email]
+        request = v3arf.post('/', data=data, format='json')
+        mock_auth_with_user(other_user)
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 403
+
+    def test_bulk_delete_400(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, v3arf):
+        users = [cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        data = emails + ['invalid_email']
+        request = v3arf.post('/', data=data, format='json')
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 400
+
+    def test_bulk_delete_409(self, channel_partner_factory, cp_user_factory,
+                             mock_auth_with_user, v3arf):
+        users = [cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = emails + [self.cp_user.user.email]
+        request = v3arf.post('/', data=data, format='json')
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 409
+
+    def test_bulk_delete(self, channel_partner_factory, cp_user_factory,
+                         mock_auth_with_user, v3arf, random_email):
+        users = [cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = emails + [random_email]
+        request = v3arf.post('/', data=data, format='json')
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+
+        assert response.status_code == 200
+        assert 'emails' in response.data
+        assert set(response.data['emails']) == set(emails)
+
+    def test_list_permissions(self, mock_auth_with_user, v3arf):
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'list'})
+        request = v3arf.get('/')
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.child_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.parent_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 403
+
+        self.cp_user.delete()
+        mock_auth_with_user(self.parent_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+
+    def test_retrieve_permissions(self, mock_auth_with_user, v3arf, cp_user_factory):
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'retrieve'})
+        manager = cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.MANAGER)
+        request = v3arf.get('/')
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 200
+
+        mock_auth_with_user(self.child_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.org_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 403
+
+        mock_auth_with_user(self.parent_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 403
+
+        self.cp_user.delete()
+        mock_auth_with_user(self.parent_cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 200
+
+    def test_retrieve(self, mock_auth_with_user, v3arf, cp_user_factory):
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'retrieve'})
+        manager = cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.MANAGER)
+        request = v3arf.get('/')
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email)
+        assert response.status_code == 200
+        assert response.data['email'] == manager.user.email
+        assert response.data['rolesIds'] == [str(ChannelPartnerRoles.MANAGER)]
+        assert response.data['created']
+        assert response.data['lastModified']
+
+    def test_paginated_list(self, mock_auth_with_user, v3arf, cp_user_factory):
+        init_users = self.cp.users.count()
+        for _ in range(150):
+            cp_user_factory(channel_partner=self.cp)
+        mock_auth_with_user(self.cp_user)
+        request = v3arf.get('/')
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'paginated_list'})
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert response.data['count'] == 150 + init_users
+        assert response.data['next']
+
+
+class TestChannelPartnerUserViewSetFilter:
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, cp_user_factory, cloud_test_host, mock_auth_with_user):
+        self.channel_partner = channel_partner_factory()
+
+        self.january = datetime.datetime(2024, 1, 1, 0, 0, 0,
+                                            tzinfo=datetime.timezone.utc)
+        self.february = datetime.datetime(2024, 2, 1, 0, 0, 0,
+                                            tzinfo=datetime.timezone.utc)
+        self.march = datetime.datetime(2024, 3, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.april = datetime.datetime(2024, 4, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+        self.may = datetime.datetime(2024, 5, 1, 0, 0, 0,
+                                        tzinfo=datetime.timezone.utc)
+
+        self.user_january = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_january.last_modified = self.january
+
+        self.user_march = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_march.last_modified = self.march
+
+        self.user_may = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_may.last_modified = self.may
+        ChannelPartnerToUser.objects.bulk_update([self.user_january, self.user_march, self.user_may], ['last_modified'])
+        self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+        self.path = reverse('v3:channelpartners-user-list',
+                            kwargs={'parent_lookup_channel_partner': self.channel_partner.id})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {uuid4()}')
+        mock_auth_with_user(self.user_january)
+
+    def test_no_filters(self):
+        response = self.client.get(self.path)
+        assert response.status_code == 200
+        assert len(response.data) == 3
+
+    def test_last_modified_gte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert all(parser.parse(user['lastModified']) >= self.february for user in response.data)
+        response = self.client.get(self.path, {'lastModified__gte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(parser.parse(user['lastModified']) >= self.april for user in response.data)
+
+    def test_last_modified_lte(self):
+        response = self.client.get(self.path, {'lastModified__lte': self.february})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(parser.parse(user['lastModified']) <= self.february for user in response.data)
+        response = self.client.get(self.path, {'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert all(parser.parse(user['lastModified']) <= self.april for user in response.data)
+
+    def test_last_modified_gte_lte(self):
+        response = self.client.get(self.path, {'lastModified__gte': self.february, 'lastModified__lte': self.april})
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert all(self.february <= parser.parse(user['lastModified']) <= self.april for user in response.data)
