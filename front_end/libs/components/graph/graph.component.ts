@@ -146,6 +146,11 @@ export class NxMonitoringGraphComponent implements OnChanges {
                         const seriesData = this.multi.find(
                             series => series.name === data.description,
                         );
+                        // Due to some hypervisor-vm issue - negative values received for
+                        // network interfaces monitoring causing this. VMS thick clients have
+                        // zero as minimum value for graphs, so they just displayed as flat line. --[T]
+                        const value = Math.round(Math.max(data.value, 0) * 100);
+
                         if (!seriesData) {
                             const series = Array.from({ length: 50 }, (_, i) => {
                                 return { name: i + 1, value: 0 };
@@ -156,13 +161,13 @@ export class NxMonitoringGraphComponent implements OnChanges {
                             });
                             this.multi[this.multi.length - 1].series.push({
                                 name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100),
+                                value,
                             });
                             this.multi[this.multi.length - 1].series.shift();
                         } else {
                             seriesData.series.push({
                                 name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100),
+                                value,
                             });
                             seriesData.series.shift();
                         }
