@@ -1314,9 +1314,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             delete user.fullName;
         }
 
+        // Adding in pipe/catchError to log the error made it cease. The retry is there for good measure.
         return this.patch<ChangedIdReturned>(
             `/rest/v1/users/${user.id}`,
             this.cleanUserObject(user),
+        ).pipe(
+            retry(3),
+            catchError(error => {
+                console.error('An error occurred:', error);
+                return throwError(error);
+            }),
         );
     }
 
