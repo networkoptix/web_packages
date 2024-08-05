@@ -66,7 +66,10 @@
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: fullName"
                 >
-                    {{ row.fullName }}
+                    <nx-search-highlight
+                        [text]="row.fullName"
+                        [search]="searchingQuery$$()"
+                    ></nx-search-highlight>
                 </div>
                 <div
                     class="div-container-wrapper roles-container"
@@ -86,7 +89,10 @@
                             >
                                 @for (role of roles$$(); track role.id) {
                                     <nx-select-item [value]="role.id">
-                                        {{ role.name | nxTranslate }}
+                                        <nx-search-highlight
+                                            [text]="role.name"
+                                            [search]="searchingQuery$$()"
+                                        ></nx-search-highlight>
                                     </nx-select-item>
                                 }
                             </nx-select-v2>

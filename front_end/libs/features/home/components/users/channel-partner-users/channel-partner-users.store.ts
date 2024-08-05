@@ -11,7 +11,7 @@ import {
 
 import { alphaNumericSort, caseInsensitiveSearch } from '@utils/general';
 
-import { UserRecord, CPUsersState } from './channel-partner-users.types';
+import { CPUsersState, UserRecord } from './channel-partner-users.types';
 
 const initialState: CPUsersState = {
     searchQuery: '',
@@ -43,10 +43,16 @@ function getUsersByFilters(
 }
 
 function getUsersByModel(records: UserRecord[] | undefined, query: string): UserRecord[] {
-    if (records) {
-        return records.filter(user => caseInsensitiveSearch(user.email, query));
-    }
-    return [];
+    return records && query
+        ? records.filter(user =>
+              [user.roles![0], user.email, user.fullName].some(value => {
+                  if (!value) {
+                      return false;
+                  }
+                  return caseInsensitiveSearch(value, query);
+              }),
+          )
+        : [];
 }
 
 export const ChannelPartnerUsersStore = signalStore(
