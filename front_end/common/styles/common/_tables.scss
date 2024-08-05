@@ -1,8 +1,21 @@
 @use "typography" as *;
+@use 'theme_generator' as tg;
 // @import '../../native-theme/theme_palette';
 // @import '../../custom/custom_palette';
 // @import 'styles/theme_palette';
 // @use 'theme_variables_common' as variables;
+
+// Work towards making table styles more consistent
+// theme vars need to be generated here to be available
+// to all components using nx-table -- [T]
+@include tg.generate-theme-vars((
+    '--reports-sidebar-background': 5,
+    '--reports-sidebar-highlight-background': 7,
+    '--reports-sidebar-highlight-text': -1,
+    '--reports-table-header-text-color': ('dark': -4, 'light': -9),
+    '--reports-hint-icon-color': ('dark': -10, 'light': 10),
+));
+
 $permission-cell-size: 210px;
 $large-desktop-breakpoint: 1477px;
 
@@ -167,6 +180,19 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 border-right: none;
             }
 
+            &.table-header {
+                @include medium14nocolor;
+                color: var(--reports-table-header-text-color) !important;
+                padding: 0 8px;
+
+                .hint-icon {
+                    margin-left: 2px;
+                    position: relative;
+                    bottom: 1px;
+                    color: var(--reports-hint-icon-color)
+                }
+            }
+
             .head-title {
                 pointer-events: none;
                 max-width: calc(100% - 30px); // minus sort svg and padding
@@ -208,6 +234,10 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         //&:last-child {
         //    border-bottom: none;
         //}
+
+        .align-right {
+            justify-content: flex-end;
+        }
 
         & div {
             display: flex;
@@ -455,8 +485,8 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         }
 
         .summary-row {
-            background-color: var(--dark6);
-            color: var(--light16);
+            background-color: var(--card-header-bg);
+            color: var(--light-text-color);
         }
 
         .header, .body {
@@ -491,8 +521,8 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         }
 
         .summary-row {
-            background-color: var(--dark6);
-            color: var(--light16);
+            background-color: var(--card-header-bg);
+            color: var(--light-text-color);
         }
 
         .header, .body {
@@ -527,8 +557,8 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         }
 
         .summary-row {
-            background-color: var(--dark6);
-            color: var(--light16);
+            background-color: var(--card-header-bg);
+            color: var(--light-text-color);
             border-bottom: none !important;
         }
 
@@ -564,8 +594,8 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         }
 
         .summary-row {
-            background-color: var(--dark6);
-            color: var(--light16);
+            background-color: var(--card-header-bg);
+            color: var(--light-text-color);
             border-bottom: none !important;
         }
 

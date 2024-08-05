@@ -1,13 +1,3 @@
-@use 'theme_generator' as tg;
-
-@include tg.generate-theme-vars((
-    '--reports-sidebar-background': 5,
-    '--reports-sidebar-highlight-background': 7,
-    '--reports-sidebar-highlight-text': -1,
-    '--reports-table-header-text-color': -4,
-    '--reports-hint-icon-color': -10,
-), ':host');
-
 :host {
     display: flex;
     height: 100%;
