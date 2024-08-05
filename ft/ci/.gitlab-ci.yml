@@ -5,6 +5,7 @@ include:
   $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^releases_23\.3\./ )'
 
 .require_testing:
+  - cloud/**/*
   - front_end/**/*
   - ft/**/*
 
