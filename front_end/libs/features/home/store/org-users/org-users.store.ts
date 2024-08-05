@@ -21,7 +21,8 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Subject, iif, Observable, pipe, zip, NEVER, timer } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { iif, NEVER, Observable, pipe, Subject, timer, zip } from 'rxjs';
 import {
     catchError,
     debounceTime,
@@ -34,6 +35,7 @@ import {
     switchMap,
 } from 'rxjs/operators';
 
+import LANG from '@language/language_i18n_static.json';
 import {
     AccessLevel,
     UserRecord,
@@ -49,6 +51,7 @@ import {
     OrganizationUser,
     OrgRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 import { alphaNumericSort, caseInsensitiveSearch, interceptMethodCalls } from '@utils/general';
 
 import { GroupsStore } from '../groups/groups.store';
@@ -182,22 +185,41 @@ function getUsersByFilters(
     return [];
 }
 
-function getUsersByModel(records: OrgUser[] | undefined, query: string): OrgUser[] {
-    if (records) {
-        return records.filter(user => {
-            return query && caseInsensitiveSearch(user.email, query);
-            // Commented out for 23.3.3
-            // https://networkoptix.atlassian.net/browse/CLOUD-14078
-            // return (
-            //     query &&
-            //     (caseInsensitiveSearch(user.email, query) ||
-            //         caseInsensitiveSearch(user.fullName, query) ||
-            //         user.roles?.some(role => caseInsensitiveSearch(role, query)) ||
-            //         user.groupRoles?.some(role => caseInsensitiveSearch(role.name, query)))
-            // );
-        });
+function getUsersByModel(
+    records: OrgUser[] | undefined,
+    query: string,
+    orgName: string,
+): OrgUser[] {
+    if (!records || !query) {
+        return [];
     }
-    return [];
+
+    return records.filter(user => {
+        const fieldsToFilterBy = [
+            user.email,
+            user.fullName,
+            ...user.rolesIds.map(roleId => LANG.channelPartners.orgs.orgRoleInfo[roleId].name),
+            ...user.groupRoles.map(
+                groupRole => LANG.channelPartners.orgs.orgRoleInfo[groupRole.rolesIds[0]].name,
+            ),
+        ];
+
+        if (user.userType === UserType.ORGANIZATION) {
+            fieldsToFilterBy.push(orgName);
+        }
+
+        // Commented out for 23.3.3
+        // https://networkoptix.atlassian.net/browse/CLOUD-14078
+        // return (
+        //     query &&
+        //     (caseInsensitiveSearch(user.email, query) ||
+        //         caseInsensitiveSearch(user.fullName, query) ||
+        //         user.roles?.some(role => caseInsensitiveSearch(role, query)) ||
+        //         user.groupRoles?.some(role => caseInsensitiveSearch(role.name, query)))
+        // );
+
+        return fieldsToFilterBy.some(value => caseInsensitiveSearch(value, query));
+    });
 }
 
 const currentGroupUsersEntity = { collection: 'currentGroupUsers' } as const;
@@ -675,16 +697,20 @@ export const OrgUsersStore = signalStore(
         },
     }),
     withComputed(
-        ({
-            searchQuery: searchQuery$$,
-            searchFilters: searchFilters$$,
-            currentGroupUsersEntities: entities$$,
-        }) => ({
+        (
+            {
+                searchQuery: searchQuery$$,
+                searchFilters: searchFilters$$,
+                currentGroupUsersEntities: entities$$,
+            },
+            store = inject(Store),
+        ) => ({
             filteredRecords$$: computed(() => {
                 if (!entities$$().length) {
                     return undefined; // avoid showing "No data" msg.
                 }
-
+                const currentOrg$$ = store.selectSignal(selectCurrentOrganization);
+                const currentOrgName = currentOrg$$().name;
                 const records = entities$$().sort(alphaNumericSort(record => record.email));
                 const search = searchQuery$$();
                 const filters = searchFilters$$() as Record<string, string>;
@@ -694,7 +720,7 @@ export const OrgUsersStore = signalStore(
                     filteredRecords = getUsersByFilters(filteredRecords, filters);
                 }
                 if (search.length) {
-                    filteredRecords = getUsersByModel(filteredRecords, search);
+                    filteredRecords = getUsersByModel(filteredRecords, search, currentOrgName);
                 }
 
                 return filteredRecords as UserRecord[];
