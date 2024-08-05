@@ -22,6 +22,9 @@ interface HEADER_ITEM {
     align?: string;
 }
 
+const apiPage = 1;
+const apiPageSize = 1000;
+
 @Component({
     selector: 'nx-expiring-service-table',
     templateUrl: './expiring-service-table.component.html',
@@ -75,6 +78,8 @@ export class NxExpiringServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
                 break;
             case 'organization':
@@ -82,6 +87,8 @@ export class NxExpiringServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
                 break;
             default:
@@ -89,6 +96,8 @@ export class NxExpiringServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
         }
 

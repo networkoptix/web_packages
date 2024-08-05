@@ -299,10 +299,12 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     getPartnerServiceUsage = (
         partnerId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<PartnerUsageReportEntry[]> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'reports', 'usage_report']),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 
@@ -326,6 +328,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         partnerId: string,
         serviceId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
@@ -334,7 +338,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_detail_table',
             ]),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 
@@ -358,6 +362,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         partnerId: string,
         serviceId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<ExpiringServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.CHANNEL_PARTNERS, [
@@ -366,7 +372,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'expiring_detail_table',
             ]),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 
@@ -470,9 +476,11 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     getOrganizationServiceUsage = (
         orgId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<OrgUsageReportEntry[]> => {
         return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report']), {
-            params: { periodStartDate },
+            params: { periodStartDate, page, pageSize },
         });
     };
 
@@ -512,6 +520,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         orgId: string,
         serviceId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -520,7 +530,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'regular_detail_table',
             ]),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 
@@ -528,6 +538,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         orgId: string,
         serviceId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<ExpiringServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -536,7 +548,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 serviceId,
                 'expiring_detail_table',
             ]),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 
@@ -545,6 +557,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         systemId: string,
         serviceId: string,
         periodStartDate: string,
+        page: number,
+        pageSize: number,
     ): Observable<RegularServiceDetailDialogResponse> => {
         return this.get(
             this.makeUrl(urlBases.ORGANIZATIONS, [
@@ -555,7 +569,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
                 systemId,
                 'regular_detail_table',
             ]),
-            { params: { periodStartDate } },
+            { params: { periodStartDate, page, pageSize } },
         );
     };
 

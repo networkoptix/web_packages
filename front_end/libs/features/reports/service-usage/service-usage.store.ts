@@ -25,6 +25,9 @@ const initialState: ServiceUsageState = {
     partnerUsageReports: [],
 };
 
+const apiPage = 1;
+const apiPageSize = 1000;
+
 export const ServiceUsageStore = signalStore(
     withState(initialState),
     withComputed(store => ({
@@ -86,7 +89,7 @@ export const ServiceUsageStore = signalStore(
             let serviceUsageRecords: PartnerUsageReportEntry[];
             try {
                 serviceUsageRecords = await firstValueFrom(
-                    CPService.getPartnerServiceUsage(entityId, startTs),
+                    CPService.getPartnerServiceUsage(entityId, startTs, apiPage, apiPageSize),
                 );
             } catch ({ error }) {
                 patchState(store, { error: error?.detail ?? '', isLoading: false, hasError: true });
@@ -103,7 +106,7 @@ export const ServiceUsageStore = signalStore(
             let serviceUsageRecords: OrgUsageReportEntry[];
             try {
                 serviceUsageRecords = await firstValueFrom(
-                    CPService.getOrganizationServiceUsage(entityId, startTs),
+                    CPService.getOrganizationServiceUsage(entityId, startTs, apiPage, apiPageSize),
                 );
             } catch ({ error }) {
                 patchState(store, { error: error?.detail ?? '', isLoading: false, hasError: true });

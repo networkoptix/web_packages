@@ -22,6 +22,9 @@ interface HEADER_ITEM {
     align?: string;
 }
 
+const apiPage = 1;
+const apiPageSize = 1000;
+
 @Component({
     selector: 'nx-regular-service-table',
     templateUrl: './regular-service-table.component.html',
@@ -81,6 +84,8 @@ export class NxRegularServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
                 break;
             case 'organization':
@@ -88,6 +93,8 @@ export class NxRegularServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
                 break;
             case 'system':
@@ -96,6 +103,8 @@ export class NxRegularServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
                 break;
             default:
@@ -103,6 +112,8 @@ export class NxRegularServiceTableComponent {
                     entityId,
                     serviceId,
                     startTs,
+                    apiPage,
+                    apiPageSize,
                 );
         }
 

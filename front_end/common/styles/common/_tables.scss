@@ -562,6 +562,11 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             border-bottom: none !important;
         }
 
+        .footer {
+            padding: 0 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
         .header, .body {
             width: 100% !important;
         }
@@ -597,6 +602,11 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             background-color: var(--card-header-bg);
             color: var(--light-text-color);
             border-bottom: none !important;
+        }
+
+        .footer {
+            padding: 0 1rem;
+            border-top: 1px solid var(--border-color);
         }
 
         .header, .body {
