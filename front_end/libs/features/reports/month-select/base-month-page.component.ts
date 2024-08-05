@@ -36,44 +36,29 @@ export abstract class BaseMonthPageComponent {
         return `${Y}-${m}-${d}`;
     }
 
-    protected parseDateParam(dateParam: string | undefined):
-        | {
-              year: number;
-              month: number;
-          }
-        | undefined {
-        if (!dateParam) {
-            return undefined;
-        }
-
-        const [year, month] = dateParam.split('-').map(part => parseInt(part));
-        const isMonthValid = !!month && month >= 1 && month <= 12;
-        if (!year || !isMonthValid) {
-            return undefined;
-        }
-        return { year, month };
-    }
-
-    dateParam = paramModel('date');
-    dateParam$ = toObservable(this.dateParam);
+    startTs = paramModel('startTs');
+    startTs$ = toObservable(this.startTs);
     constructor(private destroyRef: DestroyRef) {
-        // Set year/month using date query param if available + valid on initial page load
-        this.dateParam$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(dateParam => {
-            const parsedDate = this.parseDateParam(dateParam);
-            if (parsedDate) {
-                this.year.set(parsedDate.year);
-                this.monthIndex.set(parsedDate.month - 1);
-            } else {
-                const currentDate = new Date();
-                this.year.set(currentDate.getFullYear());
-                this.monthIndex.set(currentDate.getMonth());
+        this.startTs$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(startTs => {
+            const now = new Date();
+            if (startTs) {
+                const [year, month] = startTs.split('-').map(part => parseInt(part));
+                this.year.set(year);
+                this.monthIndex.set(Math.max(0, month - 1));
+            } else if (now.getDate() === 1) {
+                if (now.getMonth() === 1) {
+                    this.year.set(now.getFullYear() - 1);
+                    this.monthIndex.set(11);
+                } else {
+                    this.monthIndex.set(now.getMonth() - 1);
+                }
             }
         });
     }
 
     dateEffect = effect(
         () => {
-            this.dateParam.set(this.requestStartString());
+            this.startTs.set(this.requestStartString());
         },
         { allowSignalWrites: true },
     );
