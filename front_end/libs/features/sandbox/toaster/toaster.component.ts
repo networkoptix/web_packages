@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
@@ -10,7 +10,6 @@ import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
-import { NxMenuService } from '@menu/menu.service';
 import { NxProcessService } from '@services/process.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
@@ -30,7 +29,7 @@ import { icons } from '@static-variables';
         NxAlertBlockComponent,
     ],
 })
-export class ToasterComponent implements OnInit, OnDestroy {
+export class ToasterComponent implements OnDestroy {
     LANG = staticLang;
 
     ToastType = ToastType;
@@ -40,15 +39,9 @@ export class ToasterComponent implements OnInit, OnDestroy {
 
     constructor(
         private toasts: NxToastService,
-        private menuService: NxMenuService,
         private ribbonService: NxRibbonService,
         private processService: NxProcessService,
     ) {}
-
-    ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('toaster');
-    }
 
     ngOnDestroy(): void {
         this.ribbonService.hide();

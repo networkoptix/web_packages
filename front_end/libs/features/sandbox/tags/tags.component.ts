@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxFilterTagsComponent } from '@components/tag-filter/tag.component';
 import { UserFilter } from '@dialogs/channel-partners/filter-users/filter-users.types';
-import { NxMenuService } from '@menu/menu.service';
 
 @Component({
     selector: 'tags',
@@ -19,12 +18,7 @@ export class TagsComponent {
     options: { name: string; selected: boolean; type?: string }[];
     filters: UserFilter[];
 
-    constructor(private menuService: NxMenuService) {}
-
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('tags');
-
         this.options = [
             { name: 'brand', selected: false, type: 'brand' },
             { name: 'really long name break', selected: false, type: 'brand' },

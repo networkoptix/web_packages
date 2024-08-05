@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-
-import { NxMenuService } from '@menu/menu.service';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'nx-arch-svg',
@@ -10,11 +8,4 @@ import { NxMenuService } from '@menu/menu.service';
     standalone: true,
     imports: [CommonModule],
 })
-export class NxArchSvgComponent implements OnInit {
-    constructor(private menuService: NxMenuService) {}
-
-    ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('archsvg');
-    }
-}
+export class NxArchSvgComponent {}

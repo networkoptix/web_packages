@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 
-import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -35,7 +34,6 @@ export class WebglComponent {
     system: NxSystem;
 
     constructor(
-        private menuService: NxMenuService,
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
@@ -44,9 +42,6 @@ export class WebglComponent {
     }
 
     async ngOnInit(): Promise<void> {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('webgl');
-
         await this.systemsService.getSystemAsPromise(SERVER_ID);
         this.system = this.systemService.createSystem(this.accountService.account.email, SERVER_ID);
         await this.system.update();

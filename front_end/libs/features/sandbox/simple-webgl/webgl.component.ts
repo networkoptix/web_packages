@@ -7,7 +7,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -49,7 +48,6 @@ export class SimpleWebglComponent {
     showData: Record<string, boolean>;
 
     constructor(
-        private menuService: NxMenuService,
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
@@ -60,9 +58,6 @@ export class SimpleWebglComponent {
     }
 
     async ngOnInit(): Promise<void> {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('simple-webgl');
-
         await this.systemsService.getSystemAsPromise(SERVER_ID);
         this.system = this.systemService.createSystem(this.accountService.account.email, SERVER_ID);
         await this.system.update();

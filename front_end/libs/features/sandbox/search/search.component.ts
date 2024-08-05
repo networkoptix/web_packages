@@ -13,7 +13,6 @@ import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { highlightRegex } from '@components/search-highlight/highlight-regex';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
-import { NxMenuService } from '@menu/menu.service';
 
 import { elements } from './elements';
 
@@ -71,12 +70,7 @@ export class SearchComponent {
     hexSearch = '';
     hexRegex = /^[a-f0-9]{6}$/i;
 
-    constructor(private menuService: NxMenuService) {}
-
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('search');
-
         this.filter = {
             query: '',
             selects: [

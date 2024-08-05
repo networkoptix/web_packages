@@ -16,7 +16,6 @@ import {
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
-import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
 
@@ -213,15 +212,9 @@ export class MultiSelectComponent {
         console.log('onChange', event);
     }
 
-    constructor(
-        private menuService: NxMenuService,
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(@Inject(DOCUMENT) private document: Document) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('dropdowns');
-
         this.dropdownConfiguration = {
             type: '',
             disabled: false,

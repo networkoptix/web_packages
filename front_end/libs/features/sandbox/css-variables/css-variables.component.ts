@@ -3,7 +3,6 @@ import { Component, effect, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 
-import { NxMenuService } from '@menu/menu.service';
 import { NxThemeService } from '@services/theme.service';
 import { paramModel } from '@utils/signals';
 
@@ -106,7 +105,6 @@ const getRootProps = (): PropMap =>
     imports: [CommonModule, FormsModule],
 })
 export class NxCssVariablesComponent {
-    menuService = inject(NxMenuService);
     themeService = inject(NxThemeService);
     initialTheme = this.themeService.getTheme();
 
@@ -126,8 +124,6 @@ export class NxCssVariablesComponent {
     propMap$$ = signal<PropMap>({} as PropMap);
 
     ngAfterViewInit(): void {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('cssVariables');
         this.propMap$$.set(getRootProps());
     }
 

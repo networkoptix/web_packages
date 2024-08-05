@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
-import { NxMenuService } from '@menu/menu.service';
-
 const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --alt-body-bg : #000000; //$dark1;
             --body-text-color : #A5B7C0; //$light10;
@@ -596,12 +594,7 @@ export class NxThemeColorsComponent implements OnInit {
 
     theme = [{ name: '--body-bg', light: '#F0F2F4', dark: '#0D0E0F' }];
 
-    constructor(private menuService: NxMenuService) {}
-
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('themeColors');
-
         this.parse();
     }
 

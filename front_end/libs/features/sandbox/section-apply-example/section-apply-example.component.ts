@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher, SectionWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
@@ -74,13 +73,9 @@ export class SectionApplyExampleComponent {
     constructor(
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private menuService: NxMenuService,
     ) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('applyServiceSection');
-
         // setup section 1
         this.section1Input = 'section1';
         this.saveSection1 = this.processService

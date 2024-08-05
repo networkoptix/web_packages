@@ -10,7 +10,6 @@ import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
-import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
@@ -73,7 +72,6 @@ export class FormApplyExampleComponent {
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService,
-        private menuService: NxMenuService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
     ) {
         this.show1 = false;
@@ -121,9 +119,6 @@ export class FormApplyExampleComponent {
     }
 
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('applyServiceForm');
-
         this.account.form1Field1Input = 'Tsanko';
         this.account.form1Field2Input = 'Tsolov';
         this.applyService.initPageFormsWatcher(this.pageApply);
