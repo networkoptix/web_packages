@@ -6,7 +6,6 @@ import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxMenuService } from '@menu/menu.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -32,15 +31,9 @@ export class ValidationComponent {
     change: Process;
     restore: Process;
 
-    constructor(
-        private processService: NxProcessService,
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private processService: NxProcessService) {}
 
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('validation');
-
         this.change = this.processService.createProcess(() => {
             return Promise.resolve(true);
         });

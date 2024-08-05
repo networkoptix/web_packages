@@ -4,7 +4,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NxSystemCameraWithMappedFields } from '@components/layout-grid/layout-grid.types';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
-import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -46,7 +45,6 @@ export class WebglComponent {
     });
 
     constructor(
-        private menuService: NxMenuService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
     ) {
@@ -54,9 +52,6 @@ export class WebglComponent {
     }
 
     async ngOnInit(): Promise<void> {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('webgl');
-
         // await this.systemsService.getSystemAsPromise(SERVER_ID);
         this.system = this.systemService.createSystem(
             this.accountService.account.email,

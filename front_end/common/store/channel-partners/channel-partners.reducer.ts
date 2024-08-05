@@ -216,6 +216,6 @@ export const channelPartnersReducer = createReducer(
         return {
             ...state,
             channelPartners: patchedPartners,
-        }
+        };
     }),
 );

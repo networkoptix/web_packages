@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, model, signal } from '@angular/core';
+import { Component, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { map, skip, startWith, switchMap, take, timer } from 'rxjs';
 
-import { NxMenuService } from '@menu/menu.service';
 import {
     bindSignals,
     paramModel,
@@ -28,8 +27,6 @@ const boundSourceSerializer = {
     imports: [CommonModule, FormsModule, RecursiveComponent, NxNgModelComponent],
 })
 export class NxSignalsComponent {
-    menuService = inject(NxMenuService);
-
     modelBinding$$ = model({ value: 'model binding' }, { alias: 'modelBinding' });
 
     modelAlias$$ = createBoundSignal(this.modelBinding$$, {
@@ -98,11 +95,6 @@ export class NxSignalsComponent {
 
     toggleCheckAll(): void {
         this.checkAll$$.update(val => !val);
-    }
-
-    ngAfterViewInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('signals');
     }
 
     constructor() {

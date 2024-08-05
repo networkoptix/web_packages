@@ -13,7 +13,6 @@ import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 // import { NxSliderComponent } from '@components/slider/slider.component';
 import * as staticLang from '@language_static';
-import { NxMenuService } from '@menu/menu.service';
 import { PipesModule } from '@pipes/pipes.module';
 import { simpleURLRegex } from '@static-variables';
 
@@ -71,12 +70,7 @@ export class FormElementsComponent {
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
-    constructor(private menuService: NxMenuService) {}
-
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('formElements');
-
         this.toggleDisabled = true;
         this.show = false;
         this.show5 = false;

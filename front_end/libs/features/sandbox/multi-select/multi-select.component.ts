@@ -19,7 +19,6 @@ import { NxMultiSelectV2ItemComponent } from '@components/select-v2/items/multi-
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxMultiSelectV2Component } from '@components/select-v2/multi-select-v2.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
-import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
 
@@ -242,12 +241,7 @@ export class MultiSelectComponent {
         console.log('onChange', event);
     }
 
-    constructor(private menuService: NxMenuService) {}
-
     ngOnInit(): void {
-        this.menuService.selectedSection$$.set('components');
-        this.menuService.selectedDetailsSection$$.set('dropdowns');
-
         this.dropdownConfiguration = {
             type: '',
             disabled: false,

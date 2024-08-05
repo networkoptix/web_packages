@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-
-import { NxMenuService } from '@menu/menu.service';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'nx-custom-colors',
@@ -10,7 +8,7 @@ import { NxMenuService } from '@menu/menu.service';
     standalone: true,
     imports: [CommonModule],
 })
-export class NxCustomColorsComponent implements OnInit {
+export class NxCustomColorsComponent {
     blue = [
         { name: '$brand_contrast', hex: '#FFFFFF' },
         { name: '$brand_l4', hex: '#77D2FF' },
@@ -42,11 +40,4 @@ export class NxCustomColorsComponent implements OnInit {
         { name: '--brand-d6', hex: '#7D3A12' },
         { name: '--brand-d7', hex: '#6B3516' },
     ];
-
-    constructor(private menuService: NxMenuService) {}
-
-    ngOnInit(): void {
-        this.menuService.selectedSection$$.set('colors');
-        this.menuService.selectedDetailsSection$$.set('customColors');
-    }
 }
