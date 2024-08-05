@@ -14,8 +14,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, firstValueFrom, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
-import { catchError, debounceTime, map } from 'rxjs/operators';
+import {
+    BehaviorSubject,
+    defer,
+    firstValueFrom,
+    fromEvent,
+    lastValueFrom,
+    Observable,
+    of,
+} from 'rxjs';
+import { catchError, debounceTime, map, retry } from 'rxjs/operators';
 
 import { AuthService } from '@authorization/src/app/auth.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -548,7 +556,27 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 ) {
                     const accessCodeOrToken =
                         this.initialData.access_code || this.initialData.access_token;
-                    return this.cloudService.verify2FaKey(this.authCode, accessCodeOrToken);
+                    return this.cloudService
+                        .verify2FaKey(this.authCode, accessCodeOrToken)
+                        .then(async res => {
+                            if ('resultCode' in res && res.resultCode === 'ok') {
+                                await firstValueFrom(
+                                    defer(() => this.cloudService.getAllAccountInfo(true)).pipe(
+                                        map(({ account2faEnabled }) => {
+                                            if (!account2faEnabled) {
+                                                throw new Error('Waiting for cache to update');
+                                            }
+                                        }),
+                                        retry({
+                                            delay: 500,
+                                            count: 10,
+                                        }),
+                                        catchError(() => Promise.resolve()),
+                                    ),
+                                );
+                            }
+                            return res;
+                        });
                 }
 
                 return lastValueFrom(

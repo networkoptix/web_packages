@@ -693,7 +693,7 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncShort
-    private getAllAccountInfo(forceUpdate = false): Observable<Account> {
+    public getAllAccountInfo(forceUpdate = false): Observable<Account> {
         return this.getAccount(forceUpdate).pipe(
             switchMap(cloudInfo =>
                 forkJoin([
