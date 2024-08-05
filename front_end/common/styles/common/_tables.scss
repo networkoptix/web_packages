@@ -583,6 +583,12 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         
         .big-row {
             grid-template-columns: $service-changes-table-column-width;
+            user-select: none;
+
+            &:hover {
+                cursor: default;
+                background-color: var(--card-body-bg);
+            }
 
             div:last-child {
                 border-right: none;
