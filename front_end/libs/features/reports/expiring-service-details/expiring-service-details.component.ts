@@ -9,6 +9,8 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
 
+import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
+import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
 import { NxServiceUsageTableComponent } from '../service-usage/service-usage-table/service-usage-table.component';
 
@@ -30,22 +32,22 @@ import { NxExpiringServiceTableComponent } from './expiring-service-table/expiri
         NxExpiringServiceTableComponent,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        NxMonthSelectComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
     providers: [ExpiringServiceDetailsStore],
     standalone: true,
 })
-export class NxExpiringServiceDetailsComponent {
+export class NxExpiringServiceDetailsComponent extends BaseMonthPageComponent {
     LANG = staticLang;
     icons = icons;
     readonly expiringServiceDetailsStore = inject(ExpiringServiceDetailsStore);
-    constructor(private router: Router) {}
+    router = inject(Router);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
     serviceId$$ = input.required<string>({ alias: 'serviceId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
-    startTs = input<string>('');
 
     error = this.expiringServiceDetailsStore.error;
     hasError = this.expiringServiceDetailsStore.hasError;

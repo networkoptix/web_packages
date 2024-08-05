@@ -10,6 +10,9 @@ import staticLang from '@language_static';
 import { EntityType } from '@libs/features/reports/reports.types';
 import { icons } from '@static-variables';
 
+import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
+import { NxMonthSelectComponent } from '../month-select/month-select.component';
+
 import { RegularServiceDetailsStore } from './regular-service-details.store';
 import {
     FormattedRegularServiceRecord,
@@ -27,22 +30,22 @@ import { NxRegularServiceTableComponent } from './regular-service-table/regular-
         NxRegularServiceTableComponent,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        NxMonthSelectComponent,
         NxPagePlaceholderGenericNewV2Component,
     ],
     providers: [RegularServiceDetailsStore],
     standalone: true,
 })
-export class NxRegularServiceDetailsComponent {
+export class NxRegularServiceDetailsComponent extends BaseMonthPageComponent {
     LANG = staticLang;
     icons = icons;
     readonly regularServiceDetailsStore = inject(RegularServiceDetailsStore);
-    constructor(private router: Router) {}
+    router = inject(Router);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
     serviceId$$ = input.required<string>({ alias: 'serviceId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
-    startTs = input<string>('');
 
     error = this.regularServiceDetailsStore.error;
     hasError = this.regularServiceDetailsStore.hasError;

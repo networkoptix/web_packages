@@ -39,3 +39,9 @@
         }
     </div>
 }
+<nx-month-select
+    [monthIndex]="monthIndex()"
+    (monthIndexChange)="monthIndex.set($event)"
+    [year]="year()"
+    (yearChange)="year.set($event)"
+></nx-month-select>

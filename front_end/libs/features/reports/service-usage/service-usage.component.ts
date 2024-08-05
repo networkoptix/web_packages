@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, effect, inject, input, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -27,14 +27,13 @@ import { FormattedUsageReportRecord } from './service-usage.types';
     providers: [ServiceUsageStore],
     standalone: true,
 })
-export class NxServiceUsageComponent extends BaseMonthPageComponent implements OnInit {
+export class NxServiceUsageComponent extends BaseMonthPageComponent {
     LANG = staticLang;
     readonly serviceUsageStore = inject(ServiceUsageStore);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
     selectedEntityName$$ = input.required<string>({ alias: 'entityName' });
-    startTs$$ = input<string>('', { alias: 'startTs' });
 
     formattedServiceUsageRecords$$ = computed<FormattedUsageReportRecord[]>(() => {
         const entityType = this.entityType$$();
@@ -59,22 +58,4 @@ export class NxServiceUsageComponent extends BaseMonthPageComponent implements O
             }
         });
     });
-
-    ngOnInit(): void {
-        const now = new Date();
-        const startTs = this.startTs$$();
-        if (startTs) {
-            const [year, month] = startTs.split('-').map(part => parseInt(part));
-            this.year.set(year);
-            this.monthIndex.set(Math.max(0, month - 1));
-        }
-        if (now.getDate() === 1) {
-            if (now.getMonth() === 1) {
-                this.year.set(now.getFullYear() - 1);
-                this.monthIndex.set(11);
-            } else {
-                this.monthIndex.set(now.getMonth() - 1);
-            }
-        }
-    }
 }
