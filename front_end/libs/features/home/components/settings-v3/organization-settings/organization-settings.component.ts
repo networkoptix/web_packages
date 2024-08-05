@@ -100,11 +100,12 @@ export class NxOrganizationSettingsV3Component {
             .some(u => u.rolesIds.includes(OrgRoleIds.OrgAdmin)),
     );
 
-    private accessLevelControl = new FormControl<string | null>(
-        this.organization().channelPartnerAccessLevel,
+    private accessLevelControl = new FormControl<string>(
+        String(this.organization().channelPartnerAccessLevel), // Convert null to "null" for indexing
         {
+            nonNullable: true,
             validators: [
-                ({ value }: { value: string | null }) => {
+                ({ value }: { value: string }) => {
                     if (value !== OrgRoleIds.OrgAdmin && !this.hasAdminUsers()) {
                         this.store.dispatch(
                             cpActions.showBannerAction({
@@ -132,9 +133,7 @@ export class NxOrganizationSettingsV3Component {
 
     accessItems2 = LANG.channelPartners.orgs.channelPartnerAccessInfo;
     nosort = keyValueNoSort;
-    /* `null` (object) is converted to "null" (string) when accessing a property.
-    This also means importing JSON with "null" as a key will be typed as `null` */
-    accessLevelMessageKey = computed<ControlState>(() => ({ key: this.accessLevel() as string }));
+    accessLevelMessageKey = computed<ControlState>(() => ({ key: this.accessLevel() }));
 
     generalFormGroup = new FormGroup({
         name: this.nameControl,
@@ -166,7 +165,9 @@ export class NxOrganizationSettingsV3Component {
                     updateBody.name = this.nameControl.value;
                 }
                 if (channelPartnerAccessLevel !== this.accessLevelControl.value) {
-                    updateBody.channelPartnerAccessLevel = this.accessLevelControl.value;
+                    const accessLevel = this.accessLevelControl.value;
+                    updateBody.channelPartnerAccessLevel =
+                        accessLevel === 'null' ? null : accessLevel;
                 }
                 return firstValueFrom(this.cpService.updateOrganization(id, updateBody));
             } else {
@@ -174,10 +175,9 @@ export class NxOrganizationSettingsV3Component {
             }
         },
         success: patch => {
-            if (patch) {
-                this.store.dispatch(cpActions.patchOrganization({ patch }));
-            }
+            this.store.dispatch(cpActions.patchOrganization({ patch }));
         },
+        error: () => {},
     });
 
     inactiveChannelPartner = computed(
