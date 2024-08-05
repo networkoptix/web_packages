@@ -58,7 +58,7 @@ export class NxReportsComponent {
             },
         ];
         if (nxConfig.featureFlags.channelPartnersAccessServiceUsage) {
-            services.push({
+            services.unshift({
                 name: staticLang.appHeader.headerMenuNodes.reports.nodes.serviceUsage.displayName,
                 icon: 'bar_chart.svg',
                 url: `/reports/${entityUrl}/service-usage`,
