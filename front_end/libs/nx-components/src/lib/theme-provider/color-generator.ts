@@ -95,7 +95,7 @@ export const generateHslaString = memoize(
         lightness: Percentage,
         alpha: Percentage = 100,
     ): HslaString => {
-        const values = `${hue}, ${saturation}%, ${lightness}%, ${alpha / 100}`;
+        const values = `${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%, ${Math.round(alpha / 100)}`;
         return `hsla(${values})`;
     },
     hash,
@@ -104,7 +104,7 @@ export const generateHslaString = memoize(
 const extractBaseHexColor = memoize(
     (theme: ThemeDefinition<ThemeColors>, colorVariable: CssColorVariables): HSL => {
         const baseColor = colorVariable.split('_')[0] as ThemeColors;
-        return hex.hsl(theme[baseColor]);
+        return hex.hsl(theme[baseColor]).map(value => Math.round(value)) as HSL;
     },
     hash,
 );

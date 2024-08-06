@@ -38,7 +38,7 @@ const handleRgb = (hslaString: HslaString, themeColor: string): string => {
         try {
             const hslValues = extractHslValues(hslaString);
             const rgbValues = hsl.rgb(hslValues);
-            return `rgb(${rgbValues.join(', ')})`;
+            return rgbValues.join(', ');
         } catch {}
     }
 
