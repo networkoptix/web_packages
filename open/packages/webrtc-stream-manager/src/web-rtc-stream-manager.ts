@@ -855,6 +855,10 @@ export class WebRTCStreamManager {
      */
     private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg | MimeInit): void => {
         this.initPeerConnection();
+        if ('transcoding' in signal && signal.transcoding && !this.allowTranscoding) {
+            this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+            this.close(false);
+        }
         if ('mime' in signal) {
             this.initializeMse(signal.mime);
         }
