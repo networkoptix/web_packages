@@ -34,6 +34,7 @@
         align-items: center;
         padding: 2px 4px 2px 0;
         border-radius: 2px;
+        color: var(--groups-sidebar-color);
         
         .level-name {
             width:200px;
@@ -43,17 +44,46 @@
             overflow: hidden;
         }
 
+        .icon-with-fill {
+            fill: var(--groups-sidebar-arrow-color);
+        }
+
         &:hover,
         &.selected {
             background-color: var(--groups-sidebar-highlight);
-            .group, a {
-                .st0 {
-                    stroke: var(--groups-sidebar-highlight-color);
+        }
+
+        &.selected {
+            &:hover {
+                .icon-with-fill{
+                    fill: var(--groups-sidebar-selected-color) !important;
                 }
-            }        
-  
+            }
+            .group, a {
+                color: var(--groups-sidebar-selected-color);
+            }      
+
+            &:active {
+                background-color: var(--groups-sidebar-selected-active-background) !important;
+
+                a {
+                    color: var(--groups-sidebar-selected-active-color) !important;
+                }
+                .icon-with-fill {
+                    fill: var(--groups-sidebar-selected-color) !important;
+                }
+            }
+        }
+
+        &:active {
+            background-color: var(--groups-sidebar-active-background) !important;
+
+            a {
+                color: var(--groups-sidebar-active-color) !important;
+            }
+
             .icon-with-fill {
-                fill: var(--dropdown-item-selected-color)
+                fill: var(--groups-sidebar-active-arrow-color);
             }
         }
 
