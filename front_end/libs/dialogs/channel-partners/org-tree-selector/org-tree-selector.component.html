@@ -78,6 +78,10 @@
                     ></svg-icon>
                 } @else {
                     <svg-icon
+                        [src]="icons.dirTextButtons + 'arrow_open.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    ></svg-icon>
+                    <svg-icon
                         [src]="icons.dirTextButtons + 'organization.svg'"
                         [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                     ></svg-icon>
@@ -95,7 +99,7 @@
                     <li
                         *ngrxLet="statuses()?.get(group.id) as status"
                         [ngStyle]="{
-                            paddingLeft: group.level * 25 + 'px'
+                            paddingLeft: (group.level + 1) * 20 + 'px'
                         }"
                         [class]="'org-tree__item' + ' ' + 'org-tree__item--' + i"
                         [ngClass]="{
