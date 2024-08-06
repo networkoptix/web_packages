@@ -54,7 +54,7 @@ describe('mapAdditionalCameraFieldsFactory', () => {
         expect(mapAdditionalCameraFieldsV1System(camera)).toEqual({
             id: 'camera1',
             parentId: 'server1',
-            status: 'recording',
+            status: RecordingStatus.Recording,
             recordingStatus: RecordingStatus.Recording,
             parameters: {
                 mediaStreams: {
@@ -97,7 +97,7 @@ describe('mapAdditionalCameraFieldsFactory', () => {
 
         const mappedCamera = mapAdditionalCameraFieldsV1System(cameraOnOfflineServer);
 
-        expect(mappedCamera.status).toBe('scheduled');
+        expect(mappedCamera.status).toBe(RecordingStatus.Scheduled);
         expect(mappedCamera.online).toBe(false);
     });
 

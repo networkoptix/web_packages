@@ -111,6 +111,7 @@ import {
     CameraStatus,
     CameraTypeId,
     NxSystemCamera,
+    RecordingStatus,
     Status,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -691,11 +692,17 @@ export class NxLayoutGridComponent {
                     layoutItemStatus = 'ioDevice';
                 } else if (
                     isCamera &&
-                    !['archive', 'scheduled', 'recording', 'live', 'online'].includes(
-                        itemDetail.details.status,
-                    )
+                    ![
+                        RecordingStatus.Archive,
+                        RecordingStatus.Scheduled,
+                        RecordingStatus.Recording,
+                        // the next two are magical. I am not sure why live is here in the first place
+                        'live',
+                        'Live',
+                        CameraStatus.Online,
+                    ].includes(itemDetail.details.status)
                 ) {
-                    // this one is weird. should be replaced or removed
+                    // this one is weird. should potentially be replaced or removed
                     layoutItemStatus = itemDetail.details.status;
                 }
             }
@@ -1653,16 +1660,36 @@ export class NxLayoutGridComponent {
         layoutErrors: Record<string, string>;
     }): string | null => layoutErrors?.[item.id] || null;
 
+    itemHasNoErrors = ({
+        itemDetail,
+        errors,
+    }: {
+        itemDetail: ReturnType<NxLayoutGridComponent['getItem']>;
+        errors: Record<string, string>;
+    }): boolean =>
+        // this method is a kind of duplicate. We indicate here if the item has error giving no status
+        // and we do the same thing sometimes to define type of error in the placeholder
+        !errors[itemDetail.details.id] &&
+        !(
+            assertResourceOfType.camera(itemDetail) &&
+            (itemDetail.details.unauthorized || itemDetail.details.typeId === CameraTypeId.Virtual)
+        ) &&
+        (((assertResourceOfType.camera(itemDetail) || assertResourceOfType.server(itemDetail)) &&
+            itemDetail.details.online) ||
+            assertResourceOfType.webpage(itemDetail));
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     getItemForDisplay = ({
         item,
         layoutItemLookup,
         layoutErrors,
+        statuses,
         currentlyPlayingArchive,
     }: {
         item: ParsedLayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
         layoutErrors: Record<string, string>;
+        statuses: Record<string, string>;
         currentlyPlayingArchive: string;
     }) => {
         const itemDetail = this.getItem({ item, layoutItemLookup });
@@ -1673,6 +1700,12 @@ export class NxLayoutGridComponent {
         if (
             nxConfig.featureFlags.layoutsItemNewPlaceholder &&
             !!this.getItemLayoutError({ item, layoutErrors })
+        ) {
+            return false;
+        }
+        if (
+            !nxConfig.featureFlags.layoutsItemNewPlaceholder &&
+            !this.itemHasNoErrors({ itemDetail, errors: statuses })
         ) {
             return false;
         }

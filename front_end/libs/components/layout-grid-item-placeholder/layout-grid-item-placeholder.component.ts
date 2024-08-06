@@ -242,7 +242,6 @@ export class NxLayoutGridItemPlaceholderComponent {
     renderConfig = input.required<ParsedLayoutItem['renderConfig']>();
     /** to be deprecated */
     systemStatus = input.required<Translatable>();
-    isEditable = input.required<boolean>();
 
     @Output() updateCameraCredentials = new EventEmitter<NxSystemCamera>();
 
@@ -396,7 +395,7 @@ export class NxLayoutGridItemPlaceholderComponent {
                 .systemsPermissionsManager$$()
                 [itemDetail.details.systemId].canEditDevice(itemDetail.details.id);
 
-        return this.isEditable() && hasAuthorize;
+        return hasAuthorize;
     });
 
     notSupported = computed(() => {

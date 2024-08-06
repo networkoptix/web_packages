@@ -34,6 +34,6 @@ export const mapAdditionalCameraFieldsFactory =
 
         const requiresTranscoding = nonWebRtcCodec && !useV2api;
 
-        const status = (camera.recordingStatus || camera.status).toLowerCase() as CameraStatus;
+        const status = (camera.recordingStatus as unknown as CameraStatus) || camera.status;
         return { ...camera, online, unauthorized, requiresTranscoding, status };
     };

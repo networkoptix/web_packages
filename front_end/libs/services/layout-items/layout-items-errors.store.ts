@@ -18,6 +18,7 @@ import {
 
 import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
+import { nxConfig } from '@services/nx-config/config';
 
 type Entity = { id: string; value: string };
 type Collection = 'status' | 'layoutError' | 'icon' | 'message';
@@ -31,6 +32,24 @@ const entitiesToObject = (entities: Entity[]): Record<string, string> =>
         }),
         {},
     );
+
+const helpGetAdditionalErrorMessages = (): Entity[] => {
+    const result: Entity[] = [];
+    Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).forEach(
+        ([id, value]: [string, string]) => {
+            if (
+                nxConfig.featureFlags.layoutsAuthorizeCamera ||
+                !['unauthorized', 'defaultPassword'].includes(id)
+            ) {
+                result.push({
+                    id,
+                    value,
+                });
+            }
+        },
+    );
+    return result;
+};
 
 @Injectable({
     providedIn: 'root',
@@ -93,10 +112,6 @@ export class LayoutItemsErrorsStore extends signalStore(
                 }
             });
 
-            Object.entries(staticLang.layouts.itemPlaceholders.additionalErrorMessages).map(
-                ([id, value]: [string, Translatable]) => ({ id, value }),
-            );
-
             return patchState(store, ...updates);
         },
         reset: (collection?: Collections) =>
@@ -106,15 +121,9 @@ export class LayoutItemsErrorsStore extends signalStore(
                     (collection: Collection) => {
                         switch (collection) {
                             case 'message':
-                                return setAllEntities(
-                                    Object.entries(
-                                        staticLang.layouts.itemPlaceholders.additionalErrorMessages,
-                                    ).map(([id, value]: [string, string]) => ({
-                                        id,
-                                        value,
-                                    })),
-                                    { collection },
-                                );
+                                return setAllEntities(helpGetAdditionalErrorMessages(), {
+                                    collection,
+                                });
                             default:
                                 return removeAllEntities({ collection });
                         }

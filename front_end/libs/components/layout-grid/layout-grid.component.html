@@ -793,7 +793,6 @@
                                                         [renderConfig]="item.renderConfig"
                                                         [systemStatus]="item.systemStatusOld$$()"
                                                         [status]="status"
-                                                        [isEditable]="editItems$$()"
                                                         (updateCameraCredentials)="
                                                             updateCameraCredentials(system, $event)
                                                         "
@@ -807,6 +806,8 @@
                                                             layoutItemLookup: layoutItemLookup,
                                                             layoutErrors:
                                                                 layoutItemsErrorsStore.layoutErrors$$(),
+                                                            statuses:
+                                                                layoutItemsErrorsStore.statuses$$(),
                                                             currentlyPlayingArchive:
                                                                 (webGlService.playbackTimeMs$$() ||
                                                                     0) > 0
