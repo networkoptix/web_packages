@@ -213,7 +213,7 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         const queryParams: IpvdParams = {};
 
         if (tagFilter.select) {
-            this.searchFilter.selects.find(select => {
+            this.searchFilter.selects?.find(select => {
                 if (select.id === tagFilter.select.id) {
                     select.selected = select.items.find(
                         item => item.value === tagFilter.select.value,
@@ -227,8 +227,8 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         }
 
         if (tagFilter.tagId) {
-            queryParams.tags = tagFilter.tagId;
-            this.searchFilter.tags.find(tag => {
+            queryParams.tags?.push(tagFilter.tagId);
+            this.searchFilter.tags?.find(tag => {
                 if (tag.id === tagFilter.tagId) {
                     tag.value = true;
                     return true;
@@ -239,7 +239,7 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         }
 
         if (tagFilter.multiselect) {
-            this.searchFilter.multiselects.find(select => {
+            this.searchFilter.multiselects?.find(select => {
                 if (select.id === tagFilter.multiselect.id) {
                     select.selected.push(
                         select.items.find(item => item.id === tagFilter.multiselect.value).id,
