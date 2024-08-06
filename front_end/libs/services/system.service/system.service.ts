@@ -10,6 +10,10 @@ import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
+import {
+    RefreshSystemResources,
+    SystemResourceTypeEnums,
+} from '@store/system-resources/system-resources.types';
 import { ObservableValueType } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -44,9 +48,18 @@ export class NxSystemService {
     setSystem(system: NxSystem): void {
         if (system.id !== this.currentSystem$$()?.id) {
             this.currentSystem$.next(system);
+            let resources: RefreshSystemResources = { all: true };
+
+            if (system.version < 5) {
+                resources = {
+                    [SystemResourceTypeEnums.CAMERAS]: true,
+                    [SystemResourceTypeEnums.SERVERS]: true,
+                };
+            }
+
             this.store.dispatch(
                 SystemResourcesActions.refreshSystemResources({
-                    systems: { [system.id]: { all: true } },
+                    systems: { [system.id]: resources },
                 }),
             );
         }
