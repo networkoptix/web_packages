@@ -5,7 +5,7 @@ import type { SearchModel } from '@services/search.service.types';
 /** Extend this with selects/mulitselects and other params */
 export type SearchParams = Partial<{
     search: string;
-    tags: string;
+    tags: string[] | undefined;
     page: string;
 }>;
 
@@ -21,7 +21,7 @@ export interface SearchFilter extends SearchModel {
         id: string;
         label: string;
         items: DropdownItem<string>[];
-        selected: DropdownItem<string>;
+        selected: DropdownItem<string> | undefined;
         css?: string;
     }>;
     multiselects?: Array<{

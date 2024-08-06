@@ -1,7 +1,7 @@
 <div class="nx-new-table-container">
     <div class="csv">
         <nx-csv-button
-            [data]="csvCameraData"
+            [data]="showRecords"
             filename="camera_list_{{ csvFilename | date: 'yyyy-MM-dd' }}"
             [options]="csvOptions"
         ></nx-csv-button>

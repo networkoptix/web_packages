@@ -313,7 +313,12 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                 tag.value = false;
             });
             if (this.params.tags) {
-                const paramTags = new Set(this.params.tags.split(','));
+                if (typeof this.params.tags === 'string') {
+                    // multiselects are presented in URI as arrays ... i.e. "...&vendors=ACTi&vendors=3xLogic..."
+                    // but single selection tags is presented as a single string
+                    this.params.tags = [this.params.tags];
+                }
+                const paramTags = new Set(this.params.tags);
                 this.filterModel.tags.forEach(tag => {
                     tag.value = paramTags.has(tag.id);
                 });
@@ -330,7 +335,8 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
 
         this.filterModel.multiselects?.forEach(select => {
             if (this.params[select.id]) {
-                select.selected = this.params[select.id].split(',');
+                // multiselects are presented in URI as arrays ... i.e. "...&vendors=ACTi&vendors=3xLogic..."
+                select.selected = this.params[select.id];
             } else if (select.id === 'vendors' && this.params.vendors) {
                 // direct navigation to camera
                 select.selected = this.findVendorForCamera(this.params.vendors);
@@ -449,7 +455,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.vendors.sort(alphabeticalSort(elm => elm.name));
 
                     // reformat vendors to fit the multiselect component
-                    this.filterModel.multiselects.unshift({
+                    this.filterModel.multiselects?.unshift({
                         id: 'vendors',
                         label: this.LANG.search.vendors,
                         singular: this.LANG.search.vendor,
@@ -542,10 +548,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     }
 
     activateCamera(elementSelected: FilteredCamera): void {
-        if (!elementSelected) {
-            return;
-        }
-        if (Object.keys(elementSelected).length === 0) {
+        if (!elementSelected || Object.keys(elementSelected).length === 0) {
             // call was not initiated by linking the element in HTML
             // this.resetActiveCamera();
             return;

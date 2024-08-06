@@ -108,7 +108,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
     private debounceShortTime: number;
     private debounceTime: number;
-    private params: Record<string, string> = {};
+    private params: Record<string, string | string[]> = {};
     public searchUpdated = new Subject<string>();
     private modelUpdated = new Subject<void>();
 
@@ -193,7 +193,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.localFilter.query = this.localFilter[this.paramBinding] || '';
 
         if (this.params[this.paramBinding]?.length) {
-            this.localFilter.query = this.params[this.paramBinding];
+            this.localFilter.query = <string>this.params[this.paramBinding];
 
             this.searchService.getMatchPatterns(this.localFilter);
         }
@@ -203,7 +203,12 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 tag.value = false;
             });
             if (this.params.tags) {
-                this.params.tags.split(',').forEach(tagName => {
+                if (typeof this.params.tags === 'string') {
+                    // multiselects are presented in URI as arrays ... i.e. "...&vendors=ACTi&vendors=3xLogic..."
+                    // but single selection tags is presented as a single string
+                    this.params.tags = [this.params.tags];
+                }
+                this.params.tags.forEach(tagName => {
                     this.localFilter.tags?.forEach(tag => {
                         if (tag.id === tagName) {
                             tag.value = true;
@@ -225,7 +230,12 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         this.localFilter.multiselects?.forEach(select => {
             if (this.params[select.id]) {
-                select.selected = this.params[select.id].split(',');
+                // multiselects are presented in URI as arrays ... i.e. "...&vendors=ACTi&vendors=3xLogic..."
+                if (typeof this.params[select.id] === 'string') {
+                    select.selected = [this.params[select.id] as string];
+                } else {
+                    select.selected = this.params[select.id] as string[];
+                }
             } else {
                 select.selected = [];
             }
@@ -392,7 +402,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         if (this.localFilter.tags?.length) {
             const selectedTags = this.localFilter.tags.filter(tag => tag.value);
             if (selectedTags.length) {
-                queryParams.tags = selectedTags.map(elm => elm.id).join(',');
+                queryParams.tags = selectedTags.map(elm => elm.id);
             }
         }
 
