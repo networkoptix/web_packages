@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { forkJoin, mergeMap, of } from 'rxjs';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { catchError, delay, map, switchMap } from 'rxjs/operators';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 
@@ -19,6 +19,13 @@ export class ChannelPartnersEffects {
                         currentPartnerId: action.partnerId,
                         currentPartnerOrganizations: organizations,
                     })),
+                    catchError(() =>
+                        of({
+                            type: ChannelPartnerActions.setCurrentPartner.type,
+                            currentPartnerId: '',
+                            currentPartnerOrganizations: [],
+                        }),
+                    ),
                 ),
             ),
         );

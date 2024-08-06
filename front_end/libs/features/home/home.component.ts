@@ -13,7 +13,6 @@ import {
     selectAreChannelPartnersAndOrgsLoading,
     selectChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
@@ -36,7 +35,7 @@ import { isUserSystem } from '@utils/nx';
             height: 100%;
         }
     `,
-    imports: [NxPreLoaderComponent, RouterModule, CommonModule, NxNoSystemsComponent],
+    imports: [NxPreLoaderComponent, RouterModule, CommonModule],
     standalone: true,
 })
 export class NxHomeComponent implements OnInit {
@@ -48,7 +47,6 @@ export class NxHomeComponent implements OnInit {
     organizations$ = this.store.select<Organization[]>(selectAllOrganizations);
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     isPageLoading: boolean = true;
-    isNoSystemsOrgOrChP: boolean = false;
 
     loadingSubscription = this.areChannelPartnersAndOrgsLoading$
         .pipe(
@@ -181,11 +179,9 @@ export class NxHomeComponent implements OnInit {
 
         if (redirect && redirectPath && this.isPageLoading) {
             this.router.navigateByUrl(`home/${redirectPath}`).then(() => {
-                this.isNoSystemsOrgOrChP = false;
                 this.isPageLoading = false;
             });
         } else {
-            this.isNoSystemsOrgOrChP = !redirectPath;
             this.isPageLoading = this.router.url === '/home';
         }
     }
