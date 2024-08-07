@@ -34,6 +34,7 @@ import { userResolver } from '@resolvers/user-resolver';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';
@@ -214,6 +215,7 @@ export const cloudSettingsRoutes: Routes = [
         PipesModule,
         NxPreLoaderComponent,
         NxAddSvgSrcDirective,
+        NxMenuProjectionDirective,
     ],
     providers: [],
     declarations: [NxSystemSettingsComponent],

@@ -44,12 +44,9 @@
         *ngIf="account"
         class="block-container mt-3"
     >
-        <div class="row">
+        <div [class]="useNewCloud ? '' : 'row'">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
-            <div
-                class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
-                [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
-            >
+            <ng-template #menuSection>
                 <ng-template #noMenu>
                     <nx-pre-loader></nx-pre-loader>
                 </ng-template>
@@ -63,10 +60,26 @@
                     (menuSearchMode)="menuMode($event)"
                     (contentToggle)="contentToggle($event)"
                 ></nx-menu>
-            </div>
+            </ng-template>
+            @if (useNewCloud) {
+                <ng-container *nxMenuProjection="useNewCloud; collapsible: false">
+                    <ng-container *ngTemplateOutlet="menuSection"></ng-container>
+                </ng-container>
+            } @else {
+                <div
+                    class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+                    [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
+                >
+                    <ng-container *ngTemplateOutlet="menuSection"></ng-container>
+                </div>
+            }
             <!-- Offset for the fixed menu -->
             <div
-                class="col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3"
+                [ngClass]="
+                    useNewCloud
+                        ? 'mx-2'
+                        : 'col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3'
+                "
             >
                 <router-outlet></router-outlet>
                 <nx-footer *ngIf="menuVisible"></nx-footer>

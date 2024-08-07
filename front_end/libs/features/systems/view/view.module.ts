@@ -12,6 +12,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
 import { MediaServerListComponent } from './components/media-server-list/media-server-list.component';
@@ -57,6 +58,7 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
         PlaybackStateIndicatorComponent,
         PlayerComponent,
         NxVmsClientTextComponent,
+        NxMenuProjectionDirective,
     ],
     providers: [CookieService],
     declarations: [

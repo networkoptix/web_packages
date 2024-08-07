@@ -73,6 +73,8 @@ import { SystemResourcesEffects } from '@store/system-resources/system-resources
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LegacyCloudAppComponent } from './legacy-cloud/legacy-cloud.component';
+import { NewCloudAppComponent } from './new-cloud/new-cloud.component';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -146,6 +148,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 marginBottom: 'var(--skeleton-margin-bottom)',
             },
         }),
+        LegacyCloudAppComponent,
+        NewCloudAppComponent,
     ],
     providers: [
         ...cdProviders,

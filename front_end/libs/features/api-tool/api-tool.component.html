@@ -14,7 +14,9 @@
         <div class="block-container">
             <div class="row">
                 <div
+                    *nxMenuProjection="useNewCloud"
                     class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+                    [ngClass]="{ newCloud: useNewCloud }"
                     [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
                 >
                     <nx-api-tool-dropdowns></nx-api-tool-dropdowns>
@@ -52,7 +54,10 @@
                     </div>
                 </div>
                 <div
-                    class="swagger-container col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3"
+                    class="swagger-container pt-3 pt-md-0 px-3"
+                    [ngClass]="
+                        useNewCloud ? '' : 'col-12 col-md-8 col-xl-7 offset-md-4 offset-xl-3'
+                    "
                 >
                     <nx-swagger [activeNode]="APIJSONService.activeNode"></nx-swagger>
                 </div>

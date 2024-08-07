@@ -1,5 +1,8 @@
 @if (groups$$().length) {
-    <div class="sidebar">
+    <div
+        class="sidebar"
+        [ngClass]="{ projected: useNewCloud }"
+    >
         <!--Groups Sidebar-->
         <nx-sidebar-level [groups]="groups$$()"></nx-sidebar-level>
     </div>

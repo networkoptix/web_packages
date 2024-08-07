@@ -17,6 +17,7 @@ import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@menu/menu.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';
@@ -63,6 +64,7 @@ const appRoutes: Routes = [
         NxSelectV2Component,
         NxSelectV2ItemComponent,
         FormsModule,
+        NxMenuProjectionDirective,
     ],
     providers: [],
     declarations: [NxMonitoringComponent, GraphsComponent, LogsComponent],

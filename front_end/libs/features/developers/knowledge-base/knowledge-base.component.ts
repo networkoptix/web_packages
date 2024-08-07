@@ -34,7 +34,8 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { icons, search } from '@static-variables';
-import { highlight } from '@utils/general';
+import { highlight, useNewCloud } from '@utils/general';
+import { NxLayoutComponent } from 'nx-components';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';
 
@@ -122,6 +123,8 @@ class KnowledgeNode {
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
+    useNewCloud = useNewCloud();
+    clampWidthEffect = NxLayoutComponent.configureLayout(1440);
     injector: Injector;
     CONFIG = nxConfig;
     LANG = staticLang;

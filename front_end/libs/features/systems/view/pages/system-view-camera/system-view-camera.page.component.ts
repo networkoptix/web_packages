@@ -4,6 +4,7 @@ import {
     computed,
     effect,
     ElementRef,
+    HostBinding,
     HostListener,
     Input,
     OnDestroy,
@@ -37,6 +38,7 @@ import { DeviceType } from '@services/system.service/camera-manager/camera-manag
 import type { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
+import { useNewCloud } from '@utils/general';
 import { PLAYBACK_ERROR, PLAYBACK_MODE, PlaybackState } from '@view/datatypes/PlaybackState';
 import { PlaybackService } from '@view/services/playback.service';
 import { VideoManagementSystemService } from '@view/services/vms.service';
@@ -96,6 +98,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.time$$.set(time);
         }
     }
+    @HostBinding('class.use-new-cloud') useNewCloud = useNewCloud();
+
     time$$ = signal<string>('live');
     canEditCamera$$ = computed<boolean>(() =>
         this.system?.permissionManager.canEditDevice(this.cameraId$$()),
@@ -385,7 +389,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.controlsShown = s.isTimelineShown;
             // setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
 
-            if (s.isSidebarShown) {
+            if (s.isSidebarShown && !this.useNewCloud) {
                 this.$self.classList.add('sidebar-shown');
             } else {
                 this.$self.classList.remove('sidebar-shown');

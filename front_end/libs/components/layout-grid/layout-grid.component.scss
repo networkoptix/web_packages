@@ -230,6 +230,25 @@ nx-webgl-canvas {
     }
 }
 
+.projected-wrapper {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    & > nx-layout-grid-tree {
+        min-height: min(25%, 144px);
+        flex-shrink: 1;
+        flex-grow: 1;
+    }
+
+    background: var(--sidebar-background);
+    z-index: var(--z-index-sidebar-wrapper);
+
+    padding: 16px 0 16px 16px;
+}
+
 div.tab {
     z-index: var(--z-index-menu-tab);
     height: 32px;

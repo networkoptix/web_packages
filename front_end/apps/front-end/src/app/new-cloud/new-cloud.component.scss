@@ -1,0 +1,18 @@
+@use "_theme_variables_common" as *;
+@use "css-variables/legacy-theme-provider";
+@use "theme_variables_common" as theme_variables_common;
+@import "@angular/cdk/overlay-prebuilt.css";
+@import "theme_variables_light";
+@import "theme_variables_dark";
+@import "features/channel_partner_variables";
+
+@include legacy-theme-provider.with-legacy-theme;
+
+html {
+    @include theme_variables_common.with-html;
+}
+
+.header-wrapper {
+    transform: translateZ(0);
+    height: calc(100vh - 60px);
+}

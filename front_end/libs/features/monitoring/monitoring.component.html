@@ -5,8 +5,8 @@
             type="NO_SETTINGS"
         />
     } @else {
-        <div class="row">
-            <div class="col-12 col-md-4 col-xl-3">
+        <div [ngClass]="useNewCloud ? 'mr-3' : 'row'">
+            <ng-template #leftMenu>
                 @if (!servers()) {
                     <nx-pre-loader />
                 } @else {
@@ -32,9 +32,24 @@
                     </nx-select-v2>
                     <nx-menu [content]="content()" />
                 }
-            </div>
+            </ng-template>
+            @if (useNewCloud) {
+                <div
+                    *nxMenuProjection
+                    class="new-cloud-montoring-wrapper"
+                >
+                    <ng-container *ngTemplateOutlet="leftMenu" />
+                </div>
+            } @else {
+                <div class="col-12 col-md-4 col-xl-3">
+                    <ng-container *ngTemplateOutlet="leftMenu" />
+                </div>
+            }
 
-            <div class="col-12 col-md-8 col-xl-9 pt-3 pt-md-0">
+            <div
+                class="pt-3 pt-md-0"
+                [ngClass]="useNewCloud ? 'ml-3' : 'col-12 col-md-8 col-xl-9'"
+            >
                 @if (selectedServer()?.status !== 'Online') {
                     <nx-alert-block
                         type="error"

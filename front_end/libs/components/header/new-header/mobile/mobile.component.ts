@@ -7,11 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
 import { NxMobileHeaderMenuComponent } from '@components/header/new-header/mobile/mobile-menu/mobile-menu.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { toggleSecondaryMenuEvent } from '@libs/nx-components/src/lib/theme-provider/events';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { mobileIconState } from '../new-header-types';
@@ -34,7 +36,8 @@ export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;
     @Input() menuNodes: MenuNode[] = [];
     @Input() systemCount: number = 0;
-    menuOpen$ = new BehaviorSubject(false);
+    useNewCloud = useNewCloud();
+    menuOpen$ = new BehaviorSubject(this.useNewCloud);
     isProfile$ = new BehaviorSubject(false);
     isTablet$ = new BehaviorSubject(false);
     currentSystemMenu: MenuNode;
@@ -61,7 +64,11 @@ export class NxHeaderMobileComponent {
 
     toggleMenuOpen(): void {
         this.isProfile$.next(false);
-        this.menuOpen$.next(!this.menuOpen$.value);
+        if (this.useNewCloud) {
+            window.dispatchEvent(toggleSecondaryMenuEvent());
+        } else {
+            this.menuOpen$.next(!this.menuOpen$.value);
+        }
     }
 
     openProfile(): void {

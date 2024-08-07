@@ -216,7 +216,17 @@ export class NxConfigService {
                     return {} as ThemeWithOptions;
                 }
             })();
-            this.themeProvider.updateThemeOptions(options);
+            const setThemeMode = (): void =>
+                this.themeProvider.updateThemeOptions({
+                    ...options,
+                    inverse: !!document.querySelector('html[data-theme="dark"]'),
+                });
+            setThemeMode();
+            new MutationObserver(setThemeMode).observe(document.querySelector('html')!, {
+                attributes: true,
+                attributeFilter: ['data-theme'],
+            });
+            // window.IS_STORYBOOK = true;
             this.themeProvider.updateThemeColor(theme);
             document.querySelector('html')!.classList.add('new-cloud-colors');
         }

@@ -26,6 +26,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { healthMonitoring, icons, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
 
 import { NxHealthService } from '../health.service';
 
@@ -37,6 +38,7 @@ import { NxHealthService } from '../health.service';
     encapsulation: ViewEncapsulation.None,
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
+    useNewCloud = useNewCloud();
     @Input() system: NxSystem;
     LANG = staticLang;
     CONFIG: IConfig;

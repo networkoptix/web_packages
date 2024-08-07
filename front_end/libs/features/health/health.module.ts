@@ -22,6 +22,7 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemAlertCardComponent } from './card/card.component';
@@ -103,6 +104,7 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxSearchComponent,
         NxAddSvgSrcDirective,
+        NxMenuProjectionDirective,
     ],
     providers: [NxHealthLayoutService],
     declarations: [

@@ -16,6 +16,7 @@ import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 import { NxProjectedLinkHandler } from '@directives/nx-projected-link-handler.directive';
 import { DevelopersGuard } from '@guards/developersGuard';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { Nx404Component } from '../404/404.component';
 
@@ -91,6 +92,7 @@ const appRoutes: Routes = [
         NxIntersectionObserver,
         NxMatchHeightDirective,
         NxProjectedLinkHandler,
+        NxMenuProjectionDirective,
     ],
     providers: [],
     declarations: [NxKnowledgeBaseComponent],

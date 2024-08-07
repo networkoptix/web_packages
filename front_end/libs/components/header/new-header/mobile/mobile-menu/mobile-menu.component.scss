@@ -22,6 +22,8 @@
     .menu-items-container {
         padding-bottom: 88px;
         background-color: var(--mobile-header-bg);
+        max-height: calc(100vh - 72px);
+        overflow-y: auto;
         .menu-item {
             width: 100%;
 

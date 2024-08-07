@@ -1,7 +1,8 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 import { NxToastService } from '@services/toast.service';
+import { useNewCloud } from '@utils/general';
 
 import type { Toast } from './toast.types';
 
@@ -20,6 +21,7 @@ import type { Toast } from './toast.types';
     ],
 })
 export class NxToastsContainer {
+    @HostBinding('class.new-cloud-layout') newCloudLayout = useNewCloud();
     constructor(public toastService: NxToastService) {}
 
     remove(toast: Toast): void {

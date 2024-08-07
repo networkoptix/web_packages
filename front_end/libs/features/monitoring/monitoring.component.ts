@@ -9,7 +9,9 @@ import { Content } from '@menu/menu.types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { icons, menus } from '@static-variables';
+import { useNewCloud } from '@utils/general';
 import { paramModel, pipeSignal } from '@utils/signals';
+import { NxLayoutComponent } from 'nx-components';
 
 @Component({
     selector: 'nx-monitoring',
@@ -20,6 +22,8 @@ export class NxMonitoringComponent {
     readonly LANG = staticLang;
     readonly icons = icons;
     private menuService = inject(NxMenuService);
+    useNewCloud = useNewCloud();
+    clampEffect = NxLayoutComponent.configureLayout(1800);
 
     system = input.required<NxSystem>();
     serverId = paramModel('serverId');

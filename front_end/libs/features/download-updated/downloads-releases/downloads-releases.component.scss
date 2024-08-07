@@ -7,6 +7,14 @@
     background: var(--left-menu-bg);
     margin: 0 -16px -16px -16px;
     padding-top: 16px;
+    &.newCloud {
+        width: 100%;
+        height: 100% !important;
+        margin: 0;
+        nx-menu {
+            width: 100%;
+        }
+    }
 }
 
 :host nx-menu {
@@ -18,6 +26,8 @@
 .content {
     overflow-y: auto;
     flex: 1;
-    margin-left: 360px;
+    &:not(.newCloud) {
+        margin-left: 360px;
+    }
 }
 

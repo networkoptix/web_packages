@@ -303,7 +303,7 @@ module.exports = [
     "libs/menu/menu.component.html",
 
     // Inline
-    "apps/front-end/src/app/app.component.ts",
+    "apps/front-end/src/app/legacy-cloud/legacy-cloud.component.ts",
     "apps/webadmin/src/app/app.component.ts",
     "libs/components/dropdowns/generic/item-icon/item-icon.component.ts",
     "libs/components/mat-like-components/mat-like-generic-select/item-icon/item-icon.component.ts",

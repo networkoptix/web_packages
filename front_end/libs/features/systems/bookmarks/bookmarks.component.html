@@ -7,7 +7,7 @@
 
 <ng-template #page>
     <div class="page">
-        <div class="sidebar">
+        <ng-template #sidebar>
             <nx-date-and-time-filter
                 #dateAndTimeFilterComp
                 [(dateRange)]="dateFilter"
@@ -49,7 +49,22 @@
                     </nx-filter-container>
                 </div>
             }
-        </div>
+        </ng-template>
+
+        @if (useNewCloud) {
+            <div
+                *nxMenuProjection
+                class="projected-bookmark-sidebar"
+            >
+                <div>
+                    <ng-container *ngTemplateOutlet="sidebar"></ng-container>
+                </div>
+            </div>
+        } @else {
+            <div class="sidebar">
+                <ng-container *ngTemplateOutlet="sidebar"></ng-container>
+            </div>
+        }
         <div class="body">
             <nx-alert-block
                 *ngIf="(newCreationCutOffTimeMS$ | async) > (creationCutOffTimeMS$ | async)"

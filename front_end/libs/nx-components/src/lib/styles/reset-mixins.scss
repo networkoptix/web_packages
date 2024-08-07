@@ -7,9 +7,11 @@
     }
 
     @layer nxcomponents {
-        * {
-            font-family: reset;
-            font-weight: reset;
+        :host:not(.preserve-font) {
+            * {
+                font-family: reset;
+                font-weight: reset;
+            }
         }
         @content;
     }

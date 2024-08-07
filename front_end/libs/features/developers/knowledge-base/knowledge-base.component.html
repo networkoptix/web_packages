@@ -11,7 +11,7 @@
     let-node="node"
     let-index="index"
 >
-    <div [ngClass]="{ 'narrow-section': node.cardClass === CardClasses.NORMAL }">
+    <div [ngClass]="{ 'narrow-section': !useNewCloud && node.cardClass === CardClasses.NORMAL }">
         <div
             (NxProjectedLinkHandler)="projectedLinkHandler($event)"
             NxProjectedCodeBlock
@@ -28,7 +28,7 @@
     let-node="node"
     let-index="index"
 >
-    <div [ngClass]="{ 'narrow-section': node.cardClass === CardClasses.NORMAL }">
+    <div [ngClass]="{ 'narrow-section': !useNewCloud && node.cardClass === CardClasses.NORMAL }">
         <div
             (NxProjectedLinkHandler)="projectedLinkHandler($event)"
             NxProjectedCodeBlock
@@ -98,7 +98,10 @@
     #resultBlock
     let-doc="doc"
 >
-    <div class="narrow-section my-2">
+    <div
+        class="my-2"
+        [ngClass]="{ 'narrow-section': !useNewCloud }"
+    >
         <a
             [routerLink]="'../' + doc.docId"
             (mouseover)="
@@ -171,17 +174,39 @@
 
 <div
     *ngIf="kbService.basePath"
-    [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'"
+    [ngClass]="
+        kbService.basePath === 'content'
+            ? 'content-only'
+            : useNewCloud
+              ? 'page-wrapper new-cloud'
+              : 'page-wrapper'
+    "
 >
-    <nx-developers-menu
-        *ngIf="kbService.menuName"
-        [ngClass]="{ 'with-ribbon': ribbonService.context.visibility }"
-        [service]="kbService"
-        [searchEnabled]="false"
-        (onClick)="handleClick($event)"
-        (relatedLinks)="relatedLinks$.next($event)"
-        (handlePrefetch)="prefetchDocument($event)"
-    ></nx-developers-menu>
+    @if (useNewCloud && kbService.menuName) {
+        <div
+            *nxMenuProjection
+            class="new-cloud-menu-wrapper"
+        >
+            <nx-developers-menu
+                [ngClass]="{ 'with-ribbon': ribbonService.context.visibility }"
+                [service]="kbService"
+                [searchEnabled]="false"
+                (onClick)="handleClick($event)"
+                (relatedLinks)="relatedLinks$.next($event)"
+                (handlePrefetch)="prefetchDocument($event)"
+            ></nx-developers-menu>
+        </div>
+    } @else {
+        <nx-developers-menu
+            *ngIf="kbService.menuName"
+            [ngClass]="{ 'with-ribbon': ribbonService.context.visibility }"
+            [service]="kbService"
+            [searchEnabled]="false"
+            (onClick)="handleClick($event)"
+            (relatedLinks)="relatedLinks$.next($event)"
+            (handlePrefetch)="prefetchDocument($event)"
+        ></nx-developers-menu>
+    }
     <div [ngClass]="{ 'knowledge-base': kbService.basePath !== 'content' }">
         <ng-container *ngIf="!loading; else preloader">
             <nx-search

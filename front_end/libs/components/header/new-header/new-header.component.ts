@@ -17,6 +17,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
 
 import { NxHeaderLevelOneComponent } from './header-level-one/header-level-one.component';
 import { NxHeaderLevelTwoComponent } from './header-level-two/header-level-two.component';
@@ -43,7 +44,7 @@ export class NxNewHeaderComponent {
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
     loggedIn$ = this.store.select(accountSelectors.selectIsAuthenticated);
-    isMobile$ = new BehaviorSubject<boolean>(false);
+    isMobile$ = new BehaviorSubject<boolean>(useNewCloud());
     systemCount$: Observable<number>;
 
     cycleSub = this.headerService.cycleL2Menu$
@@ -96,12 +97,13 @@ export class NxNewHeaderComponent {
                 );
                 this.showActiveSystem();
             });
-
-        this.scrollMechanicsService.windowSizeSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(({ width }) => {
-                this.isMobile$.next(width < GridBreakpoints.MD);
-            });
+        if (!useNewCloud()) {
+            this.scrollMechanicsService.windowSizeSubject
+                .pipe(untilDestroyed(this))
+                .subscribe(({ width }) => {
+                    this.isMobile$.next(width < GridBreakpoints.MD);
+                });
+        }
 
         this.systemCount$ = systemsService.systemsSubject.pipe(map(systems => systems.length));
     }

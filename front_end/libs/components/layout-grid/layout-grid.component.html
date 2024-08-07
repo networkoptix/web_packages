@@ -1,18 +1,5 @@
 @if (layoutItemLookup && system.permissionManager.currentUser$$() && (layout$ | async); as layout) {
-    <div
-        class="sidebar-wrapper left"
-        tourAnchor="cloud-layouts_left-menu"
-        [ngStyle]="{
-            width:
-                layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
-                    ? (layoutStateService.menuResizePercentage$ | async)
-                    : null
-        }"
-        [ngClass]="{
-            'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
-            resizing: resizing
-        }"
-    >
+    <ng-template #layoutTree>
         @if (
             !layout || !layoutItemLookup
                 ? ''
@@ -79,18 +66,20 @@
                 }
             </div>
         }
-        <div
-            class="tab"
-            [ngClass]="{ 'active-menu': layoutGridService.isLeftMenuOpen$$() }"
-        >
-            <svg-icon
-                #resources
-                (click)="layoutGridService.toggleMenu('left', true); $event.stopPropagation()"
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'arrow_left.svg'"
+        @if (!useNewCloud) {
+            <div
+                class="tab"
+                [ngClass]="{ 'active-menu': layoutGridService.isLeftMenuOpen$$() }"
             >
-            </svg-icon>
-        </div>
+                <svg-icon
+                    #resources
+                    (click)="layoutGridService.toggleMenu('left', true); $event.stopPropagation()"
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                >
+                </svg-icon>
+            </div>
+        }
         <div
             class="menu-resize"
             cdkDrag
@@ -360,7 +349,32 @@
                 </div>
             </details>
         }
-    </div>
+    </ng-template>
+    @if (useNewCloud) {
+        <div
+            class="projected-wrapper"
+            *nxMenuProjection="true"
+        >
+            <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
+        </div>
+    } @else {
+        <div
+            class="sidebar-wrapper left"
+            tourAnchor="cloud-layouts_left-menu"
+            [ngStyle]="{
+                width:
+                    layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+                        ? (layoutStateService.menuResizePercentage$ | async)
+                        : null
+            }"
+            [ngClass]="{
+                'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
+                resizing: resizing
+            }"
+        >
+            <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
+        </div>
+    }
 }
 
 @if (!(layoutStateService.portal && CONFIG.featureFlags.layoutsDeviceSettings)) {

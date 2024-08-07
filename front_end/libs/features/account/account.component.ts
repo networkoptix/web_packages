@@ -10,6 +10,8 @@ import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { menus } from '@static-variables';
+import { useNewCloud } from '@utils/general';
+import { NxLayoutComponent } from 'nx-components';
 
 @Component({
     selector: 'nx-account',
@@ -18,6 +20,8 @@ import { menus } from '@static-variables';
 })
 export class NxAccountComponent {
     LANG = staticLang;
+    useNewCloud = useNewCloud();
+    clampEffect = NxLayoutComponent.configureLayout(1024);
 
     content: Content = {
         base: menus.account.baseUrl,

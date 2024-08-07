@@ -30,7 +30,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { dialogs, icons, search } from '@static-variables';
-import { alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, useNewCloud } from '@utils/general';
+import { NxLayoutComponent } from 'nx-components';
 
 import { IpvdSearchService } from './ipvd-search.service';
 import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
@@ -50,6 +51,8 @@ const TABLE_MAX_WIDTH = '1192px';
 export class NxIpvdComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     CONFIG: IConfig;
+    useNewCloud = useNewCloud();
+    clampEffect = NxLayoutComponent.configureLayout(1800);
 
     destroyRef = inject(DestroyRef);
 

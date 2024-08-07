@@ -118,12 +118,14 @@
 </ng-template>
 
 <ng-template #closeButton>
-    <svg-icon
-        (click)="toggleMenuOpen()"
-        class="menu-button close-btn"
-        nx-add-svg-src
-        [src]="icons.dirTextButtons + 'close.svg'"
-        [svgStyle]="{ 'width.px': '32', 'height.px': '20' }"
-    >
-    </svg-icon>
+    @if (!useNewCloud) {
+        <svg-icon
+            (click)="toggleMenuOpen()"
+            class="menu-button close-btn"
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'close.svg'"
+            [svgStyle]="{ 'width.px': '32', 'height.px': '20' }"
+        >
+        </svg-icon>
+    }
 </ng-template>

@@ -14,6 +14,7 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';
@@ -71,6 +72,7 @@ const dbConfig: DBConfig = {
         PipesModule,
         NxPreLoaderComponent,
         NxAddSvgSrcDirective,
+        NxMenuProjectionDirective,
     ],
     providers: [],
     declarations: [

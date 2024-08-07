@@ -33,7 +33,7 @@ nx-block {
 
   // replicate col-md-4
   @include bootstrap.media-breakpoint-up(lg) {
-    position: fixed;
+    position: sticky;
     left: 0;
     width: calc((100% - #{theme_vars.$scrollbar-height}) / 3)
   }

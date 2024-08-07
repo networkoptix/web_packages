@@ -32,7 +32,14 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { alphabeticalSort, cleanId, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import {
+    alphabeticalSort,
+    cleanId,
+    msToParts,
+    offsetDate,
+    paramSortFunc,
+    useNewCloud,
+} from '@utils/general';
 
 import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
@@ -86,6 +93,7 @@ function cssaToStrArray(cssa: string): string[] {
     styleUrls: ['bookmarks.component.scss'],
 })
 export class NxBookmarksComponent implements OnInit {
+    useNewCloud = useNewCloud();
     @ViewChild('dateAndTimeFilterComp') private dateAndTimeFilter: NxDateAndTimeFilterComponent;
     @ViewChild('bookmarksContainer') bookmarksContainer: ElementRef<HTMLDivElement>;
     readonly css = {

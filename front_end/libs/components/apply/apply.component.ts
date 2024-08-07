@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input, HostListener, ViewChild } from '@angular/core';
+import { Component, forwardRef, Input, HostListener, ViewChild, HostBinding } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { Process } from '@services/process.service/process';
+import { useNewCloud } from '@utils/general';
 
 import { NxProcessButtonComponent } from '../process-button/process-button.component';
 
@@ -38,6 +39,9 @@ export class NxApplyComponent {
     @Input() showSectionWarning = false;
     @Input() showDiscard = false;
     @Input() show = false;
+    @HostBinding('style.--apply-position-bottom') applyPositionBottom = useNewCloud()
+        ? '-24px'
+        : '0';
 
     @Input()
     set standaloneMode(standalone: boolean) {

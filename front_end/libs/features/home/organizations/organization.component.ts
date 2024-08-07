@@ -53,6 +53,8 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { icons } from '@static-variables';
+import { useNewCloud } from '@utils/general';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { NxAccessTableContainerComponent } from '../components/users/access-table-users/access-table-container.component';
@@ -91,12 +93,14 @@ interface SidebarSettings {
         NxTutorialDialogComponent,
         NxPagePlaceholderGenericNewV2Component,
         NxRibbonStandaloneComponent,
+        NxMenuProjectionDirective,
     ],
 })
 export class NxOrganizationsComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     icons = icons;
     State = State;
+    useNewCloud = useNewCloud();
     permissionsStore = inject(PermissionsStore);
     parentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     groupsStore = inject(GroupsStore);

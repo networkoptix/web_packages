@@ -46,7 +46,8 @@ import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { alertTimeout, clientMode, menus, redirect } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import { alphabeticalSort, cleanIdLegacy } from '@utils/general';
+import { alphabeticalSort, cleanIdLegacy, useNewCloud } from '@utils/general';
+import { NxLayoutComponent } from 'nx-components';
 
 /**
  * TODO: A lot of the observable usage in this component should be cleaned up.
@@ -67,6 +68,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
     #system: NxSystem;
+    useNewCloud = useNewCloud();
+    clampWidthEffect = NxLayoutComponent.configureLayout(1024);
     unsubscribe$ = new Subject();
     injector = inject(EnvironmentInjector);
     @Input() set system(system: NxSystem) {

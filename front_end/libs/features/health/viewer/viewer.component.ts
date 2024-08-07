@@ -19,6 +19,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { icons, healthMonitoring } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
 
 import { NxHealthService } from '../health.service';
 
@@ -34,6 +35,7 @@ export class NxReportViewerComponent implements OnInit {
     account: Account;
     system: NxSystem;
     server: NxSystemAPI;
+    useNewCloud = useNewCloud();
 
     menu: Content;
 

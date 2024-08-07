@@ -41,11 +41,14 @@
     <div *ngSwitchDefault>
         <div
             class="mainGrid"
-            [ngClass]="mediaLayoutClass"
+            [ngClass]="mediaLayoutClass ? mediaLayoutClass : useNewCloud ? 'newCloud' : ''"
             *ngIf="healthService.ready"
         >
-            <div class="gridMenu">
-                <div class="gridMenuComponent">
+            @if (useNewCloud) {
+                <div
+                    *nxMenuProjection
+                    class="new-cloud-health-menu-wrapper"
+                >
                     <nx-menu
                         [content]="menu"
                         class="pb-2 d-block"
@@ -56,7 +59,21 @@
                         *ngIf="mediaLayoutClass !== 'mobileLayout'"
                     ></ng-template>
                 </div>
-            </div>
+            } @else {
+                <div class="gridMenu">
+                    <div class="gridMenuComponent">
+                        <nx-menu
+                            [content]="menu"
+                            class="pb-2 d-block"
+                        ></nx-menu>
+
+                        <ng-template
+                            [ngTemplateOutlet]="healthLinks"
+                            *ngIf="mediaLayoutClass !== 'mobileLayout'"
+                        ></ng-template>
+                    </div>
+                </div>
+            }
             <div class="gridContent">
                 <div class="gridContentComponent">
                     <router-outlet></router-outlet>

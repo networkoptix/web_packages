@@ -1,6 +1,6 @@
 import { Dialog, DialogConfig } from '@angular/cdk/dialog';
-import { ComponentType } from '@angular/cdk/overlay';
-import { Injectable } from '@angular/core';
+import { ComponentType, Overlay } from '@angular/cdk/overlay';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -9,6 +9,8 @@ import {
 } from '@components/console-table/console-table.component.types';
 import staticLang from '@language_static';
 // import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
+import { toggleModalEvent } from '@libs/nx-components/src/lib/theme-provider/events';
+import { useNewCloud } from '@utils/general';
 
 import { DIALOG_SIZE } from './dialog-config-v2';
 import * as Dt from './dialogs.types';
@@ -101,6 +103,10 @@ export class NxDialogsService {
             dialogConfig.panelClass = 'nx-legacy-dialog-style';
         }
 
+        if (useNewCloud()) {
+            return this.openNewCloud<R, D, T>(component, dialogConfig);
+        }
+
         return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
     }
 
@@ -132,7 +138,50 @@ export class NxDialogsService {
             width: DIALOG_SIZE.NORMAL, // Default width
             ...customconfig,
         };
+
+        if (useNewCloud()) {
+            return this.openNewCloud<R, D, T>(component, dialogConfig);
+        }
+
         return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
+    }
+
+    private overlay = inject(Overlay);
+
+    private openNewCloud<R, D = never, T = unknown>(
+        component: ComponentType<T>,
+        customconfig: DialogConfig<D> = {},
+    ): Promise<R> {
+        const topMenu = !!document.querySelector('header.top-menu.wrapper');
+
+        const dialogConfig: DialogConfig<D> = {
+            ...customconfig,
+            ...(topMenu
+                ? {
+                      width: `calc(100vw - 48px)`,
+                      height: `calc(100vh - 48px)`,
+                      positionStrategy: this.overlay
+                          .position()
+                          .global()
+                          .centerHorizontally()
+                          .centerVertically(),
+                  }
+                : {
+                      width: `var(--drawer-width)`,
+                      height: '100%',
+                      positionStrategy: this.overlay.position().global().right(),
+                  }),
+        };
+        window.dispatchEvent(
+            toggleModalEvent(
+                true,
+                customconfig.width === DIALOG_SIZE.NORMAL ? undefined : customconfig.width,
+            ),
+        );
+
+        return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed).finally(
+            () => window.dispatchEvent(toggleModalEvent(false)),
+        );
     }
 
     /** Factory that creates a function to lazily open a dialog

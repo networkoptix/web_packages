@@ -7,6 +7,10 @@ $custom-xl: 1440px;
 
 :host {
 
+    .page-wrapper.new-cloud {
+        grid-template-columns: 1fr;
+    }
+
     .page-wrapper,
     .content-only {
         display: grid;
@@ -21,7 +25,12 @@ $custom-xl: 1440px;
             grid-auto-rows: auto;
         }
 
-        nx-developers-menu {
+        nx-developers-menu.newCloud {
+            max-height: 100vh !important;
+            overflow-y: auto;
+        }
+
+        nx-developers-menu:not(.newCloud) {
             background-color: var(--developer-menu-bg);
             margin: -1rem -1rem 1rem -1rem;
             padding: 1rem 0;
@@ -281,4 +290,15 @@ $custom-xl: 1440px;
             }
         }
     }
+}
+
+.new-cloud-menu-wrapper {
+    background-color: var(--developer-menu-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 16px 0;
 }

@@ -20,6 +20,7 @@ import { NxAccountSecurityModule } from '@pages/account/security/security.module
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 const appRoutes: Routes = [
     {
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxFocusMeDirective,
         NxTooltipDirective,
+        NxMenuProjectionDirective,
     ],
     declarations: [NxAccountComponent],
 })

@@ -19,6 +19,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { BoolIconComponent } from './cam-components/bool-icon/bool-icon.component';
 import { CamViewComponent } from './cam-components/cam-view/cam-view.component';
@@ -56,6 +57,7 @@ const appRoutes: Routes = [
         NxTagComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
+        NxMenuProjectionDirective,
     ],
     providers: [IpvdSearchService],
     declarations: [

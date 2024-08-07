@@ -20,6 +20,6 @@
 
 :host:has(.unsaved-changes) {
     position: sticky;
-    bottom: 0;
+    bottom: var(--apply-position-bottom);
     z-index: 50;
 }

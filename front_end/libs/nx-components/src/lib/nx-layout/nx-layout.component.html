@@ -1,0 +1,160 @@
+<header [ngClass]="templateClasses()">
+    <ng-content select="ng-container[header]">
+        <div
+            class="example-menu"
+            (click)="toggleSecondaryModal()"
+        >
+            Menu
+        </div>
+    </ng-content>
+</header>
+<main
+    [ngClass]="templateClasses()"
+    #mainSection
+>
+    <ng-template #mainContent>
+        <ng-content select="ng-container[main]">
+            @if (isStoryBook) {
+                <div
+                    class="example-content solid"
+                    (click)="toggleDrawer()"
+                >
+                    Toggle Drawer
+                </div>
+                <div
+                    class="example-content solid"
+                    (click)="toggleDrawer(true)"
+                >
+                    Toggle Modal
+                </div>
+                @for (tile of mockContent(); track tile) {
+                    <div class="example-content">{{ tile }}</div>
+                }
+            }
+        </ng-content>
+    </ng-template>
+    @if (layoutType() === 'wrapper') {
+        <div class="wrapper">
+            <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+        </div>
+    } @else {
+        <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+    }
+
+    @if (collapsible() && this.secondaryMenuPortal() && this.asideOpen()) {
+        <div
+            (click)="toggleProjectedSecondaryMenu()"
+            class="collapse-toggle"
+            [ngClass]="{ collapsed: this.asideOpen() }"
+        >
+            <span>{{ '>' }}</span>
+        </div>
+    }
+</main>
+
+@if (collapsible() && this.secondaryMenuPortal() && !this.asideOpen()) {
+    <div
+        (click)="toggleProjectedSecondaryMenu()"
+        class="collapse-toggle"
+        [ngClass]="{ collapsed: this.asideOpen() }"
+    >
+        <span>{{ '>' }}</span>
+    </div>
+}
+
+<div
+    class="drawer-wrapper"
+    [ngClass]="templateClasses()"
+>
+    @if (rightDrawerPortal(); as rightDrawerTemplate) {
+        <ng-template [cdkPortalOutlet]="rightDrawerTemplate"></ng-template>
+    } @else {
+        <ng-content select="ng-container[drawer]">
+            @if (isStoryBook) {
+                <div class="example-drawer">{{ modal() ? 'Modal' : 'Drawer' }}</div>
+            }
+        </ng-content>
+    }
+    <div
+        class="resize-handle drawer"
+        cdkDrag
+        (cdkDragMoved)="resizeDrawer($event)"
+    ></div>
+</div>
+
+<section class="notifications">
+    <ng-content select="ng-container[notifications]">
+        @if (isStoryBook) {
+            @for (message of mockMessages(); track message; let index = $index) {
+                <div
+                    class="example-notification"
+                    (click)="removeMessage(index)"
+                >
+                    {{ message }}
+                </div>
+            }
+        }
+    </ng-content>
+</section>
+
+@if (asideExpanded()) {
+    <aside [ngClass]="templateClasses()">
+        @if (secondaryMenuModalOpen()) {
+            <div class="secondary-modal">
+                <ng-content select="ng-container[secondaryMenuModal]">
+                    @if (isStoryBook) {
+                        <div
+                            class="example-aside"
+                            (click)="toggleHoverMenu()"
+                        >
+                            Toggle hover menu
+                        </div>
+                    }
+                </ng-content>
+            </div>
+        }
+
+        <div [ngClass]="{ 'hidden-portal': secondaryMenuModalOpen() }">
+            @if (secondaryMenuPortal(); as secondaryMenuPortal) {
+                <ng-template [cdkPortalOutlet]="secondaryMenuPortal"></ng-template>
+            } @else if (isStoryBook) {
+                <div
+                    class="example-aside"
+                    (click)="toggleHoverMenu()"
+                    translate
+                >
+                    Toggle hover menu
+                </div>
+            }
+        </div>
+        @if (asideResizable()) {
+            <div
+                class="resize-handle"
+                cdkDrag
+                (cdkDragMoved)="resizeSecondaryMenu($event)"
+            ></div>
+        }
+        @if (hoverMenuOpen()) {
+            <div
+                class="hover-menu"
+                [ngClass]="templateClasses()"
+            >
+                <ng-content select="ng-container[hoverMenu]">
+                    @if (isStoryBook) {
+                        <div
+                            class="example-hover-menu"
+                            (click)="toggleHoverMenu()"
+                        >
+                            Toggle hover menu
+                        </div>
+                    }
+                </ng-content>
+            </div>
+        }
+    </aside>
+}
+
+<div
+    class="modal-overlay"
+    (click)="toggleOverlay()"
+></div>

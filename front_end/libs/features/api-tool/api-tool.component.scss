@@ -21,6 +21,9 @@
     padding-right: 0 !important;
     background: var(--developer-menu-bg);
     height: 100% !important;
+    &.newCloud {
+        width: 100% !important;
+    }
 
     @include bootstrap.media-breakpoint-down(sm) {
         height: auto !important;
@@ -89,6 +92,8 @@
     margin-top: 22px;
     padding-left: 4px !important;
     background: var(--alt-body-bg) !important;
+    position: relative;
+    width: 100%;
 }
 
 @include bootstrap.media-breakpoint-down(sm) {

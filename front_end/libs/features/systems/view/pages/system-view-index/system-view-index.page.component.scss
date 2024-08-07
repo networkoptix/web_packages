@@ -15,8 +15,12 @@
     justify-content: center;
     align-items: center;
 
-    &.new-header {
+    &.new-header:not(.new-cloud) {
         top: 98px !important;
+    }
+
+    &.new-cloud {
+        top: 0 !important;
     }
 
     &.animated {

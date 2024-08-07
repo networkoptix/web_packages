@@ -47,11 +47,25 @@ export const createComponentVariablesEvent = (
 ): CustomEvent<Record<string, [string, string]>> =>
     new CustomEvent(createComponentVariablesEventName, { detail });
 
-export interface CustomThemeEventMap {
+export const toggleSecondaryMenuEventName = 'nx-components:layout:toggleSecondaryMenu';
+export const toggleSecondaryMenuEvent = (open?: boolean): CustomEvent<boolean | undefined> =>
+    new CustomEvent(toggleSecondaryMenuEventName, { detail: open });
+
+export const toggleModalEventName = 'nx-components:layout:toggleModal';
+export const toggleModalEvent = (
+    open?: boolean,
+    width?: string,
+    collapsible = true,
+): CustomEvent<{ open?: boolean; width?: string; collapsible: boolean }> =>
+    new CustomEvent(toggleModalEventName, { detail: { open, width, collapsible } });
+
+export interface CustomNxComponentsEventMap {
     [themeUpdatedEventName]: ReturnType<typeof createThemeUpdateEvent>;
     [themePatchEventName]: ReturnType<typeof createThemePatchEvent>;
     [themeResetEventName]: ReturnType<typeof createThemePatchEvent>;
     [baseColorStorybookEventName]: ReturnType<typeof createColorStorybookEvent>;
     [colorGroupStorybookEventName]: ReturnType<typeof createColorGroupStorybookEvent>;
     [createComponentVariablesEventName]: ReturnType<typeof createComponentVariablesEvent>;
+    [toggleSecondaryMenuEventName]: ReturnType<typeof toggleSecondaryMenuEvent>;
+    [toggleModalEventName]: ReturnType<typeof toggleModalEvent>;
 }

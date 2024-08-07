@@ -7,12 +7,22 @@
     class="block-container mt-3"
     *ngIf="menuReady"
 >
-    <div class="row">
-        <div class="col-12 col-md-4 col-xl-3">
-            <nx-menu [content]="content"></nx-menu>
-        </div>
+    <div [ngClass]="useNewCloud ? '' : 'row'">
+        @if (useNewCloud) {
+            <nx-menu
+                *nxMenuProjection="true; collapsible: false; resizable: false"
+                [content]="content"
+            ></nx-menu>
+        } @else {
+            <div [ngClass]="useNewCloud ? '' : 'col-12 col-md-4 col-xl-3'">
+                <nx-menu [content]="content"></nx-menu>
+            </div>
+        }
 
-        <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0">
+        <div
+            class="pt-3 pt-md-0"
+            [ngClass]="useNewCloud ? '' : 'col-12 col-md-8 col-xl-7'"
+        >
             <router-outlet></router-outlet>
             <nx-footer></nx-footer>
         </div>

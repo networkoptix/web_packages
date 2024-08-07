@@ -11,6 +11,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
+import { NxLayoutComponent } from 'nx-components';
 
 import { NxAPIToolSystemService } from './services/api-tool-system.service';
 import { NxOpenAPIJSONService } from './services/openapi-json.service';
@@ -26,6 +28,8 @@ import { NxReadonlyAPIService } from './services/readonly-api.service';
 })
 export class NxAPIToolComponent {
     @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;
+    useNewCloud = useNewCloud();
+    clampWidthEffect = NxLayoutComponent.configureLayout(1024);
     CONFIG: IConfig;
     LANG = staticLang;
     icons = icons;

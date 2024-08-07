@@ -26,6 +26,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { images, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
+import { NxLayoutComponent, NxMenuProjectionDirective } from 'nx-components';
 
 import { DownloadsService } from '../downloads.service';
 
@@ -49,11 +51,14 @@ import { DownloadsService } from '../downloads.service';
         NxCheckboxComponent,
         DownloadHistoryComponent,
         DownloadComponent,
+        NxMenuProjectionDirective,
     ],
 })
 export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     @Input() downloadData: DownloadReleases;
 
+    useNewCloud = useNewCloud();
+    clampWidthEffect = NxLayoutComponent.configureLayout(1440);
     ds = inject(DownloadsService);
     private platform$$ = this.ds.platform$$.asReadonly();
     private activeType$$ = this.ds.type$$.asReadonly();

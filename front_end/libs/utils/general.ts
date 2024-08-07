@@ -8,6 +8,7 @@ import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import { nxConfig } from '@services/nx-config/config';
 import {
     CameraProjection,
     DewarpingParams,
@@ -772,4 +773,9 @@ export const getActualHeight = (el: Element): number =>
     ['margin-top', 'margin-bottom', 'padding-top', 'padding-bottom'].reduce(
         (totalSize, prop) => totalSize + parseFloat(getComputedStyle(el).getPropertyValue(prop)),
         el.clientHeight,
+    );
+
+export const useNewCloud = (): boolean =>
+    Boolean(
+        nxConfig.featureFlags.newCloudColorProvider && nxConfig.featureFlags.newCloudLayoutWrapper,
     );

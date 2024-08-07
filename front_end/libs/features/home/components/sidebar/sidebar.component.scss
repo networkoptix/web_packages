@@ -11,6 +11,11 @@
     color: var(--groups-sidebar-intro-text-color);
     z-index: 2;
 
+    &.projected {
+        width: 100%;
+        height: 100vh;
+    }
+
 
     @include bootstrap.media-breakpoint-down(sm) {
         position: absolute;

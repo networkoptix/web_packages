@@ -229,6 +229,7 @@ const FeatureFlagKeys = [
     'layouts51Enabled',
     'layoutsShowBetaTag',
     'newCloudColorProvider',
+    'newCloudLayoutWrapper',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

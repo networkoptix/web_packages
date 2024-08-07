@@ -11,6 +11,7 @@ const config: StorybookConfig = {
         // Need to bump this package once there's a fix
         '@storybook/addon-designs',
         './manager',
+        'storybook-addon-angular-router',
     ],
     framework: {
         name: '@storybook/angular',

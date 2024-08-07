@@ -16,6 +16,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { DummyBookmarkComponent } from '@pages/systems/bookmarks/components/dummy-bookmark/dummy-bookmark.component';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { NxBookmarksComponent } from './bookmarks.component';
 import { NxBookmarksCardModule } from './components/card/bookmarks-card.module';
@@ -52,6 +53,7 @@ const appRoutes: Routes = [
         NxFilterContainerComponent,
         NxSingleFilterComponent,
         NxRadioFilterItemComponent,
+        NxMenuProjectionDirective,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

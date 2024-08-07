@@ -27,7 +27,7 @@ import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/ty
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-import { cleanIdLegacy } from '@utils/general';
+import { cleanIdLegacy, useNewCloud } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import type { ms } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
@@ -51,6 +51,7 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeaderFlag = nxConfig.featureFlags.newHeader;
+    @HostBinding('class.new-cloud') useNewCloud = useNewCloud();
 
     systemId: string;
     @Input({ required: true }) system: NxSystem;

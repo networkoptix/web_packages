@@ -1,7 +1,7 @@
 <div
     class="ipvd-grid"
     [style.grid-template-rows]="templateRows"
-    [ngClass]="{ extended: showAnalytics }"
+    [ngClass]="{ extended: showAnalytics, 'mt-3': useNewCloud }"
 >
     <div data-page-grid>
         <h1
@@ -11,12 +11,14 @@
             List of cameras by manufacturer and device type
         </h1>
         <div
+            *nxMenuProjection="useNewCloud"
             class="row p-3 m-0"
             [style.display]="mobileDetailMode ? 'none' : 'block'"
             #searchContainer
         >
             <nx-search
                 name="filterModel"
+                [layout]="useNewCloud ? 'compact' : 'full'"
                 [(ngModel)]="filterModel"
                 (ngModelChange)="modelChanged($event)"
                 (onExpand)="menuChanged($event)"
@@ -148,6 +150,7 @@
                 *ngIf="activeCamera && !noResult"
             >
                 <nx-cam-view
+                    *nxMenuProjection="useNewCloud; rightPanel: true"
                     [activeCamera]="activeCamera"
                     (onCloseView)="resetActiveCamera()"
                     (onFeedbackClick)="openDeviceFeedback()"

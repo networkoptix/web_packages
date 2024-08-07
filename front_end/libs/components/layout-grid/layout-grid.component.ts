@@ -125,11 +125,12 @@ import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { canViewLayouts } from '@utils/can-view-layouts';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
-import { cleanId, cleanIdLegacy, dirtyId } from '@utils/general';
+import { cleanId, cleanIdLegacy, dirtyId, useNewCloud } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 import { paramModel } from '@utils/signals';
 import { ExtractObservable } from '@utils/type-helpers';
+import { NxMenuProjectionDirective } from 'nx-components';
 
 import { filterOtherSites } from './filter-other-sites';
 import { findOtherSite } from './find-other-site';
@@ -363,9 +364,11 @@ const calculateResize = (
         NxPagePlaceholderComponent,
         NxLinesLoaderComponent,
         NxAsyncActionButtonComponent,
+        NxMenuProjectionDirective,
     ],
 })
 export class NxLayoutGridComponent {
+    useNewCloud = useNewCloud();
     @Input() layout: Layout;
     @Input() layoutItemLookup: LayoutResourceTree;
     layoutItemLookup$$ = signal<LayoutResourceTree>({ tree: [] } as unknown as LayoutResourceTree);

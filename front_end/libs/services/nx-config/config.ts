@@ -162,8 +162,8 @@ export const nxConfig: IConfig = {
         auditTime: 500,
     },
     tosConfig: {
-        hourly: MS.hour,
-        daily: MS.day,
+        hourly: MS?.hour,
+        daily: MS?.day,
     },
 
     // Dynamic from cloud_portal

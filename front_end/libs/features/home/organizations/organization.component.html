@@ -107,7 +107,7 @@
             *ngIf="!showAccessTable; else accessTable"
         >
             <button
-                *ngIf="rootGroups$$()?.length"
+                *ngIf="!useNewCloud && rootGroups$$()?.length"
                 class="sidebar-toggling-ear-wrapper"
                 type="button"
                 [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
@@ -121,17 +121,25 @@
                     </svg-icon>
                 </div>
             </button>
-            <div
-                *ngIf="
-                    (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
-                    (sidebarSettings.value$ | async)?.showSidebarState
-                "
-            >
-                <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
-                <ng-template #sidebar>
-                    <nx-groups-sidebar></nx-groups-sidebar>
-                </ng-template>
-            </div>
+            @if (useNewCloud) {
+                @if (isLoading) {
+                    <nx-pre-loader *nxMenuProjection></nx-pre-loader>
+                } @else {
+                    <nx-groups-sidebar *nxMenuProjection></nx-groups-sidebar>
+                }
+            } @else {
+                <div
+                    *ngIf="
+                        (rootGroups$$()?.length || currentOrganization$$()?.systemCount) &&
+                        (sidebarSettings.value$ | async)?.showSidebarState
+                    "
+                >
+                    <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
+                    <ng-template #sidebar>
+                        <nx-groups-sidebar></nx-groups-sidebar>
+                    </ng-template>
+                </div>
+            }
             <div class="ribbon-container">
                 @if (banner$$()?.page === 'organization') {
                     <nx-alert-block

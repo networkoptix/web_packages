@@ -1,7 +1,9 @@
 <div class="block-container">
     <div class="d-flex">
         <div
+            *nxMenuProjection="useNewCloud"
             class="menu-container"
+            [ngClass]="{ newCloud: useNewCloud }"
             [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
         >
             <nx-menu
@@ -10,7 +12,10 @@
             ></nx-menu>
         </div>
 
-        <div class="content">
+        <div
+            class="content"
+            [ngClass]="{ newCloud: useNewCloud }"
+        >
             <router-outlet></router-outlet>
             <nx-footer></nx-footer>
         </div>
