@@ -1,6 +1,7 @@
 import datetime
 import json
 import uuid
+from typing import Any
 
 import structlog
 from celery import (
@@ -137,23 +138,23 @@ class GenerationPending(Exception):
     pass
 
 
-def get_report_result(
-        report_id: str,
-        user_id: int,
-):
+def failed_report(reason: str, report_id: Any):
+    # caches['default'].delete(cache_key)
+    return {
+        'id': report_id,
+        'status': ReportTaskState.failed,
+        'reason': reason
+    }
 
-    def failed_report(reason: str):
-        # caches['default'].delete(cache_key)
-        return {
-            'id': report_id,
-            'status': ReportTaskState.failed,
-            'reason': reason
-        }
 
+def get_task(task_id):
     try:
-        task = TaskResult.objects.get(task_id=report_id)
+        return TaskResult.objects.get(task_id=task_id)
     except ObjectDoesNotExist:
         raise NotFound('Task not found.')
+
+
+def get_task_kwargs(task):
 
     try:
         if settings.CELERY_TASK_ALWAYS_EAGER:
@@ -162,9 +163,19 @@ def get_report_result(
             task_kwargs = json.loads(json.loads(task.task_kwargs).replace("'", '"'))
     except json.JSONDecodeError:
         task_kwargs = {}
+    return task_kwargs
+
+
+def get_report_result(
+        report_id: str,
+        user_id: int,
+):
+    task = get_task(report_id)
+
+    task_kwargs = get_task_kwargs(task)
 
     if not task_kwargs:
-        return failed_report('Task is invalid.')
+        return failed_report('Task is invalid.', report_id=report_id)
 
     if task_kwargs.get('user_id') != user_id:
         raise PermissionDenied('User not authorized.')
@@ -182,22 +193,23 @@ def get_report_result(
             entity_id = task_kwargs.get('organization_id')
             entity = Organization.objects.get(id=entity_id)
     except ObjectDoesNotExist:
-        return failed_report('Entity not found.')
+        return failed_report('Entity not found.', report_id=report_id)
 
     report_format = task_kwargs.get('report_format', ReportFormat.xlsx)
+    report_format = ReportFormat(report_format)
     period_start = task_kwargs.get('period_start')
 
     if task.status != states.SUCCESS:
-        return failed_report('Task failed.')
+        return failed_report('Task failed.', report_id=report_id)
 
     if not task.result or not (filename := json.loads(task.result)):
-        return failed_report('Task result is empty.')
+        return failed_report('Task result is empty.', report_id=report_id)
 
     storage = ReportsStorage()
     if not storage.exists(filename):
-        return failed_report('File not found.')
+        return failed_report('File not found.', report_id=report_id)
 
-    download_file_name = f'{slugify(entity.name)}_{period_start}.{report_format}'
+    download_file_name = f'{slugify(entity.name)}_{period_start}.{report_format.report_extension()}'
     response_data = {
         'id': report_id,
         'status': ReportTaskState.success,
