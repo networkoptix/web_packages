@@ -225,7 +225,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     channelPartnersService = inject(NxChannelPartnersService);
 
-    isOrgUser$$ = signal(false);
+    isOrgUser$$ = signal<boolean | null>(null);
 
     manageOrgSystems$$ = pipeSignal(
         this.system$$,

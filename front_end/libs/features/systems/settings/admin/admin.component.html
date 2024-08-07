@@ -166,7 +166,7 @@
                     </span>
                     <div
                         class="mt-2"
-                        *ngIf="!environment.isLocal && !isOrgUser$$()"
+                        *ngIf="!environment.isLocal && isOrgUser$$() === false"
                     >
                         <button
                             [disabled]="settings?.disconnectDisabled"
