@@ -1,3 +1,4 @@
+import re
 from typing import (
     Optional,
     Tuple,
@@ -10,25 +11,54 @@ class AllowRequestMixin:
     """
     Mixin to conditionally bypass throttling in Django REST Framework throttle classes.
 
-    Integrates with Django REST Framework's throttling mechanism by providing a custom
-    `allow_request` method. This method checks a condition defined in `_should_skip_throttle`
-    to decide whether to bypass throttling. If the condition is met, throttling is skipped;
-    otherwise, standard throttling checks are applied by calling `super().allow_request`.
+    This mixin provides a custom `allow_request` method that integrates with Django REST
+    Framework's throttling mechanism. It checks a condition defined in `_should_skip_throttle`
+    to decide whether to bypass throttling for certain requests, particularly those targeting
+    internal API endpoints.
+
+    Attributes:
+        _INTERNAL_PATH_PATTERN (re.Pattern): A compiled regular expression pattern used to
+            match internal API paths. This is a class-level constant shared across all
+            instances for improved performance and memory efficiency.
 
     Usage:
-        Inherit from this mixin before Django REST Framework throttle classes to ensure the
-        mixin's logic is applied first.
+        Inherit from this mixin before Django REST Framework throttle classes in the
+        class hierarchy to ensure the mixin's logic is applied first.
 
     Example:
         class CustomThrottle(AllowRequestMixin, UserRateThrottle):
             pass
+
+    Note:
+        This mixin is designed to work with Django REST Framework's throttling classes.
+        Ensure that the classes you're inheriting from after this mixin implement the
+        `allow_request` method.
     """
 
-    def allow_request(self, request, view):
+    _INTERNAL_PATH_PATTERN = re.compile(r'^/partners/api/v(\d+)/internal/*?')
+
+    def allow_request(self, request: HttpRequest, view) -> bool:
+        """
+        Determines whether the request should be allowed without throttling.
+
+        This method first checks if the request should skip throttling by calling
+        `_should_skip_throttle`. If throttling should be skipped, it returns `True`.
+        Otherwise, it calls the superclass's `allow_request` method to apply standard
+        throttling checks.
+
+        Args:
+            request (HttpRequest): The current HTTP request.
+            view: The view being accessed.
+
+        Returns:
+            bool: `True` if the request should bypass throttling, `False` otherwise.
+
+        Raises:
+            NotImplementedError: If the superclass does not implement `allow_request`.
+        """
         if self._should_skip_throttle(request):
             return True
 
-        # This will scream at you in your IDE. Let it.
         try:
             return super().allow_request(request, view)
         except AttributeError:
@@ -36,34 +66,24 @@ class AllowRequestMixin:
 
     def _should_skip_throttle(self, request: HttpRequest) -> bool:
         """
-         Determines whether a request should be exempt from throttling based on its path.
+        Determines whether a request should be exempt from throttling based on its path.
 
-         This function is used to bypass the standard throttling process for specific
-         requests, particularly those targeting internal or non-public-facing endpoints.
-         It's implemented directly in the throttling check process, rather than as middleware,
-         to ensure precise control over the throttling logic and to address limitations
-         encountered with middleware-based approaches.
+        This method checks if the request's path matches the internal API pattern defined
+        by `_INTERNAL_PATH_PATTERN`. If it matches, the request is considered internal and
+        should bypass throttling.
 
-         Note:
-         The initial approach attempted to use middleware for throttling decisions, but
-         this method was not effective. Middleware execution occurs either before the
-         request is fully processed (in the case of process_request middleware) or after
-         the response has been generated (in the case of process_response middleware),
-         which does not offer the granularity needed for making throttling decisions based
-         on view-specific logic or request details. Direct implementation within the
-         throttling check allows for more nuanced and immediate control over which
-         requests are throttled, based on the specific needs of the application and
-         its endpoints.
+        Args:
+            request (HttpRequest): The current HTTP request.
 
-         Parameters:
-         - request: HttpRequest object representing the current request.
+        Returns:
+            bool: `True` if the request should be exempt from throttling, `False` otherwise.
 
-         Returns:
-         - bool: True if the request should be exempt from throttling, False otherwise.
-         """
-        if request.path.startswith('/partners/internal'):
-            return True
-        return False
+        Note:
+            This method is implemented directly in the throttling check process, rather than
+            as middleware, to ensure precise control over the throttling logic and to address
+            limitations encountered with middleware-based approaches.
+        """
+        return bool(self._INTERNAL_PATH_PATTERN.match(request.path))
 
 
 class ParseRateMixin:
