@@ -72,6 +72,15 @@ class ReportFormat(StrEnum):
     xlsx = 'xlsx'
     csv = 'csv'
 
+    def report_extension(self):
+        match self.value:
+            case ReportFormat.xlsx:
+                return 'xlsx'
+            case ReportFormat.csv:
+                return 'zip'
+            case _:
+                logger.warning('Unsupported format', format=self.value)
+                raise ValueError(f'Unsupported format format={self.value}')
 
 class Styling:
     black = "000000"

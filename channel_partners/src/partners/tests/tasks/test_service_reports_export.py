@@ -1,16 +1,20 @@
 import datetime
 import io
 import re
+from uuid import uuid4
 
 import boto3
 import pytest
 from django.conf import settings
+from django.utils.text import slugify
 from moto import mock_aws
 
 from channel_partners.storages import ReportsStorage
+from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
     TaskRetry,
     generate_report,
+    get_report_result,
 )
 
 
@@ -138,6 +142,7 @@ class TestGenerateReportCsv:
         file = ReportsStorage().open(result)
         assert file.read() == b'Hello World!'
 
+
     @mock_aws
     def test_organization_report_generation(self):
         boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
@@ -182,3 +187,87 @@ class TestGenerateReportCsv:
                             period_start=self.period_start.isoformat(),
                             user_id=self.user_id,
                             report_format=self.report_format)
+
+
+class TestGetReportResult:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, mocker, cp_user_factory):
+        self.channel_partner = channel_partner_factory()
+        self.channel_partner_id = self.channel_partner.id
+        user_rel = cp_user_factory(channel_partner=self.channel_partner)
+        self.user_id = user_rel.user.id
+        self.organization_id = organization_factory().id
+        self.report_date = datetime.date.today()
+        self.period_start = self.report_date.replace(day=1)
+        self.report_format = 'csv'
+        self.task_id = f'{uuid4()}'
+        self.file_name = f'{self.task_id}/{uuid4()}'
+        self.task_kwargs = dict(
+            channel_partner_id=self.channel_partner_id,
+            report_date=self.report_date.isoformat(),
+            period_start=self.period_start.isoformat(),
+            user_id=self.user_id,
+            report_format=self.report_format
+        )
+        self.mocked_get_task = mocker.patch('partners.tasks.service_reports_export.get_task')
+        self.mocked_get_task_kwargs = mocker.patch('partners.tasks.service_reports_export.get_task_kwargs')
+        self.task = mocker.MagicMock()
+        self.task.task_id = self.task_id
+        self.task.id = self.task_id
+
+    @mock_aws
+    def test_task_pending_state(self, ):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.mocked_get_task.return_value = self.task
+        self.mocked_get_task_kwargs.return_value = self.task_kwargs
+        self.task.status = 'PENDING'
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.pending
+        assert result['reason'] == 'Task is running.'
+
+    @mock_aws
+    def test_task_failure_state(self, ):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.mocked_get_task.return_value = self.task
+        self.mocked_get_task_kwargs.return_value = self.task_kwargs
+        self.task.status = 'FAILURE'
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.failed
+        assert result['reason'] == 'Task failed.'
+
+    @mock_aws
+    def test_task_has_no_result(self, ):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.task.result = ''
+        self.mocked_get_task.return_value = self.task
+        self.mocked_get_task_kwargs.return_value = self.task_kwargs
+        self.task.status = 'SUCCESS'
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.failed
+        assert result['reason'] == 'Task result is empty.'
+
+    @mock_aws
+    def test_task_no_file(self, ):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.task.result = f'"{self.file_name}"'
+        self.mocked_get_task.return_value = self.task
+        self.mocked_get_task_kwargs.return_value = self.task_kwargs
+        self.task.status = 'SUCCESS'
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.failed
+        assert result['reason'] == 'File not found.'
+
+
+    @mock_aws
+    def test_task_success(self, ):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.task.result = f'"{self.file_name}"'
+        self.mocked_get_task.return_value = self.task
+        self.mocked_get_task_kwargs.return_value = self.task_kwargs
+        self.task.status = 'SUCCESS'
+        ReportsStorage().save(self.file_name, io.BytesIO(b'Hello World!'))
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.success
+        assert result['id'] == self.task_id
+        assert f'{slugify(self.channel_partner.name)}_{self.period_start}.zip' in result['download_url']
