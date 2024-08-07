@@ -83,47 +83,4 @@ describe('defaultLayoutSelectorFactory', () => {
         expect(defaultLayoutSelector(tree)).toEqual(expectedLayoutId);
         expect(setParamState).toHaveBeenCalledWith({ params: { layoutId: expectedLayoutId } });
     });
-
-    it('should return empty string if no layouts have items and no cameras', () => {
-        const expectedLayoutId = uuid();
-        const tree = generateTree({
-            layouts: [
-                {
-                    type: ResourceType.LAYOUT,
-                    name: 'Layout',
-                    details: createLayout(expectedLayoutId),
-                    children: [],
-                },
-            ],
-        });
-        expect(defaultLayoutSelector(tree)).toEqual('');
-        expect(setParamState).not.toHaveBeenCalled();
-    });
-
-    it('should return camera id when no layouts have items', () => {
-        const expectedCameraId = uuid();
-        const tree = generateTree({
-            layouts: [
-                {
-                    type: ResourceType.LAYOUT,
-                    name: 'Layout',
-                    details: createLayout(uuid()),
-                    children: [],
-                },
-            ],
-            cameras: [
-                {
-                    type: ResourceType.CAMERA,
-                    name: 'Camera',
-                    aspectRatio: 1,
-                    details: {
-                        id: expectedCameraId,
-                    } as unknown as NxSystemCameraWithMappedFields,
-                },
-            ],
-        });
-
-        expect(defaultLayoutSelector(tree)).toEqual(expectedCameraId);
-        expect(setParamState).toHaveBeenCalledWith({ params: { layoutId: expectedCameraId } });
-    });
 });

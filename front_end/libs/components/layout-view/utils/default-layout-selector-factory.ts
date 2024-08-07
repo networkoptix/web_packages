@@ -6,7 +6,6 @@ import {
     ResourceParentNode,
 } from '@components/layout-grid/layout-grid.types';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
-import { Layout } from '@services/system-api.types/layouts.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { cleanIdLegacy } from '@utils/general';
 
@@ -31,9 +30,7 @@ const findFirstCamera = (
 export const defaultLayoutSelectorFactory =
     (paramState$$: LayoutStateService['paramStateHandler']['state$$']) =>
     (tree: ResourceNode[]) => {
-        const layout = tree
-            .find(assertResourceOfType.layouts)
-            ?.children.find(({ details }: ResourceNode<Layout>) => details?.items.length);
+        const layout = tree.find(assertResourceOfType.layouts)?.children[0];
         const camera = findFirstCamera(tree.find(assertResourceOfType.cameras)?.children || []);
         const layoutId = cleanIdLegacy((layout || camera)?.details?.id);
         if (layoutId) {
