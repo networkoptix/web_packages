@@ -49,3 +49,8 @@ nx-block div.checkbox-block:last-of-type+.helper-block {
 .btn:disabled {
     opacity: var(--btn-disabled-opacity) !important;
 }
+
+.cloud-session-toggle {
+    display: flex;
+    align-items: center;
+}

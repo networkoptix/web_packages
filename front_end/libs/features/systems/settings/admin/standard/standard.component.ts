@@ -76,6 +76,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         trafficEncryptionForced: false,
         videoTrafficEncryptionForced: false,
         sessionLimitMinutes: 0,
+        useSessionLimitForCloud: false,
     };
 
     limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem> = {

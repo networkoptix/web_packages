@@ -277,7 +277,7 @@
                             class="control-label mb-0"
                             for="sessionLimitMinutesToggle"
                         >
-                            <span translate>Limit session duration to</span>
+                            <span translate>Limit session duration for Local and LDAP users</span>
                         </label>
 
                         <input
@@ -302,7 +302,10 @@
                             forceVisibilityOnce
                         ></nx-alert-block>
                     </div>
-                    <div class="row ml-4 my-2">
+                    <div
+                        class="row ml-4 my-2"
+                        [hidden]="!sessionLimitToggle"
+                    >
                         <div
                             class="mr-2"
                             style="width: 70px"
@@ -327,6 +330,24 @@
                             [selected]="selectedTimeUnit"
                             (onSelected)="updateTimeUnitInput($event)"
                         ></nx-select>
+                        @if (systemAndSecuritySettings.useSessionLimitForCloud !== undefined) {
+                            <div class="cloud-session-toggle">
+                                <nx-checkbox
+                                    name="useSessionLimitForCloud"
+                                    componentId="useSessionLimitForCloud"
+                                    [(ngModel)]="systemAndSecuritySettings.useSessionLimitForCloud"
+                                    #useSessionLimitForCloud="ngModel"
+                                >
+                                </nx-checkbox>
+
+                                <label
+                                    class="control-label mb-0"
+                                    for="useSessionLimitForCloud"
+                                >
+                                    <span translate>Apply Session Duration to Cloud Users</span>
+                                </label>
+                            </div>
+                        }
                     </div>
                     <div class="session-alert">
                         <nx-alert-block
