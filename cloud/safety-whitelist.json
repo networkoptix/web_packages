@@ -294,4 +294,5 @@
     "name": "html-sanitizer",
     "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
   }
+
 }

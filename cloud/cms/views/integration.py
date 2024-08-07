@@ -88,17 +88,9 @@ def get_integration(request, asset_id=None):
     elif not (is_enabled or has_beta_access):
         return api_success(INTEGRATION_FORBIDDEN,
                            status_code=status.HTTP_403_FORBIDDEN)
-    cache = IntegrationCache(
-        language=get_language_object_from_request(request),
-        state=state, identifier=integration.id,
-        version=integration.version_id(customization=customization),
-        customization_name=customization
-    )
-    if not (data := cache.get_cached_item()):
-        serializer = IntegrationSerializer.generate([integration], request)
-        serializer.is_valid()
-        data = serializer.data
-        cache.set_cached_item(data, timeout=84600)
+    serializer = IntegrationSerializer.generate([integration], request)
+    serializer.is_valid()
+    data = serializer.data
 
     return api_success(data)
 

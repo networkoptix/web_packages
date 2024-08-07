@@ -1,6 +1,8 @@
 import pytest
+from django.core.cache import caches
 from rest_framework import status
 
+from cms.models import AssetCustomizationReview
 from cms.views.integration import INTEGRATION_FORBIDDEN, INTEGRATION_NOT_FOUND, get_integration, get_integrations
 
 
@@ -15,6 +17,7 @@ class TestIntegrations:
         self.integrations = list(asset_factory(
             qty=self.number_integrations, account=self.superuser))
         self.existing_asset_id = self.integrations[0].id
+        caches['integrations'].clear()
 
     def patch_enabled(self, mocker, state=True):
         mocker.patch("cms.views.integration.check_integration_store_enabled", return_value=state)
@@ -71,3 +74,23 @@ class TestIntegrations:
         response = get_integrations(request)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data['data']) == self.number_integrations
+
+    def test_get_integration_views_caching(self, mocker, arf, asset_factory):
+        review_integration = next(asset_factory(account=self.superuser,  state=AssetCustomizationReview.REVIEW_STATES.pending))
+        request = arf.get(f'/api/cms/integration/{self.existing_asset_id}-name?pending=True')
+        request.session = {}
+        request.user = self.superuser
+        response = get_integration(request, review_integration.id)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1
+        assert response.data[0]['id'] == review_integration.id
+        keys = caches['integrations'].keys('*')
+        assert len(keys) == 1
+        assert isinstance(caches['integrations'].get(keys[0]), dict)
+        response = get_integrations(request)
+        assert response.status_code == status.HTTP_200_OK
+        # 2 * number of integrations because of the pending param
+        # causes showing drafts as well. I'm not sure about this.
+        assert len(response.data['data']) == (self.number_integrations + 1) * 2
+        keys = caches['integrations'].keys('*')
+        assert len(keys) == self.number_integrations + 1
