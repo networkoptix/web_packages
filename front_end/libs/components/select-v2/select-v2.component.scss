@@ -5,13 +5,17 @@
     width: 100%;
 }
 
+.org-users {
+    @include typography.regular14nocolor;
+}
+
 .select-wrapper {
     height: 2rem;
     display: flex;
     justify-content: space-between;
     background-color: var(--btn-dropdown-toggle-bg);
     box-shadow: var(--btn-dropdown-toggle-shadow-color);
-    @include typography.medium13nocolor;
+    @include typography.regular14nocolor;
 
     &[aria-disabled="false"] {
         cursor: pointer;

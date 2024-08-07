@@ -47,7 +47,7 @@ new-table-wrapper {
 }
 
 .div-container.roles:has(.readonly-role) {
-    @include typography.medium13nocolor;
+    @include typography.regular14nocolor;
     height: calc(2rem - 5px - 5px); // Used to match select-v2 .select-box
     padding-top: 1px;
     padding-left: 2px;

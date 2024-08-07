@@ -53,7 +53,7 @@
                 <div
                     class="div-container-wrapper"
                     data-id="{{ row[idPropName] }}"
-                    style="grid-area: email"
+                    style="grid-area: email; font-size: 14px"
                 >
                     <nx-search-highlight
                         [text]="row.email"
@@ -62,7 +62,7 @@
                 </div>
                 <div
                     data-id="{{ row[idPropName] }}"
-                    style="grid-area: fullName"
+                    style="grid-area: fullName; font-size: 14px"
                 >
                     <nx-search-highlight
                         [text]="row.fullName"
@@ -74,7 +74,7 @@
                     class="div-container-wrapper"
                     #roleWrapper
                     data-id="{{ row[idPropName] }}"
-                    style="grid-area: accessLevel"
+                    style="grid-area: accessLevel; font-size: 14px"
                     toggleOnClick
                     reversePositionOrder
                     ignoreMaxWidth
