@@ -120,7 +120,7 @@ def new_channel_partner_created(channel_partner_pk: uuid.UUID) -> None:
                         original_service_pk=service.pk,
                         channel_partner_pk=channel_partner.pk,
 
-                    original_service_id=service_pk,
+                    original_service_id=service.pk,
                     channel_partner_id=channel_partner.pk,
                     channel_partner_name=channel_partner.name
                     )

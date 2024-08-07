@@ -9,6 +9,7 @@ from dataclasses import (
 )
 from typing import (
     Dict,
+    Iterable,
     List,
 )
 
@@ -1102,11 +1103,36 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
         existing_services = self.instance.calculate_current_services()
         services = self._get_services_from_value(value)
         self._check_service_enabled(value)
+        self._check_expired_services(services)
         new_records, types_changes = self._calculate_service_changes(services, existing_services)
 
         self._check_monthly_limits(types_changes)
 
         return new_records
+
+    def _check_expired_services(self, services: Iterable[ChannelPartnerService]):
+        """
+        Check if any of the given services have expired and raise a ValidationError if true.
+
+        Args:
+            services (Iterable[ChannelPartnerService]): An iterable of service objects.
+
+        Raises:
+            ValidationError: If any service has expired.
+        """
+        expired_services = {}
+        for service in services:
+            if service.is_expiring and service.duration > 0:
+                is_expired = ChannelPartnerServiceRecord.objects.filter(
+                    service=service,
+                    organization_id=self.instance.organization_id,
+                    created_ts__lt=timezone.now() - relativedelta(months=service.duration),
+                ).exists()
+                if is_expired:
+                    expired_services[str(service.id)] = 'Service has expired'
+
+        if expired_services:
+            raise exceptions.ValidationError(detail=expired_services)
 
     def _check_shutdown_state(self):
         """Check if the system is in shutdown state and raise a ValidationError if true."""

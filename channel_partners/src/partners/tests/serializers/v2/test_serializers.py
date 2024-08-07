@@ -299,6 +299,67 @@ class TestSystemServiceQuantitySerializer:
             assert serializer.data['services'][str(service.id)]['quantity'] == 20
             assert serializer.data['services'][str(service.id)]['used'] == 1 + idx
 
+    def test_expired_services(self,
+                              channel_partner_factory,
+                              organization_factory,
+                              system_factory,
+                              service_record_factory,
+                              cp_service_factory,
+                              arf):
+
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        sys = system_factory(
+            organization=org,
+            # created_ts=timezone.now() - timedelta(days=40),
+        )
+        service_add_date = timezone.now() - timedelta(days=35)
+        regular_service = cp_service_factory(channel_partner=cp)
+        expired_service = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+        not_expired_service = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=2
+        )
+        not_used_service = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+        service_record_factory(
+            service=regular_service,
+            cloud_system=sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        service_record_factory(
+            service=expired_service,
+            cloud_system=sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        service_record_factory(
+            service=not_expired_service,
+            cloud_system=sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        data = {
+            "services": {
+                f"{service.id}": {"quantity": 11}
+                for service in
+                [regular_service, expired_service, not_expired_service, not_used_service]
+            }
+        }
+        serializer = SystemServiceQuantitySerializer(instance=sys, data=data)
+        assert serializer.is_valid() is False
+        assert serializer.errors['services'][str(expired_service.id)] == 'Service has expired'
+        assert list(serializer.errors['services'].keys()) == [str(expired_service.id)]
+
 
 class TestChannelPartnerSerializer:
 
