@@ -209,6 +209,13 @@ class TestCloudSystemViewSetRetrieve:
         response = self.client.get(path=self.url)
         assert response.status_code == 403
 
+    def test_token_403_user_with_no_org(self, cloud_user_factory, mock_auth_with_user):
+        user = cloud_user_factory()
+        mock_auth_with_user(user)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
+        response = self.client.get(path=self.url)
+        assert response.status_code == 403
+
     def test_token_403_group_user(self, mock_cdb_token_introspect, cloud_user_factory):
         mock_cdb_token_introspect(user=self.other_group_admin.user, system=None, system_role=None)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth_cred)
