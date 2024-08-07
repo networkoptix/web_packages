@@ -244,8 +244,9 @@ export interface APIToolSettings {
         main: APIType;
         deprecated: APIType;
     };
-    defaultManifest: MenuManifest;
-    legacyManifest: MenuManifest;
+    defaultDocs: MarkdownItem[];
+    defaultManifest: LegacyMenuManifest;
+    legacyManifest: LegacyMenuManifest;
 }
 
 export interface ManifestItem {
@@ -256,7 +257,21 @@ export interface ManifestItem {
     }[];
 }
 
-export type MenuManifest = ManifestItem[];
+export interface MarkdownItem {
+    name: string;
+    doc: string;
+    chapters?: {
+        name: string;
+        doc: string;
+    }[];
+}
+
+export type LegacyMenuManifest = ManifestItem[];
+
+export type MenuManifest = {
+    docs: MarkdownItem[];
+    versions: ManifestItem[];
+};
 
 interface APIType {
     type: string;

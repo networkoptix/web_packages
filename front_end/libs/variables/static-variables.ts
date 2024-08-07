@@ -80,6 +80,16 @@ export const apiTool: configTypes.APIToolSettings = {
             ],
         },
     ],
+    defaultDocs: [
+        {
+            "name": "API Information",
+            "doc": "api_preamble.md",
+        },
+        {
+            "name": "API Changelog",
+            "doc": "api_changelog.md"
+        }
+    ]
 };
 
 export const clientMode: configTypes.ClientMode = {

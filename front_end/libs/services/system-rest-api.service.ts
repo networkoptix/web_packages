@@ -74,7 +74,7 @@ import { cleanUserObjectRest } from './mediaserver-apis/utils/clean-user-object'
 import { useJsonRpc } from './mediaserver-apis/utils/use-json-rpc';
 import { withSystemBusUpdates } from './mediaserver-apis/utils/with-system-bus-updates';
 import { NxAppStateService } from './nx-app-state.service';
-import type { APIDocType, MenuManifest } from './nx-config/base-config';
+import type { APIDocType, LegacyMenuManifest, MenuManifest } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
@@ -798,24 +798,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncPersistent
-    getAPIToolManifest(): Promise<MenuManifest> {
-        return firstValueFrom(this.get('/static/openapi_manifest.json')).catch(
-            () => apiTool.defaultManifest,
-        );
+    getAPIToolManifest(): Promise<MenuManifest | LegacyMenuManifest | undefined> {
+        return this.get('/static/openapi_manifest.json')
+            .toPromise()
+            .catch(() => apiTool.defaultManifest);
     }
 
     @memoizeAsyncPersistent
-    getApiChangelog(): Promise<string> {
-        return firstValueFrom(
-            this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }),
-        );
-    }
-
-    @memoizeAsyncPersistent
-    getApiPreamble(): Promise<string> {
-        return firstValueFrom(
-            this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }),
-        );
+    getApiMarkdownFile(fileName: string): Promise<string | undefined> {
+        return this.http
+            .get(`${this.urlBase}/web/static/${fileName}`, { responseType: 'text' })
+            .toPromise();
     }
 
     protected updateSystemSettings$ = new BehaviorSubject('');

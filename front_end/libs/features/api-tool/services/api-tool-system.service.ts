@@ -18,7 +18,12 @@ import {
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
+import type {
+    APIDocType,
+    LegacyMenuManifest,
+    MarkdownItem,
+    MenuManifest,
+} from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -37,7 +42,7 @@ import type { APIDoc } from '../api-tool-types';
 import type {
     EmitInfo,
     IndexDBCacheObject,
-    MarkdownObj,
+    MarkdownIndex,
     ServerInfo,
 } from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
@@ -50,7 +55,6 @@ export class NxAPIToolSystemService {
     currentSystemId$ = new BehaviorSubject<string>(null);
     systemVersion$ = new BehaviorSubject<string>(null);
     systemEmitter$ = new Subject<EmitInfo<NxSystemInfo | NxSystem>>();
-    systemManifest$ = new BehaviorSubject<MenuManifest>(null);
     validSystems: NxSystemInfo[] = []; // Used for trying all possible systems before showing an error
     systems: NxSystemInfo[] = [];
     manualSystemChange = false;
@@ -76,7 +80,7 @@ export class NxAPIToolSystemService {
         json: APIDoc,
         disabled = false,
         error = '',
-        markdown = null,
+        markdown: MarkdownIndex | undefined = undefined,
     ): void {
         this.serverEmitter$.next({ info: { server, json, markdown }, disabled, error });
     }
@@ -145,7 +149,7 @@ export class NxAPIToolSystemService {
                 filter(system => !!system),
             )
             .subscribe(system => {
-                this.currentServerId = null;
+                this.currentServerId = '';
                 this.setQueryParams('system', system);
                 this.getServers.errorCount = 0;
                 this.serversLoading$.next(true);
@@ -248,7 +252,7 @@ export class NxAPIToolSystemService {
         this.getServersInfo();
     }
 
-    getMenuManifest() {
+    getMenuManifest(): Promise<MenuManifest | LegacyMenuManifest | undefined> {
         return this.currentSystem.serverManager.getApiToolManifest();
     }
 
@@ -356,12 +360,9 @@ export class NxAPIToolSystemService {
     }
 
     async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
-        let markdown = await this.getAPIInfoMarkdown(server.id);
-        markdown = markdown.APIPreamble && markdown.APIChangelog ? markdown : null;
-        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json, markdown);
         this.setRequestURL(json);
         this.currentServerId = this.currentServerId || server.id;
-        this.emitServer(server, json, false, '', markdown);
+        this.emitServer(server, json, false, '');
     }
 
     async getLocalSystem(): Promise<void> {
@@ -506,26 +507,63 @@ export class NxAPIToolSystemService {
             ?.json;
         if (!JSON) {
             JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
-            this.cacheJSON(route, this.currentSystem.id, this.systemVersion, JSON);
+            if (JSON) {
+                this.cacheJSON(route, this.currentSystem.id, this.systemVersion, JSON);
+            }
         }
         return JSON;
     }
 
-    async getAPIInfoMarkdown(serverID: string) {
-        let APIPreamble;
+    /**
+     * Fetches all markdown files simultaneously
+     * Any requests that fail do not get returned in the index
+     */
+    async getMarkdownFiles(markdownStructure: MarkdownItem[]): Promise<MarkdownIndex> {
+        const promiseArray: Promise<MarkdownIndex>[] = [];
+        for (const markdownItem of markdownStructure) {
+            promiseArray.push(this.getMarkdownFileWithName(markdownItem.name, markdownItem.doc));
+            if (markdownItem.chapters) {
+                for (const chapter of markdownItem.chapters) {
+                    promiseArray.push(this.getMarkdownFileWithName(chapter.name, chapter.doc));
+                }
+            }
+        }
+        const markdownObject: MarkdownIndex = {};
+        await Promise.allSettled(promiseArray).then(results => {
+            results.forEach(result => {
+                if (result.status === 'fulfilled') {
+                    const { name, markdown } = result.value;
+                    markdownObject[name] = markdown;
+                }
+            });
+        });
+        return markdownObject;
+    }
+
+    async getMarkdownFileWithName(name: string, file: string): Promise<MarkdownIndex> {
+        try {
+            const markdown = await this.currentSystem.serverManager.getApiMarkdownFile(file);
+            return { name: name.replace(/\s+/g, ''), markdown: markdown || '' };
+        } catch (error) {
+            return { name: name.replace(/\s+/g, ''), markdown: '' };
+        }
+    }
+
+    async getLegacyAPIInfoMarkdown(serverID: string) {
+        let APIInformation;
         let APIChangelog;
         if (this.isRestAPI(serverID)) {
             const changeLog = this.currentSystem.serverManager
-                .getApiChangelog()
+                .getApiMarkdownFile('api_changelog')
                 ?.then((api: any) => {
                     APIChangelog = api;
                 })
                 .catch(() => {});
 
             const preamble = this.currentSystem.serverManager
-                .getApiPreamble()
+                .getApiMarkdownFile('api_preamble')
                 ?.then((api: any) => {
-                    APIPreamble = api;
+                    APIInformation = api;
                 })
                 .catch(() => {});
 
@@ -533,7 +571,7 @@ export class NxAPIToolSystemService {
             await preamble;
         }
 
-        return { APIPreamble, APIChangelog };
+        return { APIInformation, APIChangelog };
     }
 
     useBrandingVariables(data: any) {
@@ -559,7 +597,7 @@ export class NxAPIToolSystemService {
         route: string,
         systemId: string,
         systemVersion: string,
-    ): Promise<IndexDBCacheObject> {
+    ): Promise<IndexDBCacheObject | null> {
         if (this.queryParams.disableCache) {
             return null;
         }
@@ -590,14 +628,14 @@ export class NxAPIToolSystemService {
         systemId: string,
         systemVersion: string,
         json: APIDoc,
-        markdown: MarkdownObj = null,
+        markdown: MarkdownIndex | undefined = undefined,
     ): Promise<void> {
         if (this.queryParams.disableCache) {
             this.indexedDbService
                 .deleteByKey('jsons', this.makeCacheKey(systemId, route))
                 .pipe(take(1))
                 .subscribe(() => {});
-            return null;
+            return;
         }
         const cachedObject = await this.getJSONFromCache(route, systemId, systemVersion);
         if (!cachedObject) {

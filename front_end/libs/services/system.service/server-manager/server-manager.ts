@@ -4,7 +4,7 @@ import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { APIDoc } from '@pages/api-tool/api-tool-types';
 import type { Logger } from '@pages/systems/settings/servers/logger/logger.component.types';
-import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
+import type { APIDocType, LegacyMenuManifest, MenuManifest } from '@services/nx-config/base-config';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
 import type { GetLicenses, StorageAnalytics } from '@services/system-api.aggregated-types';
@@ -438,27 +438,22 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
-    getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
+    getApiDoc(type: APIDocType = 'main'): Promise<APIDoc | undefined> {
         return this.mediaserver.getApiDoc(type);
     }
 
-    fetchApiToolJSON(route: string): Promise<APIDoc> {
+    fetchApiToolJSON(route: string): Promise<APIDoc | undefined> {
         return this.mediaserver.fetchApiToolJSON(route);
     }
 
-    getApiToolManifest(): Promise<MenuManifest> {
+    getApiToolManifest(): Promise<MenuManifest | undefined | LegacyMenuManifest> {
         const mediaServer = this.mediaserver as NxSystemRestAPI;
         return mediaServer.getAPIToolManifest();
     }
 
-    getApiChangelog(): Promise<string> {
+    getApiMarkdownFile(fileName: string): Promise<string | undefined> {
         const mediaServer = this.mediaserver as NxSystemRestAPI;
-        return mediaServer.getApiChangelog();
-    }
-
-    getApiPreamble(): Promise<string> {
-        const mediaServer = this.mediaserver as NxSystemRestAPI;
-        return mediaServer.getApiPreamble();
+        return mediaServer.getApiMarkdownFile(fileName);
     }
 
     getStorages(serverId: string, useCache: boolean = false, customTimeout?: number) {
