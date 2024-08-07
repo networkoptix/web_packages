@@ -462,6 +462,19 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         roles = self.user_access_matrix.access_matrix.organization_roles
         return [roles[r]['name'] for r in own_roles if roles[r]['name']]
 
+    def validate_channelPartnerAccessLevel(self, value: uuid.UUID | None):
+        if self.instance.channel_partner_access_level_id == value:
+            return value
+        if value == OrganizationRoles.ORGANIZATION_ADMINISTRATOR:
+            return value
+        if OrganizationToUser.objects.filter(
+            organization=self.instance,
+            roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
+        ).exists():
+            return value
+        raise ValidationError('There should be at least one user in the organization '
+                              'with Organization Administrator permissions')
+
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())

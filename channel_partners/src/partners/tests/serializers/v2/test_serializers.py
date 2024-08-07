@@ -613,6 +613,29 @@ class TestOrganizationSerializer:
         assert serializer.is_valid()
         assert 'channel_partner_access_level_id' not in serializer.validated_data
 
+    def test_channelPartnerAccessLevel_administrator_validation(
+            self, channel_partner_factory, organization_factory, cp_user_factory, arf):
+        err_message = ('There should be at least one user in the organization'
+                       ' with Organization Administrator permissions')
+        cp = channel_partner_factory()
+        user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        assert org.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        data = {'channelPartnerAccessLevel': OrganizationRoles.SYSTEM_HEALTH_VIEWER}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(user.user), partial=True)
+        assert serializer.is_valid() is False
+        assert serializer.errors['channelPartnerAccessLevel'][0] == err_message
+
+        data = {'channelPartnerAccessLevel': None}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(user.user), partial=True)
+        assert serializer.is_valid() is False
+        assert serializer.errors['channelPartnerAccessLevel'][0] == err_message
+
+        data = {'channelPartnerAccessLevel': OrganizationRoles.ORGANIZATION_ADMINISTRATOR}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(user.user), partial=True)
+        assert serializer.is_valid()
+
+
 
 class TestChannelPartnerRecordsParamSerializer:
 
