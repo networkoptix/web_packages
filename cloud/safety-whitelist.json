@@ -289,6 +289,9 @@
   "71849": {
     "name": "djangorestframework",
     "note": "Affected versions of the package djangorestframework are vulnerable to Cross-site Scripting (XSS) via the break_long_headers template filter due to improper input sanitization before splitting and joining with <br> tags."
+  },
+  "71890": {
+    "name": "html-sanitizer",
+    "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
   }
-
 }
