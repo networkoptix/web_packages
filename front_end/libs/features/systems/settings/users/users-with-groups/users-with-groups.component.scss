@@ -103,6 +103,7 @@
         .help-block {
             display: unset;
             font-family: theme_vars.$font-family-light;
+            word-break: break-all;
         }
     }
 }
