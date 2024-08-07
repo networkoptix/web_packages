@@ -134,8 +134,22 @@ export const generateResourceTree = ([
             if (editedLayout?.isNew && editedLayout.id === a.details.id) {
                 return -1;
             }
+
+            const getSortScore = (layout: SharableResourceLeafNode<Layout>): number => {
+                if (layout.shared) {
+                    return 2;
+                }
+
+                if (!layout.crossSystem) {
+                    return 1;
+                }
+                return 0;
+            };
+
+            const scoreA = getSortScore(a);
+            const scoreB = getSortScore(b);
             // shared layouts are at the top sorted alphabetically
-            return a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1;
+            return scoreB - scoreA || byName(a, b);
         });
 
     const parsedResources = Object.entries({
