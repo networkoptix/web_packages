@@ -657,6 +657,44 @@ class TestCloudSystemViewSet:
         assert "Unable to update; system is not activated" in response.data['message']
         assert mock_method.call_count == 0
 
+    def test_service_quantity_patch_expired(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            cp_user_factory,
+            service_record_factory,
+            cp_service_factory,
+            system_factory,
+            mock_auth_with_user,
+            arf,
+            mocker
+    ):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org,)
+        service = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.TRIAL,
+            duration=1,
+        )
+        service_record_factory(
+            service=service,
+            cloud_system=system,
+            quantity=10,
+            created_ts=timezone.now() - timedelta(days=40),
+        )
+        mock_auth_with_user(cp_user)
+        view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
+
+        mocker.patch('nx_django_redis.redis_cache.RedisSyncBackend.add', return_value=True)
+        request = arf.patch('/', data={"services": {str(service.id): {"quantity": 15}}}, format='json')
+
+        with transaction.atomic():
+            response = view(request, id=str(system.system_id))
+        assert response.status_code == 400
+        assert response.data['services'][str(service.id)] == "Service has expired"
+
     def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
                          mock_auth_with_system, arf_basic_auth, service_record_factory, cp_service_factory):
         cp = channel_partner_factory()
