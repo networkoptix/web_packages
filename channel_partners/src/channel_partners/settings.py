@@ -230,6 +230,7 @@ structlog.configure(
 
 MIDDLEWARE = [
     "django_structlog.middlewares.RequestMiddleware",
+    'channel_partners.logging.middleware.DBQueryLoggerMiddleware',
     "channel_partners.logging.middleware.RequestTimerMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'partners.middleware.cloud_host_middleware',
