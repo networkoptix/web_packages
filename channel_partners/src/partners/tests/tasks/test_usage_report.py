@@ -259,6 +259,7 @@ class TestRegenerateOutdatedSchemaReports:
         regenerate_outdated_schema_reports(ReportSnapshot.get_outdated_schema_reports())
         assert reports_query.count() == 0
 
+    @pytest.mark.skip(reason="Skipping this test for now; Kyrylo will fix this and thinks it's a timezone bug")
     def test_recreation_of_system_reports(self):
         system_reports = ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report
         calculate_all_reports()

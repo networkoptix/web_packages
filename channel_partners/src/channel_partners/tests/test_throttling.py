@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework.test import APIClient
 from rest_framework.views import APIView
 
+from channel_partners.throttling.mixin import AllowRequestMixin
 from channel_partners.throttling.throttle import (
     AnonymousRateThrottle,
     AuthenticatedUserRateThrottle,
@@ -54,10 +55,10 @@ class SystemQuickResponseView(APIView):
 
 # Create a temporary URL conf for the test
 urlpatterns = [
-    path('partners/test-anon/', NoAuthNoPermQuickResponseView.as_view(), name='test-anon'),
-    path('partners/internal/', NoAuthNoPermQuickResponseView.as_view(), name='test-internal'),
-    path('partners/test-user/', UserQuickResponseView.as_view(), name='test-response'),
-    path('partners/test-system/', SystemQuickResponseView.as_view(), name='test-system')
+    path('partners/api/v2/test-anon/', NoAuthNoPermQuickResponseView.as_view(), name='test-anon'),
+    path('partners/api/v2/internal/', NoAuthNoPermQuickResponseView.as_view(), name='test-internal'),
+    path('partners/api/v2/test-user/', UserQuickResponseView.as_view(), name='test-response'),
+    path('partners/api/v2/test-system/', SystemQuickResponseView.as_view(), name='test-system')
 ]
 
 
@@ -78,15 +79,15 @@ class ThrottleTests(TestCase):
 
     def test_internal_endpoint_no_throttle(self):
         for _ in range(50):
-            response = self.client.get('/partners/internal/')
+            response = self.client.get('/partners/api/v2/internal/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_anonymous_throttle(self):
         for _ in range(2):
-            response = self.client.get('/partners/test-anon/')
+            response = self.client.get('/partners/api/v2/test-anon/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response_fail = self.client.get('/partners/test-anon/')
+        response_fail = self.client.get('/partners/api/v2/test-anon/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
     @patch('partners.authentication.NxCloudOauthTokenAuthentication.authenticate')
@@ -98,10 +99,10 @@ class ThrottleTests(TestCase):
 
         # Simulate authenticated requests
         for _ in range(10):
-            response = self.client.get('/partners/test-user/')
+            response = self.client.get('/partners/api/v2/test-user/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response_fail = self.client.get('/partners/test-user/')
+        response_fail = self.client.get('/partners/api/v2/test-user/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
     @patch('partners.authentication.NxCloudSystemBasicAuthentication.authenticate_credentials')
@@ -129,14 +130,14 @@ class ThrottleTests(TestCase):
 
         # Simulate authenticated requests
         for _ in range(2):
-            response = self.client.get('/partners/test-system/')
+            response = self.client.get('/partners/api/v2/test-system/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response_fail = self.client.get('/partners/test-system/')
+        response_fail = self.client.get('/partners/api/v2/test-system/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
     def test_throttle_policies_active(self):
-        match = resolve('/partners/test-anon/')
+        match = resolve('/partners/api/v2/test-anon/')
         view = match.func
 
         view_class = getattr(view, 'cls', None)
@@ -164,7 +165,7 @@ class ThrottleTests(TestCase):
 
         # Simulate authenticated requests that should pass under the new rate limit
         for _ in range(10):
-            response = self.client.get('/partners/test-user/')
+            response = self.client.get('/partners/api/v2/test-user/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Wait for 5 seconds to reset the throttle
@@ -172,9 +173,32 @@ class ThrottleTests(TestCase):
 
         # Next requests within the new period should also pass
         for _ in range(10):
-            response = self.client.get('/partners/test-user/')
+            response = self.client.get('/partners/api/v2/test-user/')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # The next request should fail due to throttling
-        response_fail = self.client.get('/partners/test-user/')
+        response_fail = self.client.get('/partners/api/v2/test-user/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+
+class TestInternalPathPattern(TestCase):
+    def setUp(self):
+        self.pattern = AllowRequestMixin()._INTERNAL_PATH_PATTERN
+
+    def test_internal_path_match(self):
+        self.assertTrue(self.pattern.match('/partners/api/v2/internal/'))
+        self.assertTrue(self.pattern.match('/partners/api/v10/internal/'))
+        self.assertTrue(self.pattern.match('/partners/api/v123/internal/'))
+        self.assertTrue(self.pattern.match('/partners/api/v2/internal/extra'))
+        self.assertTrue(self.pattern.match('/partners/api/v2/internal/extra/path'))
+        self.assertTrue(self.pattern.match('/partners/api/v01/internal/'))
+        self.assertTrue(self.pattern.match('/partners/api/v0/internal/'))
+        self.assertTrue(self.pattern.match('/partners/api/v1/internal/'))
+
+    def test_internal_path_no_match(self):
+        self.assertFalse(self.pattern.match('/partners/api/v1/external/'))
+        self.assertFalse(self.pattern.match('/partners/api/internal/'))
+
+    def test_internal_path_edge_cases(self):
+        self.assertFalse(self.pattern.match('/partners/api//internal/'))
+        self.assertFalse(self.pattern.match('/partners/api/v2//internal/'))
