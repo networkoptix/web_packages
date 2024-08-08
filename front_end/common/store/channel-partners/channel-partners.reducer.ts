@@ -16,6 +16,7 @@ const initialState: ChannelPartnersState = {
     currentPartnerSupportInformation: undefined,
     currentOrgId: null,
     currentSubChannels: [],
+    currentSubchannelId: null,
     currentPartnerOrganizations: [],
     channelPartners: [],
     organizations: [],
@@ -44,10 +45,13 @@ export const channelPartnersReducer = createReducer(
             banner,
         }),
     ),
-    on(ChannelPartnerActions.hideBannerAction, state => ({
-        ...state,
-        banner: null,
-    })),
+    on(
+        ChannelPartnerActions.hideBannerAction,
+        (state): ChannelPartnersState => ({
+            ...state,
+            banner: null,
+        }),
+    ),
     on(
         ChannelPartnerActions.loadChannelPartnersAndOrgs,
         (state): ChannelPartnersState => ({
@@ -175,6 +179,13 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
+        ChannelPartnerActions.setCurrentSubChannelId,
+        (state, { id }): ChannelPartnersState => ({
+            ...state,
+            currentSubchannelId: id,
+        }),
+    ),
+    on(
         ChannelPartnerActions.setCurrentParentPartnerForChild,
         (state, { parentPartnerForCurrentChild }): ChannelPartnersState => ({
             ...state,
@@ -216,6 +227,16 @@ export const channelPartnersReducer = createReducer(
         return {
             ...state,
             channelPartners: patchedPartners,
+        };
+    }),
+    on(ChannelPartnerActions.patchSubChannel, (state, { patch }): ChannelPartnersState => {
+        const { currentSubChannels } = state;
+        const patchIndex = currentSubChannels.findIndex(p => p.id === patch.id);
+        const patchedSubChannels = currentSubChannels.slice();
+        patchedSubChannels.splice(patchIndex, 1, patch);
+        return {
+            ...state,
+            currentSubChannels: patchedSubChannels,
         };
     }),
 );

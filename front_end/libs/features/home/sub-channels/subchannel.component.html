@@ -7,19 +7,15 @@
         All Partners</a
     >
     <div class="header">
-        <h2>{{ currentSubChannel$$()?.name }}</h2>
-        @if (
-            currentSubChannel$$()?.effectiveState !== 'active' &&
-                currentSubChannel$$()?.effectiveState;
-            as state
-        ) {
+        <h2>{{ currentSubChannel().name }}</h2>
+        @if (effectiveState() !== 'active') {
             <nx-tag
-                [type]="state === 'suspended' ? 'warning' : 'danger'"
+                [type]="effectiveState() === 'suspended' ? 'warning' : 'danger'"
                 [size]="'large'"
                 [locked]="true"
-                [customClass]="'status' + (state === 'suspended' ? ' dark-text' : '')"
+                [customClass]="'status' + (effectiveState() === 'suspended' ? ' dark-text' : '')"
             >
-                {{ state | translate | uppercase }}
+                {{ effectiveState() | translate | uppercase }}
             </nx-tag>
         }
     </div>

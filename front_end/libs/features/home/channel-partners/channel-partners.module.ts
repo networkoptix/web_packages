@@ -12,7 +12,7 @@ import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
-import { NxChannelPartnersSettingsV3Component } from '../components/settings-v3/channel-partners-settings/channel-partners-settings.component';
+import { NxChannelPartnersSettingsComponent } from '../components/settings/channel-partners-settings/channel-partners-settings.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { cpTabGuard } from '../resolvers/CP-tab-guard';
@@ -64,7 +64,7 @@ const CPRoutes: Routes = withTabReporterResolver([
             {
                 path: 'settings',
                 canActivate: [cpTabGuard],
-                component: NxChannelPartnersSettingsV3Component,
+                component: NxChannelPartnersSettingsComponent,
             },
             {
                 path: 'subchannels',

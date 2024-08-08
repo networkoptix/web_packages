@@ -39,7 +39,7 @@ import { NxStateSettingBlockComponent } from '../state-setting-block/state-setti
         NxStateSettingBlockComponent,
     ],
 })
-export class NxChannelPartnersSettingsV3Component {
+export class NxChannelPartnersSettingsComponent {
     LANG = LANG;
     icons = icons;
     State = State;

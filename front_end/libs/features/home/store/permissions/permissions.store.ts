@@ -1,4 +1,3 @@
-/* eslint-disable nx/signal-naming-convention */
 import { computed, inject, InjectionToken } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withState } from '@ngrx/signals';
 import { Store } from '@ngrx/store';

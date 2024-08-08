@@ -1,0 +1,8 @@
+<!-- Already gated in guard for partner settings -->
+<!-- https://gitlab.nxvms.dev/dev/cloud_portal/-/blob/024d9fe9354fd3657dec98997ff2aa4654fb7370/front_end/libs/features/home/store/permissions/permissions.store.ts#L88 -->
+<nx-state-setting-block
+    [saveStateAction]="saveStateAction"
+    [inheritedState]="inactiveParentPartner()"
+    [state]="selectedState()"
+    (onStateChange)="selectedState.set($event)"
+></nx-state-setting-block>

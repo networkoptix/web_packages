@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import {
     ChannelPartner,
@@ -120,6 +120,12 @@ export const selectCurrentSubChannelPartners = createSelector(
     state => state.currentSubChannels,
 );
 
+export const selectCurrentSubChannel = createSelector(
+    selectChannelPartnersState,
+    ({ currentSubchannelId, currentSubChannels }) =>
+        currentSubChannels?.find(c => c.id === currentSubchannelId),
+);
+
 export const selectCurrentPartner = createSelector(
     selectChannelPartners,
     selectCurrentPartnerId,
@@ -146,13 +152,6 @@ export const selectCurrentOrganization = createSelector(
         return orgs.find(org => org.id === id);
     },
 );
-
-export const selectSubchannelPartner = (
-    id: string,
-): MemoizedSelector<ChannelPartnersState, ChannelPartner> =>
-    createSelector(selectCurrentSubChannelPartners, (partners: ChannelPartner[]) =>
-        partners.find(partner => partner.id === id),
-    );
 
 export const selectCurrentPartnerParent = createSelector(
     selectCurrentParentChannelPartnerId,

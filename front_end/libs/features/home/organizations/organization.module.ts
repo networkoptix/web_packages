@@ -8,7 +8,7 @@ import { nxConfig } from '@services/nx-config/config';
 
 import { NxReportsComponent } from '../components/reports/reports.component';
 import { Mode } from '../components/reports/reports.types';
-import { NxOrganizationSettingsV3Component } from '../components/settings-v3/organization-settings/organization-settings.component';
+import { NxOrganizationSettingsComponent } from '../components/settings/organization-settings/organization-settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { CPResovler } from '../resolvers/CP-resolver';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
@@ -62,7 +62,7 @@ const orgRoutes: Routes = withTabReporterResolver([
             {
                 path: 'settings',
                 canActivate: [orgTabGuard],
-                component: NxOrganizationSettingsV3Component,
+                component: NxOrganizationSettingsComponent,
             },
             {
                 path: 'support',

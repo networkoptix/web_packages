@@ -58,7 +58,7 @@ export type UpdateChannelPartnerUser = CreateChannelPartnerUser;
 export interface ChannelPartner {
     id: string;
     state: State;
-    effectiveState: string;
+    effectiveState: State;
     parentChannelPartner: string;
     monthlyAdditionalServiceLimit: number | null;
     attributes: Record<string, unknown>;

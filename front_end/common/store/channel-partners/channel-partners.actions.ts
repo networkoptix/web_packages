@@ -104,6 +104,11 @@ export const setCurrentSubChannelPartners = createAction(
     props<{ currentSubchannels: ChannelPartner[] }>(),
 );
 
+export const setCurrentSubChannelId = createAction(
+    '[Channel Partners] Set current subchannel id',
+    props<{ id: string | null }>(),
+);
+
 export const loadCurrentParentPartnerForChild = createAction(
     '[Channel Partners] Load current parent partner for a child partner or org',
     props<{ parentId: string }>(),
@@ -126,5 +131,10 @@ export const removeRootOrganization = createAction(
 
 export const patchPartner = createAction(
     '[Channel Partners] Patch a channel partner',
+    props<{ patch: ChannelPartner }>(),
+);
+
+export const patchSubChannel = createAction(
+    '[Channel Partners] Patch a subchannel',
     props<{ patch: ChannelPartner }>(),
 );
