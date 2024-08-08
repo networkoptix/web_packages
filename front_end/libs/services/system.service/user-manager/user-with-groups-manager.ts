@@ -80,11 +80,7 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     protected override isCloudOwner(user: SystemUser): boolean {
-        return (
-            'type' in user &&
-            user.type === 'cloud' &&
-            (('isOwner' in user && !!user.isOwner) || ('isAdmin' in user && !!user.isAdmin))
-        );
+        return 'type' in user && user.type === 'cloud' && 'isOwner' in user && user.isOwner;
     }
 
     override async deleteUser(removedUser: NxUser): Promise<void> {
@@ -235,6 +231,24 @@ export class UserWithGroupsManager extends UserManager {
         this.groups$$.set(this.groups);
     }
 
+    override processUser(user: NxUser): NxUser {
+        if (user.groupIds === undefined) {
+            user.groupIds = [];
+        }
+
+        user.isOwner = user.groupIds.includes(AdminGroups.administratorGroup);
+        user.isAdmin =
+            user.isOwner ||
+            user.groupIds.some(groupId => this.isGroupPowerUser(this.userGroups[groupId]));
+        user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
+        user.isLocalOwner = user.type === UserType.local && user.isOwner;
+        user.canBeEdited = this.canBeEdited(user);
+        user.hasCustomPermissions =
+            !['none', ''].includes(user.permissions) ||
+            Object.keys(user?.resourceAccessRights || {}).length > 0;
+        return user;
+    }
+
     override processUsers(usersWithGroups: NxUser[]): NxUser[] {
         if (!Array.isArray(usersWithGroups)) {
             return [];
@@ -249,49 +263,18 @@ export class UserWithGroupsManager extends UserManager {
                 type: 'cloud',
             })) as NxUser[];
         }
-        /**
-         * individual camera rights set by `resourceAccessRights` on the user object, but not implemented yet
-         * need to get structure of data to build an estimate at least
-         * **
-         * how does parentGroupIds work? all rights that parent groups have, child groups have?
-         * if so, is that parsed down in some way? all set into permissions & resourceAccessRights?
-         * or do I need to iterate through and form my own set of master permissions?
-         */
+
+        const currentUser = usersWithGroups.find(
+            user =>
+                this.userId === user.id ||
+                (user.type === UserType.cloud && this.currentUserEmail === user.email),
+        );
+        if (currentUser) {
+            this.currentUser = this.processUser(currentUser);
+        }
         this.users = usersWithGroups
             .filter(({ attributes }) => !attributes?.includes('hidden'))
-            .map((user: NxUser) => {
-                // if local user has no fullName, do we need to add name as fullName?
-                // if (!user.fullName && user.name) {
-                //     user.fullName = user.name;
-                // }
-
-                if (user.groupIds === undefined) {
-                    user.groupIds = [];
-                }
-
-                // should we add a list of user group names?
-                // user.userGroupNames = [];
-                // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
-                user.isOwner = user.groupIds.includes(AdminGroups.administratorGroup);
-                user.isAdmin =
-                    user.isOwner ||
-                    user.groupIds.some(groupId => this.isGroupPowerUser(this.userGroups[groupId]));
-                user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
-                user.isLocalOwner = user.type === UserType.local && user.isOwner;
-                user.canBeEdited = this.canBeEdited(user);
-                user.hasCustomPermissions =
-                    !['none', ''].includes(user.permissions) ||
-                    Object.keys(user?.resourceAccessRights || {}).length > 0;
-
-                if (
-                    this.userId === user.id ||
-                    (user.type === UserType.cloud && this.currentUserEmail === user.email)
-                ) {
-                    this.currentUser = user;
-                    // set userGroups for user?
-                }
-                return user;
-            })
+            .map((user: NxUser) => this.processUser(user))
             .sort((userA, userB) => {
                 // seems to error when > 5.1 system is offline, type field does not exist
                 // sorts local before cloud users --> then by email for cloud & name for local
