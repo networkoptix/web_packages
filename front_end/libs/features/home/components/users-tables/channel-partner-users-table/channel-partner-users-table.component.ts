@@ -67,6 +67,16 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     searching = input.required<boolean>();
     searchingQuery$$ = computed(() => this.channelPartnerUsersStore.searchQuery());
+    rolesWithDescriptions$$ = computed(() => {
+        const roles = this.roles$$();
+        return roles?.map(role => {
+            return {
+                id: role.id,
+                name: role.name,
+                description: this.LANG.channelPartners.usersTable.roleDescriptions[role.name],
+            };
+        });
+    });
 
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$() || 0);
     selectedUsers$$ = computed(

@@ -1,0 +1,50 @@
+@use "theme_variables_common" as *;
+@use "typography";
+@use "theme_generator" as tg;
+@include tg.generate-theme-vars((
+    '--dropdown-item-bg-alt': ('dark': 13, 'light': 1),
+    '--dropdown-item-border-alt': ('dark': 14, 'light': 4),
+), ':host');
+
+:host {
+    display: block;
+    overflow: clip;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    color: var(--text-contrast);
+    background-color: var(--dropdown-item-bg-alt);
+    line-height: normal;
+    user-select: none;
+    padding: rem(12px);
+
+    &:hover {
+        background-color: var(--brand-core) !important;
+    }
+
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--dropdown-item-border-alt);
+    }
+
+    &.highlighted {
+        background-color: var(--dropdown-item-hover-bg);
+        color: var(--dropdown-item-hover-color);
+    }
+
+    &.selected {
+        background-color: var(--dropdown-item-selected-bg);
+        color: var(--dropdown-item-selected-color);
+    }
+
+    &.disabled {
+        cursor: auto;
+    }
+
+    .title {
+        @include typography.regular14nocolor;
+        padding-bottom: 2px;
+    }
+    
+    .description {
+        @include typography.regular12nocolor;
+    }
+}
