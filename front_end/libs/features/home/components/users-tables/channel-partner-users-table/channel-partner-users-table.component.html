@@ -87,13 +87,18 @@
                                 [ngModel]="getRowRoleId(row)"
                                 (ngModelChange)="updateRole(row, $event)"
                             >
-                                @for (role of roles$$(); track role.id) {
-                                    <nx-select-item [value]="role.id">
+                                @for (role of rolesWithDescriptions$$(); track role.id) {
+                                    <nx-paragraph-select-item [value]="role.id">
                                         <nx-search-highlight
                                             [text]="role.name"
                                             [search]="searchingQuery$$()"
-                                        ></nx-search-highlight>
-                                    </nx-select-item>
+                                            title
+                                        >
+                                        </nx-search-highlight>
+                                        <div body>
+                                            {{ role.description | nxTranslate }}
+                                        </div>
+                                    </nx-paragraph-select-item>
                                 }
                             </nx-select-v2>
                         }
