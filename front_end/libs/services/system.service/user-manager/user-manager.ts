@@ -162,56 +162,59 @@ export class UserManager {
         return Array.from(new Set(permissions.split('|').sort())).join('|');
     }
 
-    processUsers(users: SystemUser[]): void {
-        const nxUsers = users.map<NxUser>(user => {
-            const { id, name, fullName, email, isEnabled } = user;
-            const isCloudOwner = this.isCloudOwner(user);
-            const isLocalOwner = this.isLocalOwner(user);
-            const isOwner = isCloudOwner || isLocalOwner || ('isAdmin' in user && !!user.isAdmin);
-            const type = coerceUserType(user);
+    processUser(user: SystemUser): NxUser {
+        const { id, name, fullName, email, isEnabled } = user;
+        const isCloudOwner = this.isCloudOwner(user);
+        const isLocalOwner = this.isLocalOwner(user);
+        const isOwner = isCloudOwner || isLocalOwner || ('isAdmin' in user && !!user.isAdmin);
+        const type = coerceUserType(user);
 
-            user.permissions = this.normalizePermissionString(user.permissions);
-            const role = this.getUserRole(user);
-            const permissions = this.normalizePermissionString(
-                [user.permissions, role.permissions].join('|'),
-            );
+        user.permissions = this.normalizePermissionString(user.permissions);
+        const role = this.getUserRole(user);
+        const permissions = this.normalizePermissionString(
+            [user.permissions, role.permissions].join('|'),
+        );
 
-            const canBeEdited = this.canBeEdited({
-                id,
-                isLocalOwner,
-                isCloudOwner,
-                permissions,
-            });
-
-            const postprocess: NxUser = {
-                hasCustomPermissions: false,
-                id,
-                name,
-                fullName,
-                email,
-
-                isAdmin: isOwner || isAdmin(user),
-                isEnabled,
-                isCloudOwner,
-                isLocalOwner,
-                isHttpDigestEnabled: false,
-                isOwner,
-                type,
-
-                permissions,
-                role,
-                get accessRole(): string {
-                    return role.name;
-                },
-                userRoleId: ('userRoleId' in user && user.userRoleId) || ZERO_ID,
-                canBeEdited,
-            };
-
-            if (this.userId === postprocess.id) {
-                this.currentUser = postprocess;
-            }
-            return postprocess;
+        const canBeEdited = this.canBeEdited({
+            id,
+            isLocalOwner,
+            isCloudOwner,
+            permissions,
         });
+
+        return {
+            hasCustomPermissions: false,
+            id,
+            name,
+            fullName,
+            email,
+
+            isAdmin: isOwner || isAdmin(user),
+            isEnabled,
+            isCloudOwner,
+            isLocalOwner,
+            isHttpDigestEnabled: false,
+            isOwner,
+            type,
+
+            permissions,
+            role,
+            get accessRole(): string {
+                return role.name;
+            },
+            userRoleId: ('userRoleId' in user && user.userRoleId) || ZERO_ID,
+            canBeEdited,
+        };
+    }
+
+    processUsers(users: SystemUser[]): void {
+        const currentUser = users.find(
+            user => user.id === this.userId || user.email === this.currentUserEmail,
+        );
+        if (currentUser) {
+            this.currentUser = this.processUser(currentUser as NxUser);
+        }
+        const nxUsers = users.map<NxUser>(user => this.processUser(user));
 
         this.users = nxUsers.sort((a, b) => {
             if (a.type === UserType.cloud && b.type === UserType.cloud) {
