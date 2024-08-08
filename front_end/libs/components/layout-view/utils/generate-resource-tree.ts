@@ -186,6 +186,12 @@ export const generateResourceTree = ([
                 type: ResourceType.LAYOUTS,
                 children: layoutsForTree,
             },
+            {
+                name: staticLang.layouts.titles.resourceTypes[ResourceType.CAMERAS],
+                details: { id: ResourceType.CAMERAS },
+                type: ResourceType.CAMERAS,
+                children: camerasForTree,
+            },
             (nxConfig.featureFlags.layoutsServers || nxConfig.featureFlags.layoutsDemo) && {
                 name: staticLang.layouts.titles.resourceTypes[ResourceType.SERVERS],
                 details: { id: ResourceType.SERVERS },
@@ -195,12 +201,6 @@ export const generateResourceTree = ([
                     children: [],
                     // children: camerasForTree.filter(({ details: { parentId } }) => parentId === server.details.id)
                 })),
-            },
-            {
-                name: staticLang.layouts.titles.resourceTypes[ResourceType.CAMERAS],
-                details: { id: ResourceType.CAMERAS },
-                type: ResourceType.CAMERAS,
-                children: camerasForTree,
             },
             (nxConfig.featureFlags.layoutsWebpages || nxConfig.featureFlags.layoutsDemo) && {
                 name: staticLang.layouts.titles.resourceTypes[ResourceType.WEB_PAGES],
