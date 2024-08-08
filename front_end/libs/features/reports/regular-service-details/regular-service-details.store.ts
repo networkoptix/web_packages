@@ -1,4 +1,5 @@
 import { computed, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
@@ -16,6 +17,8 @@ import {
     Service,
     SystemRegularServiceEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import { HiddenNameLink } from '../hidden-name-link/hidden-name-link.types';
 
 interface RegularServiceDetailsState {
     error: string;
@@ -52,83 +55,113 @@ const getChangedColumnText = (
 
 export const RegularServiceDetailsStore = signalStore(
     withState(initialState),
-    withComputed((store, dateTimeFormat = inject(NxDateTimeFormatService)) => ({
-        entityRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
-            store
-                .entityRegularServices()
-                .map(
-                    ({
-                        id,
-                        type,
-                        name,
-                        changes_count,
-                        last_changed,
-                        channels,
-                        monthly_rate,
-                        daily_rate,
-                    }) => ({
-                        id,
-                        type,
-                        usedBy: name,
-                        changed: getChangedColumnText(changes_count, last_changed, dateTimeFormat),
-                        channels,
-                        monthlyRate: monthly_rate,
-                        fractionalUsage: daily_rate,
-                    }),
-                ),
-        ),
-        entityRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
-            store.entityRegularServices().reduce(
-                ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
-                    channels: channels + serviceChangeEntry.channels,
-                    monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
-                    fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
-                }),
-                {
-                    channels: 0,
-                    monthlyRate: 0,
-                    fractionalUsage: 0,
-                },
+    withComputed(
+        (
+            store,
+            dateTimeFormat = inject(NxDateTimeFormatService),
+            route = inject(ActivatedRoute),
+        ) => ({
+            entityRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
+                store
+                    .entityRegularServices()
+                    .map(
+                        (
+                            {
+                                id,
+                                type,
+                                name,
+                                changes_count,
+                                last_changed,
+                                channels,
+                                monthly_rate,
+                                daily_rate,
+                            },
+                            i,
+                        ) => {
+                            let usedBy: string | HiddenNameLink;
+                            if (name === '**REDACTED**') {
+                                const { params } = route.snapshot;
+                                const currentUrl = window.location.href;
+                                usedBy = {
+                                    name: `Hidden Name ${i + 1}`,
+                                    url: currentUrl.replace(params.entityId, id),
+                                };
+                            } else {
+                                usedBy = name;
+                            }
+                            return {
+                                id,
+                                type,
+                                usedBy,
+                                changed: getChangedColumnText(
+                                    changes_count,
+                                    last_changed,
+                                    dateTimeFormat,
+                                ),
+                                channels,
+                                monthlyRate: monthly_rate,
+                                fractionalUsage: daily_rate,
+                            };
+                        },
+                    ),
             ),
-        ),
-        systemRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
-            store
-                .systemRegularServices()
-                .map(
-                    ({
-                        system_id,
-                        system_name,
-                        changes_count,
-                        last_changed,
-                        channels,
-                        monthly_rate,
-                        daily_rate,
-                    }) => ({
-                        id: system_id,
-                        type: 'system',
-                        usedBy: system_name,
-                        changed: getChangedColumnText(changes_count, last_changed, dateTimeFormat),
-                        channels,
-                        monthlyRate: monthly_rate,
-                        fractionalUsage: daily_rate,
+            entityRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
+                store.entityRegularServices().reduce(
+                    ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
+                        channels: channels + serviceChangeEntry.channels,
+                        monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
+                        fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
                     }),
+                    {
+                        channels: 0,
+                        monthlyRate: 0,
+                        fractionalUsage: 0,
+                    },
                 ),
-        ),
-        systemRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
-            store.systemRegularServices().reduce(
-                ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
-                    channels: channels + serviceChangeEntry.channels,
-                    monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
-                    fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
-                }),
-                {
-                    channels: 0,
-                    monthlyRate: 0,
-                    fractionalUsage: 0,
-                },
             ),
-        ),
-    })),
+            systemRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
+                store
+                    .systemRegularServices()
+                    .map(
+                        ({
+                            system_id,
+                            system_name,
+                            changes_count,
+                            last_changed,
+                            channels,
+                            monthly_rate,
+                            daily_rate,
+                        }) => ({
+                            id: system_id,
+                            type: 'system',
+                            usedBy: system_name,
+                            changed: getChangedColumnText(
+                                changes_count,
+                                last_changed,
+                                dateTimeFormat,
+                            ),
+                            channels,
+                            monthlyRate: monthly_rate,
+                            fractionalUsage: daily_rate,
+                        }),
+                    ),
+            ),
+            systemRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
+                store.systemRegularServices().reduce(
+                    ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
+                        channels: channels + serviceChangeEntry.channels,
+                        monthlyRate: monthlyRate + serviceChangeEntry.monthly_rate,
+                        fractionalUsage: fractionalUsage + serviceChangeEntry.daily_rate,
+                    }),
+                    {
+                        channels: 0,
+                        monthlyRate: 0,
+                        fractionalUsage: 0,
+                    },
+                ),
+            ),
+        }),
+    ),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
         async loadPartnerRegularServiceReport(
             partnerId: string,

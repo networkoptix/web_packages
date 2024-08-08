@@ -1,7 +1,9 @@
+import { HiddenNameLink } from '../hidden-name-link/hidden-name-link.types';
+
 export interface FormattedRegularServiceRecord {
     id: string;
     type: string;
-    usedBy: string;
+    usedBy: string | HiddenNameLink;
     changed: string;
     channels: number;
     monthlyRate: number;

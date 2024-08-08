@@ -7,6 +7,8 @@ import { NxHintComponent } from '@components/hint/hint.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';
+import { NxHiddenNameLinkComponent } from '@pages/reports/hidden-name-link/hidden-name-link.component';
+import { HiddenNameLink } from '@pages/reports/hidden-name-link/hidden-name-link.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ExpiringServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -26,7 +28,13 @@ interface HEADER_ITEM {
     selector: 'nx-expiring-service-table',
     templateUrl: './expiring-service-table.component.html',
     styleUrls: ['./expiring-service-table.component.scss'],
-    imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
+    imports: [
+        TranslateModule,
+        NxBaseTableComponent,
+        CommonModule,
+        NxHintComponent,
+        NxHiddenNameLinkComponent,
+    ],
     standalone: true,
 })
 export class NxExpiringServiceTableComponent {
@@ -56,10 +64,14 @@ export class NxExpiringServiceTableComponent {
         private CPService: NxChannelPartnersService,
     ) {}
 
+    isHiddenNameLink(usedBy: string | HiddenNameLink): boolean {
+        return typeof usedBy !== 'string';
+    }
+
     openExpiringServiceDetailsDialog({
         id: entityId,
         type: entityType,
-        usedBy: entityName,
+        usedBy,
         hasMultipleExpirations,
     }: FormattedExpiringServiceRecord): void {
         if (!hasMultipleExpirations) {
@@ -91,7 +103,7 @@ export class NxExpiringServiceTableComponent {
                     startTs,
                 );
         }
-
+        const entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
         this.dialogsService.viewExpiringServiceDetails({ expiringServiceDialogData$, entityName });
     }
 }

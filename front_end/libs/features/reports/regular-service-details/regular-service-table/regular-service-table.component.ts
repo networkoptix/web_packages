@@ -6,10 +6,13 @@ import { Observable } from 'rxjs';
 import { NxHintComponent } from '@components/hint/hint.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language/language_i18n_static.json';
+import { HiddenNameLink } from '@pages/reports/hidden-name-link/hidden-name-link.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { RegularServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+import { NxHiddenNameLinkComponent } from '../../hidden-name-link/hidden-name-link.component';
 import {
     RegularServiceTotals,
     type FormattedRegularServiceRecord,
@@ -26,7 +29,14 @@ interface HEADER_ITEM {
     selector: 'nx-regular-service-table',
     templateUrl: './regular-service-table.component.html',
     styleUrls: ['./regular-service-table.component.scss'],
-    imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
+    imports: [
+        TranslateModule,
+        NxBaseTableComponent,
+        CommonModule,
+        NxHintComponent,
+        NxTooltipV2Directive,
+        NxHiddenNameLinkComponent,
+    ],
     standalone: true,
 })
 export class NxRegularServiceTableComponent {
@@ -66,10 +76,14 @@ export class NxRegularServiceTableComponent {
         private CPService: NxChannelPartnersService,
     ) {}
 
+    isHiddenNameLink(usedBy: string | HiddenNameLink): boolean {
+        return typeof usedBy !== 'string';
+    }
+
     openRegularServiceDetailsDialog({
         id: entityId,
         type: entityType,
-        usedBy: entityName,
+        usedBy,
     }: FormattedRegularServiceRecord): void {
         const serviceId = this.serviceId();
         const parentEntityId = this.entityId();
@@ -106,6 +120,7 @@ export class NxRegularServiceTableComponent {
                 );
         }
 
+        const entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
         this.dialogsService.viewRegularServiceDetails({ regularServiceDialogData$, entityName });
     }
 }
