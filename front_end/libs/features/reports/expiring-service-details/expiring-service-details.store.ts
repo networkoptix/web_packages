@@ -1,4 +1,5 @@
 import { computed, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,6 +13,8 @@ import {
     Service,
     SystemExpiringServiceEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import { HiddenNameLink } from '../hidden-name-link/hidden-name-link.types';
 
 import {
     ExpiringServiceTotals,
@@ -53,50 +56,71 @@ function formatExpirations(expirations: string[], dateTimeFormat: NxDateTimeForm
 
 export const ExpiringServiceDetailsStore = signalStore(
     withState(initialState),
-    withComputed((store, dateTimeFormat = inject(NxDateTimeFormatService)) => ({
-        entityExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
-            store.entityExpiringServices().map(({ id, type, name, channels, expirations }) => ({
-                id,
-                type,
-                usedBy: name,
-                channels,
-                expirationDate: formatExpirations(expirations, dateTimeFormat),
-                hasMultipleExpirations: expirations.length > 1,
-            })),
-        ),
-        entityExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
-            store.entityExpiringServices().reduce(
-                (totals, expiringServiceEntry) => ({
-                    channels: totals.channels + expiringServiceEntry.channels,
-                }),
-                {
-                    channels: 0,
-                },
+    withComputed(
+        (
+            store,
+            dateTimeFormat = inject(NxDateTimeFormatService),
+            route = inject(ActivatedRoute),
+        ) => ({
+            entityExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
+                store
+                    .entityExpiringServices()
+                    .map(({ id, type, name, channels, expirations }, i) => {
+                        let usedBy: string | HiddenNameLink;
+                        if (name === '**REDACTED**') {
+                            const { params } = route.snapshot;
+                            const currentUrl = window.location.href;
+                            usedBy = {
+                                name: `Hidden Name ${i + 1}`,
+                                url: currentUrl.replace(params.entityId, id),
+                            };
+                        } else {
+                            usedBy = name;
+                        }
+                        return {
+                            id,
+                            type,
+                            usedBy,
+                            channels,
+                            expirationDate: formatExpirations(expirations, dateTimeFormat),
+                            hasMultipleExpirations: expirations.length > 1,
+                        };
+                    }),
             ),
-        ),
-        systemExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
-            store
-                .systemExpiringServices()
-                .map(({ system_id, system_name, channels, expiration_date }) => ({
-                    id: system_id,
-                    type: 'system',
-                    usedBy: system_name,
-                    channels,
-                    expirationDate: expiration_date,
-                    hasMultipleExpirations: false,
-                })),
-        ),
-        systemExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
-            store.systemExpiringServices().reduce(
-                (totals, expiringServiceEntry) => ({
-                    channels: totals.channels + expiringServiceEntry.channels,
-                }),
-                {
-                    channels: 0,
-                },
+            entityExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
+                store.entityExpiringServices().reduce(
+                    (totals, expiringServiceEntry) => ({
+                        channels: totals.channels + expiringServiceEntry.channels,
+                    }),
+                    {
+                        channels: 0,
+                    },
+                ),
             ),
-        ),
-    })),
+            systemExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
+                store
+                    .systemExpiringServices()
+                    .map(({ system_id, system_name, channels, expiration_date }) => ({
+                        id: system_id,
+                        type: 'system',
+                        usedBy: system_name,
+                        channels,
+                        expirationDate: expiration_date,
+                        hasMultipleExpirations: false,
+                    })),
+            ),
+            systemExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
+                store.systemExpiringServices().reduce(
+                    (totals, expiringServiceEntry) => ({
+                        channels: totals.channels + expiringServiceEntry.channels,
+                    }),
+                    {
+                        channels: 0,
+                    },
+                ),
+            ),
+        }),
+    ),
     withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
         async loadPartnerExpiringServiceReport(
             partnerId: string,

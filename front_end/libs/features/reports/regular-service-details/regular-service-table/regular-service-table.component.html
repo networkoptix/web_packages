@@ -29,7 +29,11 @@
         let-row
     >
         <div>
-            {{ row.usedBy }}
+            @if (isHiddenNameLink(row.usedBy)) {
+                <nx-hidden-name-link [link]="row.usedBy" />
+            } @else {
+                <span>{{ row.usedBy }}</span>
+            }
         </div>
         <div class="align-right">
             {{ row.changed }}
