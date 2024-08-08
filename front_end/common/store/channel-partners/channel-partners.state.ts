@@ -26,6 +26,7 @@ export interface ChannelPartnersState {
     currentPartnerSupportInformation: SupportInformationServer | undefined;
     currentOrgId: string;
     currentSubChannels: ChannelPartner[];
+    currentSubchannelId: string | null;
     currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
     organizations: Organization[];

@@ -65,7 +65,7 @@ import { NxStateSettingBlockComponent } from '../state-setting-block/state-setti
         NxApplyV3Module,
     ],
 })
-export class NxOrganizationSettingsV3Component {
+export class NxOrganizationSettingsComponent {
     LANG = LANG;
     icons = icons;
     State = State;

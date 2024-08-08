@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, OnDestroy, computed, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { switchMap } from 'rxjs';
 
-import { selectSubchannelPartner } from '@common/store/channel-partners/channel-partners.selectors';
+import { selectCurrentSubChannel } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
+import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -30,9 +31,10 @@ import { icons } from '@variables/static-variables';
         TranslateModule,
     ],
 })
-export class NxSubchannelComponent {
+export class NxSubchannelComponent implements OnDestroy {
     LANG = staticLang;
     icons = icons;
+    State = State;
 
     permissionStore = inject(PermissionsStore);
     tabs = computed<Tab[]>(() => {
@@ -51,21 +53,25 @@ export class NxSubchannelComponent {
         }
         return tabs;
     });
-    currentSubChannel$$ = toSignal(
-        this.route.params.pipe(
-            switchMap(({ subChannelId }) =>
-                this.store.select(selectSubchannelPartner(subChannelId)),
-            ),
-        ),
-    );
+    currentSubChannel = computed(() => this.store.selectSignal(selectCurrentSubChannel)()!);
+    effectiveState = computed(() => this.currentSubChannel().effectiveState);
+
     constructor(
-        private route: ActivatedRoute,
+        route: ActivatedRoute,
         private router: Router,
         private store: Store,
-    ) {}
+    ) {
+        route.params.pipe(takeUntilDestroyed()).subscribe(params => {
+            store.dispatch(CPActions.setCurrentSubChannelId({ id: params.subChannelId }));
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.store.dispatch(CPActions.setCurrentSubChannelId({ id: null }));
+    }
 
     toRoot(): Promise<boolean> {
-        const id = this.currentSubChannel$$()!.parentChannelPartner;
+        const id = this.currentSubChannel().parentChannelPartner;
         return this.router.navigate([PartnerRedirect.toPartnerSubChannels(id)]);
     }
 }

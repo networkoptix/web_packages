@@ -1,0 +1,6 @@
+@use '../settings.scss';
+
+:host {
+    @include settings.settings-page-base();
+}
+@include settings.settings-block();
