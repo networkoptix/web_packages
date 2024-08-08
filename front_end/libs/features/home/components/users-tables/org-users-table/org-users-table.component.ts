@@ -161,33 +161,22 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
 
     deleteUser(user: UserRecord): void {
         let message: string;
-        switch (user.groupRoles?.length) {
-            case 0:
-                message = this.translateService.instant(
-                    this.LANG.channelPartners.usersTable.deleteDialog.singleOrgMessage,
-                    {
-                        name: user.email,
-                        organization: this.currentOrg$$().name,
-                    },
-                );
-                break;
-            case 1:
-                message = this.translateService.instant(
-                    this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
-                    {
-                        name: user.email,
-                        folder: escape(user.groupRoles[0].name),
-                    },
-                );
-                break;
-            default:
-                message = this.translateService.instant(
-                    this.LANG.channelPartners.usersTable.deleteDialog.multipleFoldersMessage,
-                    {
-                        name: user.email,
-                        count: user.groupRoles?.length,
-                    },
-                );
+        if (user.isOrgUser) {
+            message = this.translateService.instant(
+                this.LANG.channelPartners.usersTable.deleteDialog.singleOrgMessage,
+                {
+                    name: user.email,
+                    organization: this.currentOrg$$().name,
+                },
+            );
+        } else {
+            message = this.translateService.instant(
+                this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
+                {
+                    name: user.email,
+                    folder: escape(user.accessLevel?.name),
+                },
+            );
         }
         this.dialogService
             .confirm(
