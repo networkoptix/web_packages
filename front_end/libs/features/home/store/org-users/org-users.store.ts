@@ -202,6 +202,7 @@ function getUsersByModel(
             ...user.groupRoles.map(
                 groupRole => LANG.channelPartners.orgs.orgRoleInfo[groupRole.rolesIds[0]].name,
             ),
+            ...user.groupRoles.map(groupRole => groupRole.name),
         ];
 
         if (user.userType === UserType.ORGANIZATION) {

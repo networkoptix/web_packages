@@ -112,10 +112,9 @@
                         ></svg-icon>
                         @if (!row?.groupRoles) {
                             <nx-search-highlight
-                                [text]="currentOrg$$().name"
+                                [text]="row.accessLevel.name"
                                 [search]="searchingQuery$$()"
                             ></nx-search-highlight>
-                            {{ row.accessLevel.name }}
                         } @else if (row.groupRoles.length === 1) {
                             <nx-search-highlight
                                 [text]="row.groupRoles[0].name"
