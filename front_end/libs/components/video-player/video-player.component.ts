@@ -24,6 +24,7 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { nxConfig } from '@services/nx-config/config';
+import { cleanId } from '@utils/general';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -211,7 +212,7 @@ export class NxVideoPlayerComponent {
         const hasSecondary = availableStreams.includes(AvailableStreams.SECONDARY);
         const targetStream = availableStreams.length ? TargetStream.AUTO : hasSecondary ? TargetStream.LOW : TargetStream.HIGH
 
-        const stream$ = WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, accessToken: this.camera.accessToken, targetStream }, this.originalStream.nativeElement).pipe(
+        const stream$ = WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, serverId: cleanId(this.camera.parentId), accessToken: this.camera.accessToken, targetStream }, this.originalStream.nativeElement).pipe(
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {

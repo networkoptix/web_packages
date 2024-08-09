@@ -940,6 +940,7 @@ export class WebRTCStreamManager {
         return this.apiVersion
     }
 
+    private useProxy = false;
     private serverId: string;
 
     private codecChanged = 0;
@@ -1017,15 +1018,18 @@ export class WebRTCStreamManager {
                 return fetchCurrentStream();
             });
 
-            if (!this.serverId && this.apiVersion === ApiVersions.v1) {
+            if (!this.serverId && !this.useProxy) {
                 this.serverId = cleanId((await fetchStreams).serverId);
             }
 
-            if (this.serverId) {
+            const directConnect = !this.useProxy && !!this.serverId;
+
+            if (directConnect) {
                 webRtcUrl += `x-server-guid=${this.serverId}&`
             }
 
-            const resolvedHost = await fetch(`https://${relayHost}/api/ping?${this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
+
+            const resolvedHost = await fetch(`https://${relayHost}/api/ping?${directConnect ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
             if (resolvedHost) {
                 if (this.accessToken) {
@@ -1039,7 +1043,11 @@ export class WebRTCStreamManager {
                             return requeue();
                         }
                     } else {
-                        const oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
+                        let oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
+
+                        if (directConnect) {
+                            oneTimeTokenEndpoint += `?x-server-guid=${this.serverId}&`
+                        }
 
                         const oneTimeToken = await fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken}` }, method: 'POST'}).then(response => response.json()).then(res => {
                             return res.token;
@@ -1054,6 +1062,7 @@ export class WebRTCStreamManager {
                 }
                 webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
             } else {
+                this.useProxy = true;
                 return requeue();
             }
 
