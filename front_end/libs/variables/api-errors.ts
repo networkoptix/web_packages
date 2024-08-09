@@ -39,20 +39,23 @@ function isApiError<E extends HttpErrorResponse>() {
     };
 }
 
-/** When an owner action is attempted on Cloud DB with an expired session */
+/** When an owner action is attempted on Cloud DB with an expired session
+ *
+ * Org systems return 400 instead of 401. This might be changed in the future,
+ * but handle both in hotfix for now.
+ */
 export type UserPasswordRequiredError = ApiError<
-    401,
+    400 | 401,
     {
         errorData: null;
         errorText: ResultCodes.UserPasswordRequired;
         resultCode: ResultCodes.UserPasswordRequired;
     }
 >;
-export const isUserPwRequiredError = isApiError<UserPasswordRequiredError>()(
-    401,
-    'resultCode',
-    ResultCodes.UserPasswordRequired,
-);
+export const isUserPwRequiredError = (err: unknown): err is UserPasswordRequiredError =>
+    err instanceof HttpErrorResponse &&
+    (err.status === 400 || err.status === 401) &&
+    err.error?.resultCode === ResultCodes.UserPasswordRequired;
 
 /** When an action is attempted on the server with insufficient permissions */
 export type ForbiddenError = ApiError<
