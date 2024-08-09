@@ -473,6 +473,17 @@ export function ariaDisabledValue(state: boolean): AriaDisabledValue {
     return state ? 'true' : 'false';
 }
 
+/** Check whether a mouse event is inside an element */
+export function clickedInside(
+    { pageX: eventX, pageY: eventY }: Pick<MouseEvent, 'pageX' | 'pageY'>,
+    element: HTMLElement,
+): boolean {
+    const elemRect = element.getBoundingClientRect();
+    const withinHorizontal = elemRect.left <= eventX && eventX <= elemRect.right;
+    const withinVertical = elemRect.top <= eventY && eventY <= elemRect.bottom;
+    return withinHorizontal && withinVertical;
+}
+
 /* Async */
 /**
  * Use for async tasks that run quickly but for the UI you'd like to delay initial output of stream.

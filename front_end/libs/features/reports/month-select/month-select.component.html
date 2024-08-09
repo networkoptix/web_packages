@@ -2,8 +2,8 @@
     class="arrow-btn arrow-btn--decrement"
     data-escape-global-style
     cdkOverlayOrigin
-    #trigger="cdkOverlayOrigin"
-    (click)="decrementMonth()"
+    #origin="cdkOverlayOrigin"
+    (click)="decrement()"
 >
     <svg-icon [src]="icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
 </button>
@@ -17,14 +17,15 @@
 <button
     class="arrow-btn arrow-btn--increment"
     data-escape-global-style
-    (click)="incrementMonth()"
+    (click)="increment()"
 >
     <svg-icon [src]="icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
 </button>
 <ng-template
     cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayOpen]="isMenuOpen()"
+    (overlayOutsideClick)="onOutsideClick($event)"
 >
     <div class="month-menu">
         @for (month of longMonths; track $index) {
