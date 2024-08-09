@@ -1,11 +1,20 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, Output, computed, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    Output,
+    computed,
+    signal,
+} from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { icons } from '@static-variables';
+import { clickedInside } from '@utils/general';
 
 @Component({
     selector: 'nx-month-select',
@@ -42,7 +51,10 @@ export class NxMonthSelectComponent {
         return isMenuOpen ? this.yearFormat.format(date) : this.longMonthYearFormat.format(date);
     });
 
-    constructor(nxDatetime: NxDateTimeFormatService) {
+    constructor(
+        private host: ElementRef<HTMLElement>,
+        nxDatetime: NxDateTimeFormatService,
+    ) {
         const longMonth = new Intl.DateTimeFormat(nxDatetime.locale, { month: 'long' });
         const date = new Date();
         for (let i = 0; i < 12; i++) {
@@ -62,7 +74,7 @@ export class NxMonthSelectComponent {
         this.isMenuOpen.update(isOpen => !isOpen);
     }
 
-    decrementMonth(): void {
+    decrement(): void {
         if (this.isMenuOpen()) {
             this.year.update(y => y - 1);
             return;
@@ -75,7 +87,7 @@ export class NxMonthSelectComponent {
         }
     }
 
-    incrementMonth(): void {
+    increment(): void {
         if (this.isMenuOpen()) {
             this.year.update(y => y + 1);
             return;
@@ -85,6 +97,12 @@ export class NxMonthSelectComponent {
             this.year.update(y => y + 1);
         } else {
             this.monthIndex.update(m => m + 1);
+        }
+    }
+
+    onOutsideClick(event: MouseEvent): void {
+        if (!clickedInside(event, this.host.nativeElement)) {
+            this.isMenuOpen.set(false);
         }
     }
 }
