@@ -260,6 +260,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         () => this.system.permissionManager.isOwner$$() || this.manageOrgSystems$$(),
     );
 
+    showPermissions$$ = computed(
+        () => this.system.permissionManager.isAdmin$$() && this.cloudSystemType$$() === 'org',
+    );
+
     systemOfferedToUser$$ = computed<boolean>(() => {
         const [transferInfo, currentUser] = [
             this.transferInfo$$(),

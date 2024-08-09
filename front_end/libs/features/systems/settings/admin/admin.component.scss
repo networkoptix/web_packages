@@ -30,4 +30,9 @@
             color: var(--anchor-color);
         }
     }
+
+    .permissions-row {
+        justify-content: space-between;
+        align-items: center;
+    }
 }

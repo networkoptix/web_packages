@@ -117,53 +117,56 @@
                     </div>
                 }
             </header>
+            <ng-template #permissions>
+                <span
+                    *ngIf="userRole$$()"
+                    class="system-owner"
+                >
+                    <ng-container *ngIf="!showNewText; else newText">
+                        <span
+                            translate
+                            data-testid="accessLevelText"
+                            >Your access level</span
+                        >
+                    </ng-container>
+                    <ng-template #newText>
+                        <span
+                            translate
+                            data-testid="accessLevelText"
+                            >Your permissions</span
+                        >
+                    </ng-template>
+                    <span>&nbsp;– </span>
+                    <ng-container *ngIf="permissionGroupsCount > 1; else oneGroup">
+                        <span
+                            class="group-count-container"
+                            [nxTooltip]="userGroups"
+                            topBottom
+                            alternateSecondary
+                        >
+                            <ng-template #userGroups>
+                                <nx-ml-ellipsis-clamp [viewLines]="5">
+                                    {{ userRole$$() | translate }}
+                                </nx-ml-ellipsis-clamp>
+                            </ng-template>
+                            <span
+                                class="group-count"
+                                [translate]="LANG.groupCount"
+                                [translateParams]="{ count: permissionGroupsCount }"
+                            ></span>
+                        </span>
+                    </ng-container>
+                    <ng-template #oneGroup>
+                        <span
+                            class="name"
+                            [innerText]="userRole$$() | translate"
+                        ></span>
+                    </ng-template>
+                </span>
+            </ng-template>
             <ng-template #notMine>
                 <nx-section>
-                    <span
-                        *ngIf="userRole$$()"
-                        class="system-owner"
-                    >
-                        <ng-container *ngIf="!showNewText; else newText">
-                            <span
-                                translate
-                                data-testid="accessLevelText"
-                                >Your access level</span
-                            >
-                        </ng-container>
-                        <ng-template #newText>
-                            <span
-                                translate
-                                data-testid="accessLevelText"
-                                >Your permissions</span
-                            >
-                        </ng-template>
-                        <span>&nbsp;– </span>
-                        <ng-container *ngIf="permissionGroupsCount > 1; else oneGroup">
-                            <span
-                                class="group-count-container"
-                                [nxTooltip]="userGroups"
-                                topBottom
-                                alternateSecondary
-                            >
-                                <ng-template #userGroups>
-                                    <nx-ml-ellipsis-clamp [viewLines]="5">
-                                        {{ userRole$$() | translate }}
-                                    </nx-ml-ellipsis-clamp>
-                                </ng-template>
-                                <span
-                                    class="group-count"
-                                    [translate]="LANG.groupCount"
-                                    [translateParams]="{ count: permissionGroupsCount }"
-                                ></span>
-                            </span>
-                        </ng-container>
-                        <ng-template #oneGroup>
-                            <span
-                                class="name"
-                                [innerText]="userRole$$() | translate"
-                            ></span>
-                        </ng-template>
-                    </span>
+                    <ng-container *ngTemplateOutlet="permissions"></ng-container>
                     <div
                         class="mt-2"
                         *ngIf="!environment.isLocal && isOrgUser$$() === false"
@@ -180,15 +183,22 @@
                     </div>
                 </nx-section>
             </ng-template>
-            <nx-section
-                *ngIf="canManageSystem$$() && !system.permissionManager.isAdmin$$(); else notMine"
-            >
-                <div class="row m-0">
-                    <div class="col-lg-6 pl-0">
+            <nx-section>
+                <div
+                    *ngIf="canManageSystem$$(); else notMine"
+                    class="row m-0"
+                    [ngClass]="{ 'permissions-row': showPermissions$$() }"
+                >
+                    <div *ngIf="showPermissions$$()">
+                        <ng-container *ngTemplateOutlet="permissions"></ng-container>
+                    </div>
+                    <div
+                        *ngIf="cloudSystemType$$() !== 'org'"
+                        class="col-lg-6 pl-0"
+                    >
                         <div class="float-left mr-2">
                             <!-- Cloud merge not supported for v1 of org systems -->
                             <button
-                                *ngIf="cloudSystemType$$() !== 'org'"
                                 class="btn btn-default"
                                 [disabled]="merging || !system.isOnline || !system.isAvailable"
                                 (click)="mergeSystems()"
