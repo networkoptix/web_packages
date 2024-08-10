@@ -1854,8 +1854,7 @@
             "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
             "User does not exist in group": "User does not exist in group",
             "alreadyInFolder": "This { type } is already in the selected folder",
-            "alreadyInRoot": "This { type } is already in root",
-            "childInFolder": "Cannot move folder into its own child folder"
+            "folderInBranch": "Cannot move folder into itself nor into its child folders"
         },
         "status": {
             "active": "Active",
