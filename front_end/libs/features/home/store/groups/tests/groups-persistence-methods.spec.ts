@@ -122,10 +122,10 @@ describe('Groups Store: Persistence Methods', () => {
 
                 detectChanges();
 
-                expect(result).toBe(errorMsg.alreadyInRoot);
+                expect(result).toBe(errorMsg.alreadyInFolder);
                 expect(
                     (groupsStore.currentRibbonContext$$()!.message as TranslateObject).value,
-                ).toBe(errorMsg.alreadyInRoot);
+                ).toBe(errorMsg.alreadyInFolder);
             });
 
             xit('should show childInFolder error when moving group to a child', async () => {
@@ -138,10 +138,10 @@ describe('Groups Store: Persistence Methods', () => {
                     groupsStore.moveItem(parentGroup, childGroup),
                 ).catch(error => error as string);
 
-                expect(result).toBe(errorMsg.childInFolder);
+                expect(result).toBe(errorMsg.folderInBranch);
                 expect(
                     (groupsStore.currentRibbonContext$$()!.message as TranslateObject).value,
-                ).toBe(errorMsg.childInFolder);
+                ).toBe(errorMsg.folderInBranch);
             });
         });
 

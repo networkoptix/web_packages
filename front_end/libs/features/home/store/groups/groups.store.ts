@@ -375,22 +375,20 @@ export const GroupsStore = signalStore(
                     value: isGroupItem(movedItem) ? draggableType.folder : draggableType.system,
                 };
                 if (
-                    isGroupItem(movedItem) &&
-                    movedItem.children &&
-                    findItem(movedItem.children, targetItem.id)
+                    (isGroupItem(movedItem) &&
+                        movedItem.children &&
+                        findItem(movedItem.children, targetItem.id)) ||
+                    ('id' in movedItem && movedItem.id === targetItem.id)
                 ) {
-                    const value = errorMsg.childInFolder;
+                    const value = errorMsg.folderInBranch;
                     store.showRibbon({ value, params: { type } });
                     return from(Promise.reject(value));
                 }
 
                 const targetGroupId = store.getTargetGroupId(movedItem);
 
-                if (
-                    targetGroupId === targetItem.id ||
-                    ('id' in movedItem && movedItem.id === targetItem.id)
-                ) {
-                    const value = targetGroupId ? errorMsg.alreadyInFolder : errorMsg.alreadyInRoot;
+                if (targetGroupId === targetItem.id) {
+                    const value = errorMsg.alreadyInFolder;
                     store.showRibbon({ value, params: { type } });
                     return from(Promise.reject(value));
                 }
