@@ -1,7 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
 import { WebSocketSubject } from 'rxjs/webSocket';
-import { BufferHandler, SignalingMessage, StreamHandler } from './types';
+import { BufferHandler, ConnectionType, SignalingMessage, StreamHandler } from './types';
 import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
@@ -18,6 +18,8 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         if (this.iceConnectionState === 'connected') {
             this.logger?.log('peerConnection connected, closing websocket');
             this.closeWebsocket();
+            const  { local: { type: localCandidateType }, remote: { type: remoteCandidateType }} = this.sctp.transport.iceTransport.getSelectedCandidatePair();
+            this.updateConnectionType({ localCandidateType, remoteCandidateType });
         } else if (this.iceConnectionState === 'disconnected') {
             this.logger?.log('peerConnection disconnected, reconnecting websocket');
             this.reconnectionHandler(false);
@@ -41,6 +43,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         bufferHandler: BufferHandler,
         private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number, speed: number | 'unlimited' },
         private handleDataChannelMessage: (message: string) => void,
+        public updateConnectionType: (connectionType: Partial<ConnectionType>) => void,
         private logger?: Console,
     ) {
         super({

@@ -5,9 +5,9 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, disti
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
+import { ConnectionQueue, WithSkip, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -864,6 +864,7 @@ export class WebRTCStreamManager {
         }
 
         if ('sdp' in signal) {
+            const remote = new RTCSessionDescription(signal.sdp)
             this.peerConnection
                 .setRemoteDescription(new RTCSessionDescription(signal.sdp))
                 .then(() => {
@@ -1188,6 +1189,12 @@ export class WebRTCStreamManager {
         }
     }
 
+    connectionType: ConnectionType = {
+        usingRelay: false,
+        remoteCandidateType: 'host',
+        localCandidateType: 'host',
+    }
+
     /**
      * Ensures that peer connection to mediaserver has been initialized.
      */
@@ -1208,10 +1215,24 @@ export class WebRTCStreamManager {
                 speed: this.speed$.value.value
             }),
             this.handleDataChannelMessage,
+            this.updateConnectionType,
             WebRTCStreamManager.logger,
         );
 
         this.updateTrackerConnections();
+    };
+
+    public updateConnectionType = (connectionType: Partial<ConnectionType>) => {
+        connectionType = {...this.connectionType, ...connectionType};
+        if(
+            ([
+                'remoteCandidateType',
+                'localCandidateType'] as const
+            ).some(key => connectionType[key] !== this.connectionType[key])
+        ) {
+            connectionType.usingRelay = [connectionType.remoteCandidateType, connectionType.localCandidateType].includes('relay');
+            this.connectionType = connectionType as ConnectionType;
+        }
     };
 
     private generateWebRtcUrl = (config: WebRtcUrlConfig): WebRtcUrlFactory => {

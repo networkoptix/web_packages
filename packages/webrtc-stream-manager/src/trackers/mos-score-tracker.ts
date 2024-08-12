@@ -1,8 +1,8 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
+import { IssuePayload } from "webrtc-issue-detector";
 import { MediaServerPeerConnection } from "../media-server-peer-connection";
-import { RTCStatReportTypes, CandidatePairReport, InboundRtpReport } from "../types";
-import { BaseConnectionTracker } from "./base-connection-tracker";
+import { CandidatePairReport, InboundRtpReport, ConnectionType } from "../types";
 import { BaseTracker } from "./base-tracker";
 import { WebRTCIssueDetectorWithState } from "./webrtc-issue-detector";
 
@@ -49,16 +49,26 @@ export class MosScoreTracker extends BaseTracker<number> {
     public updateConnection(connection: MediaServerPeerConnection) {
         this.destroy?.();
         this.connection = connection;
-        this.destroy = WebRTCIssueDetectorWithState.track(this.connection, mos => {
-            if (mos) {
-                this.currentValue = mos;
+        this.destroy = WebRTCIssueDetectorWithState.track(
+            this.connection,
+            (mos) => {
+                if (mos) {
+                    this.currentValue = mos;
+                }
+            },
+            (issues) => {
+                this.logger?.info({ issues });
+                const isCandidateUpdate = ({ type, statsSample }: IssuePayload) => type === 'network' && 'usingRelay' in statsSample;
+                if (issues.some(payload => payload.type !== 'cpu' && !isCandidateUpdate(payload))) {
+                    connection.reconnectionHandler(true);
+                }
+
+                const candidateTypeUpdate = [...issues].reverse().find(isCandidateUpdate);
+                if (candidateTypeUpdate?.statsSample) {
+                    connection.updateConnectionType(candidateTypeUpdate.statsSample as unknown as ConnectionType);
+                }
             }
-        }, issues => {
-            this.logger?.info({ issues });
-            if (issues.some(({ type }) => type !== 'cpu')) {
-                connection.reconnectionHandler(true);
-            }
-        })
+        );
         this.updateMetric(performance.now());
     }
 }
