@@ -96,6 +96,7 @@
             right: -16px;
             width: 16px;
             height: 40px;
+            z-index: 100;
 
             @include bootstrap.media-breakpoint-down(md) {
                 content: "";

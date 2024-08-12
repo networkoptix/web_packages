@@ -9,7 +9,7 @@
     border-right: 1px solid var(--groups-sidebar-border);
     background-color: var(--groups-sidebar-bg);
     color: var(--groups-sidebar-intro-text-color);
-    z-index: 2;
+    z-index: 99;
 
     &.projected {
         width: 100%;
@@ -20,11 +20,6 @@
     @include bootstrap.media-breakpoint-down(sm) {
         position: absolute;
         width: 100%;
-        height: calc(100% - 98px);
-        z-index: 2;
-    }
-
-    @include bootstrap.media-breakpoint-down(xs) {
         height: calc(100% - 60px);
     }
 }
