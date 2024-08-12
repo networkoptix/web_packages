@@ -198,4 +198,10 @@ const timeStampMessage = {
 
 export const isStreamChangeMessage = (message: unknown): message is StreamChangeMessage => typeof message === 'object' &&  'status' in message && message.status === 301;
 
-export type DataChannelMessage = TimeStampMessage
+export type DataChannelMessage = TimeStampMessage;
+
+export interface ConnectionType {
+    usingRelay: boolean,
+    localCandidateType: RTCIceCandidateType,
+    remoteCandidateType: RTCIceCandidateType,
+}

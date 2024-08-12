@@ -339,7 +339,24 @@
                     "secondary": "Secondary Stream"
                 },
                 "fps": "{fps} Fps",
-                "loading": "Loading..."
+                "loading": "Loading...",
+                "connectionTypeMessages": {
+                    "relay": {
+                        "matches": "Relay Mode: {localCandidateType}",
+                        "varies": "Relay Mode: Client({localCandidateType}) <-> Server({remoteCandidateType})"
+                    },
+                    "peer": {
+                        "matches": "P2P Mode: {localCandidateType}",
+                        "varies": "P2P Mode: Client({localCandidateType}) <-> Server({remoteCandidateType})"
+                    }
+                },
+                "candidateTypeDescriptions": {
+                    "host": "host(Host): Actual host IP address used",
+                    "srflx": "srflx(Server Reflexive): UDP hole-punched IP address using STUN/TURN",
+                    "prflx": "prflx(Peer Reflexive): IP address from ICE negotiation",
+                    "relay": "relay(Relay): Relayed traffic using IP address from TURN server"
+                },
+                "relayed": "Relayed Connection"
             },
             "menuActions": {
                 "menu": {

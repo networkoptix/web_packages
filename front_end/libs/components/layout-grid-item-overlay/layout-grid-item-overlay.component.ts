@@ -22,6 +22,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import FileSaver from 'file-saver';
 import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
+import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
 import {
     distinctUntilChanged,
     map,
@@ -280,6 +281,9 @@ export class NxLayoutGridItemOverlayComponent {
                     loading,
                     streamType: { primary, secondary, stream },
                     resolution: { high, low },
+                    connectionTypeMessages,
+                    candidateTypeDescriptions,
+                    relayed,
                 } = staticLang.layouts.overlay.info;
                 const mediaStreams = cameraNode.details.parameters?.mediaStreams?.streams || [];
 
@@ -337,8 +341,49 @@ export class NxLayoutGridItemOverlayComponent {
                             params: { codec: codecLookup[currentStream.codec] },
                         };
 
+                        const connectionType = WebRTCStreamManager.getInstance(
+                            cameraNode.details.id,
+                        )?.connectionType;
+
+                        const debugConnectionInfo = connectionType
+                            ? (() => {
+                                  if (!nxConfig.allowDebugMode) {
+                                      return connectionType.usingRelay ? [relayed] : [];
+                                  }
+
+                                  return [
+                                      {
+                                          value: connectionTypeMessages[
+                                              connectionType.usingRelay ? 'relay' : 'peer'
+                                          ][
+                                              connectionType.localCandidateType ===
+                                              connectionType.remoteCandidateType
+                                                  ? 'matches'
+                                                  : 'varies'
+                                          ],
+                                          params: {
+                                              localCandidateType: connectionType.localCandidateType,
+                                              remoteCandidateType:
+                                                  connectionType.remoteCandidateType,
+                                          },
+                                      },
+                                      ...[
+                                          ...new Set([
+                                              connectionType.localCandidateType,
+                                              connectionType.remoteCandidateType,
+                                          ]),
+                                      ].map(val => candidateTypeDescriptions[val]),
+                                  ];
+                              })()
+                            : [];
+
                         return videoLoaded
-                            ? [streamTitle, currentResolution, streamDescription].filter(Boolean)
+                            ? [
+                                  streamTitle,
+                                  currentResolution,
+                                  streamDescription,
+                                  ...debugConnectionInfo,
+                              ].filter(Boolean)
                             : [streamTitle, loading];
                     }),
                     tap(() => {
