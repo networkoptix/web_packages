@@ -147,6 +147,7 @@ export class NxMonitoringComponent implements OnInit {
     changeSelectedServer(item: DropdownItem<string>): void {
         this.router.navigate([], {
             relativeTo: this.route,
+            replaceUrl: true,
             queryParams: {
                 serverId: item.value,
             },
