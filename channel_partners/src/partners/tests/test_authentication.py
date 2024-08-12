@@ -360,13 +360,20 @@ class TestCdbInternalAuthentication:
             "errorText": "badUsername",
             "resultCode": "badUsername"
         }
+        token = f'{uuid4()}'
         httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=200)
         introspection = CdbInternalAuthentication.introspect_with_system(
-            token=f'{uuid4()}',
+            token=token,
             cloud_host_name=cloud_test_host.hostname,
             system_id=self.system_1.system_id)
         assert not introspection.email
         assert introspection.introspected_systems_roles == {}
+
+        request = httpx_mock.get_request(url=cdb_introspect_url)
+        request_data = json.loads(request.read())
+        assert request_data['token'] == token
+        assert request_data['system_ids'] == [str(self.system_1.system_id)]
+        assert request_data['skip_non_shared'] is True
 
         data = {
             "errorClass": "unauthorized",
@@ -376,16 +383,17 @@ class TestCdbInternalAuthentication:
         }
         httpx_mock.add_response(url=cdb_introspect_url, json=data, status_code=401)
         introspection = CdbInternalAuthentication.introspect_with_system(
-            token=f'{uuid4()}',
+            token=token,
             cloud_host_name=cloud_test_host.hostname,
             system_id=self.system_1.system_id)
         assert not introspection.email
         assert introspection.introspected_systems_roles == {}
 
-    def test_no_system(self, mock_cdb_token_introspect, cloud_test_host):
+    def test_no_system(self, mock_cdb_token_introspect, cloud_test_host, httpx_mock, cdb_introspect_url):
         mock_cdb_token_introspect(user=self.user)
+        token = f'{uuid4()}'
         introspection = CdbInternalAuthentication.introspect_with_system(
-            token=f'{uuid4()}',
+            token=token,
             cloud_host_name=cloud_test_host.hostname,
             system_id=self.system_1.system_id)
         assert introspection.email == self.user.email
@@ -393,6 +401,11 @@ class TestCdbInternalAuthentication:
         assert not introspection.has_roles_in_system(email=self.user.email,
                                                      system_id=self.system_1.system_id,
                                                      expected_roles=VmsRoles.ALL_ROLES)
+        request = httpx_mock.get_request(url=cdb_introspect_url)
+        request_data = json.loads(request.read())
+        assert request_data['token'] == token
+        assert request_data['system_ids'] == [str(self.system_1.system_id)]
+        assert request_data['skip_non_shared'] is True
 
     def test_no_role(self, mock_cdb_token_introspect, cloud_test_host):
         mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=None)
@@ -405,6 +418,10 @@ class TestCdbInternalAuthentication:
         assert not introspection.has_roles_in_system(email=self.user.email,
                                                      system_id=self.system_1.system_id,
                                                      expected_roles=VmsRoles.ALL_ROLES)
+        assert introspection.has_roles_in_system(email=self.user.email,
+                                                 system_id=self.system_1.system_id,
+                                                 expected_roles=VmsRoles.ANY_ROLE)
+
 
     def test_roles_not_authorized(self, mock_cdb_token_introspect, cloud_test_host):
         mock_cdb_token_introspect(user=self.user, system=self.system_1, system_role=VmsRoles.VIEWER)
