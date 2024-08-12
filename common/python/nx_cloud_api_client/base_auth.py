@@ -413,6 +413,7 @@ class CdbOauth2APIBase(ContextAPIMixin, _BaseAPI):
             self,
             token: str,
             system_ids: typing.Optional[typing.List[str]] = None,
+            skip_non_shared: bool = True,
             auth: AUTH_TYPES.BEARER = None,
             headers: typing.Optional[dict] = None,
     ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
@@ -425,13 +426,17 @@ class CdbOauth2APIBase(ContextAPIMixin, _BaseAPI):
         Args:
             token: Authorization token
             system_ids: System IDs to check user roles
+            skip_non_shared: Skip systems that are not shared with the user (default: true)
             auth: Bearer authorization object
             headers: request headers
 
         Returns:
             token introspection
         """
-        data = {'token': token}
+        data = {
+            'token': token,
+            'skip_non_shared': skip_non_shared
+        }
         if system_ids:
             data['system_ids'] = system_ids
         return self.post('/introspect', json=data, auth=auth, headers=headers)
