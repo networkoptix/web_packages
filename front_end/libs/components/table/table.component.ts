@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     Component,
     ContentChild,
     ContentChildren,
@@ -15,7 +16,6 @@ import {
     Renderer2,
     TemplateRef,
     ViewChild,
-    booleanAttribute,
 } from '@angular/core';
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -115,6 +115,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
     LANG = staticLang;
 
     expandRowId: string;
+    rowsSpace: number;
 
     params: Params;
     currentPage: number = 1;
@@ -169,14 +170,16 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
     initPageRows(): void {
         if (this.tableBodyContainer) {
             if (this.setAutoRows && this.data?.length) {
-                const autoRows = clamp(
-                    Math.floor(
-                        (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) /
-                            ROW_HEIGHT,
-                    ),
-                    1,
-                    this.data?.length || 1,
-                );
+                const rowsSpace =
+                    (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) /
+                    ROW_HEIGHT;
+
+                let autoRows = Math.floor(rowsSpace);
+                if (rowsSpace % 1 <= 0.05) {
+                    autoRows--; // if there is a small fraction of a row, we need to reduce rows shown -- [T]
+                }
+
+                autoRows = clamp(autoRows, 1, this.data?.length || 1);
                 this.perPageSelectedOption = { name: 'auto', value: autoRows };
             } else {
                 this.rowsPerPage.forEach(item => {
