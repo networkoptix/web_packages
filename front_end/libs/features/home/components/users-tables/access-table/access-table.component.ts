@@ -1,5 +1,6 @@
-import { Component, Output, ViewChild, computed, forwardRef } from '@angular/core';
+import { Component, Output, ViewChild, computed, forwardRef, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
@@ -9,6 +10,7 @@ import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 import { caseInsensitiveSearch, alphaNumericSort } from '@utils/general';
@@ -100,6 +102,8 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
     checkAllContainer = new BehaviorSubject<null | NxCheckAllContainerDirective>(null);
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
+    routerState = inject(ChannelPartnersRouteState);
+    router = inject(Router);
     @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
         checkAllContainerRef: NxCheckAllContainerDirective,
     ) {
@@ -170,7 +174,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     });
 
     openedRoleTooltip?: NxTooltipV2Directive;
-
     getGroupId(row: UserRecord): string {
         return row.isOrgUser ? this.currentOrg$$().id : row.groupRoles[0].groupId;
     }
@@ -296,6 +299,17 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                         this.email$$(),
                         groupIds,
                     );
+
+                    const partnerId = this.routerState.partnerId();
+                    const orgId = this.routerState.organizationId();
+
+                    this.router
+                        .navigate([
+                            `/home/channelPartners/${partnerId}/organization/${orgId}/users`,
+                        ])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             });
     }
