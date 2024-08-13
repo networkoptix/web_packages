@@ -99,7 +99,7 @@
                 >
                     <p
                         *ngIf="createAccountEmail.errors.required"
-                        class="error-label mt-2 mb-0"
+                        class="error-label mt-1 mb-0"
                         data-testid="emailRequiredError"
                         translate
                     >
@@ -107,7 +107,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.pattern"
-                        class="error-label mt-2 mb-0"
+                        class="error-label mt-1 mb-0"
                         data-testid="emailPatternError"
                         translate
                     >
@@ -115,7 +115,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.alreadyExists"
-                        class="error-label mt-2 mb-0"
+                        class="error-label mt-1 mb-0"
                         data-testid="emailExistsError"
                         translate
                     >
@@ -123,7 +123,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.portalError"
-                        class="error-label mt-2 mb-0"
+                        class="error-label mt-1 mb-0"
                         data-testid="emailPortalError"
                         translate
                     >
@@ -175,7 +175,7 @@
                         (firstName.dirty || firstName.touched) &&
                         firstName.errors.required
                     "
-                    class="error-label mt-2 mb-0"
+                    class="error-label mt-1 mb-0"
                     id="firstNameRequiredError"
                     translate
                 >
@@ -216,7 +216,7 @@
                         (lastName.dirty || lastName.touched) &&
                         lastName.errors.required
                     "
-                    class="error-label mt-2 mb-0"
+                    class="error-label mt-1 mb-0"
                     id="lastNameRequiredError"
                     translate
                 >
@@ -250,7 +250,7 @@
                     #createAccountPassword="ngModel"
                 >
                 </nx-password-input>
-                <div class="mt-2">
+                <div class="mt-1">
                     <nx-password-input-validation
                         [forElement]="createAccountPassword"
                         [value]="createPassword"
@@ -264,7 +264,7 @@
             #rowTerms
             class="d-flex flex-column"
         >
-            <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start align-items-center">
                 <nx-checkbox
                     [color]="['desktop', 'mobile'].includes(viewType) && 'desktop'"
                     name="termsAndConditions"
@@ -311,7 +311,7 @@
             </div>
             <p
                 *ngIf="termsConditions.touched && !termsAndConditions"
-                class="error-label mt-2 mb-0"
+                class="error-label mb-0"
                 translate
             >
                 Required
