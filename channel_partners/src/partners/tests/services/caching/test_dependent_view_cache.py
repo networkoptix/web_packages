@@ -1,4 +1,5 @@
 import json
+import logging
 from unittest import mock
 
 import pytest
@@ -149,8 +150,11 @@ class TestDependentViewCacheDecorator:
             cloud_test_host,
             channel_partner_factory,
             cloud_user_factory,
-            temporary_urlconf, cache_cleared
+            temporary_urlconf,
+            cache_cleared,
+            caplog
     ) -> None:
+        caplog.set_level(logging.DEBUG)
         self.cp = channel_partner_factory(cloud_host=cloud_test_host)
         self.user = cloud_user_factory(email="asdsadsadas@aol.com")
         self.cloud_host = cloud_test_host
