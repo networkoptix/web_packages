@@ -1136,7 +1136,18 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedVi
             organization=organization,
             roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
         )
-        if not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists():
+        if (
+                (not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists())
+                or
+                (
+                    organization.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+                    and
+                    ChannelPartnerToUser.objects.filter(
+                        channel_partner_id=organization.channel_partner_id,
+                        roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+                    ).exists()
+                )
+        ):
             OrganizationToUser.objects.filter(user=instance, organization=organization).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         raise Conflict(f'User {instance.email} is the only Administrator and may not be demoted or removed.')
