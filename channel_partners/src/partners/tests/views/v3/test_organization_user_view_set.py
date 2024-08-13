@@ -117,6 +117,31 @@ class TestOrganizationUserViewSet:
         assert not OrganizationToUser.objects.filter(user__email=user.user.email).exists()
         assert CloudUser.objects.filter(email=user.user.email).exists()
 
+    @pytest.mark.parametrize("cpal, cp_role,expected_status", [
+        (OrganizationRoles.ORGANIZATION_ADMINISTRATOR, ChannelPartnerRoles.ADMINISTRATOR, 204),
+        (OrganizationRoles.ORGANIZATION_ADMINISTRATOR, ChannelPartnerRoles.MANAGER, 204),
+        (OrganizationRoles.ORGANIZATION_ADMINISTRATOR, ChannelPartnerRoles.REPORTS_VIEWER, 409),
+        (OrganizationRoles.SYSTEM_HEALTH_VIEWER, ChannelPartnerRoles.ADMINISTRATOR, 409),
+        (OrganizationRoles.SYSTEM_HEALTH_VIEWER, ChannelPartnerRoles.MANAGER, 409),
+        (OrganizationRoles.SYSTEM_HEALTH_VIEWER, ChannelPartnerRoles.REPORTS_VIEWER, 409),
+    ])
+    def test_destroy_with_cpal(
+            self, cpal, cp_role, expected_status, channel_partner_factory, organization_factory,
+            cp_user_factory, org_user_factory, system_factory, mock_auth_with_user, arf, httpx_mock, mocker
+    ):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org.channel_partner_access_level_id = cpal
+        org.save()
+        admin_user = org_user_factory(organization=org)
+        cp_user = cp_user_factory(channel_partner=cp, role=cp_role)
+        request = arf.delete('/')
+        mock_auth_with_user(admin_user)
+        view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=admin_user.user.email)
+        assert response.status_code == expected_status
+
     def test_destroy_self_204(self, organization_factory, org_user_factory, system_factory,
                          mock_auth_with_user, v3arf, httpx_mock, mocker):
         org = organization_factory()
@@ -148,13 +173,14 @@ class TestOrganizationUserViewSet:
 
     def test_destroy_last_admin(self, organization_factory, org_user_factory, system_factory,
                                 mock_auth_with_user, v3arf, httpx_mock, default_cp_admin):
-        gen_count = 10
         org = organization_factory()
+        org.channel_partner_access_level_id = OrganizationRoles.SYSTEM_HEALTH_VIEWER
+        org.save()
         role = OrganizationRole.objects.get(name="Organization Administrator")
         user = org_user_factory(organization=org)
         user_2 = org_user_factory(organization=org)
         request = v3arf.delete('/')
-        mock_auth_with_user(default_cp_admin)
+        mock_auth_with_user(user_2)
         view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
         with transaction.atomic():
             response = view(request, parent_lookup_organization=org.id, email=user.user.email)
@@ -752,7 +778,7 @@ class TestOrganizationUserViewSetDestroy:
         response = self.view(self.request,
                              parent_lookup_organization=self.organization.id,
                              email=self.org_admin.user.email)
-        assert response.status_code == 409
+        assert response.status_code == 204
 
     def test_2xx_cpal_with_no_admins(self, mock_auth_with_user):
         self.org_admin.delete()
