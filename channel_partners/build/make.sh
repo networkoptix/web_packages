@@ -3,7 +3,7 @@
 . ../../deploy/environment
 . ../../deploy/common.sh
 
-REPOSITORY_PATH="/products/channel_partners"
+REPOSITORY_PATH="${REPOSITORY_PATH:-"/products/channel_partners"}"
 BUILD_NUMBER=${BUILD_NUMBER:-0}
 BUILD_ARGS=(--build-arg CACHE_DATE=$(date +%s))
 
