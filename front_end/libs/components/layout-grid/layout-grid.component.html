@@ -1080,7 +1080,9 @@
                                                     [node]="layoutItemLookup[item.resourceId]"
                                                     [fullScreenTarget]="layoutItemWrapper"
                                                     [hideRemove]="
-                                                        dirtyId(layout.id) === dirtyId(item.id)
+                                                        dirtyId(layout.id) === dirtyId(item.id) ||
+                                                        layoutItemWrapper ===
+                                                            window.document.fullscreenElement
                                                     "
                                                     [canEdit]="editItems$$()"
                                                     [hide]="dragging$$()"

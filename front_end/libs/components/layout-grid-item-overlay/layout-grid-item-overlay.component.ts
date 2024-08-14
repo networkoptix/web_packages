@@ -223,8 +223,8 @@ export class NxLayoutGridItemOverlayComponent {
         if (!this.cameraOnline$$()) {
             return true;
         }
-        const primary = this.primaryStream$$();
-        const secondary = this.secondaryStream$$();
+        const primary = !!this.primaryStream$$();
+        const secondary = !!this.secondaryStream$$();
         return (primary && !secondary) || (!primary && secondary);
     });
     cameraStreams$$ = computed(() => {
