@@ -140,7 +140,7 @@ export class NxSettingsGeneralV2Component implements AfterViewInit {
         () => accessMap?.[this.channelPartnerAccessLevel()] || null,
     );
 
-    @Output() updateAccess = new EventEmitter<string>();
+    @Output() updateAccess = new EventEmitter<DropdownItem<string | null>>();
     @Output() disconnectOrg = new EventEmitter<void>();
 
     ngAfterViewInit(): void {

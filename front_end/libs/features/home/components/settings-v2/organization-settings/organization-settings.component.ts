@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     MatButtonToggle,
@@ -90,6 +90,10 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         return (currentStateItem as Organization)?.channelPartnerAccessLevel || null;
     });
 
+    isValidState$$ = signal(true);
+
+    State = State;
+
     ngOnInit(): void {
         this.initProcesses();
     }
@@ -136,16 +140,19 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
         );
     }
 
-    handleAccessUpdate = (): void => {
+    handleAccessUpdate = (selectedItem: DropdownItem<string | null>): void => {
         const currLevel = this.accessLevel$$();
-        const hasAdminRole = this.orgUserStore
-            .currentGroupUsersEntities()
-            ?.some(r => r.roles?.includes('Organization Administrator'));
+        const selectedAccess = selectedItem.value;
+        const isDifferent = selectedAccess !== currLevel;
+        const orgUsers = this.orgUserStore.currentGroupUsersEntities();
+        const hasAdminRole = orgUsers?.some(r => r.rolesIds.includes(OrgRoleIds.OrgAdmin));
         this.disableSave = !hasAdminRole;
-
-        const formValue = this.generalForm?.get('accessLevel')?.value.value;
-        if (formValue !== currLevel && formValue !== OrgRoleIds.OrgAdmin && !hasAdminRole) {
-            this.store.dispatch(
+        if (
+            isDifferent &&
+            ((selectedAccess !== OrgRoleIds.OrgAdmin && !hasAdminRole) || !orgUsers.length)
+        ) {
+            this.isValidState$$.set(false);
+            return this.store.dispatch(
                 cpActions.showBannerAction({
                     banner: {
                         message: this.LANG.channelPartners.orgs.adminWarning,
@@ -156,6 +163,7 @@ export class NxOrganizationSettingsComponent extends SettingsBase implements OnI
                 }),
             );
         }
+        this.isValidState$$.set(true);
     };
 
     override resetGeneralUpdates = (): void => {

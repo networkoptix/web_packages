@@ -10,7 +10,7 @@
                         [permissions]="permissions$$()"
                         [channelPartnerAccessLevel]="accessLevel$$()"
                         [currentState]="effectiveState$$()"
-                        (updateAccess)="handleAccessUpdate()"
+                        (updateAccess)="handleAccessUpdate($event)"
                         (disconnectOrg)="deleteUserFromOrg()"
                     >
                         @if (
@@ -21,7 +21,9 @@
                                 <div class="row m-0">
                                     <div class="footer pt-4 pl-2 pb-2">
                                         <nx-process-button
-                                            [buttonDisabled]="!generalForm?.valid"
+                                            [buttonDisabled]="
+                                                !generalForm?.valid || !isValidState$$()
+                                            "
                                             [removeMinWidth]="true"
                                             [process]="updateOrgProcess"
                                             [buttonText]="'Save' | translate"
