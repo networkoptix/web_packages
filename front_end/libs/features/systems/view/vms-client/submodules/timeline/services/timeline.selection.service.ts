@@ -29,6 +29,8 @@ export class TimelineSelectionService {
     private dragAnchorPx: px = 0;
     private dragAnchorMs: ms = 0;
 
+    background: HTMLElement;
+
     constructor(
         private timeline: TimelineService,
         private playback: PlaybackService,
@@ -38,7 +40,7 @@ export class TimelineSelectionService {
     get exportUrlParams(): Parameters<NxSystem['mediaserver']['getExportUrl']>[0] {
         return {
             transport: this.playback.state.transport,
-            cameraId: this.vms.selectedCamera.id,
+            cameraId: this.vms.selectedCamera?.id,
             pos: this.selectedRange.start,
             endPos: this.selectedRange.end,
             duration: Math.floor(this.selectedRange.duration / 1000),
@@ -86,12 +88,6 @@ export class TimelineSelectionService {
         });
     }
 
-    background: HTMLElement;
-
-    private getOffsetPx(e: MouseEvent): number {
-        return e.clientX - this.background.getBoundingClientRect().left;
-    }
-
     handleBackgroundMouseDown(e: MouseEvent): void {
         // activate
         this.isActive = true;
@@ -101,7 +97,7 @@ export class TimelineSelectionService {
             e.preventDefault();
             e.stopPropagation();
             this.dragMode = SELECTION_DRAG_MODE.DRAGGING_BACKGROUND;
-            this.dragAnchorPx = this.getOffsetPx(e);
+            this.dragAnchorPx = e.offsetX;
             const mouseTime = this.timeline.domOffsetXtoTime(this.dragAnchorPx);
             const playbackTime = (this.playback.state as PlayingState)?.currentTime || Infinity;
             const diff_ms = Math.abs(mouseTime - playbackTime);
@@ -151,8 +147,10 @@ export class TimelineSelectionService {
 
     handleMouseMove(e: MouseEvent): boolean {
         if (this.isActive && this.dragMode) {
+            // we need this calculated as 'e.offsetX' changes when hovering inner elements -- [T]
+            const offsetPx = e.clientX - this.background.getBoundingClientRect().left;
+
             if (this.dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND) {
-                const offsetPx = this.getOffsetPx(e);
                 const time = this.timeline.domOffsetXtoTime(offsetPx);
 
                 if (time < this.dragAnchorMs) {
@@ -166,7 +164,7 @@ export class TimelineSelectionService {
                 this.emit();
                 // Keep this just in case UX change their mind ... again
                 // } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
-                //     const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
+                //     const offsetPx = offsetPx - this._dragAnchorPx;
                 //     const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
                 //     const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
                 //     const rightEdgeFits = this.timeline.archiveRange.contains(
@@ -191,7 +189,6 @@ export class TimelineSelectionService {
                 //     }
                 //     this._emit();
             } else if (this.dragMode === SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR) {
-                const offsetPx = this.getOffsetPx(e);
                 const newStart = this.timeline.domOffsetXtoTime(offsetPx);
 
                 if (newStart < this.selectedRange.end) {
@@ -205,7 +202,6 @@ export class TimelineSelectionService {
 
                 this.emit();
             } else if (this.dragMode === SELECTION_DRAG_MODE.DRAGGING_RIGHT_EAR) {
-                const offsetPx = this.getOffsetPx(e);
                 const newEnd = this.timeline.domOffsetXtoTime(offsetPx);
 
                 if (newEnd > this.selectedRange.start) {
