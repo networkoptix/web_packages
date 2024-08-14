@@ -2,7 +2,6 @@ import {
     Component,
     OnInit,
     ElementRef,
-    AfterViewInit,
     TemplateRef,
     ViewContainerRef,
     ViewChild,
@@ -30,7 +29,7 @@ import type { TimelineSelectionServiceStatus } from '../../services/timeline.ser
     templateUrl: './timeline-selection-action-panel.component.html',
     styleUrls: ['./timeline-selection-action-panel.component.scss'],
 })
-export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewInit {
+export class TimelineSelectionActionPanelComponent implements OnInit {
     private status: TimelineSelectionServiceStatus;
     private system: NxSystem;
 
@@ -86,10 +85,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
                 this.system = this.systemService.createSystem(account.email, this.vms.systemId$$());
             }
         });
-    }
-
-    ngAfterViewInit(): void {
-        this.selection.background = this.self.nativeElement;
     }
 
     downloadFile(): void {
