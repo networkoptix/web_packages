@@ -195,7 +195,7 @@ class ExternalIdTargetManager(models.Manager):
 
 
 class CloudUser(VersionMixin, models.Model):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=255)
     full_name = models.CharField(max_length=255, null=True, blank=True, default=None)
 
     is_system_user = False

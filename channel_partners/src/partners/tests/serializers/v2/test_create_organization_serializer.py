@@ -117,3 +117,22 @@ class TestCreateOrganizationSerializer:
         serializer = CreateOrganizationSerializer(data=data, context=self.context)
         assert not serializer.is_valid()
         assert error_message in serializer.errors['firstAdminEmail'][0]
+
+    def test_first_admin_email_len(self, random_email):
+        email = random_email
+        email_255 = 'a' * (255 - len(email)) + email
+        email_256 = 'a' * (256 - len(email)) + email
+        data = {
+            **self.valid,
+            'firstAdminEmail': email_255
+        }
+        serializer = CreateOrganizationSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is True
+        serializer.save()
+        data = {
+            **self.valid,
+            'firstAdminEmail': email_256
+        }
+        serializer = CreateOrganizationSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['firstAdminEmail'][0] == 'Ensure this field has no more than 255 characters.'
