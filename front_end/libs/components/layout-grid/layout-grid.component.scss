@@ -699,11 +699,13 @@ h2.auto-save-overlay {
         border: var(--border-style);
     }
 
-    &.wide {
-        width: unset;
-    }
-    &.narrow {
-        height: unset;
+    &:not(:has(nx-layout-grid-item-placeholder)) {
+        &.wide {
+            width: unset;
+        }
+        &.narrow {
+            height: unset;
+        }
     }
 
     &:hover {
