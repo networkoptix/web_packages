@@ -10,7 +10,7 @@
     "CREATE ACCOUNT BUTTON TEXT": "アカウント作成",
     "CREATE NEW ACCOUNT BUTTON TEXT": "新規アカウントを作成",
     "TERMS AND CONDITIONS LINK TEXT": "利用規約",
-    "RESEND ACTIVATION LINK BUTTON TEXT": "認証メールを再送信",
+    "RESEND ACTIVATION LINK BUTTON TEXT": "確認メールを再送信",
     "FORGOT PASSWORD TEXT": "パスワードをお忘れですか?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "すべてのクラウドユーザーが削除されます",
     "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "システムはローカルネットワークからのみアクセス可能になります。",
