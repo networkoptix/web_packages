@@ -343,6 +343,9 @@ check-python-licenses:
     USER_RATE_LIMIT: "50/5s"
     CACHE_BUCKET: "cloud-portal-test"
     AWS_REGION: "us-east-1"
+    AUTH_PROVIDERS: "https://auth_provider_base_url"
+    AUTH_ID: "client_id"
+    AUTH_SECRET: "client_secret"
     RSA_KEY_PRIVATE: |-
       -----BEGIN RSA PRIVATE KEY-----
       MIIEowIBAAKCAQEAtb16Q2sJL/eZqNpfItB0oMdhttY9Ov21QN8PedcJm8+1t/qj

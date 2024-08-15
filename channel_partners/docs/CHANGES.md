@@ -1,5 +1,14 @@
 *Put here changes you think can affect development*
 
+## 2024-07-26 - Service-to-Service Authorization Changes
+
+- Service authorization credentials are required for running server locally.
+- You can copy `Service auth` from src/config/.env.dist to src/config/.env.local. 
+- That fake credentials allow tests to pass and work with local server, exception 
+ is some server interactions with CDB which are made in background tasks. 
+- These task cannot harm local development, but if you need for them running 
+ properly ask web-backend team for proper credentials.
+
 ## 2024-07-13 - Reports snapshot schema version
 
 Any changes to usage reports data schema (data types and serializers) **must** 

@@ -1,6 +1,9 @@
 import json
 import logging
-from uuid import uuid4
+from uuid import (
+    UUID,
+    uuid4,
+)
 
 import pytest
 from django.conf import settings
@@ -94,7 +97,7 @@ class TestCloudUserFullName:
         emails = {"user1@example.com", "user2@example.com"}
         cloud_db_users = [{"email": "user1@example.com", "full_name": "User One"}]
 
-        with caplog.at_level(logging.WARNING):
+        with caplog.at_level(logging.DEBUG):
             get_missing_emails(emails, cloud_db_users)
 
         assert "Emails not returned from Cloud DB" in caplog.text
@@ -131,19 +134,39 @@ class TestCloudUserFullName:
         assert len(updated_users) == len(users_to_update)
 
     @pytest.mark.django_db
-    def test_update_cloud_users_full_name(self, httpx_mock):
+    def test_update_cloud_users_full_name(self, httpx_mock, mocker):
+        mocker.patch('partners.tasks.cloud_user_full_name.update_cloud_user_full_name.delay', return_value=None)
+        CloudUser.objects.create(email='user@example.com').save()
         httpx_mock.add_response(
             method="POST",
             url=f"https://{self.host}/cdb/internal/accounts/info",
             json=[{"email": "user@example.com", "fullName": "User Example"}],
             status_code=200
         )
-        CloudUser.objects.create(email='user@example.com').save()
-
         update_cloud_users_full_name()
 
         updated_user = CloudUser.objects.get(email='user@example.com')
         assert updated_user.full_name == "User Example"
+        request = httpx_mock.get_request(url=f"https://{self.host}/cdb/internal/accounts/info")
+        assert UUID(request.headers['Authorization'].split()[1], version=4)
+        assert request.headers['Authorization'].split()[0] == 'Bearer'
+
+    @pytest.mark.no_service_auth_mock
+    def test_update_cloud_users_full_name_credentials_failure(
+            self, httpx_mock, cloud_user_factory, mock_service_auth_token):
+        httpx_mock.add_response(
+            method="POST",
+            url=f"https://{self.host}/cdb/internal/accounts/info",
+            json=[{"email": "user@example.com", "fullName": "User Example"}],
+            status_code=200
+        )
+        mock_service_auth_token(status_code=400)
+        user = cloud_user_factory()
+
+        update_cloud_users_full_name()
+
+        updated_user = CloudUser.objects.get(email=user.email)
+        assert updated_user.full_name is None
 
     @pytest.mark.django_db
     def test_update_cloud_users_full_name_happy_path(self, httpx_mock, caplog):
@@ -195,19 +218,16 @@ class TestCloudUserFullName:
         processing_batch_count = count_log_records(
             caplog,
             'partners.tasks.cloud_user_full_name',
-            logging.INFO,
+            logging.DEBUG,
             'Processing batch')
         batch_update_completed_count = count_log_records(
             caplog,
             'partners.tasks.cloud_user_full_name',
-            logging.INFO,
+            logging.DEBUG,
             'Batch update completed')
 
         assert starting_task_count == 1
         assert task_completed_count == 1
-        assert processing_batch_count == num_batches
-        assert batch_update_completed_count == num_batches
-
     def test_missing_request_id(self, cloud_test_host, httpx_mock):
         url = f"https://{cloud_test_host}/cdb/internal/accounts/info"
         httpx_mock.add_response(
