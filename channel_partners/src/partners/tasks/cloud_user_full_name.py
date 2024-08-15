@@ -11,6 +11,9 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import QuerySet
 from httpx import Response
+from nx_cloud_api_client.base_auth import BearerTokenAuth
+
+from tools.cdb_service_auth import get_auth_token
 
 
 logger = structlog.get_logger(__name__)
@@ -38,11 +41,18 @@ def get_emails_from_internal_endpoint(emails: List[str], request_id: str, origin
 
     if original_host:
         headers["x-original-host"] = original_host
+    try:
+        auth_token = get_auth_token()
+    except Exception as exc:
+        logger.error("Failed to get auth credentials", exception=exc)
+        return []
+    auth = BearerTokenAuth(auth_token)
     with httpx.Client() as client:
 
         response: Response = client.post(
             path,
             json={"emails": emails, "fields": ["fullName"]},
+            auth=auth,
             headers=headers)
 
     if response.status_code != 200:
@@ -79,7 +89,7 @@ def get_missing_emails(emails: Set[str], cloud_db_users: List[UserInfo]) -> None
     returned_emails = {user_info['email'] for user_info in cloud_db_users}
     missing_emails = emails - returned_emails
     if missing_emails:
-        logger.warn("Emails not returned from Cloud DB", emails=list(missing_emails))
+        logger.debug("Emails not returned from Cloud DB", emails=list(missing_emails))
 
 
 def get_users_to_update(cloud_users: QuerySet, cloud_db_users: List[UserInfo]) -> List['CloudUser']:
@@ -136,7 +146,7 @@ def update_cloud_users_full_name(batch_size: int = 500) -> None:
 
     for start in range(0, total_users, batch_size):
         end = min(start + batch_size, total_users)
-        logger.info("Processing batch", start=start, end=end)
+        logger.debug("Processing batch", start=start, end=end)
 
         cloud_users_batch = CloudUser.objects.order_by('id')[start:end]
         emails = {user.email for user in cloud_users_batch}
@@ -147,7 +157,7 @@ def update_cloud_users_full_name(batch_size: int = 500) -> None:
         users_to_update = get_users_to_update(cloud_users_batch, cloud_db_users)
 
         bulk_update_users(users_to_update)
-        logger.info("Batch update completed", updated_count=len(users_to_update))
+        logger.debug("Batch update completed", updated_count=len(users_to_update))
 
     logger.info("Task completed")
 
@@ -196,6 +206,6 @@ def update_cloud_user_full_name(email: str, request_id: str, original_host: str 
     if cloud_user.full_name != user_info['full_name']:
         cloud_user.full_name = user_info['full_name']
         cloud_user.save(update_fields=['full_name'])
-        logger.info("CloudUser full name updated", email=email)
+        logger.debug("CloudUser full name updated", email=email)
     else:
-        logger.info("CloudUser full name is already up to date", email=email)
+        logger.debug("CloudUser full name is already up to date", email=email)

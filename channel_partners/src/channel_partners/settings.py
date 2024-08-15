@@ -60,6 +60,7 @@ IS_CELERY = (
         'celery' in get_container_name() or
         ' beat ' in ' '.join(sys.argv)
 )
+IS_CELERY_BEAT = ' beat ' in ' '.join(sys.argv)
 IS_DJANGO_SHELL = (
         'shell' in sys.argv and
         'manage.py' in sys.argv
@@ -116,6 +117,17 @@ DB_NAME = env.str('DB_NAME')
 DB_PASSWORD = env.str('DB_PASSWORD')
 DB_PORT = env.str('DB_PORT', default=5432)
 DB_USER = env.str('DB_USER')
+
+## Services Authentication
+if IS_CELERY_BEAT:
+    AUTH_SRV_PROVIDERS = env.str('AUTH_PROVIDERS', '')
+    AUTH_SRV_ID = env.str('AUTH_ID', '')
+    AUTH_SRV_SECRET = env.str('AUTH_SECRET', '')
+else:
+    AUTH_SRV_PROVIDERS = env.str('AUTH_PROVIDERS')
+    AUTH_SRV_ID = env.str('AUTH_ID')
+    AUTH_SRV_SECRET = env.str('AUTH_SECRET')
+
 
 ## Celery
 QUEUE_CELERY_BROKER_URL = env.str('QUEUE_CELERY_BROKER_URL')

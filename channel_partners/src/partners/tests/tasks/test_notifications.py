@@ -61,7 +61,7 @@ def test_get_general_notification_type(mock_account_status, request_host, httpx_
     mock_account_status(email=email, active=True)
     assert is_existing_user(host=request_host, email=email, request_id=str(uuid4()))
 
-    httpx_mock.reset(True)
+    httpx_mock.reset(False)
     mock_account_status(email=email, active=False)
     assert is_existing_user(host=request_host, email=email, request_id=str(uuid4())) is False
 

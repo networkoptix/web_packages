@@ -863,3 +863,27 @@ def mock_get_customizations_hdw_mx(mocker):
                             return_value=customizations, side_effect=side_effect)
 
     return factory
+
+
+@pytest.fixture()
+def mock_service_auth_token(httpx_mock):
+    def factory(token: str = '', expires_in: int = 600, status_code: int = 200, side_effect: Exception=None):
+        if side_effect:
+            httpx_mock.add_exception(side_effect)
+            return
+        data = {
+            "access_token": token or str(uuid4()),
+            "expires_in": expires_in,
+            "token_type": "bearer"
+        }
+        httpx_mock.add_response(url=settings.AUTH_SRV_PROVIDERS + "/oauth2/token", json=data, status_code=status_code)
+        return data
+
+    return factory
+
+
+@pytest.fixture(autouse=True)
+def auto_mock_service_auth_token(request, mock_service_auth_token):
+    if request.node.get_closest_marker('no_service_auth_mock'):
+        return
+    mock_service_auth_token()
