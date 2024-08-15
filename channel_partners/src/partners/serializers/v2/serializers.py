@@ -344,7 +344,7 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False)
-    firstAdminEmail = serializers.EmailField(required=False)
+    firstAdminEmail = serializers.EmailField(required=False, max_length=255)
 
     class Meta:
         model = ChannelPartner
@@ -480,7 +480,7 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
-    firstAdminEmail = serializers.EmailField(required=False)
+    firstAdminEmail = serializers.EmailField(required=False, max_length=255)
 
     class Meta:
         model = Organization
