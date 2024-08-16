@@ -1,0 +1,287 @@
+<nx-block>
+    <header>
+        <h2>Oauth Dialog Builder</h2>
+    </header>
+    <nx-section>
+        <form [formGroup]="authConfigFormGroup">
+            @if (!environment.production) {
+                <nx-form-field>
+                    <label
+                        nx-label
+                        for="cloudHost"
+                        >Cloud Host</label
+                    >
+                    <input
+                        nx-input
+                        id="cloudHost"
+                        type="text"
+                        formControlName="cloudHost"
+                    />
+                </nx-form-field>
+            }
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="viewType"
+                    >View Type (Client Opening Oauth)</label
+                >
+                <nx-select-v2
+                    id="viewType"
+                    formControlName="viewType"
+                >
+                    <nx-select-item [value]="'desktop'">Desktop</nx-select-item>
+                    <nx-select-item [value]="'mobile'">Mobile</nx-select-item>
+                    <nx-select-item [value]="'web'">Web</nx-select-item>
+                </nx-select-v2>
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="clientType"
+                    >Client Type</label
+                >
+                <nx-select-v2
+                    id="clientType"
+                    formControlName="clientType"
+                >
+                    <nx-select-item [value]="'create'">Create</nx-select-item>
+                    <nx-select-item [value]="'connect'">Connect</nx-select-item>
+                    <nx-select-item [value]="'loginCloud'">Login Cloud</nx-select-item>
+                    <nx-select-item [value]="'loginWebadmin'">Login Webadmin</nx-select-item>
+                    <nx-select-item [value]="'renewWeb'">Refresh Session</nx-select-item>
+                </nx-select-v2>
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="clientId"
+                    >Client ID</label
+                >
+                <input
+                    nx-input
+                    id="clientId"
+                    type="text"
+                    formControlName="clientId"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="email"
+                    >Email</label
+                >
+                <input
+                    nx-input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="systemName"
+                    >System name (Required when binding)</label
+                >
+                <input
+                    nx-input
+                    id="systemName"
+                    formControlName="systemName"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="scopeBuilder"
+                    >Scope</label
+                >
+                <input
+                    nx-input
+                    id="scopeBuilder"
+                    formControlName="scopeBuilder"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="redirectUrl"
+                    >Redirect Url</label
+                >
+                <input
+                    nx-input
+                    id="redirectUrl"
+                    type="text"
+                    formControlName="redirectUrl"
+                />
+            </nx-form-field>
+        </form>
+    </nx-section>
+    <nx-section>
+        <h2>Oauth Url</h2>
+        <div class="auth-link">{{ authUrl() }}</div>
+        <div class="buttons">
+            <button
+                class="btn btn-primary"
+                (click)="copyToClipboard(authUrl() || '')"
+            >
+                Copy Link
+            </button>
+            <button
+                class="btn btn-primary"
+                (click)="open()"
+            >
+                Open
+            </button>
+        </div>
+    </nx-section>
+</nx-block>
+<nx-block>
+    <header>
+        <h2>Auth without dialog (No 2fa Support)</h2>
+    </header>
+    <nx-section>
+        <form [formGroup]="loginFormGroup">
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="responseType"
+                    >Response Type</label
+                >
+                <nx-select-v2
+                    id="responseType"
+                    formControlName="responseType"
+                >
+                    <nx-select-item [value]="'code'">Code</nx-select-item>
+                    <nx-select-item [value]="'token'">Token</nx-select-item>
+                </nx-select-v2>
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="grantType"
+                    >Grant Type</label
+                >
+                <nx-select-v2
+                    id="grantType"
+                    formControlName="grantType"
+                >
+                    <nx-select-item [value]="'password'">Password</nx-select-item>
+                    <nx-select-item [value]="'authorization_code'"
+                        >Authorization Code
+                    </nx-select-item>
+                    <nx-select-item [value]="'refresh_token'">Refresh Token</nx-select-item>
+                </nx-select-v2>
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="scope"
+                    >Scope</label
+                >
+                <input
+                    nx-input
+                    id="scope"
+                    formControlName="scope"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="username"
+                    >Username</label
+                >
+                <input
+                    nx-input
+                    id="username"
+                    type="email"
+                    formControlName="username"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="password"
+                    >Password</label
+                >
+                <input
+                    nx-input
+                    id="password"
+                    type="password"
+                    formControlName="password"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="code"
+                    >Code</label
+                >
+                <input
+                    nx-input
+                    id="code"
+                    formControlName="code"
+                />
+            </nx-form-field>
+            <nx-form-field>
+                <label
+                    nx-label
+                    for="refreshToken"
+                    >Refresh Token</label
+                >
+                <input
+                    nx-input
+                    id="refreshToken"
+                    formControlName="refreshToken"
+                />
+            </nx-form-field>
+        </form>
+        <div class="buttons">
+            <button
+                class="btn btn-primary"
+                (click)="login()"
+            >
+                Login
+            </button>
+        </div>
+    </nx-section>
+</nx-block>
+@if (oauthRequestBody(); as oauthBody) {
+    <nx-block>
+        <header>
+            <h2>Auth Response</h2>
+        </header>
+        <nx-section>
+            <pre>{{ oauthBody | json }}</pre>
+            <div class="buttons">
+                @if (oauthBody?.code | as: string; as code) {
+                    <button
+                        class="btn btn-primary"
+                        (click)="copyToClipboard(code || '')"
+                    >
+                        Copy Access Code
+                    </button>
+                }
+                @if (oauthBody?.access_token | as: string; as access_token) {
+                    <button
+                        class="btn btn-primary"
+                        (click)="copyToClipboard(access_token || '')"
+                    >
+                        Copy Auth Token
+                    </button>
+                }
+                @if (oauthBody?.refresh_token | as: string; as refresh_token) {
+                    <button
+                        class="btn btn-primary"
+                        (click)="copyToClipboard(refresh_token || '')"
+                    >
+                        Copy Refresh Token
+                    </button>
+                }
+            </div>
+            @if (parsedToken(); as parsedToken) {
+                <h2>Parsed JWT (Access Token)</h2>
+                <pre>{{ parsedToken | json }}</pre>
+            }
+        </nx-section>
+    </nx-block>
+}
