@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ApplyGuard } from '@guards/applyGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
+import { NxOauthBuilderComponent } from '@pages/sandbox/oauth-builder/oauth-builder.component';
 import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 // import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 
@@ -154,6 +155,10 @@ export const appRoutes: Routes = [
                         component: SimpleWebglComponent,
                     },
                 ],
+            },
+            {
+                path: 'oauth-builder',
+                component: NxOauthBuilderComponent,
             },
         ],
     },

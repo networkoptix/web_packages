@@ -1,0 +1,22 @@
+:host {
+    display: grid;
+    grid-row-gap: 1rem;
+}
+
+pre {
+    max-width: 800px;
+}
+
+
+nx-form-field,
+.auth-link {
+    margin-bottom: 0.75rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    & > *{
+        margin-right: 1rem;
+    }
+}
