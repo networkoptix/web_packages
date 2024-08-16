@@ -18,9 +18,6 @@ from partners.utils.cache_keys import get_version_cache_key
 logger = structlog.getLogger()
 
 
-logger = structlog.getLogger()
-
-
 class VersionMixin(models.Model):
     version = models.PositiveBigIntegerField(default=0)
 

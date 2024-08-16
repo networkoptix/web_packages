@@ -562,10 +562,10 @@ class CloudSystemId(
             new = self._state.adding
 
             # Check if the organization associated with the instance has changed
-            orgs_are_different: bool = self.organization_id != self.get_audit_history("organization_id", idx=0)
+            orgs_are_different: bool = self.has_field_changed("organization_id", idx=0)
 
             # Check if the system group associated with the instance has changed
-            system_groups_are_different: bool = self.system_group_id != self.get_audit_history("system_group_id", idx=0)
+            system_groups_are_different: bool = self.has_field_changed("system_group_id", idx=0)
             if system_groups_are_different:
                 old_path = [self.get_audit_history("system_group_id", idx=0)] + (self.path or [])
 
@@ -574,12 +574,15 @@ class CloudSystemId(
 
             # If this is a new record or the organization or system group has changed, update the path
             if new or orgs_are_different or system_groups_are_different:
-                if self.organization_id and self.system_group_id:
+                if self.organization_id is None and self.system_group_id is None:
+                    self.path = []
+                elif self.organization_id and self.system_group_id:
                     self.path = get_path_from_parent(self.system_group)
                 elif self.organization_id:
                     self.path = get_path_from_parent(self.organization)
                 else:
-                    self.path = None
+                    logger.error("Cloud System in an improper state", cloud_system=self.id)
+                    raise ValidationError("Cloud System in an improper state.")
 
             # If this is a new record, invalidate the cache for the organization of the new record
             if new:
@@ -616,10 +619,21 @@ class CloudSystemId(
             ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
 
     def disconnect_system(self):
+        """
+        Disconnects the system from the organization and system group.
+        """
         self.state = ChannelPartnerStates.SHUTDOWN
         self.system_state = CloudSystemStates.DELETED
+
+        # Organization
         self.organization = None
+        self.organization_id = None
+
+        # System group
         self.system_group = None
+        self.system_group_id = None
+
+        # Save the changes
         self.save()
 
     @staticmethod
@@ -662,7 +676,7 @@ class CloudSystemId(
         if self._state.adding:
             return
         if (
-                self.state == self.get_audit_history("state", idx=0)
+                not self.has_field_changed("state", idx=0)
                 and self.organization_id == self.get_audit_history("organization_id", idx=0)
                 and self.system_state == self.get_audit_history("system_state", idx=0)
         ):
@@ -1277,9 +1291,9 @@ class ChannelPartner(
         self.effective_state = max(self.state, getattr(self.parent_channel_partner, 'effective_state', 0))
         if self._state.adding:
             return
-        if self.state == self.get_audit_history("state", idx=0):
+        if not self.has_field_changed("state", idx=0):
             return
-        if self.effective_state == self.get_audit_history("effective_state", idx=0):
+        if not self.has_field_changed("effective_state", idx=0):
             return
         updated_ids = Organization.update_effective_states(
             self.organizations,
@@ -1777,9 +1791,9 @@ class Organization(
         self.effective_state = max(self.state, self.channel_partner.effective_state)
         if self._state.adding:
             return False
-        if self.state == self.get_audit_history("state", idx=0):
+        if not self.has_field_changed("state", idx=0):
             return False
-        if self.effective_state == self.get_audit_history("effective_state", idx=0):
+        if not self.has_field_changed("effective_state", idx=0):
             return False
         self.update_systems_effective_states(organization_effective_state=self.effective_state)
         return True

@@ -25,9 +25,5 @@ def on_cloud_system_saved(
         instance.increment_version()
     handle_organization_id_change(instance)
     if groups_changed:
-        logger.debug(
-            "Cloud System Group Changed - Updating path in cache",
-            system=instance.id,
-            organization=instance.organization_id,
-            system_group=instance.system_group_id)
+        logger.debug("Cloud System Group Changed - Updating path in cache", system=instance.id)
         instance.update_cached_path()
