@@ -1,7 +1,7 @@
 import type { SelectionModel } from '@angular/cdk/collections';
 import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
-import type { Observable } from 'rxjs';
+import type { Observable, Subject } from 'rxjs';
 
 import { UserFilter } from '@dialogs/channel-partners/filter-users/filter-users.types';
 import type { OrgUser } from '@pages/home/store/org-users/org-users.types';
@@ -236,6 +236,11 @@ export type ViewExpiringServiceDetails = DialogType<
         expiringServiceDialogData$: Observable<ExpiringServiceDetailDialogResponse>;
         entityName: string;
     },
+    void
+>;
+
+export type CancelReportExport = DialogType<
+    { exportDialogRef: DialogRef; cancelExport$: Subject<void> },
     void
 >;
 

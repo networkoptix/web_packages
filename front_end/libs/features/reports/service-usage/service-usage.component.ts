@@ -1,14 +1,19 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { icons } from '@static-variables';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
 
+import { NxReportExportService } from './report-export/report-export.service';
 import { NxServiceUsageTableComponent } from './service-usage-table/service-usage-table.component';
 import { ServiceUsageStore } from './service-usage.store';
 import { FormattedUsageReportRecord } from './service-usage.types';
@@ -23,13 +28,17 @@ import { FormattedUsageReportRecord } from './service-usage.types';
         NxPreLoaderComponent,
         NxMonthSelectComponent,
         NxPagePlaceholderGenericNewV2Component,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
     ],
     providers: [ServiceUsageStore],
     standalone: true,
 })
 export class NxServiceUsageComponent extends BaseMonthPageComponent {
+    icons = icons;
     LANG = staticLang;
     readonly serviceUsageStore = inject(ServiceUsageStore);
+    readonly reportExportService = inject(NxReportExportService);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
@@ -58,4 +67,15 @@ export class NxServiceUsageComponent extends BaseMonthPageComponent {
             }
         });
     });
+
+    initExport(reportFormat: ReportExportFormat): void {
+        const entityType = this.entityType$$();
+        const entityId = this.entityId$$();
+        const startTs = this.requestStartString();
+        if (entityType === EntityType.channelPartner) {
+            this.reportExportService.exportPartnerReport(entityId, startTs, reportFormat);
+        } else {
+            this.reportExportService.exportOrgReport(entityId, startTs, reportFormat);
+        }
+    }
 }

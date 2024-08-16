@@ -1,0 +1,22 @@
+@use '../../../../dialogs/nx-modal.scss';
+
+:host {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 20px;
+  width: 350px;
+}
+
+.nx-modal__header-title {
+  margin: 0px;
+}
+
+.nx-modal__body {
+  display: flex;
+  align-items: center;
+}
+
+svg-icon + .nx-modal__body-text {
+  margin-left: 4px;
+}

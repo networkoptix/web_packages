@@ -1,0 +1,45 @@
+<div class="nx-modal__header">
+    <h1
+        class="nx-modal__header-title"
+        translate
+    >
+        Cancel Export?
+    </h1>
+    <button
+        type="button"
+        class="nx-modal__header-close-btn"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <span class="close-content"></span>
+    </button>
+</div>
+<div class="nx-modal__content">
+    <div class="nx-modal__body">
+        <p
+            class="nx-modal__body-text"
+            translate
+        >
+            Your export is not complete. Would you like to cancel the export?
+        </p>
+    </div>
+    <div class="nx-modal__footer">
+        <button
+            class="btn btn-primary"
+            type="button"
+            (click)="close()"
+            translate
+        >
+            Continue Export
+        </button>
+        <button
+            class="btn btn-default"
+            type="button"
+            (click)="cancelExport()"
+            translate
+        >
+            Cancel
+        </button>
+    </div>
+</div>

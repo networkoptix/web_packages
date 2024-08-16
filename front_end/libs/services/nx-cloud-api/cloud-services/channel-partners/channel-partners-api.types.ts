@@ -427,6 +427,16 @@ export interface OrgUsageReportEntry extends BaseUsageReportEntry {
     used_by: number;
 }
 
+export type ReportExportFormat = 'xlsx' | 'csv';
+
+export type ReportStatus = 'success' | 'failed' | 'pending';
+
+export interface ExportResponse {
+    id: string;
+    status: ReportStatus;
+    downloadUrl?: string;
+}
+
 // Reports - Regular service details
 export interface EntityRegularServiceEntry {
     id: string;
