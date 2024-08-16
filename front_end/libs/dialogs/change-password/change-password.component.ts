@@ -115,7 +115,7 @@ export class ChangePasswordModalContent
 
                     return firstValueFrom(
                         this.system.mediaserver.loginToken(
-                            'admin',
+                            this.user.name,
                             this.currentPasswordForUser,
                             true,
                         ),
