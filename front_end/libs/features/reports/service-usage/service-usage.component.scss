@@ -18,6 +18,33 @@ p {
     margin-bottom: 16px;
 }
 
+.export-buttons {
+    margin-bottom: 16px;
+    margin-top: 8px;
+
+    button {
+        font-family: inherit;
+        color: var(--reports-export-button);
+        background: transparent;
+        display: flex;
+        align-items: center;
+        padding: 0 !important;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        svg-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        span {
+            margin-left: 4px;
+        }
+    }
+}
+
 .service-usage-table-wrapper {
     flex-grow: 1;
 }

@@ -1,7 +1,7 @@
 import type { SelectionModel } from '@angular/cdk/collections';
 import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
-import type { Observable } from 'rxjs';
+import type { Observable, Subject } from 'rxjs';
 
 import type { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
 import type { SELECTION_DATE_RANGE } from '@components/nx-webgl-canvas/services/webgl.types';
@@ -237,6 +237,11 @@ export type ViewExpiringServiceDetails = DialogType<
         expiringServiceDialogData$: Observable<ExpiringServiceDetailDialogResponse>;
         entityName: string;
     },
+    void
+>;
+
+export type CancelReportExport = DialogType<
+    { exportDialogRef: DialogRef; cancelExport$: Subject<void> },
     void
 >;
 

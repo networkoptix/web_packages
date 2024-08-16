@@ -516,6 +516,14 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.EXTRA_LARGE },
     );
 
+    cancelReportExport = this.dialogV2Factory<Dt.CancelReportExport>(
+        () =>
+            import('./channel-partners/cancel-report-export/cancel-report-export.component').then(
+                m => m.NxCancelExportDialog,
+            ),
+        { width: DIALOG_SIZE.SMALL },
+    );
+
     /* Admin */
     connectLocalToCloud = this.dialogV1Factory<Dt.ConnectLocalToCloud>(() =>
         import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),

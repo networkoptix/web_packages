@@ -61,6 +61,8 @@ import {
     PartnerExpiringServiceReportResponse,
     OrgExpiringServiceReportResponse,
     ExpiringServiceDetailDialogResponse,
+    ReportExportFormat,
+    ExportResponse,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -306,6 +308,37 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
+    createPartnerServiceUsageExport = (
+        partnerId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): Observable<ExportResponse> => {
+        return this.post(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                'usage_report',
+                'export',
+            ]),
+            { params: { periodStartDate, reportFormat } },
+        );
+    };
+
+    getPartnerServiceUsageExport = (
+        partnerId: string,
+        reportId: string,
+    ): Observable<ExportResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                'usage_report',
+                'export',
+                reportId,
+            ]),
+        );
+    };
+
     getPartnerRegularServiceReport = (
         partnerId: string,
         serviceId: string,
@@ -474,6 +507,32 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report']), {
             params: { periodStartDate },
         });
+    };
+
+    createOrganizationServiceUsageExport = (
+        orgId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): Observable<ExportResponse> => {
+        return this.post(
+            this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report', 'export']),
+            { params: { periodStartDate, reportFormat } },
+        );
+    };
+
+    getOrganizationServiceUsageExport = (
+        orgId: string,
+        reportId: string,
+    ): Observable<ExportResponse> => {
+        return this.get(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                'usage_report',
+                'export',
+                reportId,
+            ]),
+        );
     };
 
     getOrganizationRegularServiceReport = (

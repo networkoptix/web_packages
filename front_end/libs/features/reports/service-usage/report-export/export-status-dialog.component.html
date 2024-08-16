@@ -1,0 +1,61 @@
+<div class="nx-modal__header">
+    <h1
+        class="nx-modal__header-title"
+        translate
+    >
+        Preparing Download
+    </h1>
+    <button
+        type="button"
+        class="nx-modal__header-close-btn"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <span class="close-content"></span>
+    </button>
+</div>
+<div class="nx-modal__content">
+    <div class="nx-modal__body">
+        @if (reportExport()?.status === 'failed') {
+            <p
+                class="nx-modal__body-text"
+                translate
+            >
+                Download Error
+            </p>
+        } @else if (reportExport()?.status === 'success') {
+            <svg-icon
+                nx-add-svg-src
+                [applyClass]="true"
+                [src]="icons.dir + 'check.svg'"
+                [svgStyle]="{
+                    width: '20px',
+                    height: '20px'
+                }"
+            ></svg-icon>
+            <span
+                class="nx-modal__body-text"
+                translate
+            >
+                Report Generated
+            </span>
+        } @else {
+            <svg-icon
+                nx-add-svg-src
+                [applyClass]="true"
+                [src]="icons.dir + 'document.svg'"
+                [svgStyle]="{
+                    width: '20px',
+                    height: '20px'
+                }"
+            ></svg-icon>
+            <span
+                class="nx-modal__body-text"
+                translate
+            >
+                Report Generating...
+            </span>
+        }
+    </div>
+</div>
