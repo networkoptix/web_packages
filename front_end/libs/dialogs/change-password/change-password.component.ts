@@ -113,7 +113,7 @@ export class ChangePasswordModalContent
                     }
 
                     return this.system.mediaserver
-                        .loginToken('admin', this.currentPasswordForUser, true)
+                        .loginToken(this.user.name, this.currentPasswordForUser, true)
                         .toPromise()
                         .then(
                             () => {
