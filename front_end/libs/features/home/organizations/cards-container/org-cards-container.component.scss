@@ -8,6 +8,8 @@
 ), ':host');
 
 :host {
+    height: 100%;
+
     ::ng-deep {
         nx-three-dot {
             .dropdown-menu {
@@ -103,7 +105,19 @@ $org-cards-hidden-spacing: 4px;
 }
 
 .no-systems {
-    height: $org-cards-container-height;
+    overflow: auto;
+
+    &:not(:has(nx-no-systems-cards)) {
+        height: $org-cards-container-height;
+    }
+
+    &:has(nx-no-systems-cards) {
+        max-height: calc(100% - 100px);
+    }
+
+    &:has(nx-page-placeholder-no-items) {
+        max-height: calc(100% - 300px);
+    }
 }
 
 .actions {
@@ -139,11 +153,6 @@ $org-cards-hidden-spacing: 4px;
     display: flex;
     align-items: flex-start;
 }
-
-:host {
-    height: 100%;
-}
-
 
 .card-content {
     .icon-with-fill {
