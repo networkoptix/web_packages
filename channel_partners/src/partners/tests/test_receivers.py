@@ -1,6 +1,8 @@
+from unittest.mock import patch
 
 import pytest
 from django.core.cache import caches
+from django.core.exceptions import ValidationError
 
 from partners.models import (
     ChannelPartner,
@@ -382,6 +384,57 @@ class TestReceivers:
         # Test after disconnecting the service
         self.assert_both_versions(system, 1)
         self.assert_both_descendant_versions(organization, 2)
+
+    def test_change_system_group_updates_path(self, organization_factory, system_group_factory, system_factory, caplog):
+        with self.capture_callbacks(execute=True):
+            # Step 1: Create an organization and two system groups within that organization
+            organization = organization_factory()
+            group1 = system_group_factory(organization=organization, name="Group 1")
+            group2 = system_group_factory(organization=organization, name="Group 2")
+
+            # Step 2: Create a system and assign it to one of the system groups
+            system = system_factory(organization=organization, system_group=group1)
+
+        self.assert_both_versions(system, 0)
+        self.assert_path_version(system)
+
+        with patch.object(system.__class__, 'update_cached_path') as mock_update_cached_path, caplog.at_level('DEBUG'):
+            with self.capture_callbacks(execute=True):
+                # Change the system's group to the other system group
+                system.system_group = group2
+                system.save()
+
+            # Verify that update_cached_path was called
+            mock_update_cached_path.assert_called_once()
+
+        # Verify the log message
+        assert any("Cloud System Group Changed - Updating path in cache" in message for message in caplog.messages)
+
+        self.assert_both_versions(system, 1)
+        self.assert_path_version(system)
+
+    def test_improper_state_logs_error(self, organization_factory, system_group_factory, system_factory, caplog):
+        with self.capture_callbacks(execute=True):
+            # Step 1: Create an organization and a system group
+            organization = organization_factory()
+            system_group = system_group_factory(organization=organization)
+
+            # Step 2: Create a CloudSystemId instance without setting the organization and system group
+            system = system_factory(organization=organization, system_group=system_group)
+
+        self.assert_both_versions(system, 0)
+        self.assert_path_version(system)
+
+        with caplog.at_level('ERROR'):
+            with self.capture_callbacks(execute=True):
+                system.organization_id = None
+                system.organization = None
+
+            with pytest.raises(ValidationError, match="Cloud System in an improper state."):
+                system.save()
+
+            # Verify the log message
+            assert any("Cloud System in an improper state" in message for message in caplog.messages)
 
     def test_system_disconnect_several_users_2(
             self,

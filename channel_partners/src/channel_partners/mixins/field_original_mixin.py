@@ -9,7 +9,13 @@ logger = structlog.getLogger()
 class FieldOriginalMixin:
     """
     Maintains a fixed-length FIFO queue for auditing changes to specified fields.
+
     The `_audit` attribute is a dictionary where keys are field names and values are deques (FIFO queues) of changes.
+    Upon initialization, the audit will have one entry for each observed field with its initial value.
+
+    Attributes:
+        observed_fields (list): List of field names to be audited.
+        audit_length (int): Maximum number of historical values to keep for each field (default: 3).
     """
     observed_fields = []
     audit_length = 3  # Default length of the FIFO queue
@@ -20,9 +26,17 @@ class FieldOriginalMixin:
 
     def has_field_changed(self, field_name, idx=None):
         """
-        Check if a field has changed by comparing the current value with the last audited value or a specific audit entry.
-        :param field_name: The name of the field to check.
-        :param idx: Optional index to compare with a specific audit entry.
+        Check if a field has changed by comparing the current value with a historical value.
+
+        Args:
+            field_name (str): The name of the field to check.
+            idx (int, optional): Index of the historical value to compare against. If None, compares with the most recent historical value.
+
+        Returns:
+            bool: True if the field has changed, False otherwise.
+
+        Raises:
+            None, but logs errors for non-existent fields or out-of-range indices.
         """
         if field_name not in self._audit:
             logger.error("Field does not exist in audit.", model=self.__class__.__name__, field=field_name)
@@ -37,15 +51,23 @@ class FieldOriginalMixin:
                 return False
             audited_value = audit_history[idx]
         else:
-            audited_value = audit_history[-1] if audit_history else None
+            audited_value = audit_history[0] if audit_history else None
 
         return current_value != audited_value
 
     def get_audit_history(self, field_name, idx=None):
         """
-        Get the audit history of a field. If idx is provided, return the specific audit entry.
-        :param field_name: The name of the field.
-        :param idx: Optional index to retrieve a specific audit entry.
+        Retrieve the audit history of a field.
+
+        Args:
+            field_name (str): The name of the field.
+            idx (int, optional): Index of a specific historical value to retrieve. If None, returns the entire history.
+
+        Returns:
+            list or Any: The entire audit history as a list, or a specific historical value if idx is provided.
+
+        Raises:
+            None, but logs errors for non-existent fields or out-of-range indices.
         """
         if field_name not in self._audit:
             logger.error("Field does not exist in audit.", model=self.__class__.__name__, field=field_name)
@@ -76,7 +98,7 @@ class FieldOriginalMixin:
                 if self._field_exists(field_name):
                     self._audit[field_name] = deque(maxlen=self.audit_length)
                     current_value = self._get_field_value(field_name)
-                    self._audit[field_name].append(current_value)
+                    self._audit[field_name].appendleft(current_value)
                 else:
                     logger.warning("Field does not exist on model.", model=self.__class__.__name__, field=field_name)
 
@@ -90,7 +112,7 @@ class FieldOriginalMixin:
             for field_name in self.observed_fields:
                 if self._field_exists(field_name):
                     current_value = self._get_field_value(field_name)
-                    self._audit[field_name].append(current_value)
+                    self._audit[field_name].appendleft(current_value)
                 else:
                     logger.warning("Field does not exist on model.", model=self.__class__.__name__, field=field_name)
 
