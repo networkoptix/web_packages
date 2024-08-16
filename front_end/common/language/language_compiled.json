@@ -1558,7 +1558,7 @@
     "System: { system }": "System: { system }",
     "Systems": "Systems",
     "Systems List": "Systems List",
-    "Systems in the Suspended, or Shutdown state are not available in %CLOUD_NAME%": "Systems in the Suspended, or Shutdown state are not available in %CLOUD_NAME%",
+    "Systems in the Suspended or Shutdown state are not available in %CLOUD_NAME%": "Systems in the Suspended or Shutdown state are not available in %CLOUD_NAME%",
     "Systems merge failed": "Systems merge failed",
     "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Systems will be accessible over local network for local users": "Systems will be accessible over local network for local users",
