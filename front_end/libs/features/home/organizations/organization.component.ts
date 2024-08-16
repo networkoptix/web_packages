@@ -2,16 +2,16 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    DestroyRef,
-    Input,
-    OnInit,
-    inject,
-    signal,
     computed,
-    input,
-    untracked,
+    DestroyRef,
     effect,
+    inject,
+    Input,
+    input,
     OnDestroy,
+    OnInit,
+    signal,
+    untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
@@ -25,10 +25,10 @@ import { delay, switchMap } from 'rxjs/operators';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectCurrentOrganization,
-    selectBanner,
-    selectCurrentParentPartnerForChild,
     selectAllOrganizations,
+    selectBanner,
+    selectCurrentOrganization,
+    selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
@@ -107,7 +107,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     routerState = inject(ChannelPartnersRouteState);
     currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
-    isValidOrg = true;
+    isValidOrg = false;
 
     hasSupportInfo$$ = computed(() => {
         return Object.values(this.parentPartner$$()?.supportInformation || []).some(
@@ -264,20 +264,26 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
                     if (loadedOrg) {
                         return loadedOrg;
                     }
-                    const fetchedOrg = await firstValueFrom(this.cpService.getOrganization(id));
-                    this.store.dispatch(
-                        CPActions.addOrganizations({ organizations: [fetchedOrg] }),
-                    );
-                    return fetchedOrg;
+
+                    return firstValueFrom(this.cpService.getOrganization(id))
+                        .then(fetchedOrg => {
+                            this.store.dispatch(
+                                CPActions.addOrganizations({ organizations: [fetchedOrg] }),
+                            );
+                            return fetchedOrg;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(currentOrg => {
                 if (!currentOrg) {
-                    this.isValidOrg = false;
                     this.isLoading = false;
                     return;
                 }
+                this.isValidOrg = true;
 
                 this.cpService.getSelfChannelPartnerUser(currentOrg?.channelPartner).subscribe({
                     next: () => this.isChannelPartnerUser$$.set(true),
