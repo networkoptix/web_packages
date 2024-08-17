@@ -12,6 +12,7 @@ from enum import (
 from math import ceil
 from threading import Lock
 from typing import (
+    Any,
     Dict,
     List,
     Self,
@@ -714,6 +715,17 @@ class CloudSystemId(
             return current_services.get('services', {})
         else:
             return {}
+
+    def get_current_services_list(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                'service_id': service_id,
+                'quantity': values.get('quantity', 0),
+                'used': values.get('used', 0),
+            }
+            for service_id, values in self.services.items()
+        ]
+
 
     @property
     def services(self) -> Dict[str, ServiceUsageDict]:

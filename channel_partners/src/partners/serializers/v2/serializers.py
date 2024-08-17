@@ -1074,9 +1074,6 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
         model = CloudSystemId
         fields = ['services']
 
-    class ServiceQuantitySerializer(serializers.Serializer):
-        quantity = serializers.IntegerField(required=True)
-
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
         user = validated_data.get('user')

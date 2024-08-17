@@ -1584,6 +1584,7 @@ class CloudSystemViewSet(VersionedViewMixin,
                    extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_service_quantities} for Organization\'s Channel Partner'})
     @extend_schema(auth=[{'Cloud Oauth Token': []}], request=SystemServiceQuantitySerializer,
                    responses=SystemServiceQuantitySerializer)
+    @version_range(Versions(min_version="v2", deprecated_in="v2", max_version="v2"))
     @action(methods=['get', 'patch'], detail=True)
     def service_quantity(self, request, id):
         # Get System object

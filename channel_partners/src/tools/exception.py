@@ -1,8 +1,27 @@
+from enum import StrEnum
+
 from rest_framework import status
 from rest_framework.exceptions import (
     APIException,
     _get_error_details,
 )
+
+
+class ErrorCodes(StrEnum):
+    # TODO ensure that all error codes are in camelCase
+    # CLOUD-13665 Add unique error codes for all API errors
+    permission_denied = 'permission_denied'
+    legacy_license_no_service = 'legacyLicenseNoService'
+    system_not_activated = 'systemNotActivated'
+    system_is_shutdown = 'systemIsShutdown'
+    service_quantity_exceeded = 'serviceQuantityExceeded'
+    service_disabled = 'serviceDisabled'
+    service_expired = 'serviceExpired'
+    duplicated_service_quantity = 'duplicatedServiceQuantity'
+    role_deletion_conflict = 'roleDeletionConflict'
+    role_creation_conflict = 'roleCreationConflict'
+    role_change_conflict = 'roleChangeConflict'
+    wrong_service_id = 'wrongServiceId'
 
 
 class Conflict(APIException):
