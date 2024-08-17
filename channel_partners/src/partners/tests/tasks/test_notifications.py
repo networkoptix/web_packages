@@ -345,7 +345,7 @@ class TestNotificationOrganizationStateChangedTask:
         self.active_organization = organization_factory(state=ChannelPartnerStates.ACTIVE)
         self.suspended_organization = organization_factory(state=ChannelPartnerStates.SUSPENDED)
         self.shutdown_organization = organization_factory(state=ChannelPartnerStates.SHUTDOWN)
-        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEMS_ADMINISTRATOR]
+        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEM_ADMINISTRATOR]
         for role in roles:
             for _ in range(2):
                 org_user_factory(organization=self.active_organization, role=role)
@@ -416,7 +416,7 @@ class TestNotificationPartnerStateChangedTask:
         self.active_partner = channel_partner_factory(state=ChannelPartnerStates.ACTIVE)
         self.suspended_partner = channel_partner_factory(state=ChannelPartnerStates.SUSPENDED)
         self.shutdown_partner = channel_partner_factory(state=ChannelPartnerStates.SHUTDOWN)
-        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEMS_ADMINISTRATOR]
+        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEM_ADMINISTRATOR]
         for role in roles:
             for _ in range(2):
                 cp_user_factory(channel_partner=self.active_partner, role=role)
@@ -490,7 +490,7 @@ class TestRunOrganizationStateChangedTask:
         self.suspended_organization = organization_factory(state=ChannelPartnerStates.SUSPENDED)
         self.shutdown_organization = organization_factory(state=ChannelPartnerStates.SHUTDOWN)
         self.organizations = [self.active_organization, self.suspended_organization, self.shutdown_organization]
-        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEMS_ADMINISTRATOR]
+        roles = [OrganizationRoles.ORGANIZATION_ADMINISTRATOR, OrganizationRoles.SYSTEM_ADMINISTRATOR]
         for role in roles:
             for _ in range(2):
                 org_user_factory(organization=self.active_organization, role=role)
