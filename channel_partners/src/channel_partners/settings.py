@@ -14,6 +14,7 @@ import environ
 import structlog
 from corsheaders.defaults import default_headers
 from django.core.cache.backends.dummy import DummyCache
+from django.core.exceptions import ImproperlyConfigured
 from nx_jwt.jwt_auth import get_jwk_client
 
 from channel_partners.configuration.celery_cron_config import (
@@ -119,15 +120,15 @@ DB_PORT = env.str('DB_PORT', default=5432)
 DB_USER = env.str('DB_USER')
 
 ## Services Authentication
-if IS_CELERY_BEAT:
-    AUTH_SRV_PROVIDERS = env.str('AUTH_PROVIDERS', '')
-    AUTH_SRV_ID = env.str('AUTH_ID', '')
-    AUTH_SRV_SECRET = env.str('AUTH_SECRET', '')
-else:
-    AUTH_SRV_PROVIDERS = env.str('AUTH_PROVIDERS')
-    AUTH_SRV_ID = env.str('AUTH_ID')
-    AUTH_SRV_SECRET = env.str('AUTH_SECRET')
-
+AUTH_SRV_PROVIDERS = env.str('AUTH_PROVIDERS', '')
+AUTH_SRV_ID = env.str('AUTH_ID', '')
+AUTH_SRV_SECRET = env.str('AUTH_SECRET', '')
+if (
+        not IS_CELERY_BEAT
+        and not IS_PRIVATE_CLOUD
+        and not all([AUTH_SRV_PROVIDERS, AUTH_SRV_ID, AUTH_SRV_SECRET])
+):
+    raise ImproperlyConfigured("Missing required auth settings.")
 
 ## Celery
 QUEUE_CELERY_BROKER_URL = env.str('QUEUE_CELERY_BROKER_URL')

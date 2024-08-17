@@ -53,7 +53,7 @@ def request_auth_token():
         raise
 
 
-def get_auth_token() -> str:
+def get_internal_token() -> str:
     """
     Retrieve or request a new authentication token.
 
@@ -71,6 +71,15 @@ def get_auth_token() -> str:
     cache.set(SECRET_CACHE_KEY, token_data["access_token"],
               token_data["expires_in"] - 20 if token_data["expires_in"] > 20 else 0)
     return token_data["access_token"]
+
+
+def get_auth_token() -> str:
+    if all([settings.AUTH_SRV_PROVIDERS, settings.AUTH_SRV_ID, settings.AUTH_SRV_SECRET]):
+        return get_internal_token()
+    if not settings.IS_PRIVATE_CLOUD:
+        raise ValueError("Missing required auth settings.")
+    logger.warning("Auth settings are missing, using random token.")
+    return 'token_is_unavailable'
 
 
 def get_auth_string() -> str:
