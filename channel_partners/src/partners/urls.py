@@ -6,6 +6,7 @@ from tools.versioning.utils import versioned_include
 
 versioned_modules = [
     'partners.views.v2.urls',
+    'partners.views.v3.urls',
 ]
 
 urlpatterns = []

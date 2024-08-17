@@ -112,6 +112,7 @@ def filter_patterns(patterns: list, version: str) -> list:
                     if pat.pattern.regex in accepted_paths:
                         raise ImproperlyConfigured(
                             f"Path {pat.pattern} or name {pat.name} is already in use. Version {version}, view {view}.")
+
                     filtered.append(pat)
                     accepted_paths.append(pat.pattern.regex)
     return filtered
@@ -207,7 +208,7 @@ def versioned_serializer(base_serializer: Union[Type[Serializer], Serializer], v
         if serializer_class := versions_mapping.get(ver, {}).get(base_class):
             return serializer_class
     logger.warning(
-        f"Serializer for not found for version. Using base serializer: {base_class}. Version: {version}.")
+        "Serializer for not found for version", version=version, base_serializer=base_class)
     return base_serializer
 
 
