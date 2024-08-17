@@ -7,7 +7,7 @@ from partners.models import OrganizationRoles
 
 def alter_role_name(apps, schema_editor):
     OrganizationRole = apps.get_model("partners", "OrganizationRole")
-    OrganizationRole.objects.filter(id=OrganizationRoles.SYSTEMS_ADMINISTRATOR).update(name='Systems Administrator')
+    OrganizationRole.objects.filter(id=OrganizationRoles.SYSTEM_ADMINISTRATOR).update(name='Systems Administrator')
 
 
 class Migration(migrations.Migration):

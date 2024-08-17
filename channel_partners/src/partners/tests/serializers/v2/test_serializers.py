@@ -771,7 +771,7 @@ class TestOrganizationUserSerializer:
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
         self.org_adm_name = 'Organization Administrator'
-        self.adm_name = 'Systems Administrator'
+        self.adm_name = 'System Administrator'
         self.org_power_user_name = 'Power User'
 
     @pytest.mark.no_tasks_autofix
@@ -839,7 +839,7 @@ class TestOrganizationUserSerializer:
         serializer = OrganizationUserSerializer(instance=user)
         assert serializer.data['email'] == group_user.user.email
         assert serializer.data['groupRoles'][0]['roles'] == [self.adm_name]
-        assert serializer.data['groupRoles'][0]['rolesIds'] == [str(OrganizationRoles.SYSTEMS_ADMINISTRATOR)]
+        assert serializer.data['groupRoles'][0]['rolesIds'] == [str(OrganizationRoles.SYSTEM_ADMINISTRATOR)]
         assert serializer.data['groupRoles'][0]['groupId'] == str(group_user.system_group_id)
         assert serializer.data['groupRoles'][0]['created']
         assert serializer.data['groupRoles'][0]['lastModified']
@@ -981,14 +981,14 @@ class TestSystemGroupUserSerializer:
         user = self.other_org_user.user
         data = {
             'email': self.other_org_user.user.email,
-            'role': 'Systems Administrator'
+            'role': 'System Administrator'
         }
 
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
         assert serializer.is_valid()
 
         group_rel = serializer.save()
-        assert group_rel.roles == [OrganizationRoles.SYSTEMS_ADMINISTRATOR]
+        assert group_rel.roles == [OrganizationRoles.SYSTEM_ADMINISTRATOR]
         assert group_rel.user == user
         user_rels = OrganizationToUser.objects.filter(organization=self.org, user=user, system_group=self.group)
         assert user_rels.count() == 1
@@ -997,7 +997,7 @@ class TestSystemGroupUserSerializer:
         org_user = org_user_factory(organization=self.org)
         data = {
             'email': org_user.user.email,
-            'role': 'Systems Administrator'
+            'role': 'System Administrator'
         }
 
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
@@ -1009,7 +1009,7 @@ class TestSystemGroupUserSerializer:
         user = child_group_rel.user
         data = {
             'email': child_group_rel.user.email,
-            'role': 'Systems Administrator'
+            'role': 'System Administrator'
         }
 
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
@@ -1017,14 +1017,14 @@ class TestSystemGroupUserSerializer:
         serializer.save()
         new_rel = OrganizationToUser.objects.get(organization=self.org, user=user)
         assert new_rel.system_group_id == self.group.id
-        assert new_rel.roles == [OrganizationRoles.SYSTEMS_ADMINISTRATOR]
+        assert new_rel.roles == [OrganizationRoles.SYSTEM_ADMINISTRATOR]
 
     def test_groups_overlap_cp_user(self, cp_user_factory):
         cp_user_rel = cp_user_factory(channel_partner=self.org.channel_partner)
         user = cp_user_rel.user
         data = {
             'email': cp_user_rel.user.email,
-            'role': 'Systems Administrator'
+            'role': 'System Administrator'
         }
 
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})

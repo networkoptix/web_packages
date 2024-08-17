@@ -485,3 +485,5 @@ def report_daily_calculation_task():
             logger.info("No outdated reports found.")
     finally:
         cache.delete(TASK_LOCK_KEY)
+
+

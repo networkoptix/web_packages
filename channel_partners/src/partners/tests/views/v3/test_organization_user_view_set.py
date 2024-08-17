@@ -323,7 +323,7 @@ class TestOrganizationUserViewSetList:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'get': 'list'}, detail=True)
         self.request = v3arf.get('/')
@@ -446,7 +446,7 @@ class TestOrganizationUserViewSetRetrieve:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
         self.request = v3arf.get('/')
@@ -560,8 +560,8 @@ class TestOrganizationUserViewSetRetrieve:
         assert response.data['email'] == self.group_admin.user.email
         assert response.data['fullName'] == self.group_admin.user.full_name
         assert response.data['groupRoles'][0]['groupId'] == str(self.group.id)
-        assert response.data['groupRoles'][0]['roles'] == ['Systems Administrator']
-        assert response.data['groupRoles'][0]['rolesIds'] == [str(OrganizationRoles.SYSTEMS_ADMINISTRATOR)]
+        assert response.data['groupRoles'][0]['roles'] == ['System Administrator']
+        assert response.data['groupRoles'][0]['rolesIds'] == [str(OrganizationRoles.SYSTEM_ADMINISTRATOR)]
         assert response.data['roles'] == []
         assert response.data['rolesIds'] == []
         assert response.data['created']
@@ -591,7 +591,7 @@ class TestOrganizationUserViewSetCreateUpdate:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         self.request = v3arf.get('/')
@@ -749,7 +749,7 @@ class TestOrganizationUserViewSetDestroy:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
         self.request = v3arf.delete('/')
@@ -889,7 +889,7 @@ class TestOrganizationUserViewSetCreateUpdate:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         self.request = v3arf.get('/')
@@ -1048,7 +1048,7 @@ class TestOrganizationUserViewSetCreateUpdate:
                                                role=OrganizationRoles.POWER_USER)
         self.group = system_group_factory(organization=self.organization)
         self.group_admin = sys_group_user_factory(organization=self.organization,
-                                                  role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR,
+                                                  role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
                                                   group=self.group)
         self.view = OrganizationUserViewSet.as_view(actions={'post': 'bulk_delete'}, detail=True)
         self.request = v3arf.get('/')

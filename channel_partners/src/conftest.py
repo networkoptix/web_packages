@@ -578,7 +578,7 @@ def system_group_factory():
 
 @pytest.fixture()
 def sys_group_user_factory(system_group_factory, cloud_user_factory):
-    def factory(organization, group=None, cloud_user=None, role_id=OrganizationRoles.SYSTEMS_ADMINISTRATOR):
+    def factory(organization, group=None, cloud_user=None, role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR):
         if not group:
             group = system_group_factory(organization=organization)
         if not cloud_user:
