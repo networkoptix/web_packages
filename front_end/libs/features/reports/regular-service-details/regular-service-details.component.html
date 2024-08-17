@@ -24,6 +24,7 @@
                     | translate: { customerName: selectedEntityName$$() }
             }}
         </p>
+        <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
     </div>
     <div class="service-details-table-wrapper">
         @if (!hasError()) {

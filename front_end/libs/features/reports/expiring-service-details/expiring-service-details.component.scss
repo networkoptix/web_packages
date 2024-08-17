@@ -26,6 +26,10 @@
 .info {
     font-size: 14px;
     margin-bottom: 16px;
+
+    p {
+        margin-bottom: unset;
+    }
 }
 
 .service-details-table-wrapper {
