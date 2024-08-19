@@ -186,7 +186,7 @@ export const RegularServiceDetailsStore = signalStore(
                 selectedService = services.find(service => service.id === serviceId);
             } catch ({ error }) {
                 patchState(store, {
-                    error: error?.join('\n') ?? '',
+                    error: error?.detail ?? 'Error loading report.',
                     hasError: true,
                     isLoading: false,
                 });
@@ -222,7 +222,7 @@ export const RegularServiceDetailsStore = signalStore(
                 )?.service;
             } catch ({ error }) {
                 patchState(store, {
-                    error: error?.join('\n') ?? '',
+                    error: error?.detail ?? 'Error loading report.',
                     hasError: true,
                     isLoading: false,
                 });
