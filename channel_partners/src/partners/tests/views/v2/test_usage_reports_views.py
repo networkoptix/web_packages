@@ -8,7 +8,6 @@ import pytest
 from dateutil.relativedelta import relativedelta
 from django.core.cache import caches
 from django.utils import timezone
-from django_celery_results.models import TaskResult
 from mock.mock import MagicMock
 from moto import mock_aws
 from rest_framework.reverse import reverse
@@ -26,7 +25,10 @@ from partners.services.usage_reports_service import (
     OrganizationReportsService,
 )
 from partners.tasks.constants import ReportTaskState
-from partners.tasks.service_reports_export import get_cached_report_key
+from partners.tasks.service_reports_export import (
+    get_cached_report_key,
+    get_queued_report_key,
+)
 from partners.tasks.services import new_channel_partner_created
 from partners.tasks.usage_reports import calculate_all_reports
 from partners.views.v2.usage_reports_views import get_hierarchy_level
@@ -599,10 +601,10 @@ class TestOrganizationGenerateReport:
         self.task_result = MagicMock()
         self.task_result.task_id = self.task_id
         self.export_path = f'{self.path}{self.task_id}/'
-        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.delay',
+        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.apply_async',
                                                   return_value=self.task_result)
         self.mock_task = MagicMock()
-        self.mock_task_result_get = mocker.patch('django_celery_results.models.TaskResult.objects.get',
+        self.mock_task_result_get = mocker.patch('partners.tasks.service_reports_export.get_task',
                                                   return_value=self.mock_task)
         self.mock_storage_exists = mocker.patch('storages.backends.s3.S3Storage.exists', return_value=True)
         self.mock_generate_presigned_url = mocker.patch(
@@ -621,7 +623,8 @@ class TestOrganizationGenerateReport:
             response = self.client.post(self.path, QUERY_STRING=query_string)
             assert response.status_code == 200
             assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            self.mock_generate_report.assert_called_once_with(
+            self.mock_generate_report.assert_called_once()
+            assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
                 organization_id=str(self.organization.pk),
                 period_start=self.period_start.isoformat(),
                 user_id=self.organization_admin.user_id,
@@ -636,6 +639,8 @@ class TestOrganizationGenerateReport:
                 report_format=format
             )
             assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+            assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
+
             # check cached requests
             response = self.client.post(self.path, QUERY_STRING=query_string)
             assert response.status_code == 200
@@ -646,10 +651,21 @@ class TestOrganizationGenerateReport:
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
-        self.mock_task_result_get.side_effect = TaskResult.DoesNotExist('Not found')
+        self.mock_task_result_get.return_value = None
         response = self.client.get(self.export_path)
         assert response.status_code == 404
         self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_pending_export_report_task_not_found(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.mock_task_result_get.return_value = None
+        caches['default'].set(get_queued_report_key(self.task_id), '1', timeout=60)
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.pending.value,
+                                 'organizationId': str(self.organization.id)}
 
     def test_failed_export_report_empty_kwargs(self, mocker):
         self.mock_task.status = 'PENDING'
@@ -762,10 +778,10 @@ class TestChannelPartnerGenerateReport:
         self.export_path = f'{self.path}{self.task_id}/'
         self.task_result = MagicMock()
         self.task_result.task_id = self.task_id
-        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.delay',
+        self.mock_generate_report = mocker.patch('partners.tasks.service_reports_export.generate_report.apply_async',
                                                   return_value=self.task_result)
         self.mock_task = MagicMock()
-        self.mock_task_result_get = mocker.patch('django_celery_results.models.TaskResult.objects.get',
+        self.mock_task_result_get = mocker.patch('partners.tasks.service_reports_export.get_task',
                                                   return_value=self.mock_task)
         self.mock_storage_exists = mocker.patch('storages.backends.s3.S3Storage.exists', return_value=True)
         self.mock_generate_presigned_url = mocker.patch(
@@ -784,13 +800,15 @@ class TestChannelPartnerGenerateReport:
             response = self.client.post(self.path, QUERY_STRING=query_string)
             assert response.status_code == 200
             assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            self.mock_generate_report.assert_called_once_with(
+            self.mock_generate_report.assert_called_once()
+            assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
                 channel_partner_id=str(self.channel_partner.pk),
                 period_start=self.period_start.isoformat(),
                 user_id=self.admin.user_id,
                 report_format=format,
                 hierarchy_level=1
             )
+            assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
             # check cache
             cache_key = get_cached_report_key(
                 entity_id=self.channel_partner.pk,
@@ -809,7 +827,7 @@ class TestChannelPartnerGenerateReport:
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
-        self.mock_task_result_get.side_effect = TaskResult.DoesNotExist('Not found')
+        self.mock_task_result_get.return_value = None
         response = self.client.get(self.export_path)
         assert response.status_code == 404
         self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
@@ -832,6 +850,17 @@ class TestChannelPartnerGenerateReport:
         response = self.client.get(self.export_path)
         assert response.status_code == 403
         self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+
+    def test_pending_export_report_task_not_found(self, mocker):
+        self.mock_task.status = 'PENDING'
+        self.mock_task_result_get.return_value = None
+        caches['default'].set(get_queued_report_key(self.task_id), '1', timeout=60)
+        response = self.client.get(self.export_path)
+        assert response.status_code == 200
+        self.mock_task_result_get.assert_called_once_with(task_id=self.task_id)
+        assert response.data == {'id': self.task_id,
+                                 'status': ReportTaskState.pending.value,
+                                 'channelPartnerId': str(self.channel_partner.id)}
 
     def test_export_report_pending(self, mocker):
         self.mock_task.status = 'PENDING'
