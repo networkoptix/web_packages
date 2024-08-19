@@ -7,8 +7,6 @@ from typing import (
 )
 
 import structlog
-from celery.result import AsyncResult
-from django.core.cache import caches
 from django.db.models import F
 from django.urls import converters
 from drf_spectacular.types import OpenApiTypes
@@ -68,9 +66,9 @@ from partners.services.usage_reports_service import (
 )
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
-    generate_report,
     get_cached_report_key,
     get_report_result,
+    start_report_generation,
 )
 from partners.views.v2.views import (
     DefaultPagination,
@@ -83,7 +81,6 @@ from tools.versioning.views import VersionedViewMixin
 
 
 logger = structlog.get_logger(__name__)
-DAILY_REPORTS_LIMIT = 100
 
 
 def get_hierarchy_level(entity, user) -> int | None:
@@ -397,20 +394,14 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
             user_id=request.user.id,
             report_format=report_format,
         )
-        requests = caches['default'].get(cache_key) or []
-        now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
-        requests = list(filter(lambda r: r > now - 86400, requests))
-        if len(requests) >= DAILY_REPORTS_LIMIT:
-            raise PermissionDenied(detail='Daily report generation limit exceeded.')
-        task: AsyncResult = generate_report.delay(
+        task_kwargs = dict(
             organization_id=str(organization.id),
             period_start=period_start.isoformat(),
             user_id=request.user.id,
             report_format=report_format,
             hierarchy_level=get_hierarchy_level(organization, request.user),
         )
-        requests.append(now)
-        caches['default'].set(cache_key, requests, timeout=86400)
+        task = start_report_generation(cache_key, task_kwargs)
         return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
                         status=status.HTTP_200_OK)
 
@@ -603,19 +594,13 @@ class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseVi
             user_id=request.user.id,
             report_format=report_format,
         )
-        requests = caches['default'].get(cache_key) or []
-        now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
-        requests = list(filter(lambda r: r > now - 86400, requests))
-        if len(requests) >= DAILY_REPORTS_LIMIT:
-            raise PermissionDenied(detail='Daily report generation limit exceeded.')
-        task: AsyncResult = generate_report.delay(
+        task_kwargs = dict(
             channel_partner_id=str(channel_partner.id),
             period_start=period_start.isoformat(),
             user_id=request.user.id,
             report_format=report_format,
             hierarchy_level=get_hierarchy_level(channel_partner, request.user),
         )
-        requests.append(now)
-        caches['default'].set(cache_key, requests, timeout=86400)
+        task = start_report_generation(cache_key, task_kwargs)
         return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
                         status=status.HTTP_200_OK)

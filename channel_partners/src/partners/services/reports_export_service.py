@@ -620,8 +620,9 @@ class ExpiringServiceChangesRow:
         """
         if self.usage['expiration_date'] == BeginningOfPeriodDate:
             return 'Previous periods'
-
         if self.usage['expiration_date'] == TotalUsageDate:
+            return ''
+        if self.usage['expiration_date'] is None:
             return ''
         return parser.parse(self.usage['expiration_date'])
 

@@ -6,14 +6,17 @@ from uuid import uuid4
 import boto3
 import pytest
 from django.conf import settings
+from django.core.cache import caches
 from django.utils.text import slugify
 from moto import mock_aws
+from rest_framework.exceptions import NotFound
 
 from channel_partners.storages import ReportsStorage
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
     TaskRetry,
     generate_report,
+    get_queued_report_key,
     get_report_result,
 )
 
@@ -215,6 +218,24 @@ class TestGetReportResult:
         self.task = mocker.MagicMock()
         self.task.task_id = self.task_id
         self.task.id = self.task_id
+
+
+    @mock_aws
+    def test_task_does_not_exist(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.mocked_get_task.return_value = None
+        with pytest.raises(NotFound):
+            get_report_result(self.task_id, self.user_id)
+
+    @mock_aws
+    def test_task_queue_and_not_in_db(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        self.mocked_get_task.return_value = None
+        caches['default'].set(get_queued_report_key(self.task_id), '1')
+        result = get_report_result(self.task_id, self.user_id)
+        assert result['status'] == ReportTaskState.pending
+        assert result['reason'] == 'Task is running.'
+
 
     @mock_aws
     def test_task_pending_state(self, ):

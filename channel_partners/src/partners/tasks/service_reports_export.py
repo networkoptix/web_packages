@@ -9,6 +9,7 @@ from celery import (
     shared_task,
     states,
 )
+from celery.result import AsyncResult
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
@@ -36,9 +37,29 @@ from tools.helpers import cast_uuid
 
 logger = structlog.get_logger(__name__)
 
+# Task expiration time in seconds. Set for both task and cache.
+REPORT_EXPORT_TASK_TTL = 1800
+# Daily report generation limit for user.
+DAILY_REPORTS_LIMIT = 100
+
 
 class TaskRetry(Exception):
     pass
+
+
+class GenerationFailed(Exception):
+    pass
+
+
+class GenerationPending(Exception):
+    pass
+
+class TaskNotFound(Exception):
+    pass
+
+
+def get_queued_report_key(task_id: str | uuid.UUID):
+    return f'report_export_task-{task_id}'
 
 
 def get_cached_report_key(
@@ -130,28 +151,16 @@ def generate_report(channel_partner_id: str = None,
     return filename
 
 
-class GenerationFailed(Exception):
-    pass
-
-
-class GenerationPending(Exception):
-    pass
-
-
-def failed_report(reason: str, report_id: Any):
-    # caches['default'].delete(cache_key)
+def failed_report(reason: str, report_id: Any, status: str = ReportTaskState.failed):
     return {
         'id': report_id,
-        'status': ReportTaskState.failed,
+        'status': status,
         'reason': reason
     }
 
 
 def get_task(task_id):
-    try:
-        return TaskResult.objects.get(task_id=task_id)
-    except ObjectDoesNotExist:
-        raise NotFound('Task not found.')
+    return TaskResult.objects.filter(task_id=task_id).first()
 
 
 def get_task_kwargs(task):
@@ -170,7 +179,11 @@ def get_report_result(
         report_id: str,
         user_id: int,
 ):
-    task = get_task(report_id)
+    task = get_task(task_id=report_id)
+    if not task:
+        if not caches['default'].get(get_queued_report_key(report_id)):
+            raise NotFound(f'Task not found.')
+        return failed_report('Task is running.', report_id, status=ReportTaskState.pending)
 
     task_kwargs = get_task_kwargs(task)
 
@@ -181,11 +194,7 @@ def get_report_result(
         raise PermissionDenied('User not authorized.')
 
     if task.status not in states.READY_STATES:
-        return {
-            'id': report_id,
-            'status': ReportTaskState.pending,
-            'reason': 'Task is running.'
-        }
+        return failed_report('Task is running.', report_id=report_id, status=ReportTaskState.pending)
     try:
         if entity_id := task_kwargs.get('channel_partner_id'):
             entity = ChannelPartner.objects.get(id=entity_id)
@@ -217,3 +226,19 @@ def get_report_result(
                                                                 download_filename=download_file_name),
     }
     return response_data
+
+
+def start_report_generation(task_usage_cache_key: str, task_kwargs: dict) -> AsyncResult:
+    requests = caches['default'].get(task_usage_cache_key) or []
+    now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+    requests = [r for r in requests if r > now - 86400]
+    if len(requests) >= DAILY_REPORTS_LIMIT:
+        raise PermissionDenied(detail='Daily report generation limit exceeded.')
+    task: AsyncResult = generate_report.apply_async(
+        kwargs=task_kwargs,
+        expires=datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=REPORT_EXPORT_TASK_TTL)
+    )
+    caches['default'].set(get_queued_report_key(task.task_id), '1', timeout=REPORT_EXPORT_TASK_TTL)
+    requests.append(now)
+    caches['default'].set(task_usage_cache_key, requests, timeout=86400)
+    return task
