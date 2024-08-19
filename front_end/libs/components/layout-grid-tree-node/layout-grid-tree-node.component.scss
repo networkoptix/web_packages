@@ -20,7 +20,7 @@
     background: var(--background-color);
     opacity: var(--node-opacity);
     outline: 1px solid  var(--outline-color);
-    margin-left: 1px; // for the outline to fit in
+    outline-offset: -1px;
 
     .primary-icon svg path.st0 {
         // multi colored icons have the last path to be the primary element

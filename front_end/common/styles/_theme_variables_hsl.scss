@@ -915,8 +915,12 @@ html[data-theme="hsl"] {
     --no-systems-description-color: var(--dark17);
 
     /* Layouts */
-    --layout-grid-playing: var(--new-light10);
-    --layout-grid-selected: var(--brand-core);
+    --layout-grid-item-hover: var(--new-light15);
+    --layout-grid-item-playing: var(--new-light6);
+    --layout-grid-item-playing-hover: var(--new-light1);
+    --layout-grid-item-selected: var(--new-brand-core);
+    --layout-grid-item-selected-hover: var(--new-brand-l2);
+
     --placeholder-error-color: var(--new-attention-red);
     --placeholder-info-color: var(--new-light10);
     --placeholder-error-color-old: #{$red_main};

@@ -700,8 +700,12 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
 
-    --layout-grid-playing: var(--light10);
-    --layout-grid-selected: var(--brand-core);
+    --layout-grid-item-hover: var(--light15);
+    --layout-grid-item-playing: var(--light6);
+    --layout-grid-item-playing-hover: var(--light1);
+    --layout-grid-item-selected: var(--brand-core);
+    --layout-grid-item-selected-hover: var(--brand-l2);
+
     --placeholder-background: var(--light6);
     --placeholder-info-color: var(--light10);
     --placeholder-error-color-old: #{$red_main};

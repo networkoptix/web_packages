@@ -751,8 +751,12 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
 
-    --layout-grid-playing: var(--light10);
-    --layout-grid-selected: var(--brand-core);
+    --layout-grid-item-hover: var(--light15);
+    --layout-grid-item-playing: var(--light6);
+    --layout-grid-item-playing-hover: var(--light1);
+    --layout-grid-item-selected: var(--brand-core);
+    --layout-grid-item-selected-hover: var(--brand-l2);
+
     --placeholder-background: var(--dark4);
     --placeholder-info-color: var(--light10);
     --placeholder-error-color-old: var(--red_main, #{$red_main});

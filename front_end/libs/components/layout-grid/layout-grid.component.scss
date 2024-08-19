@@ -22,7 +22,8 @@
     --z-index-video: calc(var(--z-index-highlight-adding) + 1);
     --z-index-preloader: calc(var(--z-index-video) + 1);
     --z-index-overlay: calc(var(--z-index-preloader) + 1);
-    --z-index-resize-handle: calc(var(--z-index-overlay) + 1);
+    --z-index-tile-border: calc(var(--z-index-overlay) + 1);
+    --z-index-resize-handle: calc(var(--z-index-tile-border) + 1);
     --z-index-status-ribbon: calc(var(--z-index-resize-handle) + 1);
     --z-index-menu-tab: calc(var(--z-index-status-ribbon) + 1);
 
@@ -523,7 +524,7 @@ h2.auto-save-overlay {
     overflow: hidden;
     padding: var(--current-layout-gap);
 
-    &:active {
+    &:has(.cdk-drag-placeholder) {
         background: rgba($brand_core, 0.1);
     }
 
@@ -674,6 +675,8 @@ h2.auto-save-overlay {
 }
 
 .layout-item {
+    --border-color: "transparent";
+
     height: 100%;
     width: 100%;
     max-height: 100%;
@@ -695,8 +698,8 @@ h2.auto-save-overlay {
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 1000;
-        border: var(--border-style);
+        z-index: var(--z-index-tile-border);
+        border: 3px solid var(--border-color);
     }
 
     &:not(:has(nx-layout-grid-item-placeholder)) {
@@ -708,18 +711,20 @@ h2.auto-save-overlay {
         }
     }
 
-    &:hover {
-        --border-style: 2px solid var(--border-color);
-    }
-
     &.playing-item {
-        --border-style: 2px solid var(--layout-grid-playing);
+        --border-color: var(--layout-grid-item-playing);
     }
-
-    &:active,
-    :focus,
     &.selected-item {
-        --border-style: 2px solid var(--layout-grid-selected);
+        --border-color: var(--layout-grid-item-selected);
+    }
+    &:hover {
+        --border-color: var(--layout-grid-item-hover);
+        &.playing-item {
+            --border-color: var(--layout-grid-item-playing-hover);
+        }
+        &.selected-item {
+            --border-color: var(--layout-grid-item-selected-hover);
+        }
     }
 
 
