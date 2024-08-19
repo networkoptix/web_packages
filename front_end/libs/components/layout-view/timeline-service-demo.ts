@@ -4,15 +4,15 @@ import { uniq, isEqual } from 'lodash-es';
 import { map, distinctUntilChanged, switchMap, filter } from 'rxjs';
 
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
-import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
+import { LayoutSelectionStore } from '@services/layout-state/store/layout-selection.store';
 import { NxTimelineService } from '@services/timeline.service';
 
 import { NxLayoutViewComponent } from './layout-view.component';
 
 export const registerDemoLogger = (layoutViewComponent: NxLayoutViewComponent): void => {
     const timelineService = inject(NxTimelineService);
-    const selectedCameraStore = inject(SelectedCameraStore);
-    const selectedCamera$ = toObservable(selectedCameraStore.selectedLayoutItem$$);
+    const layoutSelectionStore = inject(LayoutSelectionStore);
+    const playingCamera$ = toObservable(layoutSelectionStore.playingLayoutItem$$);
     layoutViewComponent.layoutAndItems$
         .pipe(
             map(([{ items }, lookup]) =>
@@ -29,8 +29,8 @@ export const registerDemoLogger = (layoutViewComponent: NxLayoutViewComponent): 
             ),
             distinctUntilChanged((a, b) => isEqual(a, b)),
             switchMap(cameras =>
-                selectedCamera$.pipe(
-                    filter(camera => !!camera),
+                playingCamera$.pipe(
+                    filter(camera => !!camera && !!camera.id),
                     switchMap(cameraId =>
                         timelineService.groupByMainAndOtherCameras(cameras, cameraId.id),
                     ),

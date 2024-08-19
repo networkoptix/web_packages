@@ -915,6 +915,8 @@ html[data-theme="hsl"] {
     --no-systems-description-color: var(--dark17);
 
     /* Layouts */
+    --layout-grid-playing: var(--new-light10);
+    --layout-grid-selected: var(--brand-core);
     --placeholder-error-color: var(--new-attention-red);
     --placeholder-info-color: var(--new-light10);
     --placeholder-error-color-old: #{$red_main};
@@ -936,6 +938,7 @@ html[data-theme="hsl"] {
     --tree-node-selected-background: var(--new-dark7);
     --tree-node-hover-selected-background: var(--new-dark8);
     --tree-node-pressed-selected-background: var(--new-dark6);
+    --tree-node-playing-outline: var(--new-dark10);
 
     --tree-node-action-color: var(--new-light10);
     --tree-node-action-hover-color: var(--new-light3);
@@ -967,7 +970,7 @@ html[data-theme="hsl"] {
     --no-camera-placeholder-color: var(--new-light10);
     --no-layouts-body-color: var(--new-light17);
 
-	/* Merge */
+    /* Merge */
     --merge-unmerged-error-text: var(--light10);
     --merge-unmerged-system-message: var(--light10);
 }

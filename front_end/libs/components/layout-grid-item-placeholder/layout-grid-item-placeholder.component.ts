@@ -430,7 +430,7 @@ export class NxLayoutGridItemPlaceholderComponent {
                       .replace('transcodingDisabled', 'offline')
                       .replace('mjpegDisabled', 'offline')
                 : [ResourceType.WEB_PAGE, ResourceType.IO_DEVICE].includes(itemDetail.type)
-                  ? status
+                  ? status.toLowerCase()
                   : itemDetail.type === ResourceType.SERVER
                     ? 'unavailable'
                     : 'offline') +

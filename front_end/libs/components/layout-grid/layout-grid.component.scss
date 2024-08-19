@@ -666,7 +666,7 @@ h2.auto-save-overlay {
 .locked {
     .layout-item,
     .layout-item-wrapper {
-        &:not(.focused-item) {
+        &:not(.selected-item) {
             --border-style: unset !important;
         }
         cursor: unset !important;
@@ -712,11 +712,17 @@ h2.auto-save-overlay {
         --border-style: 2px solid var(--border-color);
     }
 
+    &.playing-item {
+        --border-style: 2px solid var(--layout-grid-playing);
+    }
+
     &:active,
     :focus,
-    &.focused-item {
-        --border-style: 2px solid var(--brand-core);
+    &.selected-item {
+        --border-style: 2px solid var(--layout-grid-selected);
     }
+
+
 
     ::ng-deep {
         .parent-hover {

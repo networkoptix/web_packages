@@ -14,10 +14,13 @@
     --background-color: transparent;
     --action-color: var(--tree-node-action-color);
     --node-opacity: 1;
+    --outline-color: transparent;
 
     color: var(--main-color);
     background: var(--background-color);
     opacity: var(--node-opacity);
+    outline: 1px solid  var(--outline-color);
+    margin-left: 1px; // for the outline to fit in
 
     .primary-icon svg path.st0 {
         // multi colored icons have the last path to be the primary element
@@ -36,7 +39,6 @@
         height: 24px;
     }
     .action-button {
-        background-color: transparent;
         svg path {
             fill: var(--action-color);
             stroke: var(--action-color);
@@ -55,6 +57,10 @@
     &.checked {
         --main-color: var(--tree-node-checked-main-color);
         --secondary-color: var(--tree-node-checked-secondary-color);
+    }
+
+    &.playing:not(.activated) {
+        --outline-color: var(--tree-node-playing-outline);
     }
 
     &.activated {
@@ -170,6 +176,9 @@ svg-icon {
     padding: 0;
     margin: 0;
     border: none;
+    &:focus {
+        outline: none;
+    }
 }
 
 .locked-icon {

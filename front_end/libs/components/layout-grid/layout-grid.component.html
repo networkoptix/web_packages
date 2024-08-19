@@ -758,11 +758,11 @@
                                                 "
                                                 class="layout-item"
                                                 (click)="
-                                                    layoutItemLookup[item.resourceId]?.type ===
-                                                        RESOURCE_TYPE.CAMERA &&
-                                                        selectedCameraStore.updateSelectedResource(
-                                                            item
-                                                        )
+                                                    layoutSelectionStore.updateSelectedResource(
+                                                        item,
+                                                        layoutItemLookup[item.resourceId]?.type ===
+                                                            RESOURCE_TYPE.CAMERA
+                                                    )
                                                 "
                                                 [ngClass]="{
                                                     'camera-layout-item':
@@ -777,10 +777,18 @@
                                                         layoutItemWrapper ===
                                                         window.document.fullscreenElement,
                                                     collided: (collisions$ | async)[item.id],
-                                                    'focused-item':
-                                                        selectedCameraStore.selectedLayoutItem$$() &&
+                                                    'selected-item':
+                                                        layoutSelectionStore.selectedLayoutItem$$()
+                                                            .id &&
                                                         item.id.includes(
-                                                            selectedCameraStore.selectedLayoutItem$$()
+                                                            layoutSelectionStore.selectedLayoutItem$$()
+                                                                .id
+                                                        ),
+                                                    'playing-item':
+                                                        layoutSelectionStore.playingLayoutItem$$()
+                                                            .id &&
+                                                        item.id.includes(
+                                                            layoutSelectionStore.playingLayoutItem$$()
                                                                 .id
                                                         )
                                                 }"
@@ -857,9 +865,9 @@
                                                                         >
                                                                             <nx-video-player
                                                                                 [muted]="
-                                                                                    !selectedCameraStore.selectedLayoutItem$$() ||
+                                                                                    !layoutSelectionStore.selectedLayoutItem$$() ||
                                                                                     !item.id.includes(
-                                                                                        selectedCameraStore.selectedLayoutItem$$()
+                                                                                        layoutSelectionStore.selectedLayoutItem$$()
                                                                                             .id
                                                                                     )
                                                                                 "

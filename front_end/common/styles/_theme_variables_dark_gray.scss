@@ -722,6 +722,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
 
+    --layout-grid-playing: var(--light10);
+    --layout-grid-selected: var(--brand-core);
     --placeholder-background: var(--dark4);
     --placeholder-info-color: var(--light10);
     --placeholder-error-color-old: #{$red_main};
@@ -745,6 +747,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --tree-node-selected-background: var(--dark7);
     --tree-node-hover-selected-background: var(--dark8);
     --tree-node-pressed-selected-background: var(--dark6);
+    --tree-node-playing-outline: var(--dark10);
 
     --tree-node-action-color: var(--light10);
     --tree-node-action-hover-color: var(--light3);

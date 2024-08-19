@@ -99,8 +99,8 @@ import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { LayoutSelectionStore } from '@services/layout-state/store/layout-selection.store';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
-import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
@@ -457,9 +457,9 @@ export class NxLayoutGridComponent {
         return allCameras.filter(({ id }) => cameraIds.includes(id));
     });
 
-    selectedCameraStore = inject(SelectedCameraStore);
+    layoutSelectionStore = inject(LayoutSelectionStore);
 
-    layoutItemsWithDefaultOrder$$ = computed(
+    layoutCamerasWithDefaultOrder$$ = computed(
         () => {
             const layout = this.layout$$();
             const layoutItemLookup = this.layoutItemLookup$$();
@@ -504,16 +504,14 @@ export class NxLayoutGridComponent {
 
     updateSelectedCameraEffect = effect(
         () => {
-            const layout = this.layoutItemsWithDefaultOrder$$();
+            const layout = this.layoutCamerasWithDefaultOrder$$();
 
             if (!layout) {
                 return;
             }
 
-            const layoutItemIds = layout.items;
-
             const selectedItemState = untracked(() =>
-                this.selectedCameraStore.selectedLayoutItemState$$(),
+                this.layoutSelectionStore.selectedLayoutItemState$$(),
             );
 
             if (!layout?.id || !selectedItemState || selectedItemState.id !== cleanId(layout.id)) {
@@ -522,21 +520,22 @@ export class NxLayoutGridComponent {
                 return;
             }
 
-            const defaultLayoutItemId = layoutItemIds[0];
-
-            if (!layoutItemIds.length) {
+            const layoutCameraItems = layout.items;
+            if (!layoutCameraItems.length) {
                 return;
             }
 
-            const selectedInLayout = layoutItemIds
-                .map(({ id }) => id)
-                .includes(selectedItemState.selected.id);
+            const defaultLayoutCameraItem = layoutCameraItems[0];
+
+            const selectedInLayout = layoutCameraItems
+                .map(({ id }) => cleanId(id))
+                .includes(selectedItemState.playing.id);
 
             if (selectedInLayout) {
                 return;
             }
 
-            this.selectedCameraStore.updateSelectedResource(defaultLayoutItemId, true);
+            this.layoutSelectionStore.updatePlayingResource(defaultLayoutCameraItem, true);
         },
         {
             allowSignalWrites: true,
@@ -544,13 +543,13 @@ export class NxLayoutGridComponent {
     );
 
     selectedCameraId$$ = computed(() => {
-        const selectedLayoutItemId = this.selectedCameraStore.selectedLayoutItem$$();
+        const playingLayoutItem = this.layoutSelectionStore.playingLayoutItem$$();
         const currentLayoutCameras = this.currentLayoutCameras$$();
         const camera =
-            selectedLayoutItemId &&
+            playingLayoutItem &&
             currentLayoutCameras.find(
                 ({ id, systemId }) =>
-                    `cloud://${systemId}.${id}` === selectedLayoutItemId.resourcePath,
+                    `cloud://${systemId}.${id}` === playingLayoutItem.resourcePath,
             );
 
         return camera ? cleanId(camera.id) : '';

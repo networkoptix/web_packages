@@ -2,7 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -34,13 +34,14 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
-import { SelectedCameraStore } from '@services/layout-state/store/selected-camera.store';
+import { LayoutSelectionStore } from '@services/layout-state/store/layout-selection.store';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { CameraTypeId } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
+import { cleanId } from '@utils/general';
 
 @UntilDestroy()
 @Component({
@@ -72,7 +73,6 @@ import { icons } from '@static-variables';
         FormsModule,
     ],
     hostDirectives: [NxResizeObserver],
-    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
         '[class]': 'this.class$$()',
     },
@@ -104,6 +104,7 @@ export class NxLayoutGridTreeNode {
     class$$ = computed(() => ({
         offline: this.offline$$(),
         activated: this.activated$$(),
+        playing: this.playing$$(),
         selected: this.selected$$(),
         checked: this.checked$$(),
         'leaf-node': !this.isRoot$$(),
@@ -157,7 +158,7 @@ export class NxLayoutGridTreeNode {
     cameraNodeStatus$$ = computed(() => {
         const node = this.node$$();
         if (assertResourceOfType.camera(node)) {
-            return node.details.status;
+            return node.details.status.toLowerCase();
         }
     });
 
@@ -168,27 +169,41 @@ export class NxLayoutGridTreeNode {
         }
     });
 
-    selectedStateStore = inject(SelectedCameraStore);
+    selectedStateStore = inject(LayoutSelectionStore);
 
     systemService = inject(NxSystemService);
 
-    activated$$ = computed(() => {
+    selectedStatus$$: Signal<'selected' | 'playing' | null> = computed(() => {
         const node = this.node$$();
-        const selectedCamera = this.selectedStateStore.selectedLayoutItem$$();
-
+        const selectedLayoutItemState = this.selectedStateStore.selectedLayoutItemState$$();
         const currentSystem = this.systemService.currentSystem$$();
 
-        if (!node.details || !currentSystem || !selectedCamera) {
-            return false;
+        if (
+            !node.details ||
+            !currentSystem ||
+            !selectedLayoutItemState ||
+            !selectedLayoutItemState.selected.id
+        ) {
+            return null;
         }
 
-        const id = node.details.id;
+        const id = cleanId(node.details.id);
 
         const resourcePath = `cloud://${
             'systemId' in node.details ? node.details.systemId : currentSystem.id
         }.${id}`;
-        return resourcePath === selectedCamera.resourcePath;
+
+        if (resourcePath === selectedLayoutItemState.selected.resourcePath) {
+            return 'selected';
+        } else if (resourcePath === selectedLayoutItemState.playing.resourcePath) {
+            return 'playing';
+        }
+
+        return null;
     });
+
+    activated$$ = computed(() => this.selectedStatus$$() === 'selected');
+    playing$$ = computed(() => this.selectedStatus$$() === 'playing');
 
     checked$$ = computed(() => {
         const node = this.node$$();
