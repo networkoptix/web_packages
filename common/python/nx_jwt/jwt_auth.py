@@ -2,7 +2,7 @@ import json
 import re
 import urllib.request
 from collections import deque
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from datetime import datetime, timezone
 from ssl import SSLContext
 from typing import (
@@ -51,6 +51,17 @@ class JTWPayload:
     sub: str
     client_id: str
     iss: str
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]):
+        """
+        Create instance of JTWPayload from dictionary ignoring extra fields.
+        """
+        expected_fields = [f.name for f in fields(cls)]
+        cleaned_data = {
+            k: v for k, v in data.items() if k in expected_fields
+        }
+        return cls(**cleaned_data)
 
     @property
     def is_expired(self) -> bool:
@@ -198,7 +209,7 @@ class JWKClient(PyJWKClient):
             jwt=jwt_token, key=key.key, algorithms=["RS256"],
             options={"verify_aud": False, "verify_exp": verify_exp}
         )
-        return JTWPayload(**payload)
+        return JTWPayload.from_dict(payload)
 
 
 def get_jwk_client(default_hostname: str, lifespan: int = 21600, init_keys: bool = False) -> JWKClient:
