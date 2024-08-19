@@ -127,7 +127,7 @@ export const ExpiringServiceDetailsStore = signalStore(
             serviceId: string,
             startTs: string,
         ): Promise<void> {
-            patchState(store, { isLoading: true });
+            patchState(store, { error: '', hasError: false, isLoading: true });
             let serviceReportResponse: PartnerExpiringServiceReportResponse;
             let services: Service[];
             let selectedService: Service | undefined;
@@ -145,7 +145,7 @@ export const ExpiringServiceDetailsStore = signalStore(
                 selectedService = services.find(service => service.id === serviceId);
             } catch ({ error }) {
                 patchState(store, {
-                    error: error?.join('\n') ?? '',
+                    error: error?.detail ?? 'Error loading report.',
                     hasError: true,
                     isLoading: false,
                 });
@@ -163,7 +163,7 @@ export const ExpiringServiceDetailsStore = signalStore(
             serviceId: string,
             startTs: string,
         ): Promise<void> {
-            patchState(store, { isLoading: true });
+            patchState(store, { error: '', hasError: false, isLoading: true });
             let serviceReportResponse: OrgExpiringServiceReportResponse;
             let servicesResponse: AvailableService[];
             let selectedService: Service | undefined;
@@ -181,7 +181,7 @@ export const ExpiringServiceDetailsStore = signalStore(
                 )?.service;
             } catch ({ error }) {
                 patchState(store, {
-                    error: error?.join('\n') ?? '',
+                    error: error?.detail ?? 'Error loading report.',
                     hasError: true,
                     isLoading: false,
                 });
