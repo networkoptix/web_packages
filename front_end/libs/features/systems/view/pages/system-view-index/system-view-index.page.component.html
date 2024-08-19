@@ -21,6 +21,11 @@
                 class="nx-view-sidebar"
                 *ngIf="hasCameras; else noCameras"
             >
+                <nx-media-server-list
+                    [selectedCameraId]="selectedCameraId"
+                    [systemId]="systemId"
+                    [mediaservers]="mediaservers"
+                ></nx-media-server-list>
                 <div
                     class="sidebar-toggling-ear--wrapper"
                     [ngClass]="{
