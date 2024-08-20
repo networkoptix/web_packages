@@ -706,12 +706,7 @@ export const GroupsStore = signalStore(
             const totalOrgGroupsOrSystems$$ = computed(() => {
                 const groups = Object.values(groupFlatMap$$());
                 const groupCount = groups.length;
-                const systemsCount = groups.reduce(
-                    (acc, { systemCount, parentId }) =>
-                        parentId === null ? acc + systemCount : acc,
-                    0,
-                );
-                return groupCount + systemsCount;
+                return groupCount + allOrgSystems$$().length;
             });
 
             return {
