@@ -282,10 +282,16 @@ class UserAccessMatrix:
 
     @cached_property
     def user_channel_partners(self):
+        if not isinstance(self.cloud_user, CloudUser):
+            # in case of system authentication
+            return []
         return self.cloud_user.channelpartnertouser_set.all().prefetch_related('channel_partner')
 
     @cached_property
     def user_organizations(self):
+        # in case of system authentication
+        if not isinstance(self.cloud_user, CloudUser):
+            return []
         return self.cloud_user.organizationtouser_set.all().prefetch_related('organization', 'system_group')
 
     def get_cp_to_user_rel(self, channel_partner_id: UUID) -> None | ChannelPartnerToUser:
