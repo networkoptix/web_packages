@@ -350,7 +350,7 @@ export class NxChannelPartnerInformationComponent {
         // "Back" if form is not dirty and no items
         if (this.hasNoItems || (this.editMode && this.hasDirty)) {
             this.hasDirty = false;
-            this.editMode = false;
         }
+        this.editMode = false;
     };
 }
