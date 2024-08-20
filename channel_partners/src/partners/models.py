@@ -2960,7 +2960,6 @@ class MigrationRecord(models.Model):
 
 
 class ReportSnapshot(models.Model):
-    CURRENT_SCHEMA_VERSION = 1
     class ReportType(IntegerChoices):
         system_regular_report = 1, 'system_regular_report'
         system_expiring_report = 2, 'system_expiring_report'
@@ -2990,7 +2989,6 @@ class ReportSnapshot(models.Model):
     created_ts = models.DateTimeField(auto_now_add=True)
     updated_ts = models.DateTimeField(auto_now=True)
     report_data = models.JSONField(encoder=JSONEncoder)
-    schema_version = models.IntegerField()
 
     class Meta:
         unique_together = (
@@ -3000,7 +2998,6 @@ class ReportSnapshot(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.schema_version = self.CURRENT_SCHEMA_VERSION
         if self.start_date + relativedelta(months=1) > get_today():
             # mark as provisional if current greater than new period start date
             self.provisional = True
@@ -3008,13 +3005,6 @@ class ReportSnapshot(models.Model):
             self.provisional = False
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
-
-    def is_schema_version_outdated(self):
-        return self.schema_version != self.CURRENT_SCHEMA_VERSION
-
-    @classmethod
-    def get_outdated_schema_reports(cls):
-        return cls.objects.exclude(schema_version=cls.CURRENT_SCHEMA_VERSION).order_by('start_date', 'report_type')
 
 
 class CloudSystemHistory(models.Model):
