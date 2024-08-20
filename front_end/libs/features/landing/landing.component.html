@@ -1,39 +1,48 @@
 <nx-pre-loader
     type="page"
+    [ngClass]="{ centered: useNewCloud }"
     *ngIf="!loaded"
 ></nx-pre-loader>
 
-<div
-    class="container"
-    *ngIf="loaded"
->
-    <div class="jumbotron">
-        <nx-landing-display-component></nx-landing-display-component>
+@if (useNewCloud) {
+    <iframe
+        [ngClass]="{ 'auth-loaded': loaded }"
+        [src]="authorization"
+        (load)="handleLoad($event)"
+    ></iframe>
+} @else {
+    <div
+        class="container"
+        *ngIf="loaded"
+    >
+        <div class="jumbotron">
+            <nx-landing-display-component></nx-landing-display-component>
 
-        <p
-            *ngIf="!userEmail"
-            class="button d-flex justify-content-center auth-hidden"
-        >
-            <a
-                class="btn btn-primary"
-                [href]="createUrl"
-                role="button"
-                data-testid="landingComponentLink"
-                >{{ LANG.createAccount | translate }}</a
+            <p
+                *ngIf="!userEmail"
+                class="button d-flex justify-content-center auth-hidden"
             >
-        </p>
-        <p
-            *ngIf="userEmail"
-            class="button d-flex justify-content-center auth-hidden"
-        >
-            <a
-                class="btn btn-primary"
-                routerLink="/login"
-                role="button"
-                translate
-                >Log In</a
+                <a
+                    class="btn btn-primary"
+                    [href]="createUrl"
+                    role="button"
+                    data-testid="landingComponentLink"
+                    >{{ LANG.createAccount | translate }}</a
+                >
+            </p>
+            <p
+                *ngIf="userEmail"
+                class="button d-flex justify-content-center auth-hidden"
             >
-        </p>
+                <a
+                    class="btn btn-primary"
+                    routerLink="/login"
+                    role="button"
+                    translate
+                    >Log In</a
+                >
+            </p>
+        </div>
+        <nx-footer [center]="true"></nx-footer>
     </div>
-    <nx-footer [center]="true"></nx-footer>
-</div>
+}

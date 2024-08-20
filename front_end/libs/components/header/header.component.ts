@@ -55,6 +55,7 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { useNewCloud } from '@utils/general';
 
 import { NxHeaderMainButtonComponent } from './main-button/main-button.component';
 import { NxNavDropdownComponent } from './nav-dropdown/nav-dropdown.component';
@@ -321,7 +322,9 @@ export class NxHeaderComponent implements OnInit {
         });
 
         if (!environment.production) {
-            this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${window.location.href}`;
+            this.headerService.authorizeUrl = useNewCloud()
+                ? `/?redirect_url=${window.location.href}`
+                : `https://${environment.cloudHost}/authorize?redirect_url=${window.location.href}`;
         }
         this.headerService.createUrl = `${this.headerService.authorizeUrl}${
             environment.production ? '?' : '&'

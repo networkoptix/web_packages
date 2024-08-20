@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 
 import { accountDropdown } from '@components/static-variables-components';
 import staticLang from '@language_static';
+import { toggleSecondaryMenuEvent } from '@libs/nx-components/src/lib/theme-provider/events';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
@@ -18,6 +19,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 import { icons, images } from '@static-variables';
+import { useNewCloud } from '@utils/general';
 
 @UntilDestroy()
 @Component({
@@ -39,6 +41,15 @@ export class NxMobileHeaderMenuComponent {
     LANG = staticLang;
     currentSystemMenu: MenuNode;
     showCurrentSystem = false;
+    useNewCloud = useNewCloud();
+
+    get loginRedirectParams(): { redirect_uri?: string } {
+        return {
+            redirect_uri:
+                new URL(window.location.href).searchParams.get('redirect_uri') ||
+                window.location.href,
+        };
+    }
 
     CONFIG: IConfig;
     icons: {
@@ -79,6 +90,10 @@ export class NxMobileHeaderMenuComponent {
                 this.currentSystemMenu = cloneDeep(currentLocation.parentNode);
             }
         });
+    }
+
+    closeSidebar(): void {
+        window.dispatchEvent(toggleSecondaryMenuEvent());
     }
 
     nodeClick(node: MenuNode, event: MouseEvent): void {

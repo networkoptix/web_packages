@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import { useNewCloud } from '@utils/general';
 import { memoizeAsyncShort } from '@utils/memoize';
 
 import { nxConfig } from './nx-config/config';
@@ -123,7 +124,11 @@ export class OauthService {
             : environment.cloudHost
               ? `https://${environment.cloudHost}`
               : this.CONFIG.cloudHost;
-        window.location.href = `${host}/authorize?${params.toString()}`;
+        if (useNewCloud()) {
+            window.location.href = `${window.location.origin}?${params.toString()}`;
+        } else {
+            window.location.href = `${host}/authorize?${params.toString()}`;
+        }
         return false;
     }
 

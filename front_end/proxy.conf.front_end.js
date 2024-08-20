@@ -18,6 +18,9 @@ const PROXY_CONFIG = [
             '/cdb',
             '/docdb',
             '/partners',
+            // authorize iframe
+            '/authorize',
+            '/static/authorization',
             // mediaserver specific apis
             '/ec2',
             '/hls',
@@ -62,7 +65,8 @@ const PROXY_CONFIG = [
             if (req.url.includes('/static/lang_en_US')) {
                 return req.url.replace('/static/lang_en_US', '');
             }
-            return req.url.replace('/static', '');
+
+            return req.url.replace(/static\/\d{5}/, 'static').replace('/static', '');
         },
     },
     {

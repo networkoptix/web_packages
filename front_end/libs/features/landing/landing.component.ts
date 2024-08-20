@@ -1,5 +1,6 @@
 import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
@@ -10,6 +11,7 @@ import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
+import { useNewCloud } from '@utils/general';
 
 @Component({
     selector: 'nx-landing-component',
@@ -17,6 +19,7 @@ import { NxPageService } from '@services/page.service';
     styleUrls: ['landing.component.scss'],
 })
 export class NxLandingComponent implements OnInit {
+    useNewCloud = useNewCloud() && window.self === window.top;
     LANG = staticLang;
     destroyRef = inject(DestroyRef);
     params;
@@ -27,6 +30,49 @@ export class NxLandingComponent implements OnInit {
     loaded: boolean;
     startParams;
     startUrl;
+    domSanitizer = inject(DomSanitizer);
+    authorizationUrl = `${window.location.origin}/authorize${window.location.search}`;
+    authorization = this.domSanitizer.bypassSecurityTrustResourceUrl(this.authorizationUrl);
+
+    handleLoad = (event: Event) => {
+        const contentWindow = (event.target as HTMLIFrameElement).contentWindow;
+        if (!contentWindow) {
+            return;
+        }
+        const style = contentWindow.document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = `
+            body {
+                background-color: transparent !important;
+            }
+            .auth-footer {
+                display: none !important;
+            }
+        `;
+        contentWindow.document.head.appendChild(style);
+
+        const observer = new MutationObserver(() => {
+            if (contentWindow.document.querySelector('.auth-window')) {
+                observer.disconnect();
+                this.loaded = true;
+            }
+        });
+
+        observer.observe(contentWindow.document, {
+            childList: true,
+            subtree: true,
+        });
+
+        const currentHref = contentWindow.location.href;
+        if (
+            currentHref &&
+            !currentHref.startsWith(this.authorizationUrl) &&
+            currentHref.startsWith(window.location.origin)
+        ) {
+            event.preventDefault();
+            window.location.href = currentHref;
+        }
+    };
 
     constructor(
         private accountService: NxAccountService,
@@ -50,7 +96,9 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.startUrl === '/logout') {
+        if (this.startParams.access_token) {
+            this.loaded = !this.useNewCloud;
+        } else if (this.startUrl === '/logout') {
             this.accountService.logout();
         } else if (this.startUrl.includes('/content/about')) {
             this.pageService.pageTitle(this.LANG.pageTitles.about, '');
@@ -69,7 +117,7 @@ export class NxLandingComponent implements OnInit {
                         } else if (this.startParams.next) {
                             return this.router.navigate([this.startParams.next]);
                         } else {
-                            this.loaded = true;
+                            this.loaded = !this.useNewCloud;
                         }
                     }
                 });

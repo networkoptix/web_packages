@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service/system.service';
 
+import { nxConfig } from './nx-config/config';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { LOGIN_STATE } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
@@ -56,7 +57,25 @@ export class NxSessionService {
 
                 prevState = state;
                 // Clear config overrides between sessions
-                this.session.store(NxConfigService.OVERRIDE_KEY, {});
+
+                const preserveOnLogout: (keyof typeof nxConfig.featureFlags)[] = [
+                    'newCloudLayoutWrapper',
+                ] as const;
+                this.session.store(
+                    NxConfigService.OVERRIDE_KEY,
+                    prevState === 'unauthorized' &&
+                        preserveOnLogout.some(flag => nxConfig.featureFlags[flag])
+                        ? preserveOnLogout
+                              .filter(flag => nxConfig.featureFlags[flag])
+                              .reduce(
+                                  (acc, flag) => ({
+                                      ...acc,
+                                      [`featureFlags.${flag}`]: true,
+                                  }),
+                                  {},
+                              )
+                        : {},
+                );
 
                 if (!window.document.hasFocus() && !environment.testing) {
                     if (state === LOGIN_STATE.LOGGED_OUT) {

@@ -1,6 +1,24 @@
 @use 'typography';
 @import 'buttons';
 
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  opacity: 0.01;
+  transition: opacity 0.3s;
+  &.auth-loaded {
+    opacity: 1;
+  }
+}
+
+:host > nx-pre-loader.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .container {
   max-width: 991px;
   padding: 0 16px;

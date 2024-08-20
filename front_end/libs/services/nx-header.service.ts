@@ -9,6 +9,7 @@ import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystem } from '@services/system.service/system';
 import { reportsRegex } from '@static-variables';
+import { useNewCloud } from '@utils/general';
 
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
@@ -27,7 +28,7 @@ export class NxHeaderService {
     public nodes$ = new BehaviorSubject<MenuNode[]>([]);
     public currentLocation$ = new BehaviorSubject<any>({});
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
-    public authorizeUrl = '/authorize';
+    public authorizeUrl = useNewCloud() ? '/' : '/authorize';
     public createUrl: string;
 
     public dynamicRoutes = {};
