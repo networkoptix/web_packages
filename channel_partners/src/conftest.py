@@ -1,3 +1,4 @@
+import base64
 import contextlib
 import datetime
 import json
@@ -887,3 +888,11 @@ def auto_mock_service_auth_token(request, mock_service_auth_token):
     if request.node.get_closest_marker('no_service_auth_mock'):
         return
     mock_service_auth_token()
+
+
+@pytest.fixture()
+def basic_auth_credentials():
+    def get_basic_auth_header(username='username', password='password'):
+        credentials = f"{username}:{password}".encode('utf-8')
+        return base64.b64encode(credentials).decode('utf-8')
+    return get_basic_auth_header

@@ -32,9 +32,9 @@ class IsAuthenticatedSystem(BasePermission):
         if not request_system:
             return False
         if not self.system_id_kwarg:
-            return bool(request_system)
+            return bool(request_system.organization_id)
         view_system_id = view.kwargs.get(self.system_id_kwarg, '')
-        return request_system and str(request_system.system_id) == view_system_id
+        return request_system.organization_id and str(request_system.system_id) == view_system_id
 
 
 class IsAuthenticatedCloudUserOrSystem(BasePermission):
@@ -62,7 +62,7 @@ class CanPerformChannelPartnerAction(BasePermission):
 
     def has_object_permission(self, request, view, obj: Any):
         if system := getattr(request, 'cloud_system', None):
-            return system == obj and self.system_allowed
+            return system == obj and self.system_allowed and obj.organization_id
         if request.user and request.user.is_authenticated and request.auth:
             if self.check_function:
                 if self.check_function(obj, request.user):

@@ -222,6 +222,22 @@ class TestCloudSystemViewSetRetrieve:
         response = self.client.get(path=self.url)
         assert response.status_code == 403
 
+    def test_system_auth_200(self, mock_auth_with_system, basic_auth_credentials):
+        mock_auth_with_system(self.group_system)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {basic_auth_credentials()}')
+        response = self.client.get(path=self.url)
+        assert response.status_code == 200
+
+    def test_system_auth_403(self, mock_auth_with_system, basic_auth_credentials, system_factory):
+        sys = system_factory(organization=self.organization)
+        sys.organization = None
+        sys.save()
+        mock_auth_with_system(sys)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {basic_auth_credentials()}')
+        url = reverse('v2:cloudsystem-detail', kwargs={'id': sys.system_id})
+        response = self.client.get(path=url)
+        assert response.status_code == 403
+
 
 
 class TestCloudSystemViewSetBind:
@@ -947,6 +963,19 @@ class TestCloudSystemViewSetSystemCurrentUsage:
         assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).cloud_system == self.system
         assert SystemServiceCurrentQuantity.objects.get(service=self.cp_service_3).organization == self.organization
         assert SystemServiceCurrentQuantity.objects.count() == 3
+
+    def test_system_auth_403(self, mock_auth_with_system, basic_auth_credentials, system_factory):
+        sys = system_factory(organization=self.organization)
+        sys.organization = None
+        sys.save()
+        mock_auth_with_system(sys)
+        data = {
+            'currentUsages': []
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {basic_auth_credentials()}')
+        path = reverse('v2:cloudsystem-system-current-usage', kwargs={'id': self.system.system_id})
+        response = self.client.post(path=path)
+        assert response.status_code == 403
 
 
 class TestChannelPartnerNestedViewSet:
@@ -5514,3 +5543,42 @@ class TestCloudSystemViewSetPermissions:
         path = reverse(view_name, kwargs=self.kwargs_lvl_3)
         response = self.client.get(path=path)
         assert response.status_code == 405
+
+    @pytest.mark.parametrize(
+        'view_name, method, success_status_code', [
+            ('v2:cloudsystem-service-quantity', 'get', 200),
+            ('v2:cloudsystem-services', 'get', 200),
+            ('v2:cloudsystem-detail', 'get', 200),
+            ('v2:cloudsystem-system-usage-report', 'post', 400),
+            ('v2:cloudsystem-detail', 'delete', 204),
+            ('v2:cloudsystem-saas-report', 'get', 200),
+            ('v2:cloudsystem-migrate-legacy-licenses', 'post', 400),
+        ]
+    )
+    def test_system_auth_without_org(
+            self,
+            view_name,
+            method,
+            success_status_code,
+            mock_auth_with_system,
+            system_factory,
+            basic_auth_credentials,
+            mocker,
+    ):
+        cdb_response = MagicMock()
+        cdb_response.status_code = 200
+        mocker.patch('nx_cloud_api_client.apis.CdbSystemAPIBase.delete_system', return_value=cdb_response)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {basic_auth_credentials()}')
+        mock_auth_with_system(self.system_lvl_3)
+        path = reverse(view_name, kwargs=self.kwargs_lvl_3)
+        handler = getattr(self.client, method)
+        response = handler(path=path)
+        assert response.status_code == success_status_code
+
+        system_with_no_org = system_factory(organization=self.org_lvl_1)
+        system_with_no_org.organization = None
+        system_with_no_org.save()
+        mock_auth_with_system(system_with_no_org)
+        path = reverse(view_name, kwargs={'id': str(system_with_no_org.system_id)})
+        response = handler(path=path)
+        assert response.status_code == 403
