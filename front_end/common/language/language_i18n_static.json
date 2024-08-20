@@ -514,7 +514,7 @@
         },
         "Advanced Viewer": {
             "description": "Can view live video, browse the archive, control PTZ etc",
-            "label": "Advanced Viewer"
+            "label": "Advanced Viewers"
         },
         "Custom": {
             "description": "Use the %VMS_NAME% Client application to set up custom permissions",
@@ -522,7 +522,7 @@
         },
         "Live Viewer": {
             "description": "Can only view live video",
-            "label": "Live Viewer"
+            "label": "Live Viewers"
         },
         "Owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
@@ -530,11 +530,11 @@
         },
         "Viewer": {
             "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "label": "Viewers"
         },
         "advancedViewer": {
             "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
-            "label": "Advanced Viewer"
+            "label": "Advanced Viewers"
         },
         "cloudAdmin": {
             "description": "Can configure System and share it",
@@ -554,7 +554,7 @@
         },
         "liveViewer": {
             "description": "Can only view live video",
-            "label": "Live Viewer"
+            "label": "Live Viewers"
         },
         "owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
@@ -562,7 +562,7 @@
         },
         "viewer": {
             "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "label": "Viewers"
         },
         "none": {
             "description": "",
