@@ -92,6 +92,11 @@ const themePresets: ThemePreset[] = [
         theme: {},
     },
     {
+        name: 'From Customization',
+        options: {},
+        theme: nxConfig.themeColors,
+    },
+    {
         name: 'Dark Blue',
         options: {
             coreSaturation: 20,

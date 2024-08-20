@@ -19,6 +19,7 @@ urlpatterns = [
     re_path(r'^utils/downloads/?$',                 utils.downloads),
     re_path(r'^utils/downloads-releases/?$',        utils.downloads_releases),
     re_path(r'^utils/settings/?$',                  utils.get_settings, name='get_settings'),
+    re_path(r'^utils/theme/?$',                     utils.get_theme, name='get_theme'),
     re_path(r'^utils/webadmin_feature_flags/?$',    utils.webadmin_feature_flags),
     re_path(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
     # re_path(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),

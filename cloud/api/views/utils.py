@@ -36,7 +36,7 @@ from cloud import settings
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
-from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras, \
+from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, ThemeSerializer, process_cameras, \
     CustomizationNameSerializer, ForceSyncSerializer
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key, get_or_set_global_cache
@@ -494,6 +494,26 @@ async def webadmin_feature_flags(request):
     request.META['webadmin'] = True
     flags = await sync_to_async(get_feature_flags)(request)
     return api_success(flags, additional_headers={'access-control-allow-origin': request.META.get('HTTP_ORIGIN', request.META.get('HTTP_HOST', ''))})
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Return the current theme for the cloud portal.",
+                     responses={200: ThemeSerializer()})
+@async_api_view(['GET'])
+@permission_classes((AllowAny, ))
+async def get_theme(request):
+    if not (version := request.query_params.get('version')):
+        current_version = await get_or_set_global_cache(request.CUSTOMIZATION)
+        return redirect(f'{reverse("get_theme")}?version={current_version}')
+
+    local_cache = caches['local']
+
+    if not (theme := await local_cache.aget(f'theme_{version}', None)):
+        serializer = await sync_to_async(lambda: ThemeSerializer(request=request))()
+        serializer.is_valid()
+        theme = serializer.data
+        await local_cache.aset(f'theme_{version}', theme, 60**2 * 24 * 365)
+
+    return Response(theme, headers={'Cache-Control': f'max-age={60**2 * 24 * 365}'})
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,

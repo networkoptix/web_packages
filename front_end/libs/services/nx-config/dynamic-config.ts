@@ -6,6 +6,7 @@ import { LOGIN_STATE } from '@services/session.service.types';
 import { Role } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
+import { ThemeColors } from './base-config';
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
 
@@ -18,9 +19,10 @@ export class DynamicConfig {
             return { provide: DynamicConfig, useValue: { config: nxConfig } };
         }
         const preloadedAccount = await DynamicConfig.getAccount();
-        const [data, preloadedTranslation] = await Promise.allSettled([
+        const [data, preloadedTranslation, customizationColors] = await Promise.allSettled([
             DynamicConfig.getData(),
             DynamicConfig.getTranslation(),
+            DynamicConfig.getCustomizationColors(),
         ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
 
         // Need to find out why featureFlag override not working for this flag
@@ -35,7 +37,12 @@ export class DynamicConfig {
 
         return {
             provide: DynamicConfig,
-            useValue: new DynamicConfig({ ...data, preloadedAccount, preloadedTranslation }),
+            useValue: new DynamicConfig({
+                ...data,
+                preloadedAccount,
+                preloadedTranslation,
+                themeColors: customizationColors,
+            }),
         };
     }
 
@@ -139,10 +146,17 @@ export class DynamicConfig {
             .catch(() => null);
     }
 
+    static getCustomizationColors(): Promise<ThemeColors> {
+        return fetch('/api/utils/theme')
+            .then(res => res.json())
+            .catch(() => ({}));
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapPropertiesToConfig(data: any): IConfig {
         nxConfig.preloadedAccount = data.preloadedAccount;
         nxConfig.preloadedTranslation = data.preloadedTranslation;
+        nxConfig.themeColors = { ...nxConfig.themeColors, ...data.themeColors };
         if (environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;

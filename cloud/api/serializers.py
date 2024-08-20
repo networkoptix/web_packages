@@ -11,7 +11,7 @@ import re
 
 from cloud.helpers.exceptions import APIInternalException
 from cms.controllers.static_files import get_static_files_links
-from cms.models import LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
+from cms.models import Asset, AssetType, LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
 
 
 def to_camel_case(value):
@@ -211,6 +211,38 @@ class MenusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = 'type', 'base_url', 'id', 'title', 'description', 'nodes'
+
+class ThemeSerializer(serializers.Serializer):
+    brand = serializers.CharField()
+    brandBg = serializers.CharField()
+
+    def __init__(self, *args, request=None, **kwargs):
+        data = {}
+
+        if request:
+            blue_bg = '#53707f'
+            gray_bg = '#808080'
+            brand_colors = {
+                'blue': '#2FA2DB',
+                'green': '#A6CC46',
+                'orange': '#FC6C21',
+                'white': '#FFFFFF',
+            }
+            brand_backgrounds = {
+                'blue': blue_bg,
+                'green': blue_bg,
+                'orange': blue_bg,
+                'white': gray_bg,
+            }
+            customization = request.CUSTOMIZATION
+            asset = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customizations__name=customization).first()
+            skin = asset.read_global_value('%SKIN%')
+            brand = asset.read_global_value('%BRAND_COLOR%').replace('useSkin', '')
+            brand_bg = asset.read_global_value('%BRAND_BACKGROUND_COLOR%').replace('useSkin', '')
+            data['brand'] = brand or brand_colors.get(skin, brand_colors['blue'])
+            data['brandBg'] = brand_bg or brand_backgrounds.get(skin, brand_backgrounds['blue'])
+
+        super().__init__(*args, data=data, **kwargs)
 
 
 class SettingsSerializer(CustomizationCacheSerializer):

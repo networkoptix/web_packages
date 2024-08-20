@@ -89,6 +89,38 @@
             }
           },
           {
+            "label": "Brand Color",
+            "name": "%BRAND_COLOR%",
+            "value": "useSkin",
+            "description": "New cloud brand color",
+            "advanced": true,
+            "type": "text",
+            "meta": {
+              "regex": "^#(?:[0-9a-fA-F]{3}){1,2}$|^useSkin$",
+              "datalist": [
+                "#2FA2DB",
+                "#A6CC46",
+                "#FC6C21",
+                "#FFFFFF"
+              ]
+            }
+          },
+          {
+            "label": "Brand Background Color",
+            "name": "%BRAND_BACKGROUND_COLOR%",
+            "value": "useSkin",
+            "description": "New cloud background color",
+            "advanced": true,
+            "type": "text",
+            "meta": {
+              "regex": "^#(?:[0-9a-fA-F]{3}){1,2}$|^useSkin$",
+              "datalist": [
+                "#53707f",
+                "#808080"
+              ]
+            }
+          },
+          {
             "label": "VMS Name",
             "name": "%VMS_NAME%",
             "old_name": "{{VMS_NAME}}",

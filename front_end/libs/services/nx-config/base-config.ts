@@ -36,12 +36,18 @@ export interface TosConfig {
     daily: number;
 }
 
+export interface ThemeColors {
+    brand: `#${string}`;
+    brandBg: `#${string}`;
+}
+
 export interface BaseConfig {
     preloadedAccount: unknown;
     preloadedTranslation: Object;
     accountDropdown: AccountDropdown[];
     accountDropdownStaff: AccountDropdown[];
     commonPasswordsList?: { [key: string]: number };
+    themeColors: ThemeColors;
     capabilities?: Capabilities;
     viewsDir?: string;
     customization: string;

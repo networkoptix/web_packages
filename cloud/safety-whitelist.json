@@ -293,6 +293,9 @@
   "71890": {
     "name": "html-sanitizer",
     "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
-  }
-
+  },
+ "72083": {
+    "name": "certifi",
+    "note": "Affected spec: >=2021.05.30,<2024.07.04 ADVISORY: Certifi affected versions recognized root certificates from GLOBALTRUST. Certifi patch removes these root certificates from the root store. These certificates are being removed pursuant to an investigation that identified 'long-running and unresolved compliance issues' and are also in the process of being removed from Mozilla's trust store.  CVE-2024-39689"
+ }
 }

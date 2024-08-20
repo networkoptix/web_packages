@@ -209,11 +209,24 @@ export class NxConfigService {
         if (this.config.featureFlags.newCloudColorProvider) {
             const { theme = {}, options = {} }: ThemeWithOptions<true> = (() => {
                 try {
-                    return JSON.parse(
+                    const themeConfig = JSON.parse(
                         localStorage.getItem('newThemeConfig') || '{}',
-                    ) as ThemeWithOptions;
+                    ) as ThemeWithOptions & { name: string };
+                    if (
+                        !this.config.preloadedAccount ||
+                        !themeConfig.name ||
+                        themeConfig.name === 'From Customization'
+                    ) {
+                        throw new Error('Use theme from customization');
+                    }
+                    return themeConfig;
                 } catch {
-                    return {} as ThemeWithOptions;
+                    return {
+                        theme: {
+                            brand: nxConfig.themeColors.brand,
+                            brandBg: nxConfig.themeColors.brandBg,
+                        },
+                    } as ThemeWithOptions;
                 }
             })();
             const setThemeMode = (): void =>

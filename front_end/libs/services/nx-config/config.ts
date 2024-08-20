@@ -13,6 +13,10 @@ export const nxConfig: IConfig = {
     browserNotSupported: false,
     defaultLanguage: 'en_US',
     customization: 'default',
+    themeColors: {
+        brandBg: '#53707f',
+        brand: '#2FA2DB',
+    },
     accountDropdown: [
         {
             name: 'Account Settings',
