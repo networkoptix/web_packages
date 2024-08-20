@@ -35,10 +35,4 @@ export enum SystemsDisplayMode {
     Shared = 2,
 }
 
-export const settingsViews = {
-    CHANNEL_PARTNERS: 'channelPartners',
-    ORGANIZATIONS: 'organizations',
-    SUBCHANNELS: 'subchannels',
-};
-
 export type DraggableItem = GroupItem | SystemItem;
