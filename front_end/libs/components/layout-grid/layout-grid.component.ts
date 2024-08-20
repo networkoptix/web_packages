@@ -74,6 +74,7 @@ import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
 import { NxLayoutGridItemPlaceholderComponent } from '@components/layout-grid-item-placeholder/layout-grid-item-placeholder.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
+import { findOtherSiteCamera } from '@components/layout-grid-tree/utils/create-layout-item';
 import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
@@ -636,7 +637,7 @@ export class NxLayoutGridComponent {
 
         const layoutItemLookup = this.layoutItemLookup$$();
         layout.items.forEach(item => {
-            const itemDetail = layoutItemLookup?.[item.resourceId];
+            const itemDetail = this.getItem({ item, layoutItemLookup });
             const { systemId } = extractSystemAndResourceId(item.resourcePath);
             const systemInfo = this.systemsService.systems$$()?.find(({ id }) => id === systemId);
 
@@ -676,7 +677,14 @@ export class NxLayoutGridComponent {
                     }
                 }
             } else if (systemInfo) {
-                layoutItemStatus = 'systemDeviceNotAvailable';
+                layoutItemStatus =
+                    !systemInfo?.system2faEnabled ||
+                    isSystemOffline ||
+                    this.accountService.account.sessionVerified
+                        ? 'systemDeviceNotAvailable'
+                        : this.accountService.account.totpExistsForAccount
+                          ? 'system2faRequired'
+                          : 'account2faDisabled';
             }
 
             if (!layoutItemStatus) {
@@ -1652,7 +1660,21 @@ export class NxLayoutGridComponent {
     }: {
         item: ParsedLayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
-    }) => layoutItemLookup?.[item.resourceId];
+    }) => {
+        const systemId = extractSystemAndResourceId(item.resourcePath).systemId;
+        const isCrossSiteItem = systemId && systemId !== this.system.id;
+        const matchedItem = layoutItemLookup?.[item.resourceId];
+
+        if (isCrossSiteItem && assertResourceOfType.camera(matchedItem)) {
+            return findOtherSiteCamera(
+                layoutItemLookup?.otherSystems || [],
+                item.resourceId,
+                systemId,
+            );
+        }
+
+        return matchedItem;
+    };
 
     getItemLayoutError = ({
         item,

@@ -467,7 +467,9 @@
                 "noLiveStream": "NO LIVE STREAM",
                 "noAccess": "NO ACCESS",
                 "noAccessToSystem": "NO ACCESS TO SYSTEM",
-                "systemIsOffline": "SYSTEM IS OFFLINE"
+                "systemIsOffline": "SYSTEM IS OFFLINE",
+                "requires2fa": "REQUIRES 2FA",
+                "enable2fa": "2FA DISABLED"
             },
             "hints": {
                 "offlineCamera": "This camera cannot be accessed. Perform camera diagnostics within the Nx Witness Desktop Client for additional information.",
@@ -481,11 +483,15 @@
                 "noAccess": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
                 "noAccessToSystem": "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system.",
                 "systemVersionNotCompatible": "This Device must be connected to at least a version 6 Server to be viewed on the Layouts page.",
-                "codecNotSupported": "Camera codec is currently not supported in Cloud portal."
+                "codecNotSupported": "Camera codec is currently not supported in Cloud portal.",
+                "requires2fa": "The item site requires 2-factor authentication. Please enter the 2FA code using the provided button.",
+                "enable2fa": "You must enable two-factor authentication in your account before accessing this item or site."
             },
             "actions": {
                 "defaultPassword": "Setup",
-                "unauthorizedCamera": "Set Credentials"
+                "unauthorizedCamera": "Set Credentials",
+                "requires2fa": "Verify Session",
+                "enable2fa": "Setup 2FA"
             },
             "descriptions": {
                 "expectInFutureVersions": "expect in future versions",

@@ -1,19 +1,22 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     computed,
     EventEmitter,
+    inject,
     input,
     Output,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
+import { lastValueFrom } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
@@ -29,6 +32,7 @@ import { NxLayoutGridItemPlaceholderTemplateLegacyComponent } from '@components/
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
@@ -37,8 +41,11 @@ import { ConnectionError } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxAccountService } from '@services/account.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
+import { OauthService } from '@services/oauth.service';
 import {
     CameraTypeId,
     NxSystemCamera,
@@ -57,6 +64,22 @@ const not_supported: Placeholder = {
     isError: false,
     icon: 'future',
     description: descriptionsLang.expectInFutureVersions,
+};
+
+const requires2fa: Placeholder = {
+    message: messagesLang.requires2fa,
+    isError: true,
+    icon: 'lock',
+    actionName: actionsLang.requires2fa,
+    hint: hintsLang.requires2fa,
+};
+
+const enable2fa: Placeholder = {
+    message: messagesLang.enable2fa,
+    isError: true,
+    icon: 'lock',
+    actionName: actionsLang.enable2fa,
+    hint: actionsLang.enable2fa,
 };
 
 const unavailable: Placeholder = {
@@ -153,6 +176,8 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         description: '',
         hint: hintsLang.codecNotSupported,
     },
+    system2faRequired: requires2fa,
+    account2faDisabled: enable2fa,
     default: {
         ...unavailable,
     },
@@ -199,6 +224,8 @@ const SYSTEM_PLACEHOLDERS = {
     systemNoAccess: PLACEHOLDERS.noAccessToSystem,
     systemNoPermission: PLACEHOLDERS.noAccess,
     systemVersionNotSupported: PLACEHOLDERS.not_supported,
+    system2faRequired: PLACEHOLDERS.system2faRequired,
+    account2faDisabled: PLACEHOLDERS.account2faDisabled,
 };
 
 @UntilDestroy()
@@ -368,6 +395,12 @@ export class NxLayoutGridItemPlaceholderComponent {
         };
     };
 
+    accountService = inject(NxAccountService);
+    oauthService = inject(OauthService);
+    cloudApi = inject(NxCloudApiService);
+    routerState = inject(Router);
+    dialogs = inject(NxDialogsService);
+
     action = computed(() => {
         const itemDetail = this.itemDetail();
         if (
@@ -379,7 +412,34 @@ export class NxLayoutGridItemPlaceholderComponent {
                 this.updateCameraCredentials.emit(itemDetail.details);
             };
         }
+
+        if (this.has2faAction()) {
+            return async () => {
+                if (this.accountService.account.totpExistsForAccount) {
+                    const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
+                    return this.oauthService.redirectOauth({
+                        state: 'system2faAuth',
+                        email: this.accountService.account.email,
+                        accessToken,
+                        redirectTo: Location.joinWithSlash(
+                            window.location.origin,
+                            this.routerState.routerState.snapshot.url,
+                        ),
+                    });
+                }
+
+                return this.dialogs.account2faEnable().then(enabled => {
+                    if (enabled) {
+                        return this.accountService.get(true);
+                    }
+                });
+            };
+        }
     });
+
+    has2faAction = computed(() =>
+        ['system2faRequired', 'account2faDisabled'].includes(this.adjustedStatus() || ''),
+    );
 
     hasAction = computed(() => {
         // this method is weird. We do not have any other actions though so it is fine so far
@@ -395,7 +455,7 @@ export class NxLayoutGridItemPlaceholderComponent {
                 .systemsPermissionsManager$$()
                 [itemDetail.details.systemId].canEditDevice(itemDetail.details.id);
 
-        return hasAuthorize;
+        return hasAuthorize || this.has2faAction();
     });
 
     notSupported = computed(() => {
