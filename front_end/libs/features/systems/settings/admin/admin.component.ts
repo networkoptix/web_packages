@@ -136,6 +136,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                 singleItem: lastGroup,
             });
         }
+
         if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
             return this.LANG.accessRoles[accessRole].label;
         }
