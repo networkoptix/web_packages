@@ -129,17 +129,6 @@ export interface SupportInformation {
     custom: InfoRow[];
 }
 
-export interface OrgSettingsState {
-    item?: Organization;
-    canUpdateStatus: boolean;
-}
-
-export interface CPSettingsState {
-    view?: string;
-    item?: ChannelPartner;
-    canUpdateStatus: boolean;
-}
-
 export type PaginatedChannelPartnerList = Page<ChannelPartner>;
 
 export interface CreateChannelPartner {
