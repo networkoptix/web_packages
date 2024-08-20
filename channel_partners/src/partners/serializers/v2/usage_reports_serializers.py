@@ -162,8 +162,8 @@ class OrganizationExpiringUsageSerializer(FieldAccessSerializer):
 class ChannelPartnerUsageReportRecordSerializer(serializers.Serializer):
     service_id = serializers.UUIDField()
     service_name = serializers.CharField()
-    parent_service_id = serializers.UUIDField()
-    parent_service_name = serializers.CharField()
+    parent_service_id = serializers.UUIDField(required=False)
+    parent_service_name = serializers.CharField(required=False)
     used_by_organizations = serializers.IntegerField()
     used_by_channel_partners = serializers.IntegerField()
     channels = serializers.IntegerField()

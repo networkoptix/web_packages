@@ -343,7 +343,7 @@ class ReportSnapshotService:
         self.next_period_start = period_end
         if isinstance(self.next_period_start, datetime.datetime):
             self.next_period_start = self.next_period_start.date()
-        if report_type in (ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report):
+        if report_type == ReportSnapshot.ReportType.system_regular_report:
             self.organization_id = organization_id
         else:
             self.organization_id = None
@@ -373,7 +373,7 @@ class ReportSnapshotService:
             'report_type': self.report_type,
             'start_date': self.period_start,
         }
-        if self.report_type in (ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report):
+        if self.report_type == ReportSnapshot.ReportType.system_regular_report:
             lookup_kwargs['organization_id'] = self.organization_id
         if self.service_id:
             lookup_kwargs['service_id'] = self.service_id
@@ -388,7 +388,6 @@ class ReportSnapshotService:
         """
         return {
             'provisional': self.is_provisional,
-            'schema_version': ReportSnapshot.CURRENT_SCHEMA_VERSION,
             **self.lookup_kwargs
         }
 
@@ -429,11 +428,10 @@ class ReportSnapshotService:
 
         if not self.generate:
             return False
-        if self.snapshot and not self.snapshot.provisional and not self.snapshot.is_schema_version_outdated():
+        if self.snapshot and not self.snapshot.provisional:
             # check if stored snapshot is still in provisional stated (until first day of a month)
             return False
-        if (self.snapshot and self.snapshot.updated_ts.date() == get_today()
-                and not self.snapshot.is_schema_version_outdated()):
+        if self.snapshot and self.snapshot.updated_ts.date() == get_today():
             # check if snapshot has been updated today
             return False
         return True
@@ -453,7 +451,6 @@ class ReportSnapshotService:
                 service_id=self.service_id,
                 report_data=report,
                 organization_id=self.organization_id,
-                schema_version=ReportSnapshot.CURRENT_SCHEMA_VERSION,
             )
 
 
@@ -504,7 +501,7 @@ def wrapped_report_func(
         raise ValueError(f'Cannot find entity "{entity_obj_name}" object in passed arguments.')
     entity_id = getattr(entity_obj, entity_id_name, None)
     service_id = getattr(func_args.arguments.get('service', None), 'id', None)
-    if report_type in (ReportSnapshot.ReportType.system_regular_report, ReportSnapshot.ReportType.system_expiring_report):
+    if report_type is ReportSnapshot.ReportType.system_regular_report:
         organization_id = getattr(func_args.arguments.get('organization', None), 'id', None)
     else:
         organization_id = None
