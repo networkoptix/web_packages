@@ -48,7 +48,7 @@
                     </div>
                 }
             </header>
-            <nx-section *ngIf="hasNoItems || (!hasNoItems && information.sites?.length)">
+            <nx-section>
                 <div
                     class="section-header"
                     [ngClass]="{ 'in-edit-mode': editMode }"
@@ -84,7 +84,7 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            <nx-section *ngIf="hasNoItems || (!hasNoItems && information.phones?.length)">
+            <nx-section>
                 <div
                     class="section-header"
                     [ngClass]="{ 'in-edit-mode': editMode }"
@@ -120,7 +120,7 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            <nx-section *ngIf="hasNoItems || (!hasNoItems && information.emails?.length)">
+            <nx-section>
                 <div
                     class="section-header"
                     [ngClass]="{ 'in-edit-mode': editMode }"
@@ -156,7 +156,7 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
-            <nx-section *ngIf="hasNoItems || (!hasNoItems && information.custom?.length)">
+            <nx-section>
                 <div
                     class="section-header"
                     [ngClass]="{ 'in-edit-mode': editMode }"
