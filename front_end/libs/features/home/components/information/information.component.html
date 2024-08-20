@@ -193,39 +193,33 @@
                     ></nx-info-form>
                 </ng-container>
             </nx-section>
+            @if (hasNoItems || editMode) {
+                <nx-section>
+                    <div class="wrapper-section-apply">
+                        <div class="section-apply">
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                [disabled]="busy$$()"
+                                translate
+                                (click)="discardDataChanges()"
+                            >
+                                Cancel
+                            </button>
+                            <nx-async-action-button
+                                [action]="saveDataChanges"
+                                [invalid]="!allValid || !hasDirty"
+                                noInvalidFirstSubmit
+                                [(busy)]="busy"
+                                translate
+                            >
+                                Save
+                            </nx-async-action-button>
+                        </div>
+                    </div>
+                </nx-section>
+            }
         </nx-block>
-        <div class="wrapper-section-apply">
-            <div class="section-apply">
-                @if (hasNoItems) {
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        translate
-                        (click)="discardDataChanges()"
-                    >
-                        Cancel
-                    </button>
-                } @else if (editMode) {
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        [disabled]="busy$$()"
-                        translate
-                        (click)="discardDataChanges()"
-                    >
-                        Cancel
-                    </button>
-                    <nx-async-action-button
-                        [action]="saveDataChanges"
-                        [invalid]="!allValid || hasNoItems || !hasDirty"
-                        [(busy)]="busy"
-                        translate
-                    >
-                        Save
-                    </nx-async-action-button>
-                }
-            </div>
-        </div>
     </div>
 }
 

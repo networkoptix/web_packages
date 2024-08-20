@@ -347,11 +347,9 @@ export class NxChannelPartnerInformationComponent {
         // button is having different caption per action
         // "Cancel" if form is dirty
         // "Back" if form is not dirty and no items
-        if (this.hasNoItems) {
-            this.editMode = false;
-            return;
+        if (this.hasNoItems || (this.editMode && this.hasDirty)) {
+            this.hasDirty = false;
         }
-
-        this.hasNoItems = this.noItems();
+        this.editMode = false;
     };
 }
