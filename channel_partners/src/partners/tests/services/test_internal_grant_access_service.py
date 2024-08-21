@@ -214,16 +214,16 @@ class TestInternalGrantAccessService:
             ('customization_2', 'host-3.test.hdw.mx'),
         ]
         
-    def test_get_customization_pub_success(self, mocker, mock_get_customizations_hdw_mx):
+    def test_get_customization_pub_success(self, mocker):
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', return_value=self.ireg_customizations)
+            'nx_ireg.helpers.get_customizations_s3', return_value=self.ireg_customizations)
         customizations = InternalGrantAccessService.get_customizations()
         mocked_get_customizations.assert_called_once()
         assert customizations == dict(self.ireg_customizations)
 
     def test_get_customization_pub_connection_exception(self, mocker):
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', side_effect=httpx.TimeoutException('test'))
+            'nx_ireg.helpers.get_customizations_s3', side_effect=httpx.TimeoutException('test'))
         customizations = InternalGrantAccessService.get_customizations()
         mocked_get_customizations.assert_called_once()
         assert customizations == {}
@@ -231,7 +231,7 @@ class TestInternalGrantAccessService:
     def test_get_customization_pub_no_customizations(self, mocker):
         ireg_customizations = []
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', return_value=ireg_customizations)
+            'nx_ireg.helpers.get_customizations_s3', return_value=ireg_customizations)
         customizations = InternalGrantAccessService.get_customizations()
         mocked_get_customizations.assert_called_once()
         assert customizations == {}
@@ -239,7 +239,7 @@ class TestInternalGrantAccessService:
     def test_get_customization_private_no_root(self, mocker, db):
         mocker.patch.object(settings, 'IS_PRIVATE_CLOUD', True)
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', side_effect=httpx.TimeoutException('test'))
+            'nx_ireg.helpers.get_customizations_s3', side_effect=httpx.TimeoutException('test'))
         customizations = InternalGrantAccessService.get_customizations()
         mocked_get_customizations.assert_not_called()
         assert customizations == {}
@@ -247,7 +247,7 @@ class TestInternalGrantAccessService:
     def test_get_customization_private(self, mocker, root_nx_channel_partner, cloud_test_host):
         mocker.patch.object(settings, 'IS_PRIVATE_CLOUD', True)
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', side_effect=httpx.TimeoutException('test'))
+            'nx_ireg.helpers.get_customizations_s3', side_effect=httpx.TimeoutException('test'))
         customizations = InternalGrantAccessService.get_customizations()
         mocked_get_customizations.assert_not_called()
         assert customizations == {'default': cloud_test_host.hostname}
@@ -295,7 +295,7 @@ class TestInternalGrantAccessService:
             channel_partner_factory
     ):
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', return_value=self.ireg_customizations)
+            'nx_ireg.helpers.get_customizations_s3', return_value=self.ireg_customizations)
         for customization, host in self.ireg_customizations[1:]:
             channel_partner_factory(parent_channel_partner=root_nx_channel_partner,
                                     name=customization,
