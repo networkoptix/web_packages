@@ -3,7 +3,6 @@ from nx_ireg.registry import IReg
 
 
 class TestIreg:
-    @pytest.mark.skip(reason="Broken. Wait for NCD-602")
     def test_init(self):
         ireg = IReg("test")
         assert len(ireg._customizations) > 0
@@ -11,7 +10,6 @@ class TestIreg:
         assert len(ireg.get_other_customizations()) == len(ireg._customizations) - 1
         assert "default" not in dict(ireg.get_other_customizations())
 
-    @pytest.mark.skip(reason="Broken. Wait for NCD-602")
     def test_get_customization_by_host(self):
         ireg = IReg("test")
         assert ireg.get_customization_by_host("cloud-test.hdw.mx") == "default"
