@@ -858,9 +858,9 @@ def generate_random_jwt(jwk_key_factory, private_key_factory):
 
 
 @pytest.fixture()
-def mock_get_customizations_hdw_mx(mocker):
+def mock_get_customizations(mocker):
     def factory(customizations: typing.List[typing.Tuple[str, str]], side_effect=None):
-        return mocker.patch('nx_ireg.helpers.get_customizations_hdw_mx',
+        return mocker.patch('nx_ireg.helpers.get_customizations_s3',
                             return_value=customizations, side_effect=side_effect)
 
     return factory

@@ -830,7 +830,12 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
             admins_queryset.exists() and
             not admins_queryset.exclude(user__email=user).exists()
         ):
-            raise ValidationError({'roleId': ['It is impossible to change role for the only administrator.']})
+            is_cpal_admin = organization.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+            cp_managers_queryset = ChannelPartnerToUser.objects.filter(
+                channel_partner_id=organization.channel_partner_id,
+                roles__overlap=[ChannelPartnerRoles.MANAGER, ChannelPartnerRoles.ADMINISTRATOR])
+            if not is_cpal_admin or not cp_managers_queryset.exists():
+                raise ValidationError({'roleId': ['It is impossible to change role for the only administrator.']})
         return attrs
 
     def create(self, validated_data):

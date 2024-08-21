@@ -914,6 +914,46 @@ class TestOrganizationUserSerializer:
         assert serializer.is_valid() is False
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
 
+    def test_the_only_admin_cpal_off(self, org_user_factory):
+        self.org.channel_partner_access_level_id = None
+        self.org.save()
+        org_admin = org_user_factory(organization=self.org)
+        data = {
+            'email': org_admin.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is False
+        assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+
+    def test_the_only_admin_cpal_on_no_cp_admins(self, org_user_factory):
+        self.org.channel_partner_access_level_id = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        self.org.save()
+        org_admin = org_user_factory(organization=self.org)
+        data = {
+            'email': org_admin.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is False
+        assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
+
+    def test_the_only_admin_cpal_on_with_cp_admins(self, org_user_factory, cp_user_factory):
+        self.org.channel_partner_access_level_id = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        self.org.save()
+        cp_admin = cp_user_factory(channel_partner=self.cp)
+        org_admin = org_user_factory(organization=self.org)
+
+        data = {
+            'email': org_admin.user.email,
+            'roleId': OrganizationRoles.POWER_USER
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        assert serializer.is_valid() is True
+
 
 class TestSystemGroupUserSerializer:
 

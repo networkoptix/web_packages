@@ -2335,7 +2335,7 @@ class TestGrantAccessView:
     @override_settings(DEBUG=True)
     def test_grant_access_ok(self, root_nx_channel_partner, mocker):
         mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_hdw_mx', return_value=self.ireg_customizations)
+            'nx_ireg.helpers.get_customizations_s3', return_value=self.ireg_customizations)
 
         request = self.factory.post(self.url, data={'email': 'kapanovich@networkoptix.com'})
         response = grant_access(request)
