@@ -5,6 +5,7 @@
         "entryFile": "src/index.ts"
     },
     "assets": [
-        "index.scss"
+        "index.scss",
+        "reset-mixins.scss"
     ]
 }

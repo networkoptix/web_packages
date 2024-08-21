@@ -3,7 +3,7 @@
 @use 'bootstrap_utils' as bootstrap;
 @use 'mixins';
 
-@use "nx-components";
+@use 'reset-mixins';
 
 @keyframes fadein {
     from {
@@ -1116,7 +1116,7 @@ nx-lines-loader {
         }
 
         h3 {
-            @include nx-components.reset-globals {
+            @include reset-mixins.reset-globals {
                 @include typography.medium16nocolor;
                 font-size: rem(16px) !important;
                 color: var(--other-sites-title) !important;
@@ -1124,7 +1124,7 @@ nx-lines-loader {
         }
 
         h4 {
-            @include nx-components.reset-globals {
+            @include reset-mixins.reset-globals {
                 @include typography.regular14nocolor;
                 font-size: rem(14px) !important;
                 color: var(--other-sites-expand-stroke) !important;

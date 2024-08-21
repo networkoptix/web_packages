@@ -147,6 +147,9 @@ export class DynamicConfig {
     }
 
     static getCustomizationColors(): Promise<ThemeColors> {
+        if (environment.isLocal) {
+            return Promise.resolve({} as ThemeColors);
+        }
         return fetch('/api/utils/theme')
             .then(res => res.json())
             .catch(() => ({}));

@@ -2,10 +2,10 @@
 @use "mixins" as mixins;
 @use "theme_variables_common" as *;
 @use "../dropdowns";
-@use "nx-components";
+@use 'reset-mixins';
 
 
-@include nx-components.wrap-app-globals {
+@include reset-mixins.wrap-app-globals {
     :host {
         width: 100%;
 

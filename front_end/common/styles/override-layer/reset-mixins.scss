@@ -1,0 +1,21 @@
+@use "sass:meta";
+// Changes here modify the global styles of the app so that it doesn't use css layers.
+// In the app's project.json add this to stylePreprocessorOptions.includePaths at the beginning of the array.
+// The builder for some reason prioritizes left to right in the array.
+
+// Use to reset globals by wrapping component styles like @include common.reset-globals { ...styles... }
+@mixin reset-globals {
+    @if not meta.content-exists() {
+        @error 'Must wrap content needs to escape globals like @include reset-mixins.reset-globals { ...stylesHere }';
+    }
+
+    @content
+}
+
+@mixin wrap-app-globals {
+    @if not meta.content-exists() {
+        @error 'Must wrap content with globals to escape like @include reset-mixins.wrap-app-globals { ...stylesHere }';
+    }
+
+    @content
+}

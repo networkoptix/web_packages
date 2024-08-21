@@ -1,9 +1,9 @@
 @use 'theme_variables_common' as *;
 @use 'typography';
 
-@use 'nx-components';
+@use 'reset-mixins';
 
-@include nx-components.wrap-app-globals {
+@include reset-mixins.wrap-app-globals {
     :host {
         .dropdown-menu {
             width: auto !important;

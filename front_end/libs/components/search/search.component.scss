@@ -3,10 +3,10 @@
 @use "_mixins";
 @use "bootstrap_utils" as bootstrap;
 
-@use "nx-components";
+@use 'reset-mixins';
 
 
-@include nx-components.wrap-app-globals {
+@include reset-mixins.wrap-app-globals {
     .nx-search {
         .btn-arrow {
             .arrow-flip svg-icon {

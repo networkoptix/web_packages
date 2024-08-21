@@ -1,10 +1,10 @@
 @use "typography";
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
-@use "nx-components";
+@use 'reset-mixins';
 
 
-@include nx-components.wrap-app-globals {
+@include reset-mixins.wrap-app-globals {
     :host {
         .installers {
             .links {
