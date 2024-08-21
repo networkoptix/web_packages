@@ -1,6 +1,7 @@
 import { Component, Output, ViewChild, computed, forwardRef, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { escape } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
@@ -225,7 +226,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                     this.LANG.channelPartners.usersTable.deleteDialog.singleOrgMessage,
                     {
                         name: row.email,
-                        organization: this.currentOrg$$()?.name,
+                        organization: escape(this.currentOrg$$()?.name),
                     },
                 );
                 break;
@@ -234,7 +235,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                     this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
                     {
                         name: row.email,
-                        folder: row.groupRoles[0].name ?? this.getFolderName(row.accessId),
+                        folder: escape(row.groupRoles[0].name ?? this.getFolderName(row.accessId)),
                     },
                 );
                 break;
