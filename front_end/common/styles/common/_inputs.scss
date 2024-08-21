@@ -21,7 +21,7 @@ input.hide-errors {
     }
 
     & .ng-invalid,
-    &>input {
+    & > input {
         @extend .override-error-style;
     }
 }
@@ -39,7 +39,7 @@ input.hide-errors {
     border-radius: 1px !important;
     transition: none !important;
     box-shadow: none !important;
-    padding: $padding-base-vertical $padding-input-horizontal  !important;
+    padding: $padding-base-vertical $padding-input-horizontal; // this should be modifiable --[TT]--
     caret-color: var(--input-color) !important;
 
     @include mixins.placeholder();
@@ -60,7 +60,7 @@ input.hide-errors {
         color: var(--input-disabled-color) !important;
         border-color: var(--input-disabled-border-color) !important;
         pointer-events: none;
-        
+
         &:hover,
         &:focus {
             border-color: var(--input-border-color) !important;
@@ -93,10 +93,14 @@ input.hide-errors {
         }
 
 
-        +.input-group-addon {
+        + .input-group-addon {
             border-color: transparent;
             background-color: transparent;
         }
+    }
+
+    &--with-right-addon {
+        padding-right: 40px !important;
     }
 }
 
@@ -144,7 +148,7 @@ input.hide-errors {
             border: 1px solid var(--input-error-border-color) !important;
             color: var(--input-error-color) !important;
 
-            +.input-group-addon {
+            + .input-group-addon {
                 border-color: transparent;
                 background-color: transparent;
             }
@@ -211,7 +215,7 @@ select.form-control {
     border-radius: 1px !important;
     transition: none !important;
     box-shadow: none !important;
-    padding: $padding-base-vertical $padding-input-horizontal  !important;
+    padding: $padding-base-vertical $padding-input-horizontal !important;
     caret-color: var(--input-color) !important;
 
     @include mixins.placeholder();
@@ -228,7 +232,7 @@ select.form-control {
         border-color: var(--input-error-border-color) !important;
         color: var(--input-error-color) !important;
 
-        +.input-group-addon {
+        + .input-group-addon {
             border-color: transparent;
             background-color: transparent;
         }
