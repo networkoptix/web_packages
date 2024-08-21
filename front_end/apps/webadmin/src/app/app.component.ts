@@ -137,6 +137,10 @@ export class AppComponent implements AfterViewInit {
         private themeService: NxThemeService,
     ) {
         this.reauthorizing = window.location.href.includes('cloud-authorize');
+
+        if (!window.location.hash) {
+            window.location.hash = '/';
+        }
         if (!this.CONFIG.browserNotSupported) {
             if (environment.isLocal || this.appStateService.ready) {
                 this.lazyLoadHeader();
