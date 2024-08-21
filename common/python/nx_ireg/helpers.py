@@ -4,7 +4,7 @@ from typing import List, Tuple
 import httpx
 
 
-S3_IREG_URL = 'https://s3.ireg.hdw.mx.s3.amazonaws.com/cloud_hosts.json'
+S3_IREG_URL = 'http://s3.ireg.hdw.mx.s3.amazonaws.com/cloud_hosts.json'
 HDW_IREG_URL = 'https://ireg.hdw.mx/api/v1/public/products/nxcloud/instances/'
 
 
@@ -16,10 +16,10 @@ def get_ireg(url: str):
 
 def get_customizations_s3(instance_name: str) -> List[Tuple[str, str]]:
     ireg = get_ireg(S3_IREG_URL)
-    if instance_name not in ireg["groups"]:
+    if instance_name not in ireg["instances"]:
         raise ValueError(f"Instance {instance_name} not found in data.")
-    instance = ireg["groups"][instance_name]
-    return instance.items()
+    instance = ireg["instances"][instance_name]
+    return list(instance.items())
 
 
 def get_customizations_hdw_mx(instance_name: str) -> List[Tuple[str, str]]:
@@ -35,7 +35,7 @@ def get_customizations_hdw_mx(instance_name: str) -> List[Tuple[str, str]]:
 def get_customizations(instance_name: str) -> List[Tuple[str, str]]:
     if not instance_name:
         raise ValueError('Environment variable INSTANCE_NAME is not set.')
-    customizations = get_customizations_hdw_mx(instance_name)
+    customizations = get_customizations_s3(instance_name)
     if not customizations:
         raise ValueError(f'There is no customizations for instance {instance_name}.')
     return customizations
