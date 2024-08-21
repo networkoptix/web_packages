@@ -33,6 +33,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'view',
+        canActivate: [SystemGuard],
         loadChildren: () =>
             import('@pages/systems/view/view.module').then(m => m.NxSystemViewModule),
     },
