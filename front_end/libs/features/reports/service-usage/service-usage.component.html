@@ -17,10 +17,20 @@
     <button (click)="initExport('xlsx')">
         <svg-icon
             nx-add-svg-src
+            class="xlsx-export-icon"
             [src]="icons.dirTextButtons + 'copy.svg'"
             [applyClass]="true"
         ></svg-icon>
         <span translate>Export as XLSX</span>
+    </button>
+    <button (click)="initExport('csv')">
+        <svg-icon
+            nx-add-svg-src
+            class="csv-export-icon"
+            [src]="icons.dir + 'external.svg'"
+            [applyClass]="true"
+        ></svg-icon>
+        <span translate>Export as CSV</span>
     </button>
 </div>
 <div class="service-usage-table-wrapper">
