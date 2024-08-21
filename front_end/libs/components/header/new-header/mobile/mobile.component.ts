@@ -58,7 +58,9 @@ export class NxHeaderMobileComponent {
         });
 
         scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.isTablet$.next(width < GridBreakpoints.MD && width > GridBreakpoints.SM);
+            this.isTablet$.next(
+                !useNewCloud() && width < GridBreakpoints.MD && width > GridBreakpoints.SM,
+            );
         });
     }
 

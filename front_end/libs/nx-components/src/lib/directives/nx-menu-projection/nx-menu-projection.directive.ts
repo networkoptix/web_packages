@@ -7,8 +7,9 @@ import {
     inject,
     input,
 } from '@angular/core';
+import { NEVER } from 'rxjs';
 
-import { NxLayoutComponent } from '../nx-layout/nx-layout.component';
+import { NxLayoutComponent } from '../../nx-layout/nx-layout.component';
 
 /**
  * Structural directive to project content into the secondary menu.
@@ -47,6 +48,7 @@ export class NxMenuProjectionDirective {
 
     nxMenuProjectionCollapsible = input(true);
     nxMenuProjectionResizable = input(true);
+    nxMenuProjectionAutoNavigateSecondaryOnMobile = input(true);
 
     updateProjection = effect(
         onCleanup => {
@@ -54,6 +56,8 @@ export class NxMenuProjectionDirective {
             const collapsible = this.nxMenuProjectionCollapsible();
             const nxMenuProjectionRightPanel = this.nxMenuProjectionRightPanel();
             const resizable = this.nxMenuProjectionResizable();
+            const autoNavigateSecondaryOnMobile =
+                this.nxMenuProjectionAutoNavigateSecondaryOnMobile();
             if (NxLayoutComponent.rootLayout && condition) {
                 this.viewContainer.clear();
                 const cleanup = NxLayoutComponent.rootLayout.useSecondaryMenu(
@@ -62,7 +66,15 @@ export class NxMenuProjectionDirective {
                     nxMenuProjectionRightPanel,
                     resizable,
                 );
-                return onCleanup(cleanup);
+                const autoNavigateSubscription = (
+                    autoNavigateSecondaryOnMobile
+                        ? NxLayoutComponent.rootLayout.navigateNotifier$
+                        : NEVER
+                ).subscribe();
+                return onCleanup(() => {
+                    autoNavigateSubscription.unsubscribe();
+                    cleanup();
+                });
             } else {
                 this.viewContainer.createEmbeddedView(this.templateRef);
             }

@@ -27,6 +27,7 @@ $custom-xl: 1440px;
 
         nx-developers-menu.newCloud {
             max-height: 100vh !important;
+            max-height: 100dvh !important;
             overflow-y: auto;
         }
 
@@ -41,9 +42,11 @@ $custom-xl: 1440px;
                 position: sticky;
                 overflow-y: auto;
                 max-height: calc(100vh - 3rem);
+                max-height: calc(100dvh - 3rem);
 
                 &.with-ribbon {
                     max-height: calc(100vh - 3rem - 33px);
+                    max-height: calc(100dvh - 3rem - 33px);
                 }
 
                 top : 0;
@@ -177,6 +180,7 @@ $custom-xl: 1440px;
     .preloader-wrapper {
         @extend .wide-section;
         height: calc(100vh - 80px);
+        height: calc(100dvh - 80px);
         display: flex;
         justify-content: center;
         align-items: center;

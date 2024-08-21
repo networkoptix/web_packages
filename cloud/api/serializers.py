@@ -236,9 +236,12 @@ class ThemeSerializer(serializers.Serializer):
             }
             customization = request.CUSTOMIZATION
             asset = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customizations__name=customization).first()
-            skin = asset.read_global_value('%SKIN%')
-            brand = asset.read_global_value('%BRAND_COLOR%').replace('useSkin', '')
-            brand_bg = asset.read_global_value('%BRAND_BACKGROUND_COLOR%').replace('useSkin', '')
+            skin = asset.read_global_value('%SKIN%') or 'blue'
+
+            # Fallback to '' so that skin is used if cloud structure hasn't been updated yet during deployment
+            brand = (asset.read_global_value('%BRAND_COLOR%') or '').replace('useSkin', '')
+            brand_bg = (asset.read_global_value('%BRAND_BACKGROUND_COLOR%') or '').replace('useSkin', '')
+
             data['brand'] = brand or brand_colors.get(skin, brand_colors['blue'])
             data['brandBg'] = brand_bg or brand_backgrounds.get(skin, brand_backgrounds['blue'])
 

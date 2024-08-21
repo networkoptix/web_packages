@@ -2,7 +2,7 @@
     class="inset menu-level-1 ellipsis"
     [ngClass]="{ selected: selected, collapsed: _toggle }"
     [id]="item.id"
-    (click)="menuClick(item.id)"
+    (click)="menuClick(item.id, !!item.level2?.length || !!item.level3?.length)"
 >
     <div
         class="menu-level-1-icon"

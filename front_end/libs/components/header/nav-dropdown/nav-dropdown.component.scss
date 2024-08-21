@@ -101,6 +101,7 @@
     .width-override {
         @media screen and (max-width : 420px) {
             width: 100vw !important;
+            width: 100dvw !important;
         }
     }
 }

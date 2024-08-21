@@ -101,7 +101,7 @@ export class NxNewHeaderComponent {
             this.scrollMechanicsService.windowSizeSubject
                 .pipe(untilDestroyed(this))
                 .subscribe(({ width }) => {
-                    this.isMobile$.next(width < GridBreakpoints.MD);
+                    this.isMobile$.next(width < GridBreakpoints.MD || useNewCloud());
                 });
         }
 

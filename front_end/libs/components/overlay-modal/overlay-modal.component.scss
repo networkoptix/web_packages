@@ -81,6 +81,7 @@
         margin-top: 64px;
         background-color: var(--light1);
         max-height: calc(100vh - 580px);
+        max-height: calc(100dvh - 580px);
         min-height: 160px;
         overflow-y: auto;
         width: 340px;

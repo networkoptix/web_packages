@@ -217,6 +217,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
             .pipe(delay(0))
             .subscribe(className => {
+                if (this.healthLayoutService.useNewCloud) {
+                    className += ' new-cloud';
+                }
                 this.fixedLayoutClass = className;
             });
 

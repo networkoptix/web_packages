@@ -23,7 +23,10 @@ export class NxMonitoringComponent {
     readonly icons = icons;
     private menuService = inject(NxMenuService);
     useNewCloud = useNewCloud();
-    clampEffect = NxLayoutComponent.configureLayout(1800);
+    clampEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1800,
+        viewIdentifier: 'monitoring',
+    });
 
     system = input.required<NxSystem>();
     serverId = paramModel('serverId');

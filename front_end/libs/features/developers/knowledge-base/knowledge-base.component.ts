@@ -124,7 +124,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
     useNewCloud = useNewCloud();
-    clampWidthEffect = NxLayoutComponent.configureLayout(1440);
+    clampWidthEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1440,
+        viewIdentifier: 'knowledge-base',
+    });
     injector: Injector;
     CONFIG = nxConfig;
     LANG = staticLang;

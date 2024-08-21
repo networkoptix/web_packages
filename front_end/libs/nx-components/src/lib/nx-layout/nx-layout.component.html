@@ -6,6 +6,14 @@
         >
             Menu
         </div>
+        @if (!secondaryMenuModalOpen() && (forceTop() || showTopMenu()) && secondaryMenuPortal()) {
+            <div
+                class="toggle-drawer"
+                (click)="toggleProjectedSecondaryMenu()"
+            >
+                {{ asideOpen() ? 'Hide' : 'Show' }}
+            </div>
+        }
     </ng-content>
 </header>
 <main
@@ -41,7 +49,13 @@
         <ng-container *ngTemplateOutlet="mainContent"></ng-container>
     }
 
-    @if (collapsible() && this.secondaryMenuPortal() && this.asideOpen()) {
+    @if (
+        !showTopMenu() &&
+        !forceTop() &&
+        (collapsible() || overlayAside()) &&
+        secondaryMenuPortal() &&
+        asideOpen()
+    ) {
         <div
             (click)="toggleProjectedSecondaryMenu()"
             class="collapse-toggle"
@@ -52,7 +66,13 @@
     }
 </main>
 
-@if (collapsible() && this.secondaryMenuPortal() && !this.asideOpen()) {
+@if (
+    !showTopMenu() &&
+    !forceTop() &&
+    (collapsible() || overlayAside()) &&
+    this.secondaryMenuPortal() &&
+    !this.asideOpen()
+) {
     <div
         (click)="toggleProjectedSecondaryMenu()"
         class="collapse-toggle"
@@ -78,6 +98,7 @@
     <div
         class="resize-handle drawer"
         cdkDrag
+        (cdkDragReleased)="resizing.set(false)"
         (cdkDragMoved)="resizeDrawer($event)"
     ></div>
 </div>
@@ -97,10 +118,13 @@
     </ng-content>
 </section>
 
-@if (asideExpanded()) {
+@if (asideExpanded() || secondaryMenuModalOpen()) {
     <aside [ngClass]="templateClasses()">
         @if (secondaryMenuModalOpen()) {
-            <div class="secondary-modal">
+            <div
+                class="secondary-modal"
+                (nxClickElsewhere)="closeOnContentClick() && secondaryMenuModalOpen.set(false)"
+            >
                 <ng-content select="ng-container[secondaryMenuModal]">
                     @if (isStoryBook) {
                         <div
@@ -127,10 +151,11 @@
                 </div>
             }
         </div>
-        @if (asideResizable()) {
+        @if (asideResizable() && !secondaryMenuModalOpen()) {
             <div
                 class="resize-handle"
                 cdkDrag
+                (cdkDragReleased)="resizing.set(false)"
                 (cdkDragMoved)="resizeSecondaryMenu($event)"
             ></div>
         }

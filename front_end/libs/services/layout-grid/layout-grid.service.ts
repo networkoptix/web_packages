@@ -7,6 +7,7 @@ import { ResourceNode, ResourceType } from '@components/layout-grid/layout-grid.
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
+import { useNewCloud } from '@utils/general';
 
 interface LayoutSettings {
     openMenu: 'left' | 'right' | 'both' | null;
@@ -41,7 +42,7 @@ export class NxLayoutGridService {
     }
 
     isLeftMenuOpen$$ = computed(() => {
-        return this.layoutSettings.signal$$()?.openMenu === 'left';
+        return useNewCloud() || this.layoutSettings.signal$$()?.openMenu === 'left';
     });
 
     toggleMenu(menu: 'left' | 'right' | 'both' | null = null, force = false): void {

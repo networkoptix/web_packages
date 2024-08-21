@@ -21,7 +21,10 @@ import { NxLayoutComponent } from 'nx-components';
 export class NxAccountComponent {
     LANG = staticLang;
     useNewCloud = useNewCloud();
-    clampEffect = NxLayoutComponent.configureLayout(1024);
+    clampEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1024,
+        viewIdentifier: 'account-settings',
+    });
 
     content: Content = {
         base: menus.account.baseUrl,

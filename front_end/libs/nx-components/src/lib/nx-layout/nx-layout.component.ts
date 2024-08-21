@@ -6,7 +6,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     EffectRef,
-    HostListener,
     Output,
     TemplateRef,
     ViewContainerRef,
@@ -19,19 +18,56 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationStart, Router } from '@angular/router';
 import { clamp } from 'lodash-es';
+import {
+    fromEvent,
+    map,
+    merge,
+    of,
+    timer,
+    switchMap,
+    startWith,
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    shareReplay,
+    tap,
+    Subject,
+} from 'rxjs';
 
 import { BaseComponent } from '../base-component';
+import { NxClickElsewhereDirective } from '../directives/nx-click-elsewhere.directive';
 import { generateCssVariableName } from '../theme-provider/color-generator';
 import { toggleModalEventName, toggleSecondaryMenuEventName } from '../theme-provider/events';
+
+interface LayoutConfig {
+    /**
+     * The maximum width of main content section.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    clampSize?: (typeof NxLayoutComponent.clampedSizes)[number];
+    /**
+     * Whether the content should be centered when clamped.
+     */
+    center?: boolean;
+    /**
+     * The view identifier for the layout. Used for preserving panel sizes.
+     *
+     * View identifier string could be used to maintain the size for a specific panel type,
+     * specific feature, or specific view.
+     *
+     * If not provided the view identifier will be determined by the first component in the route.
+     */
+    viewIdentifier?: string;
+}
 
 @Component({
     selector: 'nx-layout',
     standalone: true,
-    imports: [CommonModule, FormsModule, DragDropModule, PortalModule],
+    imports: [CommonModule, FormsModule, DragDropModule, PortalModule, NxClickElsewhereDirective],
     templateUrl: './nx-layout.component.html',
     styleUrl: './nx-layout.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,16 +89,22 @@ export class NxLayoutComponent extends BaseComponent {
     static DEFAULT_SIZE = 336;
     static layoutTypes = ['cards', 'clamped', 'full', 'wrapper'] as const;
     static columnSpans = ['-1', '4', '3'] as const;
-    static configureLayout = (
-        clampSize: (typeof NxLayoutComponent.clampedSizes)[number],
-    ): EffectRef | undefined => {
+    static configureLayout = ({
+        clampSize = 1000000,
+        center = false,
+        viewIdentifier = '',
+    }: LayoutConfig): EffectRef | undefined => {
         if (NxLayoutComponent.rootLayout) {
             const rootLayout = NxLayoutComponent.rootLayout;
             return effect(
                 cleanup => {
                     rootLayout.clampedSize.set(clampSize);
+                    rootLayout.centered.set(center);
+                    rootLayout.viewIdentifier.set(viewIdentifier);
                     return cleanup(() => {
                         rootLayout.clampedSize.set(1000000);
+                        rootLayout.centered.set(false);
+                        rootLayout.viewIdentifier.set('');
                     });
                 },
                 { allowSignalWrites: true },
@@ -70,8 +112,8 @@ export class NxLayoutComponent extends BaseComponent {
         }
         return undefined;
     };
-    static clampedSizes = [720, 1024, 1440, 1800, 1000000] as const;
-    protected minColumnPx = input(360);
+    static clampedSizes = [720, 1_024, 1_200, 1_440, 1_800, 1_000_000] as const;
+    protected minColumnPx = input(216);
     public overlayAsideOverride = input(false);
     protected asideOpen = model(false);
     protected hoverMenuOpen = model(false);
@@ -83,6 +125,7 @@ export class NxLayoutComponent extends BaseComponent {
     public showProjectedSecondaryMenu = model(true);
     public layoutType = model('cards' as (typeof NxLayoutComponent.layoutTypes)[number]);
     public clampedSize = model(1000000 as (typeof NxLayoutComponent.clampedSizes)[number]);
+    public centered = model(false);
     public modal = model(false);
     public forceTop = input(false, { transform: booleanAttribute });
     public secondaryMenuModalOpen = model(false);
@@ -90,6 +133,9 @@ export class NxLayoutComponent extends BaseComponent {
     public asideResizable = model(true);
     // TODO: Add event type for configuring and resetting the view
     public columnSpanMain = model<(typeof NxLayoutComponent.columnSpans)[number]>('-1');
+    public resizing = model(false);
+    public viewIdentifier = model('');
+    public closeOnContentClick = model(true);
 
     readonly isStoryBook = window.IS_STORYBOOK;
 
@@ -98,45 +144,150 @@ export class NxLayoutComponent extends BaseComponent {
     protected overlayAside = computed(
         () =>
             this.overlayAsideOverride() ||
-            this.width() - this.secondaryMenuSize() < this.minColumnPx() * 2.5,
+            this.width() - this.clampedSecondaryMenuWidth()() < this.minColumnPx() * 2.5,
     );
 
     protected showAsideOnGrid = computed(() => !this.overlayAside() && this.asideOpen());
 
+    protected showTopMenu = computed(() => {
+        const width = this.width();
+        const minPadding = 96;
+        const leftPanelSize = this.asideExpanded() ? this.clampedSecondaryMenuWidth()() : 0;
+        const rightPanelSize =
+            !this.secondaryMenuModalOpen() && (this.drawerOpen() || this.rightDrawerPortal())
+                ? this.clampedRightPanelSize()()
+                : 0;
+
+        return (
+            width < 648 ||
+            width + minPadding <
+                leftPanelSize + rightPanelSize + Math.max(this.spaceForContent(), 432)
+        );
+    });
+
+    private router = inject(Router);
+
+    skipNextNotifier = new Subject<void>();
+
+    skipNext = toSignal(
+        this.skipNextNotifier.pipe(
+            switchMap(() =>
+                timer(100).pipe(
+                    map(() => false),
+                    startWith(true),
+                ),
+            ),
+        ),
+    );
+
+    public navigateNotifier$ = combineLatest([
+        toObservable(this.showTopMenu),
+        toObservable(this.forceTop),
+        toObservable(this.asideOpen),
+    ]).pipe(
+        map(([showTopMenu, forceTop, asideOpen]) => asideOpen && (showTopMenu || forceTop)),
+        distinctUntilChanged(),
+        filter(showTopMenu => showTopMenu),
+        switchMap(() => this.router.events),
+        filter((event): event is NavigationStart => {
+            if (event instanceof NavigationStart) {
+                const current = new URL(this.router.url, window.location.origin).pathname;
+                const next = new URL(event.url, window.location.origin).pathname;
+                return current !== next;
+            }
+            return false;
+        }),
+        tap(() => {
+            if (this.skipNext()) {
+                return;
+            }
+            this.asideOpen.set(false);
+        }),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    );
+
     protected templateClasses = computed(() => ({
-        'top-menu':
-            this.forceTop() || this.width() < 96 + this.clampedMenuWidth() + this.drawerSize(),
+        centered: this.centered(),
+        'top-menu': this.forceTop() || this.showTopMenu(),
         [this.layoutType()]: true,
     }));
 
+    private canFitBothPanels = computed(() => {
+        const totalWidth = this.width();
+        const leftPanelWidth = this.clampedSecondaryMenuWidth()();
+        const rightPanelWidth = this.clampedRightPanelSize()();
+        return totalWidth - leftPanelWidth - rightPanelWidth > this.spaceForContent();
+    });
+
     asideExpanded = computed(() =>
         this.asideOpen()
-            ? !this.drawerOpen() && !this.rightDrawerPortal()
+            ? this.canFitBothPanels() || (!this.drawerOpen() && !this.rightDrawerPortal())
             : this.secondaryMenuModalOpen(),
     );
 
     protected class = computed(() => {
         return {
             'overlay-aside': this.overlayAside(),
-            'aside-open': this.asideExpanded(),
+            'aside-open': this.asideExpanded() || this.secondaryMenuModalOpen(),
             'drawer-open':
                 (this.drawerOpen() || this.rightDrawerPortal()) && !this.secondaryMenuModalOpen(),
             'show-modal-overlay': this.showModalOverlay(),
             'show-secondary-modal-overlay': this.secondaryMenuModalOpen(),
+            'resizing-panel': this.resizing(),
+            'can-fit-both-panels': this.canFitBothPanels(),
             ...this.templateClasses(),
         };
     });
 
-    protected clampedMenuWidth = computed(() =>
-        clamp(this.secondaryMenuSize(), 248, Math.max(648, this.width() / 2)),
+    private availableWidth = computed(() => {
+        const gap = 48;
+        const menuWidth = 72;
+        return this.width() - menuWidth - gap;
+    });
+
+    private spaceForContent = computed(() => {
+        const gap = 48;
+        const columnSize = this.minColumnPx() + gap;
+        const availableColumns = this.availableWidth() / columnSize;
+        const minContentColumns = clamp(availableColumns - 2, 1, 6);
+        return Math.min(minContentColumns * columnSize, this.clampedSize());
+    });
+
+    protected maxPanelWidth = computed(() => {
+        const availableForPanels = this.availableWidth() - this.spaceForContent();
+
+        return availableForPanels / 2;
+    });
+
+    protected clampedSecondaryMenuWidth = computed(
+        () =>
+            (singleOpen = false) =>
+                clamp(this.secondaryMenuSize(), 248, this.maxPanelWidth() * (singleOpen ? 1 : 2)),
     );
 
-    protected secondaryMenuOverlayWidth = computed(() => `${this.clampedMenuWidth()}px`);
+    protected secondaryMenuOverlayWidth = computed(
+        () =>
+            `${(() => {
+                if (this.overlayAside()) {
+                    return clamp(this.secondaryMenuSize(), 248, this.width() - 144);
+                }
+
+                return this.clampedSecondaryMenuWidth()(
+                    !(!this.drawerOpen() || !this.canFitBothPanels()),
+                );
+            })()}px`,
+    );
+
+    private clampedRightPanelSize = computed(
+        () =>
+            (singleOpen = false) =>
+                clamp(this.drawerSize(), 248, this.maxPanelWidth() * (singleOpen ? 1 : 2)),
+    );
 
     protected drawerWidth = computed(
         () =>
             this.customModalWidth() ||
-            `${clamp(this.drawerSize(), 248, Math.max(648, this.width() / 2))}px`,
+            `${this.clampedRightPanelSize()(!(!this.asideExpanded() || !this.canFitBothPanels()))}px`,
     );
 
     @Output() drawerWidthChange = toObservable(this.drawerWidth);
@@ -168,12 +319,7 @@ export class NxLayoutComponent extends BaseComponent {
 
     protected mockMessages = signal(['Initial Message']);
 
-    @HostListener('window:resize') protected onResize(): void {
-        this.width.set(this.elRef.nativeElement.offsetWidth);
-    }
-
     ngAfterViewInit(): void {
-        this.onResize();
         this.initializeEventListeners();
     }
 
@@ -181,6 +327,7 @@ export class NxLayoutComponent extends BaseComponent {
         window.addEventListener(toggleSecondaryMenuEventName, ({ detail }) => {
             const openState = this.secondaryMenuModalOpen();
             if (detail !== openState) {
+                this.secondaryMenuSize.set(this.previousSecondarySize);
                 this.secondaryMenuModalOpen.update(open => !open);
             }
         });
@@ -262,6 +409,9 @@ export class NxLayoutComponent extends BaseComponent {
     };
 
     toggleProjectedSecondaryMenu = (): void => {
+        if (this.secondaryMenuModalOpen()) {
+            return this.toggleSecondaryModal();
+        }
         this.asideOpen.update(show => !show);
     };
 
@@ -316,11 +466,36 @@ export class NxLayoutComponent extends BaseComponent {
     });
 
     resizeSecondaryMenu = (event: CdkDragMove<unknown>): void => {
-        this.secondaryMenuSize.set(event.pointerPosition.x - 96);
+        this.resizing.set(true);
+        const size = event.pointerPosition.x - 96;
+        const drawerOpen = this.drawerOpen() || this.rightDrawerPortal();
+        const rightDrawerSize = this.clampedRightPanelSize()(!drawerOpen);
+        const maxPanelWidth = this.maxPanelWidth();
+        const unusedRightSpace = drawerOpen ? maxPanelWidth - rightDrawerSize : maxPanelWidth;
+        const maxAvailableWidth = drawerOpen ? maxPanelWidth + unusedRightSpace : Infinity;
+        this.secondaryMenuSize.set(Math.min(size, maxAvailableWidth));
+
+        const viewIdentifies = this.getViewIdentifier();
+
+        if (viewIdentifies) {
+            this.sizeHistory.left.set(viewIdentifies, this.secondaryMenuSize());
+        }
     };
 
     resizeDrawer = (event: CdkDragMove<unknown>): void => {
-        this.drawerSize.set(window.innerWidth - event.pointerPosition.x);
+        this.resizing.set(true);
+        const size = window.innerWidth - event.pointerPosition.x;
+        const leftPanelOpen = this.asideExpanded();
+        const secondaryMenuSize = this.clampedSecondaryMenuWidth()(!leftPanelOpen);
+        const maxPanelWidth = this.maxPanelWidth();
+        const unusedLeftSpace = leftPanelOpen ? maxPanelWidth - secondaryMenuSize : maxPanelWidth;
+        const maxAvailableWidth = leftPanelOpen ? maxPanelWidth + unusedLeftSpace : Infinity;
+        this.drawerSize.set(Math.min(size, maxAvailableWidth));
+
+        const viewIdentifier = this.getViewIdentifier();
+        if (viewIdentifier) {
+            this.sizeHistory.right.set(viewIdentifier, this.drawerSize());
+        }
     };
 
     protected secondaryMenuPortal = signal<TemplatePortal<unknown> | null>(null);
@@ -335,6 +510,37 @@ export class NxLayoutComponent extends BaseComponent {
 
     activatedRoute = inject(ActivatedRoute);
 
+    firstComponent = (
+        snapshot: ActivatedRouteSnapshot | null = this.activatedRoute.snapshot.firstChild,
+    ): ActivatedRouteSnapshot['component'] => {
+        if (!snapshot) {
+            return null;
+        }
+        if (snapshot.component) {
+            return snapshot.component;
+        }
+        if (snapshot.firstChild) {
+            return this.firstComponent(snapshot.firstChild);
+        }
+        return null;
+    };
+
+    protected getViewIdentifier = (): string => {
+        const viewIdentifier = this.viewIdentifier();
+
+        if (viewIdentifier) {
+            return viewIdentifier;
+        }
+
+        const firstComponent = this.firstComponent();
+
+        if (firstComponent) {
+            return firstComponent.name;
+        }
+
+        return '';
+    };
+
     useSecondaryMenu = (
         template: TemplateRef<unknown>,
         collapsible = true,
@@ -346,38 +552,22 @@ export class NxLayoutComponent extends BaseComponent {
         const sizeSignal = rightPanel ? this.drawerSize : this.secondaryMenuSize;
         const sizeHistory = rightPanel ? this.sizeHistory.right : this.sizeHistory.left;
         portalSignal.set(new TemplatePortal(template, this.viewContainerRef));
-        const firstComponent = (
-            snapshot: ActivatedRouteSnapshot | null = this.activatedRoute.snapshot.firstChild,
-        ): ActivatedRouteSnapshot['component'] => {
-            if (!snapshot) {
-                return null;
-            }
-            if (snapshot.component) {
-                return snapshot.component;
-            }
-            if (snapshot.firstChild) {
-                return firstComponent(snapshot.firstChild);
-            }
-            return null;
-        };
+        const topMenu = this.forceTop() || this.showTopMenu();
 
-        const componentClass = firstComponent();
+        const viewIdentifier = this.getViewIdentifier();
 
         const asideOpen = rightPanel ? untracked(this.asideOpen) : false;
         if (!rightPanel) {
             this.collapsible.set(collapsible);
         }
-        this.asideOpen.set(!rightPanel);
+        this.asideOpen.update(open => !topMenu && (open || !rightPanel));
         untracked(() => this.asideResizable.set(resizable));
-        const previousSize = componentClass ? sizeHistory.get(componentClass) : null;
+        const previousSize = viewIdentifier ? sizeHistory.get(viewIdentifier) : null;
         sizeSignal.set(previousSize || size);
         const initialSize = untracked(sizeSignal);
         return () => {
             portalSignal.set(null);
             this.asideOpen.set(asideOpen);
-            if (componentClass) {
-                sizeHistory.set(componentClass, untracked(sizeSignal));
-            }
             sizeSignal.set(initialSize);
             this.asideResizable.set(true);
         };
@@ -386,5 +576,14 @@ export class NxLayoutComponent extends BaseComponent {
     constructor() {
         super();
         NxLayoutComponent.rootLayout ||= this;
+        fromEvent(window, 'resize')
+            .pipe(
+                switchMap(() => merge(of(true), timer(100).pipe(map(() => false)))),
+                startWith(true),
+            )
+            .subscribe(resizing => {
+                this.resizing.set(resizing);
+                this.width.set(window.document.body.offsetWidth);
+            });
     }
 }

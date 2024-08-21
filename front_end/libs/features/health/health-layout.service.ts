@@ -5,6 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { layout } from '@pages/static-variables-features';
+import { useNewCloud } from '@utils/general';
 
 import { NxHealthService } from './health.service';
 
@@ -14,6 +15,7 @@ import { NxHealthService } from './health.service';
 export class NxHealthLayoutService {
     private static ELEMENT_SEARCH_HEIGHT = 40; // px
 
+    useNewCloud = useNewCloud();
     previousActiveEntity = undefined;
     activeEntitySubject = new BehaviorSubject(undefined);
     fixedLayoutClassSubject = new BehaviorSubject('');
@@ -289,7 +291,7 @@ export class NxHealthLayoutService {
                 ? this.searchTableArea.nativeElement.offsetWidth
                 : 0;
             const widthPanel = this.healthService.getPanelWidth();
-            const isTableFit = areaWidth > this.tableWidth + widthPanel + 16; // +gutter
+            const isTableFit = this.useNewCloud || areaWidth > this.tableWidth + widthPanel + 16; // +gutter
             this.fixedLayoutClass = isTableFit ? '' : 'fixedLayout--with-panel';
 
             if (!cannotSearchStyle && this.searchElement) {

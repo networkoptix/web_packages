@@ -28,6 +28,7 @@
 
     .mobile-footer {
         top: calc(100vh - 90px);
+        top: calc(100dvh - 90px);
         height: 90px;
         background-color: var(--footer-bg);
         color: var(--footer-text-color);

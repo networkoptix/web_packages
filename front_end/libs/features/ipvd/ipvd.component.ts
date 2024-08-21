@@ -52,7 +52,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     CONFIG: IConfig;
     useNewCloud = useNewCloud();
-    clampEffect = NxLayoutComponent.configureLayout(1800);
+    clampEffect = NxLayoutComponent.configureLayout({ clampSize: 1800, viewIdentifier: 'ipvd' });
 
     destroyRef = inject(DestroyRef);
 

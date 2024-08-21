@@ -69,7 +69,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() callShare;
     #system: NxSystem;
     useNewCloud = useNewCloud();
-    clampWidthEffect = NxLayoutComponent.configureLayout(1024);
+    clampWidthEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1024,
+        viewIdentifier: 'system-settings',
+    });
     unsubscribe$ = new Subject();
     injector = inject(EnvironmentInjector);
     @Input() set system(system: NxSystem) {

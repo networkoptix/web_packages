@@ -35,6 +35,7 @@
                     nx-process-button button,
                     button {
                         width: calc(100vw - 48px);
+                        width: calc(100dvw - 48px);
                     }
 
                     .left,
@@ -122,6 +123,7 @@
     max-width: 480px;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     margin: 0 auto;
 
     &.main-m {
@@ -140,7 +142,7 @@
         min-height: 320px;
         max-height: 480px;
         height: 100vh;
-
+        height: 100dvh;
 
         &.show-scrollbar {
             overflow-y: scroll;
@@ -594,7 +596,9 @@
         bottom: 0;
         right: 0;
         width: 100vw;
+        width: 100dvw;
         height: 100vh;
+        height: 100dvh;
         z-index: 1;
         display: flex;
         justify-content: center;
@@ -605,5 +609,6 @@
         position: absolute;
         bottom: 0;
         width: 100vw;
+        width: 100dvw;
     }
 }

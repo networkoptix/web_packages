@@ -8,6 +8,11 @@ nx-system-alerts-component {
         display: grid;
         grid-column-gap: 1rem;
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
+
+        &.new-cloud {
+            grid-template-columns: 100% !important;
+        }
+
         height: 100%;
 
         @include bootstrap.media-breakpoint-down(xl) {

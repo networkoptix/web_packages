@@ -1,34 +1,42 @@
-<div
-    class="panel col-12"
-    *ngIf="healthLayoutService.activeEntity && healthLayoutService.layoutReady"
-    #nxPanelView
->
-    <nx-block
-        type="gray"
-        header-class="sticky1rem"
+@if (healthLayoutService.activeEntity && healthLayoutService.layoutReady) {
+    <div
+        class="panel col-12"
+        [ngClass]="{ 'new-cloud': useNewCloud }"
+        *nxMenuProjection="useNewCloud; rightPanel: true"
+        #nxPanelView
     >
-        <header>
-            <h4 class="panel-title">
-                <span [innerText]="name | translate"></span>
-            </h4>
-            <button
-                type="button"
-                class="close detailsClose"
-                data-dismiss="modal"
-                aria-label="Close"
-                (click)="closeView()"
+        <nx-block
+            type="gray"
+            [header-class]="useNewCloud ? '' : 'sticky1rem'"
+        >
+            <header>
+                <h4 class="panel-title">
+                    <span [innerText]="name | translate"></span>
+                </h4>
+                <button
+                    type="button"
+                    class="close detailsClose"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="closeView()"
+                >
+                    <div class="close-content"></div>
+                </button>
+            </header>
+            <ng-container *ngIf="panelParams.id === 'cameras' && !healthService.importedData">
+                <nx-image-section
+                    [cameraInfo]="healthLayoutService.activeEntity"
+                ></nx-image-section>
+            </ng-container>
+            <nx-section
+                *ngIf="sections && sections.length"
+                [ngClass]="{ 'new-cloud': useNewCloud }"
             >
-                <div class="close-content"></div>
-            </button>
-        </header>
-        <ng-container *ngIf="panelParams.id === 'cameras' && !healthService.importedData">
-            <nx-image-section [cameraInfo]="healthLayoutService.activeEntity"></nx-image-section>
-        </ng-container>
-        <nx-section *ngIf="sections && sections.length">
-            <nx-info-block
-                [sectionsOrColumns]="sections"
-                [removeTopMargin]="true"
-            ></nx-info-block>
-        </nx-section>
-    </nx-block>
-</div>
+                <nx-info-block
+                    [sectionsOrColumns]="sections"
+                    [removeTopMargin]="true"
+                ></nx-info-block>
+            </nx-section>
+        </nx-block>
+    </div>
+}

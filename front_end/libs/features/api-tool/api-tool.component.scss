@@ -11,6 +11,11 @@
         background: var(--body-bg) !important;
         overflow-x: hidden;
     }
+
+    &.new-cloud {
+        max-height: unset;
+        padding-right: 16px;
+    }
 }
 
 .fixed-sidebar {
@@ -23,6 +28,7 @@
     height: 100% !important;
     &.newCloud {
         width: 100% !important;
+        max-width: 100% !important;
     }
 
     @include bootstrap.media-breakpoint-down(sm) {
@@ -31,6 +37,7 @@
         left: 0;
         padding-right: 1rem !important;
         width: 100vw !important;
+        width: 100dvw !important;
     }
 
     @include bootstrap.media-breakpoint-up(md) {

@@ -8,6 +8,7 @@
     grid-template-rows: auto 1fr;
     gap: 0 0;
     min-height: calc(100vh - 48px);
+    min-height: calc(100dvh - 48px);
     grid-template-areas:
         "Menu Heading"
         "Menu Dashboard";
@@ -40,6 +41,7 @@
         flex-direction: column;
         padding-top: 8px;
         height: calc(100vh - 48px);
+        height: calc(100dvh - 48px);
         align-self: flex-start;
     }
 
@@ -175,11 +177,13 @@
         right: 48px;
         width: 65vw;
         height: calc(100vh - 128px);
+        height: calc(100dvh - 128px);
 
         @media (orientation : portrait) {
             bottom: 8px;
             right: 8px;
             width: calc(100vw - 16px);
+            width: calc(100dvw - 16px);
             height: calc(75vw - 48px);
         }
 
@@ -300,6 +304,7 @@
         top: 0;
         left: 100%;
         height: calc(100vh - 48px);
+        height: calc(100dvh - 48px);
         box-shadow: var(--dashboard-settings-menu-shadow);
         overflow-x: hidden;
         width: 0;

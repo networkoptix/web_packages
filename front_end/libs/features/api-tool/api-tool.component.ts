@@ -29,7 +29,10 @@ import { NxReadonlyAPIService } from './services/readonly-api.service';
 export class NxAPIToolComponent {
     @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;
     useNewCloud = useNewCloud();
-    clampWidthEffect = NxLayoutComponent.configureLayout(1024);
+    clampWidthEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1024,
+        viewIdentifier: 'api-tool',
+    });
     CONFIG: IConfig;
     LANG = staticLang;
     icons = icons;

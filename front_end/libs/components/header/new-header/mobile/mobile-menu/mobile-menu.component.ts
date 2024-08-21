@@ -59,6 +59,8 @@ export class NxMobileHeaderMenuComponent {
         dirHeader: string;
     };
 
+    location = window.location;
+
     constructor(
         public headerService: NxHeaderService,
         private configService: NxConfigService,

@@ -21,6 +21,7 @@
         justify-content: center;
         position: fixed;
         bottom: calc((100vh - var(--header-height)) / 2 - 20px);
+        bottom: calc((100dvh - var(--header-height)) / 2 - 20px);
         left: 0;
         width: 16px;
         height: 40px !important;

@@ -200,6 +200,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
             .pipe(delay(0))
             .subscribe((className: string) => {
+                if (this.healthLayoutService.useNewCloud) {
+                    className += ' new-cloud';
+                }
                 this.fixedLayoutClass = className;
             });
 

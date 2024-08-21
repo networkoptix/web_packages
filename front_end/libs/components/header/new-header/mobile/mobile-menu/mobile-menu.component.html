@@ -36,7 +36,7 @@
     </div>
     <div
         class="account-button-wrapper"
-        *ngIf="!loggedIn"
+        *ngIf="!loggedIn && (!useNewCloud || location.pathname !== '/')"
     >
         @if (useNewCloud) {
             <a

@@ -10,7 +10,10 @@
     #mainPage
     let-menuNodes="menuNodes"
 >
-    <div class="page-wrapper">
+    <div
+        class="page-wrapper"
+        [ngClass]="{ 'new-cloud': useNewCloud }"
+    >
         <div class="block-container">
             <div class="row">
                 <div

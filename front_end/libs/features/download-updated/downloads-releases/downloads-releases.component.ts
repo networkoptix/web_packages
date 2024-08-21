@@ -58,7 +58,10 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     @Input() downloadData: DownloadReleases;
 
     useNewCloud = useNewCloud();
-    clampWidthEffect = NxLayoutComponent.configureLayout(1440);
+    clampWidthEffect = NxLayoutComponent.configureLayout({
+        clampSize: 1440,
+        viewIdentifier: 'downloads',
+    });
     ds = inject(DownloadsService);
     private platform$$ = this.ds.platform$$.asReadonly();
     private activeType$$ = this.ds.type$$.asReadonly();

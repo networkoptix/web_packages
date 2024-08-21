@@ -5,6 +5,7 @@ import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { icons } from '@static-variables';
 import type { NgChanges } from '@utils/ng-changes';
+import { NxLayoutComponent } from 'nx-components';
 
 import type { Level1Item } from '../menu.types';
 
@@ -62,10 +63,13 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         }
     }
 
-    menuClick(sectionId: string): void {
+    menuClick(sectionId: string, hasChildren: boolean): void {
         if (!this.searchMode) {
             this.menuService.selectedSection$$.set(sectionId);
             if (this.itemPath) {
+                if (hasChildren) {
+                    NxLayoutComponent.rootLayout?.skipNextNotifier.next();
+                }
                 this.router
                     .navigate([this.itemPath], {
                         queryParams: { search: this.item.query, ...(this.item.params ?? {}) },

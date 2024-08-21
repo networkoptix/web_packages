@@ -14,6 +14,7 @@ import {
     InfoBlockLine,
 } from '@components/info-block/info-block.component.types';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { useNewCloud } from '@utils/general';
 
 import { NxHealthLayoutService } from '../../health-layout.service';
 import { NxHealthService } from '../../health.service';
@@ -26,6 +27,8 @@ import { NxHealthService } from '../../health.service';
 export class NxDynamicTablePanelComponent implements AfterContentInit {
     @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
+
+    useNewCloud = useNewCloud();
 
     name: string;
 

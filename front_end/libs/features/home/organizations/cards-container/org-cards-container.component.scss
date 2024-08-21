@@ -26,7 +26,7 @@
     }
 }
 
-$org-cards-container-height: calc(100vh - var(--channel-partners-header-height, 324px));
+$org-cards-container-height: calc(100dvh - var(--channel-partners-header-height, 324px));
 $org-cards-hidden-spacing: 4px;
 
 .cards-container {
