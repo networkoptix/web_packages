@@ -781,11 +781,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 // eslint-disable-next-line camelcase
                 cloudAccessToken = res.access_token;
             }
-            logoutObservable$ = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
-                accessToken,
-                cloudAccessToken,
-                refreshToken,
-            });
+            logoutObservable$ = this.http
+                .post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
+                    accessToken,
+                    cloudAccessToken,
+                    refreshToken,
+                })
+                .pipe(switchMap(() => this.delete<{}>('/rest/v1/login/sessions/current')));
             // Logout a cloud session on cloud.
         } else if (!environment.isLocal) {
             logoutObservable$ = this.deleteToken('', accessToken);

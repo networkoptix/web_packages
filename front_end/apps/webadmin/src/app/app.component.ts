@@ -140,6 +140,10 @@ export class AppComponent implements AfterViewInit {
         @Inject(WINDOW) private window: Window,
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
+
+        if (!window.location.hash) {
+            window.location.hash = '/';
+        }
         if (!this.CONFIG.browserNotSupported) {
             if (environment.isLocal || this.appStateService.ready) {
                 this.lazyLoadHeader();
