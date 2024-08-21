@@ -10,7 +10,6 @@ import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
 import { caseInsensitiveSearch, alphaNumericSort } from '@utils/general';
@@ -100,7 +99,6 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
         { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
     ];
     protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
-    routerState = inject(ChannelPartnersRouteState);
     router = inject(Router);
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
     selectedGroups$$ = computed(
