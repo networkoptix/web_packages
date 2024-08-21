@@ -5,8 +5,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, from, combineLatest, Observable, Subject } from 'rxjs';
-import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { environment } from '@environments/environment';
@@ -15,12 +15,14 @@ import { Auth, MenuNode } from '@services/menus.service.types';
 import { CurrentUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
 import { canViewLayouts } from '@utils/can-view-layouts';
+import { cleanId } from '@utils/general';
 
 import { apiBase } from '../variables/static-variables';
 
-import { MenuStructure, MenusStructure } from './nx-config/base-config';
+import { OrgRoleIds } from './nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { MenusStructure, MenuStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
-
+import { AdminGroups } from './system.service/permission-manager/permission-manager';
 @UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root',
@@ -409,8 +411,15 @@ export class NxMenusService {
             nodes.splice(1, 0, layoutsNode);
         }
 
+        const roleCanViewServices =
+            activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
+            activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup));
         // Services
-        if ('organizationId' in activeSystem.info && permissions.viewServices) {
+        if (
+            'organizationId' in activeSystem.info &&
+            roleCanViewServices &&
+            permissions.viewServices
+        ) {
             const servicesNode = new MenuNode(
                 'Services',
                 this.getUrl(activeSystem.id, { services: true }),
