@@ -25,7 +25,7 @@
             width         : auto !important;
             border-radius : 2px;
             border        : none !important;
-            transform     : translateX(calc(20px - 100%));
+            transform     : translate(calc(23px - 100%), -2px);
 
             @media(max-width : $collapse-second-width) {
                 left      : auto;
