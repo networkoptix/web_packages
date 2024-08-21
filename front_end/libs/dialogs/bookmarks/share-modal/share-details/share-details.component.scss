@@ -6,6 +6,7 @@
     flex-direction: row;
     align-items: center;
     background-color: var(--brand-core);
+    margin: -1rem -1rem 0 -1rem;
 
     .url-text {
         padding-left: 16px;
@@ -16,12 +17,13 @@
         color: var(--bookmarks-share-url-text-color);
     }
 
-    .copy-button {
+   .copy-button {
         margin: 16px 16px 16px 0;
-        padding: 0 !important;
-        height: unset !important;
+        padding: 0;
         min-width: min-content;
-        border-radius: 50% !important;
+        border-radius: 50%;
+        border: none;
+        display: flex;
 
         svg-icon {
             padding: 8px;
@@ -43,7 +45,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 16px;
 
     .delete-button-text {
         color: var(--bookmarks-share-delete-text-color) !important;

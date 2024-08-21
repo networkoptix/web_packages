@@ -1,19 +1,17 @@
-<div class="outer-container">
-    <div class="modal-header">
-        <div class="header-title">
+<div>
+    <div class="nx-modal__header">
+        <span class="nx-modal__header-title">
             {{ dialogData.header }}
-        </div>
+        </span>
         <button
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-        >
-            <span class="close-content"></span>
-        </button>
+        ></button>
     </div>
-    <div class="body">
+    <div class="nx-modal__content">
         <ng-container [ngTemplateOutlet]="dialogData.template"></ng-container>
     </div>
 </div>

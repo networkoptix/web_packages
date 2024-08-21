@@ -1,12 +1,9 @@
-<div
-    class="outer-container"
-    [ngStyle]="{ visibility: loading() ? 'hidden' : 'visible' }"
->
-    @if (loading()) {
-        <nx-pre-loader class="pre-loader-visible" />
-    }
-    <div class="modal-header">
-        <div class="header-title">
+@if (loading()) {
+    <nx-pre-loader class="pre-loader-visible" />
+}
+<div [ngStyle]="{ visibility: loading() ? 'hidden' : 'visible' }">
+    <div class="nx-modal__header">
+        <div class="nx-modal__header-title">
             @if (pageState() === 'details') {
                 <span translate>Share</span>
             } @else if (pageState() === 'edit') {
@@ -15,28 +12,28 @@
         </div>
         <button
             type="button"
-            class="close"
+            class="nx-modal__header-close-btn"
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-        >
-            <span class="close-content"></span>
-        </button>
+        ></button>
     </div>
-    @if (pageState() === 'details') {
-        <nx-bookmark-share-details
-            [shareUrl]="shareUrl"
-            (onEditClick)="onEditClick()"
-            (onDeleteClick)="onDeleteClick()"
-            [expirationText]="(expirationText | async) || '' | nxTranslate"
-            [passwordDetailsText]="passwordDetailsText"
-        />
-    } @else if (pageState() === 'edit') {
-        <nx-bookmark-share-edit
-            (onConfirmClick)="onSaveClick($event)"
-            (onCancelClick)="onCancelEditClick()"
-            [initialExpirationTime]="bookmark.share!.expirationTimeMs"
-            [hasExistingPassword]="bookmark.share!.password === '******'"
-        />
-    }
+    <div class="nx-modal__content">
+        @if (pageState() === 'details') {
+            <nx-bookmark-share-details
+                [shareUrl]="shareUrl"
+                (onEditClick)="onEditClick()"
+                (onDeleteClick)="onDeleteClick()"
+                [expirationText]="(expirationText | async) || '' | nxTranslate"
+                [passwordDetailsText]="passwordDetailsText"
+            />
+        } @else if (pageState() === 'edit') {
+            <nx-bookmark-share-edit
+                (onConfirmClick)="onSaveClick($event)"
+                (onCancelClick)="onCancelEditClick()"
+                [initialExpirationTime]="bookmark.share!.expirationTimeMs"
+                [hasExistingPassword]="bookmark.share!.password === '******'"
+            />
+        }
+    </div>
 </div>

@@ -1,22 +1,4 @@
-@use "theme_variables_common" as *;
-@use "typography";
-
-.outer-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    .header-title {
-        @include typography.medium15nocolor;
-        color: var(--bookmarks-share-header-title-color);
-    }
-}
+@use '../../nx-modal';
 
 .pre-loader-visible {
     visibility: visible;
