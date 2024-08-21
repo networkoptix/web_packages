@@ -21,6 +21,7 @@ p {
 .export-buttons {
     margin-bottom: 16px;
     margin-top: 8px;
+    display: flex;
 
     button {
         font-family: inherit;
@@ -29,19 +30,23 @@ p {
         display: flex;
         align-items: center;
         padding: 0 !important;
+        margin-right: 14px;
 
         &:hover {
             cursor: pointer;
         }
+    }
 
-        svg-icon {
-            width: 24px;
-            height: 24px;
-        }
+    .xlsx-export-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 1px;
+    }
 
-        span {
-            margin-left: 4px;
-        }
+    .csv-export-icon {
+        width: 26px;
+        height: 26px;
+        color: var(--reports-export-button);
     }
 }
 
