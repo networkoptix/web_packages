@@ -4,9 +4,9 @@ $card-header-height: 2rem;
 $card-vertical-padding: 0.75rem;
 $card-content-height: 4rem;
 $card-height: $card-header-height +
-    2 * $card-vertical-padding +
+    3.5 * $card-vertical-padding +
     $card-content-height;
-$card-width: 20rem;
+$card-width: 21rem;
 $card-border-radius: 12px;
 
 .card {
@@ -35,7 +35,7 @@ $card-border-radius: 12px;
             display: flex;
             flex-direction: column;
             height: 100%;
-            padding: $card-vertical-padding 1rem;
+            padding: $card-vertical-padding 1.25rem;
 
             .info {
                 display: flex;

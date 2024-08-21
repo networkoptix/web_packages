@@ -10,6 +10,11 @@
     --label-color: var(--label-color-original)
 }
 
+// Ensures no 1px overlap for Labels behind the Permission Group dropdown
+label {
+    margin-left: 1px;
+}
+
 .header-title--muted {
     color: var(--light14); // TODO: Fix this with new variable generation
 }
@@ -111,7 +116,6 @@
 
 nx-select-v2 {
     display: block;
-    border: 1px solid transparent;
 }
 
 :host {
@@ -133,12 +137,11 @@ nx-select-v2 {
 
 .role-message {
     min-height: 5rem;
-    white-space: break-spaces;
+    white-space: pre-line;
 }
 
 nx-org-step-select {
     width: 100%;
-    border: 1px solid transparent;
 }
 
 .warning-outline {
