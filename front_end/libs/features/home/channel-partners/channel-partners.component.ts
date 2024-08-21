@@ -261,7 +261,6 @@ export class NxChannelPartnersComponent implements OnInit {
             ? PartnerRedirect.toPartnerSubChannels(parentChannelPartner.id)
             : '';
     });
-    processedTabs = false;
     isValidPartner = true;
     searchConfig = searchConfig;
 
@@ -307,7 +306,7 @@ export class NxChannelPartnersComponent implements OnInit {
             )
             .subscribe(([currentPartnerId, partners]) => {
                 const currPartner = partners.find(partner => partner.id === currentPartnerId);
-                if (partners.length && !currPartner) {
+                if (!currPartner) {
                     this.isValidPartner = false;
                     return throwError(() => 'Partner not found');
                 }
