@@ -306,8 +306,13 @@ export class UserManager {
             delete userData.name;
             delete userData.permissions;
         } else if (userData.role) {
+            let userRoleId = userData.role.id;
+            // Set the userRoleId to ZERO_ID if the role is predefined. The mediaserver uses permissions for default roles.
+            if (this.CONFIG.accessRoles.predefinedRoles.some(({ id }) => id === userRoleId)) {
+                userRoleId = ZERO_ID;
+            }
             userData.permissions = userData.role.permissions;
-            userData.userRoleId = ZERO_ID;
+            userData.userRoleId = userRoleId;
         } else {
             delete userData.permissions;
         }
