@@ -31,7 +31,12 @@
                 id="add-organization-name"
                 formControlName="orgName"
             />
-            <nx-control-messages></nx-control-messages>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Name is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">

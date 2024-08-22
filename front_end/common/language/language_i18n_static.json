@@ -2232,9 +2232,18 @@
         "phoneNotUnique": "Phone already in use",
         "characterLimit": "{ requiredLength } character limit"
     },
-    "patternValidatorMsg": {
-        "email": "Invalid email",
-        "phone": "Invalid phone number",
-        "url": "Invalid URL"
+    "builtinValidatorMsg": {
+        "email": {
+            "required": "Email is required",
+            "invalid": "Email is invalid"
+        },
+        "tel": {
+            "required": "Phone number is required",
+            "invalid": "Phone number is invalid"
+        },
+        "url": {
+            "required": "URL is required",
+            "invalid": "URL is invalid"
+        }
     }
 }

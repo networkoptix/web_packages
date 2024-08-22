@@ -33,7 +33,12 @@
                 id="new-partner-name"
                 formControlName="name"
             />
-            <nx-control-messages></nx-control-messages>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Partner Name is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
         </nx-form-field>
 
         <nx-form-field [errorMatcher]="emailErrorMatcher">
@@ -49,7 +54,12 @@
                 id="new-partner-admin-email"
                 formControlName="email"
             />
-            <nx-control-messages pattern="email"></nx-control-messages>
+            <nx-control-messages pattern="email">
+                <nx-control-message
+                    key="required"
+                    [text]="'Administrator email is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">

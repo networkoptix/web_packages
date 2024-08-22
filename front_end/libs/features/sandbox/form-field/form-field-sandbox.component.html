@@ -16,7 +16,10 @@
                 nx-input
                 formControlName="email"
             />
-            <nx-control-messages pattern="email">
+            <nx-control-messages
+                pattern="email"
+                required="email"
+            >
                 <nx-control-message
                     key="letterA"
                     text="The letter A is not allowed"
@@ -64,6 +67,10 @@
                 [spacingLines]="3"
                 [state]="quoteControl.value ?? null"
             >
+                <nx-control-message
+                    key="required"
+                    [text]="'Source is required'"
+                ></nx-control-message>
                 @for (quote of quotes; track quote.source) {
                     <nx-control-message
                         [key]="quote.source"
@@ -98,7 +105,12 @@
                 nx-input
                 formControlName="name"
             />
-            <nx-control-messages></nx-control-messages>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Name is required'"
+                ></nx-control-message>
+            </nx-control-messages>
         </nx-form-field>
         <div class="footer">
             @if (nameFormObserver.formChanged()) {

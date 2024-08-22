@@ -4,16 +4,18 @@
         [text]="LANG.customValidatorMsg.characterLimit"
         translateWith="data"
     ></nx-control-message>
-    @if (pattern()) {
+    @if (pattern(); as pattern) {
         <nx-control-message
             key="pattern"
-            [text]="LANG.patternValidatorMsg[pattern()!] | translate"
+            [text]="LANG.builtinValidatorMsg[pattern].invalid | translate"
         ></nx-control-message>
     }
-    <nx-control-message
-        key="required"
-        [text]="'Required' | translate"
-    ></nx-control-message>
+    @if (required(); as required) {
+        <nx-control-message
+            key="required"
+            [text]="LANG.builtinValidatorMsg[required].required | translate"
+        ></nx-control-message>
+    }
 </div>
 <div
     class="sizing-container"

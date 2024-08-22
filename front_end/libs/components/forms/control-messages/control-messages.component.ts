@@ -30,11 +30,11 @@ import { NxFormFieldToken } from '../form-field/form-field.token';
 import { NxControlMessageComponent as NxMessage } from './control-message/control-message.component';
 import { NxControlMessagesToken } from './control-messages.token';
 
-type PatternMessageKey = keyof typeof LANG.patternValidatorMsg;
+type BuiltinMessageKey = keyof typeof LANG.builtinValidatorMsg;
 
 /** Container component to manage nx-control-message selection.
  *
- * Base cases like maxlength, required, and certain patterns are built in.
+ * Some base cases are built-in and can be accessed with their respective inputs.
  */
 @Component({
     selector: 'nx-control-messages',
@@ -53,8 +53,16 @@ type PatternMessageKey = keyof typeof LANG.patternValidatorMsg;
 export class NxControlMessagesComponent implements AfterViewInit {
     LANG = LANG;
 
-    /** Input value type for pattern error message */
-    pattern = input<PatternMessageKey>();
+    /** Input value type for required error message.
+     *
+     * Example: `email` => `'Email is required'`
+     */
+    required = input<BuiltinMessageKey>();
+    /** Input value type for pattern error message.
+     *
+     * Example: `email` => `'Email is invalid'`
+     */
+    pattern = input<BuiltinMessageKey>();
 
     /** How many lines of space to preallocate.
      *

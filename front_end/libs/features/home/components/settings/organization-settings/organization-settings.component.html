@@ -20,7 +20,12 @@
                     formControlName="name"
                     id="organization-name-input"
                 />
-                <nx-control-messages [spacingLines]="0"></nx-control-messages>
+                <nx-control-messages [spacingLines]="0">
+                    <nx-control-message
+                        key="required"
+                        [text]="'Name is required' | translate"
+                    ></nx-control-message>
+                </nx-control-messages>
             </nx-form-field>
             @if (canUpdateOrgAccess()) {
                 <nx-form-field [errorMatcher]="accessLevelErrorMatcher">
