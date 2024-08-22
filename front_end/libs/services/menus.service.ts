@@ -412,8 +412,9 @@ export class NxMenusService {
         }
 
         const roleCanViewServices =
-            activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
-            activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup));
+            !environment.isLocal &&
+            (activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
+                activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup)));
         // Services
         if (
             'organizationId' in activeSystem.info &&
