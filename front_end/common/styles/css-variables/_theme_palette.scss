@@ -108,8 +108,9 @@
 	@include generateVarAndRgb(--red_d5, $red_d5);
 	@include generateVarAndRgb(--red_d6, $red_d6);
 	@include generateVarAndRgb(--red_d7, $red_d7);
-	@include generateVarAndRgb(--error, $red_main);
-	@include generateVarAndRgb(--error-label, $red_main);
+	// Removing theses for now. Its possible that we fixed styles which makes this break things
+	//@include generateVarAndRgb(--error, $red_main);
+	//@include generateVarAndRgb(--error-label, $red_main);
 	@include generateVarAndRgb(--red-l1-brighter, $red_l1_brighter);
 
 	@include generateVarAndRgb(--yellow-l3, native.$yellow_l3);
