@@ -1,12 +1,17 @@
 import { nxConfig } from '@services/nx-config/config';
 
-export function canViewLayouts(versionOrWithVersion: number | { version: number }): boolean {
+export function canViewLayouts(
+    versionOrWithVersion: number | { version: number },
+    minVersion?: number,
+): boolean {
     const version =
         typeof versionOrWithVersion === 'number'
             ? versionOrWithVersion
             : versionOrWithVersion.version;
 
-    const minVersion = nxConfig.featureFlags.layouts51Enabled ? (5.1 as const) : (6 as const);
+    if (!minVersion) {
+        minVersion = nxConfig.featureFlags.layouts51Enabled ? (5.1 as const) : (6 as const);
+    }
 
     const enabledForBrowser =
         nxConfig.featureFlags.layoutsNonChrome ||

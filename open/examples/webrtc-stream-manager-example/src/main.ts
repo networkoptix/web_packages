@@ -261,11 +261,6 @@ const systemSelected = async () => {
   systemId = systemSelect.value;
   systemToken = await getSystemToken(systemSelect.value);
 
-  await fetchWithRedirectAuthorization(
-    `https://${systemRelay}/rest/v2/login/sessions/${systemToken.access_token}?setCookie=true`,
-    { credentials: 'include' }
-  ).catch();
-
   cameras = await fetchWithRedirectAuthorization(`https://${systemRelay}/rest/v2/devices`, {
     headers: { Authorization: `Bearer ${systemToken.access_token}` },
   }).then((res) => res.json());

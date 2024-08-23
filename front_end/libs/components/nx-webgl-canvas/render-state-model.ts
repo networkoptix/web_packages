@@ -44,6 +44,7 @@ export class RenderStateModel {
     // Public API: Properties
     public canvasVirtualWidth: number;
     public lastMinuteWidth: number;
+    public timelineUpdateEnabled = true;
 
     public timelineActionsEnabled$$ = signal<boolean>(false);
     public timelineAxisEnabled$$ = signal<boolean>(true);
@@ -402,7 +403,7 @@ export class RenderStateModel {
                         this.initZoom();
                     })
                     .on('click', event => {
-                        if (!this.scaleUpdateInProcess) {
+                        if (!this.scaleUpdateInProcess && this.timelineUpdateEnabled) {
                             const desiredTimeMs = this.webglService.xScale$.value
                                 .invert(event.offsetX)
                                 .getTime();

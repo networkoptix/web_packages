@@ -5,8 +5,25 @@
 }
 
 .timeline-container {
+    position: relative;
     border: 1px solid var(--border-color);
     background-color: var(--view-bg);
+    &.saas-placeholder {
+        & > *:not(.sass-placeholder-message) {
+            overflow: hidden;
+            pointer-events: none;
+            filter: blur(1px) brightness(0.5);
+        }
+
+        .sass-placeholder-message {
+            @include typography.regular14nocolor;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+    }
 }
 
 .nx-timeline-wrapper {

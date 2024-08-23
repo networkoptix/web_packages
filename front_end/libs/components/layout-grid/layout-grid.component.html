@@ -1112,12 +1112,13 @@
             <nx-pre-loader></nx-pre-loader>
         }
     </div>
-    @if (CONFIG.featureFlags.layoutsTimeline) {
+    @if (showTimeline$$(); as showTimeline) {
         @defer (when selectedCameraId$$() && currentLayoutCameras$$().length) {
             <nx-webgl-canvas
+                [showSaasPlaceholder]="showTimeline === 'placeholder'"
                 [selectedCameraId]="selectedCameraId$$()"
                 [cameras]="currentLayoutCameras$$()"
-            ></nx-webgl-canvas>
+            />
         }
     }
 } @else {

@@ -1,6 +1,17 @@
 @defer (when !dataModel.state$$().loading) {
     @if (dataModel.state$$().camerasCount && dataModel.state$$().allCamerasData.length) {
-        <div class="d-flex flex-column timeline-container">
+        <div
+            class="d-flex flex-column timeline-container"
+            [ngClass]="{ 'saas-placeholder': showSaasPlaceholder$$() }"
+        >
+            @if (showSaasPlaceholder$$()) {
+                <div
+                    class="sass-placeholder-message"
+                    translate
+                >
+                    Timeline on layouts are subscription only. Upgrade to a SaaS license to enable.
+                </div>
+            }
             <!--    <div>-->
             <!--        <nx-timeline-zoom-->
             <!--            (onZoom)="doZoom($event)"-->

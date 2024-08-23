@@ -16,6 +16,7 @@ import { CurrentUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
 import { canViewLayouts } from '@utils/can-view-layouts';
 import { cleanId } from '@utils/general';
+import { replaceViewTab } from '@utils/replace-view-tab';
 
 import { apiBase } from '../variables/static-variables';
 
@@ -347,7 +348,7 @@ export class NxMenusService {
 
         const nodes = [];
         const permissions = activeSystem.permissionManager?.permissions$$() || {};
-        if (activeSystem.canViewADevice()) {
+        if (activeSystem.canViewADevice() && !replaceViewTab(activeSystem)) {
             const viewNode = new MenuNode(
                 'View',
                 this.getUrl(activeSystem.id, { view: true }),

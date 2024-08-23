@@ -26,7 +26,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { selectRootOrganizations } from '@store/channel-partners/channel-partners.selectors';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
-import { isSystemMerging, isUserSystem } from '@utils/nx';
+import { isOrgSystem, isSystemMerging, isUserSystem } from '@utils/nx';
 
 import { updateInterval } from '../variables/static-variables';
 
@@ -302,5 +302,10 @@ export class NxSystemsService {
         return systems
             .sort(alphabeticalSort(sys => sys.name))
             .sort(paramSortFunc(sys => Number(sys.stateOfHealth !== 'online')));
+    }
+
+    public isSaasSystem(systemId: string): boolean {
+        const system = this.systems$$().find(({ id }) => id === systemId);
+        return !!system && isOrgSystem(system);
     }
 }

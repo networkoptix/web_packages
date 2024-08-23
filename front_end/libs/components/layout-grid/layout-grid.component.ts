@@ -2485,4 +2485,29 @@ export class NxLayoutGridComponent {
         success: () => {},
         error: () => {},
     };
+
+    showTimeline$$ = computed(() => {
+        if (
+            ![
+                nxConfig.featureFlags.layoutsTimeline,
+                nxConfig.featureFlags.layoutsTimelineSaas,
+            ].some(Boolean)
+        ) {
+            return false;
+        }
+        const layout = this.layout$$();
+        const selectedCameraId =
+            layout?.items.length === 1 ? cleanId(layout.items[0].resourceId) : '';
+        const currentLayoutId = layout?.id || '';
+        const singleCameraView = selectedCameraId && selectedCameraId === currentLayoutId;
+        const cameraSystemId = extractSystemAndResourceId(
+            layout?.items[0]?.resourcePath || this.system.id,
+        ).systemId;
+
+        return (
+            !!singleCameraView ||
+            (!!nxConfig.featureFlags.layoutsTimelineSaas &&
+                (this.systemsService.isSaasSystem(cameraSystemId) || 'placeholder'))
+        );
+    });
 }

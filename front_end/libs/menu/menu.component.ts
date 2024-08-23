@@ -322,7 +322,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 } else {
                     windowHeightFit = this.menuHeight;
                 }
-                this.menuHeightFit = `${windowHeightFit}px`;
+                this.menuHeightFit = windowHeightFit ? `${windowHeightFit}px` : '100%';
 
                 // 120px is the min height for taller scrollArea - keep height if shorter
                 if (this.scrollArea.nativeElement.scrollHeight > SCROLL_AREA_LIMIT) {

@@ -55,7 +55,12 @@ export class NxWebGLCanvasComponent {
     protected webglService = inject(NxWebGLService);
     protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     dataModel = new TimelineDataModel();
+    showSaasPlaceholder$$ = input<boolean>(false, { alias: 'showSaasPlaceholder' });
     renderStateModel = new RenderStateModel(this.dataModel.state$$, this.webglService);
+
+    disableInteractionEffect = effect(() => {
+        this.renderStateModel.timelineUpdateEnabled = !this.showSaasPlaceholder$$();
+    });
 
     chartElement$$ = viewChild<ElementRef>('chart');
     axisMajorElement$$ = viewChild<ElementRef>('axisMajor');

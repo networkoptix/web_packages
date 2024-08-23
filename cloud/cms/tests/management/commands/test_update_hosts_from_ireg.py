@@ -2,7 +2,7 @@
 import pytest
 from cms.models import Customization
 from cms.management.commands.update_hosts_from_ireg import Command
-from nx_ireg.helpers import HDW_IREG_URL
+from nx_ireg.helpers import S3_IREG_URL
 
 HDW_DATA = [
     {
@@ -52,7 +52,21 @@ S3_DATA = {
             "metavms": "metavms.cloud-test.hdw.mx",
             "t11": "t11-cloud-test.hdw.mx"
         },
-    }
+    },
+    "instances": {
+        "dev4": {
+            "default": "dev4.cloud.hdw.mx",
+            "digitalwatchdog": "digitalwatchdog.dev4.cloud.hdw.mx"
+        },
+        "test": {
+            "default": "cloud-test.hdw.mx",
+            "digitalwatchdog": "digitalwatchdog.cloud-test.hdw.mx",
+            "vmsdemoblue": "vmsdemoblue.cloud-test.hdw.mx",
+            "hanwha": "hanwha.cloud-test.hdw.mx",
+            "metavms": "metavms.cloud-test.hdw.mx",
+            "t11": "t11-cloud-test.hdw.mx"
+        },
+    },
 }
 
 class TestUpdateHostsFromIreg:
@@ -60,7 +74,7 @@ class TestUpdateHostsFromIreg:
     @pytest.fixture(autouse=True)
     def setup(self, mocker):
         self.mocked_get_ireg = mocker.patch(
-            "nx_ireg.helpers.get_ireg", return_value=HDW_DATA)
+            "nx_ireg.helpers.get_ireg", return_value=S3_DATA)
         self.mocked_get_env = mocker.patch(
             "nx_ireg.helpers.os.getenv", return_value='dev4')
     def test_handle_missing_env(self, mocker, db, default_customization):
@@ -86,12 +100,12 @@ class TestUpdateHostsFromIreg:
             assert True
         else:
             assert False, "Should have raised SystemExit"
-        self.mocked_get_ireg.assert_called_once_with(HDW_IREG_URL)
+        self.mocked_get_ireg.assert_called_once_with(S3_IREG_URL)
         self.mocked_get_ireg.reset_mock()
         self.mocked_get_ireg.return_value = []
         options = {'ignore_missing': 'True'}
         instance.handle(**options)
-        self.mocked_get_ireg.assert_called_once_with(HDW_IREG_URL)
+        self.mocked_get_ireg.assert_called_once_with(S3_IREG_URL)
 
     def test_handle_missing_customizations(self, mocker, db, default_customization):
         self.mocked_get_ireg.return_value = [{"name": "dev4"}]
@@ -102,19 +116,19 @@ class TestUpdateHostsFromIreg:
             assert True
         else:
             assert False, "Should have raised SystemExit"
-        self.mocked_get_ireg.assert_called_once_with(HDW_IREG_URL)
+        self.mocked_get_ireg.assert_called_once_with(S3_IREG_URL)
         self.mocked_get_ireg.reset_mock()
         self.mocked_get_ireg.return_value = [{"name": "dev4", "instance_customizations": []}]
         options = {'ignore_missing': 'True'}
         instance.handle(**options)
-        self.mocked_get_ireg.assert_called_once_with(HDW_IREG_URL)
+        self.mocked_get_ireg.assert_called_once_with(S3_IREG_URL)
 
 
     def test_handle(self, mocker, db, default_customization):
         assert default_customization.host != "dev4.cloud.hdw.mx"
         instance = Command()
         instance.handle()
-        self.mocked_get_ireg.assert_called_once_with(HDW_IREG_URL)
+        self.mocked_get_ireg.assert_called_once_with(S3_IREG_URL)
         default_customization.refresh_from_db()
         digitalwatchdog = Customization.objects.get(name="digitalwatchdog", host="digitalwatchdog.dev4.cloud.hdw.mx")
         assert digitalwatchdog.default_language.code == "en_US"

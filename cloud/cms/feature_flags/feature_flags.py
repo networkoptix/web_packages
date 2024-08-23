@@ -95,6 +95,8 @@ class FLAGS(metaclass=_FlagType):
     layouts_fisheye = ('Layouts - Fisheye De-warping', 'layoutsFisheye')
     layouts_51_enabled = ('Layouts - Enabled for 5.1 Systems', 'layouts51Enabled')
     layouts_show_beta_tag = ('Layouts - Show Beta Tag in header', 'layoutsShowBetaTag')
+    layouts_timeline_saas = ('Layouts - Layouts Timeline SaaS (Enable timeline when viewing a layout)', 'layoutsTimelineSaas')
+    layouts_replace_view_tab = ('Layouts - Replace View Tab on 6.0+ systems', 'layoutsReplaceViewTab')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

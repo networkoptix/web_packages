@@ -236,6 +236,8 @@ const FeatureFlagKeys = [
     'layoutsShowBetaTag',
     'newCloudColorProvider',
     'newCloudLayoutWrapper',
+    'layoutsTimelineSaas',
+    'layoutsReplaceViewTab',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];
