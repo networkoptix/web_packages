@@ -285,12 +285,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             timeout: customTimeout = 60000,
             responseType = 'json',
         } = opts ?? {};
-        let params = new HttpParams({ fromObject: _params });
         let headers = new HttpHeaders(_headers);
-
-        if (!environment.isLocal && this.authGet) {
-            params = params.append('auth', this.authGet);
-        }
 
         if (environment.isLocal) {
             headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
@@ -302,18 +297,28 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
         const fullUrl = `${this.urlBase}${url}`;
 
-        let request: Observable<unknown>;
-        if (responseType === 'json') {
-            request = this.http.get(fullUrl, { headers, params, responseType });
-        } else if (responseType === 'arraybuffer') {
-            request = this.http.get(fullUrl, { headers, params, responseType });
-        } else if (responseType === 'blob') {
-            request = this.http.get(fullUrl, { headers, params, responseType });
-        } else {
-            request = this.http.get(fullUrl, { headers, params, responseType: 'text' });
-        }
+        const getRequest = () => {
+            let params = new HttpParams({ fromObject: _params });
 
-        return request.pipe(
+            if (!environment.isLocal && this.authGet) {
+                params = params.append('auth', this.authGet);
+            }
+
+            let request: Observable<unknown>;
+            if (responseType === 'json') {
+                request = this.http.get(fullUrl, { headers, params, responseType });
+            } else if (responseType === 'arraybuffer') {
+                request = this.http.get(fullUrl, { headers, params, responseType });
+            } else if (responseType === 'blob') {
+                request = this.http.get(fullUrl, { headers, params, responseType });
+            } else {
+                request = this.http.get(fullUrl, { headers, params, responseType: 'text' });
+            }
+            return request;
+        };
+
+        return of('').pipe(
+            switchMap(() => getRequest()),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
             tap(undefined, error => {
