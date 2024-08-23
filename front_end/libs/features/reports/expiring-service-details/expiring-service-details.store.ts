@@ -105,7 +105,7 @@ export const ExpiringServiceDetailsStore = signalStore(
                         type: 'system',
                         usedBy: system_name,
                         channels,
-                        expirationDate: expiration_date,
+                        expirationDate: formatDate(expiration_date, dateTimeFormat),
                         hasMultipleExpirations: false,
                     })),
             ),
