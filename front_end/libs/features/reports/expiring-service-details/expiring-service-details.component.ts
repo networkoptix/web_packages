@@ -97,10 +97,22 @@ export class NxExpiringServiceDetailsComponent extends BaseMonthPageComponent {
         });
     });
 
+    initStartTs: string = '';
+    setInitStartTsEffect = effect(
+        () => {
+            this.initStartTs = this.startTs();
+            if (this.initStartTs) {
+                this.setInitStartTsEffect.destroy();
+            }
+        },
+        { manualCleanup: true },
+    );
+
     goBack(): void {
         const urlSegments = this.router.url.split('/');
         this.router.navigate(urlSegments.slice(0, urlSegments.indexOf('service-usage') + 1), {
-            queryParams: { startTs: this.startTs() },
+            queryParamsHandling: 'merge',
+            queryParams: { startTs: this.initStartTs },
         });
     }
 }
