@@ -20,7 +20,12 @@
                     formControlName="name"
                     id="partner-name-input"
                 />
-                <nx-control-messages [spacingLines]="0"></nx-control-messages>
+                <nx-control-messages [spacingLines]="0">
+                    <nx-control-message
+                        key="required"
+                        [text]="'Name is required' | translate"
+                    ></nx-control-message>
+                </nx-control-messages>
             </nx-form-field>
             <nx-apply-v3 [action]="saveGeneralAction"></nx-apply-v3>
         </form>

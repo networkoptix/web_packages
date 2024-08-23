@@ -33,7 +33,12 @@
                 id="update-group-folder-name"
                 formControlName="renameFolder"
             />
-            <nx-control-messages></nx-control-messages>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Folder Name is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">
