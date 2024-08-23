@@ -2558,20 +2558,31 @@ class ServiceToSubChannelProperties(FieldOriginalMixin, models.Model):
         return self.service.created_by_channel_partner.can_add_or_remove_sub_chanel_partners(user)
 
     @classmethod
-    def create_missing(cls, channel_partner_id: int):
+    def create_missing(cls, channel_partner_id: str | uuid.UUID):
         """
         Create any missing properties linking channel partner to service
         Args:
             channel_partner_id:
         """
+        # Get all service IDs in a single query
         services_ids = set(ChannelPartnerService.objects.filter(
-            created_by_channel_partner__channel_partners=channel_partner_id).values_list('pk', flat=True))
-        service_properties_service_ids = set(cls.objects.filter(
-            channel_partner=channel_partner_id, service__in=services_ids
+            created_by_channel_partner_id=channel_partner_id
+        ).values_list('pk', flat=True))
+
+        # Get existing service property IDs in a single query
+        existing_ids = set(cls.objects.filter(
+            channel_partner_id=channel_partner_id,
+            service_id__in=services_ids
         ).values_list('service_id', flat=True))
-        missing_service_ids = services_ids.difference(service_properties_service_ids)
-        for id in missing_service_ids:
-            cls.objects.create(service_id=id, channel_partner_id=channel_partner_id)
+
+        # Calculate missing service IDs
+        missing_service_ids = services_ids - existing_ids
+
+        # Bulk create with ignore_conflicts to handle potential race conditions
+        cls.objects.bulk_create([
+            cls(service_id=service_id, channel_partner_id=channel_partner_id)
+            for service_id in missing_service_ids
+        ], ignore_conflicts=True)
 
 
 class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
@@ -2614,25 +2625,26 @@ class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
 
 
     @classmethod
-    def create_missing(cls, organization_id: int):
+    def create_missing(cls, organization_id: str | uuid.UUID):
         """
         Create any missing properties linking organization to service
         Args:
             organization_id: int
         """
         services_ids = set(ChannelPartnerService.objects.filter(
-            created_by_channel_partner__organizations=organization_id).values_list('pk', flat=True))
-        service_properties__service_ids = set(cls.objects.filter(
+            created_by_channel_partner__organizations__id=organization_id
+        ).values_list('pk', flat=True))
+
+        existing_ids = set(cls.objects.filter(
             organization=organization_id, service__in=services_ids
         ).values_list('service_id', flat=True))
-        missing_service_ids = services_ids.difference(service_properties__service_ids)
-        for id in missing_service_ids:
-            props, created = cls.objects.get_or_create(service_id=id, organization_id=organization_id)
-            if not created:
-                logger.info("Service properties record already exists",
-                            organization_id=organization_id,
-                            service_id=id)
 
+        missing_service_ids = services_ids - existing_ids
+
+        cls.objects.bulk_create([
+            cls(service_id=service_id, organization_id=organization_id)
+            for service_id in missing_service_ids
+        ], ignore_conflicts=True)
 
 class ChannelPartnerEvent(models.Model):
     SERVICE_CHANGED = 0
