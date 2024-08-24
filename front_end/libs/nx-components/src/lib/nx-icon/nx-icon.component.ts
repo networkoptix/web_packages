@@ -27,6 +27,8 @@ import {
 import { BaseComponent } from '../base-component';
 import { GeneratedTheme, generateCssVariableName, isHexString } from '../theme-provider';
 
+import { NxApplyActionTargetDirective } from './nx-apply-action-classes-target.directive';
+
 type SvgColor = {
     stroke: string | null;
     fill: string | null;
@@ -72,6 +74,13 @@ const colorMapping = {
     '#3A4D57': generateCssVariableName('core', 'light12'),
     '#445B67': generateCssVariableName('core', 'light14'),
     '#587787': generateCssVariableName('core', 'light18'),
+    '#A3B8C2': generateCssVariableName('core', 'light11'),
+    '#F44336': generateCssVariableName('attentionErrorRed', 'light16'),
+    '#7E9BA9': generateCssVariableName('core', 'light16'),
+    '#0C1012': generateCssVariableName('core', 'dark2'),
+    '#DAE2E7': generateCssVariableName('core', 'light4'),
+    '#1E88E5': generateCssVariableName('attentionInfoBlue', 'light8'),
+    '#FFC107': generateCssVariableName('attentionWarningYellow', 'light18'),
     // Can't find mapping
     '#4CAF50': '#4CAF50',
     '#E5E9EB': '#E5E9EB',
@@ -125,7 +134,7 @@ const skipNormalize: NxIconNames[] = [
     'LdapGroup',
     'Live52X24',
     'MainMenu',
-    'Motion20X20',
+    // 'Motion20X20',
     'NoLayouts',
     'Nolist',
     'Nomembers',
@@ -164,7 +173,7 @@ const skipNormalize: NxIconNames[] = [
     'StepBackward',
     'StepForward',
     'Sync',
-    'Thumbnails',
+    // 'Thumbnails',
     'Tilt',
     'TimePlaceholder',
     'User64X64',
@@ -179,7 +188,7 @@ const skipNormalize: NxIconNames[] = [
     'UserTemp64X64',
     'VideowallServerPlaceholder',
     'VideowallWebpagePlaceholder',
-    'VirtualCamera',
+    // 'VirtualCamera',
 ];
 
 /**
@@ -189,6 +198,12 @@ const skipNormalize: NxIconNames[] = [
  * Either these won't be themed or we need to have the svg updated for these.
  */
 const alwaysUseInlineStyles: NxIconNames[] = [
+    'AccountBox',
+    'AllEvents',
+    'Article',
+    'Capslock',
+    'CapslockText',
+    'Calendar20X20Variant2',
     'Certificate90X124',
     'ConnectToCloud54X32',
     'ConnectToServer54X32',
@@ -266,6 +281,9 @@ const extractSvgColors = ({ data, name }: NxIcons, colors: GeneratedTheme): Part
     return Object.keys(extracted || {}).length ? extracted : undefined;
 };
 
+/**
+ * Most likely will only be used internally
+ */
 @Component({
     selector: 'nx-icon',
     standalone: true,
@@ -273,6 +291,12 @@ const extractSvgColors = ({ data, name }: NxIcons, colors: GeneratedTheme): Part
     templateUrl: './nx-icon.component.html',
     styleUrl: './nx-icon.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [
+        {
+            directive: NxApplyActionTargetDirective,
+            inputs: ['nxActionClassesTarget'],
+        },
+    ],
 })
 export class NxIconComponent extends BaseComponent {
     static ensureStyleMapping = memoize(async () => {

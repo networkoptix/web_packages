@@ -1,6 +1,7 @@
 @use "../styles/reset-mixins";
 
 @mixin apply-fill-and-stroke($stroke, $fill) {
+    color: inherit;
     &[applyFill] {
         fill: $fill;
     }
@@ -14,15 +15,15 @@
         display: inline-block;
         ::ng-deep {
             .Primary, .Primary *:not(.Secondary):not(.Third) {
-                @include apply-fill-and-stroke(var(--svg-primary-stroke), var(--svg-primary-fill));
+                @include apply-fill-and-stroke(var(--svg-primary-stroke-override, var(--svg-primary-stroke)), var(--svg-primary-fill-override, var(--svg-primary-fill)));
             }
 
             .Secondary, .Secondary *:not(.Primary):not(.Third) {
-                @include apply-fill-and-stroke(var(--svg-secondary-stroke), var(--svg-secondary-fill));
+                @include apply-fill-and-stroke(var(--svg-secondary-stroke-override, var(--svg-secondary-stroke)), var(--svg-secondary-fill-override, var(--svg-secondary-fill)));
             }
 
             .Third, .Third *:not(.Primary):not(.Secondary) {
-                @include apply-fill-and-stroke(var(--svg-third-stroke), var(--svg-third-fill));
+                @include apply-fill-and-stroke(var(--svg-third-stroke-override, var(--svg-third-stroke)), var(--svg-third-fill-override, var(--svg-third-fill)));
             }
         }
     }

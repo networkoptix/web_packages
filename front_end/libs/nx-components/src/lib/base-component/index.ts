@@ -5,6 +5,10 @@ import { CssColorVariables, ThemeOptions, stepCount } from '../theme-provider/co
 import { createComponentVariablesEvent } from '../theme-provider/events';
 import { NxThemeProviderService } from '../theme-provider/theme-provider.service';
 
+type Native = 'currentColor' | 'initial';
+const useNative = (color: CssColorVariables | Native): color is Native =>
+    ['currentColor', 'initial'].includes(color);
+
 @Directive()
 export abstract class BaseComponent {
     protected elRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -33,7 +37,9 @@ export abstract class BaseComponent {
      *   });
      * ```
      */
-    abstract variablesDeclaration: Signal<Record<string, CssColorVariables>>;
+    abstract variablesDeclaration: Signal<
+        Record<string, CssColorVariables | 'currentColor' | 'initial'>
+    >;
 
     // Add common colors here
     protected readonly commonColors = { ...fontColorsCommon } as const;
@@ -42,6 +48,8 @@ export abstract class BaseComponent {
         const colorVariablesDeclarations = {
             ...this.commonColors,
             ...this.variablesDeclaration(),
+            currentColor: 'currentColor' as const,
+            initial: 'initial' as const,
         };
 
         const themeOverride = this.themeOptionOverride?.();
@@ -49,11 +57,15 @@ export abstract class BaseComponent {
             ? this.themeProvider.getColorsWithThemeOverride(themeOverride)
             : this.themeProvider.colors();
         Object.entries(colorVariablesDeclarations).forEach(([variableName, colorName]) => {
-            const baseVar = `${colorName.startsWith('--') ? colorName : `--${colorName}`}`;
-            this.elRef.nativeElement.style.setProperty(baseVar, themeColors[colorName]);
+            const baseVar = useNative(colorName)
+                ? colorName
+                : `${colorName.startsWith('--') ? colorName : `--${colorName}`}`;
+            if (!useNative(colorName)) {
+                this.elRef.nativeElement.style.setProperty(baseVar, themeColors[colorName]);
+            }
             this.elRef.nativeElement.style.setProperty(
                 variableName.startsWith('--') ? variableName : `--${variableName}`,
-                `var(${baseVar})`,
+                useNative(colorName) ? colorName : `var(${baseVar})`,
             );
         });
 
@@ -77,7 +89,7 @@ export abstract class BaseComponent {
                     Object.fromEntries([
                         ...Object.entries(colorVariablesDeclarations).map(([key, value]) => [
                             key,
-                            [value, themeColors[value]],
+                            [value, useNative(value) ? value : themeColors[value]],
                         ]),
                         ...Object.entries(otherDeclarations).map(([key, value]) => [
                             key,
