@@ -128,15 +128,15 @@ export function offsetDate(
         year?: number;
         month?: number;
         day?: number;
-        hr?: number;
-        min?: number;
-        s?: number;
-        ms?: number;
+        hour?: number;
+        minute?: number;
+        second?: number;
+        millisecond?: number;
     },
 ): Date {
     const date = base instanceof Date ? base : new Date(base);
 
-    const { year, month, day, hr, min, s, ms } = offset;
+    const { year, month, day, hour, minute, second, millisecond } = offset;
     if (year) {
         date.setFullYear(date.getFullYear() + year);
     }
@@ -146,17 +146,17 @@ export function offsetDate(
     if (day) {
         date.setDate(date.getDate() + day);
     }
-    if (hr) {
-        date.setHours(date.getHours() + hr);
+    if (hour) {
+        date.setHours(date.getHours() + hour);
     }
-    if (min) {
-        date.setMinutes(date.getMinutes() + min);
+    if (minute) {
+        date.setMinutes(date.getMinutes() + minute);
     }
-    if (s) {
-        date.setSeconds(date.getSeconds() + s);
+    if (second) {
+        date.setSeconds(date.getSeconds() + second);
     }
-    if (ms) {
-        date.setMilliseconds(date.getMilliseconds() + ms);
+    if (millisecond) {
+        date.setMilliseconds(date.getMilliseconds() + millisecond);
     }
     return date;
 }
