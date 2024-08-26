@@ -1095,7 +1095,7 @@
             "recordingSuspended": "Recording will continue",
             "recordingDisabled": "Recording \u200B | will be stopped | \u200B immediately",
             "directAccess": "User has access as { role }. Permissions for the selected folder will be overwritten",
-            "directAccess2": "{ email } has access to { folder } as { role }. Permissions for the folder will be overwritten",
+            "directAccess2": "{ email } has access to { folder } as { role }. Permissions will be overwritten.",
             "parentAccess": "{ email } already has access to a higher level",
             "parentOverwriteSingle": "{ email } permissions for { folder } will be overwritten",
             "parentOverwriteMultiple": "{ email } permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten",
