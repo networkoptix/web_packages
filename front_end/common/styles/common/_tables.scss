@@ -151,7 +151,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
 .nx-new-table {
     &-container {
         height: calc(100% - 1rem);
-        margin : 1rem 0 1rem;
+        margin: 1rem 0 1rem;
     }
 
     .nx-new-table-wrapper {
@@ -211,6 +211,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 svg path {
                     fill: var(--card-support-svg-elem-bg);
                 }
+
                 //position: absolute;
                 //top: 8px;
                 //right: 0;
@@ -245,6 +246,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
 
         & div {
             display: flex;
+
             svg-icon.icon-expand {
                 transform: rotate(-90deg);
             }
@@ -255,7 +257,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             padding: 10px 8px;
             @include ellipsis;
 
-            *[id^='sortKey-']{
+            *[id^='sortKey-'] {
                 height: 0;
                 width: 0;
                 padding: 0;
@@ -289,6 +291,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 stroke: none;
             }
         }
+
         .roles {
             width: 100%;
 
@@ -296,9 +299,11 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 min-width: $permission-cell-size;
             }
         }
+
         .dropdown {
             padding: 0;
         }
+
         // dropdown v2
         .select-wrapper {
             height: 100%;
@@ -306,7 +311,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             background-color: transparent;
             box-shadow: none;
 
-             &:hover {
+            &:hover {
                 background-color: transparent !important;
                 box-shadow: none !important;
             }
@@ -339,6 +344,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 }
             }
         }
+
         .big-row {
             grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 94px);
             grid-template-rows: 40px;
@@ -412,6 +418,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 42px 1fr 1fr 1fr 42px;
         }
+
         .big-row {
             grid-template-columns: 42px 1fr 1fr 1fr 42px;
             grid-template-rows: 40px;
@@ -432,6 +439,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 42px 1fr .5fr 1fr 1fr 42px 42px;
         }
+
         .big-row {
             grid-template-columns: 42px 1fr .5fr 1fr 1fr 42px 42px;
             grid-template-rows: 40px;
@@ -441,10 +449,12 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 display: flex;
                 gap: 0.25rem;
             }
+
             .icon {
                 cursor: pointer;
                 justify-content: center;
             }
+
             .delete {
                 svg .st0 {
                     fill: red;
@@ -464,6 +474,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 42px 1fr 0.5fr 42px;
         }
+
         .big-row {
             grid-template-columns: 42px 1fr 0.5fr 42px;
             grid-template-rows: 40px;
@@ -474,6 +485,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                 gap: 0.5rem;
             }
         }
+
         .header, .body {
             width: 100% !important;
         }
@@ -485,10 +497,10 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
         }
-        
+
         .big-row {
             grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            
+
             &:hover {
                 cursor: pointer;
             }
@@ -509,7 +521,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
         }
-        
+
         .big-row {
             grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
 
@@ -542,7 +554,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 5fr 1fr 1fr;
         }
-        
+
         .big-row {
             grid-template-columns: 5fr 1fr 1fr;
 
@@ -551,6 +563,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
                     background-color: var(--card-body-bg);
                     cursor: default;
                 }
+
                 cursor: pointer;
             }
 
@@ -584,7 +597,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             border-right: none !important;
 
         }
-        
+
         .big-row {
             grid-template-columns: 1fr 1fr 1fr 1fr;
             border-left: none !important;
@@ -631,7 +644,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             border-right: none !important;
 
         }
-        
+
         .big-row {
             grid-template-columns: 1fr 1fr;
             border-left: none !important;
@@ -673,7 +686,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: $service-changes-table-column-width;
         }
-        
+
         .big-row {
             grid-template-columns: $service-changes-table-column-width;
             user-select: none;
@@ -702,6 +715,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
         .header {
             grid-template-columns: 542px 368px 178px;
         }
+
         .big-row {
             grid-template-columns: 542px 368px 178px;
         }
