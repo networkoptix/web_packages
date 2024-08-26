@@ -29,10 +29,12 @@
     <div class="service-details-table-wrapper">
         @if (!hasError()) {
             <nx-regular-service-table
-                [records]="formattedRegularServiceRecords$$()"
+                [partnerRecords]="formattedPartnerRecords$$()"
+                [orgRecords]="formattedOrgRecords$$()"
                 [totals]="regularServiceTotals$$()"
                 [serviceId]="serviceId$$()"
                 [entityId]="entityId$$()"
+                [isPartnerTable]="isPartner$$()"
                 [startTs]="startTs()"
             ></nx-regular-service-table>
         } @else {

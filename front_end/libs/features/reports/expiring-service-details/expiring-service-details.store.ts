@@ -7,18 +7,23 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
     AvailableService,
+    CloudSystem,
     EntityExpiringServiceEntry,
+    GroupStructureItem,
     OrgExpiringServiceReportResponse,
     PartnerExpiringServiceReportResponse,
     Service,
     SystemExpiringServiceEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+import { NxGroupPathService } from '../group-path/groupPath.service';
+import { GroupMap, SystemMap, SystemToGroupPathMap } from '../group-path/groupPath.service.types';
 import { HiddenNameLink } from '../hidden-name-link/hidden-name-link.types';
 
 import {
+    EntityFormattedExpiringServiceRecord,
     ExpiringServiceTotals,
-    FormattedExpiringServiceRecord,
+    SystemFormattedExpiringServiceRecord,
 } from './expiring-service-details.types';
 
 interface ExpiringServiceDetailsState {
@@ -28,6 +33,9 @@ interface ExpiringServiceDetailsState {
     entityExpiringServices: EntityExpiringServiceEntry[];
     systemExpiringServices: SystemExpiringServiceEntry[];
     selectedService: Service | undefined;
+    groupMap: GroupMap;
+    systemMap: SystemMap;
+    systemToGroupPathMap: SystemToGroupPathMap;
 }
 
 const initialState: ExpiringServiceDetailsState = {
@@ -37,6 +45,9 @@ const initialState: ExpiringServiceDetailsState = {
     entityExpiringServices: [],
     systemExpiringServices: [],
     selectedService: undefined,
+    groupMap: new Map(),
+    systemMap: new Map(),
+    systemToGroupPathMap: new Map(),
 };
 
 function formatDate(date: string, dateTimeFormat: NxDateTimeFormatService): string {
@@ -61,8 +72,9 @@ export const ExpiringServiceDetailsStore = signalStore(
             store,
             dateTimeFormat = inject(NxDateTimeFormatService),
             route = inject(ActivatedRoute),
+            groupPathService = inject(NxGroupPathService),
         ) => ({
-            entityExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
+            entityExpiringServicesForTable$$: computed<EntityFormattedExpiringServiceRecord[]>(() =>
                 store
                     .entityExpiringServices()
                     .map(({ id, type, name, channels, expirations }, i) => {
@@ -97,17 +109,27 @@ export const ExpiringServiceDetailsStore = signalStore(
                     },
                 ),
             ),
-            systemExpiringServicesForTable$$: computed<FormattedExpiringServiceRecord[]>(() =>
-                store
-                    .systemExpiringServices()
-                    .map(({ system_id, system_name, channels, expiration_date }) => ({
-                        id: system_id,
-                        type: 'system',
-                        usedBy: system_name,
-                        channels,
-                        expirationDate: formatDate(expiration_date, dateTimeFormat),
-                        hasMultipleExpirations: false,
-                    })),
+            systemExpiringServicesForTable$$: computed<SystemFormattedExpiringServiceRecord[]>(
+                () => {
+                    const groupMap = store.groupMap();
+                    const systemMap = store.systemMap();
+                    const systemToGroupPathMap = store.systemToGroupPathMap();
+                    return store
+                        .systemExpiringServices()
+                        .map(({ system_id, channels, expiration_date }) => ({
+                            id: system_id,
+                            type: 'system',
+                            usedByPath: groupPathService.getFormattedGroupPath(
+                                system_id,
+                                groupMap,
+                                systemMap,
+                                systemToGroupPathMap,
+                            ),
+                            channels,
+                            expirationDate: formatDate(expiration_date, dateTimeFormat),
+                            hasMultipleExpirations: false,
+                        }));
+                },
             ),
             systemExpiringServiceTotals$$: computed<ExpiringServiceTotals>(() =>
                 store.systemExpiringServices().reduce(
@@ -121,78 +143,102 @@ export const ExpiringServiceDetailsStore = signalStore(
             ),
         }),
     ),
-    withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
-        async loadPartnerExpiringServiceReport(
-            partnerId: string,
-            serviceId: string,
-            startTs: string,
-        ): Promise<void> {
-            patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: PartnerExpiringServiceReportResponse;
-            let services: Service[];
-            let selectedService: Service | undefined;
-            try {
-                const serviceReportPromise = firstValueFrom(
-                    CPService.getPartnerExpiringServiceReport(partnerId, serviceId, startTs),
-                );
-                const servicesPromise = firstValueFrom(
-                    CPService.getChannelPartnerOwnedServices(partnerId),
-                );
-                [serviceReportResponse, services] = await Promise.all([
-                    serviceReportPromise,
-                    servicesPromise,
-                ]);
-                selectedService = services.find(service => service.id === serviceId);
-            } catch ({ error }) {
+    withMethods(
+        (
+            store,
+            CPService = inject(NxChannelPartnersService),
+            groupPathService = inject(NxGroupPathService),
+        ) => ({
+            async loadPartnerExpiringServiceReport(
+                partnerId: string,
+                serviceId: string,
+                startTs: string,
+            ): Promise<void> {
+                patchState(store, { error: '', hasError: false, isLoading: true });
+                let serviceReportResponse: PartnerExpiringServiceReportResponse;
+                let services: Service[];
+                let selectedService: Service | undefined;
+                try {
+                    const serviceReportPromise = firstValueFrom(
+                        CPService.getPartnerExpiringServiceReport(partnerId, serviceId, startTs),
+                    );
+                    const servicesPromise = firstValueFrom(
+                        CPService.getChannelPartnerOwnedServices(partnerId),
+                    );
+                    [serviceReportResponse, services] = await Promise.all([
+                        serviceReportPromise,
+                        servicesPromise,
+                    ]);
+                    selectedService = services.find(service => service.id === serviceId);
+                } catch ({ error }) {
+                    patchState(store, {
+                        error: error?.detail ?? 'Error loading report.',
+                        hasError: true,
+                        isLoading: false,
+                    });
+                    return;
+                }
                 patchState(store, {
-                    error: error?.detail ?? 'Error loading report.',
-                    hasError: true,
                     isLoading: false,
+                    entityExpiringServices: serviceReportResponse.sub_entities,
+                    systemExpiringServices: [],
+                    selectedService,
                 });
-                return;
-            }
-            patchState(store, {
-                isLoading: false,
-                entityExpiringServices: serviceReportResponse.sub_entities,
-                systemExpiringServices: [],
-                selectedService,
-            });
-        },
-        async loadOrgExpiringServiceReport(
-            orgId: string,
-            serviceId: string,
-            startTs: string,
-        ): Promise<void> {
-            patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: OrgExpiringServiceReportResponse;
-            let servicesResponse: AvailableService[];
-            let selectedService: Service | undefined;
-            try {
-                const serviceReportPromise = firstValueFrom(
-                    CPService.getOrganizationExpiringServiceReport(orgId, serviceId, startTs),
+            },
+            async loadOrgExpiringServiceReport(
+                orgId: string,
+                serviceId: string,
+                startTs: string,
+            ): Promise<void> {
+                patchState(store, { error: '', hasError: false, isLoading: true });
+                let serviceReportResponse: OrgExpiringServiceReportResponse;
+                let servicesResponse: AvailableService[];
+                let systemsResponse: CloudSystem[];
+                let groupsResponse: GroupStructureItem[];
+                let selectedService: Service | undefined;
+                try {
+                    const serviceReportPromise = firstValueFrom(
+                        CPService.getOrganizationExpiringServiceReport(orgId, serviceId, startTs),
+                    );
+                    const servicesPromise = firstValueFrom(
+                        CPService.getOrganizationServices(orgId),
+                    );
+                    const systemsPromise = firstValueFrom(CPService.getOrgSystems(orgId));
+                    const groupsPromise = firstValueFrom(CPService.getGroupsStructure(orgId));
+                    [serviceReportResponse, servicesResponse, systemsResponse, groupsResponse] =
+                        await Promise.all([
+                            serviceReportPromise,
+                            servicesPromise,
+                            systemsPromise,
+                            groupsPromise,
+                        ]);
+                    selectedService = servicesResponse.find(
+                        ({ service }) => service.id === serviceId,
+                    )?.service;
+                } catch ({ error }) {
+                    patchState(store, {
+                        error: error?.detail ?? 'Error loading report.',
+                        hasError: true,
+                        isLoading: false,
+                    });
+                    return;
+                }
+                const groupMap = groupPathService.createGroupMap(groupsResponse);
+                const systemMap = groupPathService.createSystemMap(systemsResponse);
+                const systemToGroupPathMap = groupPathService.createSystemToGroupPathMap(
+                    systemsResponse,
+                    groupMap,
                 );
-                const servicesPromise = firstValueFrom(CPService.getOrganizationServices(orgId));
-                [serviceReportResponse, servicesResponse] = await Promise.all([
-                    serviceReportPromise,
-                    servicesPromise,
-                ]);
-                selectedService = servicesResponse.find(
-                    ({ service }) => service.id === serviceId,
-                )?.service;
-            } catch ({ error }) {
                 patchState(store, {
-                    error: error?.detail ?? 'Error loading report.',
-                    hasError: true,
                     isLoading: false,
+                    entityExpiringServices: [],
+                    systemExpiringServices: serviceReportResponse.systems,
+                    selectedService,
+                    groupMap,
+                    systemMap,
+                    systemToGroupPathMap,
                 });
-                return;
-            }
-            patchState(store, {
-                isLoading: false,
-                entityExpiringServices: [],
-                systemExpiringServices: serviceReportResponse.systems,
-                selectedService,
-            });
-        },
-    })),
+            },
+        }),
+    ),
 );

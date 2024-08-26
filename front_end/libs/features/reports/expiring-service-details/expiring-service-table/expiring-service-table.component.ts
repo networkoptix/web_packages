@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
@@ -7,14 +7,17 @@ import { NxHintComponent } from '@components/hint/hint.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';
+import { NxGroupPathComponent } from '@pages/reports/group-path/group-path.component';
 import { NxHiddenNameLinkComponent } from '@pages/reports/hidden-name-link/hidden-name-link.component';
 import { HiddenNameLink } from '@pages/reports/hidden-name-link/hidden-name-link.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { ExpiringServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import {
+    EntityFormattedExpiringServiceRecord,
     ExpiringServiceTotals,
-    type FormattedExpiringServiceRecord,
+    FormattedExpiringServiceRecord,
+    SystemFormattedExpiringServiceRecord,
 } from '../expiring-service-details.types';
 
 interface HEADER_ITEM {
@@ -37,6 +40,7 @@ const apiPageSize = 1000;
         CommonModule,
         NxHintComponent,
         NxHiddenNameLinkComponent,
+        NxGroupPathComponent,
     ],
     standalone: true,
 })
@@ -56,11 +60,21 @@ export class NxExpiringServiceTableComponent {
         },
     ];
     selectedRecordId = '';
-    records = input.required<FormattedExpiringServiceRecord[]>();
+    partnerRecords = input.required<EntityFormattedExpiringServiceRecord[]>();
+    orgRecords = input.required<SystemFormattedExpiringServiceRecord[]>();
     totals = input.required<ExpiringServiceTotals>();
     serviceId = input.required<string>();
     entityId = input.required<string>();
+    isPartnerTable = input.required<boolean>();
     startTs = input<string>('');
+
+    records = computed<FormattedExpiringServiceRecord[]>(() => {
+        const isPartnerTable = this.isPartnerTable();
+        const partnerRecords = this.partnerRecords();
+        const orgRecords = this.orgRecords();
+
+        return isPartnerTable ? partnerRecords : orgRecords;
+    });
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -71,12 +85,8 @@ export class NxExpiringServiceTableComponent {
         return typeof usedBy !== 'string';
     }
 
-    openExpiringServiceDetailsDialog({
-        id: entityId,
-        type: entityType,
-        usedBy,
-        hasMultipleExpirations,
-    }: FormattedExpiringServiceRecord): void {
+    openExpiringServiceDetailsDialog(selectedRecord: FormattedExpiringServiceRecord): void {
+        const { id: entityId, type: entityType, hasMultipleExpirations } = selectedRecord;
         if (!hasMultipleExpirations) {
             return;
         }
@@ -112,7 +122,14 @@ export class NxExpiringServiceTableComponent {
                     apiPageSize,
                 );
         }
-        const entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
+
+        let entityName: string;
+        if ('usedBy' in selectedRecord) {
+            const { usedBy } = selectedRecord;
+            entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
+        } else {
+            entityName = selectedRecord.usedByPath[1];
+        }
         this.dialogsService.viewExpiringServiceDetails({ expiringServiceDialogData$, entityName });
     }
 }

@@ -13,17 +13,10 @@ import {
     Service,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import {
-    GroupMap,
-    ServiceChangeRecord,
-    SystemMap,
-    SystemToGroupPathMap,
-} from './service-changes.types';
-import {
-    createGroupMap,
-    createSystemMap,
-    createSystemToGroupPathMap,
-} from './service-changes.utils';
+import { NxGroupPathService } from '../group-path/groupPath.service';
+import { GroupMap, SystemMap, SystemToGroupPathMap } from '../group-path/groupPath.service.types';
+
+import { ServiceChangeRecord } from './service-changes.types';
 
 interface ServiceChangesState {
     isLoading: boolean;
@@ -53,7 +46,12 @@ const apiSort = '-created';
 export const ServiceChangesStore = signalStore(
     withState(initialState),
     withMethods(
-        (store, CPService = inject(NxChannelPartnersService), rootStore = inject(Store)) => ({
+        (
+            store,
+            CPService = inject(NxChannelPartnersService),
+            groupPathService = inject(NxGroupPathService),
+            rootStore = inject(Store),
+        ) => ({
             async loadPartnerServiceChanges(
                 entityId: string,
                 startTs: string,
@@ -176,9 +174,12 @@ export const ServiceChangesStore = signalStore(
                 const serviceIdToNameMap = new Map(
                     servicesResponse.map(({ service }) => [service.id, service.displayName]),
                 );
-                const groupMap = createGroupMap(groupsResponse);
-                const systemMap = createSystemMap(systemsResponse);
-                const systemToGroupPathMap = createSystemToGroupPathMap(systemsResponse, groupMap);
+                const groupMap = groupPathService.createGroupMap(groupsResponse);
+                const systemMap = groupPathService.createSystemMap(systemsResponse);
+                const systemToGroupPathMap = groupPathService.createSystemToGroupPathMap(
+                    systemsResponse,
+                    groupMap,
+                );
 
                 // Syncronize API pagination with frontend table pagination
                 const { count, results } = serviceChangeRecordsResponse;
@@ -211,47 +212,6 @@ export const ServiceChangesStore = signalStore(
                     systemToGroupPathMap,
                     errorMessage: null,
                 }));
-            },
-            /**
-            Gets a system's group path and converts it to the format [groupPathString, systemName] for the table:  
-            rawGroupPath -> formattedGroupPath
-            [systemId] -> ['', 'systemName']  
-            [parentGroupId, systemId] -> ['parentGroupName', 'systemName']  
-            [rootGroupId, parentGroupId, systemId] -> ['rootGroupName / parentGroupName', 'systemName']  
-            [rootGroupId, nestedGroupId, parentGroupId, systemId] -> ['rootGroupName / ... / parentGroupName', 'systemName']  
-            */
-            getFormattedGroupPath(systemId: string): string[] {
-                const {
-                    groupMap: groupMap$$,
-                    systemMap: systemMap$$,
-                    systemToGroupPathMap: systemToGroupPathMap$$,
-                } = store;
-                const groupMap = groupMap$$();
-                const systemMap = systemMap$$();
-                const systemToGroupPathMap = systemToGroupPathMap$$();
-
-                const groupPath = systemToGroupPathMap.get(systemId) ?? [];
-                // It's possible for a system to have been removed from an org, but to still be in the service change records.
-                // In that case we don't have any info for the system other than its ID, so we'll show that
-                const systemName = systemMap.get(systemId)?.name ?? systemId;
-                const formattedGroupPath: string[] = [systemName];
-                if (groupPath.length === 1) {
-                    formattedGroupPath.unshift('');
-                } else if (groupPath.length === 2) {
-                    const groupName = groupMap.get(groupPath[0])!.name;
-                    formattedGroupPath.unshift(`${groupName} /`);
-                } else if (groupPath.length === 3) {
-                    const rootGroupName = groupMap.get(groupPath[0])!.name;
-                    const nestedGroupName = groupMap.get(groupPath[1])!.name;
-                    const groupPathString = `${rootGroupName} / ${nestedGroupName} /`;
-                    formattedGroupPath.unshift(groupPathString);
-                } else if (groupPath.length >= 4) {
-                    const rootGroupName = groupMap.get(groupPath[0])!.name;
-                    const parentGroupName = groupMap.get(groupPath[groupPath.length - 2])!.name;
-                    const groupPathString = `${rootGroupName} / ... / ${parentGroupName} /`;
-                    formattedGroupPath.unshift(groupPathString);
-                }
-                return formattedGroupPath;
             },
         }),
     ),

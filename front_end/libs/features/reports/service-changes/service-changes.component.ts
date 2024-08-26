@@ -13,6 +13,7 @@ import {
     selectPartnersFromStructure,
 } from '@store/channel-partners/channel-partners.selectors';
 
+import { NxGroupPathService } from '../group-path/groupPath.service';
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
@@ -44,6 +45,7 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
     private readonly store = inject(Store);
     private dateTimeService = inject(NxDateTimeFormatService);
     private uri = inject(NxUriService);
+    private groupPathService = inject(NxGroupPathService);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
@@ -75,12 +77,20 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         const isPartner = this.isPartner$$();
         const records = this.serviceChangesStore.records();
         const serviceIdToNameMap = this.serviceChangesStore.serviceIdToNameMap();
+        const groupMap = this.serviceChangesStore.groupMap();
+        const systemMap = this.serviceChangesStore.systemMap();
+        const systemToGroupPathMap = this.serviceChangesStore.systemToGroupPathMap();
 
         return !isPartner
             ? records.map(({ serviceId, amount, changedAtId, date: dateTimeString }) => ({
                   serviceName: serviceIdToNameMap.get(serviceId) ?? '',
                   amount,
-                  changedAtPath: this.serviceChangesStore.getFormattedGroupPath(changedAtId),
+                  changedAtPath: this.groupPathService.getFormattedGroupPath(
+                      changedAtId,
+                      groupMap,
+                      systemMap,
+                      systemToGroupPathMap,
+                  ),
                   date: this.dateTimeService.mediumDateShortTimeString(new Date(dateTimeString)),
               }))
             : [];

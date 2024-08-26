@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
@@ -8,14 +8,17 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language/language_i18n_static.json';
+import { NxGroupPathComponent } from '@pages/reports/group-path/group-path.component';
 import { HiddenNameLink } from '@pages/reports/hidden-name-link/hidden-name-link.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { RegularServiceDetailDialogResponse } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxHiddenNameLinkComponent } from '../../hidden-name-link/hidden-name-link.component';
 import {
+    EntityFormattedRegularServiceRecord,
+    FormattedRegularServiceRecord,
     RegularServiceTotals,
-    type FormattedRegularServiceRecord,
+    SystemFormattedRegularServiceRecord,
 } from '../regular-service-details.types';
 
 interface HEADER_ITEM {
@@ -31,7 +34,6 @@ const apiPageSize = 1000;
 @Component({
     selector: 'nx-regular-service-table',
     templateUrl: './regular-service-table.component.html',
-    styleUrls: ['./regular-service-table.component.scss'],
     imports: [
         TranslateModule,
         NxBaseTableComponent,
@@ -39,6 +41,7 @@ const apiPageSize = 1000;
         NxHintComponent,
         NxTooltipV2Directive,
         NxHiddenNameLinkComponent,
+        NxGroupPathComponent,
     ],
     standalone: true,
 })
@@ -68,11 +71,21 @@ export class NxRegularServiceTableComponent {
         },
     ];
     selectedRecordId = '';
-    records = input.required<FormattedRegularServiceRecord[]>();
+    partnerRecords = input.required<EntityFormattedRegularServiceRecord[]>();
+    orgRecords = input.required<SystemFormattedRegularServiceRecord[]>();
     totals = input.required<RegularServiceTotals>();
     serviceId = input.required<string>();
     entityId = input.required<string>();
+    isPartnerTable = input.required<boolean>();
     startTs = input<string>('');
+
+    records = computed<FormattedRegularServiceRecord[]>(() => {
+        const isPartnerTable = this.isPartnerTable();
+        const partnerRecords = this.partnerRecords();
+        const orgRecords = this.orgRecords();
+
+        return isPartnerTable ? partnerRecords : orgRecords;
+    });
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -83,11 +96,8 @@ export class NxRegularServiceTableComponent {
         return typeof usedBy !== 'string';
     }
 
-    openRegularServiceDetailsDialog({
-        id: entityId,
-        type: entityType,
-        usedBy,
-    }: FormattedRegularServiceRecord): void {
+    openRegularServiceDetailsDialog(selectedRecord: FormattedRegularServiceRecord): void {
+        const { id: entityId, type: entityType } = selectedRecord;
         const serviceId = this.serviceId();
         const parentEntityId = this.entityId();
         const startTs = this.startTs();
@@ -131,7 +141,13 @@ export class NxRegularServiceTableComponent {
                 );
         }
 
-        const entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
+        let entityName: string;
+        if ('usedBy' in selectedRecord) {
+            const { usedBy } = selectedRecord;
+            entityName = typeof usedBy === 'string' ? usedBy : usedBy.name;
+        } else {
+            entityName = selectedRecord.usedByPath[1];
+        }
         this.dialogsService.viewRegularServiceDetails({ regularServiceDialogData$, entityName });
     }
 }

@@ -16,8 +16,9 @@ import { NxServiceUsageTableComponent } from '../service-usage/service-usage-tab
 
 import { ExpiringServiceDetailsStore } from './expiring-service-details.store';
 import {
-    FormattedExpiringServiceRecord,
     ExpiringServiceTotals,
+    EntityFormattedExpiringServiceRecord,
+    SystemFormattedExpiringServiceRecord,
 } from './expiring-service-details.types';
 import { NxExpiringServiceTableComponent } from './expiring-service-table/expiring-service-table.component';
 
@@ -52,13 +53,16 @@ export class NxExpiringServiceDetailsComponent extends BaseMonthPageComponent {
     error = this.expiringServiceDetailsStore.error;
     hasError = this.expiringServiceDetailsStore.hasError;
 
-    formattedExpiringServiceRecords$$ = computed<FormattedExpiringServiceRecord[]>(() => {
-        const entityType = this.entityType$$();
-        if (entityType === EntityType.channelPartner) {
-            return this.expiringServiceDetailsStore.entityExpiringServicesForTable$$();
-        } else {
-            return this.expiringServiceDetailsStore.systemExpiringServicesForTable$$();
-        }
+    isPartner$$ = computed(() => this.entityType$$() === EntityType.channelPartner);
+    formattedPartnerRecords$$ = computed<EntityFormattedExpiringServiceRecord[]>(() => {
+        return this.isPartner$$()
+            ? this.expiringServiceDetailsStore.entityExpiringServicesForTable$$()
+            : [];
+    });
+    formattedOrgRecords$$ = computed<SystemFormattedExpiringServiceRecord[]>(() => {
+        return !this.isPartner$$()
+            ? this.expiringServiceDetailsStore.systemExpiringServicesForTable$$()
+            : [];
     });
 
     expiringServiceTotals$$ = computed<ExpiringServiceTotals>(() => {
