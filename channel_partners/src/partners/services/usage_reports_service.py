@@ -343,7 +343,7 @@ class ReportSnapshotService:
         self.next_period_start = period_end
         if isinstance(self.next_period_start, datetime.datetime):
             self.next_period_start = self.next_period_start.date()
-        if report_type == ReportSnapshot.ReportType.system_regular_report:
+        if ReportSnapshot.ReportType.is_system_report(report_type):
             self.organization_id = organization_id
         else:
             self.organization_id = None
@@ -373,7 +373,7 @@ class ReportSnapshotService:
             'report_type': self.report_type,
             'start_date': self.period_start,
         }
-        if self.report_type == ReportSnapshot.ReportType.system_regular_report:
+        if ReportSnapshot.ReportType.is_system_report(self.report_type):
             lookup_kwargs['organization_id'] = self.organization_id
         if self.service_id:
             lookup_kwargs['service_id'] = self.service_id
@@ -501,7 +501,7 @@ def wrapped_report_func(
         raise ValueError(f'Cannot find entity "{entity_obj_name}" object in passed arguments.')
     entity_id = getattr(entity_obj, entity_id_name, None)
     service_id = getattr(func_args.arguments.get('service', None), 'id', None)
-    if report_type is ReportSnapshot.ReportType.system_regular_report:
+    if ReportSnapshot.ReportType.is_system_report(report_type):
         organization_id = getattr(func_args.arguments.get('organization', None), 'id', None)
     else:
         organization_id = None

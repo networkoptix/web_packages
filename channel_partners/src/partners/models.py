@@ -2972,7 +2972,12 @@ class MigrationRecord(models.Model):
 
 
 class ReportSnapshot(models.Model):
+
     class ReportType(IntegerChoices):
+        """
+        Report types
+        Systems reports must have type idx less than 20
+        """
         system_regular_report = 1, 'system_regular_report'
         system_expiring_report = 2, 'system_expiring_report'
         organization_regular_systems_reports = 20, 'organization_regular_system_reports'
@@ -2992,6 +2997,13 @@ class ReportSnapshot(models.Model):
         channel_partner_expiring_service_report = 48, 'channel_partner_expiring_service_report'
         channel_partner_usage_report = 44, 'channel_partner_usage_report'
 
+        @classmethod
+        def is_system_report(cls, report_type: int) -> bool:
+            return report_type in (
+                cls.system_regular_report,
+                cls.system_expiring_report,
+            )
+
     report_type = models.SmallIntegerField(choices=ReportType.choices)
     entity_id = models.UUIDField()
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT, null=True)
@@ -3003,13 +3015,39 @@ class ReportSnapshot(models.Model):
     report_data = models.JSONField(encoder=JSONEncoder)
 
     class Meta:
-        unique_together = (
-            ('entity_id', 'report_type', 'service_id', 'start_date')
-        )
+        constraints = [
+            # Unique constraint for usage report,
+            # defined by entity_id, report_type and start_date
+            models.constraints.UniqueConstraint(
+                name='unique_report_snapshot_usage',
+                fields=['entity_id', 'report_type', 'start_date'],
+                condition=Q(service_id__isnull=True)
+            ),
+            # Unique constraint for service report, excepting systems reports,
+            # defined by entity_id, report_type, service_id and start_date
+            models.constraints.UniqueConstraint(
+                name='unique_report_snapshot_service',
+                fields=['entity_id', 'report_type', 'service_id', 'start_date'],
+                condition=Q(service_id__isnull=False, organization_id__isnull=True)
+            ),
+            # Unique constraint for systems reports,
+            # defined by entity_id, report_type, service_id, start_date and organization_id
+            models.constraints.UniqueConstraint(
+                name='unique_report_snapshot_system',
+                fields=['entity_id', 'report_type', 'service_id', 'organization_id'],
+                condition=Q(service_id__isnull=False, organization_id__isnull=False)
+            ),
+        ]
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
+        if ReportSnapshot.ReportType.is_system_report(self.report_type) and not self.organization_id:
+            raise ValidationError(f'Organization is required for system reports, '
+                                  f'report_type: {self.report_type}, '
+                                  f'entity_id: {self.entity_id}, '
+                                  f'services_id: {self.service_id}, '
+                                  f'start_date: {self.start_date}')
         if self.start_date + relativedelta(months=1) > get_today():
             # mark as provisional if current greater than new period start date
             self.provisional = True
