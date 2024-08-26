@@ -1,19 +1,19 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEqual } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest,
-    switchMap,
+    merge,
     Observable,
+    of,
+    ReplaySubject,
+    Subject,
+    switchMap,
     timer,
     zip,
-    ReplaySubject,
-    merge,
-    of,
-    Subject,
 } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 
@@ -412,8 +412,8 @@ export class NxBookmarksComponent implements OnInit {
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         deviceId,
                         bk.startTimeMs,
-                        270 * aspectRatio * dpr,
-                        270 * dpr, // 270px is the height we want
+                        Math.ceil(270 * aspectRatio * dpr),
+                        Math.ceil(270 * dpr), // 270px is the height we want
                         0,
                         '',
                         true,
