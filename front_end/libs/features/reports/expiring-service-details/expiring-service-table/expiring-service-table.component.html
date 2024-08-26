@@ -29,10 +29,12 @@
         let-row
     >
         <div [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }">
-            @if (isHiddenNameLink(row.usedBy)) {
+            @if (isPartnerTable() && isHiddenNameLink(row.usedBy)) {
                 <nx-hidden-name-link [link]="row.usedBy" />
-            } @else {
+            } @else if (isPartnerTable() && !isHiddenNameLink(row.usedBy)) {
                 <span>{{ row.usedBy }}</span>
+            } @else {
+                <nx-group-path [groupPath]="row.usedByPath" />
             }
         </div>
         <div

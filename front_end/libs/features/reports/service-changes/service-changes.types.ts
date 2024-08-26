@@ -1,8 +1,3 @@
-import {
-    CloudSystem,
-    GroupStructureItem,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-
 export interface ServiceChangeRecord {
     serviceId: string;
     amount: number;
@@ -27,7 +22,3 @@ export interface FormattedOrgServiceChangeRecord {
 export type FormattedServiceChangeRecord =
     | FormattedPartnerServiceChangeRecord
     | FormattedOrgServiceChangeRecord;
-
-export type GroupMap = Map<string, GroupStructureItem>;
-export type SystemMap = Map<string, CloudSystem>;
-export type SystemToGroupPathMap = Map<string, string[]>;

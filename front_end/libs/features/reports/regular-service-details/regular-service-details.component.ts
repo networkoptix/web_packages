@@ -15,8 +15,9 @@ import { NxMonthSelectComponent } from '../month-select/month-select.component';
 
 import { RegularServiceDetailsStore } from './regular-service-details.store';
 import {
-    FormattedRegularServiceRecord,
+    EntityFormattedRegularServiceRecord,
     RegularServiceTotals,
+    SystemFormattedRegularServiceRecord,
 } from './regular-service-details.types';
 import { NxRegularServiceTableComponent } from './regular-service-table/regular-service-table.component';
 
@@ -50,13 +51,16 @@ export class NxRegularServiceDetailsComponent extends BaseMonthPageComponent {
     error = this.regularServiceDetailsStore.error;
     hasError = this.regularServiceDetailsStore.hasError;
 
-    formattedRegularServiceRecords$$ = computed<FormattedRegularServiceRecord[]>(() => {
-        const entityType = this.entityType$$();
-        if (entityType === EntityType.channelPartner) {
-            return this.regularServiceDetailsStore.entityRegularServicesForTable$$();
-        } else {
-            return this.regularServiceDetailsStore.systemRegularServicesForTable$$();
-        }
+    isPartner$$ = computed(() => this.entityType$$() === EntityType.channelPartner);
+    formattedPartnerRecords$$ = computed<EntityFormattedRegularServiceRecord[]>(() => {
+        return this.isPartner$$()
+            ? this.regularServiceDetailsStore.entityRegularServicesForTable$$()
+            : [];
+    });
+    formattedOrgRecords$$ = computed<SystemFormattedRegularServiceRecord[]>(() => {
+        return !this.isPartner$$()
+            ? this.regularServiceDetailsStore.systemRegularServicesForTable$$()
+            : [];
     });
 
     regularServiceTotals$$ = computed<RegularServiceTotals>(() => {

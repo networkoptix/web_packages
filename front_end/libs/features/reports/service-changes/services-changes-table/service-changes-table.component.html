@@ -31,8 +31,7 @@
             @if (isPartnerTable$$()) {
                 {{ row.changedAtName }}
             } @else {
-                <span class="group-path">{{ row.changedAtPath[0] }}</span>
-                {{ row.changedAtPath[1] }}
+                <nx-group-path [groupPath]="row.changedAtPath" />
             }
         </div>
         <div class="align-right">

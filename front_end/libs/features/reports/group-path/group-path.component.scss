@@ -1,0 +1,10 @@
+
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+    '--reports-group-path': -17,
+), ':host');
+
+.group-path {
+    color: var(--reports-group-path);
+}

@@ -29,10 +29,12 @@
     <div class="service-details-table-wrapper">
         @if (!hasError()) {
             <nx-expiring-service-table
-                [records]="formattedExpiringServiceRecords$$()"
+                [partnerRecords]="formattedPartnerRecords$$()"
+                [orgRecords]="formattedOrgRecords$$()"
                 [totals]="expiringServiceTotals$$()"
                 [serviceId]="serviceId$$()"
                 [entityId]="entityId$$()"
+                [isPartnerTable]="isPartner$$()"
                 [startTs]="startTs()"
             ></nx-expiring-service-table>
         } @else {

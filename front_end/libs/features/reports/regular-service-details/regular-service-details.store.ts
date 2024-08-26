@@ -4,20 +4,25 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { firstValueFrom } from 'rxjs';
 
 import {
-    FormattedRegularServiceRecord,
+    EntityFormattedRegularServiceRecord,
     RegularServiceTotals,
+    SystemFormattedRegularServiceRecord,
 } from '@pages/reports/regular-service-details/regular-service-details.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import {
     AvailableService,
+    CloudSystem,
     EntityRegularServiceEntry,
+    GroupStructureItem,
     OrgRegularServiceReportResponse,
     PartnerRegularServiceReportResponse,
     Service,
     SystemRegularServiceEntry,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
+import { NxGroupPathService } from '../group-path/groupPath.service';
+import { GroupMap, SystemMap, SystemToGroupPathMap } from '../group-path/groupPath.service.types';
 import { HiddenNameLink } from '../hidden-name-link/hidden-name-link.types';
 
 interface RegularServiceDetailsState {
@@ -27,6 +32,9 @@ interface RegularServiceDetailsState {
     entityRegularServices: EntityRegularServiceEntry[];
     systemRegularServices: SystemRegularServiceEntry[];
     selectedService: Service | undefined;
+    groupMap: GroupMap;
+    systemMap: SystemMap;
+    systemToGroupPathMap: SystemToGroupPathMap;
 }
 
 const initialState: RegularServiceDetailsState = {
@@ -36,6 +44,9 @@ const initialState: RegularServiceDetailsState = {
     entityRegularServices: [],
     systemRegularServices: [],
     selectedService: undefined,
+    groupMap: new Map(),
+    systemMap: new Map(),
+    systemToGroupPathMap: new Map(),
 };
 
 const getChangedColumnText = (
@@ -60,8 +71,9 @@ export const RegularServiceDetailsStore = signalStore(
             store,
             dateTimeFormat = inject(NxDateTimeFormatService),
             route = inject(ActivatedRoute),
+            groupPathService = inject(NxGroupPathService),
         ) => ({
-            entityRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
+            entityRegularServicesForTable$$: computed<EntityFormattedRegularServiceRecord[]>(() =>
                 store
                     .entityRegularServices()
                     .map(
@@ -119,13 +131,15 @@ export const RegularServiceDetailsStore = signalStore(
                     },
                 ),
             ),
-            systemRegularServicesForTable$$: computed<FormattedRegularServiceRecord[]>(() =>
-                store
+            systemRegularServicesForTable$$: computed<SystemFormattedRegularServiceRecord[]>(() => {
+                const groupMap = store.groupMap();
+                const systemMap = store.systemMap();
+                const systemToGroupPathMap = store.systemToGroupPathMap();
+                return store
                     .systemRegularServices()
                     .map(
                         ({
                             system_id,
-                            system_name,
                             changes_count,
                             last_changed,
                             channels,
@@ -134,7 +148,12 @@ export const RegularServiceDetailsStore = signalStore(
                         }) => ({
                             id: system_id,
                             type: 'system',
-                            usedBy: system_name,
+                            usedByPath: groupPathService.getFormattedGroupPath(
+                                system_id,
+                                groupMap,
+                                systemMap,
+                                systemToGroupPathMap,
+                            ),
                             changed: getChangedColumnText(
                                 changes_count,
                                 last_changed,
@@ -144,8 +163,8 @@ export const RegularServiceDetailsStore = signalStore(
                             monthlyRate: monthly_rate,
                             fractionalUsage: daily_rate,
                         }),
-                    ),
-            ),
+                    );
+            }),
             systemRegularServiceTotals$$: computed<RegularServiceTotals>(() =>
                 store.systemRegularServices().reduce(
                     ({ channels, monthlyRate, fractionalUsage }, serviceChangeEntry) => ({
@@ -162,78 +181,102 @@ export const RegularServiceDetailsStore = signalStore(
             ),
         }),
     ),
-    withMethods((store, CPService = inject(NxChannelPartnersService)) => ({
-        async loadPartnerRegularServiceReport(
-            partnerId: string,
-            serviceId: string,
-            startTs: string,
-        ): Promise<void> {
-            patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: PartnerRegularServiceReportResponse;
-            let services: Service[];
-            let selectedService: Service | undefined;
-            try {
-                const serviceReportPromise = firstValueFrom(
-                    CPService.getPartnerRegularServiceReport(partnerId, serviceId, startTs),
-                );
-                const servicesPromise = firstValueFrom(
-                    CPService.getChannelPartnerOwnedServices(partnerId),
-                );
-                [serviceReportResponse, services] = await Promise.all([
-                    serviceReportPromise,
-                    servicesPromise,
-                ]);
-                selectedService = services.find(service => service.id === serviceId);
-            } catch ({ error }) {
+    withMethods(
+        (
+            store,
+            CPService = inject(NxChannelPartnersService),
+            groupPathService = inject(NxGroupPathService),
+        ) => ({
+            async loadPartnerRegularServiceReport(
+                partnerId: string,
+                serviceId: string,
+                startTs: string,
+            ): Promise<void> {
+                patchState(store, { error: '', hasError: false, isLoading: true });
+                let serviceReportResponse: PartnerRegularServiceReportResponse;
+                let services: Service[];
+                let selectedService: Service | undefined;
+                try {
+                    const serviceReportPromise = firstValueFrom(
+                        CPService.getPartnerRegularServiceReport(partnerId, serviceId, startTs),
+                    );
+                    const servicesPromise = firstValueFrom(
+                        CPService.getChannelPartnerOwnedServices(partnerId),
+                    );
+                    [serviceReportResponse, services] = await Promise.all([
+                        serviceReportPromise,
+                        servicesPromise,
+                    ]);
+                    selectedService = services.find(service => service.id === serviceId);
+                } catch ({ error }) {
+                    patchState(store, {
+                        error: error?.detail ?? 'Error loading report.',
+                        hasError: true,
+                        isLoading: false,
+                    });
+                    return;
+                }
                 patchState(store, {
-                    error: error?.detail ?? 'Error loading report.',
-                    hasError: true,
                     isLoading: false,
+                    entityRegularServices: serviceReportResponse.sub_entities,
+                    systemRegularServices: [],
+                    selectedService,
                 });
-                return;
-            }
-            patchState(store, {
-                isLoading: false,
-                entityRegularServices: serviceReportResponse.sub_entities,
-                systemRegularServices: [],
-                selectedService,
-            });
-        },
-        async loadOrgRegularServiceReport(
-            orgId: string,
-            serviceId: string,
-            startTs: string,
-        ): Promise<void> {
-            patchState(store, { error: '', hasError: false, isLoading: true });
-            let serviceReportResponse: OrgRegularServiceReportResponse;
-            let servicesResponse: AvailableService[];
-            let selectedService: Service | undefined;
-            try {
-                const serviceReportPromise = firstValueFrom(
-                    CPService.getOrganizationRegularServiceReport(orgId, serviceId, startTs),
+            },
+            async loadOrgRegularServiceReport(
+                orgId: string,
+                serviceId: string,
+                startTs: string,
+            ): Promise<void> {
+                patchState(store, { error: '', hasError: false, isLoading: true });
+                let serviceReportResponse: OrgRegularServiceReportResponse;
+                let servicesResponse: AvailableService[];
+                let systemsResponse: CloudSystem[];
+                let groupsResponse: GroupStructureItem[];
+                let selectedService: Service | undefined;
+                try {
+                    const serviceReportPromise = firstValueFrom(
+                        CPService.getOrganizationRegularServiceReport(orgId, serviceId, startTs),
+                    );
+                    const servicesPromise = firstValueFrom(
+                        CPService.getOrganizationServices(orgId),
+                    );
+                    const systemsPromise = firstValueFrom(CPService.getOrgSystems(orgId));
+                    const groupsPromise = firstValueFrom(CPService.getGroupsStructure(orgId));
+                    [serviceReportResponse, servicesResponse, systemsResponse, groupsResponse] =
+                        await Promise.all([
+                            serviceReportPromise,
+                            servicesPromise,
+                            systemsPromise,
+                            groupsPromise,
+                        ]);
+                    selectedService = servicesResponse.find(
+                        ({ service }) => service.id === serviceId,
+                    )?.service;
+                } catch ({ error }) {
+                    patchState(store, {
+                        error: error?.detail ?? 'Error loading report.',
+                        hasError: true,
+                        isLoading: false,
+                    });
+                    return;
+                }
+                const groupMap = groupPathService.createGroupMap(groupsResponse);
+                const systemMap = groupPathService.createSystemMap(systemsResponse);
+                const systemToGroupPathMap = groupPathService.createSystemToGroupPathMap(
+                    systemsResponse,
+                    groupMap,
                 );
-                const servicesPromise = firstValueFrom(CPService.getOrganizationServices(orgId));
-                [serviceReportResponse, servicesResponse] = await Promise.all([
-                    serviceReportPromise,
-                    servicesPromise,
-                ]);
-                selectedService = servicesResponse.find(
-                    ({ service }) => service.id === serviceId,
-                )?.service;
-            } catch ({ error }) {
                 patchState(store, {
-                    error: error?.detail ?? 'Error loading report.',
-                    hasError: true,
                     isLoading: false,
+                    entityRegularServices: [],
+                    systemRegularServices: serviceReportResponse.systems,
+                    selectedService,
+                    groupMap,
+                    systemMap,
+                    systemToGroupPathMap,
                 });
-                return;
-            }
-            patchState(store, {
-                isLoading: false,
-                entityRegularServices: [],
-                systemRegularServices: serviceReportResponse.systems,
-                selectedService,
-            });
-        },
-    })),
+            },
+        }),
+    ),
 );
