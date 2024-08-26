@@ -99,6 +99,7 @@
             border-radius: 2px;
             color: var(--dropdown-item-color);
             text-wrap: nowrap;
+            margin-bottom: 6px;
 
             // Padding is already used in template for level indentation
             & > :first-child {
@@ -130,6 +131,7 @@
             }
 
             &-text {
+                font-size: 14px;
                 text-overflow: ellipsis;
                 min-width: 0;
                 overflow: hidden;
