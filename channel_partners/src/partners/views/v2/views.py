@@ -7,7 +7,6 @@ from uuid import uuid4
 
 import httpx
 import structlog
-from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import (
     ImproperlyConfigured,
@@ -20,11 +19,7 @@ from django.db.models import (
     QuerySet,
     Subquery,
 )
-from django.http import HttpResponseForbidden
-from django.shortcuts import (
-    get_object_or_404,
-    render,
-)
+from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
@@ -64,7 +59,6 @@ from partners.authentication import (
     NxCloudSystemBasicAuthentication,
     NxTokenAuthentication,
 )
-from partners.forms.grant_access_form import GrantAccessForm
 from partners.models import (
     ChannelPartner,
     ChannelPartnerEvent,
@@ -157,10 +151,6 @@ from partners.services.channel_partner_group_structure_service import (
     ChannelPartnerGroupStructureService,
 )
 from partners.services.cloud_system_service import CloudSystemService
-from partners.services.internal_grant_access_service import (
-    CustomizationUsers,
-    InternalGrantAccessService,
-)
 from tools.exception import Conflict
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 from tools.utils import paginated_response
@@ -171,32 +161,6 @@ from tools.versioning.views import VersionedViewMixin
 
 VIEW_LOCK_WAIT_TIME = 2
 logger = structlog.get_logger(__name__)
-
-
-def grant_access(request):
-    if not settings.DEBUG:
-        return HttpResponseForbidden()
-    form: GrantAccessForm = GrantAccessForm(request.POST or None)
-    grant_service = InternalGrantAccessService()
-    if not grant_service.root_partner or not grant_service.customizations:
-        return render(request,
-                      'grant_access_error.html',
-                      {'root_partner': grant_service.root_partner,
-                       'customizations': grant_service.customizations})
-
-    if request.method == 'POST' and form.is_valid():
-
-        email: str = form.cleaned_data.get("email")
-        result: List[CustomizationUsers] = grant_service.new_process(email)
-
-        context = {'form': form, 'result': result, 'submitted': True}
-        # Refreshing the resulting page leads to resubmitting form.
-        # But, it is not a problem here. Just because it generates the same result.
-        return render(request, 'grant_access.html', context)
-
-    return render(request,
-                  template_name='grant_access.html',
-                  context={'form': form, 'customizations': grant_service.customizations})
 
 
 class DefaultPagination(PageNumberPagination):
