@@ -262,12 +262,12 @@ export class NxMenusService {
             segment = '/health';
         }
 
-        if (endpoint.bookmarks) {
-            segment = '/bookmarks';
-        }
-
         if (endpoint.settings && environment.isLocal) {
             segment = '/settings';
+        }
+
+        if (endpoint.bookmarks) {
+            segment = '/bookmarks';
         }
 
         if (endpoint.monitoring) {
@@ -346,40 +346,37 @@ export class NxMenusService {
                 ? 'system.svg'
                 : 'system_offline.svg';
 
-        const nodes = [];
         const permissions = activeSystem.permissionManager?.permissions$$() || {};
+
+        let viewNode: MenuNode | undefined;
+        let informationNode: MenuNode | undefined;
+        let monitoringNode: MenuNode | undefined;
+        let bookmarksNode: MenuNode | undefined;
+        let layoutsNode: MenuNode | undefined;
+        let servicesNode: MenuNode | undefined;
+
         if (activeSystem.canViewADevice() && !replaceViewTab(activeSystem)) {
-            const viewNode = new MenuNode(
+            viewNode = new MenuNode(
                 'View',
                 this.getUrl(activeSystem.id, { view: true }),
                 this.LANG?.serverTabTitles.View,
                 this.endpoint.view || false,
             );
-            nodes.push(viewNode);
         }
 
-        const settingsNode = new MenuNode(
-            'Settings',
-            this.getUrl(activeSystem.id, { settings: true }),
-            this.LANG?.serverTabTitles.Settings,
-            this.endpoint.settings || false,
-        );
-        nodes.push(settingsNode);
-
         if (permissions.systemHealth) {
-            const informationNode = new MenuNode(
+            informationNode = new MenuNode(
                 'Information',
                 this.getUrl(activeSystem.id, { information: true }),
                 this.LANG?.serverTabTitles.Information,
                 this.endpoint.information || false,
             );
-            const monitoringNode = new MenuNode(
+            monitoringNode = new MenuNode(
                 'Monitoring',
                 this.getUrl(activeSystem.id, { monitoring: true }),
                 this.LANG?.serverTabTitles.Monitoring,
                 this.endpoint.monitoring || false,
             );
-            nodes.push(informationNode, monitoringNode);
         }
 
         if (
@@ -387,17 +384,16 @@ export class NxMenusService {
                 this.deviceService.isMobile() || this.deviceService.isTablet(),
             )
         ) {
-            const bookmarksNode = new MenuNode(
+            bookmarksNode = new MenuNode(
                 'Bookmarks',
                 this.getUrl(activeSystem.id, { bookmarks: true }),
                 this.LANG?.serverTabTitles.Bookmarks,
                 this.endpoint.bookmarks || false,
             );
-            nodes.splice(1, 0, bookmarksNode); // Right after view
         }
 
         if (activeSystem.canViewADevice() && canViewLayouts(activeSystem)) {
-            const layoutsNode = new MenuNode(
+            layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),
                 this.LANG?.serverTabTitles.Layouts,
@@ -409,7 +405,6 @@ export class NxMenusService {
                     value: 'BETA',
                 };
             }
-            nodes.splice(1, 0, layoutsNode);
         }
 
         const roleCanViewServices =
@@ -422,14 +417,30 @@ export class NxMenusService {
             roleCanViewServices &&
             permissions.viewServices
         ) {
-            const servicesNode = new MenuNode(
+            servicesNode = new MenuNode(
                 'Services',
                 this.getUrl(activeSystem.id, { services: true }),
                 this.LANG?.serverTabTitles.Services,
                 this.endpoint.services || false,
             );
-            nodes.push(servicesNode);
         }
+
+        const settingsNode = new MenuNode(
+            'Settings',
+            this.getUrl(activeSystem.id, { settings: true }),
+            this.LANG?.serverTabTitles.Settings,
+            this.endpoint.settings || false,
+        );
+
+        const nodes = [
+            viewNode,
+            layoutsNode,
+            bookmarksNode,
+            settingsNode,
+            informationNode,
+            monitoringNode,
+            servicesNode,
+        ].filter(Boolean) as MenuNode[];
 
         const activeSystemMenu = new MenuNode(
             name,
