@@ -6,6 +6,7 @@ from urllib.parse import quote_plus
 import django
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from cloud.controllers import cloud_api
 from cloud.customization_context import customization_ctx
@@ -222,6 +223,7 @@ def get_push_devices_from_targets(notification_object, system_users):
                         f'User {target} not found', logging.ERROR)
 
     return PushDevice.objects.filter(
-        subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts, user__is_active=True,
-        application_id=notification_object.customization.name, active=True
+        ~Q(provider=PushDevice.PROVIDERS.firebase_legacy), subscriptions__system_id__in=(system_id, 'all'),
+        user__in=target_accounts, user__is_active=True, application_id=notification_object.customization.name,
+        active=True,
     ).distinct()
