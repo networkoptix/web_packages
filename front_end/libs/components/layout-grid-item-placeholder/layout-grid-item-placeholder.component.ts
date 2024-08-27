@@ -143,10 +143,6 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
         ...not_supported,
         hint: hintsLang.webPage,
     },
-    intercom: {
-        ...not_supported,
-        hint: hintsLang.intercom,
-    },
     virtualCamera: {
         message: messagesLang.noLiveStream,
         isError: false,
