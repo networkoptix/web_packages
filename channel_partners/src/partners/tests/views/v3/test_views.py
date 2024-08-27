@@ -51,13 +51,13 @@ from partners.models import (
     SystemServiceCurrentQuantity,
     VmsRoles,
 )
+from partners.views.v2.internal_views import grant_access
 from partners.views.v2.views import (
     ChannelPartnerNestedViewSet,
     ChannelPartnerViewSet,
     CloudSystemViewSet,
     OrganizationViewSet,
     get_authorized_system,
-    grant_access,
     organization_roles,
 )
 from tools.helpers import cast_uuid

@@ -13,15 +13,6 @@ from django.core.cache import (
     caches,
 )
 from django.db import transaction
-from django.http import (
-    HttpResponseForbidden,
-    HttpResponseNotFound,
-)
-from django.test import (
-    Client,
-    RequestFactory,
-    override_settings,
-)
 from django.utils import timezone
 from mock.mock import MagicMock
 from rest_framework import exceptions
@@ -57,7 +48,6 @@ from partners.views.v2.views import (
     CloudSystemViewSet,
     OrganizationViewSet,
     get_authorized_system,
-    grant_access,
     organization_roles,
 )
 from tools.helpers import cast_uuid
@@ -2538,63 +2528,6 @@ class TestOrganizationRole:
 
         assert all(results)
 
-
-class TestGrantAccessView:
-    @pytest.fixture(autouse=True)
-    def setUp(self):
-        self.ireg_customizations = [
-            ('default', 'cloud-test.hdw.mx'),
-            ('customization_1', 'host-2.test.hdw.mx'),
-            ('customization_2', 'host-3.test.hdw.mx'),
-        ]
-        self.factory = RequestFactory()
-        self.url = '/internal/grant_access.html'
-        self.client = Client()
-
-    @override_settings(DEBUG=False)
-    def test_grant_access_debug_false_call_by_url(self, db):
-        response = self.client.get(self.url)
-        assert type(response) == HttpResponseNotFound
-        assert response.status_code == 404
-
-    @override_settings(DEBUG=False)
-    def test_grant_access_debug_false_call_by_method(self, db):
-        request = self.factory.get(self.url)
-        response = grant_access(request)
-        assert type(response) == HttpResponseForbidden
-        assert response.status_code == 403
-
-    @override_settings(DEBUG=True)
-    def test_grant_access_not_cp(self, db):
-        request = self.factory.get(self.url)
-        response = grant_access(request)
-        assert response.status_code == 200
-        assert b'<h2 class="title">No Customizations Available</h2>' in response.content
-        assert b'No Channel Partners Available' in response.content
-
-    @override_settings(DEBUG=True)
-    def test_grant_access_no_customization(self, root_nx_channel_partner):
-        request = self.factory.get(self.url)
-        response = grant_access(request)
-        assert response.status_code == 200
-        assert b'<h2 class="title">No Customizations Available</h2>' in response.content
-        assert b'No Channel Partners Available' not in response.content
-
-    @override_settings(DEBUG=True)
-    def test_grant_access_ok(self, root_nx_channel_partner, mocker):
-        mocked_get_customizations = mocker.patch(
-            'nx_ireg.helpers.get_customizations_s3', return_value=self.ireg_customizations)
-
-        request = self.factory.post(self.url, data={'email': 'kapanovich@networkoptix.com'})
-        response = grant_access(request)
-        assert response.status_code == 200
-        assert b'Network Optix' in response.content
-        assert b'Default Channel Partner' in response.content
-        assert b'Default Organization' in response.content
-        assert b'defaultadmin@networkoptix.com' in response.content
-        assert b'defaultcpadmin@networkoptix.com' in response.content
-        assert b'defaultorgadmin@networkoptix.com' in response.content
-        assert str(root_nx_channel_partner.id).encode() in response.content
 
 class TestCloudSystemViewSetDelete:
     @pytest.fixture(autouse=True)

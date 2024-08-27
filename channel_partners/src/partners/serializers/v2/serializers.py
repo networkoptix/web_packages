@@ -19,6 +19,7 @@ import structlog
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.cache import caches
+from django.core.validators import RegexValidator
 from django.db import transaction
 from django.db.models import (
     Prefetch,
@@ -2300,3 +2301,28 @@ class SystemServiceCurrentQuantitySerializer(serializers.ModelSerializer):
 class ServicePriceHistorySerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=10, decimal_places=3)
     createdTs = serializers.DateTimeField(source='created_ts')
+
+
+class GrantAccessSerializer(serializers.Serializer):
+
+    email = serializers.EmailField(
+        max_length=100,
+        required=True,
+        validators=[RegexValidator(
+            regex=r'.*@networkoptix.com$',
+            message="Must be a '@networkoptix.com' address"
+        )]
+    )
+
+
+class GrantAccessResponseSerializer(serializers.Serializer):
+    class CustomizationUsersSerializer(serializers.Serializer):
+        email = serializers.EmailField(source='user.email')
+        organizationName = serializers.CharField(source='organization.name', required=False)
+        organizationId = serializers.UUIDField(source='organization.id', required=False)
+        channelPartnerName = serializers.CharField(source='channel_partner.name', required=False)
+        channelPartnerId = serializers.UUIDField(source='channel_partner.id', required=False)
+
+    customization = serializers.CharField()
+    users = CustomizationUsersSerializer(many=True)
+
