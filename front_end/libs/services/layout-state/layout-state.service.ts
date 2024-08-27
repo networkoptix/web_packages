@@ -310,15 +310,31 @@ export class LayoutStateService {
         return id;
     }
 
-    deleteLayout(layoutId: string): void;
-    deleteLayout(layoutIds: string[]): void;
-    deleteLayout(_layoutIds: string[] | string): void {
-        const layoutIds = typeof _layoutIds === 'string' ? [_layoutIds] : _layoutIds;
-        this.redirectRemovedLayout(
-            layoutIds,
-            () => this.store.dispatch(SharedLayoutsActions.deleteLayout({ layoutIds })),
-            true,
-        );
+    async deleteLayout(layoutId: Layout): Promise<void>;
+    async deleteLayout(layoutIds: Layout[]): Promise<void>;
+    async deleteLayout(_layouts: Layout[] | Layout): Promise<void> {
+        const layouts = Array.isArray(_layouts) ? _layouts : [_layouts];
+        const confirmDelete =
+            layouts.length === 1
+                ? staticLang.layouts.deleteLayout
+                : staticLang.layouts.deleteLayouts;
+
+        const doDelete = await this.dialogsService.confirm({
+            ...confirmDelete,
+            message: {
+                value: confirmDelete.message,
+                params: { layoutName: layouts[0].name, layoutsCount: layouts.length.toString() },
+            },
+        });
+
+        if (doDelete) {
+            const layoutIds = layouts.map(({ id }) => id);
+            this.redirectRemovedLayout(
+                layoutIds,
+                () => this.store.dispatch(SharedLayoutsActions.deleteLayout({ layoutIds })),
+                true,
+            );
+        }
     }
 
     private redirectRemovedLayout(

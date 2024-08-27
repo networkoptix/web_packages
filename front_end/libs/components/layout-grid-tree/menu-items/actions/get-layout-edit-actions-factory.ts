@@ -6,7 +6,7 @@ import { Layout } from '@services/system-api.types/layouts.types';
 
 export const getLayoutEditActionsFactory =
     (
-        deleteLayout: (layoutId: string) => void,
+        deleteLayout: (layout: Layout) => void,
         duplicateLayout: (layout: Layout) => void,
         setEditedLayout: (layout: Layout) => void,
     ) =>
@@ -38,7 +38,7 @@ export const getLayoutEditActionsFactory =
                     !node.locked && {
                         id: 'delete',
                         name: staticLang.layouts.treeActions.delete.name,
-                        action: () => deleteLayout(node.details.id),
+                        action: () => deleteLayout(node.details),
                     },
             ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
         ).filter(Boolean);

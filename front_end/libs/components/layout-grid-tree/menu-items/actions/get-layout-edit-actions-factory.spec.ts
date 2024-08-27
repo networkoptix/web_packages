@@ -86,7 +86,7 @@ describe('getLayoutEditActionsFactory', () => {
 
         performItemAction(result)('delete', node);
 
-        expect(deleteLayout).toHaveBeenCalledWith(node.details.id);
+        expect(deleteLayout).toHaveBeenCalledWith(node.details);
     });
 
     it('should call setEditedLayout when the rename item is clicked', () => {

@@ -271,6 +271,22 @@
                 "cancelLabel": "Cancel"
             }
         },
+        "deleteLayout": {
+            "title": "Delete Layout?",
+            "message": "This action will delete the layout \"{layoutName}\".",
+            "footer": {
+                "actionLabel": "Delete",
+                "cancelLabel": "Cancel"
+            }
+        },
+        "deleteLayouts": {
+            "title": "Delete Layouts?",
+            "message": "This action will delete {layoutsCount} layouts.",
+            "footer": {
+                "actionLabel": "Delete",
+                "cancelLabel": "Cancel"
+            }
+        },
         "ptzActionLabels": {
             "up": "UP",
             "down": "DOWN",

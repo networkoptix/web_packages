@@ -91,7 +91,7 @@ export abstract class WithMenuItemsByType {
                 layout => this.layoutStateService.unlockLayout(layout),
             ),
             getLayoutEditActions: getLayoutEditActionsFactory(
-                layoutId => this.layoutStateService.deleteLayout(layoutId),
+                layout => this.layoutStateService.deleteLayout(layout),
                 layout => this.layoutStateService.duplicateAsNewLayout(layout),
                 layout => this.layoutStateService.editedLayout$$.set(layout),
             ),
