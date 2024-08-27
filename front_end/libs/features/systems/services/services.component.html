@@ -113,6 +113,9 @@
                         >
                             Remaining
                         </th>
+                        @if (hasChangePermission) {
+                            <th class="header-row__empty"></th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -121,26 +124,41 @@
                             class="body-row"
                             [class.body-row--selectable]="hasChangePermission"
                             [class.body-row--selected]="selectedRow === row.id"
-                            (click)="hasChangePermission && selectRow($event, row)"
                         >
                             <td class="body-row__service-name">{{ row.displayName }}</td>
                             <td class="body-row__usage">
-                                <div
-                                    class="body-row__usage-bar"
-                                    [ngStyle]="{
-                                        border: !row.quantity
-                                            ? '1px solid var(--dark11)'
-                                            : undefined,
-                                        background: row.barBackground
-                                    }"
-                                ></div>
-                                <span class="body-row__usage-text"
-                                    >{{ row.used }} / {{ row.quantity }}</span
-                                >
+                                <div class="body-row__usage-content">
+                                    <div
+                                        class="body-row__usage-bar"
+                                        [ngStyle]="{
+                                            background: row.barBackground
+                                        }"
+                                    ></div>
+                                    <span class="body-row__usage-text"
+                                        >{{ row.used }} / {{ row.quantity }}</span
+                                    >
+                                </div>
                             </td>
                             <td class="body-row__used">
                                 {{ row.remaining }}
                             </td>
+                            @if (hasChangePermission) {
+                                <td
+                                    class="body-row__edit"
+                                    (click)="selectRow(row)"
+                                >
+                                    <button
+                                        class="body-row__edit-button"
+                                        type="button"
+                                    >
+                                        <svg-icon
+                                            nx-add-svg-src
+                                            [src]="icons.dir + 'edit.svg'"
+                                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                                        ></svg-icon>
+                                    </button>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

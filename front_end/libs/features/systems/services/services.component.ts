@@ -1,4 +1,4 @@
-import { Overlay, OverlayModule } from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -8,16 +8,16 @@ import { combineLatest, switchMap, tap } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import { ChannelPartnerPermissions } from '@pages/home/store/permissions/permissions.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
-    ServiceQuantity,
     ServiceQuantities,
+    ServiceQuantity,
     SystemService,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
-import { connectedPosition } from '@utils/nx';
 
 import type { Row } from './services.types';
 
@@ -28,12 +28,12 @@ function barBackground({ quantity, used }: ServiceQuantity): string {
     const percent = ((quantity - used) / quantity) * 100;
     const intRounded = Math.round(percent);
     if (intRounded === 0) {
-        return 'var(--dark8)';
-    } else if (intRounded === 100) {
         return 'var(--brand-core)';
+    } else if (intRounded === 100) {
+        return 'var(--usage-bar-unused-portion)';
     } else {
         const floatRounded = percent.toFixed(1);
-        return `linear-gradient(to left, var(--brand-core), var(--dark8)${floatRounded}%)`;
+        return `linear-gradient(to left, var(--usage-bar-unused-portion)${floatRounded}%, var(--brand-core)${floatRounded}%)`;
     }
 }
 
@@ -50,6 +50,7 @@ function barBackground({ quantity, used }: ServiceQuantity): string {
     imports: [CommonModule, OverlayModule, AngularSvgIconModule, NxPreLoaderComponent],
     templateUrl: './services.component.html',
     styleUrls: ['./services.component.scss'],
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxServicesComponent {
     icons = icons;
@@ -104,7 +105,6 @@ export class NxServicesComponent {
 
     constructor(
         route: ActivatedRoute,
-        private overlay: Overlay,
         private dialogs: NxDialogsService,
         { cloudChannelPartnersApi: channelPartnersApi }: NxCloudApiService,
     ) {
@@ -137,49 +137,19 @@ export class NxServicesComponent {
             });
     }
 
-    selectRow(event: MouseEvent, row: Row): void {
+    selectRow(row: Row): void {
         this.selectedRow = row.id;
-
-        const rowElem = event.currentTarget as HTMLTableRowElement;
-        const rowClientX = rowElem.getBoundingClientRect().x;
-        const mouseClientX = event.clientX;
-        const offsetX = mouseClientX - rowClientX;
-        // Calculate the X offset from row start to click X
-
         const { systemId, monthlyServiceCap, hasChangePermission, partnerId } = this;
         this.dialogs
-            .changeService(
-                {
-                    systemId,
-                    service: row,
-                    partner: {
-                        id: partnerId,
-                        hasChangePermission,
-                        monthlyServiceCap,
-                    },
+            .changeService({
+                systemId,
+                service: row,
+                partner: {
+                    id: partnerId,
+                    hasChangePermission,
+                    monthlyServiceCap,
                 },
-                {
-                    /*
-                     II |  I
-                    ----|----
-                    III | IV
-
-                    Priority: IV => I => III => II
-
-                    Show dialog above or below row to not block it
-                    */
-                    positionStrategy: this.overlay
-                        .position()
-                        .flexibleConnectedTo(rowElem)
-                        .withPush(true)
-                        .withPositions([
-                            connectedPosition({ originPoint: 'SW', overlayPoint: 'NW', offsetX }),
-                            connectedPosition({ originPoint: 'NW', overlayPoint: 'SW', offsetX }),
-                            connectedPosition({ originPoint: 'SW', overlayPoint: 'NE', offsetX }),
-                            connectedPosition({ originPoint: 'NW', overlayPoint: 'SE', offsetX }),
-                        ]),
-                },
-            )
+            })
             .then(res => {
                 if (res) {
                     const [services, quantities, monthlyServiceCap] = res;
