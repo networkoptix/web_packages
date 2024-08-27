@@ -3034,7 +3034,7 @@ class ReportSnapshot(models.Model):
             # defined by entity_id, report_type, service_id, start_date and organization_id
             models.constraints.UniqueConstraint(
                 name='unique_report_snapshot_system',
-                fields=['entity_id', 'report_type', 'service_id', 'organization_id'],
+                fields=['entity_id', 'report_type', 'service_id', 'organization_id', 'start_date'],
                 condition=Q(service_id__isnull=False, organization_id__isnull=False)
             ),
         ]
