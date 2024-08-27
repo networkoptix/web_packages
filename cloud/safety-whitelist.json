@@ -293,5 +293,33 @@
   "71890": {
     "name": "html-sanitizer",
     "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
+  },
+  "72110": {
+    "name": "django",
+    "note": "Affected versions of Django are affected by a directory-traversal vulnerability in the Storage.save() method. Derived classes of the django.core.files.storage.Storage base class that overrides the generate_filename() method without replicating the file path validations existing in the parent class could allow for directory traversal via certain inputs when calling save(). This could enable an attacker to manipulate file paths and access unintended directories."
+  },
+  "72109": {
+    "name": "django",
+    "note": "Affected versions of Django are affected by a username enumeration vulnerability caused by timing differences in the django.contrib.auth.backends.ModelBackend.authenticate() method. This method allowed remote attackers to enumerate users through a timing attack involving login requests for users with unusable passwords. The timing difference in the authentication process exposed whether a username was valid or not, potentially aiding attackers in gaining unauthorized access."
+  },
+  "72095": {
+    "name": "django",
+    "note": "Affected versions of Django are affected by a potential denial-of-service vulnerability in the django.utils.html.urlize() function. The urlize and urlizetrunc template filters were susceptible to a denial-of-service attack via certain inputs containing many brackets. An attacker could exploit this vulnerability to cause significant delays or crashes in the affected application."
+  },
+  "72111": {
+    "name": "django",
+    "note": "Affected versions of Django are potentially vulnerable to denial-of-service via the get_supported_language_variant() method. This method was susceptible to a denial-of-service attack when used with very long strings containing specific characters. Exploiting this vulnerability could cause significant delays or crashes in the affected application, potentially leading to service disruption."
+  },
+  "72083": {
+    "name": "certifi",
+    "note": "Certifi affected versions recognized root certificates from GLOBALTRUST. Certifi patch removes these root certificates from the root store. These certificates are being removed pursuant to an investigation that identified \"long-running and unresolved compliance issues\" and are also in the process of being removed from Mozilla's trust store."
+  },
+  "72236": {
+    "name": "setuptools",
+    "note": "Affected versions of Setuptools allow for remote code execution via its download functions. These functions, which are used to download packages from URLs provided by users or retrieved from package index servers, are susceptible to code injection. If these functions are exposed to user-controlled inputs, such as package URLs, they can execute arbitrary commands on the system."
+  },
+  "72132": {
+    "name": "zipp",
+    "note": "A Denial of Service (DoS) vulnerability exists in the jaraco/zipp library. The vulnerability is triggered when processing a specially crafted zip file that leads to an infinite loop. This issue also impacts the zipfile module of CPython, as features from the third-party zipp library are later merged into CPython, and the affected code is identical in both projects. The infinite loop can be initiated through the use of functions affecting the `Path` module in both zipp and zipfile, such as `joinpath`, the overloaded division operator, and `iterdir`. Although the infinite loop is not resource exhaustive, it prevents the application from responding."
   }
 }
