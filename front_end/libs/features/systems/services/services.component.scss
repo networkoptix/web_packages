@@ -1,4 +1,9 @@
 @use "typography";
+@use 'theme_generator' as tg;
+@include tg.generate-theme-vars((
+    '--usage-bar-unused-portion': ('dark': 11, 'light': 3),
+    '--usage-bar-border': ('dark': 8, 'light': 6),
+), ':host');
 
 :host {
     position: relative;
@@ -113,6 +118,7 @@
 
     table {
         border-collapse: collapse;
+        
         &, th, td {
             border: 1px solid var(--border-color);
         }
@@ -134,6 +140,7 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
+                    border: 0;
 
                     svg-icon {
                         cursor: pointer;
@@ -163,15 +170,13 @@
                 height: var(--table-row-height);
 
                 &--selectable {
-                    cursor: pointer;
-                    &.body-row--selected,
-                    &:hover {
+                    &.body-row--selected {
                         color: var(--card-header-text);
                         background: var(--table-row-hover-bg);
                     }
                 }
 
-                td {
+                td:not(.body-row__edit) {
                     padding: 0.75rem;
                 }
 
@@ -179,14 +184,19 @@
                     text-align: start;
                 }
                 &__usage {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 40px;
+                    
+                    &-content {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 40px;
+                    }
 
                     &-bar {
-                        width: 217px;
-                        height: 6px;
+                        width: 218px;
+                        height: 8px;
+                        border: 1px solid var(--usage-bar-border);
+                        border-radius: 5px;
                     }
 
                     &-text {
@@ -196,6 +206,15 @@
                 }
                 &__used {
                     text-align: end;
+                }
+                &__edit {
+
+                    &-button {
+                        background: transparent;
+                        width: 45px;
+                        height: 45px !important;
+                        padding: 0 !important;
+                    }
                 }
             }
         }

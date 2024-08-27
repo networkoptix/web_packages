@@ -446,7 +446,7 @@ export class NxDialogsService {
             import('./channel-partners/change-service/change-service.component').then(
                 m => m.NxChangeServiceModalContent,
             ),
-        { width: '400px' },
+        { width: DIALOG_SIZE.SMALL },
     );
 
     /* Channel Partner Reports */

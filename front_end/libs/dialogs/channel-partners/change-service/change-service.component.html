@@ -38,24 +38,6 @@
                 </th>
                 <td>{{ service.remaining }}</td>
             </tr>
-            <tr>
-                <th
-                    scope="row"
-                    translate
-                >
-                    In use
-                </th>
-                <td>{{ service.used }}</td>
-            </tr>
-            <tr>
-                <th
-                    scope="row"
-                    translate
-                >
-                    Total
-                </th>
-                <td>{{ service.quantity }}</td>
-            </tr>
             @if (monthlyServiceCap !== null) {
                 <tr>
                     <th
@@ -101,7 +83,7 @@
                     scope="row"
                     translate
                 >
-                    New total
+                    Total
                 </th>
                 <td>
                     <div class="flex-container">
