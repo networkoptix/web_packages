@@ -1,5 +1,8 @@
-@if (currentTimestamp$$()) {
-    <div #timePlaybackEar>
+@if (position()) {
+    <div
+        #timePlaybackEar
+        [ngClass]="{ 'show-go-to-live': showGoToLiveAndPlayingArchive() }"
+    >
         <span class="date">{{ date$$() }}</span>
         <span class="time">{{ time$$() }}</span>
         <svg
@@ -14,5 +17,13 @@
             class="vertical-line"
             [ngStyle]="{ 'left.px': vlPosition }"
         ></div>
+        @if (showGoToLiveAndPlayingArchive()) {
+            <span
+                class="go-to-live-action"
+                (click)="goToLive()"
+                translate
+                >Go to Live</span
+            >
+        }
     </div>
 }

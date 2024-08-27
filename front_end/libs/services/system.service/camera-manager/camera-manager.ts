@@ -186,6 +186,7 @@ export class CameraManager {
             'accessToken' in this.serverManager.mediaserver
                 ? this.serverManager.mediaserver.accessToken
                 : '';
+
         return {
             id,
             name,

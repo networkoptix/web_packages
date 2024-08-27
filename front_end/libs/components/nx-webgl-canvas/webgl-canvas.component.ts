@@ -22,6 +22,7 @@ import { TimelineScrollComponent } from '@components/nx-webgl-canvas/scroll/time
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
+import { CameraAndSystemId } from '@services/timeline.service/timeline-service.types';
 
 import { RenderStateModel } from './render-state-model';
 import { NxWebGLService } from './services/webgl.service';
@@ -69,11 +70,13 @@ export class NxWebGLCanvasComponent {
     debugMode$$ = input<boolean>(false, { alias: 'debugMode' });
 
     @Input({ required: true, alias: 'selectedCameraId' }) set selectedCameraIdUpdater(
-        camera: string | NxSystemCamera,
+        camera: CameraAndSystemId | null,
     ) {
-        const cameraId = typeof camera === 'string' ? camera : camera.id;
-        this.dataModel.updateSelectedCameraId(cameraId);
-        this.webglService.cameraId$$.set(cameraId);
+        if (!camera) {
+            return;
+        }
+        this.dataModel.updateSelectedCameraId(camera);
+        this.webglService.cameraId$$.set(camera);
     }
 
     @Input({ required: true, alias: 'cameras' }) set camerasUpdater(cameras: NxSystemCamera[]) {

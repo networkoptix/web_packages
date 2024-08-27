@@ -137,6 +137,7 @@ import { filterOtherSites } from './filter-other-sites';
 import { findOtherSite } from './find-other-site';
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
+    BaseResourceNode,
     isResourceParentNode,
     LayoutRenderConfig,
     LayoutResourceTree,
@@ -149,6 +150,7 @@ import {
     placeholderNameLookup,
     PlaceholderState,
     Position,
+    ResourceLeafNode,
     ResourceNode,
     ResourceType,
     Setting,
@@ -371,7 +373,7 @@ const calculateResize = (
 export class NxLayoutGridComponent {
     useNewCloud = useNewCloud();
     @Input() layout: Layout;
-    @Input() layoutItemLookup: LayoutResourceTree;
+    @Input() layoutItemLookup?: LayoutResourceTree;
     layoutItemLookup$$ = signal<LayoutResourceTree>({ tree: [] } as unknown as LayoutResourceTree);
     @Input() system: NxSystem;
 
@@ -449,13 +451,17 @@ export class NxLayoutGridComponent {
         return !layout?.locked && layout?.name !== this.layoutStateService.focusViewToken;
     });
 
-    cameras$$ = signal<NxSystemCameraWithMappedFields[]>([]);
+    cameras$$ = computed(() =>
+        this.getAllCameras(this.layoutItemLookup$$()).map(({ details }) => details),
+    );
 
     currentLayoutCameras$$ = computed(() => {
         const layoutItems = this.layout$$?.()?.items || [];
-        const cameraIds = layoutItems.map(({ resourceId }) => cleanId(resourceId));
+        const resourcePaths = layoutItems.map(({ resourcePath }) => resourcePath);
         const allCameras = this.cameras$$();
-        return allCameras.filter(({ id }) => cameraIds.includes(id));
+        return allCameras.filter(({ id, systemId }) =>
+            resourcePaths.includes(`cloud://${systemId}.${id}`),
+        );
     });
 
     layoutSelectionStore = inject(LayoutSelectionStore);
@@ -469,18 +475,55 @@ export class NxLayoutGridComponent {
                 return null;
             }
 
+            const systemErrors = this.layoutItemsErrorsStore.layoutErrors$$();
+
+            const getStatusPriority = (
+                a: NxSystemCameraWithMappedFields,
+                b: NxSystemCameraWithMappedFields,
+            ): number => {
+                const getPriority = ({ online, unauthorized, systemId }: typeof a): number =>
+                    !online || unauthorized || systemErrors[dirtyId(systemId)] ? 1 : 0;
+
+                return getPriority(a) - getPriority(b);
+            };
+
+            const allCameras = this.cameras$$();
+
             const items = layout.items
-                .filter(({ resourceId }) => {
-                    const isCamera = assertResourceOfType.camera(layoutItemLookup[resourceId]);
-                    const hasPermission = this.system.permissionManager.canViewDevice(resourceId);
-                    return isCamera && hasPermission;
-                })
+                .map(item => ({
+                    item,
+                    device: allCameras.find(device => {
+                        const { systemId, resourceId } = extractSystemAndResourceId(
+                            item.resourcePath,
+                        );
+                        return device.id === resourceId && device.systemId === systemId;
+                    }),
+                }))
+                .filter(
+                    (
+                        itemAndDetails,
+                    ): itemAndDetails is {
+                        item: ParsedLayoutItem;
+                        device: NxSystemCameraWithMappedFields;
+                    } => {
+                        if (!itemAndDetails.device) {
+                            return false;
+                        }
+
+                        const { id, systemId } = itemAndDetails.device;
+
+                        const hasPermission = this.systemService
+                            .createSystemById(systemId)
+                            .permissionManager.canViewDevice(id);
+                        return hasPermission;
+                    },
+                )
                 .sort((a, b) => {
-                    const top = a.top - b.top;
-                    const left = a.left - b.left;
-                    return top || left;
+                    const top = a.item.top - b.item.top;
+                    const left = a.item.left - b.item.left;
+                    return getStatusPriority(a.device, b.device) || top || left;
                 })
-                .map(({ id, resourcePath }) => ({ id, resourcePath }));
+                .map(({ item: { id, resourcePath } }) => ({ id, resourcePath }));
 
             return {
                 id: layout.id,
@@ -515,7 +558,11 @@ export class NxLayoutGridComponent {
                 this.layoutSelectionStore.selectedLayoutItemState$$(),
             );
 
-            if (!layout?.id || !selectedItemState || selectedItemState.id !== cleanId(layout.id)) {
+            if (
+                !layout?.id ||
+                !selectedItemState ||
+                !selectedItemState.id.endsWith(cleanId(layout.id))
+            ) {
                 // this.layout$$ is asynchronous and this.selectedStateStore.selectedLayoutItemState$$
                 // is synchronous, this is to handle potential race conditions.
                 return;
@@ -547,13 +594,13 @@ export class NxLayoutGridComponent {
         const playingLayoutItem = this.layoutSelectionStore.playingLayoutItem$$();
         const currentLayoutCameras = this.currentLayoutCameras$$();
         const camera =
-            playingLayoutItem &&
+            playingLayoutItem.resourcePath &&
             currentLayoutCameras.find(
                 ({ id, systemId }) =>
                     `cloud://${systemId}.${id}` === playingLayoutItem.resourcePath,
             );
 
-        return camera ? cleanId(camera.id) : '';
+        return camera || null;
     });
 
     #lastWidth: number = Infinity;
@@ -815,8 +862,8 @@ export class NxLayoutGridComponent {
         const findCommonAspectRatio = (items: ParsedLayoutItems): number => {
             const aspects = items
                 .map(({ resourceId, rotation }) => {
-                    const unknownItem = this.layoutItemLookup[resourceId];
-                    if (assertResourceOfType.camera(unknownItem)) {
+                    const unknownItem = this.layoutItemLookup?.[resourceId];
+                    if (unknownItem && assertResourceOfType.camera(unknownItem)) {
                         const initialAspect =
                             (!unknownItem.details.parameters.VideoLayout &&
                                 unknownItem.details.parameters?.overrideAr) ||
@@ -829,7 +876,7 @@ export class NxLayoutGridComponent {
                                 180,
                         );
 
-                        return isRotated ? 1 / initialAspect : initialAspect;
+                        return isRotated && initialAspect ? 1 / initialAspect : initialAspect;
                     }
 
                     return null;
@@ -1269,6 +1316,27 @@ export class NxLayoutGridComponent {
         { allowSignalWrites: true },
     );
 
+    currentLayoutSites = computed(
+        () => {
+            const openSite = this.currentSiteId$$();
+            const currentSite = this.system.id;
+            const layoutItems = this.layout$$()?.items || [];
+            const otherSites = layoutItems
+                .map(({ resourcePath }) => extractSystemAndResourceId(resourcePath).systemId)
+                .filter(systemId => ![openSite, currentSite].includes(systemId));
+            return [...new Set(otherSites)].sort();
+        },
+        { equal: (a, b) => isEqual(a, b) },
+    );
+
+    loadCurrentLayoutSitesEffect = effect(
+        () =>
+            this.currentLayoutSites().forEach(systemId =>
+                firstValueFrom(this.layoutStateService.loadSite(systemId)),
+            ),
+        { allowSignalWrites: true },
+    );
+
     activeSystemSearchResults$$ = computed(() => {
         const activeSystemResources = this.layoutItemLookup$$().tree;
 
@@ -1350,6 +1418,33 @@ export class NxLayoutGridComponent {
         return otherSystems.map(({ name }) => name);
     });
 
+    private getAllCameras = (
+        layoutItemLookup?: LayoutResourceTree,
+    ): ResourceLeafNode<NxSystemCameraWithMappedFields>[] => {
+        if (!layoutItemLookup) {
+            return [];
+        }
+
+        function* flatten(
+            children: BaseResourceNode[],
+        ): Generator<ResourceLeafNode<NxSystemCameraWithMappedFields>> {
+            for (const child of children) {
+                if ('children' in child) {
+                    yield* flatten(child.children as BaseResourceNode[]);
+                } else if (child && assertResourceOfType.camera(child)) {
+                    yield child;
+                }
+            }
+        }
+
+        return [
+            ...flatten([
+                ...Object.values(layoutItemLookup),
+                ...(layoutItemLookup.otherSystems || []),
+            ]),
+        ];
+    };
+
     async ngOnChanges({
         layout,
         layoutItemLookup,
@@ -1360,8 +1455,8 @@ export class NxLayoutGridComponent {
             layoutItemLookup?.currentValue &&
             !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue);
 
-        if (itemsChanged || layoutItemLookup?.firstChange) {
-            this.layoutItemLookup$$.set(layoutItemLookup!.currentValue);
+        if (layoutItemLookup?.currentValue && (itemsChanged || layoutItemLookup?.firstChange)) {
+            this.layoutItemLookup$$.set(layoutItemLookup.currentValue);
         }
 
         if (layout && (layoutChanged || itemsChanged)) {
@@ -1371,20 +1466,16 @@ export class NxLayoutGridComponent {
             this.updateLayout();
         }
 
-        if (itemsChanged) {
+        if (itemsChanged && layoutItemLookup.currentValue) {
             this.otherSystems$$.set(layoutItemLookup.currentValue.otherSystems);
-            const cameras = Object.values(layoutItemLookup.currentValue).filter(
-                assertResourceOfType.camera,
-            );
-
-            this.cameras$$.set(cameras.map(({ details }) => details));
+            const cameras = this.getAllCameras(this.layoutItemLookup$$());
 
             const cameraTranscodingDisabled = cameras.map(({ details: { id, parameters } }) => {
                 const streams = parameters.mediaStreams?.streams ?? [];
 
                 const streamRequiresTranscoding = (stream: number): boolean =>
                     isRequiresTranscoding(
-                        streams.find(({ encoderIndex }) => encoderIndex === stream)?.codec,
+                        streams.find(({ encoderIndex }) => encoderIndex === stream)?.codec || 0,
                     );
 
                 const primary = streamRequiresTranscoding(0);
@@ -1412,7 +1503,8 @@ export class NxLayoutGridComponent {
     pingOfflineCameras(pollingInterval = this.CONFIG.offlineCameraPollingInterval): void {
         const getOfflineCameras = (): Record<string, NxSystemCamera[]> => {
             const offlineCameras = this.layout.items
-                .map(({ resourceId }) => this.layoutItemLookup[resourceId])
+                .map(({ resourceId }) => this.layoutItemLookup?.[resourceId])
+                .filter((node): node is LayoutResourceTree[keyof LayoutResourceTree] => !!node)
                 .filter(assertResourceOfType.camera)
                 .map(({ details }) => details)
                 .filter(({ status }) => status === CameraStatus.Offline);
@@ -1454,9 +1546,9 @@ export class NxLayoutGridComponent {
 
         const updateReachableCameras = (cameraIds: string[]): void =>
             cameraIds.forEach(cameraId => {
-                const camera = this.layoutItemLookup[cameraId];
+                const camera = this.layoutItemLookup?.[cameraId];
 
-                if (assertResourceOfType.camera(camera)) {
+                if (camera && assertResourceOfType.camera(camera)) {
                     camera.details.status = CameraStatus.Online;
                     this.layoutItemsErrorsStore.remove(cameraId, true);
                 }
@@ -1563,7 +1655,7 @@ export class NxLayoutGridComponent {
     ): void => {
         const hasAdditionalMessage = Boolean(
             this.layoutItemsErrorsStore.messages$$?.()[
-                this.layoutItemLookup[id]?.details.id || status
+                this.layoutItemLookup?.[id]?.details.id || status
             ],
         );
         const iconSizeConfigs: {
@@ -2238,9 +2330,9 @@ export class NxLayoutGridComponent {
         const bottom = top + 1;
         const id = dirtyId(uuid());
         let rotation = 0;
-        const unknownItem = this.layoutItemLookup[dirtyId(resourceId)];
+        const unknownItem = this.layoutItemLookup?.[dirtyId(resourceId)];
 
-        if (assertResourceOfType.camera(unknownItem)) {
+        if (unknownItem && assertResourceOfType.camera(unknownItem)) {
             rotation = unknownItem.details.parameters?.rotation ?? 0;
         }
 
@@ -2284,7 +2376,7 @@ export class NxLayoutGridComponent {
     updateItemNames = (items: LayoutItem[]): LayoutItem[] =>
         items.map(item => ({
             ...item,
-            name: this.layoutItemLookup[dirtyId(item.resourceId)]?.name || item.name,
+            name: this.layoutItemLookup?.[dirtyId(item.resourceId)]?.name || item.name,
         }));
 
     addItem = (node: ResourceNode): void => {
@@ -2331,8 +2423,9 @@ export class NxLayoutGridComponent {
                 ]).map(ensureLayoutItemResourcePath(this.system.id));
 
                 const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
-                const layoutOrFocus = this.layoutItemLookup[dirtyId(this.layout.id)];
+                const layoutOrFocus = this.layoutItemLookup?.[dirtyId(this.layout.id)];
                 if (
+                    layoutOrFocus &&
                     assertResourceOfType.layout(layoutOrFocus) &&
                     layoutOrFocus.crossSystem === !isLocalLayout
                 ) {
@@ -2358,7 +2451,7 @@ export class NxLayoutGridComponent {
                         );
                     }
                 }
-                if (this.layoutItemLookup[`{${this.layout.id}}`]) {
+                if (this.layoutItemLookup?.[`{${this.layout.id}}`]) {
                     this.layout.id = '';
                     this.showPtz.emit();
                 }
@@ -2398,7 +2491,7 @@ export class NxLayoutGridComponent {
     };
 
     removeItem = async ({ id, resourceId }: LayoutItem): Promise<void> => {
-        const item = this.layoutItemLookup[resourceId];
+        const item = this.layoutItemLookup?.[resourceId];
         let update = true;
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
@@ -2486,6 +2579,21 @@ export class NxLayoutGridComponent {
         error: () => {},
     };
 
+    singleCameraView$$ = computed(() => {
+        const layout = this.layout$$();
+        const selectedCameraId =
+            layout?.items.length === 1 ? cleanId(layout.items[0].resourceId) : '';
+        const currentLayoutId = layout?.id || '';
+        return !!selectedCameraId && selectedCameraId === currentLayoutId;
+    });
+
+    persistTimeOnSingleCameraViewEffect = effect(
+        () => {
+            this.webGlService.persistCurrentTimeStamp$$.set(this.singleCameraView$$() === true);
+        },
+        { allowSignalWrites: true },
+    );
+
     showTimeline$$ = computed(() => {
         if (
             ![
@@ -2496,18 +2604,17 @@ export class NxLayoutGridComponent {
             return false;
         }
         const layout = this.layout$$();
-        const selectedCameraId =
-            layout?.items.length === 1 ? cleanId(layout.items[0].resourceId) : '';
-        const currentLayoutId = layout?.id || '';
-        const singleCameraView = selectedCameraId && selectedCameraId === currentLayoutId;
+        const singleCameraView = this.singleCameraView$$();
         const cameraSystemId = extractSystemAndResourceId(
             layout?.items[0]?.resourcePath || this.system.id,
         ).systemId;
 
         return (
-            !!singleCameraView ||
+            singleCameraView ||
             (!!nxConfig.featureFlags.layoutsTimelineSaas &&
-                (this.systemsService.isSaasSystem(cameraSystemId) || 'placeholder'))
+                (this.systemsService.isSaasSystem(cameraSystemId) ||
+                    this.accountService.account.is_staff ||
+                    'placeholder'))
         );
     });
 }

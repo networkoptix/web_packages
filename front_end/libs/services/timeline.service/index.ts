@@ -48,7 +48,7 @@ export class NxTimelineService {
 
     public groupByMainAndOtherCameras = (
         cameras: CameraAndSystemIds,
-        focusCamera: CameraAndSystemId | string,
+        focusCamera: CameraAndSystemId,
     ): Observable<PeriodDetailByMainAndOther | null> =>
         this.aggregateTimeDetail(cameras).pipe(
             map(timeDetail =>

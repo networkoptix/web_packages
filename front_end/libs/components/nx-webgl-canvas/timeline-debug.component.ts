@@ -97,16 +97,14 @@ import { TimelineDataModel } from './timeline-data-model';
                 <div class="col-6">
                     <span>{{ 'CurrPointer' | translate }}</span> :
                     {{ this.webglService.currentPointer$$() }} /
-                    {{
-                        webglService.xScale$.value.invert(this.webglService.currentPointer$$() || 0)
-                    }}
+                    {{ webglService.xScale$$().invert(this.webglService.currentPointer$$() || 0) }}
                     <br />
                     <span>{{ 'PlaybackPosition' | translate }}</span> :
                     {{ renderState.debugInfo.playbackTime }}
                     <br />
                     <span>{{ 'PlaybackTime' | translate }}</span> :
                     {{ webglService.playbackPosition$$() }} /
-                    {{ webglService.xScale$.value.invert(webglService.playbackPosition$$() || 0) }}
+                    {{ webglService.xScale$$().invert(webglService.playbackPosition$$() || 0) }}
                     <br />
 
                     <span>{{ 'lastChunkStart' | translate }}</span> :

@@ -3,6 +3,7 @@ import type { CustomNxComponentsEventMap } from './lib/theme-provider/events';
 declare global {
     interface Window {
         IS_STORYBOOK?: boolean;
+        disableConsole: boolean;
         addEventListener<K extends keyof CustomNxComponentsEventMap>(
             type: K,
             listener: (this: Document, ev: CustomNxComponentsEventMap[K]) => void,

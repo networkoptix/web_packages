@@ -7,7 +7,7 @@ import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers'
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
+import { ConnectionQueue, WithSkip, getConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -404,8 +404,8 @@ export class WebRTCStreamManager {
         return WebRTCStreamManager.EXISTING_CONNECTIONS[cameraId] || null;
     }
 
-    static closeAll(): void {
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.close());
+    static closeAll(): Promise<true> {
+        return Promise.allSettled(Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).map(connection => connection.close())).then(() => true);
     }
 
     /**
@@ -429,10 +429,15 @@ export class WebRTCStreamManager {
             return NEVER;
         }
 
-        const connected = connection.updatePosition(position);
+        const currentPosition = connection.currentPosition / 1000;
 
-        if (withinChunk && !connected) {
-            connection.start();
+        if (currentPosition !== position) {
+            const connected = connection.updatePosition(position);
+
+            if (withinChunk && !connected) {
+                connection.start();
+            }
+
         }
 
         return connection.currentPosition$;
@@ -514,7 +519,6 @@ export class WebRTCStreamManager {
     }
 
     /** Internal */
-    private peerConnection: MediaServerPeerConnection;
     private wsConnection: WebSocketSubject<SignalingMessage>;
     private videoElements: HTMLVideoElement[] = [];
 
@@ -693,12 +697,14 @@ export class WebRTCStreamManager {
     /**
      * Handles cleaning up connections when no longer in use.
      */
-    public close = (retryAfterSeconds: false | number = false, checkCodec = false): void => {
+    public close = (retryAfterSeconds: false | number = false, checkCodec = false): Promise<true> => {
         if (checkCodec) {
             this.codecChanged++;
         }
         this.stopCurrentStream();
         this.closeWsConnection();
+        this.cleanupBuffers();
+
         this.peerConnection?.close();
         this.peerConnection = null;
         this.performanceTrackers.forEach((tracker) => {
@@ -706,17 +712,58 @@ export class WebRTCStreamManager {
             tracker.destroy();
         })
 
+        if (this.videoRef) {
+            this.videoRef.src = null;
+        }
         this.videoRef?.remove();
         this.videoRef = null;
-        this.mediaSource = null;
-        this.sourceBuffer = null;
 
         if (retryAfterSeconds) {
             setTimeout(this.start, retryAfterSeconds * 1000)
         } else {
             this.closeNotifier$.next('close');
             delete WebRTCStreamManager.EXISTING_CONNECTIONS[getConnectionKey(this.webRtcUrlFactory())];
+            return new Promise((resolve) => setTimeout(resolve, 100)).then(() => true);
         }
+    };
+
+    private cleanupBuffers = () => {
+        const mediaStream = this.mediaStream$.value?.[0];
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => {
+                track.stop();
+                mediaStream.removeTrack(track);
+            });
+            this.mediaStream$.next([null, null, this]);
+        }
+        if (this.mediaSource) {
+            for (const buffer of this.mediaSource.sourceBuffers) {
+                try {
+                    this.mediaSource.removeSourceBuffer(buffer);
+                    buffer.abort();
+                    buffer.remove(0, buffer.buffered.end(0));
+
+                    if (this.sourceBuffer === buffer) {
+                        this.sourceBuffer = null;
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+            this.mediaSource.setLiveSeekableRange(0, 0);
+            this.mediaSource.endOfStream();
+        }
+
+        if (this.sourceBuffer) {
+            try {
+                this.sourceBuffer.abort();
+                this.sourceBuffer.remove(0, this.sourceBuffer.buffered.end(0));
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        this.mediaSource = null;
+        this.sourceBuffer = null;
     };
 
     private initialStreamSent = false;
@@ -789,6 +836,17 @@ export class WebRTCStreamManager {
         return this.videoRef;
     }
 
+    private set video(video: WebRTCStreamManager['videoRef'] | null) {
+        if (this.videoRef) {
+            this.videoRef.src = null;
+            this.videoRef.remove();
+        }
+
+        if (video) {
+            this.videoRef = video;
+        }
+    }
+
     private async startUnmuteHandler() {
         await firstValueFrom(WebRTCStreamManager.userInteracted$)
         if (this.videoRef) {
@@ -823,7 +881,12 @@ export class WebRTCStreamManager {
                 if (!webRtcStreamManager.sourceBuffer) {
                     webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
-                        if (!this.buffered?.length || this.updating) {
+                        try {
+                            if (!this.buffered?.length || this.updating) {
+                                return;
+                            }
+                        } catch(e) {
+                            mediaSource.setLiveSeekableRange(0, 0);
                             return;
                         }
 
@@ -866,7 +929,7 @@ export class WebRTCStreamManager {
         if ('sdp' in signal) {
             const remote = new RTCSessionDescription(signal.sdp)
             this.peerConnection
-                .setRemoteDescription(new RTCSessionDescription(signal.sdp))
+                .setRemoteDescription(remote)
                 .then(() => {
                     // Only create answers in response to offers
                     if (signal.sdp.type === 'offer') {
@@ -1195,11 +1258,24 @@ export class WebRTCStreamManager {
         localCandidateType: 'host',
     }
 
+    private _peerConnection: MediaServerPeerConnection | null;
+
+    private get peerConnection() {
+        if (!this._peerConnection) {
+            this.initPeerConnection();
+        }
+        return this._peerConnection
+    }
+
+    private set peerConnection(connection: MediaServerPeerConnection | null) {
+        this._peerConnection = connection;
+    }
+
     /**
      * Ensures that peer connection to mediaserver has been initialized.
      */
     private initPeerConnection = (): void => {
-        this.peerConnection ||= new MediaServerPeerConnection(
+        this._peerConnection ||= new MediaServerPeerConnection(
             this.getOpenWebSocketConnection,
             this.closeWsConnection,
             this.start,

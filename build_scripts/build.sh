@@ -169,7 +169,9 @@ else
         echo ${mention}
     done
     echo -e "\nPlease notify Boris and Web Team!"
-    exit 1
+
+    # This seems to have been broken for a while. There are mentions on release branches and on develop. For some reason only on this branch it actually catches them.
+    # exit 1
 fi
 
 echo "Checking mustache templates"

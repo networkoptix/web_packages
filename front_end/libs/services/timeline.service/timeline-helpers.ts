@@ -30,7 +30,7 @@ import {
 
 export const separatePeriodsByMainAndOtherCameras = (
     timeDetail: TimeDetail[],
-    focusCameraId: CameraAndSystemId | string,
+    focusCameraId: CameraAndSystemId,
 ): PeriodDetailByMainAndOther => {
     const mainCameraIndex = timeDetail.findIndex(
         ({ guid }) =>
@@ -39,7 +39,7 @@ export const separatePeriodsByMainAndOtherCameras = (
                 cleanId(typeof focusCameraId === 'string' ? focusCameraId : focusCameraId.id),
     );
 
-    const main = mainCameraIndex === -1 ? [] : timeDetail.splice(mainCameraIndex, 1)[0].periods;
+    const main = mainCameraIndex === -1 ? null : timeDetail.splice(mainCameraIndex, 1)[0].periods;
 
     const other = timeDetail.map(({ periods }) => periods).flat();
 

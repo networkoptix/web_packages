@@ -4,7 +4,7 @@
 >
     <nx-webgl-canvas
         [debugMode]="true"
-        [selectedCameraId]="selectedCameraId$$()"
+        [selectedCameraId]="{ id: selectedCameraId$$(), systemId: '' }"
         [cameras]="currentCameras$$()"
     ></nx-webgl-canvas>
 </div>

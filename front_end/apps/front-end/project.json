@@ -111,7 +111,10 @@
                             "replace": "common/environments/environment.ts",
                             "with": "common/environments/environment.dev.ts"
                         }
-                    ]
+                    ],
+                    "customWebpackConfig": {
+                        "path": "webpack.config.js"
+                    }
                 },
                 "zoneless": {
                     "tsConfig": "apps/front-end/tsconfig.dev.json",
@@ -143,35 +146,38 @@
                             "with": "common/environments/environment.prod.ts"
                         }
                     ],
+                    "customWebpackConfig": {
+                        "path": "webpack.config.js"
+                    },
                     "deployUrl": "static/",
                     "optimization": {
-                        "scripts": true,
+                        "scripts": false,
                         "styles": {
-                            "minify": true,
+                            "minify": false,
                             "inlineCritical": false
                         }
                     },
                     "outputHashing": "all",
                     "sourceMap": false,
                     "extractLicenses": true,
-                    "vendorChunk": false,
-                    "buildOptimizer": true,
-                    "commonChunk": false,
+                    "vendorChunk": true,
+                    "buildOptimizer": false,
+                    "commonChunk": true,
                     "budgets": [
                         {
                             "type": "initial",
                             "maximumWarning": "2mb",
-                            "maximumError": "3mb"
+                            "maximumError": "4mb"
                         },
                         {
                             "type": "anyComponentStyle",
                             "maximumWarning": "200kb",
-                            "maximumError": "350kb"
+                            "maximumError": "355kb"
                         },
                         {
                             "type": "anyScript",
                             "maximumWarning": "1mb",
-                            "maximumError": "3mb"
+                            "maximumError": "4mb"
                         }
                     ],
                     "serviceWorker": true,

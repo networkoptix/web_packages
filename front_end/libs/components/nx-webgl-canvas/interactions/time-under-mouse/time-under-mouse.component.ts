@@ -23,7 +23,7 @@ export class WebGlTimeUnderMouseComponent {
     position = this.webglService.currentPointer$$;
 
     timeUnderMouse$$ = computed(() =>
-        this.webglService.xScale$.value.invert(this.webglService.currentPointer$$() || 0),
+        this.webglService.xScale$$().invert(this.webglService.currentPointer$$() || 0),
     );
 
     public date$$ = computed(() => dateFormat(this.timeUnderMouse$$(), DATE_FORMAT));

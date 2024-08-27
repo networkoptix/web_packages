@@ -1,13 +1,16 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
 import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
-import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, merge, skip, startWith, switchMap, take, timer } from 'rxjs';
 
 import { ExportSelection } from '@components/nx-webgl-canvas/interactions/selection/selection.types';
 import { DATA } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { ZOOM_DIRECTIONS } from '@components/nx-webgl-canvas/zoom/zoom.types';
+import staticLang from '@language_static';
+import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
+import { CameraAndSystemId } from '@services/timeline.service/timeline-service.types';
 import { pipeSignal } from '@utils/signals';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
@@ -17,11 +20,12 @@ import { SCROLL_DIRECTIONS } from './webgl.types';
     providedIn: 'root',
 })
 export class NxWebGLService {
+    layoutItemErrorStore = inject(LayoutItemsErrorsStore);
     canvasWidth$ = new BehaviorSubject<number>(0);
     canvasHeight$ = new BehaviorSubject<number>(0);
     canvasRect$ = new BehaviorSubject<DOMRect>(new DOMRect());
     xScaleOriginal$ = new BehaviorSubject<d3.ScaleTime<number, number, never>>(d3.scaleUtc());
-    xScale$ = new BehaviorSubject<d3.ScaleTime<number, number, never>>(d3.scaleUtc());
+    xScale$$ = signal<d3.ScaleTime<number, number, never>>(d3.scaleUtc());
     canScroll$ = new BehaviorSubject<SCROLL_DIRECTIONS>({
         left: false,
         right: false,
@@ -55,37 +59,97 @@ export class NxWebGLService {
     levelZoom$$ = signal<number>(1);
     levelZoom$ = toObservable(this.levelZoom$$);
     currentPointer$$ = signal<number | undefined>(undefined);
-    playbackPosition$$ = signal<number>(undefined);
+    playbackPosition$$ = signal<number | undefined>(undefined);
     playbackPosition$ = toObservable(this.playbackPosition$$);
+    cameraId$$ = signal<CameraAndSystemId | null>(null);
     playbackTimeMs$$ = signal<number | undefined>(undefined);
-    cameraId$$ = signal('');
+    playbackTimeMs$ = toObservable(this.playbackTimeMs$$).pipe(map(val => val || 0));
+    timestampFromPlayer$$ = pipeSignal(
+        this.cameraId$$,
+        cameraId$ =>
+            merge(
+                cameraId$.pipe(
+                    map(cameraId => cameraId?.id && WebRTCStreamManager.getInstance(cameraId.id)),
+                    filter(Boolean),
+                    switchMap(instance => instance.currentPosition$),
+                    skip(1),
+                ),
+                this.playbackTimeMs$.pipe(map(val => (val || 0) * 1000)),
+            ).pipe(filter(val => val >= 0)),
+        -1,
+    );
+
+    smoothTimestampFromPlayers$$ = pipeSignal(
+        this.timestampFromPlayer$$,
+        timestamp$ =>
+            timestamp$.pipe(
+                filter(val => val > 0),
+                switchMap(val => {
+                    const timestamp = val / 1000;
+                    const intervalTime = 1000 / 60;
+                    return timer(0, intervalTime).pipe(
+                        map(frame => timestamp + frame * intervalTime),
+                        startWith(timestamp),
+                        take(180),
+                    );
+                }),
+            ),
+        0,
+    );
+    smoothPlaybackTimestamp$$ = computed(() => {
+        const initialTimestamp = this.playbackTimeMs$$() || 0;
+        const timestamp = this.smoothTimestampFromPlayers$$();
+        return Math.max(initialTimestamp, timestamp);
+    });
+    smoothPlaybackPosition$$ = computed(() => {
+        const timestamp = this.smoothPlaybackTimestamp$$();
+        return this.xScale$$()(new Date(timestamp));
+    });
+
+    persistCurrentTimeStamp$$ = signal(true);
 
     resetPosition(): void {
         this.playbackPosition$$.set(undefined);
         this.playbackTimeMs$$.set(undefined);
     }
 
-    timestampFromPlayer$$ = pipeSignal(
-        this.cameraId$$,
-        cameraId$ =>
-            cameraId$.pipe(
-                map(cameraId => WebRTCStreamManager.getInstance(cameraId)),
-                filter(Boolean),
-                switchMap(instance => instance!.currentPosition$),
-            ),
-        -1,
+    goToLive(): void {
+        const cameraId = this.cameraId$$();
+        if (cameraId) {
+            this.playbackTimeMs$$.set(Date.now() + 1000);
+            // const error = this.layoutItemErrorStore.statuses$$()[cameraId.id];
+            // if (error === staticLang.common.cameraStates.unavailable.toLowerCase()) {
+            //     this.layoutItemErrorStore.remove(cameraId.id, true);
+            // }
+            // WebRTCStreamManager.updateCameraPosition(cameraId.id, 0);
+        }
+    }
+
+    autoResetPosition = effect(
+        () => {
+            if (!this.persistCurrentTimeStamp$$()) {
+                this.cameraId$$();
+                this.resetPosition();
+            }
+        },
+        { allowSignalWrites: true },
     );
 
     syncTimestampEffect = effect(
         () => {
             const timestamp = this.timestampFromPlayer$$();
             if (timestamp !== -1) {
-                const position = this.xScale$.value(new Date(timestamp / 1000));
-                console.info('syncTimestampEffect', timestamp, position);
+                const position = this.xScale$$()(new Date(timestamp / 1000));
                 this.playbackPosition$$.set(position);
             }
         },
         { allowSignalWrites: true },
+    );
+
+    lastTimestamp$$ = pipeSignal(
+        this.timestampFromPlayer$$,
+        timestamp$ => timestamp$.pipe(filter(val => val >= 0)),
+        -1,
     );
 
     playbackEffect = effect(
@@ -93,7 +157,14 @@ export class NxWebGLService {
             const playbackTimeMs = this.playbackTimeMs$$() || 0;
             const cameraId = this.cameraId$$();
             if (playbackTimeMs && cameraId) {
-                WebRTCStreamManager.updateCameraPosition(cameraId, playbackTimeMs);
+                const error = this.layoutItemErrorStore.statuses$$()[cameraId.id];
+                if (error === staticLang.common.cameraStates.unavailable.toLowerCase()) {
+                    this.layoutItemErrorStore.remove(cameraId.id, true);
+                }
+                WebRTCStreamManager.updateCameraPosition(
+                    cameraId.id,
+                    playbackTimeMs > Date.now() ? 0 : playbackTimeMs,
+                );
             }
         },
         { allowSignalWrites: true },
@@ -132,7 +203,7 @@ export class NxWebGLService {
 
     updateTimelineRange(): void {
         const selection = this.selection$.value;
-        const xScale = this.xScale$.value;
+        const xScale = this.xScale$$();
 
         selection.timelineStart = xScale.domain()[0];
         selection.timelineEnd = xScale.domain()[1];

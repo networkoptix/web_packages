@@ -6,6 +6,8 @@ import { map, distinctUntilChanged, switchMap, filter } from 'rxjs';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import { LayoutSelectionStore } from '@services/layout-state/store/layout-selection.store';
 import { NxTimelineService } from '@services/timeline.service';
+import { CameraAndSystemIds } from '@services/timeline.service/timeline-service.types';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 
 import { NxLayoutViewComponent } from './layout-view.component';
 
@@ -28,11 +30,20 @@ export const registerDemoLogger = (layoutViewComponent: NxLayoutViewComponent): 
                 ),
             ),
             distinctUntilChanged((a, b) => isEqual(a, b)),
+            filter((cameras): cameras is CameraAndSystemIds => cameras?.length > 0),
             switchMap(cameras =>
                 playingCamera$.pipe(
                     filter(camera => !!camera && !!camera.id),
                     switchMap(cameraId =>
-                        timelineService.groupByMainAndOtherCameras(cameras, cameraId.id),
+                        timelineService.groupByMainAndOtherCameras(
+                            cameras,
+                            (() => {
+                                const { systemId, resourceId: id } = extractSystemAndResourceId(
+                                    cameraId.resourcePath,
+                                );
+                                return { id, systemId };
+                            })(),
+                        ),
                     ),
                 ),
             ),

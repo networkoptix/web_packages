@@ -65,4 +65,4 @@ export type TimePeriod = TimeDetail['periods'][number];
 /**
  * Time periods separated into main and other cameras
  */
-export type PeriodDetailByMainAndOther = { main: TimePeriod[]; other: TimePeriod[] };
+export type PeriodDetailByMainAndOther = { main: TimePeriod[] | null; other: TimePeriod[] };

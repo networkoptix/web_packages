@@ -306,6 +306,7 @@ export class NxSystemsService {
 
     public isSaasSystem(systemId: string): boolean {
         const system = this.systems$$().find(({ id }) => id === systemId);
+
         return !!system && isOrgSystem(system);
     }
 }

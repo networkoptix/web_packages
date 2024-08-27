@@ -167,6 +167,7 @@ export class NxVideoPlayerComponent {
         const canvas = this.zoomCanvas.nativeElement;
         video.autoplay = true;
         video.muted = true;
+
         video.srcObject = stream;
 
         if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.renderParams()?.[key])) {
@@ -228,6 +229,19 @@ export class NxVideoPlayerComponent {
         }
     }
 
+    streamCleanup = (stream?: MediaStream): void => {
+        if (this.webRtcStreamRef.nativeElement.srcObject && this.webRtcStreamRef.nativeElement.srcObject instanceof MediaStream) {
+            const currentStream = this.webRtcStreamRef.nativeElement.srcObject;
+            if (!stream || currentStream !== stream) {
+                currentStream.getTracks().forEach(track => {
+                    track.stop();
+                    currentStream.removeTrack(track);
+                });
+                this.webRtcStreamRef.nativeElement.srcObject = null;
+            }
+        }
+    }
+
     ngAfterViewInit(): void {
         if (!this.camera) {
             return;
@@ -242,6 +256,7 @@ export class NxVideoPlayerComponent {
         const stream$ = WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, serverId: cleanId(this.camera.parentId), accessToken: this.camera.getAccessToken, targetStream }, this.originalStream.nativeElement).pipe(
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
+                this.streamCleanup(stream);
                 if (stream) {
                     this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
                     this.webRtcStreamRef.nativeElement.autoplay = true;
@@ -309,5 +324,9 @@ export class NxVideoPlayerComponent {
                 }),
                 untilDestroyed(this)
             ).subscribe();
+    }
+
+    ngOnDestroy(): void {
+        this.streamCleanup();
     }
 }

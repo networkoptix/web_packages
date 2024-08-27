@@ -1,5 +1,5 @@
-@defer (when !dataModel.state$$().loading) {
-    @if (dataModel.state$$().camerasCount && dataModel.state$$().allCamerasData.length) {
+@if (dataModel.state$$().camerasCount && dataModel.state$$().allCamerasData.length) {
+    @defer (when !dataModel.state$$().loading) {
         <div
             class="d-flex flex-column timeline-container"
             [ngClass]="{ 'saas-placeholder': showSaasPlaceholder$$() }"
@@ -137,7 +137,9 @@
                 </nx-timeline-scroll>
 
                 <nx-webgl-time-under-mouse></nx-webgl-time-under-mouse>
-                <nx-webgl-timeline-playback-indicator></nx-webgl-timeline-playback-indicator>
+                <nx-webgl-timeline-playback-indicator
+                    [showGoToLive]="!renderStateModel.timelineActionsEnabled$$()"
+                ></nx-webgl-timeline-playback-indicator>
             </div>
 
             @if (renderStateModel.timelineActionsEnabled$$()) {
@@ -146,9 +148,9 @@
                 ></nx-timeline-actions>
             }
         </div>
+    } @loading (minimum 1s) {
+        <nx-pre-loader [minHeight]="105"></nx-pre-loader>
     }
-} @loading (after 1s) {
-    <nx-pre-loader [minHeight]="115"></nx-pre-loader>
 }
 
 @if (debugMode$$() || (nxConfig.timelineDebugData && dataModel.state$$()?.allCamerasData?.length)) {

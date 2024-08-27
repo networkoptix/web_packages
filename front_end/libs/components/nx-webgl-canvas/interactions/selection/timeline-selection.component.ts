@@ -142,19 +142,19 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     }
 
     updateStartTimeLabels(): void {
-        const newDate = this.webglService.xScale$.value.invert(this.selection.startDisplay);
+        const newDate = this.webglService.xScale$$().invert(this.selection.startDisplay);
         this.selection.leftDate = dateFormat(newDate, DATE_FORMAT);
         this.selection.leftTime = dateFormat(newDate, TIME_FORMAT);
     }
 
     updateEndTimeLabels(): void {
-        const newDate = this.webglService.xScale$.value.invert(this.selection.endDisplay);
+        const newDate = this.webglService.xScale$$().invert(this.selection.endDisplay);
         this.selection.rightDate = dateFormat(newDate, DATE_FORMAT);
         this.selection.rightTime = dateFormat(newDate, TIME_FORMAT);
     }
 
     updateSelection(): void {
-        const scale = this.webglService.xScale$.getValue();
+        const scale = this.webglService.xScale$$();
         this.selection.startDisplay = Math.trunc(
             scale(new Date(this.selection.leftDate + ' ' + this.selection.leftTime)),
         );
@@ -188,7 +188,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
         // const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
 
-        const dateUnder = this.webglService.xScale$.value.invert((event as MouseEvent).offsetX);
+        const dateUnder = this.webglService.xScale$$().invert((event as MouseEvent).offsetX);
         const time = dateFormat(dateUnder, TIME_FORMAT);
         const date = dateFormat(dateUnder, DATE_FORMAT);
         let swap = false;

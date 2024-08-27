@@ -16,6 +16,16 @@
     background: var(--timeline-playback-indicator-bg);
     z-index: 12;
 
+    &.show-go-to-live {
+        height: 58px;
+        top: -59px;
+
+        & > span.go-to-live-action {
+            pointer-events: all;
+            cursor: pointer;
+        }
+    }
+
     * {
         pointer-events: none;
     }

@@ -1,11 +1,15 @@
 import { computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { combineLatest, switchMap } from 'rxjs';
+import { NEVER, Observable, combineLatest, switchMap } from 'rxjs';
 
 import { CHUNK_TYPE, DATA } from '@components/nx-webgl-canvas/webgl-canvas.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxTimelineService } from '@services/timeline.service';
-import { TimePeriod } from '@services/timeline.service/timeline-service.types';
+import {
+    CameraAndSystemId,
+    PeriodDetailByMainAndOther,
+    TimePeriod,
+} from '@services/timeline.service/timeline-service.types';
 import { cleanId } from '@utils/general';
 
 /**
@@ -37,7 +41,7 @@ export class TimelineDataModel {
      *
      * @param cameraId The camera id for selected camera.
      */
-    public updateSelectedCameraId(cameraId: string): void {
+    public updateSelectedCameraId(cameraId: CameraAndSystemId): void {
         this.selectedCameraId$$.set(cameraId);
     }
 
@@ -47,11 +51,14 @@ export class TimelineDataModel {
     public state$$ = computed(() => {
         const mainCameraData = this.mainCameraData$$();
         const allCamerasData = this.allCamerasData$$();
-        const loading = !this.timeDetails$$();
+        const loading = !mainCameraData;
         const cameras = this.cameras$$();
         const selectedCameraId = this.selectedCameraId$$();
         const selectedCamera = cameras.find(
-            camera => cleanId(camera.id) === cleanId(selectedCameraId),
+            camera =>
+                selectedCameraId &&
+                cleanId(camera.id) === cleanId(selectedCameraId.id) &&
+                cleanId(camera.systemId) === cleanId(selectedCameraId.systemId),
         );
         const camerasCount = cameras.length;
 
@@ -69,28 +76,30 @@ export class TimelineDataModel {
     // INTERNAL
 
     private timelineService = inject(NxTimelineService);
-    private selectedCameraId$$ = signal<string>('');
+    private selectedCameraId$$ = signal<CameraAndSystemId | null>(null);
     private cameras$$ = signal<NxSystemCamera[]>([]);
 
     private timeDetails$$ = toSignal(
         combineLatest(toObservable(this.selectedCameraId$$), toObservable(this.cameras$$)).pipe(
             switchMap(([selectedCameraId, cameras]) =>
-                this.timelineService.groupByMainAndOtherCameras(cameras, selectedCameraId),
+                selectedCameraId
+                    ? this.timelineService.groupByMainAndOtherCameras(cameras, selectedCameraId)
+                    : (NEVER as Observable<PeriodDetailByMainAndOther | null>),
             ),
         ),
     );
 
-    private mainCameraData$$ = computed<DATA[]>(() => {
+    private mainCameraData$$ = computed<DATA[] | null>(() => {
         const timeDetails = this.timeDetails$$();
-        if (!timeDetails) {
-            return [];
+        if (!timeDetails?.main) {
+            return null;
         }
         return timeDetails.main.map(period => this.periodToChunk(period));
     });
 
     private allCamerasData$$ = computed<DATA[]>(() => {
         const timeDetails = this.timeDetails$$();
-        if (!timeDetails) {
+        if (!timeDetails?.main) {
             return [];
         }
         return [...timeDetails.other, ...timeDetails.main]

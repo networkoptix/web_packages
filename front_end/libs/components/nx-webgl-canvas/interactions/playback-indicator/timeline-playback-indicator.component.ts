@@ -5,14 +5,17 @@ import {
     effect,
     ElementRef,
     inject,
+    input,
     untracked,
     viewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
+import { startWith, throttleTime } from 'rxjs';
 
 import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { pipeSignal } from '@utils/signals';
 
 // const MARGIN = 5;
 const ARROW_WIDTH = 10;
@@ -33,13 +36,33 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
 })
 export class WebGlTimelinePlaybackIndicatorComponent {
     private webglService: NxWebGLService = inject(NxWebGLService);
-    position = this.webglService.playbackPosition$$;
+    position = this.webglService.smoothPlaybackPosition$$;
 
-    protected currentTimestamp$$ = computed(() => {
-        const initialTimestamp = this.webglService.playbackTimeMs$$() || 0;
-        const timestamp = this.webglService.timestampFromPlayer$$() / 1000;
-        return Math.max(initialTimestamp, timestamp);
+    showGoToLive = input(false);
+
+    showGoToLiveAndPlayingArchive = computed(() => {
+        if (!this.showGoToLive()) {
+            return false;
+        }
+
+        const playbackTime = this.currentTimestamp$$();
+        const currentTime = Date.now() - 2000;
+        return currentTime > playbackTime;
     });
+
+    goToLive(): void {
+        this.webglService.goToLive();
+    }
+
+    protected currentTimestamp$$ = pipeSignal(
+        this.webglService.smoothPlaybackTimestamp$$,
+        timestamp$ =>
+            timestamp$.pipe(
+                throttleTime(500),
+                startWith(this.webglService.smoothPlaybackTimestamp$$()),
+            ),
+        this.webglService.smoothPlaybackTimestamp$$(),
+    );
 
     protected date$$ = computed(() => dateFormat(this.currentTimestamp$$(), DATE_FORMAT));
 
@@ -84,12 +107,16 @@ export class WebGlTimelinePlaybackIndicatorComponent {
     }
 
     private setMarkerPosition(): void {
+        const position = this.position();
+        if (position < 0) {
+            return;
+        }
         untracked(() => {
-            if (this.position() > this.webglService.canvasWidth$.value) {
+            if (position > this.webglService.canvasWidth$.value) {
                 this.webglService.playbackPosition$$.update(
                     () => this.webglService.canvasWidth$.value,
                 );
-            } else if (this.position() < 0) {
+            } else if (position < 0) {
                 this.webglService.playbackPosition$$.update(() => 0);
             }
         });
@@ -99,22 +126,17 @@ export class WebGlTimelinePlaybackIndicatorComponent {
         if (timePlaybackEar) {
             timePlaybackEar.nativeElement.style.opacity = '1';
             this.svgArrow = this.svgArrowPoints();
-
-            if (this.position() - PRIMARY_WIDTH / 2 <= 0) {
+            if (position - PRIMARY_WIDTH / 2 <= 0) {
                 timePlaybackEar.nativeElement.style.left = `${PRIMARY_WIDTH / 2}px`;
-                this.vlPosition = this.position();
-            } else if (
-                this.position() + PRIMARY_WIDTH / 2 >=
-                this.webglService.canvasWidth$.value
-            ) {
+                this.vlPosition = position;
+            } else if (position + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
                 timePlaybackEar.nativeElement.style.left = `${
                     this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2
                 }px`;
-                const padding =
-                    this.webglService.canvasWidth$.value - this.position() - PRIMARY_WIDTH / 2;
+                const padding = this.webglService.canvasWidth$.value - position - PRIMARY_WIDTH / 2;
                 this.vlPosition = PRIMARY_WIDTH / 2 - padding;
             } else {
-                timePlaybackEar.nativeElement.style.left = `${this.position()}px`;
+                timePlaybackEar.nativeElement.style.left = `${position}px`;
                 this.vlPosition = PRIMARY_WIDTH / 2;
             }
         }

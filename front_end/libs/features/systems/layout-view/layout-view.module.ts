@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
 
 import { NxLayoutViewComponent } from '@components/layout-view/layout-view.component';
 import { AuthGuard } from '@guards/authGuard';
@@ -22,6 +23,7 @@ const appRoutes: Routes = [
         title: SystemTitleResolver,
         component: NxLayoutViewComponent,
         canActivate: [AuthGuard],
+        canDeactivate: [() => WebRTCStreamManager.closeAll()],
     },
 ];
 

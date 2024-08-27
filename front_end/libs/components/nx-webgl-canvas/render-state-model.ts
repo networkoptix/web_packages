@@ -237,7 +237,7 @@ export class RenderStateModel {
     axisMinorVisible$$ = signal(undefined);
 
     protected canvasInitEffect = effect(() => {
-        if (this.chartVisible$$()) {
+        if (this.chartVisible$$() && this.cameraIds$$().length) {
             untracked(() => {
                 this.container = this.chartVisible$$() as unknown as HTMLDivElement;
                 this.initContainer();
@@ -301,11 +301,11 @@ export class RenderStateModel {
                                 return [1, 0, 0, 0.5];
                             case CHUNK_TYPE.ANALYTICS:
                                 return [0, 0, 1, 0.5];
-                            case CHUNK_TYPE.IN_PROGRESS:
-                                if (nxConfig.isDarkTheme) {
-                                    return [41 / 255, 130 / 255, 23 / 255, 1]; // setting green_d2 here
-                                }
-                                return [76 / 255, 188 / 255, 40 / 255, 1];
+                            // case CHUNK_TYPE.IN_PROGRESS:
+                            //     if (nxConfig.isDarkTheme) {
+                            //         return [41 / 255, 130 / 255, 23 / 255, 1]; // setting green_d2 here
+                            //     }
+                            //     return [76 / 255, 188 / 255, 40 / 255, 1];
                             default:
                                 // [r / 255, g / 255, b / 255, opacity]
                                 if (nxConfig.isDarkTheme) {
@@ -328,21 +328,45 @@ export class RenderStateModel {
         this.overallDays = d3.timeDays(this.xScale.domain()[0], this.xScale.domain()[1]).length;
         // ***************************************
         this.xScaleOriginal = this.xScale.copy();
-        this.webglService.xScale$.next(this.xScale);
+        this.webglService.xScale$$.set(this.xScale);
     }
 
     private initStartEndTime(): void {
         this.end = Date.now();
-        this.start = this.modelState$$().allCamerasData[0]?.x || 0;
+        this.start = this.modelState$$().allCamerasData[0]?.realTimeMs || 0;
         this.nowMs = Date.now();
-        this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
+        this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000 / 60);
     }
 
     private render = (): void => {
         const { cameras, mainCameraData, allCamerasData } = this.modelState$$();
 
-        if (!mainCameraData.length) {
+        if (!mainCameraData) {
             return;
+        }
+
+        if (!mainCameraData.length) {
+            this.webglService.playbackTimeMs$$.set(undefined);
+            this.webglService.playbackPosition$$.set(undefined);
+        }
+
+        const lastTimestamp = this.webglService.lastTimestamp$$();
+
+        if (this.webglService.persistCurrentTimeStamp$$() && lastTimestamp && lastTimestamp > 0) {
+            const lastTimestampMs = lastTimestamp / 1000;
+            const chunkFoundAt = this.webglService.chunkSearch(mainCameraData, lastTimestampMs);
+
+            if (chunkFoundAt) {
+                const position = this.xScale(new Date(lastTimestampMs));
+                this.webglService.playbackTimeMs$$.set(lastTimestampMs);
+                this.webglService.playbackPosition$$.set(position);
+            } else {
+                this.webglService.playbackTimeMs$$.set(undefined);
+                this.webglService.playbackPosition$$.set(undefined);
+            }
+        } else {
+            this.webglService.playbackTimeMs$$.set(undefined);
+            this.webglService.playbackPosition$$.set(undefined);
         }
 
         if (cameras.length > 1) {
@@ -403,8 +427,13 @@ export class RenderStateModel {
                         this.initZoom();
                     })
                     .on('click', event => {
-                        if (!this.scaleUpdateInProcess && this.timelineUpdateEnabled) {
-                            const desiredTimeMs = this.webglService.xScale$.value
+                        const { mainCameraData } = this.modelState$$();
+                        if (!mainCameraData?.length) {
+                            this.webglService.playbackTimeMs$$.set(undefined);
+                            this.webglService.playbackPosition$$.set(undefined);
+                        } else if (!this.scaleUpdateInProcess && this.timelineUpdateEnabled) {
+                            const desiredTimeMs = this.webglService
+                                .xScale$$()
                                 .invert(event.offsetX)
                                 .getTime();
 
@@ -413,9 +442,9 @@ export class RenderStateModel {
                                 desiredTimeMs,
                             );
 
-                            this.webglService.playbackTimeMs$$.update(() => chunkFoundAt);
-                            this.webglService.playbackPosition$$.update(() =>
-                                chunkFoundAt ? this.xScale(chunkFoundAt) : undefined,
+                            this.webglService.playbackTimeMs$$.set(chunkFoundAt);
+                            this.webglService.playbackPosition$$.set(
+                                chunkFoundAt && this.xScale(chunkFoundAt),
                             );
 
                             return !!chunkFoundAt;
@@ -432,7 +461,7 @@ export class RenderStateModel {
         allCamerasData: DATA[],
     ): void {
         // some failsafe code
-        if (!mainCameraData.length || !this.xScale) {
+        if (!mainCameraData || !this.xScale) {
             return;
         } else if (!this.chart) {
             this.render();
@@ -755,11 +784,11 @@ export class RenderStateModel {
         this.xScale.domain(newScale.domain());
 
         this.webglService.xScaleOriginal$.next(this.xScaleOriginal);
-        this.webglService.xScale$.next(this.xScale);
+        this.webglService.xScale$$.set(this.xScale);
         // Test data ************************
         // this.nowDate = new Date();
         this.nowMs = Date.now();
-        this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
+        this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000 / 60);
         // this.nowDateDomain = this.xScale.domain()[1];
         // this.nowDateOrigDomain = this.xScaleOriginal.domain()[1];
         // **********************************
@@ -775,9 +804,7 @@ export class RenderStateModel {
                     this.webglService.canvasWidth$.value * this.webglService.levelZoom$$(),
                 );
 
-                this.lastMinuteWidth = Math.trunc(
-                    (this.canvasVirtualWidth / this.timeFrameInS) * 60,
-                );
+                this.lastMinuteWidth = Math.trunc(this.canvasVirtualWidth / this.timeFrameInS);
             };
             calcHelpers();
 

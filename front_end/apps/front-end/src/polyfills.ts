@@ -31,6 +31,14 @@ if (environment.production) {
     // require('zone.js/dist/long-stack-trace-zone');
 }
 
+window.disableConsole = false;
+
+window.console = new Proxy(window.console, {
+    get(target: Console, prop: keyof Console) {
+        return window.disableConsole ? () => {} : Reflect.get(target, prop);
+    },
+});
+
 // Needs to be registered before the app is bootstrapped to work with vms in client api.
 // TODO: Need to figure out how to register correctly without fully initializing interceptor.
 // InterceptorManager.getInstance();
