@@ -43,6 +43,8 @@ export type OrgUsersState = {
      * A refreshUsers method is exposed on the store to be used externally.
      */
     readonly refreshUsersSubject: Subject<void>;
+    /** If data has been fetched from the api (not the cache) */
+    initialized: boolean;
 };
 
 export interface OrgUsersByGroup {
