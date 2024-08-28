@@ -3,6 +3,7 @@ from typing import (
     Tuple,
 )
 
+from django.apps import apps
 from django.core.cache import caches
 from django.db import models
 
@@ -47,8 +48,6 @@ class PathCacheMixin(models.Model):
         """
         This method updates the path version in the cache.
         """
-        # This shows a warning because FieldChoiceEnum is not imported
-        cache = caches["dependent_cache"]
         timestamp = CacheService.timestamp()
         cache_key: str = get_version_cache_key(self.__class__, self.id, "path")
         if self.__class__.__name__ in ['SystemGroup', 'CloudSystemId']:
@@ -85,4 +84,22 @@ class PathCacheMixin(models.Model):
             else:
                 segment = [model, str(id)]
                 path.append(segment)
+        return path
+
+    @property
+    def systems_path_version_keys(self) -> List['VersionKey']:
+        """
+        This method builds the path version for the instance.
+        """
+        from partners.services.cache_service import VersionKey
+
+        path = []
+        model = 'SystemGroup'
+
+        for id in self.path:
+            if id == self.organization_id:
+                path.append(VersionKey(model=apps.get_model('partners', 'Organization'), id=str(id)))
+                model = 'ChannelPartner'
+            else:
+                path.append(VersionKey(model=apps.get_model('partners', model), id=str(id)))
         return path

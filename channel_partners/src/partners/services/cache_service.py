@@ -275,9 +275,31 @@ class CacheService:
 
         # Bulk update instances
         if version_type == "version":
-            VersionMixin.increment_version_bulk(model, ids)
+            model.increment_version_bulk(ids)
         else:
             model.increment_descendant_version_bulk(ids)
+
+    @staticmethod
+    def bulk_increment_multiple_types(
+            keys: List[VersionKey],
+            version_type: Literal["version", "descendant_version"],
+            mixin_to_check: Type[Union[VersionMixin, DescendantVersionMixin]]
+    ) -> None:
+
+        # Validate the model
+        validate_model(keys[0]['model'], mixin_to_check)
+
+        # Group list of keys by model
+        groups = defaultdict(list)
+        for key in keys:
+            groups[key['model']].append(key['id'])
+
+        # Increment the versions in bulk
+        for model, ids in groups.items():
+            if version_type == "version":
+                model.increment_version_bulk(ids)
+            else:
+                model.increment_descendant_version_bulk(ids)
 
     @staticmethod
     def get_items_of_multiple_types(keys: List[VersionKeyAndType]) -> Dict[str, Any]:

@@ -66,6 +66,13 @@ def auto_execute_on_commit_callbacks(using='default'):
         for callback in callbacks:
             callback()
 
+@pytest.fixture(autouse=True)
+def clear_caches_teardown():
+    yield  # Run the test
+    # Teardown: clear all caches
+    for alias in caches:
+        caches[alias].clear()
+
 @pytest.fixture()
 def assert_all_responses_were_requested() -> bool:
     """
@@ -81,6 +88,57 @@ def assert_all_responses_were_requested() -> bool:
     """
     return False
 
+@pytest.fixture()
+def cache_hit_asserter_context(caplog):
+    class CacheHitAsserterContext:
+        def __init__(self, caplog):
+            self.caplog = caplog
+            self.callbacks = None
+
+        def __enter__(self):
+            # Clear existing logs to ensure only new logs are considered
+            self.caplog.clear()
+            # Activate django_capture_on_commit_callbacks
+            self.callbacks = TestCase.captureOnCommitCallbacks(execute=True)
+            # Manually enter the context manager
+            self.callbacks.__enter__()
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            # Manually exit the django_capture_on_commit_callbacks context manager
+            if self.callbacks:
+                self.callbacks.__exit__(exc_type, exc_val, exc_tb)
+            # Check for "Cache Hit" in the log messages after the context block
+            hit_detected = any("Cache hit" in record.message for record in self.caplog.records)
+            assert hit_detected, "Expected a cache hit, but none was detected."
+
+    return CacheHitAsserterContext(caplog)
+
+@pytest.fixture()
+def cache_miss_asserter_context(caplog):
+    class CacheHitAsserterContext:
+        def __init__(self, caplog):
+            self.caplog = caplog
+            self.callbacks = None
+
+        def __enter__(self):
+            # Clear existing logs to ensure only new logs are considered
+            self.caplog.clear()
+            # Activate django_capture_on_commit_callbacks
+            self.callbacks = TestCase.captureOnCommitCallbacks(execute=True)
+            # Manually enter the context manager
+            self.callbacks.__enter__()
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            # Manually exit the django_capture_on_commit_callbacks context manager
+            if self.callbacks:
+                self.callbacks.__exit__(exc_type, exc_val, exc_tb)
+            # Check for "Cache Hit" in the log messages after the context block
+            hit_detected = any("Cache miss" in record.message for record in self.caplog.records)
+            assert hit_detected, "Validation hash mismatch -- clearing cache"
+
+    return CacheHitAsserterContext(caplog)
 
 @pytest.fixture()
 def context_vars():
@@ -520,10 +578,14 @@ def cp_service_factory(default_channel_partner):
             duration=0,
             conversion_service=None,
             sub_type=ChannelPartnerService.REGULAR,
-            is_enabled=True
+            is_enabled=True,
+            name=None
     ):
+
+        if name is None:
+            name = f'{uuid4()}'
         return baker.make(
-            ChannelPartnerService, name=f'{uuid4()}',
+            ChannelPartnerService, name=name,
             created_by_channel_partner=channel_partner,
             parent_service=parent_service,
             state=ChannelPartnerService.ACTIVE,
@@ -579,11 +641,19 @@ def system_group_factory():
 
 @pytest.fixture()
 def sys_group_user_factory(system_group_factory, cloud_user_factory):
-    def factory(organization, group=None, cloud_user=None, role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR):
+    def factory(
+            organization,
+            group=None,
+            cloud_user=None,
+            role_id=OrganizationRoles.SYSTEM_ADMINISTRATOR,
+            email=None
+    ):
+        if not email:
+            email=f'{uuid4()}@networkoptix.com'
         if not group:
             group = system_group_factory(organization=organization)
         if not cloud_user:
-            cloud_user = cloud_user_factory(email=f'{uuid4()}@networkoptix.com')
+            cloud_user = cloud_user_factory(email=email)
         return baker.make(OrganizationToUser, organization=organization, user=cloud_user,
                           system_group=group, roles=[role_id])
 
@@ -676,9 +746,14 @@ def clear_local_cache():
 
 @pytest.fixture()
 def service_usage_factory():
-    def factory(system: CloudSystemId, service: ChannelPartnerService = None,
-                usage: int = 0, from_ts: datetime.datetime = None,
-                to_ts: datetime.datetime = None) -> ServiceUsage:
+    def factory(
+            system: CloudSystemId,
+            service: ChannelPartnerService = None,
+            usage: int = 0,
+            from_ts: datetime.datetime = None,
+            to_ts: datetime.datetime = None
+    ) -> ServiceUsage:
+
         if not to_ts:
             raise ValueError("to_ts must be set")
         if not from_ts:
