@@ -66,6 +66,7 @@ const initialState: OrgUsersState = {
     searchQuery: '',
     searchFilters: {},
     refreshUsersSubject: new Subject(),
+    initialized: false,
 };
 
 const ORG_USER_STATE = new InjectionToken<OrgUsersState>('OrgUserState', {
@@ -622,7 +623,6 @@ export const OrgUsersStore = signalStore(
                             groupId =
                                 routerStateStore.groupId() || routerStateStore.organizationId();
                         }
-
                         return iif(
                             () => groupId !== routerStateStore.organizationId(),
                             chpService
@@ -644,7 +644,10 @@ export const OrgUsersStore = signalStore(
                         );
                     }),
                     tapResponse({
-                        next: users => store.setUsers(users as OrgUser[]),
+                        next: users => {
+                            store.setUsers(users as OrgUser[]);
+                            patchState(store, { initialized: true });
+                        },
                         error: () => {},
                     }),
                 ),

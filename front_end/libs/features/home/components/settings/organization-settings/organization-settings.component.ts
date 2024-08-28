@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
@@ -94,39 +94,44 @@ export class NxOrganizationSettingsComponent {
         nonNullable: true,
     });
 
+    private accessLevelControl = new FormControl<string>(
+        String(this.organization().channelPartnerAccessLevel), // Convert null to "null" for indexing
+        {
+            nonNullable: true,
+        },
+    );
+    accessLevel = formControlValueSignal(this.accessLevelControl);
+
     private hasAdminUsers = computed<boolean>(() =>
         this.orgUserStore
             .currentGroupUsersEntities()
             .some(u => u.rolesIds.includes(OrgRoleIds.OrgAdmin)),
     );
-
-    private accessLevelControl = new FormControl<string>(
-        String(this.organization().channelPartnerAccessLevel), // Convert null to "null" for indexing
-        {
-            nonNullable: true,
-            validators: [
-                ({ value }: { value: string }) => {
-                    if (value !== OrgRoleIds.OrgAdmin && !this.hasAdminUsers()) {
-                        this.store.dispatch(
-                            cpActions.showBannerAction({
-                                banner: {
-                                    message: this.LANG.channelPartners.orgs.adminWarning,
-                                    icon: 'error.svg',
-                                    type: 'error',
-                                    page: 'organization',
-                                },
-                            }),
-                        );
-                        return { willRemoveAllAdmins: true };
-                    } else {
-                        this.store.dispatch(cpActions.hideBannerAction());
-                        return null;
-                    }
-                },
-            ],
-        },
-    );
-    accessLevel = formControlValueSignal(this.accessLevelControl);
+    private removingallAdminsValidator: ValidatorFn = control_ => {
+        const control = control_ as typeof this.accessLevelControl;
+        if (control.value !== OrgRoleIds.OrgAdmin && !this.hasAdminUsers()) {
+            this.store.dispatch(
+                cpActions.showBannerAction({
+                    banner: {
+                        message: this.LANG.channelPartners.orgs.adminWarning,
+                        icon: 'error.svg',
+                        type: 'error',
+                        page: 'organization',
+                    },
+                }),
+            );
+            return { willRemoveAllAdmins: true };
+        } else {
+            this.store.dispatch(cpActions.hideBannerAction());
+            return null;
+        }
+    };
+    protected _orgUserInitEffect = effect(() => {
+        const initialized = this.orgUserStore.initialized();
+        if (initialized && !this.accessLevelControl.hasValidator(this.removingallAdminsValidator)) {
+            this.accessLevelControl.addValidators(this.removingallAdminsValidator);
+        }
+    });
 
     accessLevelErrorMatcher = errorMatcherFactory({ onChange: ['willRemoveAllAdmins'] });
     // No error messages, design wants an error banner instead
