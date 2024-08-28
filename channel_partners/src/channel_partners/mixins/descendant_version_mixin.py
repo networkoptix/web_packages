@@ -17,7 +17,6 @@ from partners.utils.cache_keys import get_version_cache_key
 
 logger = structlog.getLogger()
 
-logger = structlog.getLogger()
 
 class DescendantVersionMixin(models.Model):
     descendant_version = models.PositiveBigIntegerField(default=0)

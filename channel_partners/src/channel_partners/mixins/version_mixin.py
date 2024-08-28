@@ -79,7 +79,7 @@ class VersionMixin(models.Model):
         except Exception as e:
             logger.error("Error incrementing version", id=self.id, model=self.__class__.__name__, error=str(e))
 
-    @staticmethod
+    @classmethod
     @transaction.atomic
     def increment_version_bulk(cls, ids: List[Union[str, UUID, int]]) -> None:
         from partners.services.cache_service import CacheService

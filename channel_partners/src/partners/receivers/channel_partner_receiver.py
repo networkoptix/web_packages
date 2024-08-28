@@ -72,7 +72,7 @@ def increment_descendant_version_of_ancestors(instance: ChannelPartner):
             ancestors=ancestor_ids)
         # Setting to cache
         CacheService.bulk_increment(
-            list(ancestor_ids),
+            ancestor_ids,
             ChannelPartner,
             'descendant_version',
             DescendantVersionMixin)

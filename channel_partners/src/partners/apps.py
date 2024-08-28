@@ -15,6 +15,9 @@ def get_receivers():
         CloudUser,
         Organization,
         OrganizationToUser,
+        ServiceToOrganizationProperties,
+        ServiceToSubChannelProperties,
+        ServiceUsage,
         SystemGroup,
     )
     from partners.receivers.channel_partner_receiver import (
@@ -41,10 +44,20 @@ def get_receivers():
         on_organization_to_user_deleted,
         on_organization_to_user_saved,
     )
+    from partners.receivers.service_to_organization_properties import (
+        on_service_to_organization_properties_saved,
+    )
+    from partners.receivers.service_to_sub_channel_properties import (
+        on_service_to_sub_channel_properties_saved,
+    )
+    from partners.receivers.service_usage_receiver import (
+        on_service_usage_saved,
+    )
     from partners.receivers.system_group_receiver import (
         on_system_group_deleted,
         on_system_group_saved,
     )
+
     return {
         CloudUser: {
             "post_save": on_cloud_user_saved,
@@ -80,7 +93,16 @@ def get_receivers():
         ChannelPartnerService: {
             "post_save": on_channel_partner_service_saved,
             "post_delete": on_channel_partner_service_deleted,
-        }
+        },
+        ServiceToOrganizationProperties: {
+            "post_save": on_service_to_organization_properties_saved,
+        },
+        ServiceToSubChannelProperties: {
+            "post_save": on_service_to_sub_channel_properties_saved,
+        },
+        ServiceUsage: {
+            "post_save": on_service_usage_saved,
+        },
     }
 
 

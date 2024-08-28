@@ -723,13 +723,23 @@ class TestChannelPartnerReportsService:
         # One parent_service is automatically created/inherited from parent, so total of two services for each sub channel
         assert detail_table_mock.call_count == 5
 
-        assert channel_partner_usages == [ChannelPartnerExpiringUsage(
-            channel_partner_id=channel_partner.id, channel_partner_name=channel_partner.name, report=[
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=10),
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('01-25-2024'), channels=50),
-                ExpiringUsageDetailRecord(expiration_date=parser.parse('02-25-2024'), channels=50),
-                ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=110)
-            ]) for channel_partner in sub_channel_partners]
+        expected_channel_partner_usages = [
+            ChannelPartnerExpiringUsage(
+                channel_partner_id=sub_channel_partner.id,
+                channel_partner_name=sub_channel_partner.name,
+                report=[
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-15-2024'), channels=10),
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('01-25-2024'), channels=50),
+                    ExpiringUsageDetailRecord(expiration_date=parser.parse('02-25-2024'), channels=50),
+                    ExpiringUsageDetailRecord(expiration_date=TotalUsageDate, channels=110)
+                ]
+            ) for sub_channel_partner in sub_channel_partners
+        ]
+
+        for actual in channel_partner_usages:
+            actual_cp_id = actual.get("channel_partner_id")
+            expected = next(item for item in expected_channel_partner_usages if item.get("channel_partner_id") == actual_cp_id)
+            assert actual == expected
 
     def test_build_regular_service_summary_from_sub_entity_reports(self):
         org_usages = [

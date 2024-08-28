@@ -54,15 +54,14 @@ def on_system_group_deleted(sender: Type[SystemGroup], instance: SystemGroup, **
 
 
 def increment_descendant_version_of_ancestors(instance: SystemGroup):
-    # Get the ids of the ancestor ChannelPartner instances
-    ancestor_ids = instance.groups_path
+    ids = instance.systems_path_version_keys
     logger.debug(
-        "Incrementing descendant version of ancestor of system group",
+        "Updating ancestors of system group",
         name=instance.name,
-        ancestors=ancestor_ids)
-    if ancestor_ids:
-        CacheService.bulk_increment(
-            ancestor_ids,
-            SystemGroup,
+        ancestors=ids)
+
+    if ids:
+        CacheService.bulk_increment_multiple_types(
+            ids,
             'descendant_version',
             DescendantVersionMixin)

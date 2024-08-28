@@ -76,14 +76,14 @@ def on_channel_partner_to_user_deleted(
 
 def increment_descendant_version_of_ancestors(instance: ChannelPartner):
     # Get the ids of the ancestor ChannelPartner instances
-    ancestor_ids = instance.ancestors.values_list('id', flat=True)
+    ancestor_ids = instance.path
     logger.debug(
         "Incrementing descendant version of ancestor of channel partner",
         name=instance.name,
         ancestors=ancestor_ids)
     if ancestor_ids:
         CacheService.bulk_increment(
-            list(ancestor_ids),
+            ancestor_ids,
             ChannelPartner,
             'descendant_version',
             DescendantVersionMixin)

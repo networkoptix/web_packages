@@ -1,5 +1,10 @@
 from functools import wraps
 
+import structlog
+
+
+logger = structlog.getLogger()
+
 
 def disable_for_loaddata(signal_handler):
     @wraps(signal_handler)
@@ -19,12 +24,12 @@ def handle_organization_id_change(instance):
 
     to_increment = set()
 
-    # Increment version for old organization if it has changed
+    # Increment descendant version for old organization if it has changed
 
     if instance.has_field_changed("organization_id", idx=1) and old_organization_id is not None:
         to_increment.add(old_organization_id)
 
-    # Increment version for new organization, if present
+    # Increment descendant version for new organization, if present
     if new_organization_id is not None:
         to_increment.add(new_organization_id)
 

@@ -1,8 +1,8 @@
-from unittest.mock import patch
-
 import pytest
+from dateutil.relativedelta import relativedelta
 from django.core.cache import caches
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from partners.models import (
     ChannelPartner,
@@ -13,6 +13,8 @@ from partners.models import (
     Organization,
     OrganizationRole,
     OrganizationToUser,
+    ServiceToOrganizationProperties,
+    ServiceToSubChannelProperties,
     SystemGroup,
 )
 
@@ -28,38 +30,26 @@ class TestReceivers:
         caches["dependent_cache"].clear()
 
     def assert_both_versions(self, instance, expected_value):
-        from django.db import transaction
-        def check_versions():
-            instance.refresh_from_db()
-            assert instance.version == expected_value
-            assert instance.get_version() == expected_value
-
-        transaction.on_commit(check_versions)
+        instance.refresh_from_db()
+        assert instance.version == expected_value
+        assert instance.get_version() == expected_value
 
     def assert_both_descendant_versions(self, instance, expected_value):
-        from django.db import transaction
-        def check_descendant_versions():
-            instance.refresh_from_db()
-            assert instance.descendant_version == expected_value
-            assert instance.get_descendant_version() == expected_value
-
-        transaction.on_commit(check_descendant_versions)
+        instance.refresh_from_db()
+        assert instance.descendant_version == expected_value
+        assert instance.get_descendant_version() == expected_value
 
     def assert_path_version(self, instance):
-        from django.db import transaction
-        def check_path_version():
-            instance.refresh_from_db()
-            if instance.__class__.__name__ in ['SystemGroup', 'CloudSystemId']:
-                path_version = instance.build_path_for_systems
-            else:
-                path_version = instance.build_path
+        instance.refresh_from_db()
+        if instance.__class__.__name__ in ['SystemGroup', 'CloudSystemId']:
+            path_version = instance.systems_path
+        else:
+            path_version = instance.build_path
 
-            cached = instance.get_path_version()
-            actual = path_version
-            print(cached, actual)
-            assert actual == cached
-
-            transaction.on_commit(check_path_version)
+        cached = instance.get_cached_path()
+        actual = path_version
+        print(cached, actual)
+        assert actual == cached
 
     def test_system_move_between_groups(self, organization_factory, system_group_factory, system_factory):
         with self.capture_callbacks(execute=True):
@@ -239,7 +229,7 @@ class TestReceivers:
         self.assert_both_versions(system_group, 0)
 
         self.assert_both_versions(organization, 0)
-        self.assert_both_descendant_versions(organization, 1)
+        self.assert_both_descendant_versions(organization, 2)
 
         with self.capture_callbacks(execute=True):
             # Change the system group
@@ -251,7 +241,7 @@ class TestReceivers:
         self.assert_both_versions(organization, 0)
 
         self.assert_both_versions(organization, 0)
-        self.assert_both_descendant_versions(organization, 2)
+        self.assert_both_descendant_versions(organization, 4)
 
         self.teardown_method()
 
@@ -278,7 +268,7 @@ class TestReceivers:
         self.assert_both_versions(system, 0)
 
         self.assert_both_versions(organization, 0)
-        self.assert_both_descendant_versions(organization, 1)
+        self.assert_both_descendant_versions(organization, 2)
 
         with self.capture_callbacks(execute=True):
             # Change the system
@@ -290,7 +280,7 @@ class TestReceivers:
         self.assert_both_versions(organization, 0)
 
         self.assert_both_versions(organization, 0)
-        self.assert_both_descendant_versions(organization, 2)
+        self.assert_both_descendant_versions(organization, 4)
 
     def test_cloud_system_increment_version_on_service_record_change(
             self,
@@ -366,7 +356,7 @@ class TestReceivers:
             system = system_factory(
                 organization=organization)
 
-        self.assert_both_descendant_versions(organization, 1)
+        self.assert_both_descendant_versions(organization, 2)
 
         # Test CloudSystem upon creation
         self.assert_both_versions(system, 0)
@@ -383,7 +373,7 @@ class TestReceivers:
 
         # Test after disconnecting the service
         self.assert_both_versions(system, 1)
-        self.assert_both_descendant_versions(organization, 2)
+        self.assert_both_descendant_versions(organization, 3)
 
     def test_change_system_group_updates_path(self, organization_factory, system_group_factory, system_factory, caplog):
         with self.capture_callbacks(execute=True):
@@ -398,14 +388,11 @@ class TestReceivers:
         self.assert_both_versions(system, 0)
         self.assert_path_version(system)
 
-        with patch.object(system.__class__, 'update_cached_path') as mock_update_cached_path, caplog.at_level('DEBUG'):
+        with caplog.at_level('DEBUG'):
             with self.capture_callbacks(execute=True):
                 # Change the system's group to the other system group
                 system.system_group = group2
                 system.save()
-
-            # Verify that update_cached_path was called
-            mock_update_cached_path.assert_called_once()
 
         # Verify the log message
         assert any("Cloud System Group Changed - Updating path in cache" in message for message in caplog.messages)
@@ -503,8 +490,125 @@ class TestReceivers:
         self.assert_both_versions(child_group, 1)
         self.teardown_method()
 
-    def test_user_increment_version_add_to_channel_partner_to_user(self, channel_partner_factory):
+    def test_system_group_advanced_move_group(
+            self,
+            system_group_factory,
+            channel_partner_factory,
+            organization_factory,
+            sys_group_user_factory,
+            system_factory
+    ) -> None:
 
+        with self.capture_callbacks(execute=True):
+            # Test Setup
+            channel_partner = channel_partner_factory()
+
+        self.assert_both_versions(channel_partner, 0)
+        self.assert_both_descendant_versions(channel_partner, 0)
+
+        with self.capture_callbacks(execute=True):
+            organization = organization_factory(channel_partner=channel_partner)
+
+        self.assert_both_versions(organization, 0)
+        self.assert_both_descendant_versions(organization, 0)
+
+        self.assert_both_versions(channel_partner, 0)
+        self.assert_both_descendant_versions(channel_partner, 1)
+
+        with self.capture_callbacks(execute=True):
+            # Create Groups
+            root_group = system_group_factory(name="Root Group", organization=organization)
+
+        self.assert_both_versions(root_group, 0)
+
+        with self.capture_callbacks(execute=True):
+            group = system_group_factory(name="Group", parent=root_group, organization=organization)
+
+        self.assert_both_versions(group, 0)
+        self.assert_both_descendant_versions(group, 0)
+
+        self.assert_both_versions(root_group, 0)
+        self.assert_both_descendant_versions(root_group, 1)
+
+        self.assert_both_versions(organization, 0)
+        self.assert_both_descendant_versions(organization, 4)
+
+        self.assert_both_versions(channel_partner, 0)
+        self.assert_both_descendant_versions(channel_partner, 3)
+
+        with self.capture_callbacks(execute=True):
+            child_group = system_group_factory(name="Child Group", parent=group, organization=organization)
+
+        self.assert_both_versions(child_group, 0)
+        self.assert_both_descendant_versions(child_group, 0)
+
+        self.assert_both_versions(group, 0)
+        self.assert_both_descendant_versions(group, 1)
+
+        self.assert_both_versions(root_group, 0)
+        self.assert_both_descendant_versions(root_group, 2)
+
+        self.assert_both_versions(organization, 0)
+        self.assert_both_descendant_versions(organization, 6)
+
+        self.assert_both_versions(channel_partner, 0)
+        self.assert_both_descendant_versions(channel_partner, 4)
+
+        with self.capture_callbacks(execute=True):
+            grand_child_group = system_group_factory(
+                name="Grand Child Group",
+                parent=child_group,
+                organization=organization)
+            group2 = system_group_factory(
+                name="Group 2",
+                parent=root_group,
+                organization=organization)
+
+            # Add users and systems to each group
+            for grp in [root_group, group, child_group, grand_child_group, group2]:
+                sys_group_user_factory(organization=organization, group=grp)
+                system_factory(organization=organization, system_group=grp)
+
+        # Assertions for Initial State
+        self.assert_both_versions(root_group, 1)
+        self.assert_both_versions(group, 2)
+        self.assert_both_versions(child_group, 2)
+        self.assert_both_versions(grand_child_group, 2)
+        self.assert_both_versions(group2, 2)
+
+        self.assert_both_descendant_versions(root_group, 9)
+        self.assert_both_descendant_versions(group, 5)
+        self.assert_both_descendant_versions(child_group, 3)
+        self.assert_both_descendant_versions(grand_child_group, 1)
+        self.assert_both_descendant_versions(group2, 1)
+
+        self.assert_both_descendant_versions(organization, 20)
+        self.assert_both_descendant_versions(channel_partner, 11)
+
+        with self.capture_callbacks(execute=True):
+            # Move the child group and grand child group to Group 2
+            child_group.parent = group2
+            child_group.save()
+
+        # Assertions for Changed State
+        self.assert_both_versions(root_group, 1)
+        self.assert_both_versions(group, 2)
+        self.assert_both_versions(group2, 2)
+        self.assert_both_versions(child_group, 3)
+        self.assert_both_versions(grand_child_group, 2)
+
+        self.assert_both_descendant_versions(root_group, 10)
+        self.assert_both_descendant_versions(group, 5)
+        self.assert_both_descendant_versions(group2, 2)
+        self.assert_both_descendant_versions(child_group, 3)
+        self.assert_both_descendant_versions(grand_child_group, 1)
+
+        self.assert_both_descendant_versions(organization, 22)
+        self.assert_both_descendant_versions(channel_partner, 12)
+
+        self.teardown_method()
+
+    def test_user_increment_version_add_to_channel_partner_to_user(self, channel_partner_factory):
         with self.capture_callbacks(execute=True):
             # Test Setup
             user = CloudUser.objects.create(
@@ -560,14 +664,14 @@ class TestReceivers:
                 organization=organization)
 
         # Test after create
-        self.assert_both_versions(user, 1)
+        self.assert_both_versions(user, 2)
 
         with self.capture_callbacks(execute=True):
             # Remove user from the organization
             organization_user.delete()
 
         # Test after delete
-        self.assert_both_versions(user, 2)
+        self.assert_both_versions(user, 3)
         self.teardown_method()
 
     def test_change_channel_partner_to_user_increment_channel_partner_version(
@@ -636,7 +740,7 @@ class TestReceivers:
                 organization=organization)
 
         # Test after create
-        self.assert_both_versions(user, 1)
+        self.assert_both_versions(user, 2)
         self.assert_both_versions(organization, 1)
 
         with self.capture_callbacks(execute=True):
@@ -645,7 +749,7 @@ class TestReceivers:
             organization_user.save()
 
         # Test after save
-        self.assert_both_versions(user, 2)
+        self.assert_both_versions(user, 3)
         self.assert_both_versions(organization, 2)
         self.teardown_method()
 
@@ -732,7 +836,6 @@ class TestReceivers:
             organization_factory,
             system_group_factory
     ) -> None:
-
         with self.capture_callbacks(execute=True):
             # Create an organization and a root system group
             organization = organization_factory(
@@ -799,7 +902,6 @@ class TestReceivers:
         self.teardown_method()
 
     def test_channel_partner_increment_descendant_version_on_descendant_change(self, channel_partner_factory) -> None:
-
         with self.capture_callbacks(execute=True):
             # Test Setup
             root_channel_partner = channel_partner_factory(
@@ -1356,7 +1458,6 @@ class TestReceivers:
         self.assert_both_versions(user, 2)
 
     def test_create_channel_partner_user_then_delete_channel_partner(self, channel_partner_factory):
-
         with self.capture_callbacks(execute=True):
             # Test Setup
             user = CloudUser.objects.create(
@@ -1412,3 +1513,93 @@ class TestReceivers:
         # Test after delete
         self.assert_both_versions(channel_partner, 2)
         self.assert_both_descendant_versions(channel_partner, 0)
+
+    def test_on_service_to_organization_properties_saved(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            cp_service_factory
+    ) -> None:
+        with self.capture_callbacks(execute=True):
+            # Test Setup
+            with self.capture_callbacks(execute=True):
+                channel_partner = channel_partner_factory()
+                organization = organization_factory(channel_partner=channel_partner)
+                service = cp_service_factory(channel_partner=channel_partner)
+                ServiceToOrganizationProperties.objects.create(
+                    service=service,
+                    organization=organization,
+                    price=100.0)
+
+        # Test after save
+        self.assert_both_versions(channel_partner, 1)
+        self.assert_both_descendant_versions(channel_partner, 4)
+
+    def test_on_service_to_sub_channel_properties(
+            self,
+            channel_partner_factory,
+            cp_service_factory,
+    ) -> None:
+        # Test Setup
+        with self.capture_callbacks(execute=True):
+            channel_partner = channel_partner_factory()
+            service = cp_service_factory(channel_partner=channel_partner)
+            sub_channel = channel_partner_factory(parent_channel_partner=channel_partner)
+            ServiceToSubChannelProperties.objects.create(
+                service=service,
+                channel_partner=sub_channel,
+                price=100.0)
+
+        self.assert_both_versions(channel_partner, 2)
+        self.assert_both_descendant_versions(channel_partner, 3)
+        self.assert_both_descendant_versions(sub_channel, 0)
+
+    def test_on_service_usage_saved(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            system_group_factory,
+            system_factory,
+            service_usage_factory,
+            cp_service_factory
+
+    ) -> None:
+        # Test Setup
+        period_start = timezone.now() - relativedelta(months=2)
+
+        with self.capture_callbacks(execute=True):
+            channel_partner = channel_partner_factory()
+            organization: Organization = organization_factory(channel_partner=channel_partner)
+
+            group1: SystemGroup = system_group_factory(organization=organization, name="Group 1")
+
+            service = cp_service_factory(channel_partner=channel_partner)
+            system: CloudSystemId = system_factory(organization=organization, system_group=group1)
+            service_usage = service_usage_factory(system=system, service=service, to_ts=period_start)
+
+        self.assert_both_versions(channel_partner, 1)
+        self.assert_both_descendant_versions(channel_partner, 4)
+
+        self.assert_both_versions(organization, 0)
+        self.assert_both_descendant_versions(organization, 5)
+
+        self.assert_both_versions(group1, 0)
+        self.assert_both_descendant_versions(group1, 2)
+
+        self.assert_both_versions(system, 1)
+
+        # Change up service usage
+        with self.capture_callbacks(execute=True):
+            service_usage.usage = 100
+            service_usage.save()
+
+        self.assert_both_versions(channel_partner, 1)
+        self.assert_both_descendant_versions(channel_partner, 5)
+
+        self.assert_both_versions(organization, 0)
+        self.assert_both_descendant_versions(organization, 6)
+
+        self.assert_both_versions(group1, 0)
+        self.assert_both_descendant_versions(group1, 3)
+
+        self.assert_both_versions(system, 2)

@@ -5,8 +5,12 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from channel_partners.mixins.descendant_version_mixin import (
+    DescendantVersionMixin,
+)
 from channel_partners.mixins.version_mixin import VersionMixin
 from partners.models import (
+    ChannelPartner,
     CloudUser,
     Organization,
 )
@@ -16,6 +20,8 @@ from partners.services.cache_service import CacheService
 
 logger = structlog.getLogger()
 
+
+# TODO: Find out: Should there also be a method to increment the version of CP's in path?
 
 @receiver(post_save, sender=Organization)
 @disable_for_loaddata
@@ -29,7 +35,19 @@ def on_organization_saved(sender: Type[Organization], instance: Organization, cr
                 prior_version=instance.version,
                 prior_descendant_version=instance.descendant_version)
             instance.increment_version()
-            increment_related_users(instance)
+        increment_related_users(instance)
+
+        if instance.channel_partner_id:
+            logger.debug(
+                "Organization changed - Incrementing Version of Channel Partner",
+                organization=instance.id,
+                channel_partner=instance.channel_partner_id)
+            instance.channel_partner.increment_descendant_version()
+            CacheService.bulk_increment(
+                instance.channel_partner.path,
+                ChannelPartner,
+                'descendant_version',
+                DescendantVersionMixin)
 
     transaction.on_commit(on_commit_callback)
 
