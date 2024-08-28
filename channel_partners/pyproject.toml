@@ -39,6 +39,7 @@ openpyxl = "^3.1.2"
 etils = { version = "*", extras = ["edc"] }
 django-storages = { version="^1.14.2", extras=["s3"] }
 drf-standardized-errors = "^0.14.0"
+django-waffle = "4.0.0"
 
 [tool.poetry.group.test.dependencies]
 django-silk = "^5.0.4"

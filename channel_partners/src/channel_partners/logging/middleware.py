@@ -1,18 +1,57 @@
+import logging
 import time
 from typing import Callable
 
 import structlog
+import waffle
 from django import http
+from django.core.cache import caches
 from django.db import connection
 
-from partners.services.caching.dependent_view_cache import (
+from channel_partners import settings
+from channel_partners.settings import (
     CACHE_STATUS_HEADER_KEY,
+    REDIS_WAFFLE_TIMEOUT,
 )
 
 
-logger = structlog.get_logger(__name__)
+logger = structlog.get_logger()
 
 START_TIME_ATTRIBUTE = "start_time"
+
+
+def is_debug_enabled() -> bool:
+    local_cache = caches['waffle-local']
+    is_debug_level = local_cache.get(settings.LOGGING_SWITCH_NAME, None)
+
+    if is_debug_level is None:
+        # If True, the debug level is enabled
+        is_debug_level = waffle.switch_is_active(settings.LOGGING_SWITCH_NAME)
+        local_cache.set(settings.LOGGING_SWITCH_NAME, is_debug_level)
+
+    return is_debug_level
+
+
+class DebugLevelFilter(logging.Filter):
+    cache_timeout = REDIS_WAFFLE_TIMEOUT
+
+    def __init__(self, level: int):
+        super().__init__()
+        self.level: int = level
+        self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
+
+    def get_level(self) -> int:
+        try:
+            if time.monotonic() - self._last_update > self.cache_timeout:
+                self._last_update = time.monotonic()
+                self.level = logging.DEBUG if is_debug_enabled() else logging.INFO
+        except Exception:
+            # Avoid logging exceptions to prevent potential logging loops or performance issues
+            pass
+        return self.level
+
+    def filter(self, record):
+        return record.levelno <= self.get_level()
 
 
 class RequestTimerMiddleware:
