@@ -20,9 +20,9 @@ class WebadminConan(ConanFile):
         self.version = git.get_commit()
 
     def source(self):
-        gitlab_url = os.getenv("DEFAULT_GIT_URL") or 'git@gitlab.nxvms.dev'
+        gitlab_url = os.getenv("GIT_MIRROR_URL") or 'git@gitlab.nxvms.dev'
         git = Git(self)
-        git.fetch_commit(f"{gitlab_url}/dev/cloud_portal.git", commit=self.version)
+        git.fetch_commit(f"{gitlab_url}:dev/cloud_portal.git", commit=self.version)
 
     def generate(self):
         env = Environment()
