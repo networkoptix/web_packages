@@ -1,10 +1,16 @@
 from rest_framework import serializers
 
 from partners.models import (
+    ChannelPartner,
     ChannelPartnerService,
+    ChannelPartnerServiceRecord,
     HierarchyLevels,
+    Organization,
 )
-from partners.serializers.v2.serializers import CodeChoiceField
+from partners.serializers.v2.serializers import (
+    ChannelPartnerServiceRecordSerializer,
+    CodeChoiceField,
+)
 from partners.services.usage_reports_service import (
     BeginningOfPeriodDate,
     TotalUsageDate,
@@ -241,4 +247,59 @@ class OrganizationReportExportSerializer(ReportExportSerializer):
 
 class ReportExportParamSerializer(ReportPeriodParamSerializer):
     reportFormat = serializers.ChoiceField(choices=['csv', 'xlsx'], required=True)
-    
+
+
+class ChannelPartnerServiceChangeSerializer(ChannelPartnerServiceRecordSerializer):
+    serviceName = serializers.SerializerMethodField()
+    organizationName = serializers.SerializerMethodField()
+    channelPartnerName = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ChannelPartnerServiceRecord
+        fields = [
+            'serviceId',
+            'serviceName',
+            'organizationId',
+            'organizationName',
+            'channelPartnerId',
+            'channelPartnerName',
+            'changedBy',
+            'changeQuantity',
+            'date',
+        ]
+
+    def get_serviceName(self, obj: ChannelPartnerServiceRecord):
+        self.calculate_service_and_direct_consumer(obj)
+        return obj.report_service.name
+
+    def get_organizationName(self, obj: ChannelPartnerServiceRecord):
+        self.calculate_service_and_direct_consumer(obj)
+        organization: Organization = getattr(obj, 'report_organization', None)
+        if organization:
+            return organization.name
+
+    def get_channelPartnerName(self, obj: ChannelPartnerServiceRecord):
+        self.calculate_service_and_direct_consumer(obj)
+        channel_partner: ChannelPartner = getattr(obj, 'report_channel_partner', None)
+        if channel_partner:
+            return channel_partner.name
+
+
+class OrganizationServiceChangesSerializer(serializers.ModelSerializer):
+    systemName = serializers.CharField(source='cloud_system.name')
+    systemId = serializers.UUIDField(source='cloud_system.system_id')
+    serviceId = serializers.UUIDField(source='service_id')
+    serviceName = serializers.CharField(source='service.name')
+    changeQuantity = serializers.IntegerField(source='quantity')
+    date = serializers.DateTimeField(source='created_ts')
+    class Meta:
+        model = ChannelPartnerServiceRecord
+        fields = [
+            'id',
+            'serviceId',
+            'serviceName',
+            'changeQuantity',
+            'systemId',
+            'systemName',
+            'date',
+        ]

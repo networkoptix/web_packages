@@ -19,6 +19,7 @@ from partners.models import (
     OrganizationRoles,
     ReportSnapshot,
 )
+from partners.services.reports_export_service import ReportFormat
 from partners.services.usage_reports_service import (
     ChannelPartnerReportsService,
     CloudSystemReportsService,
@@ -26,8 +27,10 @@ from partners.services.usage_reports_service import (
 )
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
-    get_cached_report_key,
+    ReportType,
+    get_cached_requests_key,
     get_queued_report_key,
+    get_usage_report_requests_key,
 )
 from partners.tasks.services import new_channel_partner_created
 from partners.tasks.usage_reports import calculate_all_reports
@@ -629,10 +632,11 @@ class TestOrganizationGenerateReport:
                 period_start=self.period_start.isoformat(),
                 user_id=self.organization_admin.user_id,
                 report_format=format,
-                hierarchy_level=0
+                hierarchy_level=0,
+                report_type = ReportType.usage_report
             )
             # check cache
-            cache_key = get_cached_report_key(
+            cache_key = get_usage_report_requests_key(
                 entity_id=self.organization.pk,
                 period_start=self.period_start,
                 user_id=self.organization_admin.user_id,
@@ -757,9 +761,11 @@ class TestChannelPartnerGenerateReport:
         self.channel_partner = channel_partner_factory()
 
         self.admin = cp_user_factory(channel_partner=self.channel_partner.parent_channel_partner)
-        self.view_name = 'v3:channelpartners-reports-generate-report'
+        self.usage_report_view_name = 'v3:channelpartners-reports-generate-report'
+        self.service_changes_view_name = 'v3:channelpartners-reports-generate-service-changes-report'
         self.kwargs = {'parent_lookup_channel_partner': self.channel_partner.pk}
-        self.path = reverse(self.view_name, kwargs=self.kwargs)
+        self.path = reverse(self.usage_report_view_name, kwargs=self.kwargs)
+        self.service_changes_path = reverse(self.service_changes_view_name, kwargs=self.kwargs)
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
         mock_auth_with_user(self.admin)
@@ -781,39 +787,47 @@ class TestChannelPartnerGenerateReport:
     def set_task_kwargs(self, task_kwargs: Any):
         self.mock_task.task_kwargs = json.dumps(task_kwargs)
 
+    @pytest.mark.parametrize('view_name, report_type, report_format', [
+        ('v3:channelpartners-reports-generate-report', ReportType.usage_report, ReportFormat.xlsx),
+        ('v3:channelpartners-reports-generate-service-changes-report', ReportType.service_changes_report, ReportFormat.xlsx),
+        ('v3:channelpartners-reports-generate-report', ReportType.usage_report, ReportFormat.csv),
+        ('v3:channelpartners-reports-generate-service-changes-report', ReportType.service_changes_report, ReportFormat.csv),
+    ])
     @mock_aws
-    def test_success_generate_report(self, mocker):
-        for format in ('xlsx', 'csv'):
-            self.mock_task.status = 'PENDING'
-            query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': format}, doseq=True)
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            self.mock_generate_report.assert_called_once()
-            assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
-                channel_partner_id=str(self.channel_partner.pk),
-                period_start=self.period_start.isoformat(),
-                user_id=self.admin.user_id,
-                report_format=format,
-                hierarchy_level=1
-            )
-            # check cache
-            cache_key = get_cached_report_key(
-                entity_id=self.channel_partner.pk,
-                period_start=self.period_start,
-                user_id=self.admin.user_id,
-                report_format=format
-            )
-            assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
-            assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
+    def test_success_generate_report(self, view_name, report_type, report_format, mocker):
+        self.mock_task.status = 'PENDING'
+        path = reverse(view_name, kwargs=self.kwargs)
+        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': report_format}, doseq=True)
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        self.mock_generate_report.assert_called_once()
+        assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
+            channel_partner_id=str(self.channel_partner.pk),
+            period_start=self.period_start.isoformat(),
+            user_id=self.admin.user_id,
+            report_format=report_format,
+            hierarchy_level=1,
+            report_type = report_type
+        )
+        # check cache
+        cache_key = get_cached_requests_key(
+            report_type=report_type,
+            entity_id=self.channel_partner.pk,
+            period_start=self.period_start,
+            user_id=self.admin.user_id,
+            report_format=report_format
+        )
+        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+        assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
 
-            # check cached requests
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            assert self.mock_generate_report.call_count == 2
-            assert len(caches['default'].get(cache_key)) == 2
-            self.mock_generate_report.reset_mock()
+        # check cached requests
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        assert self.mock_generate_report.call_count == 2
+        assert len(caches['default'].get(cache_key)) == 2
+        self.mock_generate_report.reset_mock()
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
