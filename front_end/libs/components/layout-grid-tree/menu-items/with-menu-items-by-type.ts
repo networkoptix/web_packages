@@ -11,6 +11,7 @@ import {
     ResourceNodeMap,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
+import { webPageMenuFactory } from '@components/layout-grid-tree/menu-items/menus/web-page-menu-factory';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
 import { Layout } from '@services/system-api.types/layouts.types';
@@ -146,5 +147,6 @@ export abstract class WithMenuItemsByType {
             () => this.systemsService.systems$$() || [],
             params => this.layoutStateService.paramStateHandler.state$$.update(params),
         ),
+        [ResourceType.WEB_PAGE]: webPageMenuFactory(this.OPEN_WINDOW_ACTIONS),
     };
 }
