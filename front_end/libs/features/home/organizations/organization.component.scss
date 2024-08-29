@@ -125,6 +125,10 @@ nx-hidable {
             }
             margin-left: 1em;
         }
+        &:hover {
+            color: var(--btn-default-focus-outline-rgb) !important;
+            text-decoration: underline;
+        }
 }
     .tutorial-link {
         position: absolute;
