@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
+Hej, {{ message.userFullName }}
 
 {{ message.user_full_name }} ({{ message.user_email }}) har {{ message.status }} din begäran om att överföra äganderätten till {{ message.system_name }}
