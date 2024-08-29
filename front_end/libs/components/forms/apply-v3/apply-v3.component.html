@@ -1,5 +1,8 @@
-<button
-    nx-apply-button
-    [action]="action()"
-></button>
+<!-- Hide from Enter submit detection -->
+@if (formChanged()) {
+    <button
+        nx-apply-button
+        [action]="action()"
+    ></button>
+}
 <button nx-reset-button></button>

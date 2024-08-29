@@ -1,0 +1,47 @@
+@use 'resets';
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+    '--block-bg': ('dark': 4, 'light': 1)
+), ':host');
+
+:host {
+    --block-padding: 1.25rem;
+    --block-bdrs: 4px;
+    --subtext-color: var(--light16);
+}
+
+@mixin information-icon-btn {
+    @include resets.button();
+    border-radius: 2px;
+    background-color: transparent;
+    height: 2rem;
+    width: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:not(:disabled):hover,
+    &:focus-visible {
+        background-color: var(--btn-close-hover-bg);
+    }
+
+    &:active {
+        background-color: var(--btn-close-active-bg);
+    }
+
+    svg-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            width: 1.25rem;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.3;
+    }
+}

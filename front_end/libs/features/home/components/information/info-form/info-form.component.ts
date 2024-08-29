@@ -28,13 +28,11 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { CPInfoDataEvent } from '@pages/home/components/information/information.types';
-import type {
-    InfoDataServer,
-    InfoRow,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { CPInfoDataEvent, InfoRow } from '@pages/home/components/information/information.types';
+import type { InfoDataServer } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons, MAX_NAME_LENGTH } from '@static-variables';
 
+/** @deprecated */
 @Component({
     selector: 'nx-info-form',
     templateUrl: 'info-form.component.html',

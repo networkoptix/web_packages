@@ -1,0 +1,38 @@
+<h4 translate>Support</h4>
+@if (!readOnly()) {
+    <button
+        type="button"
+        data-escape-global-style
+        class="view-step__edit-btn"
+        (click)="edit.emit()"
+    >
+        <svg-icon [src]="icons.dir + 'edit.svg'"></svg-icon>
+    </button>
+}
+
+@for (section of sections() | keyvalue: noSort; track section.key) {
+    @if (section.value.length) {
+        <div
+            class="view-step__section"
+            *ngrxLet="protocols[section.key | as: SectionKeyType] as protocol"
+        >
+            <span>{{ headers[section.key | as: SectionKeyType] | translate }}</span>
+            @for (item of section.value; track item.value) {
+                <div class="view-step__section-item">
+                    @if (protocol) {
+                        <a
+                            class="view-step__section-link"
+                            [href]="protocol + item.value"
+                            >{{ item.value }}</a
+                        >
+                    } @else {
+                        <span>{{ item.value }}</span>
+                    }
+                    @if (item.description) {
+                        <span class="view-step__section-subtext">{{ item.description }}</span>
+                    }
+                </div>
+            }
+        </div>
+    }
+}

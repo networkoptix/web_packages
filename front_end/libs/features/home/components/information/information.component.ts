@@ -29,20 +29,21 @@ import {
     ControlRow,
     CPInfoDataEvent,
     CPInfoType,
+    InfoRow,
+    SupportInformation,
 } from '@pages/home/components/information/information.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CustomRowServer,
     InfoDataServer,
-    InfoRow,
     InfoRowServer,
-    SupportInformation,
     SupportInformationServer,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import * as cpActions from '@store/channel-partners/channel-partners.actions';
 
+/** @deprecated */
 @Component({
     selector: 'nx-channel-partner-information',
     templateUrl: 'information.component.html',

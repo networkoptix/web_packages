@@ -1,0 +1,45 @@
+@use '../information-v2.scss'as info;
+
+:host {
+    display: inline-block;
+    width: 43rem;
+    border-radius: var(--block-bdrs);
+    background-color: var(--block-bg);
+    padding: var(--block-padding);
+    position: relative;
+}
+
+h4 {
+    margin-bottom: 1.5rem;
+}
+
+.view-step {
+    &__edit-btn {
+        position: absolute;
+        top: var(--block-padding);
+        right: var(--block-padding);
+
+        @include info.information-icon-btn();
+    }
+
+    &__section {
+        line-height: 1.375;
+
+        &-item {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        &-link {
+            text-decoration: none;
+        }
+
+        &-subtext {
+            color: var(--subtext-color);
+        }
+    }
+}
+
+.view-step__section + .view-step__section {
+    margin-top: 1rem;
+}

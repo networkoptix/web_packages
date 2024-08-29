@@ -1,7 +1,5 @@
 // e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
 
-import { Validators } from '@angular/forms';
-
 export enum State {
     Active = 'active',
     Suspended = 'suspended',
@@ -104,12 +102,7 @@ export interface InfoRowServer {
 
 export interface CustomRowServer {
     label: string;
-    value: string | null;
-}
-
-export interface InfoRow {
-    data: { value: string; validation?: Validators[] };
-    description?: { value: string | null; validation?: Validators[] };
+    value: string;
 }
 
 export type InfoDataServer = InfoRowServer | CustomRowServer;
@@ -120,13 +113,6 @@ export interface SupportInformationServer {
     phones: InfoRowServer[];
     emails: InfoRowServer[];
     custom: CustomRowServer[];
-}
-
-export interface SupportInformation {
-    sites: InfoRow[]; /// API returns string[] but for simplicity we'll massage the data
-    phones: InfoRow[];
-    emails: InfoRow[];
-    custom: InfoRow[];
 }
 
 export type PaginatedChannelPartnerList = Page<ChannelPartner>;

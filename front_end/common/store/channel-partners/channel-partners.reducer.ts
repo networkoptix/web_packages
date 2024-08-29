@@ -154,6 +154,7 @@ export const channelPartnersReducer = createReducer(
             currentPartnerOrganizations: sortEntityByName(currentPartnerOrganizations),
         }),
     ),
+    /** @deprecated */
     on(
         ChannelPartnerActions.setCurrentPartnerSupportInfo,
         (state, { currentPartnerSupportInfo }): ChannelPartnersState => ({

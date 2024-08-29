@@ -23,6 +23,7 @@ export interface ChannelPartnersState {
     channelPartnersAndOrgsLoadState: LoadingState;
     currentParentPartnerId: string;
     currentPartnerId: string;
+    /** @deprecated */
     currentPartnerSupportInformation: SupportInformationServer | undefined;
     currentOrgId: string;
     currentSubChannels: ChannelPartner[];
