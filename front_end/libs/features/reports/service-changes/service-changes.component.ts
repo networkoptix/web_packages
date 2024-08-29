@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
 import { PageChange } from '@components/table/table.types';
 import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
@@ -35,6 +36,7 @@ import { NxServiceChangesTableComponent } from './services-changes-table/service
         NxServiceChangesTableComponent,
         NxPreLoaderComponent,
         NxMonthSelectComponent,
+        NxPagePlaceholderNoReportsComponent,
     ],
     providers: [ServiceChangesStore],
     standalone: true,
