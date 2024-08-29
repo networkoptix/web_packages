@@ -6,6 +6,7 @@ import staticLang from '@language_static';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';
 
+/** @deprecated */
 @Injectable({
     providedIn: 'root',
 })

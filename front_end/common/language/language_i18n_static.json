@@ -1395,6 +1395,14 @@
                 }
             },
             "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
+        },
+        "supportInformation": {
+            "viewHeader": {
+                "sites": "Site",
+                "phones": "Phone",
+                "emails": "Email",
+                "custom": "Custom"
+            }
         }
     },
     "channelPartnerReports": {

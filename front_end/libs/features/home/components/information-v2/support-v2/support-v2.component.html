@@ -1,0 +1,8 @@
+@if (loading()) {
+    <nx-pre-loader></nx-pre-loader>
+} @else {
+    <nx-information-v2-view
+        [information]="information()!"
+        readOnly
+    ></nx-information-v2-view>
+}

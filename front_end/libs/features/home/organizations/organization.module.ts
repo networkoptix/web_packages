@@ -3,9 +3,9 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@an
 import { Store } from '@ngrx/store';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
-import { NxChannelPartnerInformationComponent } from '@pages/home/components/information/information.component';
 import { nxConfig } from '@services/nx-config/config';
 
+import { NxSupportV2Component } from '../components/information-v2/support-v2/support-v2.component';
 import { NxReportsComponent } from '../components/reports/reports.component';
 import { Mode } from '../components/reports/reports.types';
 import { NxOrganizationSettingsComponent } from '../components/settings/organization-settings/organization-settings.component';
@@ -64,11 +64,16 @@ const orgRoutes: Routes = withTabReporterResolver([
                 canActivate: [orgTabGuard],
                 component: NxOrganizationSettingsComponent,
             },
+            // {
+            //     path: 'support',
+            //     canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, orgTabGuard],
+            //     component: NxChannelPartnerInformationComponent,
+            //     data: { readOnlyInfo: true },
+            // },
             {
                 path: 'support',
                 canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, orgTabGuard],
-                component: NxChannelPartnerInformationComponent,
-                data: { readOnlyInfo: true },
+                component: NxSupportV2Component,
             },
             {
                 path: 'group/:groupId',

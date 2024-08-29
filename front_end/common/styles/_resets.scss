@@ -21,3 +21,8 @@
         pointer-events: unset;
     }
 }
+
+@mixin horizontal-rule {
+    margin-top: unset;
+    margin-bottom: unset;
+}

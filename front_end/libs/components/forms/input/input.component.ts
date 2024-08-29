@@ -40,6 +40,11 @@ export class NxInputComponent {
             nativeElement.autocomplete = 'email';
             nativeElement.spellcheck = false;
             nativeElement.name ||= 'email'; // This seems required for Firefox autocomplete
+        } else if (nativeElement.type === 'tel') {
+            nativeElement.autocomplete = 'tel';
+            nativeElement.spellcheck = false;
+        } else if (nativeElement.type === 'url') {
+            nativeElement.spellcheck = false;
         }
     }
 }
