@@ -916,9 +916,9 @@ export class WebRTCStreamManager {
      *
      * @param message MessageEvent<string>
      */
-    private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg | MimeInit): void => {
+    private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg | MimeInit | { transcoding: { audio: boolean; video: boolean }}): void => {
         this.initPeerConnection();
-        if ('transcoding' in signal && signal.transcoding && !this.allowTranscoding) {
+        if ('transcoding' in signal && signal.transcoding.video && !this.allowTranscoding) {
             this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
             this.close(false);
         }
