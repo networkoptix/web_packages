@@ -261,10 +261,15 @@ export class UserManager {
 
     addUser(user: AddUser): Promise<ChangedIdReturned> {
         const { role, ...newUser } = user;
+        let userRoleId = role.id;
+        // Set the userRoleId to ZERO_ID if the role is predefined. The mediaserver uses permissions for default roles.
+        if (this.CONFIG.accessRoles.predefinedRoles.some(({ id }) => id === userRoleId)) {
+            userRoleId = ZERO_ID;
+        }
         const userData = {
             ...newUser,
+            userRoleId,
             isEnabled: true,
-            userRoleId: ZERO_ID,
             permissions: role?.permissions || '',
             name: user.email,
         };
