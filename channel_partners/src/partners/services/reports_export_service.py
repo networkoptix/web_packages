@@ -20,6 +20,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from openpyxl.reader.excel import load_workbook
 from openpyxl.styles import (
+    Alignment,
     Border,
     Font,
     PatternFill,
@@ -36,9 +37,11 @@ from partners.models import (
 )
 from partners.serializers.v2.usage_reports_serializers import (
     ChannelPartnerExpiringUsageSerializer,
+    ChannelPartnerServiceChangeSerializer,
     ChannelPartnerUsageReportRecordSerializer,
     ChannelPartnerUsageSerializer,
     OrganizationExpiringUsageSerializer,
+    OrganizationServiceChangesSerializer,
     OrganizationUsageReportRecordSerializer,
     OrganizationUsageSerializer,
     SystemExpiringUsageSerializer,
@@ -63,6 +66,7 @@ from partners.services.usage_reports_service import (
     SystemRegularUsage,
     TotalUsageDate,
 )
+from tools.helpers import get_today
 
 
 logger = structlog.getLogger(__name__)
@@ -72,15 +76,6 @@ class ReportFormat(StrEnum):
     xlsx = 'xlsx'
     csv = 'csv'
 
-    def report_extension(self):
-        match self.value:
-            case ReportFormat.xlsx:
-                return 'xlsx'
-            case ReportFormat.csv:
-                return 'zip'
-            case _:
-                logger.warning('Unsupported format', format=self.value)
-                raise ValueError(f'Unsupported format format={self.value}')
 
 class Styling:
     black = "000000"
@@ -100,8 +95,10 @@ class Styling:
     format_currency = '"$"#,##0.00'
     format_total_sum = '_("$"* #,##0.00_);_("$"* \\(#,##0.00\\);_("$"* "-"??_);_(@_)'
     format_date = 'M/d/yyyy'
+    format_datetime = 'M/d/yyyy HH:mm:ss'
 
     fill_formulae = PatternFill('solid', fgColor=peach)
+    alignment_right = Alignment(horizontal='right')
 
 
 UsagesTypes = Union[
@@ -979,6 +976,14 @@ class ChannelPartnerReportGenerator:
         self.report_format = report_format
         self.hierarchy_level = hierarchy_level
 
+    @property
+    def report_file_extension(self):
+        if self.report_format == ReportFormat.xlsx:
+            return 'xlsx'
+        elif self.report_format == ReportFormat.csv:
+            return 'zip'
+        raise ValueError("Unsupported format. Only 'xlsx' and 'csv' are supported.")
+
     def get_service_sheet_name(self, service: ChannelPartnerService):
         sheet_name = service.name
         idx = 0
@@ -1141,6 +1146,14 @@ class OrganizationReportGenerator:
         self.wb = None
         self.archive = None
         self.buf = None
+
+    @property
+    def report_file_extension(self):
+        if self.report_format == ReportFormat.xlsx:
+            return 'xlsx'
+        elif self.report_format == ReportFormat.csv:
+            return 'zip'
+        raise ValueError("Unsupported format. Only 'xlsx' and 'csv' are supported.")
 
     def get_service_sheet_name(self, service: ChannelPartnerService):
         sheet_name = service.name if self.hierarchy_level == HierarchyLevels.own else str(service.id)
@@ -1535,3 +1548,385 @@ class ChannelPartnerCSVExpiringServiceReport(PartnerReportDataMixin, CSVExpiring
 
 class OrganizationCSVExpiringServiceReport(OrganizationReportDataMixin, CSVExpiringServiceReportBase):
     pass
+
+
+class ServiceChangesRowBase:
+    """
+    Base class for summary rows in a report. This class should not be instantiated directly.
+    Instead, use one of the subclasses that implements the required methods.
+    """
+
+    def __init__(self,
+                 usage: dict,
+                 row_num: int,
+                 report_format: ReportFormat = ReportFormat.xlsx):
+        self.usage = usage
+        self.row_num = row_num
+        self.report_format = report_format
+
+    @property
+    def change_at(self):
+        """
+        'Change at' column for summary report sheets.
+        """
+        if self.usage.get('channelPartnerName'):
+            return self.usage['channelPartnerName']
+        if self.usage.get('organizationId'):
+            return self.usage['organizationName']
+        if self.usage.get('systemName'):
+            return self.usage['systemName']
+        if self.usage.get('systemId'):
+            return self.usage['systemId']
+        return 'N/A'
+
+    @property
+    def amount(self):
+        """
+        Formulae for the total price column.
+        """
+        if self.usage['changeQuantity'] >= 0 or self.report_format == ReportFormat.csv:
+            return str(self.usage['changeQuantity'])
+        return f"({abs(self.usage['changeQuantity'])})"
+
+    @property
+    def date(self) -> datetime.datetime:
+        """
+        'Date' column for summary report sheets.
+        """
+        return parser.parse(self.usage['date']).replace(tzinfo=None)
+
+    def values_list(self) -> List[Any]:
+        """
+        List of values for the current row.
+        """
+        return [
+            str(self.usage['serviceName'] or self.usage['serviceId']),
+            self.amount,
+            str(self.change_at),
+            self.date,
+        ]
+
+    def number_formats(self) -> List[Optional[str]]:
+        """
+        List of number formats for the current row.
+        """
+        return [
+            None,
+            None,
+            None,
+            Styling.format_datetime,
+        ]
+
+    def font(self) -> List[Optional[Font]]:
+        """
+        List of fonts for the current row.
+        """
+        return [
+            Styling.font,
+            Styling.font,
+            Styling.font,
+            Styling.font,
+        ]
+
+    def borders(self) -> List[Optional[Border]]:
+        """
+        List of borders for the current row.
+        """
+        return [
+            Border(left=Styling.border_medium, right=Styling.border_thin, bottom=Styling.border_thin),
+            Border(left=Styling.border_thin, right=Styling.border_thin, bottom=Styling.border_thin),
+            Border(left=Styling.border_thin, right=Styling.border_thin, bottom=Styling.border_thin),
+            Border(left=Styling.border_thin, right=Styling.border_medium, bottom=Styling.border_thin),
+        ]
+
+    def colors(self) -> List[Optional[PatternFill]]:
+        """
+        List of color fillings for the current row.
+        """
+        return [
+            None,
+            None,
+            None,
+            None,
+        ]
+
+    def zip_values(self):
+        """
+        Return zipped values and styles for the current row.
+        """
+        return zip(
+            self.values_list(),
+            self.number_formats(),
+            self.font(),
+            self.borders(),
+            self.colors()
+        )
+
+class ChannelPartnerServiceChangesDataMixin:
+
+    def get_report_data(self) -> List[dict]:
+        period_end = self.period_start + relativedelta(months=1)
+        service_changes = (self.entity.service_changes(self.period_start, period_end)
+                           .select_related('created_by')
+                           .order_by('-created_ts'))
+        context = {}
+        context['channel_partner'] = self.entity
+        return ChannelPartnerServiceChangeSerializer(service_changes, many=True, context=context).data
+
+
+class ChannelPartnerServiceChangesSheet(ChannelPartnerServiceChangesDataMixin, SummarySheetBase):
+    """
+    Summary sheet for channel partners.
+    """
+    columns = 4
+    record_row_class = ServiceChangesRowBase
+    report: None
+
+    def report_name_header(self):
+        return f"{self.entity.name} Service Changes Report"
+
+    def make_footer(self):
+        for i in range(self.start_col, self.start_col + self.columns):
+            cell = self.sheet.cell(row=self.current_row, column=i)
+            cell.border = Border(top=Styling.border_medium, bottom=None, left=None, right=None)
+
+
+class ChannelPartnerServiceChangesCSV(ChannelPartnerServiceChangesDataMixin, CSVReportBase):
+    """
+    Channel partner CSV report.
+    """
+    headers = [
+        'Service Name',
+        'Amount',
+        'Change At',
+        'Date',
+    ]
+
+    def report_name_header(self):
+        return f"{self.entity.name} Service Changes Report"
+
+    @property
+    def file_name(self):
+        return f"{self.entity.name} Service Changes Report.csv"
+
+    def fill_services(self):
+        raise NotImplemented("This method must be implemented in the subclass.")
+
+    def generate_report(self):
+        self.make_header()
+        self.fill_services()
+
+    def get_service_row(self, usage):
+        row = ServiceChangesRowBase(usage, 0, ReportFormat.csv)
+        return row.values_list()
+
+    def fill_services(self):
+        for usage in self.get_report_data():
+            self.csv_writer.writerow(self.get_service_row(usage))
+
+
+class ServiceChangesReportBase:
+    """
+    Channel partner report generator.
+    """
+
+    @property
+    def report_file_extension(self):
+        if self.report_format == ReportFormat.xlsx:
+            return 'xlsx'
+        elif self.report_format == ReportFormat.csv:
+            return 'csv'
+        raise ValueError("Unsupported format. Only 'xlsx' and 'csv' are supported.")
+
+    @property
+    def xlsx_file_name(self):
+        return f'{self.organization.name} Service Changes Report.xlsx'
+
+    @property
+    def csv_file_name(self):
+        return f'{self.organization.name} Service Changes Report.csv'
+
+    def generate_report(self):
+        template_path = os.path.join(
+            settings.BASE_DIR, 'partners/templates/reports/service_changes_report.xlsx')
+        self.wb = load_workbook(template_path)
+        self.generate_summary_sheet()
+
+    def save_report_file(self):
+        """
+        For local use only. Do not call in code.
+        """
+        self.generate_report()
+        self.wb.save(self.xlsx_file_name)
+
+    def save_csv_report_file(self):
+        """
+        For local use only. Do not call in code.
+        """
+        self.generate_csv_report()
+        self.buf.seek(0)
+        with open(self.csv_file_name, 'w') as f:
+            f.write(self.buf.read())
+        self.buf.close()
+
+    def stream_xlsx(self) -> BytesIO:
+        self.generate_report()
+        buf = BytesIO()
+        self.wb.save(buf)
+        buf.seek(0)
+        return buf
+
+    def stream_csv(self) -> StringIO:
+        """
+        Stream the report in CSV format.
+        """
+        return self.generate_csv_report()
+
+    def stream(self) -> BytesIO:
+        """
+        Stream the report in the specified format.
+        """
+        if self.report_format == ReportFormat.xlsx:
+            return self.stream_xlsx()
+        elif self.report_format == ReportFormat.csv:
+            return self.stream_csv()
+        raise ValueError("Unsupported format. Only 'xlsx' and 'csv' are supported.")
+
+    def generate_summary_sheet(self):
+        raise NotImplemented("This method must be implemented in the subclass.")
+
+    def generate_csv_report(self):
+        raise NotImplemented("This method must be implemented in the subclass.")
+
+
+class ChannelPartnerServiceChangesReportGenerator(ServiceChangesReportBase):
+    """
+    Channel partner report generator.
+    """
+    def __init__(self,
+                 channel_partner: ChannelPartner,
+                 report_date: datetime.date = None,
+                 period_start: datetime.date = None,
+                 report_format: ReportFormat = ReportFormat.xlsx,
+                 hierarchy_level: int = HierarchyLevels.own):
+        self.channel_partner = channel_partner
+        self.report_date = report_date if report_date else get_today()
+        self.period_start = period_start or self.report_date.replace(day=1)
+        self.wb: Optional[Workbook] = None
+        self.archive = None
+        self.buf = None
+        self.report_format = report_format
+        self.hierarchy_level = hierarchy_level
+
+    @property
+    def xlsx_file_name(self):
+        return f'{self.channel_partner.name} Service Changes Report.xlsx'
+
+    @property
+    def csv_file_name(self):
+        return f'{self.channel_partner.name} Service Changes Report.csv'
+
+
+    def generate_summary_sheet(self):
+        sheet = self.wb['Summary']
+        summary_sheet = ChannelPartnerServiceChangesSheet(
+            report_date=self.report_date,
+            period_start=self.period_start,
+            entity=self.channel_partner,
+            sheet=sheet,
+            hierarchy_level=self.hierarchy_level,
+        )
+        summary_sheet.generate_report_sheet()
+
+    def generate_csv_report(self):
+        summary_report = ChannelPartnerServiceChangesCSV(
+            report_date=self.report_date,
+            period_start=self.period_start,
+            entity=self.channel_partner,
+            service=None,
+            hierarchy_level=self.hierarchy_level,
+        )
+        self.buf = summary_report.stream()
+        return self.buf
+
+
+class OrganizationServiceChangesDataMixin:
+
+    def get_report_data(self) -> List[dict]:
+        period_end = self.period_start + relativedelta(months=1)
+        service_changes = (self.entity.service_changes(self.period_start, period_end)
+                           .select_related('service', 'created_by', 'cloud_system')
+                           .order_by('-created_ts'))
+        return OrganizationServiceChangesSerializer(service_changes, many=True).data
+
+
+
+class OrganizationServiceChangesSheet(OrganizationServiceChangesDataMixin, ChannelPartnerServiceChangesSheet):
+    """
+    Summary sheet for organization.
+    """
+    pass
+
+
+class OrganizationServiceChangesCSV(OrganizationServiceChangesDataMixin, ChannelPartnerServiceChangesCSV):
+    """
+    Organization CSV report.
+    """
+    headers = [
+        'Service Name',
+        'Amount',
+        'Change At',
+        'Date',
+    ]
+
+
+class OrganizationServiceChangesReportGenerator(ServiceChangesReportBase):
+    """
+    Channel partner report generator.
+    """
+    def __init__(self,
+                 organization: ChannelPartner,
+                 report_date: datetime.date = None,
+                 period_start: datetime.date = None,
+                 report_format: ReportFormat = ReportFormat.xlsx,
+                 hierarchy_level: int = HierarchyLevels.own):
+        self.organization = organization
+        self.report_date = report_date if report_date else get_today()
+        self.period_start = period_start or self.report_date.replace(day=1)
+        self.wb: Optional[Workbook] = None
+        self.archive = None
+        self.buf = None
+        self.report_format = report_format
+        self.hierarchy_level = hierarchy_level
+
+    @property
+    def xlsx_file_name(self):
+        return f'{self.organization.name} Service Changes Report.xlsx'
+
+    @property
+    def csv_file_name(self):
+        return f'{self.organization.name} Service Changes Report.csv'
+
+    def generate_summary_sheet(self):
+        sheet = self.wb['Summary']
+        summary_sheet = OrganizationServiceChangesSheet(
+            report_date=self.report_date,
+            period_start=self.period_start,
+            entity=self.organization,
+            sheet=sheet,
+            hierarchy_level=self.hierarchy_level,
+        )
+        summary_sheet.generate_report_sheet()
+
+
+
+    def generate_csv_report(self):
+        summary_report = OrganizationServiceChangesCSV(
+            report_date=self.report_date,
+            period_start=self.period_start,
+            entity=self.organization,
+            service=None,
+            hierarchy_level=self.hierarchy_level,
+        )
+        self.buf = summary_report.stream()
+        return self.buf

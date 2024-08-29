@@ -14,6 +14,7 @@ from rest_framework.exceptions import NotFound
 from channel_partners.storages import ReportsStorage
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
+    ReportType,
     TaskRetry,
     generate_report,
     get_queued_report_key,
@@ -44,6 +45,12 @@ class TestGenerateReport:
         self.mock_organization_generator = mocker.patch(
             'partners.services.reports_export_service.OrganizationReportGenerator.stream',
             return_value=self.ret_val)
+        self.mock_partner_changes_generator = mocker.patch(
+            'partners.services.reports_export_service.ChannelPartnerServiceChangesReportGenerator.stream',
+            return_value=self.ret_val)
+        self.mock_organization_changes_generator = mocker.patch(
+            'partners.services.reports_export_service.OrganizationServiceChangesReportGenerator.stream',
+            return_value=self.ret_val)
         self.spy_storage_save = mocker.spy(ReportsStorage, 'save')
         self.spy_stream_xlsx = mocker.spy(generate_report, 's')
 
@@ -54,9 +61,11 @@ class TestGenerateReport:
                                  report_date=self.report_date.isoformat(),
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
-                                 report_format=self.report_format)
+                                 report_format=self.report_format,
+                                 report_type=ReportType.usage_report)
         pattern = name_pattern.format(self.channel_partner_id, self.report_format)
         assert re.match(pattern, result)
+        self.mock_partner_generator.assert_called_once()
         self.spy_storage_save.assert_called_once()
         assert result in self.spy_storage_save.mock_calls[0].args
         assert self.ret_val in self.spy_storage_save.mock_calls[0].args
@@ -70,8 +79,36 @@ class TestGenerateReport:
                                  report_date=self.report_date.isoformat(),
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
-                                 report_format=self.report_format)
+                                 report_format=self.report_format,
+                                 report_type=ReportType.usage_report)
         pattern = name_pattern.format(self.organization_id, self.report_format)
+        self.mock_organization_generator.assert_called_once()
+        assert re.match(pattern, result)
+
+    @mock_aws
+    def test_partner_service_changes_report_generation(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        result = generate_report(channel_partner_id=self.channel_partner_id,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
+                                 user_id=self.user_id,
+                                 report_format=self.report_format,
+                                 report_type=ReportType.service_changes_report)
+        pattern = name_pattern.format(self.channel_partner_id, self.report_format)
+        self.mock_partner_changes_generator.assert_called_once()
+        assert re.match(pattern, result)
+
+    @mock_aws
+    def test_organization_service_changes_report_generation(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        result = generate_report(organization_id=self.organization_id,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
+                                 user_id=self.user_id,
+                                 report_format=self.report_format,
+                                 report_type=ReportType.service_changes_report)
+        pattern = name_pattern.format(self.organization_id, self.report_format)
+        self.mock_organization_changes_generator.assert_called_once()
         assert re.match(pattern, result)
 
     def test_unsupported_format(self):
@@ -127,6 +164,12 @@ class TestGenerateReportCsv:
         self.mock_organization_generator = mocker.patch(
             'partners.services.reports_export_service.OrganizationReportGenerator.stream',
             return_value=self.ret_val)
+        self.mock_partner_changes_generator = mocker.patch(
+            'partners.services.reports_export_service.ChannelPartnerServiceChangesReportGenerator.stream',
+            return_value=self.ret_val)
+        self.mock_organization_changes_generator = mocker.patch(
+            'partners.services.reports_export_service.OrganizationServiceChangesReportGenerator.stream',
+            return_value=self.ret_val)
         self.spy_storage_save = mocker.spy(ReportsStorage, 'save')
 
     @mock_aws
@@ -136,7 +179,8 @@ class TestGenerateReportCsv:
                                  report_date=self.report_date.isoformat(),
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
-                                 report_format=self.report_format)
+                                 report_format=self.report_format,
+                                 report_type=ReportType.usage_report)
         pattern = name_pattern.format(self.channel_partner_id, 'zip')
         assert re.match(pattern, result)
         self.spy_storage_save.assert_called_once()
@@ -144,7 +188,7 @@ class TestGenerateReportCsv:
         assert self.ret_val in self.spy_storage_save.mock_calls[0].args
         file = ReportsStorage().open(result)
         assert file.read() == b'Hello World!'
-
+        self.mock_partner_generator.assert_called_once()
 
     @mock_aws
     def test_organization_report_generation(self):
@@ -153,8 +197,36 @@ class TestGenerateReportCsv:
                                  report_date=self.report_date.isoformat(),
                                  period_start=self.period_start.isoformat(),
                                  user_id=self.user_id,
-                                 report_format=self.report_format)
+                                 report_format=self.report_format,
+                                 report_type=ReportType.usage_report)
         pattern = name_pattern.format(self.organization_id, 'zip')
+        assert re.match(pattern, result)
+        self.mock_organization_generator.assert_called_once()
+
+    @mock_aws
+    def test_partner_service_changes_report_generation(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        result = generate_report(channel_partner_id=self.channel_partner_id,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
+                                 user_id=self.user_id,
+                                 report_format=self.report_format,
+                                 report_type=ReportType.service_changes_report)
+        pattern = name_pattern.format(self.channel_partner_id, self.report_format)
+        self.mock_partner_changes_generator.assert_called_once()
+        assert re.match(pattern, result)
+
+    @mock_aws
+    def test_organization_service_changes_report_generation(self):
+        boto3.resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME).create()
+        result = generate_report(organization_id=self.organization_id,
+                                 report_date=self.report_date.isoformat(),
+                                 period_start=self.period_start.isoformat(),
+                                 user_id=self.user_id,
+                                 report_format=self.report_format,
+                                 report_type=ReportType.service_changes_report)
+        pattern = name_pattern.format(self.organization_id, self.report_format)
+        self.mock_organization_changes_generator.assert_called_once()
         assert re.match(pattern, result)
 
     def test_unsupported_format(self):
@@ -204,7 +276,7 @@ class TestGetReportResult:
         self.report_date = datetime.date.today()
         self.period_start = self.report_date.replace(day=1)
         self.report_format = 'csv'
-        self.task_id = f'{uuid4()}'
+        self.task_id = f'{uuid4()}.zip'
         self.file_name = f'{self.task_id}/{uuid4()}'
         self.task_kwargs = dict(
             channel_partner_id=self.channel_partner_id,

@@ -221,7 +221,7 @@ class Generator:
                         service=service,
                         cloud_system_id=system.id,
                         organization_id=system.organization.id,
-                        quantity=random.randint(10, 50),
+                        quantity=random.randint(-5, 50),
                         created_ts=from_ts,
                         effective_ts=from_ts,
                         in_effect=True,

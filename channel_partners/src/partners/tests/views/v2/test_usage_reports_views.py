@@ -19,6 +19,7 @@ from partners.models import (
     OrganizationRoles,
     ReportSnapshot,
 )
+from partners.services.reports_export_service import ReportFormat
 from partners.services.usage_reports_service import (
     ChannelPartnerReportsService,
     CloudSystemReportsService,
@@ -26,7 +27,8 @@ from partners.services.usage_reports_service import (
 )
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
-    get_cached_report_key,
+    ReportType,
+    get_cached_requests_key,
     get_queued_report_key,
 )
 from partners.tasks.services import new_channel_partner_created
@@ -615,39 +617,49 @@ class TestOrganizationGenerateReport:
     def set_task_kwargs(self, task_kwargs: Any):
         self.mock_task.task_kwargs = json.dumps(task_kwargs)
 
+    @pytest.mark.parametrize('view_name, report_type, report_format', [
+        ('v2:organizations-reports-generate-report', ReportType.usage_report, ReportFormat.xlsx),
+        ('v2:organizations-reports-generate-service-changes-report', ReportType.service_changes_report,
+         ReportFormat.xlsx),
+        ('v2:organizations-reports-generate-report', ReportType.usage_report, ReportFormat.csv),
+        ('v2:organizations-reports-generate-service-changes-report', ReportType.service_changes_report,
+         ReportFormat.csv),
+    ])
     @mock_aws
-    def test_success_generate_report(self, mocker):
-        for format in ('xlsx', 'csv'):
-            self.mock_task.status = 'PENDING'
-            query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': format}, doseq=True)
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            self.mock_generate_report.assert_called_once()
-            assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
-                organization_id=str(self.organization.pk),
-                period_start=self.period_start.isoformat(),
-                user_id=self.organization_admin.user_id,
-                report_format=format,
-                hierarchy_level=0
-            )
-            # check cache
-            cache_key = get_cached_report_key(
-                entity_id=self.organization.pk,
-                period_start=self.period_start,
-                user_id=self.organization_admin.user_id,
-                report_format=format
-            )
-            assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
-            assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
+    def test_success_generate_report(self, view_name, report_type, report_format, mocker):
+        path = reverse(view_name, kwargs=self.kwargs)
+        self.mock_task.status = 'PENDING'
+        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': report_format}, doseq=True)
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        self.mock_generate_report.assert_called_once()
+        assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
+            organization_id=str(self.organization.pk),
+            period_start=self.period_start.isoformat(),
+            user_id=self.organization_admin.user_id,
+            report_format=report_format,
+            hierarchy_level=0,
+            report_type=report_type
+        )
+        # check cache
+        cache_key = get_cached_requests_key(
+            report_type=report_type,
+            entity_id=self.organization.pk,
+            period_start=self.period_start,
+            user_id=self.organization_admin.user_id,
+            report_format=report_format
+        )
+        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+        assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
 
-            # check cached requests
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            assert self.mock_generate_report.call_count == 2
-            assert len(caches['default'].get(cache_key)) == 2
-            self.mock_generate_report.reset_mock()
+        # check cached requests
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        assert self.mock_generate_report.call_count == 2
+        assert len(caches['default'].get(cache_key)) == 2
+        self.mock_generate_report.reset_mock()
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'
@@ -792,38 +804,49 @@ class TestChannelPartnerGenerateReport:
     def set_task_kwargs(self, task_kwargs: Any):
         self.mock_task.task_kwargs = json.dumps(task_kwargs)
 
+    @pytest.mark.parametrize('view_name, report_type, report_format', [
+        ('v2:channelpartners-reports-generate-report', ReportType.usage_report, ReportFormat.xlsx),
+        ('v2:channelpartners-reports-generate-service-changes-report', ReportType.service_changes_report,
+         ReportFormat.xlsx),
+        ('v2:channelpartners-reports-generate-report', ReportType.usage_report, ReportFormat.csv),
+        ('v2:channelpartners-reports-generate-service-changes-report', ReportType.service_changes_report,
+         ReportFormat.csv),
+    ])
     @mock_aws
-    def test_success_generate_report(self, mocker):
-        for format in ('xlsx', 'csv'):
-            self.mock_task.status = 'PENDING'
-            query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': format}, doseq=True)
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            self.mock_generate_report.assert_called_once()
-            assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
-                channel_partner_id=str(self.channel_partner.pk),
-                period_start=self.period_start.isoformat(),
-                user_id=self.admin.user_id,
-                report_format=format,
-                hierarchy_level=1
-            )
-            assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
-            # check cache
-            cache_key = get_cached_report_key(
-                entity_id=self.channel_partner.pk,
-                period_start=self.period_start,
-                user_id=self.admin.user_id,
-                report_format=format
-            )
-            assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
-            # check cached requests
-            response = self.client.post(self.path, QUERY_STRING=query_string)
-            assert response.status_code == 200
-            assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
-            assert self.mock_generate_report.call_count == 2
-            assert len(caches['default'].get(cache_key)) == 2
-            self.mock_generate_report.reset_mock()
+    def test_success_generate_report(self, view_name, report_type, report_format, mocker):
+        self.mock_task.status = 'PENDING'
+        path = reverse(view_name, kwargs=self.kwargs)
+        query_string = urlencode({'periodStartDate': self.period_start, 'reportFormat': report_format}, doseq=True)
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        self.mock_generate_report.assert_called_once()
+        assert self.mock_generate_report.call_args.kwargs['kwargs'] == dict(
+            channel_partner_id=str(self.channel_partner.pk),
+            period_start=self.period_start.isoformat(),
+            user_id=self.admin.user_id,
+            report_format=report_format,
+            hierarchy_level=1,
+            report_type=report_type
+        )
+        # check cache
+        cache_key = get_cached_requests_key(
+            report_type=report_type,
+            entity_id=self.channel_partner.pk,
+            period_start=self.period_start,
+            user_id=self.admin.user_id,
+            report_format=report_format
+        )
+        assert 0 < caches['default'].get(cache_key)[-1] < datetime.datetime.now().timestamp()
+        assert caches['default'].get(get_queued_report_key(self.task_id)) == '1'
+
+        # check cached requests
+        response = self.client.post(path, QUERY_STRING=query_string)
+        assert response.status_code == 200
+        assert response.data == {'id': self.task_id, 'status': ReportTaskState.pending.value}
+        assert self.mock_generate_report.call_count == 2
+        assert len(caches['default'].get(cache_key)) == 2
+        self.mock_generate_report.reset_mock()
 
     def test_failed_export_report_task_not_found(self, mocker):
         self.mock_task.status = 'PENDING'

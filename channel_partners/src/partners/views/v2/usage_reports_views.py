@@ -66,8 +66,10 @@ from partners.services.usage_reports_service import (
 )
 from partners.tasks.constants import ReportTaskState
 from partners.tasks.service_reports_export import (
-    get_cached_report_key,
+    ReportType,
     get_report_result,
+    get_service_changes_requests_key,
+    get_usage_report_requests_key,
     start_report_generation,
 )
 from partners.views.v2.views import (
@@ -365,7 +367,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
         methods=['get'],
         url_path=rf'usage_report/export/(?P<report_id>{converters.UUIDConverter.regex})',
     )
-    def export_report(self, request, report_id=None, **kwargs):
+    def export_usage_report(self, request, report_id=None, **kwargs):
         organization = self.get_entity()
         result = self.get_report_result(report_id, request.user.id)
         result['organization_id'] = organization.id
@@ -388,7 +390,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
         period_start = param_serializer.validated_data['periodStartDate']
         report_format = param_serializer.validated_data['reportFormat']
         organization = self.get_entity()
-        cache_key = get_cached_report_key(
+        cache_key = get_usage_report_requests_key(
             entity_id=organization.id,
             period_start=period_start,
             user_id=request.user.id,
@@ -400,6 +402,41 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
             user_id=request.user.id,
             report_format=report_format,
             hierarchy_level=get_hierarchy_level(organization, request.user),
+            report_type=ReportType.usage_report,
+        )
+        task = start_report_generation(cache_key, task_kwargs)
+        return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
+                        status=status.HTTP_200_OK)
+
+    @extend_schema(
+        summary='Generate an organization service changes report file.',
+        parameters=[ReportExportParamSerializer],
+        responses={'200': OrganizationReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path=r'service_changes_history/export',
+    )
+    def generate_service_changes_report(self, request, *args, **kwargs):
+        param_serializer = ReportExportParamSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        period_start = param_serializer.validated_data['periodStartDate']
+        report_format = param_serializer.validated_data['reportFormat']
+        organization = self.get_entity()
+        cache_key = get_service_changes_requests_key(
+            entity_id=organization.id,
+            period_start=period_start,
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        task_kwargs = dict(
+            organization_id=str(organization.id),
+            period_start=period_start.isoformat(),
+            user_id=request.user.id,
+            report_format=report_format,
+            hierarchy_level=get_hierarchy_level(organization, request.user),
+            report_type=ReportType.service_changes_report,
         )
         task = start_report_generation(cache_key, task_kwargs)
         return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
@@ -588,7 +625,7 @@ class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseVi
         period_start = param_serializer.validated_data['periodStartDate']
         report_format = param_serializer.validated_data['reportFormat']
         channel_partner = self.get_entity()
-        cache_key = get_cached_report_key(
+        cache_key = get_usage_report_requests_key(
             entity_id=channel_partner.id,
             period_start=period_start,
             user_id=request.user.id,
@@ -600,6 +637,41 @@ class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseVi
             user_id=request.user.id,
             report_format=report_format,
             hierarchy_level=get_hierarchy_level(channel_partner, request.user),
+            report_type=ReportType.usage_report
+        )
+        task = start_report_generation(cache_key, task_kwargs)
+        return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},
+                        status=status.HTTP_200_OK)
+
+    @extend_schema(
+        summary='Generate an channel partner service changes report file.',
+        parameters=[ReportExportParamSerializer],
+        responses={'200': ChannelPartnerReportExportSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path=r'service_changes_history/export',
+    )
+    def generate_service_changes_report(self, request, *args, **kwargs):
+        param_serializer = ReportExportParamSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        period_start = param_serializer.validated_data['periodStartDate']
+        report_format = param_serializer.validated_data['reportFormat']
+        channel_partner = self.get_entity()
+        cache_key = get_service_changes_requests_key(
+            entity_id=channel_partner.id,
+            period_start=period_start,
+            user_id=request.user.id,
+            report_format=report_format,
+        )
+        task_kwargs = dict(
+            channel_partner_id=str(channel_partner.id),
+            period_start=period_start.isoformat(),
+            user_id=request.user.id,
+            report_format=report_format,
+            hierarchy_level=get_hierarchy_level(channel_partner, request.user),
+            report_type=ReportType.service_changes_report
         )
         task = start_report_generation(cache_key, task_kwargs)
         return Response({'id': task.task_id, 'status': ReportTaskState.pending.value},

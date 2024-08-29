@@ -114,14 +114,15 @@ def run(instance_name, root_name=None):
         try:
             ireg = IReg(instance_name)
             host_name = ireg.get_default_host()
+            customizations = ireg.get_other_customizations()
         except Exception as ex:
             logger.critical("Cannot get data from ireg", exc_info=ex)
-            return
+            customizations = []
+            host_name = settings.DEFAULT_HOST_NAME.lower()
         if not host_name:
             raise ValueError(f'No default host found in ireg for instance {instance_name}')
         host_name = host_name.lower()
         root_name = NX_NAME
-        customizations = ireg.get_other_customizations()
     with transaction.atomic():
         root_channel_partner = create_root_channel_partner(root_name, host_name)
         for customization, host_name in customizations:

@@ -1,6 +1,7 @@
 import datetime
 import json
 import uuid
+from enum import StrEnum
 from typing import Any
 
 import structlog
@@ -28,7 +29,9 @@ from partners.models import (
 )
 from partners.services.reports_export_service import (
     ChannelPartnerReportGenerator,
+    ChannelPartnerServiceChangesReportGenerator,
     OrganizationReportGenerator,
+    OrganizationServiceChangesReportGenerator,
     ReportFormat,
 )
 from partners.tasks.constants import ReportTaskState
@@ -42,6 +45,10 @@ REPORT_EXPORT_TASK_TTL = 1800
 # Daily report generation limit for user.
 DAILY_REPORTS_LIMIT = 100
 
+
+class ReportType(StrEnum):
+    usage_report = 'usage_report'
+    service_changes_report = 'service_changes_report'
 
 class TaskRetry(Exception):
     pass
@@ -62,13 +69,44 @@ def get_queued_report_key(task_id: str | uuid.UUID):
     return f'report_export_task-{task_id}'
 
 
-def get_cached_report_key(
+def get_cached_requests_key(
+        report_type: ReportType,
         entity_id: uuid.UUID,
         period_start: datetime.date,
         user_id: int,
         report_format: str = ReportFormat.xlsx,
 ):
-    return f'report=={entity_id}=={period_start}=={report_format}=={user_id}'
+    return f'report=={report_type}=={entity_id}=={period_start}=={report_format}=={user_id}'
+
+
+def get_usage_report_requests_key(
+        entity_id: uuid.UUID,
+        period_start: datetime.date,
+        user_id: int,
+        report_format: str = ReportFormat.xlsx,
+):
+    return get_cached_requests_key(
+        report_type=ReportType.usage_report,
+        entity_id=entity_id,
+        period_start=period_start,
+        user_id=user_id,
+        report_format=report_format
+    )
+
+
+def get_service_changes_requests_key(
+        entity_id: uuid.UUID,
+        period_start: datetime.date,
+        user_id: int,
+        report_format: str = ReportFormat.xlsx,
+):
+    return get_cached_requests_key(
+        report_type=ReportType.service_changes_report,
+        entity_id=entity_id,
+        period_start=period_start,
+        user_id=user_id,
+        report_format=report_format
+    )
 
 
 @shared_task(retry_kwargs={'max_retries': 3, 'countdown': 60}, autoretry_for=(TaskRetry,), result_serializer='pickle')
@@ -78,7 +116,8 @@ def generate_report(channel_partner_id: str = None,
                     period_start: str = None,
                     user_id: int = None,
                     report_format: ReportFormat = ReportFormat.xlsx,
-                    hierarchy_level: int = HierarchyLevels.own):
+                    hierarchy_level: int = HierarchyLevels.own,
+                    report_type: ReportType = ReportType.usage_report):
     organization_id = cast_uuid(organization_id)
     channel_partner_id = cast_uuid(channel_partner_id)
     period_start = datetime.datetime.strptime(period_start, '%Y-%m-%d').date() if period_start else None
@@ -86,14 +125,6 @@ def generate_report(channel_partner_id: str = None,
     task_id = current_task.request.id
     retry_count = current_task.request.retries
     max_retries = current_task.max_retries
-    match report_format:
-        case ReportFormat.xlsx:
-            file_ext = 'xlsx'
-        case ReportFormat.csv:
-            file_ext = 'zip'
-        case _:
-            logger.warning('Unsupported format', format=report_format, task_id=task_id)
-            raise ValueError(f'Unsupported format format={report_format}')
     if not channel_partner_id and not organization_id:
         logger.warning('Missing channel_partner_id or organization_id', task_id=current_task.request.id)
         raise ValueError('Missing channel_partner_id or organization_id')
@@ -104,7 +135,7 @@ def generate_report(channel_partner_id: str = None,
         report_date = datetime.date.today()
     if not period_start:
         period_start = report_date.replace(day=1)
-    if channel_partner_id:
+    if channel_partner_id and report_type == ReportType.usage_report:
         channel_partner = ChannelPartner.objects.get(id=channel_partner_id)
         generator = ChannelPartnerReportGenerator(
             channel_partner,
@@ -113,7 +144,16 @@ def generate_report(channel_partner_id: str = None,
             report_format=report_format,
             hierarchy_level=hierarchy_level,
         )
-    else:
+    elif channel_partner_id and report_type == ReportType.service_changes_report:
+        channel_partner = ChannelPartner.objects.get(id=channel_partner_id)
+        generator = ChannelPartnerServiceChangesReportGenerator(
+            channel_partner,
+            report_date=report_date,
+            period_start=period_start,
+            report_format=report_format,
+            hierarchy_level=hierarchy_level,
+        )
+    elif organization_id and report_type == ReportType.usage_report:
         organization = Organization.objects.get(id=organization_id)
         generator = OrganizationReportGenerator(
             organization,
@@ -122,16 +162,29 @@ def generate_report(channel_partner_id: str = None,
             report_format=report_format,
             hierarchy_level=hierarchy_level,
         )
+    elif organization_id and report_type == ReportType.service_changes_report:
+        organization = Organization.objects.get(id=organization_id)
+        generator = OrganizationServiceChangesReportGenerator(
+            organization,
+            report_date=report_date,
+            period_start=period_start,
+            report_format=report_format,
+            hierarchy_level=hierarchy_level,
+        )
+    else:
+        logger.warning('Unsupported report type', report_type=report_type, task_id=task_id)
+        raise ValueError(f'Unsupported report type report_type={report_type}')
+    file_ext = generator.report_file_extension
     try:
         fp = generator.stream()
     except Exception as e:
         logger.error('Failed to generate report', exc_info=e)
         if retry_count >= max_retries:
             caches['default'].delete(
-                get_cached_report_key(entity_id=channel_partner_id or organization_id,
-                                      period_start=period_start,
-                                      user_id=user_id,
-                                      report_format=report_format)
+                get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,
+                                              period_start=period_start,
+                                              user_id=user_id,
+                                              report_format=report_format)
             )
         raise TaskRetry('Failed to generate report. Retrying...')
     file_name = f'{organization_id or channel_partner_id}/{task_id}.{file_ext}'
@@ -142,10 +195,10 @@ def generate_report(channel_partner_id: str = None,
         logger.error('Failed to save report', exc_info=e)
         if retry_count >= max_retries:
             caches['default'].delete(
-                get_cached_report_key(entity_id=channel_partner_id or organization_id,
-                                      period_start=period_start,
-                                      user_id=user_id,
-                                      report_format=report_format)
+                get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,
+                                              period_start=period_start,
+                                              user_id=user_id,
+                                              report_format=report_format)
             )
         raise TaskRetry('Failed to save report. Retrying...')
     return filename
@@ -217,8 +270,8 @@ def get_report_result(
     storage = ReportsStorage()
     if not storage.exists(filename):
         return failed_report('File not found.', report_id=report_id)
-
-    download_file_name = f'{slugify(entity.name)}_{period_start}.{report_format.report_extension()}'
+    file_ext = filename.split('.')[-1]
+    download_file_name = f'{slugify(entity.name)}_{period_start}.{file_ext}'
     response_data = {
         'id': report_id,
         'status': ReportTaskState.success,
