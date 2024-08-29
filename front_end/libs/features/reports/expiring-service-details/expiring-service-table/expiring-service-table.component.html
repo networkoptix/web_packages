@@ -1,58 +1,62 @@
-<nx-table
-    ngClass="expiring-service-details-table"
-    [style.height]="'calc(100% - 12px)'"
-    set-pagination
-    set-sorting
-    [set-row-expand]="false"
-    [set-selected-item-id]="selectedRecordId"
-    [data]="records()"
-    (onRowClick)="openExpiringServiceDetailsDialog($event)"
->
-    <ng-template #header>
-        @for (head of headers; track head.name) {
-            <div
-                class="table-header"
-                [attr.id]="head.name"
-                [style.justify-content]="head.align || 'flex-end'"
-            >
-                <span>{{ head.value }}</span>
-                @if (head.tooltip) {
-                    <span class="hint-icon">
-                        <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint
-                    ></span>
+@if (records().length) {
+    <nx-table
+        ngClass="expiring-service-details-table"
+        [style.height]="'calc(100% - 12px)'"
+        set-pagination
+        set-sorting
+        [set-row-expand]="false"
+        [set-selected-item-id]="selectedRecordId"
+        [data]="records()"
+        (onRowClick)="openExpiringServiceDetailsDialog($event)"
+    >
+        <ng-template #header>
+            @for (head of headers; track head.name) {
+                <div
+                    class="table-header"
+                    [attr.id]="head.name"
+                    [style.justify-content]="head.align || 'flex-end'"
+                >
+                    <span>{{ head.value }}</span>
+                    @if (head.tooltip) {
+                        <span class="hint-icon">
+                            <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint
+                        ></span>
+                    }
+                </div>
+            }
+        </ng-template>
+        <ng-template
+            #rows
+            let-row
+        >
+            <div [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }">
+                @if (isPartnerTable() && isHiddenNameLink(row.usedBy)) {
+                    <nx-hidden-name-link [link]="row.usedBy" />
+                } @else if (isPartnerTable() && !isHiddenNameLink(row.usedBy)) {
+                    <span>{{ row.usedBy }}</span>
+                } @else {
+                    <nx-group-path [groupPath]="row.usedByPath" />
                 }
             </div>
-        }
-    </ng-template>
-    <ng-template
-        #rows
-        let-row
-    >
-        <div [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }">
-            @if (isPartnerTable() && isHiddenNameLink(row.usedBy)) {
-                <nx-hidden-name-link [link]="row.usedBy" />
-            } @else if (isPartnerTable() && !isHiddenNameLink(row.usedBy)) {
-                <span>{{ row.usedBy }}</span>
-            } @else {
-                <nx-group-path [groupPath]="row.usedByPath" />
-            }
-        </div>
-        <div
-            class="align-right"
-            [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }"
+            <div
+                class="align-right"
+                [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }"
+            >
+                {{ row.expirationDate }}
+            </div>
+            <div
+                class="align-right"
+                [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }"
+            >
+                {{ row.channels }}
+            </div>
+        </ng-template>
+        <ng-template #summaryRow
+            ><div></div>
+            <div></div>
+            <div class="align-right">{{ totals().channels }}</div></ng-template
         >
-            {{ row.expirationDate }}
-        </div>
-        <div
-            class="align-right"
-            [ngClass]="{ 'no-hover': !row.hasMultipleExpirations }"
-        >
-            {{ row.channels }}
-        </div>
-    </ng-template>
-    <ng-template #summaryRow
-        ><div></div>
-        <div></div>
-        <div class="align-right">{{ totals().channels }}</div></ng-template
-    >
-</nx-table>
+    </nx-table>
+} @else {
+    <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
+}

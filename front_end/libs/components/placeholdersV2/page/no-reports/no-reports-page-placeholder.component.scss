@@ -1,0 +1,9 @@
+@use "theme_generator" as tg;
+
+@include tg.generate-theme-vars((
+  '--iconFillColor' : ('dark': 17, 'light': -9)
+), ':host');
+
+.icon-with-fill {
+  fill: var(--iconFillColor)
+}
