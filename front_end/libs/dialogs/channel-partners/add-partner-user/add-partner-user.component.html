@@ -62,7 +62,7 @@
                 formControlName="permissionGroup"
                 [placeholder]="'Select' | translate"
             >
-                @for (role of partnerRoles(); track role.id) {
+                @for (role of partnerRoles$$(); track role.id) {
                     <nx-select-item
                         [value]="role.id"
                         [selected]="permissionGroupControl.value === role.id"

@@ -90,7 +90,7 @@
                                 @for (role of rolesWithDescriptions$$(); track role.id) {
                                     <nx-paragraph-select-item [value]="role.id">
                                         <nx-search-highlight
-                                            [text]="role.name"
+                                            [text]="role.name | translate"
                                             [search]="searchingQuery$$()"
                                             title
                                         >
