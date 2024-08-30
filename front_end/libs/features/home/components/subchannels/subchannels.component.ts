@@ -24,6 +24,7 @@ import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -63,6 +64,7 @@ import { NxCardComponent } from '../card/card.component';
         NxIntersectionObserver,
         NxPreLoaderComponent,
     ],
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxSubchannelsComponent {
     permissionsStore = inject(PermissionsStore);
