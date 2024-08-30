@@ -1,4 +1,9 @@
 @use "typography";
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+    '--placeholder-color': ('dark': 17, 'light': -9)
+),':host');
 
 :host {
     width: 100%;
@@ -40,18 +45,23 @@
     max-width: 250px;
     text-align: center;
     margin: auto;
+
+    .new-partner {
+        @include typography.medium14nocolor;
+        color: var(--btn-default-color)
+    }
 }
 
 .placeholder-heading {
-    @include typography.medium15dark17;
-    color: var(--placehoder-v2-title-color) !important;
-    margin-bottom: 4px;
+    @include typography.medium16nocolor;
+    color: var(--placeholder-color) !important;
+    margin-bottom: 3px;
 }
 
 .placeholder-body {
-    @include typography.regular13dark17;
-    color: var(--placehoder-v2-message-color) !important;
-    margin-bottom: 15px;
+    @include typography.regular14nocolor;
+    color: var(--placeholder-color) !important;
+    margin-bottom: 13px;
 }
 
 .placeholder-icon {
