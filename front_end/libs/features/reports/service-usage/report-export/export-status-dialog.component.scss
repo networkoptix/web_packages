@@ -1,22 +1,26 @@
 @use '../../../../dialogs/nx-modal.scss';
 
 :host {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  margin: 20px;
-  width: 350px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    width: 350px;
 }
 
 .nx-modal__header-title {
-  margin: 0px;
+    margin: 0px;
 }
 
 .nx-modal__body {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+
+    .spinner {
+        margin-left: auto; // Show spinner on the right
+    }
 }
 
 svg-icon + .nx-modal__body-text {
-  margin-left: 4px;
+    margin-left: 4px;
 }
