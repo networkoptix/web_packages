@@ -5,7 +5,12 @@
 }
 @include settings.settings-block();
 
+.block-content--form nx-form-field {
+    max-width: unset;
+}
+
 .state-toggle-block__state-info {
+    max-width: 20rem;
     padding-left: 0.25rem;
     margin-top: 0.5rem;
     color: var(--CP-state-help-color);
