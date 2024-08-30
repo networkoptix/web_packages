@@ -72,8 +72,8 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
         return roles?.map(role => {
             return {
                 id: role.id,
-                name: role.name,
-                description: this.LANG.channelPartners.usersTable.roleDescriptions[role.name],
+                name: this.LANG.channelPartners.usersTable.accessInfo[role.id].name,
+                description: this.LANG.channelPartners.usersTable.accessInfo[role.id].description,
             };
         });
     });

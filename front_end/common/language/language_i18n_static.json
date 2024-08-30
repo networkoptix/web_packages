@@ -1418,11 +1418,6 @@
             "groups": "Permission Group"
         },
         "usersTable": {
-            "roleDescriptions": {
-                "Administrator": "Unrestricted access to the Channel Partner account, including permission to manage child entities",
-                "Manager": "Permission to manage all Child Organizations of the Channel Partner",
-                "Reports Viewer": "Permission is limited to viewing reports"
-            },
             "infoToolTip": "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.",
             "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
             "adminWarning": "There should be at least one user in the channel partner with Administrator permission",
@@ -1439,6 +1434,20 @@
                 "footer": {
                     "actionLabel": "Delete",
                     "cancelLabel": "Cancel"
+                }
+            },
+            "accessInfo": {
+                "00000000-0000-4000-8000-000000000001": {
+                    "name": "Administrators",
+                    "description": "Unrestricted access to the Channel Partner account, including permission to manage child entities"
+                }, 
+                "00000000-0000-4000-8000-000000000002": {
+                    "name": "Managers",
+                    "description": "Permission to manage all Child Organizations of the Channel Partner"
+                },
+                "00000000-0000-4000-8000-000000000003": {
+                    "name": "Reports Viewers",
+                    "description": "Permission is limited to viewing reports"
                 }
             }
         },

@@ -48,6 +48,7 @@ interface UserInChildOrgError extends HttpErrorResponse {
     ],
 })
 export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
+    LANG = LANG;
     private accountEmail = inject(Store).selectSignal(accountSelectors.selectCurrentUserName);
     private partnerUsers = new Set<string>(this.data.users.map(user => user.email));
     private backendRejected = new Set<string>();
@@ -65,11 +66,17 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         onChange: ['selfAdd', 'existingUser', 'backendReject'],
     });
 
-    partnerRoles = this.cpService.channelPartnerRoles$$;
+    partnerRoles$$ = computed(() => {
+        const roles = this.cpService.channelPartnerRoles$$();
+        return roles.map(role => ({
+            ...role,
+            name: this.LANG.channelPartners.usersTable.accessInfo[role.id].name,
+        }));
+    });
     partnerRolesMessages = computed<{ key: string; text: string }[]>(() =>
         this.cpService.channelPartnerRoles$$().map(role => ({
             key: role.id,
-            text: LANG.channelPartners.usersTable.roleDescriptions[role.name],
+            text: LANG.channelPartners.usersTable.accessInfo[role.id].description,
         })),
     );
     permissionGroupControl = new FormControl<string | null>(null, {
