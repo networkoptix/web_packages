@@ -21,9 +21,7 @@ import { NxButtonToggleComponent as ButtonToggle } from './button-toggle.compone
     template: `<ng-content></ng-content>`,
     styles: `
         :host {
-            display: inline-grid;
-            grid-auto-flow: column;
-            grid-auto-columns: 1fr;
+            display: flex;
         }
     `,
     providers: [
