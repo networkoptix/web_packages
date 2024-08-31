@@ -1167,7 +1167,7 @@
     "Permission to manage all Child Organizations of the Channel Partner": "Permission to manage all Child Organizations of the Channel Partner",
     "Permissions for the folder will be overwritten": "Permissions for the folder will be overwritten",
     "Permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten": "Permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten",
-    "Phone": "Phone",
+    "Phone": "電話",
     "Phone already in use": "Phone already in use",
     "Phone number is invalid": "Phone number is invalid",
     "Phone number is required": "Phone number is required",

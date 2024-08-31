@@ -1167,7 +1167,7 @@
     "Permission to manage all Child Organizations of the Channel Partner": "Kanal Partnerinin tüm Alt Organizasyonlarını yönetme izni",
     "Permissions for the folder will be overwritten": "Klasöre ilişkin izinlerin üzerine yazılacak",
     "Permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten": "{count, plural, =0{# Klasör} one{# Klasör} other{# Klasörlerin}} izinlerinin üzerine yazılacak",
-    "Phone": "Phone",
+    "Phone": "Telefon",
     "Phone already in use": "Telefon zaten kullanılıyor",
     "Phone number is invalid": "Telefon numarası geçersiz",
     "Phone number is required": "Telefon numarası gerekli",
