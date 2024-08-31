@@ -50,7 +50,7 @@ httpx = "0.24.0" #MIT License|https://github.com/projectdiscovery/httpx|https://
 importlib_metadata = "1.6.0" #Apache 2.0 License|https://github.com/python/importlib_metadata|https://github.com/python/importlib_metadata/blob/main/LICENSE
 inlinestyler = "0.2.1" #BSD 3-Clause "New" or "Revised" License|https://github.com/dlanger/inlinestyler|https://github.com/dlanger/inlinestyler/blob/master/LICENSE
 jsonfield = "3.1.0" #MIT License|https://github.com/rpkilby/jsonfield|https://github.com/rpkilby/jsonfield/blob/master/LICENSE
-libsass = "0.20.1" #Copyright (C) 2012-2016 by the Sass Open Source Foundation|https://github.com/sass/libsass|https://github.com/sass/libsass/blob/master/LICENSE
+libsass = "0.23.0" #Copyright (C) 2012-2016 by the Sass Open Source Foundation|https://github.com/sass/libsass|https://github.com/sass/libsass/blob/master/LICENSE
 lxml = { version = "~5.2.0", extras = ["html_clean"] } # BSD license |https://github.com/lxml/lxml|https://github.com/lxml/lxml/blob/master/LICENSES.txt; BSD 3-Clause "New" or "Revised" License|https://github.com/fedora-python/lxml_html_clean|https://github.com/fedora-python/lxml_html_clean/blob/main/LICENSE.txt
 meilisearch = "0.17.0" #MIT License|https://github.com/meilisearch/meilisearch|https://github.com/meilisearch/meilisearch/blob/main/LICENSE
 mistletoe = "0.7.2" #MIT License|https://github.com/miyuchina/mistletoe|https://github.com/miyuchina/mistletoe/blob/master/LICENSE
@@ -68,8 +68,8 @@ pytz = "*" #MIT License|https://github.com/stub42/pytz|https://github.com/stub42
 PyYAML = "6.0.1" #MIT License|https://github.com/yaml/pyyaml|https://github.com/yaml/pyyaml/blob/main/LICENSE
 redis = "4.5.5" #BSD 3-Clause "New" or "Revised" License|https://github.com/redis/redis|https://github.com/redis/redis/blob/unstable/COPYING
 requests = "~2.32.0" #Apache License 2.0|https://github.com/psf/requests|https://github.com/psf/requests/blob/main/LICENSE
-"ruamel.yaml" = "0.17.21" #MIT License|https://github.com/commx/ruamel-yaml|https://github.com/commx/ruamel-yaml/blob/master/LICENSE
-"ruamel.yaml.clib" = "0.2.6" #MIT License|https://github.com/ruamel/yaml.clib|https://github.com/ruamel/yaml.clib/blob/master/LICENSE
+"ruamel.yaml" = "0.18.6" #MIT License|https://github.com/commx/ruamel-yaml%7Chttps://github.com/commx/ruamel-yaml/blob/master/LICENSE
+"ruamel.yaml.clib" = "0.2.8" #MIT License|https://github.com/ruamel/yaml.clib%7Chttps://github.com/ruamel/yaml.clib/blob/master/LICENSE
 uvicorn = "~0.22.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/encode/uvicorn|https://github.com/encode/uvicorn/blob/master/LICENSE.md
 zenpy = "2.0.40" #GNU General Public License v3.0|https://github.com/facetoe/zenpy|https://github.com/facetoe/zenpy/blob/master/LICENSE
 etils = { version = "*", extras = ["edc"] } #Apache License 2.0|https://github.com/google/etils|https://github.com/google/etils/blob/main/LICENSE

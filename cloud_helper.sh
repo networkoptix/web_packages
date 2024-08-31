@@ -143,6 +143,7 @@ function setup_env() {
     printf "Installing pip packages for build_scripts and cloud\n\n"
     export PYCURL_SSL_LIBRARY=openssl
     export_poetry_requirements
+
     pip install --upgrade -r cloud/requirements.txt
     source ./env/bin/activate
 }
@@ -218,7 +219,10 @@ function setup_or_activate_virtualenv() {
 
     # Copy necessary config for virutalenv
     cp etc/virtual_env_template/* $VENV_DIR
-    export $PYTHONPATH:$(pwd)/common/python
+    COMMON_PYTHON_PATH="$(pwd)/common/python"
+    if [[ "$PYTHONPATH" != *"$COMMON_PYTHON_PATH"* ]]; then
+        echo "export PYTHONPATH=\"$PYTHONPATH:$COMMON_PYTHON_PATH\"" >> ~/.bash_profile
+    fi
 
 }
 
@@ -866,8 +870,12 @@ do
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then
-                echo "cloud-helper CLI not installed. Installing now."
-                install_cli
+                read -p "cloud-helper CLI not installed. Do you want to install (y/n): " yn
+                case $yn in
+                    y)
+                      install_cli
+                    ;;
+                esac
             else
                 cloud-helper
             fi
