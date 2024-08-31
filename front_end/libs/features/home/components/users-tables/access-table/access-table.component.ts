@@ -306,7 +306,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
 
                     this.router
                         .navigate([
-                            `/home/channelPartners/${partnerId}/organization/${orgId}/users`,
+                            `/home/channel-partners/${partnerId}/organization/${orgId}/users`,
                         ])
                         .catch(error => {
                             console.error(error);
