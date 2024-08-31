@@ -19,8 +19,9 @@ h3 {
 
 .systems-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 320px);
-    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, 334px);
+    column-gap: 16px;
+    row-gap: 16px;
 }
 
 .user-name {
