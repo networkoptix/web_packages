@@ -246,7 +246,8 @@
             "type": "text",
             "value": "",
             "description": "Application name used for domain verification (Usually domain in reverse)",
-            "advanced": true
+            "advanced": true,
+            "optional": true
           },
           {
             "label": "Android App sha256 fingerprints",
