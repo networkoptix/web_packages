@@ -23,7 +23,22 @@ jenkins-build-webadmin:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "GITLAB_REFSPEC=$CI_COMMIT_SHA"
+      "GITLAB_REFSPEC=$CI_COMMIT_SHA" 2>&1 | tee "build.log"
+    - |
+      JENKINS_JOB_URL="$(grep 'Job Url:' "build.log" | \
+        head -1 | \
+        sed 's/\x1b\[[0-9;]*m//g' | \
+        awk -F ': ' '{print $2}')"
+    - curl
+      --fail
+      --silent
+      --show-error
+      -X GET
+      --user "jenkins:$(cat "${JENKINS_API_TOKEN_FILE}")"
+      "${JENKINS_JOB_URL}artifact/ARTIFACTORY_WEBADMIN_URL.envvar" > artifactory_webadmin_url.env
+  artifacts:
+    reports:
+      dotenv: artifactory_webadmin_url.env
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .webadmin_changes ]
