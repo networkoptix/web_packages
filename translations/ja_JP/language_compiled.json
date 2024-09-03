@@ -544,7 +544,7 @@
     "Failed to remove the server from system.": "サーバーをシステムから削除できませんでした。",
     "Failed to reset server.": "サーバーのリセットに失敗しました。",
     "Failed to reset server. Please check if password you entered is correct and server is online and try again.": "サーバーのリセットに失敗しました。入力したパスワードが正しいかどうか、サーバーがオンラインかどうかを確認して、もう一度お試しください。",
-    "Failed to the check current system's password.": "現在のシステムのパスワードを確認できませんでした。",
+    "Failed to the check current system's password.": "現在のシステムのパスワード確認に失敗しました。",
     "Failed to transfer ownership.": "所有権の譲渡に失敗しました。",
     "Features": "機能",
     "Feb": "2月",
