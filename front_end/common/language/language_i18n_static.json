@@ -1010,7 +1010,6 @@
             "directOverwrite": "Permissions for the folder will be overwritten",
             "indirectOverwrite": "Permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten",
             "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }",
-            "selfAdd": "You cannot add yourself",
             "systemAlreadyInFolder": "System is already in that folder",
             "cannotMoveIntoSelf": "You cannot move a folder into itself",
             "confirmAccessLevelChange": {
@@ -1335,7 +1334,7 @@
                 "00000000-0000-4000-8000-000000000001": {
                     "name": "Administrators",
                     "description": "Unrestricted access to the Channel Partner account, including permission to manage child entities"
-                }, 
+                },
                 "00000000-0000-4000-8000-000000000002": {
                     "name": "Managers",
                     "description": "Permission to manage all Child Organizations of the Channel Partner"
