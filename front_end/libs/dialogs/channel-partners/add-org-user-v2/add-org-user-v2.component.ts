@@ -28,6 +28,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom } from 'rxjs';
 
+import {
+    NxErrorMatches,
+    errorMatcherFactory,
+} from '@components/forms/form-field/error-state-matcher';
+import { NxFormFieldModule } from '@components/forms/forms.module';
+import { NxInputComponent } from '@components/forms/input/input.component';
+import { NxValidators } from '@components/forms/validators';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
@@ -41,7 +48,6 @@ import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
-import { simpleEmailRegex } from '@static-variables';
 import { accountSelectors } from '@store/account';
 import { formControlValueSignal } from '@utils/nx';
 
@@ -61,6 +67,12 @@ import { NxOrgStepSelectComponent } from './org-step-select/org-step-select.comp
  */
 type UserRoles = Map<string, Map<string, string>>;
 
+interface UserInParentPartnerError extends HttpErrorResponse {
+    status: 400;
+    error: { email: [string] };
+}
+/* User {user} has a role in the organization parent channel partner and cannot be added to organization {organization}. */
+
 @Component({
     selector: 'nx-add-org-user-v2',
     templateUrl: 'add-org-user-v2.component.html',
@@ -76,6 +88,8 @@ type UserRoles = Map<string, Map<string, string>>;
         TranslateModule,
         NgxTranslateCutModule,
 
+        NxFormFieldModule,
+        NxInputComponent,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
         NxOrgStepSelectComponent,
@@ -96,6 +110,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     organization = inject<DT['data']>(DIALOG_DATA).organization;
     groups = this.groupsStore.sortedGroups$$;
     private groupFlatMap = this.groupsStore.groupFlatMap$$;
+    private backendRejected = new Set<string>();
 
     @ViewChild('stepper') private stepper: CdkStepper;
     @ViewChild(NxOrgTreeSelectorComponent) private treeComponent: NxOrgTreeSelectorComponent;
@@ -125,13 +140,15 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     emailControl = new FormControl('', {
         nonNullable: true,
         validators: [
-            Validators.required,
-            Validators.pattern(simpleEmailRegex),
-            (control: FormControl<string>) => {
-                return this.accountEmail() === control.value ? { selfAdd: true } : null;
-            },
+            ...NxValidators.email(),
+            NxValidators.forbidden(this.accountEmail, 'selfAdd'),
+            NxValidators.forbidden(this.backendRejected, 'backendReject'),
         ],
     });
+    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
+        onChange: ['selfAdd', 'backendReject'],
+    });
+
     roleIdControl = new FormControl<string | null>(null, {
         validators: [Validators.required],
     });
@@ -447,16 +464,9 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             }
             this.close(user);
         },
-        error: (e: HttpErrorResponse) => {
-            const backendErrorMessage =
-                e.error?.email?.[0] || this.translate.instant(LANG.errorCodes.unexpectedError);
-            const errorEmail = this.emailControl.value;
-            this.emailControl.addValidators([
-                (control: FormControl<string>) =>
-                    control.value === errorEmail
-                        ? { backendError: true, backendErrorMessage }
-                        : null,
-            ]);
+        error: (_: UserInParentPartnerError) => {
+            this.backendRejected.add(this.emailControl.value);
+            this.emailControl.updateValueAndValidity();
         },
     });
 }

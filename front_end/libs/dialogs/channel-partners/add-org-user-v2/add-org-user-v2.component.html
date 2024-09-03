@@ -32,53 +32,38 @@
                 class="nx-modal__body"
                 #mainStepBody
             >
-                <div class="control-container">
+                <nx-form-field [errorMatcher]="emailErrorMatcher">
                     <label
+                        nx-label
+                        for="add-org-user-email"
                         translate
-                        for="email"
                         >Email</label
                     >
                     <input
-                        #emailInput
-                        class="email-input fs-mask"
-                        [ngClass]="{
-                            'email-input--error':
-                                emailControl.errors?.selfAdd ||
-                                (emailControl.touched && emailControl.errors?.pattern) ||
-                                (orgUserForm.submitted && emailControl.errors?.required)
-                        }"
-                        formControlName="email"
-                        name="email"
                         type="email"
                         [readOnly]="emailLocked()"
-                        autocomplete="email"
-                        [spellcheck]="false"
-                        data-escape-global-style
+                        id="add-org-user-email"
+                        nx-input
+                        formControlName="email"
                     />
-                    <p class="control-message">
-                        @if (emailControl.errors?.selfAdd) {
-                            <span class="control-message__error">{{
-                                LANG.dialogs.channelPartners.selfAdd | translate
-                            }}</span>
-                        } @else if (emailControl.errors?.backendError) {
-                            <span class="control-message__error">{{
-                                emailControl.errors.backendErrorMessage
-                            }}</span>
-                        } @else if (emailControl.touched && emailControl.errors?.pattern) {
-                            <span
-                                class="control-message__error"
-                                translate
-                                >Invalid email</span
-                            >
-                        } @else if (orgUserForm.submitted && emailControl.errors?.required) {
-                            <span
-                                class="control-message__error"
-                                translate
-                                >Email is required</span
-                            >
-                        }
-                    </p>
-                </div>
+                    <nx-control-messages
+                        pattern="email"
+                        required="email"
+                        [spacingLines]="2"
+                    >
+                        <nx-control-message
+                            key="selfAdd"
+                            [text]="'You cannot add yourself' | translate"
+                        ></nx-control-message>
+                        <nx-control-message
+                            key="backendReject"
+                            [text]="
+                                'User has already been added to a parent channel partner'
+                                    | translate
+                            "
+                        ></nx-control-message>
+                    </nx-control-messages>
+                </nx-form-field>
                 <div class="control-container">
                     <label
                         translate

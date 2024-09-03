@@ -1117,7 +1117,6 @@
             "directOverwrite": "Permissions for the folder will be overwritten",
             "indirectOverwrite": "Permissions for {count, plural, =0{# folders} one{# folder} other{# folders}} will be overwritten",
             "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }",
-            "selfAdd": "You cannot add yourself",
             "systemAlreadyInFolder": "System is already in that folder",
             "cannotMoveIntoSelf": "You cannot move a folder into itself",
             "confirmAccessLevelChange": {
