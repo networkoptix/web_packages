@@ -315,6 +315,8 @@ export class UserManager {
             }
             userData.permissions = userData.role.permissions;
             userData.userRoleId = userRoleId;
+        } else if (user.type === UserType.cloud) {
+            delete userData.fullName;
         } else {
             delete userData.permissions;
         }

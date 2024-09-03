@@ -345,6 +345,8 @@ export class UserWithGroupsManager extends UserManager {
         // The mediaserver doesn't like any attempts to change admin's permissions
         if (user.isLocalOwner) {
             delete user.name;
+        } else if (user.type === UserType.cloud) {
+            delete user.fullName;
         }
 
         // v3 doesn't like user permissions for modifyUser
