@@ -121,7 +121,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             !!this.camera &&
             !!this.motionMaskWatcher.value &&
             this.camera.status !== CameraStatus.Offline &&
-            this.camera.status !== CameraStatus.Unauthorized
+            this.camera.status !== CameraStatus.Unauthorized &&
+            this.system.permissionManager.canViewDevice(this.cameraId$$())
         );
     };
 
