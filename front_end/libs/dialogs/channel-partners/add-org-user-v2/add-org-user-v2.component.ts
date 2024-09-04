@@ -47,7 +47,6 @@ import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
 import { accountSelectors } from '@store/account';
 import { formControlValueSignal } from '@utils/nx';
 
@@ -100,7 +99,6 @@ interface UserInParentPartnerError extends HttpErrorResponse {
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     LANG = LANG;
-    DefaultUserGroups = DefaultUserGroups;
 
     private accountEmail = inject(Store).selectSignal(accountSelectors.selectCurrentUserName);
     private groupsStore = inject(GroupsStore);
@@ -192,13 +190,15 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
         const description = this.roleDescription();
         return (
             description?.includes('|') &&
-            (description?.includes(roleName) || roleName === 'Systems Administrator')
+            (description?.includes(roleName) || roleName === 'System Administrator')
         );
     });
     tooltipDescription = computed<string>(() => {
-        return DefaultUserGroups.find(group => {
-            return this.roleId() === group.orgRoleId;
-        })!.description;
+        const roleId = this.roleId();
+        if (!roleId) {
+            return '';
+        }
+        return LANG.channelPartners.orgs.orgRoleInfo[roleId]!.tooltip;
     });
 
     folder = signal<string | null>(null);

@@ -895,5 +895,6 @@
     "width": "width",
     "you": "you",
     "{name} ({state})": "{name} ({state})",
-    "{serverName} , error:": "{serverName} , error:"
+    "{serverName} , error:": "{serverName} , error:",
+    "{time} min ago": "{time} min ago"
 }
