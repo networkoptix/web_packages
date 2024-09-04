@@ -51,7 +51,10 @@
             <nx-section>
                 <div
                     class="section-header"
-                    [ngClass]="{ 'in-edit-mode': editMode }"
+                    [ngClass]="{
+                        'in-edit-mode': editMode,
+                        'section-header--readonly': readOnlyInfo$$()
+                    }"
                 >
                     <div
                         class="header-title"
@@ -87,7 +90,10 @@
             <nx-section>
                 <div
                     class="section-header"
-                    [ngClass]="{ 'in-edit-mode': editMode }"
+                    [ngClass]="{
+                        'in-edit-mode': editMode,
+                        'section-header--readonly': readOnlyInfo$$()
+                    }"
                 >
                     <div
                         class="header-title"
@@ -123,7 +129,10 @@
             <nx-section>
                 <div
                     class="section-header"
-                    [ngClass]="{ 'in-edit-mode': editMode }"
+                    [ngClass]="{
+                        'in-edit-mode': editMode,
+                        'section-header--readonly': readOnlyInfo$$()
+                    }"
                 >
                     <div
                         class="header-title"
@@ -159,7 +168,10 @@
             <nx-section>
                 <div
                     class="section-header"
-                    [ngClass]="{ 'in-edit-mode': editMode }"
+                    [ngClass]="{
+                        'in-edit-mode': editMode,
+                        'section-header--readonly': readOnlyInfo$$()
+                    }"
                 >
                     <div
                         class="header-title"

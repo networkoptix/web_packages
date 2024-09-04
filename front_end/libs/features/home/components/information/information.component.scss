@@ -43,7 +43,13 @@
                 }
             }
 
-            &+span {
+            &--readonly {
+                border-bottom-color: transparent;
+                margin-bottom: 0;
+                padding-bottom: 4px;
+            }
+
+            & + span {
                 color: var(--CP-state-color);
             }
         }
