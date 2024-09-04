@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { iif, mergeMap, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 type ApiData = { [key: string]: string | boolean | number };
@@ -16,9 +17,20 @@ const endpoints = {
     resetPassword: 'account/resetPassword',
     restorePassword: 'account/self',
     token: 'oauth2/token',
+    tokenV1: 'oauth2/v1/token',
     update: 'account/update',
     verifyBackupCode: 'account/self/2fa/backup-code',
     verifyTotp: 'account/self/2fa/totp/key',
+};
+
+// separate the client id into it's 3 parts. 1st part is the client id, 2nd part is the customization, 3rd part is the version. Each separated by a '/'
+// example: desktop_client/default/6.0
+// NOTE: the version was only added in 6.1 for desktop client
+const deserializeClientId = (
+    clientId: string,
+): { client: string; customization?: string; version?: number } => {
+    const [client, customization, version] = clientId.split('/');
+    return { client, customization, version: version ? Number(version) : undefined };
 };
 
 @Injectable({
@@ -71,7 +83,16 @@ export class AuthService {
             response_type: 'code',
         };
 
+        let tokenEndpoint = nxConfig.featureFlags.oauthV1Enabled
+            ? endpoints.tokenV1
+            : endpoints.token;
+
         if (clientId) {
+            const { client, version: clientVersion } = deserializeClientId(clientId);
+            // desktop client version 6.0 and below should use the old token endpoint. Everything else should use new token endpoint.
+            if (client === 'desktop_client' && (!clientVersion || clientVersion < 6.1)) {
+                tokenEndpoint = endpoints.token;
+            }
             if (['cloud', 'webadmin'].some(client => clientId === client)) {
                 clientId = `${clientId}/${this.customization}`;
             }
@@ -86,7 +107,7 @@ export class AuthService {
             data.scope = scope;
         }
         // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
-        return this.post(endpoints.token, data).pipe(
+        return this.post(tokenEndpoint, data).pipe(
             map(({ code, error }: { code: string; error: string }) => {
                 const [link, qs] = redirectUrl?.split('?') || [window.location.origin];
                 const params = new URLSearchParams(qs || '');

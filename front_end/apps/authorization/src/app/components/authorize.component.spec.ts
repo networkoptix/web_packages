@@ -90,7 +90,7 @@ describe('NxAuthorizeComponent', () => {
         expect(component.clientType).toBe('loginToCloud');
         expect(component.currentState).toBe('email');
         expect(component.initialData).toEqual(<AuthorizeParams>{
-            client_id: 'cloud',
+            client_id: 'cloud/default',
             redirect_uri: '/systems',
             response_type: 'code',
         });

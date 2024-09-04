@@ -186,6 +186,7 @@ const FeatureFlagKeys = [
     'bookmarkSharing',
     'cloudOwnershipTransfer',
     'cloudStorage',
+    'oauthV1Enabled',
     'restCookieLogin',
     'useAuthenticationInterceptor',
     'useJsonRpc',
