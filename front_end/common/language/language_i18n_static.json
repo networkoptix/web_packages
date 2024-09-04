@@ -11,6 +11,7 @@
     "How to setup?": "How to setup?",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "Privacy",
+    "Resources": "Resources",
     "Support": "Support",
     "Terms": "Terms",
     "Developers Console": "Developers Console",
@@ -1481,31 +1482,38 @@
             "orgRoleInfo": {
                 "00000000-0000-4000-8000-000000000001": {
                     "name": "Organization Administrators",
-                    "description": "Can manage all aspects of the Organization and its Systems"
+                    "description": "Can manage all aspects of the Organization and its Systems",
+                    "tooltip": ""
                 },
                 "00000000-0000-4000-8000-000000000002": {
                     "name": "System Administrators",
-                    "description": "Grants user | Administrators | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders."
+                    "description": "Grants user | Administrators | permissions in all Systems within the assigned Folder or the Organization.\n\nCannot add/remove Systems, manage Organization Users and Folders.",
+                    "tooltip": "Members of this group have unlimited System privileges. Administrators can create and modify Power Users, merge Systems and connect or disconnect System to %CLOUD_NAME%."
                 },
                 "00000000-0000-4000-8000-000000000003": {
                     "name": "Power Users",
-                    "description": "Grants user | Power Users | permissions in all Systems within the assigned Folder or the Organization"
+                    "description": "Grants user | Power Users | permissions in all Systems within the assigned Folder or the Organization",
+                    "tooltip": "Members of this group can, in addition to the permissions granted by the Advanced Viewers group, control most of the System configuration, but are not allowed to change any Administrator related settings, like delete or change their own groups and permissions, and cannot create or edit other Power Users."
                 },
                 "00000000-0000-4000-8000-000000000004": {
                     "name": "System Health Viewers",
-                    "description": "Grants user | System Health Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                    "description": "Grants user | System Health Viewers | permissions in all Systems within the assigned Folder or the Organization",
+                    "tooltip": "Members of this group can view System Health Monitoring information and server processor load in real-time (Server Monitoring)."
                 },
                 "00000000-0000-4000-8000-000000000005": {
                     "name": "Advanced Viewers",
-                    "description": "Grants user | Advanced Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                    "description": "Grants user | Advanced Viewers | permissions in all Systems within the assigned Folder or the Organization",
+                    "tooltip": "Members of this group can, in addition to the permissions granted by the Viewers group, see and activate PTZ positions and PTZ tours, use 2-way audio, operate I/O module buttons, create and edit bookmarks, and view the Event Log."
                 },
                 "00000000-0000-4000-8000-000000000006": {
                     "name": "Viewers",
-                    "description": "Grants user | Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                    "description": "Grants user | Viewers | permissions in all Systems within the assigned Folder or the Organization",
+                    "tooltip": "Members of this group can, in addition to the permissions granted by the Live Viewers group, view and export archive and Bookmarks."
                 },
                 "00000000-0000-4000-8000-000000000007": {
                     "name": "Live Viewers",
-                    "description": "Grants user | Live Viewers | permissions in all Systems within the assigned Folder or the Organization"
+                    "description": "Grants user | Live Viewers | permissions in all Systems within the assigned Folder or the Organization",
+                    "tooltip": "Members of this group can view live videos, I/O modules and web pages."
                 }
             },
             "adminWarning": "There should be at least one user in the organization with Organization Administrator permissions"
@@ -1537,7 +1545,8 @@
                 "monthlyRate": "Monthly Rate",
                 "fractionalUsage": "Fractional Usage",
                 "changed": "Changed",
-                "expirationDate": "Expiration Date"
+                "expirationDate": "Expiration Date",
+                "usedBy": "Used By"
             }
     },
     "menu": {
@@ -1918,7 +1927,7 @@
         "partnerRoles": {
             "Administrator": "Administrator",
             "Manager": "Manager",
-            "Accountant": "Accountant"
+            "Reports Viewer": "Reports Viewer"
         },
         "orgRoles": {
             "Organization Administrator": "Organization Administrator",

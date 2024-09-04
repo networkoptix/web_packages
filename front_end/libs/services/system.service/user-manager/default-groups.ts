@@ -4,10 +4,10 @@ export const DefaultUserGroups: UserGroup[] = [
     {
         attributes: 'readonly',
         description:
-            'Members of this group have unlimited System privileges. Administrators can create and modify Power Users, merge Systems and connect or disconnect System to  Nx Cloud.',
+            'Members of this group have unlimited System privileges. Administrators can create and modify Power Users, merge Systems and connect or disconnect System to %CLOUD_NAME%.',
         id: '{00000000-0000-0000-0000-100000000000}',
         orgRoleId: '00000000-0000-4000-8000-000000000002',
-        name: 'Administrators',
+        name: 'Systems Administrator',
         parentGroupIds: [],
         permissions: 'powerUser|viewLogs|viewMetrics|generateEvents|administrator',
         resourceAccessRights: {

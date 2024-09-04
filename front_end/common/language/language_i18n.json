@@ -962,5 +962,6 @@
     "within h3": "within h3",
     "you": "you",
     "{name} ({state})": "{name} ({state})",
-    "{serverName} , error:": "{serverName} , error:"
+    "{serverName} , error:": "{serverName} , error:",
+    "{time} min ago": "{time} min ago"
 }
