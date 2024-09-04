@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    DestroyRef,
     OnInit,
     Renderer2,
     ViewChild,
     ViewContainerRef,
     effect,
     inject,
-    DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ActivatedRoute,
     NavigationEnd,
-    Event as RouterEvent,
     Router,
-    RoutesRecognized,
+    Event as RouterEvent,
     RouterModule,
+    RoutesRecognized,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,7 +24,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-import { firstValueFrom, BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, fromEvent } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
@@ -45,6 +45,7 @@ import { NxLoginService } from '@services/login.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -370,13 +371,22 @@ export class NxHeaderComponent implements OnInit {
                             nxConfig.featureFlags.channelPartnersReportsUI
                         ) {
                             try {
-                                const structure = await firstValueFrom(
+                                const cpStructure = await firstValueFrom(
                                     this.channelPartnersService.getChannelStructure(),
                                 );
-                                if (
-                                    structure.channelPartners.length ||
-                                    structure.organizations.length
-                                ) {
+                                // Display "Reports" tab if user has at least 1 CP or 1 Org where they are Org Admin
+                                let displayReportsTab = !!cpStructure.channelPartners.length;
+
+                                if (!displayReportsTab && cpStructure.organizations.length) {
+                                    const orgs = await firstValueFrom(
+                                        this.channelPartnersService.getOrganizations(),
+                                    );
+                                    displayReportsTab = orgs.some(org =>
+                                        org.ownRolesIds.includes(OrgRoleIds.OrgAdmin),
+                                    );
+                                }
+
+                                if (displayReportsTab) {
                                     nodes.unshift(this.menusService.makeReportsMenuNode());
                                 }
                             } catch (e) {
