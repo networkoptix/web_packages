@@ -415,8 +415,11 @@ export class NxMenusService {
         }
 
         const roleCanViewServices =
-            activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
-            activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup));
+            nxConfig.featureFlags.channelPartners &&
+            nxConfig.featureFlags.channelPartnersChangeServicesUI &&
+            activeSystem.info?.roleIds &&
+            (activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
+                activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup)));
         // Services
         if (
             'organizationId' in activeSystem.info &&

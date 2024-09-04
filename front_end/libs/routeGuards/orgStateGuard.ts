@@ -64,7 +64,10 @@ export const OrgStateGuard: CanActivateFn = async (
                 return true;
             }
         } catch (e) {
-            return false;
+            // Something is wrong with channel partners or user blocked domain in dev tools.
+            // 0 for dev tools
+            // Everything else for legitimate issues in the partner service.
+            return [0, 500, 502, 503, 504].includes(e?.status ?? -1);
         }
     }
     return true;
