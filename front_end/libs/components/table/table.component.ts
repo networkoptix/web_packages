@@ -175,11 +175,11 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
                     ROW_HEIGHT;
 
                 let autoRows = Math.floor(rowsSpace);
-                if (rowsSpace % 1 <= 0.05) {
+                if (autoRows <= this.data.length && rowsSpace % 1 <= 0.2) {
                     autoRows--; // if there is a small fraction of a row, we need to reduce rows shown -- [T]
                 }
+                autoRows = clamp(autoRows, 1, this.data.length);
 
-                autoRows = clamp(autoRows, 1, this.data?.length || 1);
                 this.perPageSelectedOption = { name: 'auto', value: autoRows };
             } else {
                 this.rowsPerPage.forEach(item => {
