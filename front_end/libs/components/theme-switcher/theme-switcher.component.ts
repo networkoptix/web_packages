@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -25,6 +26,7 @@ import { images } from '@static-variables';
         NxContentBlockComponent,
         NxRadioComponent,
         NxAddSvgSrcDirective,
+        TranslateModule,
     ],
 })
 export class NxThemeSwitcherComponent implements OnInit {

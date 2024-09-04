@@ -122,9 +122,8 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
         <nx-async-action-button
             [action]="resetCameraAction"
             [(busy)]="busy"
-            translate
         >
-            Reset
+            <span translate>Reset</span>
         </nx-async-action-button>
     </div>
 </form>

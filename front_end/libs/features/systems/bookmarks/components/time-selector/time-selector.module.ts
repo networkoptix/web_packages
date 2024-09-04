@@ -2,6 +2,7 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -13,7 +14,7 @@ import { NxTimeSelectorComponent } from './time-selector.component';
         CommonModule,
         FormsModule,
         AngularSvgIconModule,
-        // TranslateModule,
+        TranslateModule,
         CdkMenuModule,
         NxAddSvgSrcDirective,
     ],

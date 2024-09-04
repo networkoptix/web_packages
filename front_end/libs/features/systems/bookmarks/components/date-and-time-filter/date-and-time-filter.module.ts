@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -19,6 +20,7 @@ import { NxDateAndTimeFilterComponent } from './date-and-time-filter.component';
 
         NxTimeSelectorModule,
         NxAddSvgSrcDirective,
+        TranslateModule,
     ],
     declarations: [NxDateAndTimeFilterComponent],
     providers: [],

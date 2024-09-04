@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { nxConfig } from '@services/nx-config/config';
@@ -13,7 +14,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'paginator.component.html',
     styleUrls: ['paginator.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class NxPaginatorComponent {
     @Input() numPages: number;

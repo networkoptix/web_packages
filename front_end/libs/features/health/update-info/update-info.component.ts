@@ -20,7 +20,7 @@ export class NxUpdateInfoComponent implements OnInit {
 
     LANG = staticLang;
 
-    lastUpdate: string;
+    lastUpdate: number = 0;
     timerSubscription: Subscription;
     icons = icons;
 
@@ -47,8 +47,6 @@ export class NxUpdateInfoComponent implements OnInit {
             this.timerSubscription.unsubscribe();
         }
 
-        this.lastUpdate = '0 min ago';
-
         const minute = 60 * 1000;
         const currentHmAge = ((Date.now() - this.healthService.lastUpdate) / minute) | 0;
         this.timerSubscription = timer(0, minute)
@@ -66,7 +64,7 @@ export class NxUpdateInfoComponent implements OnInit {
                 }
                 if (minutes) {
                     const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');
-                    this.lastUpdate = `${time.replace(/m/, ' min')} ago`;
+                    this.lastUpdate = parseInt(time);
                 }
             });
     }
