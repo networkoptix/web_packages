@@ -594,20 +594,20 @@ export const OrgUsersStore = signalStore(
                     distinctUntilChanged(),
                     tapResponse({
                         next: (groupId: string) => {
-                            const id = store.selectedGroupId() || routerStateStore.organizationId();
+                            const id = routerStateStore.organizationId();
                             const users = store.currentGroupUsersEntities();
+                            const selectedGroupId = groupId === id ? id : groupId;
+
                             console.info({ id, users });
                             patchState(
                                 store,
                                 removeAllEntities(currentGroupUsersEntity),
-                                groupId
-                                    ? {
-                                          selectedGroupId: groupId,
-                                      }
-                                    : {},
+                                { selectedGroupId },
                                 setEntity(
                                     { id, users },
-                                    { collection: usersCacheEntity.collection },
+                                    {
+                                        collection: usersCacheEntity.collection,
+                                    },
                                 ),
                             );
                         },
