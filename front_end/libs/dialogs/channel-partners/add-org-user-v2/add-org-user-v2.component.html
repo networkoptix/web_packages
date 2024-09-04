@@ -171,9 +171,8 @@
                     [action]="addOrgUserAction"
                     [invalid]="selectedFolderStatus()?.status === 'disable'"
                     [(busy)]="busy"
-                    translate
                 >
-                    Add
+                    <span translate>Add</span>
                 </nx-async-action-button>
             </div>
         </form>
@@ -206,9 +205,8 @@
                 <nx-async-action-button
                     [action]="confirmFolderSelectAction"
                     (reject)="orgTree.focus()"
-                    translate
                 >
-                    Select
+                    <span translate>Select</span>
                 </nx-async-action-button>
             </div>
         </form>

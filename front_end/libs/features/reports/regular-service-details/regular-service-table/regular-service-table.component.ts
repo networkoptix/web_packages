@@ -45,7 +45,11 @@ interface HEADER_ITEM {
 export class NxRegularServiceTableComponent {
     LANG = staticLang;
     headers: HEADER_ITEM[] = [
-        { value: 'Used By', name: 'usedBy', align: 'flex-start' },
+        {
+            value: this.LANG.channelPartnerReports.tableHeaders.usedBy,
+            name: 'usedBy',
+            align: 'flex-start',
+        },
         {
             value: this.LANG.channelPartnerReports.tableHeaders.changed,
             name: 'changed',

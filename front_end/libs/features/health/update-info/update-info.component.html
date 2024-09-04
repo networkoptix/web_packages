@@ -10,6 +10,6 @@
             [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
             title="Reload"
         ></svg-icon>
-        <span>{{ lastUpdate | translate }}</span>
+        <span>{{ '{time} min ago' | translate: { time: lastUpdate } }}</span>
     </a>
 </div>

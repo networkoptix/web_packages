@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -176,6 +177,7 @@ const themePresets: ThemePreset[] = [
         NxContentBlockComponent,
         NxRadioComponent,
         NxAddSvgSrcDirective,
+        TranslateModule,
         NxCheckboxComponent,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
