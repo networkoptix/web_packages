@@ -4,10 +4,7 @@ import { forkJoin, mergeMap, of } from 'rxjs';
 import { catchError, delay, map, switchMap } from 'rxjs/operators';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import {
-    ChannelPartner,
-    Organization,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { nxConfig } from '@services/nx-config/config';
 
 import * as ChannelPartnerActions from './channel-partners.actions';
 
@@ -40,13 +37,13 @@ export class ChannelPartnersEffects {
             ofType(ChannelPartnerActions.loadChannelPartnersAndOrgs),
             switchMap(({ includeChildOrgs }) =>
                 forkJoin([
-                    this.CPService.getChannelPartners().pipe(
-                        catchError(_ => of([] as ChannelPartner[])),
-                    ),
-                    this.CPService.getOrganizations(includeChildOrgs).pipe(
-                        catchError(_ => of([] as Organization[])),
-                    ),
+                    this.CPService.getChannelPartners(),
+                    this.CPService.getOrganizations(includeChildOrgs),
                 ]).pipe(
+                    catchError(() => {
+                        nxConfig.featureFlags.channelPartnersChangeServicesUI = false;
+                        return of([[], []]);
+                    }),
                     map(([channelPartners, organizations]) => {
                         const partnerIds = new Set(channelPartners.map(cp => cp.id));
                         return includeChildOrgs
