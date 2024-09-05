@@ -67,7 +67,7 @@ svg {
 }
 
 .warning-label {
-    color: $brand-danger  !important;
+    color: $brand-danger !important;
 }
 
 .block-container {
@@ -221,6 +221,16 @@ span.marked {
 
     }
 }
+
 .cdk-virtual-scroll-content-wrapper {
     width: 100%;
+}
+
+.nx-breadcrumbs {
+    @include mixins.ellipsis;
+    text-wrap: nowrap;
+
+    .group-path {
+        color: var(--reports-group-path);
+    }
 }
