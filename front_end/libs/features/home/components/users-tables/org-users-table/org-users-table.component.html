@@ -75,10 +75,17 @@
                     #roleWrapper
                     data-id="{{ row[idPropName] }}"
                     style="grid-area: accessLevel; font-size: 14px"
-                    toggleOnClick
                     reversePositionOrder
                     ignoreMaxWidth
-                    [nxTooltip]="row.groupRoles?.length > 1 && foldersTooltip"
+                    [nxTooltip]="
+                        (row.groupRoles?.length > 1 ||
+                            (row.groupRoles[0] &&
+                                groupsStore
+                                    .groupPathMap$$()
+                                    [row.groupRoles[0]?.groupId].pathString.split('/').length >
+                                    2)) &&
+                        foldersTooltip
+                    "
                 >
                     <ng-template #foldersTooltip>
                         <div
@@ -96,6 +103,7 @@
                             }
                         </div>
                     </ng-template>
+
                     @if (row.isOrgUser) {
                         <svg-icon
                             [src]="icons.dir + 'organization_2.svg'"
