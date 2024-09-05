@@ -12,6 +12,7 @@
         text-align: left;
         word-wrap: break-word;
         word-break: break-word;
+
         &:not(.ignoreMaxWidth) {
             max-width: 200px;
         }
@@ -104,7 +105,7 @@
 }
 
 :host-context(.bottom.center) .tooltip-arrow {
-    top: -4px;
+    top: -6px;
     left: 50%;
     transform: rotate(90deg) translateX(-50%);
 }
