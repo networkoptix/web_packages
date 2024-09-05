@@ -146,7 +146,7 @@ class HeadersMixin:
             return f"{name} Service Usage Report"
 
     def date_range_header(self):
-        return f"Date Range: {self.period_start: %B %d} - {self.period_end:%B %d, %Y}"
+        return f"Date Range: {self.period_start:%B %d} - {self.period_end:%B %d, %Y}"
 
     def gen_date_header(self):
         return f"Report Generation Date: {self.report_date:%B %d, %Y}"
@@ -422,7 +422,7 @@ class SummaryRowBase:
             Border(left=Styling.border_thin, right=Styling.border_thin, bottom=Styling.border_thin),
             Border(left=Styling.border_thin, right=Styling.border_medium, bottom=Styling.border_thin),
         ]
-    
+
     def colors(self) -> List[Optional[PatternFill]]:
         """
         List of color fillings for the current row.
