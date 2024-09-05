@@ -59,6 +59,14 @@ dependencies = [
     ),
 ]
 
+email_dependencies = [
+    CacheDependency(
+        model=CloudUser,
+        field=CachedDependencyFieldTypeEnum.VERSION,
+        source='path.email'
+    )
+]
+
 
 class CloudUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,12 +77,14 @@ class CloudUserSerializer(serializers.ModelSerializer):
 @extend_schema_view(
     list=extend_schema(summary="List all users", description="List all users"),
     retrieve=extend_schema(summary="Retrieve a user", description="Retrieve a user"),
-    sass_report=extend_schema(summary="Sass report", description="Sass report")
+    sass_report=extend_schema(summary="Sass report", description="Sass report"),
+    get_by_email=extend_schema(summary="Get user by email", description="Get user by email")
 )
 @DependentViewCache({
     "list": Dependencies([], validate_user=True),
     "retrieve": Dependencies(dependencies, validate_user=True),
-    "sass_report": Dependencies(dependencies, validate_user=True)
+    "sass_report": Dependencies(dependencies, validate_user=True),
+    "get_by_email": Dependencies(email_dependencies, validate_user=True)
 })
 class DemoViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -89,6 +99,10 @@ class DemoViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     @action(detail=True, methods=['get'])
     def sass_report(self, request, *args, **kwargs):
         return Response({"message": "This is the sass_report action"})
+
+    @action(detail=False, methods=['get'], url_path='by-email/(?P<email>[^/.]+)')
+    def get_by_email(self, request, email=None, *args, **kwargs):
+        return Response({"message": "This is the get_by_email action"})
 
 
 @extend_schema(
@@ -111,6 +125,7 @@ urlpatterns = [
     path('partners/test/', DemoViewSet.as_view({'get': 'list'}), name='test-list'),
     path('partners/test/<int:pk>/', DemoViewSet.as_view({'get': 'retrieve'}), name='test-detail'),
     path('partners/test/<int:pk>/sass_report/', DemoViewSet.as_view({'get': 'sass_report'}), name='test-sass-report'),
+    path('partners/test/by-email/<str:email>/', DemoViewSet.as_view({'get': 'get_by_email'}), name='test-get-by-email'),
 
     # Paths from `all_users` function
     path('partners/all_users/', all_users, name='all-users'),
@@ -172,6 +187,7 @@ class TestDependentViewCacheDecorator:
         assert '/partners/test/{id}/' in schema['paths']
         assert '/partners/test/{id}/sass_report/' in schema['paths']
         assert '/partners/all_users/' in schema['paths']
+        assert '/partners/test/by-email/{email}/' in schema['paths']
 
         # Check if the metadata is correct for the list endpoint
         list_metadata = schema['paths']['/partners/test/']['get']
@@ -198,6 +214,11 @@ class TestDependentViewCacheDecorator:
         all_users_responses = all_users_metadata['responses']
         assert '200' in all_users_responses
 
+        # Check if the metadata is correct for the get_by_email endpoint
+        get_by_email_metadata = schema['paths']['/partners/test/by-email/{email}/']['get']
+        assert get_by_email_metadata['summary'] == "Get user by email"
+        assert get_by_email_metadata['description'] == "Get user by email"
+
     def test_cache_key_generation(self, client, mock_auth_with_user):
         mock_auth_with_user(self.user)
         id: int = 1
@@ -209,7 +230,7 @@ class TestDependentViewCacheDecorator:
 
         client.get(path, headers=headers)
 
-        expected_cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:{self.user.id}:path:{path}'
+        expected_cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
         cached_data = CacheService.get_cache_fields(expected_cache_key, ['content'])
         assert cached_data is not None
         assert 'content' in cached_data
@@ -231,7 +252,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -252,7 +273,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is None
 
@@ -275,7 +296,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
 
@@ -313,7 +334,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -353,7 +374,7 @@ class TestDependentViewCacheDecorator:
                                     b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
                                     b'lt_cp_admin@networkoptix.com","full_name":null}]}')
 
-        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert cached_response is not {}
@@ -390,7 +411,42 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.json() == {"message": "This is the sass_report action"}
 
-        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+        assert cached_response is not None
+        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+
+        # Second request (follow-up)
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            with CaptureQueriesContext(connection) as second_queries:
+                second_response = client.get(path, headers=headers)
+
+        assert second_response.status_code == 200
+        assert second_response.json() == response.json()
+
+        assert "Validation hash mismatch -- clearing cache" not in caplog.text
+        assert len(pop_queries(second_queries)) == 0
+
+    def test_get_by_email(self, client, mock_auth_with_user, caplog):
+        mock_auth_with_user(self.user)
+        email = self.user.email
+        headers = {
+            'X-Original-Host': self.cloud_host.hostname,
+            'Accept': 'application/json'
+        }
+        path = f"/partners/test/by-email/{email}/"
+
+        # First request
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            with CaptureQueriesContext(connection) as first_queries:
+                response = client.get(path, headers=headers)
+
+        assert len(pop_queries(first_queries)) > 0
+
+        assert response.status_code == 200
+        assert response.json() == {"message": "This is the get_by_email action"}
+
+        cache_key = f'dependent_cache:DemoViewSet:get_by_email:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -425,7 +481,7 @@ class TestDependentViewCacheDecorator:
         assert response.status_code == 200
         assert response.json() == {"message": "This is the sass_report action"}
 
-        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -491,7 +547,7 @@ class TestDependentViewCacheDecorator:
                                     b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
                                     b'lt_cp_admin@networkoptix.com","full_name":null}]}')
 
-        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:user_id:1:path:{path}'
+        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
         cached_response = CacheService.get_cache_fields(cache_key, ['content'])
         assert cached_response is not None
         assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
@@ -535,3 +591,34 @@ class TestDependentViewCacheDecorator:
 
         assert "Validation hash mismatch -- clearing cache" not in caplog.text
         assert len(pop_queries(queries)) == 0
+
+    def test_flush_cache_header(self, client, mock_auth_with_user, caplog):
+        mock_auth_with_user(self.user)
+        id: int = 1
+        headers = {
+            'X-Original-Host': self.cloud_host.hostname,
+            'Accept': 'application/json'
+        }
+        path = f"/partners/test/{id}/"
+
+        # First request to cache the response
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            response = client.get(path, headers=headers)
+
+        assert response.status_code == 200
+        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+
+        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+        assert cached_response is not None
+
+        # Second request with X-Flush-CPS-Cache header to flush the cache
+        headers['X-Flush-CPS-Cache'] = 'true'
+        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            with CaptureQueriesContext(connection) as queries:
+                flush_response = client.get(path, headers=headers)
+
+        assert flush_response.status_code == 200
+        assert flush_response.content == response.content
+        assert "Flushing cache for the current request." in caplog.text
+        assert len(pop_queries(queries)) > 0  # Ensure a new response was generated

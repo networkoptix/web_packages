@@ -60,34 +60,37 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                 "()": "channel_partners.logging.logging_filters.ExcludeEventsFilter",
                 'excluded_event_type': ['request_started']  # <- Example excluding request_started event
             },
-            "drop_debug_logs": {
-                "()": "channel_partners.logging.middleware.DebugLevelFilter",
-                'level': min_level
-            }
+            # "drop_debug_logs": {
+            #     "()": "channel_partners.logging.middleware.DebugLevelFilter",
+            #     'level': min_level
+            # }
         },
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "formatter": "plain_console",
-                'filters': ['exclude_request_started', 'drop_debug_logs']
+                'filters': ['exclude_request_started']  # , "drop_debug_logs"]
             },
             "console_json": {
                 "class": "logging.StreamHandler",
                 "formatter": "json_formatter",
-                'filters': ['exclude_request_started', 'drop_debug_logs']
+                'filters': ['exclude_request_started']  # , "drop_debug_logs"]
             }
         },
         "loggers": {
-            LOGGER_ROOT_NAME: {
-                "handlers": ["console" if environment == "local" else "console_json"],
-                "level": min_level,
-                "filters": ["drop_debug_logs"]
-            },
-            LOGGER_STRUCTLOG_NAME: {
-                "handlers": ["console" if environment == "local" else "console_json"],
-                "level": min_level,
-                "filters": ["drop_debug_logs"]
-            }
-        }
+            # LOGGER_ROOT_NAME: {
+            #     "handlers": ["console" if environment == "local" else "console_json"],
+            #     "level": min_level,
+            # },
+            # LOGGER_STRUCTLOG_NAME: {
+            #     "handlers": ["console" if environment == "local" else "console_json"],
+            #     "level": min_level,
+            # },
+        },
+        "root": {
+            "handlers": ["console" if environment == "local" else "console_json"],
+            "level": min_level,
+            "propagate": False,
+        },
     }
     return loggers

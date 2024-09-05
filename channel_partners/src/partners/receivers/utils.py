@@ -18,6 +18,11 @@ def disable_for_loaddata(signal_handler):
 
 
 def handle_organization_id_change(instance):
+    """
+    TODO: Review the following comment
+    Kyrylo: When organization is changed path is changed too. In cloud_system_receiver .update_cached_path()
+            method is called. Shouldn't it be called here?
+    """
     from partners.models import Organization
     new_organization_id = instance.organization_id
     old_organization_id = instance.get_audit_history('organization_id', idx=1)

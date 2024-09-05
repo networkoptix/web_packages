@@ -42,7 +42,8 @@ class DescendantVersionMixin(models.Model):
                 "Error getting descendant_version",
                 id=self.id,
                 model=self.__class__.__name__,
-                error=str(e))
+                error=str(e),
+                exc_info=True)
 
     @classmethod
     @transaction.atomic
@@ -63,7 +64,8 @@ class DescendantVersionMixin(models.Model):
                 "Error incrementing descendant_version",
                 id=id,
                 model=cls.__class__.__name__,
-                error=str(e))
+                error=str(e),
+                exc_info=True)
 
     @transaction.atomic
     def increment_descendant_version(self):
@@ -85,7 +87,8 @@ class DescendantVersionMixin(models.Model):
                 "Error incrementing descendant_version",
                 id=self.id,
                 model=self.__class__.__name__,
-                error=str(e))
+                error=str(e),
+                exc_info=True)
 
     @classmethod
     @transaction.atomic
@@ -114,4 +117,5 @@ class DescendantVersionMixin(models.Model):
                 "Error incrementing descendant_version",
                 ids=ids,
                 model=cls.__class__.__name__,
-                error=str(e))
+                error=str(e),
+                exc_info=True)

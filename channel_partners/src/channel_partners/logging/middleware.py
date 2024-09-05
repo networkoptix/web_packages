@@ -1,4 +1,3 @@
-import logging
 import time
 from typing import Callable
 
@@ -9,10 +8,7 @@ from django.core.cache import caches
 from django.db import connection
 
 from channel_partners import settings
-from channel_partners.settings import (
-    CACHE_STATUS_HEADER_KEY,
-    REDIS_WAFFLE_TIMEOUT,
-)
+from channel_partners.settings import CACHE_STATUS_HEADER_KEY
 
 
 logger = structlog.get_logger()
@@ -31,27 +27,29 @@ def is_debug_enabled() -> bool:
 
     return is_debug_level
 
+    # class DebugLevelFilter(logging.Filter):
+    #     cache_timeout = REDIS_WAFFLE_TIMEOUT
+    #     _last_update = None
+    #
+    #     def __init__(self, level: int):
+    #         super().__init__()
+    #         self.level: int = level
+    #         self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
+    #
+    #     def get_level(self) -> int:
+    #         try:
+    #             print("Checking levels")
+    #             if time.monotonic() - self._last_update > self.cache_timeout:
+    #                 self._last_update = time.monotonic()
+    #                 self.level = logging.DEBUG if is_debug_enabled() else logging.INFO
+    #                 print("Updated level")
+    #         except Exception:
+    #             # Avoid logging exceptions to prevent potential logging loops or performance issues
+    #             pass
+    #         return self.level
 
-class DebugLevelFilter(logging.Filter):
-    cache_timeout = REDIS_WAFFLE_TIMEOUT
-
-    def __init__(self, level: int):
-        super().__init__()
-        self.level: int = level
-        self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
-
-    def get_level(self) -> int:
-        try:
-            if time.monotonic() - self._last_update > self.cache_timeout:
-                self._last_update = time.monotonic()
-                self.level = logging.DEBUG if is_debug_enabled() else logging.INFO
-        except Exception:
-            # Avoid logging exceptions to prevent potential logging loops or performance issues
-            pass
-        return self.level
-
-    def filter(self, record):
-        return record.levelno <= self.get_level()
+    # def filter(self, record):
+    #     return record.levelno <= self.get_level()
 
 
 class RequestTimerMiddleware:

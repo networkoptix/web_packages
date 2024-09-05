@@ -97,6 +97,10 @@ class CacheDependency:
             raise ValueError(f"The {attribute_type} '{field}' is not a valid field choice")
 
     @property
+    def model(self) -> Type[models.Model]:
+        return self._model
+    
+    @property
     def field(self) -> CachedDependencyFieldTypeEnum:
         return self._field
 
@@ -195,6 +199,7 @@ class CacheDependency:
             return None
 
         # Get the parent of the instance from the path versions
+        # Rightmost is root, leftmost is parent
         parent_model_name, parent_id = path_version[0]
         parent_model = apps.get_model('partners', parent_model_name)
 
@@ -301,6 +306,7 @@ class CacheDependency:
             return None
 
         # Get the parent of the instance from the path versions
+        # Rightmost is root, leftmost is parent
         parent_model_name, parent_id = path_versions[0]
         parent_model = apps.get_model('partners', parent_model_name)
 
