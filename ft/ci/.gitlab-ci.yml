@@ -19,3 +19,13 @@ FT:
     - if: !reference [ .functional_tests_required ]
       # noinspection YAMLSchemaValidation
       changes: !reference [ .require_testing ]
+WebAdmin:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'jenkins-build-webadmin' ]
+  script: [ 'dev-cloud-portal-webadmin-develop' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:
+    - if: !reference [ .functional_tests_required ]
+      # noinspection YAMLSchemaValidation
+      changes: !reference [ .webadmin_changes ]
