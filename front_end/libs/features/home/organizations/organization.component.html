@@ -1,4 +1,6 @@
-<ng-template #loading><nx-pre-loader></nx-pre-loader></ng-template>
+<ng-template #loading>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
 <ng-template #body>
     <div
         class="header"
@@ -108,7 +110,7 @@
         >
             <button
                 *ngIf="!useNewCloud && rootGroups$$()?.length"
-                class="sidebar-toggling-ear-wrapper"
+                class="btn sidebar-toggling-ear-wrapper"
                 type="button"
                 [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
                 (click)="handleSidebarTogglingEarClick()"
