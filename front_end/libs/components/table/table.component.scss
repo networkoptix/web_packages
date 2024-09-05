@@ -18,6 +18,7 @@
         display: grid;
         border-collapse: collapse;
         width: auto;
+        height: inherit;
         grid-template-rows: auto var(--table-row-height);
 
         .nx-new-table-horizontal-wrapper {
@@ -37,6 +38,7 @@
                     position: relative;
                     display: grid;
                     grid-template-columns: 1fr;
+                    height: calc(100% - var(--table-row-height));
                     overflow-x: hidden;
                     overflow-y: auto;
                     width: fit-content;

@@ -92,6 +92,7 @@ export class NxChannelPartnersService {
     /* Channel Partner Reports */
     getPartnerServiceUsage = this.cpApi.getPartnerServiceUsage;
     createPartnerServiceUsageExport = this.cpApi.createPartnerServiceUsageExport;
+    createPartnerServiceChangesExport = this.cpApi.createPartnerServiceChangesExport;
     getPartnerServiceUsageExport = this.cpApi.getPartnerServiceUsageExport;
     getPartnerRegularServiceReport = this.cpApi.getPartnerRegularServiceReport;
     getPartnerRegularDetailTable = this.cpApi.getPartnerRegularServiceDetailDialog;
@@ -123,6 +124,7 @@ export class NxChannelPartnersService {
     /* Organization Reports */
     getOrganizationServiceUsage = this.cpApi.getOrganizationServiceUsage;
     createOrganizationServiceUsageExport = this.cpApi.createOrganizationServiceUsageExport;
+    createOrganizationServiceChangesExport = this.cpApi.createOrganizationServiceChangesExport;
     getOrganizationServiceUsageExport = this.cpApi.getOrganizationServiceUsageExport;
     getOrganizationRegularServiceReport = this.cpApi.getOrganizationRegularServiceReport;
     getOrganizationExpiringServiceReport = this.cpApi.getOrganizationExpiringServiceReport;

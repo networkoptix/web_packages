@@ -2,13 +2,16 @@ import { Component, computed, effect, inject, input, untracked } from '@angular/
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
 import { PageChange } from '@components/table/table.types';
 import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
+import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUriService } from '@services/uri.service';
+import { icons } from '@static-variables';
 import {
     selectOrgsFromStructure,
     selectPartnersFromStructure,
@@ -18,6 +21,7 @@ import { NxGroupPathService } from '../group-path/groupPath.service';
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
 import { NxMonthSelectComponent } from '../month-select/month-select.component';
 import { EntityType } from '../reports.types';
+import { NxReportExportService } from '../service-usage/report-export/report-export.service';
 
 import { apiPageSize, ServiceChangesStore } from './service-changes.store';
 import {
@@ -37,17 +41,20 @@ import { NxServiceChangesTableComponent } from './services-changes-table/service
         NxPreLoaderComponent,
         NxMonthSelectComponent,
         NxPagePlaceholderNoReportsComponent,
+        AngularSvgIconModule,
     ],
     providers: [ServiceChangesStore],
     standalone: true,
 })
 export class NxServiceChangesComponent extends BaseMonthPageComponent {
     LANG = staticLang;
+    icons = icons;
     readonly serviceChangesStore = inject(ServiceChangesStore);
     private readonly store = inject(Store);
     private dateTimeService = inject(NxDateTimeFormatService);
     private uri = inject(NxUriService);
     private groupPathService = inject(NxGroupPathService);
+    private reportExportService = inject(NxReportExportService);
 
     entityType$$ = input.required<EntityType>({ alias: 'entityType' });
     entityId$$ = input.required<string>({ alias: 'entityId' });
@@ -138,6 +145,17 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         ) {
             const nextApiPage = getNextApiPage(tablePage, tablePageSize, currentApiPage);
             this.loadRecords(nextApiPage);
+        }
+    }
+
+    initExport(reportFormat: ReportExportFormat): void {
+        const entityType = this.entityType$$();
+        const entityId = this.entityId$$();
+        const startTs = this.requestStartString();
+        if (entityType === EntityType.channelPartner) {
+            this.reportExportService.exportPartnerChanges(entityId, startTs, reportFormat);
+        } else {
+            this.reportExportService.exportOrgChanges(entityId, startTs, reportFormat);
         }
     }
 }
