@@ -4,11 +4,14 @@ from typing import (
     Dict,
     List,
     Optional,
+    Union,
 )
 
 import structlog
+from django.contrib.auth.models import AnonymousUser
 
 from partners.models import (
+    CloudSystemId,
     CloudUser,
     Empty,
 )
@@ -26,6 +29,9 @@ logger = structlog.getLogger()
 # Constants
 VALIDATION_HASH_KEY = '**validation_hash'
 
+# Types
+AuthEntity = Union[CloudUser, CloudSystemId, AnonymousUser]
+
 
 # ==================== #
 class DependentCache:
@@ -35,7 +41,7 @@ class DependentCache:
     name: str
     key_params: list[str]
     dependencies: list[CacheDependency]
-    validate_user: bool
+    validate_auth_entity: bool
     protocol_version: int
 
     def __init__(
@@ -43,7 +49,7 @@ class DependentCache:
             name: str,  # <- Remove
             key_params: List[str],
             dependencies: List[CacheDependency],
-            validate_user: bool = True,
+            validate_auth: bool = True,
             protocol_version: int = 1  # Not currently used
     ) -> None:
         # Validate the input
@@ -53,7 +59,7 @@ class DependentCache:
         self.name = name
         self.key_params = key_params
         self.dependencies = dependencies
-        self.validate_user = validate_user
+        self.validate_auth_entity = validate_auth
         self.protocol_version = protocol_version
 
     # ==================== #
@@ -64,12 +70,12 @@ class DependentCache:
             keys: Dict[str, Any],
             validation_sources: Dict[str, Any],
             data: Dict[str, Any],
-            user: CloudUser = None
+            auth_entity: Optional[AuthEntity] = None
     ) -> None:
         # Validate the input
         self._validate_key_params_against_keys(keys)
-        if self.validate_user and not user:
-            raise ValueError("User must be provided when validate_user is True")
+        if self.validate_auth_entity and not auth_entity:
+            raise ValueError("An AuthEntity must be provided when validate_user is True")
         if VALIDATION_HASH_KEY in data:
             raise ValueError("Data cannot contain **validation_hash")
 
@@ -81,10 +87,9 @@ class DependentCache:
             # Calculate the validation hash and add it to the data
             dependency_strings = self._generate_dependency_keys(self.dependencies, validation_sources)
 
-            if self.validate_user:
-                version_key = VersionKey(model=CloudUser, id=str(user.id))
-                user_version = CacheService.get_version(version_key)
-                dependency_strings.append(f'user__version:{user_version}')
+            if self.validate_auth_entity:
+                auth_dependency = self._get_authentication_dependency(auth_entity)
+                dependency_strings.append(auth_dependency)
 
             # Add the validation hash and etag to the data
             validation_hash = hashlib.md5(str(dependency_strings).encode()).hexdigest()
@@ -93,25 +98,26 @@ class DependentCache:
 
             CacheService.set_cache_fields(cache_key, data)
         except Exception as e:
-            if user:
-                logger.error("Error setting cache", user=user.id, error=str(e))
-            else:
-                logger.error("Error setting cache", error=str(e))
+            logger.error(
+                "Error setting cache",
+                auth_entity=getattr(auth_entity, 'id', None),
+                error=str(e),
+                exc_info=True)
 
     def validate_and_retrieve(
             self,
             keys: Dict[str, Any],
             validation_sources: Dict[str, Any],
             data_fields: List[str],
-            user: Optional[CloudUser] = None
+            auth_entity: Optional[AuthEntity] = None
     ) -> Any:
 
         # Validate the input
         for key, value in keys.items():
             if not isinstance(key, str):
                 raise ValueError(f"Key {key} is not a string")
-        if self.validate_user and not user:
-            raise ValueError("User must be provided when validate_user is True")
+        if self.validate_auth_entity and not auth_entity:
+            raise ValueError("An AuthEntity must be provided when validate_user is True")
         if VALIDATION_HASH_KEY in data_fields:
             raise ValueError("Data fields cannot contain **validation_hash")
 
@@ -125,15 +131,14 @@ class DependentCache:
             cached_data = CacheService.get_cache_fields(cache_key, fields_to_get)
 
             if cached_data is not None:
-                logger.debug("Cache hit", cache_key=cache_key)
+                logger.debug("Found in cache", cache_key=cache_key)
 
                 # Check if the validation hash matches
                 dependency_strings = self._generate_dependency_keys(self.dependencies, validation_sources)
 
-                if self.validate_user:
-                    version_key = VersionKey(model=CloudUser, id=str(user.id))
-                    user_version = CacheService.get_version(version_key)
-                    dependency_strings.append(f'user__version:{user_version}')
+                if self.validate_auth_entity:
+                    auth_dependency = self._get_authentication_dependency(auth_entity)
+                    dependency_strings.append(auth_dependency)
 
                 current_validation_hash = hashlib.md5(str(dependency_strings).encode()).hexdigest()
                 cached_validation_hash = cached_data.pop(VALIDATION_HASH_KEY, None)
@@ -142,6 +147,8 @@ class DependentCache:
                     logger.debug("Validation hash mismatch -- clearing cache", cache_key=cache_key)
                     CacheService.clear_cache(cache_key)
                     return None
+                else:
+                    logger.debug("Cache hit & Validation match", cache_key=cache_key)
 
                 result = {}
                 for field in data_fields:
@@ -154,11 +161,16 @@ class DependentCache:
                 logger.debug("Cache miss", cache_key=cache_key)
                 return None
         except Exception as e:
-            if user:
-                logger.error("Error validating and retrieving cache", user=user.id, error=str(e))
-            else:
-                logger.error("Error validating and retrieving cache", error=str(e))
+            logger.error(
+                "Error validating and retrieving cache",
+                auth_entity=getattr(auth_entity, 'id', None),
+                error=str(e),
+                exc_info=True)
             return None
+
+    @staticmethod
+    def get_auth_model_name(auth_entity: AuthEntity) -> str:
+        return auth_entity.__class__.__name__
 
     # ==================== #
     # Dependency methods
@@ -219,13 +231,29 @@ class DependentCache:
         key_parts = [f'{k}:{v}' for k, v in keys.items()]
         return f'dependent_cache:{self.name}:' + ':'.join(key_parts)
 
-    # TODO: Add a method to get user version
+    def _get_authentication_dependency(self, auth_entity: Optional[AuthEntity] = None) -> Optional[str]:
+        # Generate the authentication dependency
+        if isinstance(auth_entity, CloudUser):
+            version_key = VersionKey(model=CloudUser, id=str(auth_entity.id))
+            version = CacheService.get_version(version_key)
+            return f'user__version:{version}'
+        elif isinstance(auth_entity, CloudSystemId):
+            version_key = VersionKey(model=CloudSystemId, id=str(auth_entity.system_id))
+            version = CacheService.get_version(version_key)
+            return f'system__version:{version}'
+        elif isinstance(auth_entity, AnonymousUser):
+            return None
+        else:
+            logger.error("Unsupported auth entity type", auth_entity=auth_entity)
+            raise ValueError(f"Unsupported auth entity type: {auth_entity}")
 
     # ==================== #
     # Validation methods
     # ==================== #
     def _validate_key_params_against_keys(self, keys: Dict[str, Any]) -> None:
         for key_param in self.key_params:
+            if "*" in key_param:
+                continue
             if key_param not in keys:
                 raise ValueError(f"Key param {key_param} not found in keys")
 

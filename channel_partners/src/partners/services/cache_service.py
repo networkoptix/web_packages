@@ -16,10 +16,9 @@ from uuid import UUID
 import redis.exceptions
 import structlog
 from django.core.cache import caches
-from django.db import (
-    models,
-    transaction,
-)
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+from django.db import models
 from django.db.models import QuerySet
 
 from channel_partners.mixins.descendant_version_mixin import (
@@ -68,6 +67,21 @@ class DependentCachedData(TypedDict):
 
 
 logger = structlog.getLogger()
+
+
+def is_email(value: any) -> bool:
+    try:
+        validator = EmailValidator()
+        validator(value)
+        return True
+    except ValidationError:
+        return False
+    except Exception as e:
+        logger.error(
+            "Unknown exception occurred while attempting to validate email for cache",
+            error=str(e),
+            exc_info=True)
+        return False
 
 
 def validate_version_type(keys: List[VersionKeyAndType]) -> None:
@@ -186,6 +200,55 @@ class CacheService:
 
     def ttl(self, key: str) -> int:
         return cache.ttl(key)
+
+    # Validation Cache Operations
+    @staticmethod
+    def _generate_cache_key(custom_field: str, value: str) -> str:
+        """
+        Generates a cache key for a given custom field and value.
+
+        Args:
+            custom_field (str): The custom field.
+            value (str): The value.
+
+        Returns:
+            str: The generated cache key.
+        """
+        return f"validation_source_key_{custom_field}_{value}"
+
+    @staticmethod
+    def get_bulk_validation_source_keys(keys: List[Tuple[str, str]]) -> Dict[Tuple[str, str], Any]:
+        """
+        Fetches multiple validation source keys from the cache.
+
+        Args:
+            keys (List[Tuple[str, str]]): A list of tuples containing custom_field and value.
+
+        Returns:
+            Dict[Tuple[str, str], Any]: A dictionary of fetched keys and their values.
+        """
+        cache_keys = [CacheService._generate_cache_key(custom_field, value) for custom_field, value in keys]
+        cached_values = cache.get_many(cache_keys)
+        result = {}
+        for custom_field, value in keys:
+            cache_key = CacheService._generate_cache_key(custom_field, value)
+            if cache_key in cached_values:
+                result[(custom_field, value)] = cached_values[cache_key]
+        return result
+
+    @staticmethod
+    def set_bulk_validation_source_keys(data: Dict[Tuple[str, str, str], Any]) -> None:
+        """
+        Sets multiple validation source keys in the cache.
+
+        Args:
+            data (Dict[Tuple[str, str], Any]): A dictionary of tuples containing custom_field and value, and their values to set in the cache.
+        """
+        cache_data = {
+            CacheService._generate_cache_key(custom_field, value): val
+            for (custom_field, value, _), val in data.items()
+        }
+        cache.set_many(cache_data)
 
     # Regular cache operations
     @staticmethod
@@ -377,31 +440,31 @@ class CacheService:
             # NOTE: if version_type is path, may want to do some additional
             #       processing to get the path from another method
             timestamp = CacheService.timestamp()
-            with transaction.atomic():
-                missing_objects = {}
 
-                # Fetch missing keys from database
-                instances: QuerySet[models.Model] = model_class.objects.filter(id__in=ids)
-                # Type the instance variable
-                instance: models.Model
-                for instance in instances:
-                    # Generate cache key
-                    cache_key = get_version_cache_key(model_class, str(instance.id), version_type)
-                    # Get value
-                    value = getattr(instance, version_type)
-                    # If the version_type is not path, set the value directly
-                    if version_type != "path":
-                        missing_objects[cache_key] = value
-                    else:
-                        missing_objects[cache_key] = CacheService._build_path_value(instance)
+            missing_objects = {}
 
-                # Set the values in the cache using set_many
-                successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
-                if unsuccessful:
-                    logger.error(
-                        "Attempted to set versions in cache, but failed",
-                        unsuccessful_keys=list(unsuccessful.keys()))
-                inserted_objects.update(successful)
+            instances: QuerySet[models.Model] = model_class.objects.filter(id__in=ids)
+
+            # Type the instance variable
+            instance: models.Model
+            for instance in instances:
+                # Generate cache key
+                cache_key = get_version_cache_key(model_class, str(instance.id), version_type)
+                # Get value
+                value = getattr(instance, version_type)
+                # If the version_type is not path, set the value directly
+                if version_type != "path":
+                    missing_objects[cache_key] = value
+                else:
+                    missing_objects[cache_key] = CacheService._build_path_value(instance)
+
+            # Set the values in the cache using set_many
+            successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
+            if unsuccessful:
+                logger.error(
+                    "Attempted to set versions in cache, but failed",
+                    unsuccessful_keys=list(unsuccessful.keys()))
+            inserted_objects.update(successful)
 
         return inserted_objects
 
@@ -422,13 +485,12 @@ class CacheService:
             timestamp = CacheService.timestamp()
             missing_objects = {}
 
-            # Fetch missing ids from database
             instances: QuerySet[models.Model] = model_class.objects.filter(id__in=ids)
 
             # Assuming all are returned
             instance: models.Model
             for instance in instances:
-                instance_id: str = str(instance.id)
+                instance_id = str(instance.id)
                 # Get the current group that can contain 1 or more items
                 current_group: List[VersionKeyAndType] = group_items[instance_id]
 
@@ -509,6 +571,5 @@ class CacheService:
 
             return successful_pairs, unsuccessful_pairs
         except Exception as e:
-            print(e)
-            logger.error("Redis error when attempting to set via Lua", error=str(e))
+            logger.error("Redis error when attempting to set via Lua", error=str(e), exc_info=True)
             return {}, data
