@@ -42,6 +42,10 @@
             &__head {
                 flex-shrink: 1;
             }
+
+            &__tail {
+                white-space: nowrap;
+            }
         }
     }
 
