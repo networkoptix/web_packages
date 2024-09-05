@@ -18,7 +18,10 @@
         <nx-pre-loader></nx-pre-loader>
     } @else if (serviceChangesStore.errorMessage()) {
         <p>{{ serviceChangesStore.errorMessage() }}</p>
-    } @else if (formattedOrgServiceChangeRecords$$().length) {
+    } @else if (
+        formattedPartnerServiceChangeRecords$$().length ||
+        formattedOrgServiceChangeRecords$$().length
+    ) {
         <nx-service-changes-table
             [entityType]="entityType$$()"
             [partnerRecords]="formattedPartnerServiceChangeRecords$$()"

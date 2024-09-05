@@ -27,7 +27,7 @@
         <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
     </div>
     <div class="service-details-table-wrapper">
-        @if (!hasError()) {
+        @if (formattedPartnerRecords$$().length || formattedOrgRecords$$().length) {
             <nx-regular-service-table
                 [partnerRecords]="formattedPartnerRecords$$()"
                 [orgRecords]="formattedOrgRecords$$()"
@@ -38,7 +38,7 @@
                 [startTs]="startTs()"
             ></nx-regular-service-table>
         } @else {
-            <nx-page-generic-placeholder-v2>{{ error() }}</nx-page-generic-placeholder-v2>
+            <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
         }
     </div>
 }

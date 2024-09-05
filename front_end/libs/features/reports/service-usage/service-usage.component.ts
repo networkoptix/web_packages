@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -30,6 +31,7 @@ import { FormattedUsageReportRecord } from './service-usage.types';
         NxPagePlaceholderGenericNewV2Component,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
+        NxPagePlaceholderNoReportsComponent,
     ],
     providers: [ServiceUsageStore],
     standalone: true,
