@@ -27,7 +27,8 @@ function validatorFactory(...baseValidators: ValidatorFn[]): (required?: boolean
     return (required = true) => {
         const validators = baseValidators;
         if (required) {
-            validators.push(Validators.required);
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            validators.push(NxValidators.requiredText);
         }
         return validators;
     };
@@ -35,6 +36,9 @@ function validatorFactory(...baseValidators: ValidatorFn[]): (required?: boolean
 
 @staticImplements<PresetValidators>()
 export class NxValidators {
+    static requiredText: ValidatorFn = ({ value }: FormControl<string>) =>
+        value.trim() ? null : { required: true };
+
     /** Generic text input */
     static text = validatorFactory(Validators.maxLength(InputMaxLength.text));
     static email = validatorFactory(
