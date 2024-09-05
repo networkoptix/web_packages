@@ -1,9 +1,22 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { inject, Injectable } from '@angular/core';
-import { concatMap, of, Subject, switchMap, takeUntil, takeWhile, timer } from 'rxjs';
+import {
+    concatMap,
+    Observable,
+    ObservableInput,
+    of,
+    Subject,
+    switchMap,
+    takeUntil,
+    takeWhile,
+    timer,
+} from 'rxjs';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
-import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ExportResponse,
+    ReportExportFormat,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxReportExportStatusDialog } from './export-status-dialog.component';
 
@@ -22,6 +35,28 @@ export class NxReportExportService {
         document.body.removeChild(link);
     }
 
+    private handleExportResponse(
+        response: ExportResponse,
+        entityId: string,
+        getExportFunction: (entityId: string, reportId: string) => ObservableInput<ExportResponse>,
+        cancelSubject$: Subject<void>,
+    ): Observable<ExportResponse> {
+        if (response.status !== 'pending') {
+            return of(response);
+        } else {
+            // Poll the report lookup endpoint at an interval of 2s, 4s, 8s, 16s, 32s, 32s, 32s ...
+            const intervals = [2000, 4000, 8000, 16000, 32000];
+            return of(...intervals).pipe(
+                concatMap((interval, index) =>
+                    index + 1 < intervals.length ? timer(interval) : timer(interval, 32000),
+                ),
+                takeUntil(cancelSubject$),
+                switchMap(() => getExportFunction(entityId, response.id)),
+                takeWhile(pollResponse => pollResponse.status === 'pending', true),
+            );
+        }
+    }
+
     exportPartnerReport(
         partnerId: string,
         periodStartDate: string,
@@ -31,26 +66,14 @@ export class NxReportExportService {
         const partnerReportExport$ = this.cpService
             .createPartnerServiceUsageExport(partnerId, periodStartDate, reportFormat)
             .pipe(
-                switchMap(response => {
-                    if (response.status !== 'pending') {
-                        return of(response);
-                    } else {
-                        // Poll the report lookup endpoint at an interval of 2s, 4s, 8s, 16s, 32s, 32s, 32s ...
-                        const intervals = [2000, 4000, 8000, 16000, 32000];
-                        return of(...intervals).pipe(
-                            concatMap((interval, index) =>
-                                index + 1 < intervals.length
-                                    ? timer(interval)
-                                    : timer(interval, 32000),
-                            ),
-                            takeUntil(cancelPartnerReportExport$),
-                            switchMap(() =>
-                                this.cpService.getPartnerServiceUsageExport(partnerId, response.id),
-                            ),
-                            takeWhile(pollResponse => pollResponse.status === 'pending', true),
-                        );
-                    }
-                }),
+                switchMap(response =>
+                    this.handleExportResponse(
+                        response,
+                        partnerId,
+                        this.cpService.getPartnerServiceUsageExport,
+                        cancelPartnerReportExport$,
+                    ),
+                ),
             );
         this.cdkDialog.open(NxReportExportStatusDialog, {
             data: {
@@ -70,34 +93,73 @@ export class NxReportExportService {
         const orgReportExport$ = this.cpService
             .createOrganizationServiceUsageExport(orgId, periodStartDate, reportFormat)
             .pipe(
-                switchMap(response => {
-                    if (response.status !== 'pending') {
-                        return of(response);
-                    } else {
-                        // Poll the report lookup endpoint at an interval of 2s, 4s, 8s, 16s, 32s, 32s, 32s ...
-                        const intervals = [2000, 4000, 8000, 16000, 32000];
-                        return of(...intervals).pipe(
-                            concatMap((interval, index) =>
-                                index + 1 < intervals.length
-                                    ? timer(interval)
-                                    : timer(interval, 32000),
-                            ),
-                            takeUntil(cancelOrgReportExport$),
-                            switchMap(() =>
-                                this.cpService.getOrganizationServiceUsageExport(
-                                    orgId,
-                                    response.id,
-                                ),
-                            ),
-                            takeWhile(pollResponse => pollResponse.status === 'pending', true),
-                        );
-                    }
-                }),
+                switchMap(response =>
+                    this.handleExportResponse(
+                        response,
+                        orgId,
+                        this.cpService.getOrganizationServiceUsageExport,
+                        cancelOrgReportExport$,
+                    ),
+                ),
             );
         this.cdkDialog.open(NxReportExportStatusDialog, {
             data: {
                 reportExport$: orgReportExport$,
                 cancelReportExport$: cancelOrgReportExport$,
+            },
+            hasBackdrop: false,
+        });
+    }
+
+    exportOrgChanges(
+        orgId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): void {
+        const cancelOrgChangeExport$ = new Subject<void>();
+        const orgChangeExport$ = this.cpService
+            .createOrganizationServiceChangesExport(orgId, periodStartDate, reportFormat)
+            .pipe(
+                switchMap(response =>
+                    this.handleExportResponse(
+                        response,
+                        orgId,
+                        this.cpService.getOrganizationServiceUsageExport,
+                        cancelOrgChangeExport$,
+                    ),
+                ),
+            );
+        this.cdkDialog.open(NxReportExportStatusDialog, {
+            data: {
+                reportExport$: orgChangeExport$,
+                cancelReportExport$: cancelOrgChangeExport$,
+            },
+            hasBackdrop: false,
+        });
+    }
+
+    exportPartnerChanges(
+        partnerId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): void {
+        const cancelOrgChangeExport$ = new Subject<void>();
+        const partnerChangeExport$ = this.cpService
+            .createPartnerServiceChangesExport(partnerId, periodStartDate, reportFormat)
+            .pipe(
+                switchMap(response =>
+                    this.handleExportResponse(
+                        response,
+                        partnerId,
+                        this.cpService.getPartnerServiceUsageExport,
+                        cancelOrgChangeExport$,
+                    ),
+                ),
+            );
+        this.cdkDialog.open(NxReportExportStatusDialog, {
+            data: {
+                reportExport$: partnerChangeExport$,
+                cancelReportExport$: cancelOrgChangeExport$,
             },
             hasBackdrop: false,
         });

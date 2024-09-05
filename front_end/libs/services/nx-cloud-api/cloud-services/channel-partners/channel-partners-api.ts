@@ -324,6 +324,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
+    createPartnerServiceChangesExport = (
+        partnerId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): Observable<ExportResponse> => {
+        return this.post(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [
+                partnerId,
+                'reports',
+                'service_changes_history',
+                'export',
+            ]),
+            { params: { periodStartDate, reportFormat } },
+        );
+    };
+
     getPartnerServiceUsageExport = (
         partnerId: string,
         reportId: string,
@@ -516,6 +532,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     ): Observable<ExportResponse> => {
         return this.post(
             this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'reports', 'usage_report', 'export']),
+            { params: { periodStartDate, reportFormat } },
+        );
+    };
+
+    createOrganizationServiceChangesExport = (
+        orgId: string,
+        periodStartDate: string,
+        reportFormat: ReportExportFormat,
+    ): Observable<ExportResponse> => {
+        return this.post(
+            this.makeUrl(urlBases.ORGANIZATIONS, [
+                orgId,
+                'reports',
+                'service_changes_history',
+                'export',
+            ]),
             { params: { periodStartDate, reportFormat } },
         );
     };
