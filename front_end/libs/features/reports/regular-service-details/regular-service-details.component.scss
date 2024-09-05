@@ -7,11 +7,17 @@
 
 .go-back {
     margin-bottom: 8px;
-    color: var(--light16);
+    color: var(--channel-partner-back-button-text-color);
 
-    &:hover {
-        cursor: pointer;
-    }
+  svg > path {
+            stroke: var(--channel-partner-back-button-stroke);
+        }
+
+   &:hover {
+          color: var(--channel-partner-back-button-hover) !important;
+          text-decoration: underline;
+          cursor: pointer;
+        }
 }
 
 .left-arrow-icon {

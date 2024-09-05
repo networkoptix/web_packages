@@ -15,10 +15,21 @@
     align-items: center;
     cursor: pointer;
     padding-bottom: 8px;
+    color: var(--channel-partner-back-button-text-color);
 
     svg {
       transform: rotate(180deg);
     }
+
+      svg > path {
+            stroke: var(--channel-partner-back-button-stroke);
+        }
+
+     &:hover {
+          color: var(--channel-partner-back-button-hover) !important;
+          text-decoration: underline;
+          cursor: pointer;
+        }
   }
 
   .name {
