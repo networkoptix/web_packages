@@ -105,7 +105,7 @@
 nx-hidable {
     a {
         @include typography.light14light16;
-        color: var(--channel-partner-back-button-bg-color) !important;
+        color: var(--channel-partner-back-button-text-color) !important;
         position: relative;
         margin-right: 1em;
         align-items: center;
@@ -113,7 +113,7 @@ nx-hidable {
         text-decoration: none;
         padding-bottom: .5rem;
         svg > path {
-            stroke: var(--channel-partner-back-button-bg-color);
+            stroke: var(--channel-partner-back-button-stroke);
         }
 
         &:not(:first-of-type) {
@@ -126,8 +126,9 @@ nx-hidable {
             margin-left: 1em;
         }
         &:hover {
-            color: var(--btn-default-focus-outline-rgb) !important;
+            color: var(--channel-partner-back-button-hover) !important;
             text-decoration: underline;
+            cursor: pointer;
         }
 }
     .tutorial-link {
