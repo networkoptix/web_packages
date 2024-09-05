@@ -11,18 +11,23 @@
     &.open {
         z-index: 99;
         position: absolute;
-        right: 0px;
-        top: 0px;
+        right: 0;
+        top: 0;
         background-color: var(--mobile-header-bg);
+
         &.tablet {
             width: 50%;
-            right: 0px;
+            right: 0;
+        }
+
+        .user-section {
+            display: block;
         }
     }
 
     .user-section {
-        display: block;
-        margin: 12px 0px auto 15px;
+        display: none;
+        margin: 12px 0 auto 15px;
 
         &:hover {
             cursor: pointer;
@@ -40,7 +45,7 @@
 
     .menu-button {
         display: block;
-        margin: 14px 16px auto 0px;
+        margin: 14px 16px auto 0;
 
         &:hover {
             cursor: pointer;
