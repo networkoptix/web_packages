@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxControlMessagesComponent as NxMessagesContainer } from '../control-messages.component';
 import { NxControlMessagesToken } from '../control-messages.token';
 
+type TransformData = (data: unknown) => unknown;
 /** A message associated with a form field control. */
 @Component({
     selector: 'nx-control-message',
@@ -37,13 +38,25 @@ export class NxControlMessageComponent {
      * - `undefined`: Don't translate
      * - `null`: Translate without parameters
      * - `'data'`: Translate using control state data
+     * - `TransformData`: Translate using transformed control state data
      * - `object`: Translate using input value
      */
-    translateWith = input<undefined | null | 'data' | object>(undefined);
+    translateWith = input<undefined | null | 'data' | TransformData | object>(undefined);
     type = input<'error' | 'warn' | 'info'>('error');
 
+    translateWithData = computed<boolean>(
+        () => typeof this.translateWith() === 'function' || this.translateWith() === 'data',
+    );
     selected = computed<boolean>(() => this.messagesContainer.state()?.key === this.key());
-    data = computed<unknown>(() => this.messagesContainer.state?.()?.data);
+
+    data = computed<unknown>(() => {
+        const data = this.messagesContainer.state?.()?.data;
+        if (!data) {
+            return undefined;
+        }
+        const translateWith = this.translateWith();
+        return typeof translateWith === 'function' ? translateWith(data) : data;
+    });
 
     constructor(
         public host: ElementRef<HTMLElement>,

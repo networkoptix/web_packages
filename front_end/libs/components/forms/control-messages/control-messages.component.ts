@@ -64,6 +64,15 @@ export class NxControlMessagesComponent implements AfterViewInit {
      */
     pattern = input<BuiltinMessageKey>();
 
+    /** For displaying the number of characters going over the maxlength (which is called requiredLength in this case)
+     */
+    overMaxLength = (data: {
+        actualLength: number;
+        requiredLength: number;
+    }): { charsOverLimit: number } => {
+        return { charsOverLimit: data.actualLength - data.requiredLength };
+    };
+
     /** How many lines of space to preallocate.
      *
      * Should be the number of lines taken up by the tallest message. The
@@ -140,6 +149,7 @@ export class NxControlMessagesComponent implements AfterViewInit {
         },
         { allowSignalWrites: true },
     );
+
     selectedMessage = signal<DomPortal<HTMLElement> | undefined>(undefined);
 
     constructor(
