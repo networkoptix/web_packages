@@ -1,4 +1,4 @@
-import { Component, Output, computed } from '@angular/core';
+import { Component, computed, Output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { escape } from 'lodash-es';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
@@ -169,12 +169,20 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
                     organization: this.currentOrg$$().name,
                 },
             );
+        } else if (user.groupRoles?.length > 1) {
+            message = this.translateService.instant(
+                this.LANG.channelPartners.usersTable.deleteDialog.multipleFoldersMessage,
+                {
+                    name: user.email,
+                    count: user.groupRoles?.length,
+                },
+            );
         } else {
             message = this.translateService.instant(
                 this.LANG.channelPartners.usersTable.deleteDialog.singleFolderMessage,
                 {
                     name: user.email,
-                    folder: escape(user.accessLevel?.name),
+                    folder: escape(user.accessLevel?.name || user.groupRoles[0]?.name),
                 },
             );
         }
@@ -227,6 +235,12 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
             return;
         }
 
+        if (this.selectedOrgUsers$$().length === 1) {
+            const user = this.selectedOrgUsers$$()[0] as UserRecord;
+            this.deleteUser(user);
+            return;
+        }
+
         this.dialogService
             .confirm(
                 {
@@ -247,7 +261,7 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
                 },
                 { width: DIALOG_SIZE.MICRO_SMALL },
             )
-            .then(confirm => {
+            .then((confirm: boolean) => {
                 if (confirm) {
                     const currOrgId = this.currentOrg$$()?.id;
                     this.orgUsersStore.removeUsers(
