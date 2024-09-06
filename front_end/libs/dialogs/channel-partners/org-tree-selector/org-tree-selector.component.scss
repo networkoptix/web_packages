@@ -52,13 +52,14 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+
     &--horizontal-scroll {
         overflow-x: auto;
     }
 
     .org-tree {
-        position: relative; // This is required for item autoscrolling
-        padding: 5px;
+        position: relative; // This is required for item auto scrolling
+        padding: 5px 0;
         margin-bottom: 0;
         min-width: 100%;
         height: 100%;
@@ -73,16 +74,19 @@
             svg path {
                 fill: var(--dropdown-item-color);
             }
+
             &.org-tree__item--selected {
                 svg path {
                     fill: var(--dropdown-item-selected-color);
                 }
             }
+
             &.org-tree__item--disabled {
                 cursor: default;
 
                 // Color wasn't provided in figma  ¯\_(ツ)_/¯
                 color: #414a4f;
+
                 svg path {
                     fill: #414a4f;
                 }
@@ -104,6 +108,7 @@
             & > :first-child {
                 margin-inline-start: 5px;
             }
+
             & > :last-child {
                 margin-inline-end: 5px;
             }
@@ -124,6 +129,7 @@
 
                 // Color wasn't provided in figma  ¯\_(ツ)_/¯
                 color: #414a4f;
+
                 svg path {
                     fill: #414a4f;
                 }
@@ -158,6 +164,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+
             svg-icon {
                 display: flex;
             }

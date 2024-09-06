@@ -138,6 +138,7 @@ export class NxOrgTreeSelectorComponent
     }
 
     initialized = false;
+
     writeValue(value: string): void {
         if (value !== null && !this.initialized) {
             if (value !== this.organization().id) {
@@ -161,9 +162,11 @@ export class NxOrgTreeSelectorComponent
 
     private onChange = (_: string): void => {};
     private onTouched = (): void => {};
+
     registerOnChange(fn: (value: string) => void): void {
         this.onChange = fn;
     }
+
     registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
@@ -180,6 +183,7 @@ export class NxOrgTreeSelectorComponent
             this.parseGroup(group, 0, null);
         });
         this.folderSearchResults.set(this.flatGroups);
+        this.toggleFolderOpen(this.organization().id);
 
         // Opens all folders for easier testing
         // this.folderSearchResults().forEach(g => {
@@ -191,6 +195,7 @@ export class NxOrgTreeSelectorComponent
     }
 
     horizontalScroll = signal(false);
+
     ngAfterViewInit(): void {
         /* Default is to truncate long names with ellipses, but if the nesting
         is deep enough that the deepest level won't have 100px of space for text
