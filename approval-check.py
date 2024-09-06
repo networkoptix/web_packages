@@ -10,7 +10,9 @@ czach = 'czach'
 awu = 'awu'
 
 visimetov = 'visimetov'
-kepperson = 'kepperson'
+gsovetov = 'gsovetov'
+vshebanov = 'vshebanov'
+azosimov = 'azosimov'
 
 
 default_code_owners = [nhartleb, rbarsegian]
@@ -40,7 +42,7 @@ rules = [
     create_code_owner_rule('deploy/**/*'),
     create_code_owner_rule('front_end/**/*', [ttsolov, czach, awu] + default_code_owners),
     create_code_owner_rule('webadmin/**/*'),
-    create_code_owner_rule('ft/**/*', code_owners=(visimetov, kepperson), required_approvals=1),
+    create_code_owner_rule('ft/**/*', code_owners=(visimetov, gsovetov, vshebanov, azosimov), required_approvals=1),
     # create_code_owner_rule('**/*') # Maybe we use this in the future.
 ]
 
