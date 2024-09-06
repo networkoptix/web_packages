@@ -14,7 +14,6 @@ import {
     selectChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
 import {
@@ -37,7 +36,6 @@ import { isUserSystem } from '@utils/nx';
         }
     `,
     styleUrls: ['home.component.scss'],
-    hostDirectives: [NxThemeAttributeDirective],
     imports: [NxPreLoaderComponent, RouterModule, CommonModule],
     standalone: true,
 })
