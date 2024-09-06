@@ -7,6 +7,7 @@ include:
     file: "pipelines/secrets.yml"
   - local: "ci/Docker/**/.gitlab-ci.yml"
   - local: "channel_partners/build/channel_partners_ci/.gitlab-ci.yml"
+  - local: "ft/ci/.gitlab-ci.yml"
 
 default:
   tags:
@@ -34,6 +35,7 @@ stages:
   - build
   - create mr
   - test
+  - ft (#ask-ft)
   - fail-fast
 
 .retries:

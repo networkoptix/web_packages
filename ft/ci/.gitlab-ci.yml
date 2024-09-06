@@ -1,0 +1,31 @@
+WebAdmin:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'jenkins-build-webadmin' ]
+  script: [ 'dev-cloud-portal-webadmin-vms_6.0' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:  # mirror 'jenkins-build-webadmin' rules
+  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/'
+    when: on_success
+    changes:
+      - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
+  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+    when: on_success
+    changes:
+      - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
+    when: on_success
+    changes:
+      - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
+    when: on_success
+    changes:
+      - front_end/**/*
+      - translations/**/*
+      - webadmin/**/*
