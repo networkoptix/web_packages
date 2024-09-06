@@ -1,21 +1,20 @@
-<nx-org-tree-selector
-    [organization]="organization"
-    [groups]="groups"
-    [statuses]="statuses"
-    style="width: 300px; height: 300px"
-></nx-org-tree-selector>
+<div class="tree-selector-container">
+    <nx-org-tree-selector
+        [organization]="organization"
+        [groups]="groups"
+        [statuses]="statuses"
+        style="width: 300px; height: 300px"
+    ></nx-org-tree-selector>
 
-<nx-org-tree-selector
-    [organization]="org2"
-    [groups]="groups2"
-    [statuses]="statuses2"
-    style="width: 300px; height: 300px"
-></nx-org-tree-selector>
+    <nx-org-tree-selector
+        [organization]="org2"
+        [groups]="groups2"
+        [statuses]="statuses2"
+        style="width: 300px; height: 300px"
+    ></nx-org-tree-selector>
+</div>
 
-<div
-    class="paths-test-container"
-    style="width: 300px; display: flex; flex-direction: column; gap: 0.5rem"
->
+<div class="paths-test-container">
     @for (path of paths; track $index) {
         <nx-org-step-select [ngModel]="path"></nx-org-step-select>
     }

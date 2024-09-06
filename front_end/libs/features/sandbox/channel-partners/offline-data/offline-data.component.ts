@@ -207,5 +207,25 @@ export class NxCpOfflineDataComponent {
             'WittySloganFollowerMossBandedCourage',
             'UnsavoryDynamoChatterboxGhostChatterboxGhost',
         ],
+
+        [
+            'HotDetective SolderingHippo RobotKitten WittySlogan FollowerMoss BandedCourage',
+            'SavoryTuber',
+        ],
+        [
+            'HotDetective SolderingHippo RobotKitten WittySlogan FollowerMoss BandedCourage',
+            'SavoryTuber',
+            'DaringCapitalist',
+        ],
+        ['HotDetective SolderingHippo RobotKitten WittySlogan FollowerMoss BandedCourage'],
+        [
+            'HotDetective SolderingHippo RobotKitten',
+            'WittySlogan FollowerMoss BandedCourage UnsavoryDynamo ChatterboxGhost ChatterboxGhost',
+        ],
+        [
+            'HotDetective SolderingHippo RobotKitten',
+            'WittySlogan FollowerMoss BandedCourage',
+            'UnsavoryDynamo ChatterboxGhost ChatterboxGhost',
+        ],
     ];
 }

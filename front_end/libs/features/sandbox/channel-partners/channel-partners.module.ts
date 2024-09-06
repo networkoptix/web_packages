@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { NxChannelPartnerComponent } from './channel-partner/channel-partner.component';
 import { NxChannelPartnersComponent } from './channel-partners.component';
-import { NxCpOfflineDataComponent } from './offline-data/offline-data.component';
 import { NxOrganizationComponent } from './organization/organization.component';
 import { NxSystemGroupComponent } from './system-group/system-group.component';
 
@@ -12,11 +11,6 @@ export const appRoutes: Routes = [
         path: '',
         pathMatch: 'full',
         component: NxChannelPartnersComponent,
-    },
-    {
-        path: 'offline',
-        pathMatch: 'full',
-        component: NxCpOfflineDataComponent,
     },
     {
         path: ':partnerId',

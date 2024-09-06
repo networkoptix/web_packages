@@ -1,5 +1,18 @@
-:host {
-    & > * + * {
-        margin-top: 1rem;
+:host > * + * {
+    margin-top: 1rem;
+}
+
+.tree-selector-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.paths-test-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    & > * {
+        width: 300px;
     }
 }

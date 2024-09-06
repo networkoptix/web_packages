@@ -12,6 +12,7 @@ import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
+import { NxCpOfflineDataComponent } from './channel-partners/offline-data/offline-data.component';
 import { NxCssVariablesComponent } from './css-variables/css-variables.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import { NxDatetimeSandboxComponent } from './datetime-sandbox/datetime-sandbox.component';
@@ -125,6 +126,10 @@ export const appRoutes: Routes = [
                     import('./channel-partners/channel-partners.module').then(
                         m => m.NxChannelPartnersModule,
                     ),
+            },
+            {
+                path: 'cp-dialogs-components',
+                component: NxCpOfflineDataComponent,
             },
             {
                 path: 'filters',
