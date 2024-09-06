@@ -294,8 +294,8 @@ export class NxOrgTreeSelectorComponent
         this.updateFolderState(highlightedId, newState);
     }
 
-    toggleFolderOpen(groupId: string): void {
-        const newState = !this.openFolders.has(groupId);
+    toggleFolderOpen(groupId: string, forceOpen = false): void {
+        const newState = forceOpen || !this.openFolders.has(groupId);
         this.updateFolderState(groupId, newState);
     }
 
@@ -432,7 +432,9 @@ export class NxOrgTreeSelectorComponent
                     lastAddedIndex = upTraversal[0];
                 }
                 while (upTraversal.length) {
-                    results.push(this.flatGroups[upTraversal.pop()!]);
+                    const upTraversalItem = this.flatGroups[upTraversal.pop()!];
+                    this.toggleFolderOpen(upTraversalItem.id, true);
+                    results.push(upTraversalItem);
                 }
 
                 results.push(group);
