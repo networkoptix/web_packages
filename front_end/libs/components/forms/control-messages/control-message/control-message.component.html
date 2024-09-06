@@ -2,7 +2,7 @@
     {{ text() }}
 } @else if (translateWith === null) {
     {{ text() | translate }}
-} @else if (translateWith() === 'data') {
+} @else if (translateWithData()) {
     <!-- Avoid recomputing translation with changing error data unless selected -->
     @if (selected() && data()) {
         {{ text() | translate: data() }}

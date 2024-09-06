@@ -2255,7 +2255,7 @@
         "emailNotUnique": "This email has already been registered",
         "phoneInvalid": "Phone number is invalid",
         "phoneNotUnique": "Phone already in use",
-        "characterLimit": "{ requiredLength } character limit"
+        "overCharLimit": "{ charsOverLimit, plural, one{# character} other{# characters}} over limit"
     },
     "builtinValidatorMsg": {
         "email": {
