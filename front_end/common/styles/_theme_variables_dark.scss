@@ -450,6 +450,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --dialog-border-color : var(--dark11, #35464F); //$dark11;
     --dialog-header-bg : var(--dark6, #1C2327); //$dark6;
     --dialog-header-color: var(--light4, #E1E7EA); //$light4
+    --dialog-header-muted-color: var(--light14);
     --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
     --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 

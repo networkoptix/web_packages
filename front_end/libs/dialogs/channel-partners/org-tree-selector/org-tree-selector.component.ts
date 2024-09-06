@@ -5,13 +5,13 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    OnInit,
-    Optional,
-    SkipSelf,
-    ViewChild,
     forwardRef,
     input,
+    OnInit,
+    Optional,
     signal,
+    SkipSelf,
+    ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -27,10 +27,11 @@ import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
-import { BehaviorSubject, NEVER, filter, switchMap, takeUntil, timer } from 'rxjs';
+import { BehaviorSubject, filter, NEVER, switchMap, takeUntil, timer } from 'rxjs';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { throttle } from '@decorators/throttle';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import type {
     GroupItem,
@@ -39,7 +40,7 @@ import type {
 import { icons } from '@static-variables';
 import { caseInsensitiveSearch, scrollItemIntoView } from '@utils/general';
 
-import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
+import type { OrgTreeItem, OrgTreeStatusMap } from './org-tree-selector.types';
 
 @Component({
     selector: 'nx-org-tree-selector',
@@ -54,6 +55,7 @@ import type { OrgTreeStatusMap, OrgTreeItem } from './org-tree-selector.types';
         TranslateModule,
         NxSearchHighlightComponent,
         NxTooltipV2Directive,
+        NxAddSvgSrcDirective,
     ],
     providers: [
         {

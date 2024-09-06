@@ -9,12 +9,15 @@ import {
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { icons } from '@static-variables';
+
 @Component({
     selector: 'nx-basic-search-input',
     templateUrl: './basic-search-input.component.html',
     styleUrls: ['./basic-search-input.component.scss'],
     standalone: true,
-    imports: [TranslateModule, ReactiveFormsModule],
+    imports: [TranslateModule, ReactiveFormsModule, NxAddSvgSrcDirective],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -47,4 +50,6 @@ export class SearchInputComponent implements ControlValueAccessor {
     }
 
     registerOnTouched(fn: () => void): void {}
+
+    protected readonly icons = icons;
 }

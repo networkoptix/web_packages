@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -64,6 +64,26 @@ export const authorizedRoutes: Routes = [
 ];
 
 @NgModule({
+    imports: [
+        CommonModule,
+        TranslateModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        RouterModule.forChild(authorizedRoutes),
+        AngularSvgIconModule.forRoot(),
+        NxAddSvgSrcDirective,
+        PipesModule,
+        NxFooterComponent,
+        NxNavFooterComponent,
+        NxProcessButtonComponent,
+        ToastContainerModule,
+        NxAuthorizeCreateAccountComponent,
+        NxAuthorizeResetPasswordComponent,
+        NxFocusMeDirective,
+        BindSystemToCloudComponent,
+    ],
+    providers: [],
     declarations: [
         NxAuthorizeComponent,
         NxAuthorizeEmailComponent,

@@ -12,7 +12,11 @@
     autocomplete="off"
     [placeholder]="placeholder | translate"
 />
-<span class="glyphicon web-icon-search icon-search"></span>
+<svg-icon
+    nx-add-svg-src
+    class="web-icon-search icon-search"
+    [src]="icons.dir + 'search.svg'"
+></svg-icon>
 <button
     class="clear-btn"
     *ngIf="search"

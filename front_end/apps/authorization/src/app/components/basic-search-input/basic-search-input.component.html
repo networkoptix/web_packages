@@ -2,7 +2,11 @@
     class="form-group"
     [formGroup]="searchForm"
 >
-    <span class="glyphicon web-icon-search search-icon"></span>
+    <svg-icon
+        nx-add-svg-src
+        class="web-icon-search icon-search"
+        [src]="icons.dir + 'search.svg'"
+    ></svg-icon>
     <input
         class="form-control search-input inset"
         autocomplete="off"
