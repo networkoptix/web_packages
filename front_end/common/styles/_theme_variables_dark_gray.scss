@@ -740,18 +740,19 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     --tree-node-main-color: var(--light10);
     --tree-node-secondary-color: var(--dark17);
-    --tree-node-activated-main-color: var(--brand-core);
-    --tree-node-activated-secondary-color: var(--dark17);
-    --tree-node-selected-main-color: var(--light1);
-    --tree-node-selected-secondary-color: var(--light1);
+    --tree-node-selected-main-color: var(--brand-core);
+    --tree-node-selected-secondary-color: var(--dark17);
+    --tree-node-activated-main-color: var(--light1);
+    --tree-node-activated-secondary-color: var(--light1);
     --tree-node-checked-main-color: var(--light1);
     --tree-node-checked-secondary-color: var(--dark17);
     --tree-node-hover-background: var(--dark6);
     --tree-node-pressed-background: var(--dark4);
-    --tree-node-selected-background: var(--dark7);
-    --tree-node-hover-selected-background: var(--dark8);
-    --tree-node-pressed-selected-background: var(--dark6);
+    --tree-node-activated-background: var(--dark7);
+    --tree-node-hover-activated-background: var(--dark8);
+    --tree-node-pressed-activated-background: var(--dark4);
     --tree-node-playing-outline: var(--dark10);
+    --tree-node-offline-color: var(--dark15);
 
     --tree-node-action-color: var(--light10);
     --tree-node-action-hover-color: var(--light3);

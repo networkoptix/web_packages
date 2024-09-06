@@ -931,18 +931,19 @@ html[data-theme="hsl"] {
 
     --tree-node-main-color: var(--new-light10);
     --tree-node-secondary-color: var(--new-dark17);
-    --tree-node-activated-main-color: var(--new-brand-core);
-    --tree-node-activated-secondary-color: var(--new-dark17);
-    --tree-node-selected-main-color: var(--new-light1);
-    --tree-node-selected-secondary-color: var(--new-light1);
+    --tree-node-selected-main-color: var(--new-brand-core);
+    --tree-node-selected-secondary-color: var(--new-dark17);
+    --tree-node-activated-main-color: var(--new-light1);
+    --tree-node-activated-secondary-color: var(--new-light1);
     --tree-node-checked-main-color: var(--new-light1);
     --tree-node-checked-secondary-color: var(--new-dark17);
     --tree-node-hover-background: var(--new-dark6);
     --tree-node-pressed-background: var(--new-dark4);
-    --tree-node-selected-background: var(--new-dark7);
-    --tree-node-hover-selected-background: var(--new-dark8);
-    --tree-node-pressed-selected-background: var(--new-dark6);
+    --tree-node-activated-background: var(--new-dark4);
+    --tree-node-hover-activated-background: var(--new-dark7);
+    --tree-node-pressed-activated-background: var(--new-dark4);
     --tree-node-playing-outline: var(--new-dark10);
+    --tree-node-offline-color: var(--new-dark15);
 
     --tree-node-action-color: var(--new-light10);
     --tree-node-action-hover-color: var(--new-light3);

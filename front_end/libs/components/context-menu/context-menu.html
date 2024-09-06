@@ -1,15 +1,15 @@
 <div
     cdkMenu
-    [ngClass]="isSubMenu ? 'sub-menu' : ''"
+    [ngClass]="{
+        'sub-menu': isSubMenu,
+    }"
 >
     @for (item of menu; track item) {
-  
         @if (item.name === 'divider') {
-<mat-divider />
-}
+            <mat-divider />
+        }
 
         @if (!!item.subMenu && !item.disabled$$?.()) {
-
             <button
                 cdkMenuItem
                 [cdkMenuTriggerFor]="subMenu"
@@ -27,19 +27,16 @@
             </button>
             <ng-template #subMenu>
                 @if (!!item.subMenu) {
-<nx-context-menu
-                   
-                    [menuItems]="item.subMenu"
-                    [context]="context"
-                    [isSubMenu]="true"
-                />
-}
+                    <nx-context-menu
+                        [menuItems]="item.subMenu"
+                        [context]="context"
+                        [isSubMenu]="true"
+                    />
+                }
             </ng-template>
-        
-}
+        }
 
         @if (!item.subMenu && !!item.action && !!item.name && !item.disabled$$?.()) {
-
             <button
                 cdkMenuItem
                 (click)="item.action($event, context); $event.stopPropagation()"
@@ -48,31 +45,25 @@
             >
                 {{ item.name | translate }}
                 @if (item.checked$$?.()) {
-<svg-icon
-                   
-                    nx-add-svg-src
-                    [svgStyle]="{
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
                                     'width.px': '16',
                                     'height.px': '16',
                                 }"
-                    [src]="icons.dirLayouts + 'yes.svg'"
-                >
-                </svg-icon>
-}
+                        [src]="icons.dirLayouts + 'yes.svg'"
+                    >
+                    </svg-icon>
+                }
             </button>
-        
-}
-
+        }
         @if (item.disabled$$?.()) {
-
             <button
                 cdkMenuItem
                 [disabled]="item.disabled$$?.()"
             >
                 {{ item.name | translate }}
             </button>
-        
-}
-    
-}
+        }
+    }
 </div>

@@ -173,7 +173,7 @@
                             [expanded]="!treeControl.isExpanded(node) && !tourService.currentStep"
                             [menuItems]="menuItemsByType[node.type]"
                             [treeMenuItems]="treeMenuItems[node.type]"
-                            [selected]="
+                            [activated]="
                                 layout?.id
                                     ? cleanIdLegacy(changingLayout || layout?.id) ===
                                           cleanIdLegacy(node?.details?.id) &&

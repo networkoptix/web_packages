@@ -50,8 +50,15 @@
     }
     &:active,
     &.renaming-node,
-    &.selected.renaming-node {
+    &.activated.renaming-node,
+    &.menu-opened.activated,
+    &.menu-opened.activated:hover,
+    &.menu-opened {
         --background-color: var(--tree-node-pressed-background);
+    }
+
+    &.offline {
+        --main-color: var(--tree-node-offline-color);
     }
 
     &.checked {
@@ -59,32 +66,28 @@
         --secondary-color: var(--tree-node-checked-secondary-color);
     }
 
-    &.playing:not(.activated) {
+    &.playing:not(.selected) {
         --outline-color: var(--tree-node-playing-outline);
-    }
-
-    &.activated {
-        --main-color: var(--tree-node-activated-main-color);
-        --secondary-color: var(--tree-node-activated-secondary-color);
     }
 
     &.selected {
         --main-color: var(--tree-node-selected-main-color);
         --secondary-color: var(--tree-node-selected-secondary-color);
-        --background-color: var(--tree-node-selected-background);
+    }
+
+    &.activated {
+        --main-color: var(--tree-node-activated-main-color);
+        --secondary-color: var(--tree-node-activated-secondary-color);
+        --background-color: var(--tree-node-activated-background);
         &:hover {
-            --background-color: var(--tree-node-hover-selected-background);
+            --background-color: var(--tree-node-hover-activated-background);
         }
         &:active {
-            --background-color: var(--tree-node-pressed-selected-background);
+            --background-color: var(--tree-node-pressed-activated-background);
         }
     }
 
-    &.offline {
-        --node-opacity: 0.3;
-    }
-
-    &:not(:hover) > .action-button {
+    &:not(:hover):not(.menu-opened) > .action-button {
         display: none !important;
     }
     &:hover:has(.editable-edit) > .action-button {
@@ -132,7 +135,7 @@
 }
 
 .text-with-cursor {
-    // there is no cursor when text is selected. let's fix it :)
+    // there is no cursor when there is a text selection. let's fix it :)
     &:after {
         @include fake-cursor;
     }

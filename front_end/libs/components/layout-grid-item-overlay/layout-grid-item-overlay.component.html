@@ -1,8 +1,10 @@
 <ng-template #nodeActionMenu>
-    <nx-context-menu
-        [context]="node$$()"
-        [menuItems]="menuItemsByType[node$$().type]"
-    />
+    @if (node$$()) {
+        <nx-context-menu
+            [context]="node$$()"
+            [menuItems]="menuItemsByType[node$$().type]"
+        />
+    }
 </ng-template>
 
 <div
@@ -11,6 +13,10 @@
     [ngStyle]="getScaleStyle$ | async"
     [cdkContextMenuTriggerFor]="nodeActionMenu"
     [cdkMenuTriggerFor]="scaled$$() ? nodeActionMenu : null"
+    (cdkMenuOpened)="isMenuOpened$$.set(true)"
+    (cdkMenuClosed)="isMenuOpened$$.set(false)"
+    (cdkContextMenuOpened)="isMenuOpened$$.set(true)"
+    (cdkContextMenuClosed)="isMenuOpened$$.set(false)"
     (dblclick)="$event.stopPropagation(); fullscreenAction$$().action?.($event)"
     [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide$$(), hide: hide$$() }"
 >

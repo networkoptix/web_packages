@@ -2,7 +2,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
+    Signal,
+    signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -80,7 +88,7 @@ import { cleanId } from '@utils/general';
 export class NxLayoutGridTreeNode {
     expanded$$ = input<boolean>(false, { alias: 'expanded' });
     preview$$ = input<boolean>(false, { alias: 'preview' });
-    selected$$ = input<boolean>(false, { alias: 'selected' });
+    activated$$ = input<boolean>(false, { alias: 'activated' });
     isRoot$$ = input<boolean>(false, { alias: 'isRoot' });
     menuItems$$ = input.required<
         MenuItemsOrMenuItemsFactory<Partial<MergedResourceNode<{ id: string }>> & BaseResourceNode>
@@ -90,6 +98,8 @@ export class NxLayoutGridTreeNode {
     >({ alias: 'treeMenuItems' });
     node$$ = input.required<ResourceNode>({ alias: 'node' });
     query$$ = input.required<string | RegExp | null>({ alias: 'query' });
+
+    isMenuOpened$$ = signal(false);
 
     readonly CONFIG = nxConfig;
     readonly icons = icons;
@@ -107,6 +117,7 @@ export class NxLayoutGridTreeNode {
         playing: this.playing$$(),
         selected: this.selected$$(),
         checked: this.checked$$(),
+        'menu-opened': this.isMenuOpened$$(),
         'leaf-node': !this.isRoot$$(),
         'root-node': this.isRoot$$(),
         'renaming-node': this.isRenaming$$(),
@@ -182,7 +193,7 @@ export class NxLayoutGridTreeNode {
             !node.details ||
             !currentSystem ||
             !selectedLayoutItemState ||
-            !selectedLayoutItemState.selected.id
+            (!selectedLayoutItemState.selected.id && !selectedLayoutItemState.playing.id)
         ) {
             return null;
         }
@@ -202,12 +213,13 @@ export class NxLayoutGridTreeNode {
         return null;
     });
 
-    activated$$ = computed(() => this.selectedStatus$$() === 'selected');
+    selected$$ = computed(() => this.selectedStatus$$() === 'selected');
     playing$$ = computed(() => this.selectedStatus$$() === 'playing');
 
     checked$$ = computed(() => {
         const node = this.node$$();
-        if (!node.details?.id) {
+        const nodeId = cleanId(node.details?.id || '');
+        if (!nodeId) {
             return false;
         }
         const activeResourcePaths = this.layoutStateService.activeLayoutItemsResourceIdAndPath$$();
@@ -218,7 +230,7 @@ export class NxLayoutGridTreeNode {
                 .map(({ resourcePath }) => resourcePath)
                 .includes(`cloud://${systemId}.${id}`);
         }
-        return activeResourcePaths.map(({ resourceId }) => resourceId).includes(node.details.id);
+        return activeResourcePaths.map(({ resourceId }) => resourceId).includes(nodeId);
     });
 
     unsavedLayoutString$$ = computed(() => {
