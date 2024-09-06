@@ -7,9 +7,9 @@ import { availableActions, performItemAction } from './action-test-helpers';
 import { getLayoutShareActionsFactory } from './get-layout-share-actions-factory';
 
 const shareLayout = jest.fn();
-const unshareLayout = jest.fn();
+const currentUser = jest.fn();
 
-const getLayoutShareActions = getLayoutShareActionsFactory(shareLayout, unshareLayout);
+const getLayoutShareActions = getLayoutShareActionsFactory(shareLayout, currentUser);
 
 describe('getLayoutShareActionsFactory', () => {
     let node: ResourceNodeMap[ResourceType.LAYOUT];
@@ -36,6 +36,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     it('should include a divider', () => {
         nxConfig.featureFlags.layoutsShare = true;
+        currentUser.mockReturnValue({ isAdmin: true });
 
         const result = getLayoutShareActions(node);
 
@@ -44,7 +45,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     it('should return an empty array if layout is not owned', () => {
         nxConfig.featureFlags.layoutsShare = true;
-        node.owned = false;
+        currentUser.mockReturnValue({ isAdmin: false });
 
         const result = getLayoutShareActions(node);
 
@@ -53,6 +54,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     it('should return an empty array if layout is locked', () => {
         nxConfig.featureFlags.layoutsShare = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.locked = true;
 
         const result = getLayoutShareActions(node);
@@ -62,6 +64,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     it('should return an empty array if layout is crossSystem', () => {
         nxConfig.featureFlags.layoutsShare = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.crossSystem = true;
 
         const result = getLayoutShareActions(node);
@@ -69,19 +72,9 @@ describe('getLayoutShareActionsFactory', () => {
         expect(result).toEqual([]);
     });
 
-    it('should show unshareLayout action if layout is owned and shared', () => {
-        nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
-        node.shared = true;
-
-        const result = getLayoutShareActions(node);
-
-        expect(result).toEqual(availableActions(['divider', 'unshareLayout']));
-    });
-
     it('should show shareLayout action if layout is owned and not shared', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.shared = false;
 
         const result = getLayoutShareActions(node);
@@ -91,7 +84,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     it('should call shareLayout when the shareLayout item is clicked', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.shared = false;
 
         const result = getLayoutShareActions(node);
@@ -99,17 +92,5 @@ describe('getLayoutShareActionsFactory', () => {
         performItemAction(result)('shareLayout', node);
 
         expect(shareLayout).toHaveBeenCalledWith(node.details);
-    });
-
-    it('should call unshareLayout when the unshareLayout item is clicked', () => {
-        nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
-        node.shared = true;
-
-        const result = getLayoutShareActions(node);
-
-        performItemAction(result)('unshareLayout', node);
-
-        expect(unshareLayout).toHaveBeenCalledWith(node.details);
     });
 });

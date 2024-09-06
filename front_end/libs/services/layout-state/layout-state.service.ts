@@ -36,7 +36,6 @@ import { createPortalToken } from '@common/tokens';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
-import { NxAccountService } from '@services/account.service';
 import {
     CamerasResolution,
     Resolution,
@@ -396,15 +395,6 @@ export class LayoutStateService {
         });
     }
 
-    unshareLayout(layout: Layout): void {
-        this.updateLayout({
-            ...layout,
-            parentId:
-                this.accountService.account.id ||
-                this.systemService.getCurrentSystem().permissionManager.currentUser$$().id,
-        });
-    }
-
     unlockLayout(layout: Layout): void {
         this.updateLayout({
             ...layout,
@@ -611,7 +601,6 @@ export class LayoutStateService {
         private store: Store,
         private translate: TranslateService,
         private paramStateService: NxParamStateService,
-        private accountService: NxAccountService,
         private systemService: NxSystemService,
         private dialogsService: NxDialogsService,
     ) {

@@ -8,8 +8,9 @@ import { getLayoutLockActionsFactory } from './get-layout-lock-actions-factory';
 
 const lockLayout = jest.fn();
 const unlockLayout = jest.fn();
+const currentUser = jest.fn();
 
-const getLayoutEditActions = getLayoutLockActionsFactory(lockLayout, unlockLayout);
+const getLayoutEditActions = getLayoutLockActionsFactory(lockLayout, unlockLayout, currentUser);
 
 describe('getLayoutLockActionsFactory', () => {
     let node: ResourceNodeMap[ResourceType.LAYOUT];
@@ -20,7 +21,6 @@ describe('getLayoutLockActionsFactory', () => {
             details: {
                 id: uuid(),
             },
-            owned: true,
             locked: false,
         } as ResourceNodeMap[ResourceType.LAYOUT];
         jest.resetAllMocks();
@@ -34,15 +34,16 @@ describe('getLayoutLockActionsFactory', () => {
 
     it('should include a divider', () => {
         nxConfig.featureFlags.layoutsEditable = true;
+        currentUser.mockReturnValue({ isAdmin: true });
 
         const result = getLayoutEditActions(node);
 
         expect(result[0].id).toBe('divider');
     });
 
-    it('should return an empty array if layout is not owned', () => {
+    it('should return an empty array if layout is not Admin or Power User', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = false;
+        currentUser.mockReturnValue({ isAdmin: false });
 
         const result = getLayoutEditActions(node);
 
@@ -51,7 +52,7 @@ describe('getLayoutLockActionsFactory', () => {
 
     it('should show unlockLayout action if layout is owned and locked', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.locked = true;
 
         const result = getLayoutEditActions(node);
@@ -61,7 +62,7 @@ describe('getLayoutLockActionsFactory', () => {
 
     it('should show lockLayout action if layout is owned and unlocked', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.locked = false;
 
         const result = getLayoutEditActions(node);
@@ -71,7 +72,7 @@ describe('getLayoutLockActionsFactory', () => {
 
     it('should call lockLayout when the lockLayout item is clicked', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.locked = false;
 
         const result = getLayoutEditActions(node);
@@ -83,7 +84,7 @@ describe('getLayoutLockActionsFactory', () => {
 
     it('should call unlockLayout when the unlockLayout item is clicked', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        node.owned = true;
+        currentUser.mockReturnValue({ isAdmin: true });
         node.locked = true;
 
         const result = getLayoutEditActions(node);

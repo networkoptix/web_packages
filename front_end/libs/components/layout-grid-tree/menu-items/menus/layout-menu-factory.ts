@@ -31,8 +31,8 @@ export const layoutMenuFactory = ({
             ...openWindowActions,
             ...getLayoutEditActions(node),
             ...getLayoutUpdateActions(node),
-            ...getLayoutLockActions(node),
             ...getLayoutShareActions(node),
+            ...getLayoutLockActions(node),
         ].filter(Boolean),
     scene: node =>
         [

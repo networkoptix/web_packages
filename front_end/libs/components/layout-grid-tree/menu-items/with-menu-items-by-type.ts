@@ -90,6 +90,7 @@ export abstract class WithMenuItemsByType {
             getLayoutLockActions: getLayoutLockActionsFactory(
                 layout => this.layoutStateService.lockLayout(layout),
                 layout => this.layoutStateService.unlockLayout(layout),
+                () => this.system.permissionManager.currentUser$$(),
             ),
             getLayoutEditActions: getLayoutEditActionsFactory(
                 layout => this.layoutStateService.deleteLayout(layout),
@@ -108,7 +109,7 @@ export abstract class WithMenuItemsByType {
             openWindowActions: this.OPEN_WINDOW_ACTIONS,
             getLayoutShareActions: getLayoutShareActionsFactory(
                 layout => this.layoutStateService.shareLayout(layout),
-                layout => this.layoutStateService.unshareLayout(layout),
+                () => this.system.permissionManager.currentUser$$(),
             ),
             getFullScreenActions: getFullScreenActionsFactory(
                 () => this.layoutStateService.toggleLayoutFullScreen(),

@@ -138,21 +138,13 @@
                 "name": "Open in New Window",
                 "tooltip": "Open layout \"{name}\" in a new window"
             },
-            "publishChanges": {
-                "name": "Publish Changes",
-                "tooltip": "Publish changes to \"{name}\" layout"
-            },
             "saveChanges": {
-                "name": "Save Changes",
+                "name": "Save Layout",
                 "tooltip": "Save changes to \"{name}\" layout"
             },
             "discardChanges": {
                 "name": "Discard Changes",
                 "tooltip": "Discard changes to \"{name}\" layout"
-            },
-            "unshareLayout": {
-                "name": "Unshare Layout",
-                "tooltip": "Unshare \"{name}\" layout"
             },
             "shareLayout": {
                 "name": "Share Layout",

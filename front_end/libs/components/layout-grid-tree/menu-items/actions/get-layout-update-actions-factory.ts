@@ -26,9 +26,7 @@ export const getLayoutUpdateActionsFactory =
             },
             {
                 id: 'save',
-                name: node.shared
-                    ? staticLang.layouts.treeActions.publishChanges.name
-                    : staticLang.layouts.treeActions.saveChanges.name,
+                name: staticLang.layouts.treeActions.saveChanges.name,
                 disabled$$,
                 action: () => saveLayout(node.details.id),
             },

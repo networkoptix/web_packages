@@ -3,13 +3,18 @@ import { ResourceNodeMap, ResourceType } from '@components/layout-grid/layout-gr
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
+import { CurrentUser } from '@services/system-user.types';
 
 export const getLayoutLockActionsFactory =
-    (lockLayout: (layout: Layout) => void, unlockLayout: (layout: Layout) => void) =>
+    (
+        lockLayout: (layout: Layout) => void,
+        unlockLayout: (layout: Layout) => void,
+        currentUser: () => CurrentUser | undefined,
+    ) =>
     (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (!node.owned || !nxConfig.featureFlags.layoutsEditable) {
+        if (!(currentUser()?.isAdmin && nxConfig.featureFlags.layoutsEditable)) {
             return [];
         }
 

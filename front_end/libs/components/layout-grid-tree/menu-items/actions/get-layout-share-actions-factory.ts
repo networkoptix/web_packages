@@ -3,13 +3,22 @@ import { ResourceNodeMap, ResourceType } from '@components/layout-grid/layout-gr
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
+import { CurrentUser } from '@services/system-user.types';
 
 export const getLayoutShareActionsFactory =
-    (shareLayout: (layout: Layout) => void, unshareLayout: (layout: Layout) => void) =>
+    (shareLayout: (layout: Layout) => void, currentUser: () => CurrentUser | undefined) =>
     (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.crossSystem || !node.owned || node.locked || !nxConfig.featureFlags.layoutsShare) {
+        const isAdmin = currentUser()?.isAdmin;
+
+        if (
+            node.crossSystem ||
+            node.shared ||
+            node.locked ||
+            !isAdmin ||
+            !nxConfig.featureFlags.layoutsShare
+        ) {
             return [];
         }
 
@@ -18,16 +27,10 @@ export const getLayoutShareActionsFactory =
                 id: 'divider',
                 name: 'divider',
             },
-            node.shared
-                ? {
-                      id: 'unshareLayout',
-                      name: staticLang.layouts.treeActions.unshareLayout.name,
-                      action: () => unshareLayout(node.details),
-                  }
-                : {
-                      id: 'shareLayout',
-                      name: staticLang.layouts.treeActions.shareLayout.name,
-                      action: () => shareLayout(node.details),
-                  },
+            {
+                id: 'shareLayout',
+                name: staticLang.layouts.treeActions.shareLayout.name,
+                action: () => shareLayout(node.details),
+            },
         ];
     };
