@@ -27,7 +27,11 @@
             (click)="toggleSearch()"
             [ngClass]="{ 'search-active': showSearch }"
         >
-            <span class="glyphicon web-icon-search icon-search"></span>
+            <svg-icon
+                nx-add-svg-src
+                class="web-icon-search icon-search"
+                [src]="icons.dir + 'search.svg'"
+            ></svg-icon>
             <span translate>Search</span>
         </button>
     </header>

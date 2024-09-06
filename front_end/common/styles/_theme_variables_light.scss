@@ -439,6 +439,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --dialog-border-color : #{$additional_light8};
     --dialog-header-bg : #{$additional_light1};
     --dialog-header-color: #{$dark9};
+    --dialog-header-muted-color: var(--dark14);
     --dialog-overlay-bg: rgba(var(--dark15--rgb), 0.2);
     --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 

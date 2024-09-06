@@ -16,7 +16,7 @@ label {
 }
 
 .header-title--muted {
-    color: var(--light14); // TODO: Fix this with new variable generation
+    color: var(--dialog-header-muted-color);
 }
 
 .control-container:not(:first-child) {

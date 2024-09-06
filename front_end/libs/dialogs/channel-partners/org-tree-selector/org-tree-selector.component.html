@@ -1,5 +1,9 @@
 <div class="input-wrapper">
-    <span class="glyphicon web-icon-search icon-search"></span>
+    <svg-icon
+        nx-add-svg-src
+        class="web-icon-search icon-search"
+        [src]="icons.dir + 'search.svg'"
+    ></svg-icon>
     <input
         #orgTreeSearch
         [(ngModel)]="folderSearch"

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, forwardRef, Input, OnChanges, HostListener } from '@angular/core';
+import { Component, forwardRef, HostListener, Input, OnChanges, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -7,6 +7,7 @@ import { escape, escapeRegExp } from 'lodash-es';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
 import { spaceSplitSearch } from '@utils/general';
@@ -26,6 +27,7 @@ import type { SuggestionList, Suggestions } from './simple-search.types';
         NgxTranslateCutModule,
         TranslateModule,
         NxSearchHighlightComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [
         {
