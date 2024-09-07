@@ -44,6 +44,7 @@ import type { ExportSelection } from '@vms-client/submodules/timeline/components
 
 import type { UserRecord } from '../features/home/components/users/channel-partner-users/channel-partner-users.types';
 
+import { Steps as ApplyV3Steps } from './apply-v3/apply-v3.types';
 import { MergeError } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import type { SessionState } from './update-session/update-session.component.types';
@@ -60,6 +61,16 @@ interface ApplyData {
     isApplyDisabled?: boolean;
 }
 export type Apply = DialogType<ApplyData, 'applied' | 'canceled' | 'discarded'>;
+
+export type ApplyV3 = DialogType<
+    | { step: ApplyV3Steps.UnsavedChanges }
+    | {
+          step: ApplyV3Steps.Saving;
+          actions$: Observable<boolean>;
+          otherUnsavedChanges: boolean;
+      },
+    boolean
+>;
 
 interface GenericData {
     title: Translatable;

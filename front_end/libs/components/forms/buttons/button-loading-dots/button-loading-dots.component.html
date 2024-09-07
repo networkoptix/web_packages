@@ -1,0 +1,6 @@
+@for (_ of [].constructor(3); track $index) {
+    <div
+        class="loading-dots__dot"
+        [ngClass]="'loading-dots__dot--' + $index"
+    ></div>
+}

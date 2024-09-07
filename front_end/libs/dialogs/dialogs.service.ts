@@ -206,6 +206,11 @@ export class NxDialogsService {
         { disableClose: true },
     );
 
+    applyV3 = this.dialogV2Factory<Dt.ApplyV3>(
+        () => import('./apply-v3/apply-v3.component').then(c => c.NxApplyV3ModalContent),
+        { disableClose: true },
+    );
+
     message = this.dialogV1Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
         { autoFocus: '#message' },

@@ -150,7 +150,7 @@ export class NxCloudApiService {
         private http: HttpClient,
         private cacheService: NxUriCacheService,
         private router: Router,
-        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore: Used in service worker decorators (above)
         private nxSwCacheService: NxSwCacheService,
         private consoleService: NxConsoleService,

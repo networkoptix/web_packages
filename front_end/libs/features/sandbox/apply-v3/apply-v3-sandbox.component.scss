@@ -1,0 +1,27 @@
+:host > * + * {
+    margin-top: 1rem
+}
+
+.result-container {
+    display: flex;
+    gap: 0.5rem
+}
+
+form {
+    border: 1px solid gray;
+    padding: 1rem;
+}
+
+nx-form-field {
+    margin-bottom: 1rem;
+    width: 200px;
+
+    nx-button-toggle-group {
+        width: 100%;
+    }
+}
+
+.button-container {
+    display: flex;
+    gap: 0.5rem;
+}

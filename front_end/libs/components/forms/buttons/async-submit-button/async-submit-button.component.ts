@@ -3,7 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    Input,
+    OnDestroy,
+    Optional,
     Output,
     SkipSelf,
     computed,
@@ -12,8 +13,9 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { defer, take } from 'rxjs';
+import { finalize, from, share, take } from 'rxjs';
 
+import { NxApplyV3Service } from '@components/forms/apply-v3/apply-v3.service';
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
 import { AsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.directive';
@@ -21,6 +23,8 @@ import LANG from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxToastService } from '@services/toast.service';
 import { AriaDisabledValue, ariaDisabledValue } from '@utils/general';
+
+import { NxButtonLoadingDotsComponent } from '../button-loading-dots/button-loading-dots.component';
 
 /** A button to handle asynchronous form submissions.
  *
@@ -43,7 +47,7 @@ import { AriaDisabledValue, ariaDisabledValue } from '@utils/general';
     templateUrl: 'async-submit-button.component.html',
     styleUrls: ['async-submit-button.component.scss'],
     standalone: true,
-    imports: [CommonModule, TranslateModule],
+    imports: [CommonModule, TranslateModule, NxButtonLoadingDotsComponent],
     hostDirectives: [NxEscapeGlobalStyleDirective],
     host: {
         '[class]': 'colorClass()',
@@ -56,17 +60,14 @@ import { AriaDisabledValue, ariaDisabledValue } from '@utils/general';
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NxAsyncSubmitButtonComponent<T> {
+export class NxAsyncSubmitButtonComponent<T> implements OnDestroy {
     CONFIG = nxConfig;
 
-    action = input.required<AsyncAction<T>>();
+    asyncAction = input.required<AsyncAction<T>>({ alias: 'action' });
     color = input<'primary' | 'danger' | 'default'>('primary');
     colorClass = computed<string>(() => `nx-button--${this.color()}`);
 
     busy = signal(false);
-    @Input({ alias: 'busy' }) set _busy(state: boolean) {
-        this.busy.set(state);
-    }
     @Output() busyChange = toObservable<boolean>(this.busy);
 
     /* NOT TO BE USED FOR PREVENTING INVALID FORM SUBMISSIONS.
@@ -84,10 +85,31 @@ export class NxAsyncSubmitButtonComponent<T> {
     constructor(
         private translateService: TranslateService,
         private toastService: NxToastService,
+        @Optional() @SkipSelf() private applyV3Service: NxApplyV3Service | null,
         @SkipSelf() protected formObserver: NxFormObserverDirective,
         host: ElementRef<HTMLButtonElement>,
     ) {
         this.isApplyButton.set(host.nativeElement.hasAttribute('nx-apply-button'));
+        if (this.isApplyButton()) {
+            /*
+            Types of property '_initialFormValue' are incompatible.
+              Type 'UnknownRecord' is not assignable to type 'ImmutableObject<UnknownRecord>'.
+                'string' index signatures are incompatible.
+                  Type 'unknown' is not assignable to type 'ImmutableObject<unknown>'. */
+            this.applyV3Service?.formObservers.update(observers =>
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore Issue from signal immutability patch + strict editor config
+                observers.concat(this.formObserver),
+            );
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.isApplyButton()) {
+            this.applyV3Service?.formObservers.update(observers =>
+                observers.filter(o => o !== this.formObserver),
+            );
+        }
     }
 
     private defaultErrorHandle = (error: unknown): void => {
@@ -113,23 +135,39 @@ export class NxAsyncSubmitButtonComponent<T> {
         form.control.disable();
 
         this.busy.set(true);
-        const { action, success, error = this.defaultErrorHandle } = this.action();
-        const action$ = defer(action);
+        const action = this.asyncAction().action();
+        const action$ = (action instanceof Promise ? from(action) : action.pipe(take(1))).pipe(
+            share(),
+        );
+        const { success, error = this.defaultErrorHandle } = this.asyncAction();
 
-        action$.pipe(take(1)).subscribe({
-            next: res => {
-                success(res);
-                this.busy.set(false);
-                form.control.enable();
-                if (this.isApplyButton()) {
-                    this.formObserver.updateInitialValue();
-                }
-            },
-            error: err => {
-                error(err);
-                this.busy.set(false);
-                form.control.enable();
-            },
-        });
+        if (this.isApplyButton()) {
+            this.applyV3Service?.processingActions.update(actions => actions.concat(action$));
+        }
+        action$
+            .pipe(
+                finalize(() => {
+                    if (this.isApplyButton()) {
+                        this.applyV3Service?.processingActions.update(actions =>
+                            actions.filter(a => a !== action$),
+                        );
+                    }
+                }),
+            )
+            .subscribe({
+                next: res => {
+                    success(res);
+                    this.busy.set(false);
+                    form.control.enable();
+                    if (this.isApplyButton()) {
+                        this.formObserver.updateInitialValue();
+                    }
+                },
+                error: err => {
+                    error(err);
+                    this.busy.set(false);
+                    form.control.enable();
+                },
+            });
     }
 }

@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { nxApplyV3Guard } from '@components/forms/apply-v3/apply-v3.guard';
 import { ApplyGuard } from '@guards/applyGuard';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { NxOauthBuilderComponent } from '@pages/sandbox/oauth-builder/oauth-builder.component';
@@ -9,6 +10,7 @@ import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.componen
 
 import { NxGridLayoutComponent } from '../layout/layout.component';
 
+import { NxApplyV3SandboxComponent } from './apply-v3/apply-v3-sandbox.component';
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
@@ -60,6 +62,11 @@ export const appRoutes: Routes = [
                 path: 'apply-service-section',
                 component: SectionApplyExampleComponent,
                 canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'apply-v3',
+                component: NxApplyV3SandboxComponent,
+                canDeactivate: [nxApplyV3Guard],
             },
             {
                 path: 'datetime',

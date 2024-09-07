@@ -1,0 +1,62 @@
+<div class="nx-modal__header">
+    <span class="nx-modal__header-title">
+        @if (currentStep() === Steps.Saving) {
+            <span translate>Saving Changes</span>
+        } @else {
+            <span translate>Unsaved Changes</span>
+        }
+    </span>
+</div>
+<div class="nx-modal__content">
+    <div class="nx-modal__body">
+        <ng-template #leavePrompt>
+            <p translate>Discard and leave page?</p>
+        </ng-template>
+        @switch (currentStep()) {
+            @case (Steps.UnsavedChanges) {
+                @if (otherUnsavedChanges) {
+                    <p translate>You have other unsaved changes.</p>
+                } @else {
+                    <p translate>You have unsaved changes.</p>
+                }
+                <ng-container [ngTemplateOutlet]="leavePrompt"></ng-container>
+            }
+            @case (Steps.Saving) {
+                <p translate>Saving changes...</p>
+                <p class="spacing-paragraph">{{ '\u200B' }}</p>
+            }
+            @case (Steps.FailedToSave) {
+                <p translate>Failed to saved changes.</p>
+                <ng-container [ngTemplateOutlet]="leavePrompt"></ng-container>
+            }
+        }
+    </div>
+    <div class="nx-modal__footer">
+        @if (currentStep() === Steps.Saving) {
+            <button
+                type="button"
+                class="btn btn-default"
+                disabled
+            >
+                <nx-button-loading-dots buttonColor="default"></nx-button-loading-dots>
+            </button>
+        } @else {
+            <button
+                type="button"
+                class="btn btn-danger"
+                (click)="leave()"
+                translate
+            >
+                Discard
+            </button>
+            <button
+                type="button"
+                class="btn btn-default"
+                (click)="stay()"
+                translate
+            >
+                Cancel
+            </button>
+        }
+    </div>
+</div>

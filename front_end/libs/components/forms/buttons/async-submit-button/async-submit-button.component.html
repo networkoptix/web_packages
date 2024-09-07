@@ -10,18 +10,5 @@
     }
 </div>
 @if (busy()) {
-    <!-- TODO: Pull button loading dots into separate component -->
-    <div
-        class="loading-dots"
-        [ngClass]="{
-            'loading-dots--light-default': !CONFIG.isDarkTheme && color() === 'default'
-        }"
-    >
-        @for (_ of [].constructor(3); track $index) {
-            <div
-                class="loading-dots__dot"
-                [ngClass]="'loading-dots__dot--' + $index"
-            ></div>
-        }
-    </div>
+    <nx-button-loading-dots [buttonColor]="color()"></nx-button-loading-dots>
 }

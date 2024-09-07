@@ -193,9 +193,6 @@ module.exports = {
                     },
                 ]),
                 '@typescript-eslint/prefer-includes': 'error',
-                // Note: @ts-ignore should still be used for false
-                // positives on TS warnings
-                '@typescript-eslint/prefer-ts-expect-error': 'error',
             },
         },
         {

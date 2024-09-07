@@ -1,0 +1,53 @@
+<h2>Apply V3</h2>
+@for (resultType of ['success', 'error']; track $index) {
+    <div class="result-container">
+        @for (time of timeIntervals; track $index) {
+            <form
+                [formGroup]="formGroups[resultType][$index]"
+                nxFormObserver
+            >
+                <nx-form-field>
+                    <label nx-label>{{ time }} second {{ resultType }}</label>
+                    <nx-button-toggle-group
+                        [formControl]="formGroups[resultType][$index].controls.control"
+                    >
+                        <nx-button-toggle
+                            [value]="value0"
+                            color="brand"
+                        >
+                            Initial
+                        </nx-button-toggle>
+                        <nx-button-toggle
+                            [value]="value1"
+                            color="danger"
+                        >
+                            Changed
+                        </nx-button-toggle>
+                    </nx-button-toggle-group>
+                </nx-form-field>
+                <hr />
+                <nx-apply-v3
+                    [action]="actions[resultType][$index]"
+                    unchangedBehavior="hidden"
+                ></nx-apply-v3>
+            </form>
+        }
+    </div>
+}
+<div class="button-container">
+    <button
+        type="button"
+        class="btn btn-default"
+        (click)="fireActions()"
+        [disabled]="!hasUnsavedChanges()"
+    >
+        Fire actions
+    </button>
+    <button
+        type="button"
+        class="btn btn-default"
+        (click)="triggerNavigation()"
+    >
+        Navigate away
+    </button>
+</div>
