@@ -9,7 +9,7 @@ import type {
     OverlayConnectionPosition,
     VerticalConnectionPos,
 } from '@angular/cdk/overlay';
-import type { Signal } from '@angular/core';
+import type { Signal, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import type { FormControl } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
@@ -541,3 +541,8 @@ export function formControlValueSignal<C>(control: FormControl<C>): Signal<C> {
 
 /** https://github.com/angular/angular/issues/42490 */
 export const keyValueNoSort = (): 0 => 0;
+
+type WriteOnlySignal<S extends WritableSignal<T>, T> = Pick<S, 'set' | 'update'>;
+export function writeOnlySignal<S extends WritableSignal<T>, T>(s: S): WriteOnlySignal<S, T> {
+    return s;
+}

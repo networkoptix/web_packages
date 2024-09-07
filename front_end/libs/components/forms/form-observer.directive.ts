@@ -13,6 +13,8 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormGroupDirective } from '@angular/forms';
 import { Observable, Subject, combineLatest, map } from 'rxjs';
 
+import { writeOnlySignal } from '@utils/nx';
+
 import type { NxFormFieldComponent } from './form-field/form-field.component';
 
 type UnknownRecord = Record<string, unknown>;
@@ -50,9 +52,10 @@ export class NxFormObserverDirective implements OnInit {
     formChanged = signal<boolean>(false);
     formDisabled = signal<boolean>(false);
 
-    formFields = signal<NxFormFieldComponent[]>([]);
+    private _formFields = signal<NxFormFieldComponent[]>([]);
+    formFields = writeOnlySignal(this._formFields);
     /** Whether any form fields within the form have a visible error. */
-    hasErrorState = computed<boolean>(() => this.formFields().some(ff => !!ff.errorState()));
+    hasErrorState = computed<boolean>(() => this._formFields().some(ff => !!ff.errorState()));
 
     constructor(
         private destroyRef: DestroyRef,

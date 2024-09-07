@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { NxApplyV3Service } from '@components/forms/apply-v3/apply-v3.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxThemeService } from '@services/theme.service';
 
@@ -25,6 +26,7 @@ import { NxVmsClientService } from './vms-client.service';
         NxAppSourceService,
         NxAppStateService,
         NxApplyService,
+        NxApplyV3Service,
         NxLanguageProviderService,
         NxDateTimeFormatService,
         NxConfigService,
