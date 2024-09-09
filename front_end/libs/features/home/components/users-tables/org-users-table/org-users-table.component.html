@@ -79,7 +79,7 @@
                     ignoreMaxWidth
                     [nxTooltip]="
                         (row.groupRoles?.length > 1 ||
-                            (row.groupRoles[0] &&
+                            (row.groupRoles?.[0] &&
                                 groupsStore
                                     .groupPathMap$$()
                                     [row.groupRoles[0]?.groupId].pathString.split('/').length >
