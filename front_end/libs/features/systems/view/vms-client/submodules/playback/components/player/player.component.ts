@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
-import { skip } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { skip, take } from 'rxjs/operators';
 
 import staticLang from '@language_static';
 import { PlaybackTransport } from '@view/view.types';
@@ -43,6 +44,7 @@ export class PlayerComponent implements OnDestroy, AfterViewInit {
     @Output() playBackError = new EventEmitter<string>();
 
     private transport: PlaybackTransport;
+    private errorHandlerRequest: Subscription;
 
     loading = false;
     showOverlay: boolean = false;
@@ -152,9 +154,16 @@ export class PlayerComponent implements OnDestroy, AfterViewInit {
             if (auth) {
                 headers[this.xRuntimeGuid] = auth;
             }
-            this.http
+
+            // Ask server for error message per error occurrence
+            // We probably don't care about previous requests --[TT]--
+            if (this.errorHandlerRequest) {
+                this.errorHandlerRequest.unsubscribe();
+                this.playerErrorCount = 0;
+            }
+            this.errorHandlerRequest = this.http
                 .get<any>(player.src(), { headers })
-                .pipe(untilDestroyed(this))
+                .pipe(take(3), untilDestroyed(this))
                 .subscribe(
                     response => {
                         switch (response?.error) {
@@ -170,13 +179,13 @@ export class PlayerComponent implements OnDestroy, AfterViewInit {
                         }
                     },
                     error => {
-                        /* HttpErrorResponse, but code 200 OK?
-                        error.message: "Unexpected token '#', "#EXTM3U #"... is not valid JSON"
-                        error.text: "#EXTM3U
-                        #EXT-X-STREAM-INF:BANDWIDTH=5569848
-                        https://8gpnqn65zm82ycwxzuvvm.relay.regress.cloud.hdw.mx:443/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?authKey=ae689a9c-9ebc-4972-84f0-86b5b0f8845d&hi&chunked&sessionID=307&hi"
-                        message: "Http failure during parsing for https://38b5790a-523a-4124-ac07-a958c4ad13c3.relay.regress.cloud.hdw.mx/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?hi&"
-                         */
+                        // HttpErrorResponse, but code 200 OK?
+                        // error.message: "Unexpected token '#'", "#EXTM3U #... is not valid JSON"
+                        // error.text: "#EXTM3U
+                        // #EXT-X-STREAM-INF:BANDWIDTH=5569848
+                        // https://8gpnqn65zm82ycwxzuvvm.relay.regress.cloud.hdw.mx:443/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?authKey=ae689a9c-9ebc-4972-84f0-86b5b0f8845d&hi&chunked&sessionID=307&hi"
+                        // message: "Http failure during parsing for https://38b5790a-523a-4124-ac07-a958c4ad13c3.relay.regress.cloud.hdw.mx/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?hi&"
+                        //
                         if (error.name !== 'HttpErrorResponse') {
                             this.errorPlayback = error.message?.length;
                             this.errorPlaybackDescription = error.message;
