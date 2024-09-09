@@ -19,9 +19,9 @@ import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import {
-    firstValueFrom,
     animationFrameScheduler,
     BehaviorSubject,
+    firstValueFrom,
     interval,
     Subject,
     timer,
@@ -92,6 +92,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     camera: ViewCamera;
     @Input({ required: true }) system: NxSystem;
+
     // time is updated from the query params because of withComponentInputBinding.
     @Input() set time(time: string) {
         if (time) {
@@ -146,6 +147,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     playerError$$ = signal<string>('');
 
     private user$$ = this.store.selectSignal(accountSelectors.selectCurrentUser);
+
     get user(): string {
         const user = this.user$$();
         return user.email || user.id;
@@ -238,8 +240,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const canViewArchive = this.canViewArchive$$();
         const canViewDevice = this.canViewDevice$$();
         const error = this.playerError$$();
-        const { hasArchive, isAuthorized, isOnline, isOffline, isUnauthorized, isVirtual } =
-            this.vms.state$$().selectedCamera || {};
+        const {
+            hasArchive,
+            isAuthorized,
+            isOnline,
+            isOffline,
+            isUnauthorized,
+            isVirtual,
+            availableTransports,
+        } = this.vms.state$$().selectedCamera || {};
         const isLive = this.time$$() === 'live';
 
         const canPlayLive = canViewDevice && isAuthorized && isOnline && !isVirtual;
@@ -262,15 +271,26 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             } else if (!isOffline && isUnauthorized) {
                 errorState = CameraError.unauthorized;
             }
-        } else if (error) {
+        }
+
+        if (error) {
             errorState = CameraError.custom;
+        }
+
+        if (availableTransports?.length === 0) {
+            errorState = CameraError.noFormat;
         }
 
         return {
             error,
             errorState,
             noAccess,
-            playerError: !!error || noAccess || (!isOnline && isLive) || !isAuthorized,
+            playerError:
+                !!error ||
+                noAccess ||
+                (!isOnline && isLive) ||
+                !isAuthorized ||
+                !availableTransports?.length,
         };
     });
 
@@ -597,7 +617,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const storedQuality = this.getCameraQualityStorage(this.id);
         let quality = (initialQuality || storedQuality || '').toLowerCase();
         const qualities = this.visibleQualities$.getValue();
-        if (quality === '' || !qualities.includes(this.qualityToVerbose(quality))) {
+        if (
+            qualities.length &&
+            (!qualities.includes(this.qualityToVerbose(quality)) || quality === '')
+        ) {
             if (this.selectedTransport === 'hls') {
                 quality = qualities.includes('Low') ? 'low' : qualities[0].toLowerCase();
             } else {
@@ -834,9 +857,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private initSelectedCamera(): void {
+        this.playerError$$.set('');
         this.resetTransport();
         this.resetQuality();
-        this.playerError$$.set('');
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
@@ -901,7 +924,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             transport = 'webm'; /// force mobile chrome to webm as it's more reliable
         } else {
             transport = this.getCameraTransportStorage(this.id);
-            if (!transport) {
+            if (!transport && this.transports.length) {
                 if (this.transports.includes('hls')) {
                     transport = 'hls';
                 } else if (this.transports.includes('webm')) {
@@ -910,10 +933,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     transport = this.transports[0];
                 }
             }
-        }
-
-        if (!this.transports.includes(transport)) {
-            transport = this.transports[0];
         }
 
         this.selectedTransport = transport;
