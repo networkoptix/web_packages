@@ -19,7 +19,7 @@ default:
 variables:
   JUNKSHOP_ENABLED: "false"
   # These variables are required for deploy cloud
-  K8S_PRODUCT_RELEASE: cp-mr-${CI_MERGE_REQUEST_IID}
+  K8S_PRODUCT_RELEASE: nxcloud-cp-mr-${CI_MERGE_REQUEST_IID}
 
 workflow:
   rules:
