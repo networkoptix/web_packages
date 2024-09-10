@@ -198,10 +198,10 @@
                             [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                             [tooltipContent]="
                                 (inGroup$$()
-                                    ? LANG.channelPartners.usersTable.infoToolTip
+                                    ? LANG.channelPartners.usersTable.noAccessTooltip
                                     : hasOnlyOneAdmin$$() && onlyAdmin$$() !== row.email
                                       ? LANG.channelPartners.usersTable.adminTooltip
-                                      : LANG.channelPartners.usersTable.infoToolTip
+                                      : LANG.channelPartners.usersTable.singleOrgAdminTooltip
                                 ) | nxTranslate
                             "
                         ></svg-icon>
