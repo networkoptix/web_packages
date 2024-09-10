@@ -146,7 +146,9 @@
                     } @else {
                         <svg-icon
                             class="info"
-                            [nxTooltip]="LANG.channelPartners.usersTable.infoToolTip | translate"
+                            [nxTooltip]="
+                                LANG.channelPartners.usersTable.singleOrgAdminTooltip | translate
+                            "
                             [src]="icons.dirTextButtons + 'info.svg'"
                             [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                         ></svg-icon>

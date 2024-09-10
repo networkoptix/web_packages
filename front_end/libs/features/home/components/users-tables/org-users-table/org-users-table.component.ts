@@ -118,15 +118,11 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     }
 
     canDeleteUser(user: UserRecord): boolean {
-        if (this.currAccessLevel === OrgRoleIds.OrgAdmin) {
-            return true;
-        }
-
-        if (user.isOrgUser) {
-            const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
-            return !this.inGroup$$() && !userIsOnlyAdmin;
-        }
-        return !this.inGroup$$() || user.accessLevel?.id === this.currentGroupId$$();
+        const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
+        return (
+            user.accessLevel?.id === this.currentGroupId$$() ||
+            (!this.inGroup$$() && !userIsOnlyAdmin)
+        );
     }
 
     canUpdateUserRole(user: UserRecord): boolean {

@@ -1313,7 +1313,8 @@
             "groups": "Permission Group"
         },
         "usersTable": {
-            "infoToolTip": "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.",
+            "singleOrgAdminTooltip": "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.",
+            "noAccessTooltip": "Users with access based on access to higher-level folders",
             "adminTooltip": "There must be at least one administrator. To change the role, add another user with the administrator role.",
             "adminWarning": "There should be at least one user in the channel partner with Administrator permission",
             "deleteDialog": {
