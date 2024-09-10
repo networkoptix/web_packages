@@ -227,7 +227,7 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         }
 
         if (tagFilter.tagId) {
-            queryParams.tags?.push(tagFilter.tagId);
+            queryParams.tags = [tagFilter.tagId];
             this.searchFilter.tags?.find(tag => {
                 if (tag.id === tagFilter.tagId) {
                     tag.value = true;
