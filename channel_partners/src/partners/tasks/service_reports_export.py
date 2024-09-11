@@ -11,6 +11,7 @@ from celery import (
     states,
 )
 from celery.result import AsyncResult
+from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
@@ -20,7 +21,6 @@ from rest_framework.exceptions import (
     PermissionDenied,
 )
 
-from channel_partners import settings
 from channel_partners.storages import ReportsStorage
 from partners.models import (
     ChannelPartner,

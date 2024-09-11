@@ -1,9 +1,9 @@
 import logging
 
+from django.conf import settings
 from django.db import transaction
 from nx_ireg.registry import IReg
 
-from channel_partners import settings
 from partners.models import (
     ChannelPartner,
     ChannelPartnerService,
