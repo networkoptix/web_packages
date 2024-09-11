@@ -448,9 +448,9 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
-    getOrganizations = (includeChildOrgs = false) => {
+    getOrganizations = (includeChildOrgs = false, page_size = 1000) => {
         return this.getPaginated<PaginatedOrganizationList>('/organizations/', {
-            params: { includeChildOrgs },
+            params: { includeChildOrgs, page_size },
         });
     };
 

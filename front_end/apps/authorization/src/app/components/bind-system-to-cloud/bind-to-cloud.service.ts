@@ -92,7 +92,7 @@ export class BindToCloudService {
     getOrgs(): Observable<Org[]> {
         return this.http
             .get<{ results: Org[] }>(`/${this.apiBase}/organizations/`, {
-                params: { includeChildOrgs: true },
+                params: { includeChildOrgs: true, page_size: '1000' },
                 headers: this.buildRequestHeaders(),
             })
             .pipe(
