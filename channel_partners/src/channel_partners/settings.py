@@ -224,7 +224,7 @@ MIN_LOGGING_LEVEL = (
 if MIN_LOGGING_LEVEL not in [logging.DEBUG, logging.INFO]:
     raise ValueError("MIN_LOGGING_LEVEL must be either logging.DEBUG or logging.INFO")
 
-DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = logging.INFO
+DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = MIN_LOGGING_LEVEL
 DJANGO_STRUCTLOG_CELERY_ENABLED = True
 
 """
@@ -273,7 +273,6 @@ MIDDLEWARE = [
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'waffle.middleware.WaffleMiddleware',
 ]
 
 ROOT_URLCONF = 'channel_partners.urls'
