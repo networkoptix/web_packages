@@ -9,11 +9,14 @@ import os
 import sys
 from enum import StrEnum
 from pathlib import Path
+from typing import (
+    Literal,
+    Union,
+)
 
 import environ
 import structlog
 from corsheaders.defaults import default_headers
-from django.core.cache.backends.dummy import DummyCache
 from django.core.exceptions import ImproperlyConfigured
 from nx_jwt.jwt_auth import get_jwk_client
 
@@ -162,8 +165,6 @@ AVAILABLE_VERSIONS = [
 ]
 
 
-MIN_LOGGING_LEVEL = logging.DEBUG if DEBUG and (LOCAL_ENV or LOCAL_DOCKER) else logging.INFO
-
 # SECURITY WARNING: keep the secret key used in production secret!
 if IS_PRIVATE_CLOUD:
     SECRET_KEY = env.str('SECRET_KEY')
@@ -198,7 +199,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'waffle',
     'storages',
     'django_extensions',
     'corsheaders',
@@ -213,13 +214,30 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'accounts.account'
 
 # LOGGING
-DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = MIN_LOGGING_LEVEL
+
+MIN_LOGGING_LEVEL = (
+    logging.DEBUG
+    if DEBUG and (LOCAL_ENV or LOCAL_DOCKER)
+    else logging.INFO
+)
+
+if MIN_LOGGING_LEVEL not in [logging.DEBUG, logging.INFO]:
+    raise ValueError("MIN_LOGGING_LEVEL must be either logging.DEBUG or logging.INFO")
+
+DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = logging.INFO
 DJANGO_STRUCTLOG_CELERY_ENABLED = True
 
 """
 NOTE: 
 - Until we are certain everything we want is being logged, let's not switch
   `disable_existing_loggers` to `True`
+- Logging levels denoted from waffle
+    - levels
+        - [DEBUG] = True | 1
+        - [INFO] = False | 0
+    - This is because, inside middleware.py, we're doing
+        - is_debug_level: bool = waffle.switch_is_active(settings.LOGGING_SWITCH_NAME)
+    - test
 """
 
 LOGGING = configure_logging(ENV_NAME, MIN_LOGGING_LEVEL)
@@ -255,6 +273,7 @@ MIDDLEWARE = [
     'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 ]
 
 ROOT_URLCONF = 'channel_partners.urls'
@@ -292,14 +311,21 @@ DATABASES = {
     }
 }
 
+# WAFFLE SETUP
+WAFFLE_CACHE_NAME = 'waffle-redis'
+WAFFLE_LOCAL_CACHE_NAME = 'waffle-local'
+LOGGING_SWITCH_NAME = "logging_debug_active"
+
 # Cache
 REDIS_CACHE_BACKEND = "nx_django_redis.redis_cache.RedisSyncBackend"
 REDIS_CACHE_LOCATION = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
 REDIS_THROTTLING_DB = 12
 REDIS_DEPENDENT_CACHE_DB = 13
+REDIS_WAFFLE_CACHE_DB = 14
 REDIS_CELERY_DB = 15
 
+REDIS_WAFFLE_TIMEOUT = 500
 
 if MIGRATING:
     # Avoid issues with redis on migrations
@@ -310,6 +336,16 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'local',
         'TIMEOUT': None
+    },
+    "waffle-local": {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'local',
+        'TIMEOUT': REDIS_WAFFLE_TIMEOUT
+    },
+    'waffle-redis': {
+        "BACKEND": REDIS_CACHE_BACKEND,
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_WAFFLE_CACHE_DB}",
+        "TIMEOUT": REDIS_WAFFLE_TIMEOUT
     },
     'default': {
         "BACKEND": REDIS_CACHE_BACKEND,
@@ -481,3 +517,5 @@ AWS_S3_OBJECT_PARAMETERS = {
     'ContentDisposition': 'attachment',
 }
 AWS_S3_SIGNATURE_VERSION = 's3v4'
+CACHE_STATUS_HEADER_KEY: str = "X-CPS-Cache-Status"
+CACHE_ETAG_HEADER_KEY: str = "ETag"

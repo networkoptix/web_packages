@@ -18,6 +18,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_304_NOT_MODIFIED
 from rest_framework.views import APIView
 
+from channel_partners.settings import (
+    CACHE_ETAG_HEADER_KEY,
+    CACHE_STATUS_HEADER_KEY,
+)
 from partners.models import CloudUser
 from partners.services.caching.cache_dependency import CacheDependency
 from partners.services.caching.dependent_cache import DependentCache
@@ -36,8 +40,6 @@ ViewAction = TypeVar('ViewAction', bound=str)
 KEY_PARAMS: List[str] = ["method", "host", "user_id", "path"]
 PROTOCOL_VERSION: int = 1
 E_TAG_CACHE_KEY: str = "**etag"
-CACHE_STATUS_HEADER_KEY: str = "X-CPS-Cache-Status"
-CACHE_ETAG_HEADER_KEY: str = "ETag"
 
 
 @dataclass
