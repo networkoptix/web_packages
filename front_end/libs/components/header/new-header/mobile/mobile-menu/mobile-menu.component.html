@@ -8,7 +8,7 @@
     >
         <div
             class="menu-item"
-            *ngIf="showCurrentSystem"
+            *ngIf="showCurrentSystem && currentSystemMenu"
         >
             <div class="node-name">
                 {{ currentSystemMenu.display_name | translate }}
