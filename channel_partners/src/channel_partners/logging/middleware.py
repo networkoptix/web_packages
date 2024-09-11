@@ -1,3 +1,4 @@
+import logging
 import time
 from typing import Callable
 
@@ -8,10 +9,14 @@ from django.core.cache import caches
 from django.db import connection
 
 from channel_partners import settings
-from channel_partners.settings import CACHE_STATUS_HEADER_KEY
+from channel_partners.settings import (
+    CACHE_STATUS_HEADER_KEY,
+    REDIS_WAFFLE_TIMEOUT,
+)
+from channel_partners.utils import set_request_internal
 
 
-logger = structlog.get_logger()
+logger = structlog.get_logger(__name__)
 
 START_TIME_ATTRIBUTE = "start_time"
 
@@ -27,29 +32,27 @@ def is_debug_enabled() -> bool:
 
     return is_debug_level
 
-    # class DebugLevelFilter(logging.Filter):
-    #     cache_timeout = REDIS_WAFFLE_TIMEOUT
-    #     _last_update = None
-    #
-    #     def __init__(self, level: int):
-    #         super().__init__()
-    #         self.level: int = level
-    #         self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
-    #
-    #     def get_level(self) -> int:
-    #         try:
-    #             print("Checking levels")
-    #             if time.monotonic() - self._last_update > self.cache_timeout:
-    #                 self._last_update = time.monotonic()
-    #                 self.level = logging.DEBUG if is_debug_enabled() else logging.INFO
-    #                 print("Updated level")
-    #         except Exception:
-    #             # Avoid logging exceptions to prevent potential logging loops or performance issues
-    #             pass
-    #         return self.level
 
-    # def filter(self, record):
-    #     return record.levelno <= self.get_level()
+class DebugLevelFilter(logging.Filter):
+    cache_timeout = REDIS_WAFFLE_TIMEOUT
+
+    def __init__(self, level: int):
+        super().__init__()
+        self.level: int = level
+        self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
+
+    def get_level(self) -> int:
+        try:
+            if time.monotonic() - self._last_update > self.cache_timeout:
+                self._last_update = time.monotonic()
+                self.level = logging.DEBUG if is_debug_enabled() else logging.INFO
+        except Exception:
+            # Avoid logging exceptions to prevent potential logging loops or performance issues
+            pass
+        return self.level
+
+    def filter(self, record):
+        return record.levelno <= self.get_level()
 
 
 class RequestTimerMiddleware:
@@ -77,17 +80,19 @@ class RequestTimerMiddleware:
         """
         # Start timing the request.
         start_time = time.time()
+        set_request_internal(request, start_time=start_time)
 
         # Process the request.
         response = self.get_response(request)
 
-        # Calculate and log the duration.
+        # Calculate and store the duration.
         duration_ms = int((time.time() - start_time) * 1000)
-        structlog.contextvars.bind_contextvars(request_duration_ms=duration_ms)
-
-        # Attempt to get the cps_cache header from the response and set it in the logger
         cps_cache = response.get(CACHE_STATUS_HEADER_KEY, None)
-        structlog.contextvars.bind_contextvars(cps_cache=cps_cache)
+
+        if response.status_code >= 500:
+            set_request_internal(request, cps_cache=cps_cache)
+        else:
+            structlog.contextvars.bind_contextvars(request_duration_ms=duration_ms, cps_cache=cps_cache)
 
         return response
 
@@ -95,6 +100,9 @@ class RequestTimerMiddleware:
 class DBQueryLoggerMiddleware:
     """
     Middleware to log the number of database queries made during the request processing.
+
+    This middleware counts the number of database queries before and after processing the request,
+    then logs the difference.
     """
 
     def __init__(self, get_response: Callable[[http.HttpRequest], http.response.HttpResponseBase]) -> None:
@@ -114,14 +122,18 @@ class DBQueryLoggerMiddleware:
         """
         # Count initial queries.
         initial_query_count = len(connection.queries)
+        set_request_internal(request, initial_query_count=initial_query_count)
 
         # Process the request.
         response = self.get_response(request)
 
-        # Calculate and log the number of queries during the request.
+        # Calculate and store the number of queries during the request.
         final_query_count = len(connection.queries)
         queries_during_request = final_query_count - initial_query_count
 
-        structlog.contextvars.bind_contextvars(db_queries=queries_during_request)
+        if response.status_code >= 500:
+            set_request_internal(request, queries_during_request=queries_during_request)
+        else:
+            structlog.contextvars.bind_contextvars(db_queries=queries_during_request)
 
         return response

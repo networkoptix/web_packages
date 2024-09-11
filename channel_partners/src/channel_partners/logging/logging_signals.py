@@ -1,9 +1,15 @@
+import time
+
 import structlog
+from django.db import connection
 from django.dispatch import receiver
 from django.http import HttpRequest
 from django_structlog import signals
 
-from channel_partners.utils import standardize_path
+from channel_partners.utils import (
+    get_request_internal,
+    standardize_path,
+)
 
 
 """
@@ -36,4 +42,31 @@ def bind_additional_request_metadata(request: HttpRequest, logger, **kwargs):
         path=request.path,
         normalized_path=normalized_path,
         method=request.method
+    )
+
+
+@receiver(signals.bind_extra_request_failed_metadata)
+def bind_failed_request_metadata(request: HttpRequest, logger, **kwargs):
+    """
+    Binds additional metadata for failed requests to the structlog context.
+
+    :param request: The HTTP request object.
+    :type request: HttpRequest
+    :param logger: The logger object (unused).
+    :param kwargs: Additional keyword arguments (unused).
+    """
+    start_time = get_request_internal(request, 'start_time')
+    end_time = time.time()
+    request_duration_ms = int((end_time - start_time) * 1000) if start_time else None
+
+    initial_query_count: int = get_request_internal(request, 'initial_query_count')
+    final_query_count: int = len(connection.queries)
+    queries_during_request: int = final_query_count - initial_query_count if initial_query_count is not None else None
+
+    cps_cache = get_request_internal(request, 'cps_cache')
+
+    structlog.contextvars.bind_contextvars(
+        request_duration_ms=request_duration_ms,
+        db_queries=queries_during_request,
+        cps_cache=cps_cache
     )

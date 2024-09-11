@@ -7,10 +7,6 @@ from typing import (
 import structlog
 
 
-LOGGER_ROOT_NAME = ""
-LOGGER_STRUCTLOG_NAME = "django_structlog"
-
-
 def configure_logging(environment: Literal["local", "ci", "prod"], min_level: int) -> Dict:
     logging.basicConfig(level=min_level)
 
@@ -27,6 +23,8 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                     structlog.stdlib.add_logger_name,
                     structlog.stdlib.add_log_level,
                     structlog.stdlib.PositionalArgumentsFormatter(),
+                    structlog.processors.format_exc_info,
+                    structlog.processors.StackInfoRenderer(),
                     structlog.processors.CallsiteParameterAdder(
                         {
                             structlog.processors.CallsiteParameter.FILENAME,
@@ -45,6 +43,8 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                     structlog.stdlib.add_logger_name,
                     structlog.stdlib.add_log_level,
                     structlog.stdlib.PositionalArgumentsFormatter(),
+                    structlog.processors.format_exc_info,
+                    structlog.processors.StackInfoRenderer(),
                     structlog.processors.CallsiteParameterAdder(
                         {
                             structlog.processors.CallsiteParameter.FILENAME,
@@ -58,39 +58,36 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
         "filters": {
             "exclude_request_started": {
                 "()": "channel_partners.logging.logging_filters.ExcludeEventsFilter",
-                'excluded_event_type': ['request_started']  # <- Example excluding request_started event
+                'excluded_event_type': ['request_started']
             },
-            # "drop_debug_logs": {
-            #     "()": "channel_partners.logging.middleware.DebugLevelFilter",
-            #     'level': min_level
-            # }
+            "drop_debug_logs": {
+                "()": "channel_partners.logging.middleware.DebugLevelFilter",
+                'level': min_level
+            }
         },
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "formatter": "plain_console",
-                'filters': ['exclude_request_started']  # , "drop_debug_logs"]
+                'filters': ['exclude_request_started', ]
             },
             "console_json": {
                 "class": "logging.StreamHandler",
                 "formatter": "json_formatter",
-                'filters': ['exclude_request_started']  # , "drop_debug_logs"]
+                'filters': ['exclude_request_started', ]
             }
         },
         "loggers": {
-            # LOGGER_ROOT_NAME: {
-            #     "handlers": ["console" if environment == "local" else "console_json"],
-            #     "level": min_level,
-            # },
-            # LOGGER_STRUCTLOG_NAME: {
-            #     "handlers": ["console" if environment == "local" else "console_json"],
-            #     "level": min_level,
-            # },
-        },
-        "root": {
-            "handlers": ["console" if environment == "local" else "console_json"],
-            "level": min_level,
-            "propagate": False,
-        },
+            "": {
+                "handlers": ["console" if environment == "local" else "console_json"],
+                "level": logging.getLevelName(min_level),
+                "filters": ['drop_debug_logs']
+            },
+            "django_strutlog": {
+                "handlers": ["console" if environment == "local" else "console_json"],
+                "level": logging.getLevelName(min_level),
+                "filters": ['drop_debug_logs']
+            }
+        }
     }
     return loggers
