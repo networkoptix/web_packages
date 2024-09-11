@@ -1,8 +1,7 @@
-import { DestroyRef, Injectable, computed, effect, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, effect, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 
-import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { offsetDate } from '@utils/general';
 import { paramModel } from '@utils/signals';
 
@@ -13,17 +12,6 @@ export abstract class BaseMonthPageComponent {
     monthIndex = signal<number>(new Date().getMonth());
     protected startDate = computed<Date>(() => new Date(this.year(), this.monthIndex()));
     protected endDate = computed<Date>(() => offsetDate(this.startDate().getTime(), { month: 1 }));
-
-    protected longMonthFullYearFormat = new Intl.DateTimeFormat(
-        inject(NxDateTimeFormatService).locale,
-        {
-            month: 'long',
-            year: 'numeric',
-        },
-    );
-    longMonthFullYear = computed<string>(() =>
-        this.longMonthFullYearFormat.format(this.startDate()),
-    );
 
     protected requestStartString = computed<string>(() => this.YmdString(this.startDate()));
     protected requestEndString = computed<string>(() => this.YmdString(this.endDate()));

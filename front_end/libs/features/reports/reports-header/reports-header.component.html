@@ -1,0 +1,40 @@
+<h2 class="heading">
+    {{ heading() | translate }}
+</h2>
+<div class="info">
+    <p>
+        {{
+            LANG.channelPartnerReports.customerName
+                | translate: { customerName: selectedEntityName() }
+        }}
+    </p>
+    <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
+</div>
+@if (initExport(); as initExport) {
+    <div class="export-buttons">
+        <button (click)="initExport('xlsx')">
+            <svg-icon
+                nx-add-svg-src
+                class="xlsx-export-icon"
+                [src]="icons.dirTextButtons + 'copy.svg'"
+                [applyClass]="true"
+            ></svg-icon>
+            <span translate>Export as XLSX</span>
+        </button>
+        <button (click)="initExport('csv')">
+            <svg-icon
+                nx-add-svg-src
+                class="csv-export-icon"
+                [src]="icons.dir + 'external.svg'"
+                [applyClass]="true"
+            ></svg-icon>
+            <span translate>Export as CSV</span>
+        </button>
+    </div>
+}
+<nx-month-select
+    [monthIndex]="monthIndex()"
+    (monthIndexChange)="onMonthIndexChange.emit($event)"
+    [year]="year()"
+    (yearChange)="onYearChange.emit($event)"
+></nx-month-select>

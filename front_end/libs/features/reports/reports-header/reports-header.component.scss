@@ -1,0 +1,50 @@
+  p {
+    margin-bottom: unset;
+  }
+
+  .heading {
+    margin-bottom: 14px;
+  }
+
+  .info {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .export-buttons {
+    margin-bottom: 16px;
+    margin-top: 8px;
+    display: flex;
+
+    button {
+        font-family: inherit;
+        color: var(--reports-export-button);
+        background: transparent;
+        display: flex;
+        align-items: center;
+        padding: 0 !important;
+        margin-right: 14px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .xlsx-export-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 1px;
+    }
+
+    .csv-export-icon {
+        width: 26px;
+        height: 26px;
+        color: var(--reports-export-button);
+    }
+  }
+
+  nx-month-select {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }

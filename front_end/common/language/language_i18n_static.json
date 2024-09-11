@@ -1521,6 +1521,8 @@
         }
     },
     "channelPartnerReports": {
+            "serviceChanges": "Service Changes",
+            "serviceUsage": "Service Usage",
             "customerName": "Customer: {customerName}",
             "tooltips": {
                 "changed": "Date of adding or deleting channels using this service.",
