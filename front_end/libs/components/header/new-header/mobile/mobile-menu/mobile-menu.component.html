@@ -6,6 +6,17 @@
         class="menu-items-container"
         *ngIf="!isProfile; else profile"
     >
+        <div
+            class="menu-item"
+            *ngIf="showCurrentSystem && currentSystemMenu"
+        >
+            <div class="node-name">
+                {{ currentSystemMenu.display_name | translate }}
+            </div>
+            <ng-container
+                *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
+            ></ng-container>
+        </div>
         <ng-container *ngFor="let node of menuNodes">
             <div
                 *ngIf="!node.invisible && !(systemCount < 2 && node.url === '/systems')"
@@ -19,17 +30,6 @@
                 ></ng-container>
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
-                ></ng-container>
-            </div>
-            <div
-                class="menu-item"
-                *ngIf="showCurrentSystem && node.url === '/systems'"
-            >
-                <div class="node-name">
-                    {{ currentSystemMenu.display_name | translate }}
-                </div>
-                <ng-container
-                    *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
                 ></ng-container>
             </div>
         </ng-container>
