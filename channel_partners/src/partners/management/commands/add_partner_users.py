@@ -1,10 +1,10 @@
 import sys
 from uuid import UUID
 
+from django.conf import settings
 from django.core.management import BaseCommand
 from django.core.validators import validate_email
 
-from channel_partners import settings
 from channel_partners.settings import EnvironmentEnum
 from partners.models import (
     ChannelPartner,
