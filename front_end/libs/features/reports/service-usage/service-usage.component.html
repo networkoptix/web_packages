@@ -1,38 +1,12 @@
-<h2
-    translate
-    class="heading"
->
-    Service Usage
-</h2>
-<div class="info">
-    <p>
-        {{
-            LANG.channelPartnerReports.customerName
-                | translate: { customerName: selectedEntityName$$() }
-        }}
-    </p>
-    <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
-</div>
-<div class="export-buttons">
-    <button (click)="initExport('xlsx')">
-        <svg-icon
-            nx-add-svg-src
-            class="xlsx-export-icon"
-            [src]="icons.dirTextButtons + 'copy.svg'"
-            [applyClass]="true"
-        ></svg-icon>
-        <span translate>Export as XLSX</span>
-    </button>
-    <button (click)="initExport('csv')">
-        <svg-icon
-            nx-add-svg-src
-            class="csv-export-icon"
-            [src]="icons.dir + 'external.svg'"
-            [applyClass]="true"
-        ></svg-icon>
-        <span translate>Export as CSV</span>
-    </button>
-</div>
+<nx-reports-header
+    [heading]="LANG.channelPartnerReports.serviceUsage"
+    [selectedEntityName]="selectedEntityName$$()"
+    [monthIndex]="monthIndex()"
+    [year]="year()"
+    (onMonthIndexChange)="monthIndex.set($event)"
+    (onYearChange)="year.set($event)"
+    [initExport]="initExport"
+></nx-reports-header>
 <div class="service-usage-table-wrapper">
     @if (serviceUsageStore.isLoading()) {
         <nx-pre-loader></nx-pre-loader>
@@ -45,9 +19,3 @@
         <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
     }
 </div>
-<nx-month-select
-    [monthIndex]="monthIndex()"
-    (monthIndexChange)="monthIndex.set($event)"
-    [year]="year()"
-    (yearChange)="year.set($event)"
-></nx-month-select>

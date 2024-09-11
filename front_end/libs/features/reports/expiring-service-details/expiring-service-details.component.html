@@ -11,21 +11,17 @@
     ></svg-icon>
     All Services
 </div>
+<nx-reports-header
+    [heading]="expiringServiceDetailsStore.selectedService()?.displayName"
+    [selectedEntityName]="selectedEntityName$$()"
+    [monthIndex]="monthIndex()"
+    [year]="year()"
+    (onMonthIndexChange)="monthIndex.set($event)"
+    (onYearChange)="year.set($event)"
+></nx-reports-header>
 @if (expiringServiceDetailsStore.isLoading()) {
     <nx-pre-loader></nx-pre-loader>
 } @else {
-    <h2 class="heading">
-        {{ expiringServiceDetailsStore.selectedService()?.displayName }}
-    </h2>
-    <div class="info">
-        <p>
-            {{
-                LANG.channelPartnerReports.customerName
-                    | translate: { customerName: selectedEntityName$$() }
-            }}
-        </p>
-        <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
-    </div>
     <div class="service-details-table-wrapper">
         @if (!hasError()) {
             <nx-expiring-service-table
@@ -42,9 +38,3 @@
         }
     </div>
 }
-<nx-month-select
-    [monthIndex]="monthIndex()"
-    (monthIndexChange)="monthIndex.set($event)"
-    [year]="year()"
-    (yearChange)="year.set($event)"
-></nx-month-select>

@@ -1,18 +1,15 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import staticLang from '@language_static';
 import { EntityType } from '@libs/features/reports/reports.types';
 import { icons } from '@static-variables';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
-import { NxMonthSelectComponent } from '../month-select/month-select.component';
+import { NxReportsHeaderComponent } from '../reports-header/reports-header.component';
 
 import { RegularServiceDetailsStore } from './regular-service-details.store';
 import {
@@ -27,20 +24,17 @@ import { NxRegularServiceTableComponent } from './regular-service-table/regular-
     templateUrl: './regular-service-details.component.html',
     styleUrls: ['./regular-service-details.component.scss'],
     imports: [
-        TranslateModule,
         NxPreLoaderComponent,
         NxRegularServiceTableComponent,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
-        NxMonthSelectComponent,
-        NxPagePlaceholderGenericNewV2Component,
         NxPagePlaceholderNoReportsComponent,
+        NxReportsHeaderComponent,
     ],
     providers: [RegularServiceDetailsStore],
     standalone: true,
 })
 export class NxRegularServiceDetailsComponent extends BaseMonthPageComponent {
-    LANG = staticLang;
     icons = icons;
     readonly regularServiceDetailsStore = inject(RegularServiceDetailsStore);
     router = inject(Router);

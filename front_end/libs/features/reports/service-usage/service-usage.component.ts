@@ -1,17 +1,12 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { icons } from '@static-variables';
 
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
-import { NxMonthSelectComponent } from '../month-select/month-select.component';
+import { NxReportsHeaderComponent } from '../reports-header/reports-header.component';
 import { EntityType } from '../reports.types';
 
 import { NxReportExportService } from './report-export/report-export.service';
@@ -24,20 +19,15 @@ import { FormattedUsageReportRecord } from './service-usage.types';
     templateUrl: './service-usage.component.html',
     styleUrl: './service-usage.component.scss',
     imports: [
-        TranslateModule,
         NxServiceUsageTableComponent,
         NxPreLoaderComponent,
-        NxMonthSelectComponent,
-        NxPagePlaceholderGenericNewV2Component,
-        AngularSvgIconModule,
-        NxAddSvgSrcDirective,
         NxPagePlaceholderNoReportsComponent,
+        NxReportsHeaderComponent,
     ],
     providers: [ServiceUsageStore],
     standalone: true,
 })
 export class NxServiceUsageComponent extends BaseMonthPageComponent {
-    icons = icons;
     LANG = staticLang;
     readonly serviceUsageStore = inject(ServiceUsageStore);
     readonly reportExportService = inject(NxReportExportService);
@@ -70,7 +60,7 @@ export class NxServiceUsageComponent extends BaseMonthPageComponent {
         });
     });
 
-    initExport(reportFormat: ReportExportFormat): void {
+    initExport = (reportFormat: ReportExportFormat): void => {
         const entityType = this.entityType$$();
         const entityId = this.entityId$$();
         const startTs = this.requestStartString();
@@ -79,5 +69,5 @@ export class NxServiceUsageComponent extends BaseMonthPageComponent {
         } else {
             this.reportExportService.exportOrgReport(entityId, startTs, reportFormat);
         }
-    }
+    };
 }

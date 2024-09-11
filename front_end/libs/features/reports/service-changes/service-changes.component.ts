@@ -1,8 +1,6 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
@@ -11,7 +9,6 @@ import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';
 import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUriService } from '@services/uri.service';
-import { icons } from '@static-variables';
 import {
     selectOrgsFromStructure,
     selectPartnersFromStructure,
@@ -19,7 +16,7 @@ import {
 
 import { NxGroupPathService } from '../group-path/groupPath.service';
 import { BaseMonthPageComponent } from '../month-select/base-month-page.component';
-import { NxMonthSelectComponent } from '../month-select/month-select.component';
+import { NxReportsHeaderComponent } from '../reports-header/reports-header.component';
 import { EntityType } from '../reports.types';
 import { NxReportExportService } from '../service-usage/report-export/report-export.service';
 
@@ -36,19 +33,16 @@ import { NxServiceChangesTableComponent } from './services-changes-table/service
     templateUrl: './service-changes.component.html',
     styleUrl: './service-changes.component.scss',
     imports: [
-        TranslateModule,
         NxServiceChangesTableComponent,
         NxPreLoaderComponent,
-        NxMonthSelectComponent,
         NxPagePlaceholderNoReportsComponent,
-        AngularSvgIconModule,
+        NxReportsHeaderComponent,
     ],
     providers: [ServiceChangesStore],
     standalone: true,
 })
 export class NxServiceChangesComponent extends BaseMonthPageComponent {
     LANG = staticLang;
-    icons = icons;
     readonly serviceChangesStore = inject(ServiceChangesStore);
     private readonly store = inject(Store);
     private dateTimeService = inject(NxDateTimeFormatService);
@@ -148,7 +142,7 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         }
     }
 
-    initExport(reportFormat: ReportExportFormat): void {
+    initExport = (reportFormat: ReportExportFormat): void => {
         const entityType = this.entityType$$();
         const entityId = this.entityId$$();
         const startTs = this.requestStartString();
@@ -157,5 +151,5 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
         } else {
             this.reportExportService.exportOrgChanges(entityId, startTs, reportFormat);
         }
-    }
+    };
 }
