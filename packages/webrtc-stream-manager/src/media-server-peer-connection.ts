@@ -8,13 +8,20 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     connectionId: string;
 
     remoteDataChannel: RTCDataChannel;
+    closed = false;
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
+        if (this.closed) {
+            return;
+        }
         if (event.candidate) {
             this.wsConnection.next({ ice: event.candidate });
         }
     };
 
     oniceconnectionstatechange = (): void => {
+        if (this.closed) {
+            return;
+        }
         if (this.iceConnectionState === 'connected') {
             this.logger?.log('peerConnection connected, closing websocket');
             this.closeWebsocket();
@@ -30,6 +37,25 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             this.logger?.log('peerConnection ice state ' + this.iceConnectionState);
         }
     };
+
+    clearTracks(): void {
+        this.getSenders().forEach(sender => {
+            sender.track?.stop();
+            this.removeTrack(sender);
+        });
+    }
+
+    clearDataChannel(): void {
+        this.remoteDataChannel?.close();
+        this.remoteDataChannel = null;
+    }
+
+    close() {
+        this.closed = true;
+        this.clearDataChannel();
+        this.clearTracks();
+        return super.close();
+    }
 
     private get wsConnection(): WebSocketSubject<SignalingMessage> {
         return this.getWebSocket();
@@ -51,10 +77,17 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             iceCandidatePoolSize: 10,
         });
 
-        this.ontrack = (event: RTCTrackEvent): unknown => event.track.kind === 'video' && trackHandler(event.streams[0]);
+        this.ontrack = (event: RTCTrackEvent): void => {
+            this.clearTracks();
+            if (event.track.kind === 'video') {
+                trackHandler(event.streams[0])
+            }
+        };
 
         this.addEventListener('datachannel', ({ channel }) => {
+            this.clearDataChannel();
             channel.binaryType = 'arraybuffer';
+            this.logger?.info('datachannel created', { ordered: channel.ordered, maxPacketLifeTime: channel.maxPacketLifeTime, maxRetransmits: channel.maxRetransmits, protocol: channel.protocol });
             channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
                 if (typeof(data) === 'string') {
                     this.handleDataChannelMessage(data)
@@ -65,9 +98,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                     //     restartMse();
                     //   }
                 } else {
-                    const buffer = new Uint8Array(data);
-                    this.logger?.log('dc binary: type = ' + typeof(data) +  ' len = ' + buffer.length);
-                    bufferHandler(new Uint8Array(data));
+                    bufferHandler(data);
                 }
             })
             this.remoteDataChannel = channel;

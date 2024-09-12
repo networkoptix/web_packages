@@ -185,7 +185,7 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
         videoElement.muted = true;
         videoElement.autoplay = true;
 
-        document.querySelector('h2').style.display = WebRTCStreamManager.getInstance(cameraId)?.allowTranscoding ? 'block' : 'none';
+        document.querySelector('h2').style.display = WebRTCStreamManager.getInstance({id: cameraId, systemId })?.allowTranscoding ? 'block' : 'none';
       }
 
       if (error) {

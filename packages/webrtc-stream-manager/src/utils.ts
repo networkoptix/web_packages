@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { Observable, Subject, defer, mergeMap, scan, take, takeUntil, timer } from "rxjs";
+import { Observable, Subject, defer, mergeMap, scan, take } from "rxjs";
 import { IntRange } from "./types";
 
 /**
@@ -52,12 +52,12 @@ export const calculateWindowFocusThreshold = (baseline: number): number => {
     return Math.round(100 / (area / threshold))
 }
 
-export const getConnectionKey = (webRtcUrl: string): string => {
-    if (webRtcUrl.includes('devices')) {
-        return webRtcUrl.split('devices/')[1].split('/')[0]
-    }
+export const createConnectionKey = ({ id, systemId}: { id: string, systemId: string }): string => `${cleanId(systemId)}_${cleanId(id)}`;
 
-    return webRtcUrl.split('camera_id=')[1].split('&')[0]
+export const getConnectionKey = (webRtcUrl: string): string => {
+    const id = webRtcUrl.includes('devices') ? webRtcUrl.split('devices/')[1].split('/')[0] : webRtcUrl.split('camera_id=')[1].split('&')[0]
+    const systemId = webRtcUrl.split('.')[0];
+    return createConnectionKey({ id, systemId });
 }
 
 export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, serverId: string, version: number) => (additionalParams: Record<string, unknown> = {}) => {
@@ -99,11 +99,6 @@ export class ConnectionQueue {
                 setTimeout(() => this.runTask(task), requeueDelay)
             };
 
-            // timer(taskTimeout).pipe(takeUntil(cancelTimedOut$)).subscribe(() => {
-            //     this.logger?.info(`[${this.origin}] Running tasks: Timeout`)
-            //     requeue();
-            // });
-
             completed$.pipe(take(1)).subscribe(() => {
                 cancelTimedOut$.next('cancel');
                 resolve();
@@ -120,7 +115,7 @@ export class ConnectionQueue {
     }
 
     private constructor(private origin: string, private logger?: Console) {
-        this.#queue$.pipe(mergeMap(notifier => notifier, 4)).subscribe(state => this.logger?.info(state));
+        this.#queue$.pipe(mergeMap(notifier => notifier, 5)).subscribe(state => this.logger?.info(state));
         this.#runningTasks$.subscribe(count => this.logger?.info(`[${this.origin}] Running tasks: ${count}`));
     }
 }
