@@ -332,6 +332,11 @@ export class NxIconComponent extends BaseComponent {
      */
     public colorOverrides = input<PartialSvgColors>();
 
+    /**
+     * Use Current Color for primary stroke/fill.
+     */
+    public useCurrentColor = input(false, { transform: booleanAttribute });
+
     protected resolvedIcon = toSignal(
         toObservable(this.icon).pipe(
             switchMap(async iconOrName => {
@@ -390,6 +395,7 @@ export class NxIconComponent extends BaseComponent {
         const resolvedIcon = this.resolvedIcon();
         if (resolvedIcon) {
             const colors = this.themeProvider.colors();
+            const useCurrentColor = this.useCurrentColor();
             const primaryDefault = colors[generateCssVariableName('core', 'light10')];
             const secondaryDefault =
                 colors[generateCssVariableName('attentionErrorRed', 'initial')];
@@ -407,7 +413,13 @@ export class NxIconComponent extends BaseComponent {
                 ...this.colorOverrides(),
             };
             Object.entries(merged).forEach(([key, color]) => {
-                const { fill, stroke } = color || {};
+                const { fill, stroke } =
+                    useCurrentColor && key === 'primary'
+                        ? {
+                              fill: 'currentColor',
+                              stroke: 'currentColor',
+                          }
+                        : color;
                 if (fill) {
                     this.elRef.nativeElement.style.setProperty(`--svg-${key}-fill`, fill);
                 }
