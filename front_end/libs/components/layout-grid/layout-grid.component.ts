@@ -2614,7 +2614,7 @@ export class NxLayoutGridComponent {
             (!!nxConfig.featureFlags.layoutsTimelineSaas &&
                 (this.systemsService.isSaasSystem(cameraSystemId) ||
                     this.accountService.account.is_staff ||
-                    'placeholder'))
+                    (nxConfig.allowDebugMode && 'placeholder')))
         );
     });
 }
