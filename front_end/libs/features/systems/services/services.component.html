@@ -62,7 +62,11 @@
                         'sidebar-item--highlight': typeFilter() === 'analytics'
                     }"
                 >
-                    <div style="height: 24px; width: 24px"></div>
+                    <svg-icon
+                        class="cloud-storage-icon"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        [src]="icons.dirTextButtons + 'crosshair.svg'"
+                    ></svg-icon>
                     <span translate>Analytics</span>
                 </li>
                 <!-- TODO: Analytics icon -->

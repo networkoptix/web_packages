@@ -3,6 +3,7 @@
 @include tg.generate-theme-vars((
     '--usage-bar-unused-portion': ('dark': 11, 'light': 3),
     '--usage-bar-border': ('dark': 8, 'light': 6),
+    '--edit-button-hover': -4,
 ), ':host');
 
 :host {
@@ -214,6 +215,13 @@
                         width: 45px;
                         height: 45px !important;
                         padding: 0 !important;
+
+                        &:hover {
+
+                            svg .icon-with-fill {
+                                fill: var(--edit-button-hover);
+                            }
+                        }
                     }
                 }
             }
