@@ -30,11 +30,16 @@ export class NxGroupPathComponent implements OnDestroy {
     }
 
     computedText$$ = computed(() => {
-        if (this.groupPath()[0] === '') {
-            return this.groupPath()[1];
+        const groupPath = this.groupPath();
+        if (groupPath.length === 1 && !groupPath[0].includes('/')) {
+            return groupPath[0];
         }
 
-        let txt = `<span class="group-path">${this.groupPath()[0]}</span>&nbsp;${this.groupPath()[1]}`;
+        if (groupPath[0] === '') {
+            return groupPath[1];
+        }
+
+        let txt = `<span class="group-path">${groupPath[0]}</span>&nbsp;${groupPath[1]}`;
         const styleTarget = window.getComputedStyle(this.target.nativeElement);
 
         // Find width of text displayed
@@ -53,7 +58,7 @@ export class NxGroupPathComponent implements OnDestroy {
             parseInt(styleTarget.paddingRight);
 
         if (textWidth > maxTextWidth) {
-            const segments = this.groupPath()[0].split('/');
+            const segments = groupPath[0].split('/');
             if (segments[segments.length - 1] === '') {
                 segments.pop();
             }
@@ -65,11 +70,11 @@ export class NxGroupPathComponent implements OnDestroy {
             }
 
             const path = segments.join('/ ');
-            txt = `<span class="group-path">${path}/</span>&nbsp;${this.groupPath()[1]}`;
+            txt = `<span class="group-path">${path}/</span>&nbsp;${groupPath[1]}`;
             this.measurement.innerHTML = txt;
             if (parseInt(this.getCssStyle(this.measurement, 'width')) > maxTextWidth) {
                 const truncated = '.../'; // in string is breaking closing span tag
-                txt = `<span class="group-path">${truncated}&nbsp;</span>${this.groupPath()[1]}`;
+                txt = `<span class="group-path">${truncated}&nbsp;</span>${groupPath[1]}`;
             }
         }
 
