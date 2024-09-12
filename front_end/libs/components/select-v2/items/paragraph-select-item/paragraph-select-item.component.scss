@@ -17,20 +17,16 @@
     user-select: none;
     padding: rem(12px);
 
-    &:hover {
-        background-color: var(--brand-core) !important;
-    }
-
     &:not(:last-child) {
         border-bottom: 1px solid var(--dropdown-item-border-alt);
     }
 
-    &.highlighted {
+    &:hover:not([disabled]):not(.disabled):not([highlighted]):not(.highlighted) {
         background-color: var(--dropdown-item-hover-bg);
         color: var(--dropdown-item-hover-color);
     }
 
-    &.selected {
+    &.highlighted {
         background-color: var(--dropdown-item-selected-bg);
         color: var(--dropdown-item-selected-color);
     }
