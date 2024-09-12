@@ -69,7 +69,7 @@ export class NxWebGLService {
         cameraId$ =>
             merge(
                 cameraId$.pipe(
-                    map(cameraId => cameraId?.id && WebRTCStreamManager.getInstance(cameraId.id)),
+                    map(cameraId => cameraId?.id && WebRTCStreamManager.getInstance(cameraId)),
                     filter(Boolean),
                     switchMap(instance => instance.currentPosition$),
                     skip(1),
@@ -162,7 +162,7 @@ export class NxWebGLService {
                     this.layoutItemErrorStore.remove(cameraId.id, true);
                 }
                 WebRTCStreamManager.updateCameraPosition(
-                    cameraId.id,
+                    cameraId,
                     playbackTimeMs > Date.now() ? 0 : playbackTimeMs,
                 );
             }

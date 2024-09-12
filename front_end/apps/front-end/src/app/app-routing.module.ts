@@ -7,6 +7,7 @@ import { NxLayoutViewComponent } from '@components/layout-view/layout-view.compo
 import { AuthGuard } from '@guards/authGuard';
 import { BuildGuard } from '@guards/buildGuard';
 import { ChannelPartnerGuard } from '@guards/channelPartnerGuard';
+import { disableLoggingHandler } from '@guards/disableLogging';
 import { FeatureGuardActivate, FeatureGuardMatch } from '@guards/feature.guard';
 import { OrgStateGuard } from '@guards/orgStateGuard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
@@ -113,6 +114,7 @@ const lazyRoutes: Routes = [
                         canMatch: [FeatureGuardMatch],
                         data: {
                             flag: FeatureFlagStrings.layouts,
+                            disableLogging: true,
                         },
                     },
                     {
@@ -369,7 +371,7 @@ const lazyRoutes: Routes = [
 @NgModule({
     imports: [
         PipesModule,
-        RouterModule.forRoot(lazyRoutes, {
+        RouterModule.forRoot(disableLoggingHandler(lazyRoutes), {
             initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',

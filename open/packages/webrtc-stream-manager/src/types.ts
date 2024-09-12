@@ -4,7 +4,7 @@ export type PlaybackDetails = Record<string, unknown>;
 
 export type StreamHandler = (stream: MediaStream) => unknown;
 
-export type BufferHandler = (buffer: Uint8Array) => unknown;
+export type BufferHandler = (buffer: ArrayBuffer) => unknown;
 
 interface IceCandidate {
     ice: RTCIceCandidate;

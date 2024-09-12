@@ -198,6 +198,7 @@ export class NxLayoutViewComponent {
         this.#layoutId$,
         this.store.select(SharedLayoutsSelectors.selectLayouts),
         this.selectedSystem$.pipe(
+            filter(system => !!system),
             switchMap(({ id }) =>
                 this.store.select(SystemResourcesSelectors.selectResourcesValuesBySystemId(id)),
             ),

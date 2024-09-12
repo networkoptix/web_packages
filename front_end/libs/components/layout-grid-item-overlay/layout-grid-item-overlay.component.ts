@@ -342,7 +342,7 @@ export class NxLayoutGridItemOverlayComponent {
                         };
 
                         const connectionType = WebRTCStreamManager.getInstance(
-                            cameraNode.details.id,
+                            cameraNode.details,
                         )?.connectionType;
 
                         const debugConnectionInfo = connectionType

@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { defer, map, repeat, startWith, switchMap, timer } from 'rxjs';
+import { bindCallback, defer, map, repeat, startWith, switchMap, timer } from 'rxjs';
 
 @Directive({
     standalone: true,
@@ -12,20 +12,21 @@ export class NxVideoPlayingDirective {
 
     playbackFrozen$$ = toSignal(
         defer(
-            () =>
-                new Promise<void>(resolve =>
-                    this.element.nativeElement.requestVideoFrameCallback(() => resolve()),
+            bindCallback(
+                this.element.nativeElement.requestVideoFrameCallback.bind(
+                    this.element.nativeElement,
                 ),
+            ),
         ).pipe(
             repeat(),
             switchMap(() =>
-                timer(1000).pipe(
+                timer(5_000).pipe(
                     map(() => true),
                     startWith(false),
                 ),
             ),
         ),
-        { initialValue: true },
+        { initialValue: false },
     );
 
     private playingState$$ = signal(false);

@@ -1,7 +1,16 @@
 import { Injectable, Injector } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, catchError, forkJoin, from, map, switchMap } from 'rxjs';
+import {
+    BehaviorSubject,
+    Observable,
+    catchError,
+    firstValueFrom,
+    forkJoin,
+    from,
+    map,
+    switchMap,
+} from 'rxjs';
 
 import { SystemResourcesActions, SystemResourcesTypes } from '@common/store/system-resources';
 import { environment } from '@environments/environment';
@@ -133,11 +142,8 @@ export class NxSystemService {
         const cloudSystemInfo = (this.systemsService.systems || []).find(
             system => system.id === id,
         );
-        let system: NxSystem;
-        if (id in this.systemsCache) {
-            system = this.systemsCache[id];
-        } else {
-            system = nxSystemFactory(
+        if (!(id in this.systemsCache)) {
+            const system = nxSystemFactory(
                 currentUserEmail,
                 systemId,
                 serverId,
@@ -146,10 +152,43 @@ export class NxSystemService {
                 skipSettingSystem,
             );
 
-            if (cloudSystemInfo?.version) {
-                this.systemsCache[id] = system;
-            }
+            /**
+             * Creates proxy for system while we try to resolve system version asynchronously
+             * @returns {typeof system}
+             */
+            const useProxy = (): typeof system => {
+                const resolvingSystem: { systemWithVersion: typeof system | null } = {
+                    systemWithVersion: null,
+                };
+
+                firstValueFrom(system.mediaserver.getModuleInfo())
+                    .then(({ reply }) => +reply.version)
+                    .catch(() => 5)
+                    .then(version => {
+                        resolvingSystem.systemWithVersion = nxSystemFactory(
+                            currentUserEmail,
+                            systemId,
+                            serverId,
+                            undefined,
+                            version,
+                            skipSettingSystem,
+                        );
+                        this.systemsCache[id] = resolvingSystem.systemWithVersion;
+                        if (this.system === system) {
+                            this.system = resolvingSystem.systemWithVersion;
+                        }
+                    });
+                return new Proxy(system, {
+                    get(_, prop) {
+                        return Reflect.get(resolvingSystem.systemWithVersion || system, prop);
+                    },
+                });
+            };
+
+            this.systemsCache[id] = system.version ? system : useProxy();
         }
+
+        const system = this.systemsCache[id];
 
         this.system ??= system;
 
