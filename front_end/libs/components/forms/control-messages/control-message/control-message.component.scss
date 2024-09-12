@@ -1,15 +1,20 @@
-@use 'theme_variables_common' as vars;
+@use 'theme_generator' as tg;
+@use 'theme_variables_common' as common;
+
+@include tg.generate-theme-vars((
+    '--control-info-color': ('dark': -16, 'light': 16)
+), ':host');
 
 :host {
     display: inline;
 
-    font-family: vars.$font-family-regular;
-    font-size: vars.$font-size-base;
+    font-family: common.$font-family-regular;
+    font-size: common.$font-size-base;
     line-height: 1.5;
 
-    // &.nx-control-message--info {
-    //     color: ???;
-    // }
+    &.nx-control-message--info {
+        color: var(--control-info-color);
+    }
 
     &.nx-control-message--warn {
         color: var(--yellow-d1);

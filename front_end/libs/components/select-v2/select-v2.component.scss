@@ -45,19 +45,13 @@
     }
 
     &[aria-disabled="true"] {
-        color: var(--elements-disabled);
+        opacity: 0.4;
     }
 }
 
 svg-icon svg g polyline {
     stroke: var(--btn-dropdown-toggle-color);
     stroke-width: 2px;
-}
-
-[aria-disabled="true"] {
-    svg-icon svg g polyline {
-        stroke: var(--elements-disabled);
-    }
 }
 
 $paddingTop: 5px;

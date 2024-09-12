@@ -22,10 +22,8 @@ import {
     FormControl,
     FormGroup,
 } from '@angular/forms';
-import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -41,7 +39,6 @@ import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import LANG from '@language_static';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
 import { OrgUsersStore } from '@pages/home/store/org-users/org-users.store';
@@ -58,6 +55,7 @@ import type {
 } from '../org-tree-selector/org-tree-selector.types';
 
 import { NxAddOrgUserStepperComponent } from './add-org-user-stepper.component';
+import { NxOrgRoleDescriptionComponent } from './org-role-description/org-role-description.component';
 import { NxOrgStepSelectComponent } from './org-step-select/org-step-select.component';
 
 /* Key  : User email
@@ -83,18 +81,16 @@ interface UserInParentPartnerError extends HttpErrorResponse {
         ReactiveFormsModule,
         CdkStepperModule,
         forwardRef(() => NxAddOrgUserStepperComponent),
-        LetDirective,
         TranslateModule,
-        NgxTranslateCutModule,
 
         NxFormFieldModule,
         NxInputComponent,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
+        NxOrgRoleDescriptionComponent,
         NxOrgStepSelectComponent,
         NxOrgTreeSelectorComponent,
         NxAsyncActionButtonComponent,
-        NxTooltipV2Directive,
     ],
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implements AfterViewInit {
@@ -166,40 +162,6 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     emailLocked = signal(false);
 
     private roleId = formControlValueSignal(this.roleIdControl);
-    roleName = computed<string>(() => {
-        const [orgRoles, roleId] = [this.orgRoles(), this.roleId()];
-        if (!roleId) {
-            return '';
-        }
-        return orgRoles.find(role => role.id === roleId)!.name;
-    });
-    // The strings that contain "|" require a tooltip and need translateCut. Otherwise, no translateCut will be needed
-    roleDescription = computed<string>(() => {
-        const roleId = this.roleId();
-        if (!roleId) {
-            return '';
-        }
-        return LANG.channelPartners.orgs.orgRoleInfo[roleId].description;
-    });
-
-    roleHasTooltip = computed<boolean>(() => {
-        // If the role description contains the role name, the role name in the description would need a tooltip
-        // An exception will be for "Systems Administrator", where the tooltip will be on the word "Administrators"
-        // ToDo: Remove "Administrator" when we change it to "System Administrators" in the near future
-        const roleName = this.roleName();
-        const description = this.roleDescription();
-        return (
-            description?.includes('|') &&
-            (description?.includes(roleName) || roleName === 'System Administrator')
-        );
-    });
-    tooltipDescription = computed<string>(() => {
-        const roleId = this.roleId();
-        if (!roleId) {
-            return '';
-        }
-        return LANG.channelPartners.orgs.orgRoleInfo[roleId]!.tooltip;
-    });
 
     folder = signal<string | null>(null);
     treeValue = signal<string | null>(null);

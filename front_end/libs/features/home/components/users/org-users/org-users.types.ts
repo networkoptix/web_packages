@@ -8,5 +8,5 @@ export interface OrgUserExt extends OrganizationUser {
 
 export interface TranslatedOrgPermissions {
     name: string;
-    description: string;
+    description: string[];
 }

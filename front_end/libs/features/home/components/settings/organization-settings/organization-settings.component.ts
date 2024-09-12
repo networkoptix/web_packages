@@ -11,10 +11,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
-import {
-    errorMatcherFactory,
-    type ControlState,
-} from '@components/forms/form-field/error-state-matcher';
+import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
@@ -138,7 +135,6 @@ export class NxOrganizationSettingsComponent {
 
     accessItems2 = LANG.channelPartners.orgs.channelPartnerAccessInfo;
     nosort = keyValueNoSort;
-    accessLevelMessageKey = computed<ControlState>(() => ({ key: this.accessLevel() }));
 
     generalFormGroup = new FormGroup({
         name: this.nameControl,

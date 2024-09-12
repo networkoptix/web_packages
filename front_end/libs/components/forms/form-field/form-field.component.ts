@@ -95,6 +95,7 @@ export class NxFormFieldComponent implements AfterContentInit, OnDestroy {
     }
     hasMessages = signal(false);
 
+    valueState = signal<ControlState | null>(null);
     errorState = signal<ControlState | null>(null);
     protected _errorStateEffect = effect(() => {
         const errorState = this.errorState();
@@ -137,6 +138,13 @@ export class NxFormFieldComponent implements AfterContentInit, OnDestroy {
         //         });
         //     });
         // }
+
+        if (this.ngControl.value) {
+            this.valueState.set({ key: this.ngControl.value });
+        }
+        this.ngControl.valueChanges!.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.valueState.set(value ? { key: value } : null);
+        });
 
         // `formGroup.submitted` is already true when `ngSubmit` emits
         merge(

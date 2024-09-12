@@ -63,13 +63,13 @@ export class NxFilterUsersModalContent extends ModalBase<DT['return']> {
     });
 
     roleIdControl = new FormControl<string | null>(null);
-    roleDescription$$ = computed<string>(() => {
-        const filteredRoleId = this.filterByRoleId$$();
-        if (!filteredRoleId) {
-            return '';
-        }
-        return this.LANG.channelPartners.orgs.orgRoleInfo[filteredRoleId].description;
-    });
+    // roleDescription$$ = computed<string>(() => {
+    //     const filteredRoleId = this.filterByRoleId$$();
+    //     if (!filteredRoleId) {
+    //         return '';
+    //     }
+    //     return this.LANG.channelPartners.orgs.orgRoleInfo[filteredRoleId].description;
+    // });
 
     filterByRoleName$$ = computed<string>(() => {
         const [orgRoles, roleId] = [this.orgRoles$$(), this.filterByRoleId$$()];

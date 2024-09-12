@@ -1,4 +1,11 @@
+@use 'theme_generator' as tg;
+
 @use '../settings.scss';
+
+
+@include tg.generate-theme-vars((
+    '--state-info-color': ('dark': -16, 'light': 16)
+), ':host');
 
 :host {
     max-width: settings.$block-max-width;
@@ -13,7 +20,7 @@
     max-width: 20rem;
     padding-left: 0.25rem;
     margin-top: 0.5rem;
-    color: var(--CP-state-help-color);
+    color: var(--state-info-color);
 
     li {
         list-style-type: '-';

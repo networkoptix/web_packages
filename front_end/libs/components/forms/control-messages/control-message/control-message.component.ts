@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
+
 import { NxControlMessagesComponent as NxMessagesContainer } from '../control-messages.component';
 import { NxControlMessagesToken } from '../control-messages.token';
 
@@ -27,6 +29,7 @@ type TransformData = (data: unknown) => unknown;
         '[class.nx-control-message--warn]': 'type() === "warn"',
         '[class.nx-control-message--error]': 'type() === "error"',
     },
+    hostDirectives: [NxThemeAttributeDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxControlMessageComponent {

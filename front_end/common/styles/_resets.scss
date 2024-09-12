@@ -26,3 +26,7 @@
     margin-top: unset;
     margin-bottom: unset;
 }
+
+@mixin paragraph {
+    margin-bottom: unset;
+}
