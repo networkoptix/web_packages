@@ -64,20 +64,17 @@
                         ></nx-control-message>
                     </nx-control-messages>
                 </nx-form-field>
-                <div class="control-container">
+                <nx-form-field>
                     <label
+                        nx-label
+                        for="add-org-user-permission-group"
                         translate
-                        for="permission-group"
                         >Permission Group</label
                     >
                     <nx-select-v2
-                        name="permission-group"
+                        id="add-org-user-permission-group"
                         [placeholder]="'Select' | translate"
                         formControlName="roleId"
-                        [ngClass]="{
-                            'error-outline': orgUserForm.submitted && roleIdControl.invalid,
-                            'hide-outline': emailControl.errors?.selfAdd
-                        }"
                     >
                         @for (role of orgRoles(); track role.id) {
                             <nx-select-item
@@ -89,29 +86,19 @@
                             >
                         }
                     </nx-select-v2>
-                    <p class="role-message">
-                        @if (orgUserForm.submitted && roleIdControl.errors?.required) {
-                            <span
-                                class="control-message__error"
-                                translate
-                                >Role is required</span
-                            >
-                        } @else if (roleHasTooltip() && tooltipDescription()) {
-                            <span>{{ roleDescription() | translate | translateCut: 0 }} </span>
-                            <span
-                                class="pseudo-anchor"
-                                nxTooltipV2
-                                [tooltipContent]="tooltipDescription() | translate"
-                                [tooltipPositions]="['S', 'start']"
-                                tooltipTheme="contrast"
-                                >{{ roleDescription() | translate | translateCut: 1 }}</span
-                            >
-                            {{ roleDescription() | translate | translateCut: 2 }}
-                        } @else {
-                            {{ roleDescription() | translate }}
+                    <nx-control-messages
+                        useValueState
+                        [spacingLines]="4.5"
+                    >
+                        <nx-control-message
+                            key="required"
+                            [text]="'Permission Group is required' | translate"
+                        ></nx-control-message>
+                        @for (role of orgRoles(); track role.id) {
+                            <nx-org-role-description [key]="role.id"></nx-org-role-description>
                         }
-                    </p>
-                </div>
+                    </nx-control-messages>
+                </nx-form-field>
                 <div class="control-container">
                     <label
                         translate

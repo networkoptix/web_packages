@@ -23,7 +23,6 @@ import { ModalBase } from '@dialogs/modal-base';
 import LANG from '@language_static';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { accountSelectors } from '@store/account';
-import { formControlValueSignal } from '@utils/nx';
 
 interface UserInChildOrgError extends HttpErrorResponse {
     status: 400;
@@ -82,7 +81,6 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
     permissionGroupControl = new FormControl<string | null>(null, {
         validators: [Validators.required],
     });
-    permissionGroup = formControlValueSignal(this.permissionGroupControl);
 
     formGroup = new FormGroup({
         email: this.emailControl,

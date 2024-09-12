@@ -1,0 +1,20 @@
+@if (tooltipContent(); as tooltipContent) {
+    <p *ngrxLet="description() as desc">
+        {{ desc | translate | translateCut: 0
+        }}<span
+            class="tooltip-origin"
+            nxTooltipV2
+            #tooltip="nxTooltipV2"
+            [tooltipContent]="tooltipContent | translate"
+            [tooltipPositions]="['S', 'start']"
+            tooltipTheme="contrast"
+            >{{ desc | translate | translateCut: 1 }}</span
+        >{{ desc | translate | translateCut: 2 }}
+    </p>
+    @if (key() === sysAdminId) {
+        <p class="half-break">{{ '\u200B' }}</p>
+        <p>{{ description() | translate | translateCut: 3 }}</p>
+    }
+} @else {
+    <p>{{ description() | translate }}</p>
+}

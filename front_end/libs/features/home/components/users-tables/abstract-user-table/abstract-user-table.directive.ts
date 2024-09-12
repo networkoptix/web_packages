@@ -40,9 +40,17 @@ export abstract class AbstractUserTableDirective {
     // { roleId: { "name": roleName, "description": roleDescription }, .. }
     translatedOrgPermissions = Object.entries(this.LANG.channelPartners.orgs.orgRoleInfo).reduce(
         (roles, [key, value]) => {
+            const cutTranslation = (
+                this.translateService.instant(value.description) as string
+            ).split(' | ');
+            const description = [cutTranslation.slice(0, 3).join('')];
+            if (cutTranslation.length > 3) {
+                cutTranslation.slice(3).forEach(t => description.push(t));
+            }
+
             roles[key] = {
                 name: this.translateService.instant(value.name),
-                description: this.translateService.instant(value.description).replaceAll('| ', ''),
+                description,
             };
             return roles;
         },
@@ -69,7 +77,7 @@ export abstract class AbstractUserTableDirective {
         return this.translatedOrgPermissions[roleId]?.name ?? '';
     }
 
-    permissionDescription(roleId: string): string {
-        return this.translatedOrgPermissions[roleId]?.description ?? '';
+    permissionDescription(roleId: string): string[] {
+        return this.translatedOrgPermissions[roleId].description;
     }
 }

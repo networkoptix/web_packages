@@ -1,10 +1,10 @@
+import LANG from '@language_static';
 import { UserGroup } from '@services/system-user.types';
 
 export const DefaultUserGroups: UserGroup[] = [
     {
         attributes: 'readonly',
-        description:
-            'Members of this group have unlimited System privileges. Administrators can create and modify Power Users, merge Systems and connect or disconnect System to %CLOUD_NAME%.',
+        description: LANG['00000000-0000-0000-0000-100000000000'],
         id: '{00000000-0000-0000-0000-100000000000}',
         orgRoleId: '00000000-0000-4000-8000-000000000002',
         name: 'Systems Administrator',
@@ -26,8 +26,7 @@ export const DefaultUserGroups: UserGroup[] = [
     },
     {
         attributes: 'readonly',
-        description:
-            'Members of this group can, in addition to the permissions granted by the Advanced Viewers group, control most of the System configuration, but are not allowed to change any Administrator related settings, like delete or change their own groups and permissions, and cannot create or edit other Power Users.',
+        description: LANG['00000000-0000-0000-0000-100000000001'],
         id: '{00000000-0000-0000-0000-100000000001}',
         orgRoleId: '00000000-0000-4000-8000-000000000003',
         name: 'Power Users',
@@ -49,8 +48,7 @@ export const DefaultUserGroups: UserGroup[] = [
     },
     {
         attributes: 'readonly',
-        description:
-            'Members of this group can, in addition to the permissions granted by the Viewers group, see and activate PTZ positions and PTZ tours, use 2-way audio, operate I/O module buttons, create and edit bookmarks, and view the Event Log.',
+        description: LANG['00000000-0000-0000-0000-100000000002'],
         id: '{00000000-0000-0000-0000-100000000002}',
         orgRoleId: '00000000-0000-4000-8000-000000000005',
         name: 'Advanced Viewers',
@@ -71,8 +69,7 @@ export const DefaultUserGroups: UserGroup[] = [
     },
     {
         attributes: 'readonly',
-        description:
-            'Members of this group can, in addition to the permissions granted by the Live Viewers group, view and export archive and Bookmarks.',
+        description: LANG['00000000-0000-0000-0000-100000000003'],
         id: '{00000000-0000-0000-0000-100000000003}',
         orgRoleId: '00000000-0000-4000-8000-000000000006',
         name: 'Viewers',
@@ -93,7 +90,7 @@ export const DefaultUserGroups: UserGroup[] = [
     },
     {
         attributes: 'readonly',
-        description: 'Members of this group can view live videos, I/O modules and web pages.',
+        description: LANG['00000000-0000-0000-0000-100000000004'],
         id: '{00000000-0000-0000-0000-100000000004}',
         orgRoleId: '00000000-0000-4000-8000-000000000007',
         name: 'Live Viewers',
@@ -113,8 +110,7 @@ export const DefaultUserGroups: UserGroup[] = [
     },
     {
         attributes: 'readonly',
-        description:
-            'Members of this group can view System Health Monitoring information and server processor load in real-time (Server Monitoring).',
+        description: LANG['00000000-0000-0000-0000-100000000005'],
         id: '{00000000-0000-0000-0000-100000000005}',
         orgRoleId: '00000000-0000-4000-8000-000000000004',
         name: 'System Health Viewers',

@@ -1,0 +1,20 @@
+@use 'resets';
+@use 'theme_variables_common' as common;
+
+p {
+    @include resets.paragraph();
+}
+
+:host {
+    display: block;
+}
+
+.tooltip-origin {
+    color: var(--brand-core);
+    cursor: default;
+}
+
+.half-break {
+    visibility: hidden;
+    line-height: calc(common.$line-height-base / 2);
+}

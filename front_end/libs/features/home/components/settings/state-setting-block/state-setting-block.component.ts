@@ -19,6 +19,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
 import { NxFormFieldComponent } from '@components/forms/form-field/form-field.component';
 import { AsyncAction } from '@dialogs/async-action-button/create-async-action';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import LANG from '@language_static';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
@@ -44,6 +45,7 @@ import { formControlValueSignal } from '@utils/nx';
         NxApplyV3Module,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxStateSettingBlockComponent<T> implements OnInit {
     LANG = LANG;

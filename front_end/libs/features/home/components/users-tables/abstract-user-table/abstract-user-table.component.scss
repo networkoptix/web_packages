@@ -1,3 +1,4 @@
+@use "resets";
 @use "theme_variables_common" as *;
 @use "typography";
 
@@ -52,4 +53,12 @@ new-table-wrapper {
     height: calc(2rem - 5px - 5px); // Used to match select-v2 .select-box
     padding-top: 1px;
     padding-left: 2px;
+}
+
+p {
+  @include resets.paragraph();
+
+  & + p {
+    margin-top: 0.25rem;
+  }
 }

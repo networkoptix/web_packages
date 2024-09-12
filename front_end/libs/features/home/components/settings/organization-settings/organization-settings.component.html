@@ -44,8 +44,8 @@
                         }
                     </nx-select-v2>
                     <nx-control-messages
+                        useValueState
                         [spacingLines]="3"
-                        [state]="accessLevelMessageKey()"
                     >
                         @for (item of accessItems2 | keyvalue: nosort; track item.key) {
                             <nx-control-message

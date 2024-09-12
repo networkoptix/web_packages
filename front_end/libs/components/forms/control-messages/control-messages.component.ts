@@ -11,6 +11,7 @@ import {
     QueryList,
     SkipSelf,
     ViewChildren,
+    booleanAttribute,
     computed,
     effect,
     forwardRef,
@@ -85,7 +86,9 @@ export class NxControlMessagesComponent implements AfterViewInit {
         return this.spacingLines();
     }
 
-    /** For displaying non-error messages.
+    /** For displaying text associated with select options */
+    useValueState = input<boolean, unknown>(false, { transform: booleanAttribute });
+    /** Manual control of message selection.
      *
      * Like with errors, the key should match the `nx-control-message` key.
      */
@@ -94,7 +97,10 @@ export class NxControlMessagesComponent implements AfterViewInit {
         transform: s => (typeof s === 'string' ? { key: s } : s),
     });
     state = computed<ControlState | null>(
-        () => this.manualState() ?? this.nxFormField.errorState(),
+        () =>
+            this.manualState() ??
+            this.nxFormField.errorState() ??
+            (this.useValueState() ? this.nxFormField.valueState() : null),
     );
 
     @ViewChildren(NxMessage) protected set _presetMessages(messages: QueryList<NxMessage>) {
