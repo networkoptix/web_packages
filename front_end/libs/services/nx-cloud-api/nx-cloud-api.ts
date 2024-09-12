@@ -744,27 +744,8 @@ export class NxCloudApiService {
             initialValue,
             username,
             this.targetInstance,
+            !!this.currentAccount,
         );
-    }
-
-    /**
-        @deprecated use customAccountPropertyFactory instead.
-    */
-    getCustomAccountProperty(property: string, username?: string) {
-        const endpoint = `${apiBase}/custom-properties/${property}${
-            username ? '/' + username : ''
-        }`;
-        return this.http.get<any>(endpoint);
-    }
-
-    /**
-        @deprecated use customAccountPropertyFactory instead.
-    */
-    saveCustomAccountProperty(payload: any, property: string, username?: string) {
-        const endpoint = `${apiBase}/custom-properties/${property}${
-            username ? '/' + username : ''
-        }`;
-        return this.http.post<any>(endpoint, payload);
     }
 
     @memoizeAsyncPersistent
