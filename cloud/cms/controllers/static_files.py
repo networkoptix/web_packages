@@ -121,6 +121,8 @@ def read_db_email_file(asset: Asset, customization_name: str, filename: str,
         '%CLOUD_NAME%',
         '%COMPANY_LINK%',
         '%SUPPORT_LINK%',
+        '%NX_CONNECT_URL%',
+        '%NX_CONNECT_NAME%'
     ]
     data_structures = DataStructure.objects.filter(
         context__asset_type=asset.asset_type,
@@ -131,7 +133,21 @@ def read_db_email_file(asset: Asset, customization_name: str, filename: str,
         language=lang, version_id=version_id,
         customization_name=customization_name
     )
+
+    # Find '%CLOUD_NAME%' value
+    cloud_name = None
     for ds, dr_val in values.items():
+        if ds.name == '%CLOUD_NAME%':
+            cloud_name = dr_val
+            break
+
+    for ds, dr_val in values.items():
+        if ds.name == '%NX_CONNECT_NAME%' and not dr_val:
+            dr_val = cloud_name
+
+        if ds.name == '%NX_CONNECT_URL%' and not dr_val:
+            dr_val = get_customization_config(customization_name)['cloud_portal']
+
         template = template.replace(ds.name, dr_val)
     return template
 
