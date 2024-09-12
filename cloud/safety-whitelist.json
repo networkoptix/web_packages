@@ -321,5 +321,25 @@
   "72132": {
     "name": "zipp",
     "note": "A Denial of Service (DoS) vulnerability exists in the jaraco/zipp library. The vulnerability is triggered when processing a specially crafted zip file that leads to an infinite loop. This issue also impacts the zipfile module of CPython, as features from the third-party zipp library are later merged into CPython, and the affected code is identical in both projects. The infinite loop can be initiated through the use of functions affecting the `Path` module in both zipp and zipfile, such as `joinpath`, the overloaded division operator, and `iterdir`. Although the infinite loop is not resource exhaustive, it prevents the application from responding."
+  },
+  "72519": {
+    "name": "django",
+    "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize(). The urlize and urlizetrunc functions are susceptible to a possible attack through huge inputs containing a specific sequence of characters. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72519/f17",
+    "affected_spec": "<4.2.15"
+  },
+  "72520": {
+    "name": "django",
+    "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize() and AdminURLFieldWidget. The urlize and urlizetrunc functions, along with AdminURLFieldWidget, are vulnerable to denial-of-service attacks when handling inputs with a very large number of Unicode characters. CVE-2024-41991. For more information, please visit https://data.safetycli.com/v/72520/f17",
+    "affected_spec": "<4.2.15"
+  },
+  "72515": {
+    "name": "django",
+    "note": "Django addresses a memory exhaustion issue in django.utils.numberformat.floatformat(). When floatformat receives a string representation of a number in scientific notation with a large exponent, it could lead to excessive memory consumption. To prevent this, decimals with more than 200 digits are now returned as-is. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72515/f17",
+    "affected_spec": "<4.2.15"
+  },
+  "72521": {
+    "name": "django",
+    "note": "Django has a potential SQL injection vulnerability in the QuerySet.values() and QuerySet.values_list() methods. When used on models with a JSONField, these methods are susceptible to SQL injection through column aliases if a crafted JSON object key is passed as an argument. CVE-2024-42005. For more information, please visit https://data.safetycli.com/v/72521/f17",
+    "affected_spec": "<4.2.15"
   }
 }

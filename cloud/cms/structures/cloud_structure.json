@@ -376,6 +376,31 @@
               "width_le": 240,
               "size": 5242880
             }
+          },
+          {
+            "label": "NxConnect Name",
+            "name": "%NX_CONNECT_NAME%",
+            "type": "text",
+            "value": "",
+            "description": "The name of the NxConnect customization.",
+            "optional": true,
+            "meta": {
+              "shortcut": true,
+              "brand_vars": true
+            }
+          },
+          {
+            "label": "NxConnect URL",
+            "name": "%NX_CONNECT_URL%",
+            "type": "text",
+            "value": "",
+            "description": "The URL of the NxConnect customization.",
+            "optional": true,
+            "meta": {
+              "shortcut": true,
+              "brand_vars": true,
+              "regex": "^https?:\\/\\/([\\da-z\\.~_-]+)\\.([a-z\\.]{2,6})([\\/\\w ~\\.-]*)*\\/?$"
+            }
           }
         ]
       },

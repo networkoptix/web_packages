@@ -357,7 +357,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                 global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
                                '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
                 email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%REPLY_TO_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%',
-                         '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%']
+                         '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%', '%NX_CONNECT_NAME%', '%NX_CONNECT_URL%']
                 config = ['%ANDROID_APPLICATION_LINK%', '%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%',
                           '%DOWNLOADS_PLATFORM_NAME_OVERRIDE%',
                           '%ALEXA_INTEGRATION_ENABLED%', '%BOOKMARKS_ENABLED%', '%CLIENT_PROTOCOL%',
@@ -402,7 +402,9 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                         'smtp_port': ds_data.get('%SMTP_PORT%'),
                         'smtp_user': ds_data.get('%SMTP_USER%'),
                         'smtp_password': ds_data.get('%SMTP_PASSWORD%'),
-                        'smtp_tls': ds_data.get('%SMTP_TLS%')
+                        'smtp_tls': ds_data.get('%SMTP_TLS%'),
+                        'nx_connect_name': ds_data.get('%NX_CONNECT_NAME%'),
+                        'nx_connect_url': ds_data.get('%NX_CONNECT_URL%')
                     },
                     'config': {
                         'app_types_for_platform': ds_data.get('%APP_TYPES_FOR_PLATFORM%'),
