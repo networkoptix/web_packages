@@ -67,7 +67,7 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         password=str(customization_cache["smtp_password"]),
         username=str(customization_cache["smtp_user"]),
         use_tls=customization_cache["smtp_tls"],
-    ) if not settings.TESTING else get_connection()
+    ) if not settings.TESTING and not settings.PRIVATE_CLOUD else get_connection()
 
     reply_to = None
     if reply_to_email := customization_cache.get("reply_to"):
