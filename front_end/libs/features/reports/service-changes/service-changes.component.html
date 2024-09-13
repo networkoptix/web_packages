@@ -16,12 +16,14 @@
         formattedPartnerServiceChangeRecords$$().length ||
         formattedOrgServiceChangeRecords$$().length
     ) {
-        <nx-service-changes-table
-            [entityType]="entityType$$()"
-            [partnerRecords]="formattedPartnerServiceChangeRecords$$()"
-            [orgRecords]="formattedOrgServiceChangeRecords$$()"
-            (onPageChange)="handlePageChange($event)"
-        ></nx-service-changes-table>
+        <div>
+            <nx-service-changes-table
+                [entityType]="entityType$$()"
+                [partnerRecords]="formattedPartnerServiceChangeRecords$$()"
+                [orgRecords]="formattedOrgServiceChangeRecords$$()"
+                (onPageChange)="handlePageChange($event)"
+            ></nx-service-changes-table>
+        </div>
     } @else {
         <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
     }

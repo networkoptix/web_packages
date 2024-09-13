@@ -11,10 +11,12 @@
     @if (serviceUsageStore.isLoading()) {
         <nx-pre-loader></nx-pre-loader>
     } @else if (!hasError()) {
-        <nx-service-usage-table
-            [records]="formattedServiceUsageRecords$$()"
-            [startTs]="requestStartString()"
-        ></nx-service-usage-table>
+        <div>
+            <nx-service-usage-table
+                [records]="formattedServiceUsageRecords$$()"
+                [startTs]="requestStartString()"
+            ></nx-service-usage-table>
+        </div>
     } @else {
         <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
     }
