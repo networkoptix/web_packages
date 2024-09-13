@@ -1,7 +1,6 @@
 import { computed, inject, InjectionToken } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withState } from '@ngrx/signals';
 import { Store } from '@ngrx/store';
-import { filter } from 'rxjs/operators';
 
 import {
     ChannelPartnerPermissions,
@@ -131,44 +130,35 @@ export const PermissionsStore = signalStore(
     withHooks({
         onInit(store) {
             const globalStore = inject(Store);
-            globalStore
-                .select(selectCurrentPartnerParent)
-                .pipe(filter(Boolean))
-                .subscribe(parentPartner => {
-                    patchState(store, {
-                        selectedParentPartnerId: parentPartner?.id,
-                        parentPartnerPermissions: buildPermissions(
-                            parentPartner.ownPermissions || [],
-                            createPermissionState(ChannelPartnerPermissions),
-                        ),
-                    });
+            globalStore.select(selectCurrentPartnerParent).subscribe(parentPartner => {
+                patchState(store, {
+                    selectedParentPartnerId: parentPartner?.id,
+                    parentPartnerPermissions: buildPermissions(
+                        parentPartner?.ownPermissions || [],
+                        createPermissionState(ChannelPartnerPermissions),
+                    ),
                 });
+            });
 
-            globalStore
-                .select(selectCurrentPartner)
-                .pipe(filter(Boolean))
-                .subscribe(partner => {
-                    patchState(store, {
-                        selectedPartnerId: partner?.id,
-                        partnerPermissions: buildPermissions(
-                            partner?.ownPermissions || [],
-                            createPermissionState(ChannelPartnerPermissions),
-                        ),
-                    });
+            globalStore.select(selectCurrentPartner).subscribe(partner => {
+                patchState(store, {
+                    selectedPartnerId: partner?.id,
+                    partnerPermissions: buildPermissions(
+                        partner?.ownPermissions || [],
+                        createPermissionState(ChannelPartnerPermissions),
+                    ),
                 });
+            });
 
-            globalStore
-                .select(selectCurrentOrganization)
-                .pipe(filter(Boolean))
-                .subscribe(organization => {
-                    patchState(store, {
-                        selectedOrgId: organization.id,
-                        orgPermissions: buildPermissions(
-                            organization?.ownPermissions,
-                            createPermissionState(OrgPermissions),
-                        ),
-                    });
+            globalStore.select(selectCurrentOrganization).subscribe(organization => {
+                patchState(store, {
+                    selectedOrgId: organization?.id,
+                    orgPermissions: buildPermissions(
+                        organization?.ownPermissions || [],
+                        createPermissionState(OrgPermissions),
+                    ),
                 });
+            });
         },
     }),
 );
