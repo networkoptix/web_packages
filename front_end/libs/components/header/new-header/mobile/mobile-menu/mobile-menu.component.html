@@ -22,12 +22,24 @@
                 *ngIf="!node.invisible && !(systemCount < 2 && node.url === '/systems')"
                 class="menu-item"
             >
-                <ng-container
-                    *ngTemplateOutlet="
-                        node.new_window ? externalNodeName : internalNodeName;
-                        context: { node: node }
-                    "
-                ></ng-container>
+                @if (node.nodes.length === 1 && !node.nodes[0].name) {
+                    <div class="level-two-item">
+                        <ng-container
+                            *ngTemplateOutlet="
+                                node.new_window ? externalLink : internalLink;
+                                context: { subnode: node }
+                            "
+                        ></ng-container>
+                    </div>
+                } @else {
+                    <ng-container
+                        *ngTemplateOutlet="
+                            node.new_window ? externalNodeName : internalNodeName;
+                            context: { node: node }
+                        "
+                    ></ng-container>
+                }
+
                 <ng-container
                     *ngTemplateOutlet="menuItems; context: { subnodes: node.nodes }"
                 ></ng-container>
@@ -122,17 +134,18 @@
     let-subnodes="subnodes"
 >
     <div class="menu-items">
-        <div
-            *ngFor="let subnode of subnodes"
-            class="level-two-item"
-        >
-            <ng-container
-                *ngTemplateOutlet="
-                    subnode.new_window ? externalLink : internalLink;
-                    context: { subnode: subnode }
-                "
-            ></ng-container>
-        </div>
+        @for (subnode of subnodes; track subnode.url) {
+            @if (subnode.display_name) {
+                <div class="level-two-item">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            subnode.new_window ? externalLink : internalLink;
+                            context: { subnode: subnode }
+                        "
+                    ></ng-container>
+                </div>
+            }
+        }
     </div>
 </ng-template>
 
@@ -176,11 +189,17 @@
         class="menu-item"
         *ngIf="showCurrentSystem"
     >
-        <div class="node-name">
-            {{ currentSystemMenu.display_name | translate }}
-        </div>
-        <ng-container
-            *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
-        ></ng-container>
+        @if (currentSystemMenu.nodes.length === 1 && !currentSystemMenu.nodes[0].name) {
+            <ng-container
+                *ngTemplateOutlet="internalLink; context: { subnode: currentSystemMenu }"
+            ></ng-container>
+        } @else {
+            <div class="node-name">
+                {{ currentSystemMenu.display_name | translate }}
+            </div>
+            <ng-container
+                *ngTemplateOutlet="menuItems; context: { subnodes: currentSystemMenu.nodes }"
+            ></ng-container>
+        }
     </div>
 </ng-template>
