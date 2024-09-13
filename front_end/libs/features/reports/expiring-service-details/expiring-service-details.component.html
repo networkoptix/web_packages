@@ -23,15 +23,17 @@
 } @else {
     <div class="service-details-table-wrapper">
         @if (!hasError()) {
-            <nx-expiring-service-table
-                [partnerRecords]="formattedPartnerRecords$$()"
-                [orgRecords]="formattedOrgRecords$$()"
-                [totals]="expiringServiceTotals$$()"
-                [serviceId]="serviceId$$()"
-                [entityId]="entityId$$()"
-                [isPartnerTable]="isPartner$$()"
-                [startTs]="startTs()"
-            ></nx-expiring-service-table>
+            <div>
+                <nx-expiring-service-table
+                    [partnerRecords]="formattedPartnerRecords$$()"
+                    [orgRecords]="formattedOrgRecords$$()"
+                    [totals]="expiringServiceTotals$$()"
+                    [serviceId]="serviceId$$()"
+                    [entityId]="entityId$$()"
+                    [isPartnerTable]="isPartner$$()"
+                    [startTs]="startTs()"
+                ></nx-expiring-service-table>
+            </div>
         } @else {
             <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
         }

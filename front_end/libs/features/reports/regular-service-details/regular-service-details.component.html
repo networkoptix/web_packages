@@ -23,15 +23,17 @@
 } @else {
     <div class="service-details-table-wrapper">
         @if (formattedPartnerRecords$$().length || formattedOrgRecords$$().length) {
-            <nx-regular-service-table
-                [partnerRecords]="formattedPartnerRecords$$()"
-                [orgRecords]="formattedOrgRecords$$()"
-                [totals]="regularServiceTotals$$()"
-                [serviceId]="serviceId$$()"
-                [entityId]="entityId$$()"
-                [isPartnerTable]="isPartner$$()"
-                [startTs]="startTs()"
-            ></nx-regular-service-table>
+            <div>
+                <nx-regular-service-table
+                    [partnerRecords]="formattedPartnerRecords$$()"
+                    [orgRecords]="formattedOrgRecords$$()"
+                    [totals]="regularServiceTotals$$()"
+                    [serviceId]="serviceId$$()"
+                    [entityId]="entityId$$()"
+                    [isPartnerTable]="isPartner$$()"
+                    [startTs]="startTs()"
+                ></nx-regular-service-table>
+            </div>
         } @else {
             <nx-page-placeholder-no-reports></nx-page-placeholder-no-reports>
         }
