@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, EMPTY, Observable, OperatorFunction, concatMap, map, scan } from 'rxjs';
 
 import { slashJoin } from '@utils/general';
-import { memoizeAsyncMedium } from '@utils/memoize';
+import { memoizeAsyncMedium, memoizeAsyncShort } from '@utils/memoize';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
 import {
@@ -226,7 +226,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     };
 
-    @memoizeAsyncMedium
+    @memoizeAsyncShort
     private _getChannelPartner(partnerId: string): Observable<ChannelPartner> {
         return this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
     }
