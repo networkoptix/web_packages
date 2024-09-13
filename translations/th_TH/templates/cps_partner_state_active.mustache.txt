@@ -3,4 +3,4 @@
 The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
 Functionality is now fully available.
 
-View in %CLOUD_NAME% Portal: {{ config.portal_url }}
+View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

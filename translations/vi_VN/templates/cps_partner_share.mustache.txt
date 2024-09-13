@@ -2,4 +2,4 @@ Xin chào, {{message.userFullName}}
 
 {{message.sharer_name}} đã chia sẻ quyền truy cập kênh Đối tác đại lý "{{message.partner_name}}" với bạn.
 
-Xem trong Cổng thông tin %CLOUD_NAME%: {{ config.portal_url }}
+View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

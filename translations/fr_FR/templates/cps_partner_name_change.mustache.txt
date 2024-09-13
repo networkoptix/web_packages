@@ -2,4 +2,4 @@ Bonjour, {{message.userFullName}}
 
 Le nom du partenaire {{message.old_partner_name}} a été changé en {{message.new_partner_name}}.
 
-Voir dans le portail %CLOUD_NAME% en utilisant ce lien : {{ config.portal_url }}
+View in %NX_CONNECT_NAME% Portal using this link: %NX_CONNECT_URL%

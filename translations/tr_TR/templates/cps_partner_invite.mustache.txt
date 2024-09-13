@@ -1,5 +1,5 @@
 Merhaba, {{message.userFullName}}
 
-{{message.sharer_name}} sizinle "{{message.partner_name}}" partnerine erişimi paylaştı. Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %CLOUD_NAME% üzerinde hesap oluşturun ve diğer talimatları izleyin.
+{{message.sharer_name}} sizinle "{{message.partner_name}}" partnerine erişimi paylaştı. To view and manage it, please create account on %NX_CONNECT_NAME% using your current email address and follow further instructions.
 
-Hesap Oluştur: {{ config.portal_url }}/authorize/register/
+Create Account: %NX_CONNECT_URL%/authorize/register/

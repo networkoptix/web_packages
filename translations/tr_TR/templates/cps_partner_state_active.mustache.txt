@@ -3,4 +3,4 @@ Merhaba, {{message.userFullName}}
 {{message.partner_name}} Partnerin durumu {{message.status_name}} olarak değiştirildi.
 İşlevsellik artık tamamen mevcuttur.
 
-%CLOUD_NAME% Portalda görüntüle: {{ config.portal_url }}
+View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

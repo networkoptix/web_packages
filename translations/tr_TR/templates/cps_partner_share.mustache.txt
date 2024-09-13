@@ -2,4 +2,4 @@ Merhaba, {{message.userFullName}}
 
 {{message.sharer_name}} sizinle "{{message.partner_name}}" kanal partner erişimini paylaştı.
 
-%CLOUD_NAME% Portalda görüntüle: {{ config.portal_url }}
+View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
