@@ -544,6 +544,12 @@ export const GroupsStore = signalStore(
                         );
                     }),
                     tap(openGroupsState => {
+                        if (
+                            !channelPartnerService.paramStateHandler.state$$().params
+                                ?.organizationId
+                        ) {
+                            return;
+                        }
                         const openGroups = openGroupsState.flatMap(({ id, open }) =>
                             open ? [id] : [],
                         );
