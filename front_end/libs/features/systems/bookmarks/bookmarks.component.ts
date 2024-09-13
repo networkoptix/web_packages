@@ -278,6 +278,7 @@ export class NxBookmarksComponent implements OnInit {
         const bookmarksPoll$: Observable<SystemBookmark[]> = combineLatest([
             timer(0, pollingTimeout),
             this.route.queryParams.pipe(
+                debounceTime(500),
                 tap(() => {
                     pollParams = {
                         ...this.bookmarksQuery,
@@ -288,9 +289,9 @@ export class NxBookmarksComponent implements OnInit {
                     this.infLoading$.next(false);
                     this.creationCutOffTimeMS$.next(0);
                     this.newCreationCutOffTimeMS$.next(0);
+                    this.filteredFetchedBookmarkIds.clear();
                     this._bookmarks = [];
                 }),
-                debounceTime(500),
             ),
         ]).pipe(
             // Promise.all for Observables.
@@ -510,7 +511,6 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags' | 'sharing'): void {
-        this.filteredFetchedBookmarkIds.clear();
         if (!this.queryParams) {
             return;
         }
