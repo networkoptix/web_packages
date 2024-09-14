@@ -116,6 +116,7 @@ export abstract class BaseSelectV2Component<T, M extends boolean> implements Con
         }
         this.openState$$.set(DropdownState.Opening);
         this.overlayRef = this.overlay.create(this.getOverlayConfig());
+        this.setOverlayWidth();
         this.overlayRef
             .attachments()
             .pipe(take(1))
