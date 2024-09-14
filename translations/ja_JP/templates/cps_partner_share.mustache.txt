@@ -2,4 +2,4 @@
 
 {{message.sharer_name}} が、チャネルパートナー "{{message.partner_name}}" へのアクセスを共有しました。
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+%NX_CONNECT_NAME% ポータルで表示: %NX_CONNECT_URL%

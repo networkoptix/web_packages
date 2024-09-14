@@ -2,4 +2,4 @@
 
 パートナー {{message.old_partner_name}} の名前が {{message.new_partner_name}} に変更されました。
 
-View in %NX_CONNECT_NAME% Portal using this link: %NX_CONNECT_URL%
+%NX_CONNECT_NAME% ポータル表示リンク: %NX_CONNECT_URL%

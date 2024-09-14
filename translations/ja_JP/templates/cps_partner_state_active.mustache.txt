@@ -3,4 +3,4 @@
 パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました。
 すべての機能が利用可能になりました。
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+%NX_CONNECT_NAME% ポータルで表示: %NX_CONNECT_URL%

@@ -2,4 +2,4 @@ Hej, {{message.userFullName}}
 
 {{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+Visa i %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

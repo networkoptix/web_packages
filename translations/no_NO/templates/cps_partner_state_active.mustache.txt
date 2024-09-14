@@ -3,4 +3,4 @@ Hei, {{message.userFullName}}
 Statusen til partner {{message.partner_name}} endres til {{message.status_name}}.
 Funksjonalitet er nå fullt tilgjengelig.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+Vis i %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

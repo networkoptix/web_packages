@@ -2,4 +2,4 @@ Hej, {{message.userFullName}}
 
 Namnet på partner {{message.old_partner_name}} har ändrats till {{message.new_partner_name}}.
 
-View in %NX_CONNECT_NAME% Portal using this link: %NX_CONNECT_URL%
+Visa i %NX_CONNECT_NAME% Portal med denna länk: %NX_CONNECT_URL%
