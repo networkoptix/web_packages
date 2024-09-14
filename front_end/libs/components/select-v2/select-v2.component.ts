@@ -74,7 +74,6 @@ export class NxSelectV2Component<T> extends BaseSelectV2Component<T, false> {
     override onOverlayAttach(): void {
         // Timeout for dropdown element to become accessible
         setTimeout(() => {
-            this.setOverlayWidth();
             const selected = this.selected$$();
             const selectedItem = this.dropdownItems.find(item => item.value === selected);
             if (selected) {
