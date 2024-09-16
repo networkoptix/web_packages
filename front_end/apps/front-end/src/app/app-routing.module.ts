@@ -357,6 +357,7 @@ const lazyRoutes: Routes = [
     {
         path: 'reports',
         canMatch: [FeatureGuardActivate],
+        canActivate: [AuthGuard],
         data: {
             flag: FeatureFlagStrings.channelPartnersReportsUI,
         },
