@@ -13,6 +13,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { icons } from '@static-variables';
@@ -48,7 +49,7 @@ export class NxMainActionComponent implements AfterViewInit {
                 if (path === '/account') {
                     this.action$.next('logout');
                 } else {
-                    this.action$.next('login');
+                    this.action$.next(nxConfig.preloadedAccount ? 'none' : 'login');
                 }
             });
 
