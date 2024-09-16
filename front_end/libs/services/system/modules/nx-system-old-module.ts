@@ -266,6 +266,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     next: (v: Partial<{ method: string }>) => {
                         if (v.method) {
                             switch (v.method) {
+                                case 'rest.v3.users.delete':
                                 case 'rest.v3.users.update':
                                     this.getUsers(true, true);
                                     break;
