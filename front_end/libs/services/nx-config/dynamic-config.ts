@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
+import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { LOGIN_STATE } from '@services/session.service.types';
 import { Role } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
@@ -19,6 +20,7 @@ export class DynamicConfig {
             return { provide: DynamicConfig, useValue: { config: nxConfig } };
         }
         const preloadedAccount = await DynamicConfig.getAccount();
+        CustomAccountProperty.authenticated = !!preloadedAccount;
         const [data, preloadedTranslation, customizationColors] = await Promise.allSettled([
             DynamicConfig.getData(),
             DynamicConfig.getTranslation(),
