@@ -502,16 +502,8 @@ export class NxAPIToolSystemService {
         return this.currentSystem.serverManager.getApiDoc(type);
     }
 
-    async fetchJSON(route: string) {
-        let JSON = (await this.getJSONFromCache(route, this.currentSystem.id, this.systemVersion))
-            ?.json;
-        if (!JSON) {
-            JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
-            if (JSON) {
-                this.cacheJSON(route, this.currentSystem.id, this.systemVersion, JSON);
-            }
-        }
-        return JSON;
+    fetchJSON(route: string) {
+        return this.currentSystem.serverManager.fetchApiToolJSON(route);
     }
 
     /**

@@ -150,6 +150,7 @@ export class NxSystemService {
                 undefined,
                 cloudSystemInfo?.version || version,
                 skipSettingSystem,
+                cloudSystemInfo?.build,
             );
 
             /**

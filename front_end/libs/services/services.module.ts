@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 
 import { NxApplyV3Service } from '@components/forms/apply-v3/apply-v3.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
@@ -19,8 +20,34 @@ import { NxSearchService } from './search.service';
 import { NxSystemsService } from './systems.service';
 import { NxVmsClientService } from './vms-client.service';
 
+const dbConfig: DBConfig = {
+    name: 'genericUnencryptedCache',
+    version: 3,
+    objectStoresMeta: [
+        {
+            store: 'requestCache',
+            storeConfig: { keyPath: 'key', autoIncrement: false },
+            storeSchema: [{ name: 'value', keypath: 'value', options: { unique: false } }],
+        },
+        {
+            store: 'menuCache',
+            storeConfig: { keyPath: 'key', autoIncrement: false },
+            storeSchema: [{ name: 'value', keypath: 'value', options: { unique: false } }],
+        },
+        {
+            store: 'jsons',
+            storeConfig: { keyPath: 'key', autoIncrement: false },
+            storeSchema: [
+                { name: 'json', keypath: 'json', options: { unique: false } },
+                { name: 'markdown', keypath: 'markdown', options: { unique: false } },
+                { name: 'version', keypath: 'version', options: { unique: false } },
+            ],
+        },
+    ],
+};
+
 @NgModule({
-    imports: [CommonModule],
+    imports: [CommonModule, NgxIndexedDBModule.forRoot(dbConfig)],
     declarations: [],
     providers: [
         NxAppSourceService,

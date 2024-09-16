@@ -3,11 +3,11 @@
         <nx-select
             [componentId]="'avail-systems'"
             [type]="'api-tool'"
+            [disabled]="APIToolSystemService.systemChangeLockout"
             [stillLoading]="
                 !this.systems.length ||
                 (!this.APIToolSystemService.currentSystemId &&
-                    !this.readonlyAPIService.currentReadonlyAPI) ||
-                this.APIToolSystemService.systemChangeLockout
+                    !this.readonlyAPIService.currentReadonlyAPI)
             "
             [items]="systems"
             [selected]="system"
@@ -33,7 +33,8 @@
         [items]="types"
         [selected]="type"
         (onSelected)="onTypeChange($event)"
-        [stillLoading]="APIToolSystemService.loading$ | async"
+        [disabled]="this.APIToolSystemService.systemChangeLockout"
+        [stillLoading]="types.length === 0"
         [ngClass]="environment.isLocal ? 'mb-3' : 'mt-2'"
     >
     </nx-select>

@@ -178,6 +178,7 @@ interface BaseSystem {
     systemSequence: string;
     usageFrequency: number;
     version: string;
+    build: string;
 }
 
 export interface UserSystem extends BaseSystem {

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
@@ -40,22 +39,6 @@ const appRoutes: Routes = [
     },
 ];
 
-const dbConfig: DBConfig = {
-    name: 'systemJSONs',
-    version: 1,
-    objectStoresMeta: [
-        {
-            store: 'jsons',
-            storeConfig: { keyPath: 'key', autoIncrement: false },
-            storeSchema: [
-                { name: 'json', keypath: 'json', options: { unique: false } },
-                { name: 'markdown', keypath: 'markdown', options: { unique: false } },
-                { name: 'version', keypath: 'version', options: { unique: false } },
-            ],
-        },
-    ],
-};
-
 @NgModule({
     imports: [
         CommonModule,
@@ -64,7 +47,6 @@ const dbConfig: DBConfig = {
         TranslateModule,
         MarkdownModule.forRoot(),
         AngularSvgIconModule,
-        NgxIndexedDBModule.forRoot(dbConfig),
         NxDevelopersMenuComponent,
         NxMultiSelectDropdown,
         NxGenericDropdownModule,

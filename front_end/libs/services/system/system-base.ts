@@ -137,5 +137,8 @@ export abstract class NxSystemBase implements SystemVersionBase {
         return ModuleClass.moduleSymbol in this;
     }
 
-    constructor(public systemId: string) {}
+    constructor(
+        public systemId: string,
+        public build: string,
+    ) {}
 }

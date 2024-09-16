@@ -222,6 +222,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         userId?: string,
         version?: number,
         public skipSettingSystem = false,
+        public build?: string,
     ) {
         super();
         const injector = NxSystemBase.INJECTOR;
