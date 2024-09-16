@@ -200,6 +200,12 @@ export class NxDateAndTimeFilterComponent {
     }
 
     setTimePoint(point: 'start' | 'end', time: number | null): void {
+        if (point === 'end') {
+            // The end of the range is inclusive, so we need to add 59.999 seconds
+            // For example, 12:25 - 12:25 is a 59.999 second range, not 0 seconds
+            // This could cause some confusion regarding midnight, since the time will now extend 59 seconds into the next day
+            time = time === null ? null : time + MS.second * 60 - MS.millisecond;
+        }
         this.timeRange[point] = time;
 
         if (this.invalidTimeRange()) {
