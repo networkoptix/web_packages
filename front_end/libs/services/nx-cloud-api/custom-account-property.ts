@@ -32,7 +32,6 @@ export class CustomAccountProperty<T> {
         initialValue: T,
         username: string,
         targetInstance: string,
-        authenticated = false,
     ): CustomAccountProperty<T> {
         if (CustomAccountProperty.INSTANCES[property]) {
             CustomAccountProperty.INSTANCES[property].get(true, true);
@@ -43,11 +42,12 @@ export class CustomAccountProperty<T> {
                 initialValue,
                 username,
                 targetInstance,
-                authenticated,
             );
         }
         return CustomAccountProperty.INSTANCES[property] as CustomAccountProperty<T>;
     }
+
+    static authenticated = false;
 
     constructor(
         private http: HttpClient,
@@ -55,9 +55,7 @@ export class CustomAccountProperty<T> {
         initialValue: T,
         username: string,
         targetInstance: string,
-        private authenticated: boolean,
     ) {
-        console.info({ authenticated: this.authenticated });
         this.#endpoint = `${targetInstance}${apiBase}/custom-properties/${property}${
             username ? '/' + username : ''
         }`;
@@ -69,7 +67,7 @@ export class CustomAccountProperty<T> {
         };
 
         const getValue = (): Observable<T> =>
-            this.authenticated
+            CustomAccountProperty.authenticated
                 ? this.http.get<T>(this.#endpoint).pipe(catchError(() => saveValue(initialValue)))
                 : from(saveValue(initialValue));
 
@@ -77,7 +75,9 @@ export class CustomAccountProperty<T> {
             .pipe(
                 throttleTime(1000, asyncScheduler, { trailing: true }),
                 switchMap(val =>
-                    this.authenticated ? this.http.post<T>(this.#endpoint, val) : NEVER,
+                    CustomAccountProperty.authenticated
+                        ? this.http.post<T>(this.#endpoint, val)
+                        : NEVER,
                 ),
             )
             .subscribe();

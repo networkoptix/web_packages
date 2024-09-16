@@ -744,7 +744,6 @@ export class NxCloudApiService {
             initialValue,
             username,
             this.targetInstance,
-            !!this.currentAccount,
         );
     }
 
