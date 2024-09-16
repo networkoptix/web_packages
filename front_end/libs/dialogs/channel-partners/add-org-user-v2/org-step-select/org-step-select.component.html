@@ -1,9 +1,11 @@
 <button
+    [id]="controlId()"
+    data-escape-global-style
     #selectButton
     type="button"
     (click)="onClick()"
     [disabled]="disabled$$() || readOnly()"
-    class="org-step-select btn btn-dropdown-toggle"
+    class="org-step-select"
     [ngClass]="{ 'org-step-select--readonly': readOnly() }"
 >
     <div
@@ -13,7 +15,11 @@
         @if (selectedPath) {
             <ng-template [cdkPortalOutlet]="selectedPath"></ng-template>
         } @else {
-            <span translate>Select</span>
+            <span
+                class="org-step-select__placeholder"
+                translate
+                >Select</span
+            >
         }
         <div class="hidden-paths">
             <span #ellipsesSpan>...</span>

@@ -20,6 +20,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxFormFieldControlDirective } from '@components/forms/form-field/form-field-control.directive';
 import { icons } from '@static-variables';
 
 type SpanRef = ElementRef<HTMLSpanElement>;
@@ -37,8 +38,11 @@ type SpanRef = ElementRef<HTMLSpanElement>;
             multi: true,
         },
     ],
+    hostDirectives: [NxFormFieldControlDirective],
 })
 export class NxOrgStepSelectComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+    controlId = input<string>();
+
     @ViewChild('pathContainer') private pathContainer: ElementRef<HTMLDivElement>;
     private containerObserver = new ResizeObserver(([container]) => {
         const [borderBoxSize] = container.borderBoxSize;

@@ -15,6 +15,7 @@ import {
     AfterViewInit,
     ElementRef,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -24,7 +25,7 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 import {
     NxErrorMatches,
@@ -139,30 +140,34 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
             NxValidators.forbidden(this.backendRejected, 'backendReject'),
         ],
     });
+    private email = formControlValueSignal(this.emailControl);
     emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
         onChange: ['selfAdd', 'backendReject'],
     });
+    private selfAddState = toSignal(
+        this.emailControl.statusChanges.pipe(map(_ => !!this.emailControl.errors?.selfAdd)),
+        { initialValue: false },
+    );
 
     roleIdControl = new FormControl<string | null>(null, {
         validators: [Validators.required],
     });
+    private roleId = formControlValueSignal(this.roleIdControl);
+
     folderControl = new FormControl<string[]>([], {
         nonNullable: true,
         validators: [
             (control: FormControl<string[]>) => (!control.value.length ? { required: true } : null),
         ],
     });
+
     formGroup = new FormGroup({
         email: this.emailControl,
         roleId: this.roleIdControl,
         folder: this.folderControl,
     });
 
-    private email = formControlValueSignal(this.emailControl);
     emailLocked = signal(false);
-
-    private roleId = formControlValueSignal(this.roleIdControl);
-
     folder = signal<string | null>(null);
     treeValue = signal<string | null>(null);
     folderLocked = signal(false);
@@ -358,8 +363,13 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     stepSelectStatuses = computed<OrgTreeStatusMap>(() => this.statusMessages()[1]);
 
     selectedFolderStatus = computed<OrgTreeStatusValue | undefined>(() => {
-        const [stepSelectStatuses, folder] = [this.stepSelectStatuses(), this.folder()];
-        return folder ? stepSelectStatuses.get(folder) : undefined;
+        const [stepSelectStatuses, folder, selfAddState, busy] = [
+            this.stepSelectStatuses(),
+            this.folder(),
+            this.selfAddState(),
+            this.busy$$(),
+        ];
+        return folder && !selfAddState && !busy ? stepSelectStatuses.get(folder) : undefined;
     });
     selectedFolderWarn = computed<boolean>(() => this.selectedFolderStatus()?.status === 'warn');
     selectedFolderError = computed<boolean>(

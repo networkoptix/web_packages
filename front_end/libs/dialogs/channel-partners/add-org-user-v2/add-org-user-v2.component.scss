@@ -1,63 +1,13 @@
-@use "sass-rem/rem" as sass_rem;
 
-@use 'typography';
-@use 'mixins';
-@use "theme_variables_common" as vars;
-@use '../../nx-modal';
+@use 'components/forms/forms';
+@use '../../nx-modal.scss';
 
 :host {
-    // Temporary fix for qa while migrating dialogs
-    --label-color: var(--label-color-original)
+    @include forms.stacked-form-fields();
 }
 
 .header-title--muted {
     color: var(--dialog-header-muted-color);
-}
-
-.control-container {
-    margin-top: 0.75rem;
-}
-
-.control-container>*:not(:first-child) {
-    margin-top: 0.25rem;
-}
-
-.control-message {
-    min-height: 1.25rem;
-
-    span {
-        @include typography.regular13nocolor;
-        line-height: 1rem;
-
-    }
-
-    &__warning {
-        color: var(--yellow-d1);
-    }
-
-    &__error {
-        color: var(--error-label);
-    }
-}
-
-nx-select-v2 {
-    display: block;
-}
-
-nx-org-step-select {
-    width: 100%;
-}
-
-.warning-outline {
-    border-color: var(--yellow-d1);
-}
-
-.error-outline {
-    border-color: var(--input-error-border-color);
-}
-
-.hide-outline {
-    border-color: transparent;
 }
 
 nx-org-tree-selector {
