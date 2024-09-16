@@ -1,15 +1,66 @@
+@use "typography";
+
 :host {
     display: block;
 }
 
+// Disguise button as select
+// Copy paste form select styling for this one, redo with mixin if design wants more of them
 .org-step-select {
-    max-width: unset;
-    width: 100%;
-    padding: 0 10px !important;
+    color: inherit;
+    padding: 0;
 
-    justify-content: space-between !important;
+    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--btn-dropdown-toggle-bg);
+    box-shadow: var(--btn-dropdown-toggle-shadow-color);
+    @include typography.medium13nocolor;
+
+    outline: none;
+    border: none;
+    width: 100%;
+
+    &:not(:disabled) {
+        &:hover {
+            background-color: var(--btn-dropdown-toggle-hover-bg);
+            box-shadow: var(--btn-dropdown-toggle-hover-shadow);
+        }
+
+        &:active {
+            background-color: var(--btn-dropdown-toggle-active-bg);
+            box-shadow: var(--btn-dropdown-toggle-active-shadow);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--btn-default-focus-outline-rgb);
+            outline-offset: 2px;
+            box-shadow: var(--btn-default-focus-shadow);
+        }
+
+        svg-icon svg g polyline {
+            stroke: var(--btn-dropdown-toggle-color);
+            stroke-width: 2px;
+        }
+
+        :host.nx-form-field__control--warning &:not(:focus-visible) {
+            outline: 1px solid var(--yellow-d1);
+            outline-offset: -1px;
+        }
+
+        :host.nx-form-field__control--error &:not(:focus-visible) {
+            outline: 1px solid var(--input-error-border-color);
+            outline-offset: -1px;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.4;
+    }
+
 
     .path-container {
+        padding: 5px 0 5px 10px;
         min-width: 0;
         flex: 1;
         align-self: stretch;
@@ -49,7 +100,20 @@
         }
     }
 
+    &__placeholder {
+        color: var(--dropdown-placeholder-color);
+    }
+
     &__arrow {
-        rotate: -90deg;
+        padding: 5px 10px 5px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            rotate: -90deg;
+            height: 18px;
+            width: 18px;
+        }
     }
 }

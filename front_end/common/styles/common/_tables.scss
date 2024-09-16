@@ -310,6 +310,7 @@ $service-changes-table-column-width: minmax(370px, 3fr) minmax(168px, 1fr) minma
             align-items: center;
             background-color: transparent;
             box-shadow: none;
+            @include regular14nocolor;
 
             &:hover {
                 background-color: transparent !important;

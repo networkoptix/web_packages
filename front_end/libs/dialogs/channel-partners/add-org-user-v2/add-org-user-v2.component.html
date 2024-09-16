@@ -99,50 +99,39 @@
                         }
                     </nx-control-messages>
                 </nx-form-field>
-                <div class="control-container">
+                <nx-form-field>
                     <label
+                        nx-label
+                        for="add-org-user-step-select"
                         translate
-                        for="folder"
                         >Access to</label
                     >
                     <nx-org-step-select
-                        #stepSelect
+                        controlId="add-org-user-step-select"
                         [ngClass]="{
-                            'warning-outline': selectedFolderWarn() && !busy$$(),
-                            'error-outline':
-                                (orgUserForm.submitted && folderControl.errors?.required) ||
-                                selectedFolderError(),
-                            'hide-outline': emailControl.errors?.selfAdd
+                            'nx-form-field__control--warning': selectedFolderWarn(),
+                            'nx-form-field__control--error': selectedFolderError()
                         }"
                         formControlName="folder"
                         name="folder"
                         (click)="gotoFolderSelect()"
                         [readOnly]="folderLocked()"
                     ></nx-org-step-select>
-
-                    <p class="control-message">
-                        @if (!emailControl.errors?.selfAdd) {
-                            @if (orgUserForm.submitted && folderControl.errors?.required) {
-                                <span
-                                    class="control-message__error"
-                                    translate
-                                    >Folder is required</span
-                                >
-                            } @else {
-                                <!-- as can only be used on @if, not @else if -->
-                                @if (selectedFolderStatus(); as status) {
-                                    @if (status.status === 'warn' && !busy$$()) {
-                                        <span class="control-message__warning">{{
-                                            status.msg
-                                        }}</span>
-                                    } @else if (status.status === 'disable') {
-                                        <span class="control-message__error">{{ status.msg }}</span>
-                                    }
-                                }
-                            }
-                        }
-                    </p>
-                </div>
+                    <nx-control-messages
+                        [state]="selectedFolderStatus() ? 'status' : null"
+                        [spacingLines]="2"
+                    >
+                        <nx-control-message
+                            key="required"
+                            [text]="'Folder is required' | translate"
+                        ></nx-control-message>
+                        <nx-control-message
+                            key="status"
+                            [type]="selectedFolderStatus()?.status === 'disable' ? 'error' : 'warn'"
+                            [text]="selectedFolderStatus()?.msg ?? ''"
+                        ></nx-control-message>
+                    </nx-control-messages>
+                </nx-form-field>
             </div>
             <div class="nx-modal__footer nx-modal__footer--justify-end">
                 <button
