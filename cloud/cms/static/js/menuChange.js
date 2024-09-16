@@ -106,11 +106,12 @@ const checkDuplicateUrls = (e) => {
     const duplicates = Object.entries(urlCounts).reduce((flattened, [_, ids]) => ids.length > 1 ? [...flattened, ...ids] : flattened, [])
     if (duplicates.length) {
         const submitted = e instanceof MouseEvent
-        if (submitted) {
-            e.preventDefault();
-            alert('Please fix duplicated node urls before saving')
-        }
         markDuplicates(duplicates, submitted)
+        if (submitted) {
+            const ignoreWarning = confirm('There are duplicate URLs: Click OK to submit anyway, or Cancel to review and/or fix the duplicates.');
+            if (ignoreWarning) return;
+            e.preventDefault();
+        }
     }
 }
 
