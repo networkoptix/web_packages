@@ -448,20 +448,40 @@ def test_validate_attachments():
 
 
 def test_clean_content_factory_and_check_urls(mocker):
-    branding_name, branding_value, hidden_name, hidden_value = [
-    str(uuid4()) for _ in range(4)]
-    branding = [({'name': branding_name}, f'http://{branding_value}.com')]
-    hidden = [({'name': hidden_name}, hidden_value)]
+    (
+        branding_name,
+        branding_value,
+        hidden_name,
+        hidden_value,
+        vms_name,
+        vms_value,
+        email_name,
+        email_value,
+    ) = [str(uuid4()) for _ in range(8)]
+    branding = [
+        ({"name": branding_name}, f"http://{branding_value}.com"),
+        ({"name": email_name}, f"support@{email_value}.com"),
+    ]
+    hidden = [({"name": hidden_name}, hidden_value)]
+    vms = [({"name": vms_name}, f"http://{vms_value}.com")]
     mocker.patch.object(
-        forms, 'get_branding_shortcuts', return_value=[branding, hidden])
+        forms, "get_branding_shortcuts", return_value=[branding, hidden]
+    )
+    mocker.patch.object(forms, "get_vms_branding_shortcuts", return_value=vms)
 
-    valid_url = f'http://sub_domain.{branding_value}.com/test?some=query'
-    invalid_url = 'https://sub.do.org/some/sub'
+    valid_url = f"http://sub_domain.{branding_value}.com/test?some=query"
+    invalid_url = "https://sub.do.org/some/sub"
+    valid_vms_url = f"http://{vms_value}.com/test?some=query"
+    valid_from_email = f"http://{email_value}.com/test?some=query"
 
-    result = clean_content_factory()(f'www.test.com {invalid_url} {valid_url}')
+    result = clean_content_factory()(
+        f"www.test.com {invalid_url} {valid_url} {valid_vms_url} {valid_from_email}"
+    )
 
     assert valid_url in result
+    assert valid_vms_url in result
     assert invalid_url not in result
+    assert valid_from_email in result
 
 
 def test_sub_system_id_factory():

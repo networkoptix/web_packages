@@ -84,8 +84,31 @@ def get_branding_shortcuts(customization=None, request=None):
 
     brands = mapper(brand_structures, lambda structure: structure['shortcut'])
     hidden_brands = mapper(hidden_branding_structures, lambda structure: not structure['shortcut'] and not structure['hidden'])
-
     return brands, hidden_brands
+
+def get_vms_branding_shortcuts(customization=None, request=None):
+    customization = customization or getattr(
+        request, "CUSTOMIZATION", customization_ctx.get()
+    )
+    vms = get_vms_asset(customization=customization)
+
+    if not vms:
+        return []
+
+    vms_context = Context.objects.filter(
+        asset_type__type=AssetType.ASSET_TYPES.vms,
+        name="General information",
+        deprecated=False,
+    ).last()
+    vms_structures = vms_context.datastructure_set.all() if vms_context else []
+    structures_lookup = {ds.name: ds for ds in vms_structures}
+    vals = {
+        structures_lookup[ds_name]: ds_value
+        for ds_name, ds_value in vms.read_all_global_values(
+            [ds.name for ds in vms_structures]
+        ).items()
+    }
+    return createMapper(vms, vals, SpecialStructures())(vms_structures, None)
 
 def get_restricted_keywords(*, customization=None, request=None):
     '''Returns list of keywords that should be restricted from use in assets
@@ -117,6 +140,7 @@ def createMapper(cloud_portal, vals, special_structures):
         mapped = [
             ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
             for ds in structures_to_map
+            if ds in vals
         ]
         if special_structure_filter:
             mapped.extend([(

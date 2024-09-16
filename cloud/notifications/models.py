@@ -497,11 +497,16 @@ def check_urls(known_urls, sub_val='{redacted_url}'):
 
 
 def clean_content_factory(known_urls=None, customization=None):
-    from cms.forms import get_branding_shortcuts
-    _branding, hidden_branding = get_branding_shortcuts(customization=customization)
-    known_urls = [url] if isinstance(url := known_urls or [], str) else url
-    known_urls += [val.split('//')[-1] for _, val in _branding + hidden_branding if val and re.search(URL_REGEX, val)]
+    from cms.forms import get_branding_shortcuts, get_vms_branding_shortcuts
 
+    _branding, hidden_branding = get_branding_shortcuts(customization=customization)
+    vms_branding = get_vms_branding_shortcuts(customization=customization)
+    known_urls = [url] if isinstance(url := known_urls or [], str) else url
+    known_urls += [
+        val.split("@")[-1].split("//")[-1]
+        for _, val in _branding + hidden_branding + vms_branding
+        if val and re.search(URL_REGEX, val)
+    ]
     def _clean_content(to_clean):
         return re.sub(URL_REGEX, check_urls(known_urls), to_clean)
 
