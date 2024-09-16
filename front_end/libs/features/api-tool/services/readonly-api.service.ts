@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { firstValueFrom, BehaviorSubject, Subject } from 'rxjs';
 
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
@@ -45,6 +46,8 @@ export class NxReadonlyAPIService {
 
     queryParams: Params;
 
+    db = inject(NgxIndexedDBService);
+
     constructor(
         private api: NxCloudApiService,
         private _route: ActivatedRoute,
@@ -59,14 +62,27 @@ export class NxReadonlyAPIService {
             return;
         }
 
-        const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
-        if (readonlyAPIs?.data) {
-            readonlyAPIs.data.sort((a, b) => a.order - b.order);
-            for (const API of readonlyAPIs.data) {
-                this.readonlyAPIIDs.push(API.id);
-                this.emitReadOnlyAPI(API, !API.enabled);
+        const processAPIs = (readonlyAPIs: { data: ReadOnlyAPI[] } | undefined) => {
+            if (readonlyAPIs?.data) {
+                readonlyAPIs.data.sort((a, b) => a.order - b.order);
+                for (const API of readonlyAPIs.data) {
+                    this.readonlyAPIIDs.push(API.id);
+                    this.emitReadOnlyAPI(API, !API.enabled);
+                }
             }
-        }
+        };
+        const key = 'readonlyAPIs';
+        firstValueFrom(this.db.getByKey('requestCache', key))
+            .then((res: { value: { data: ReadOnlyAPI[] } | undefined }) => processAPIs(res?.value))
+            .catch();
+        this.api
+            .getReadOnlyAPIs()
+            .toPromise()
+            .then(value => {
+                processAPIs(value);
+                this.db.update('requestCache', { key, value }).subscribe();
+            })
+            .catch();
     }
 
     async getReadonlyAPI(id: number) {
@@ -78,43 +94,62 @@ export class NxReadonlyAPIService {
             this.currentReadonlyAPI = this.readonlyAPIStore[id];
             return true;
         }
-        const readonlyAPI = await firstValueFrom(this.api.getReadOnlyAPI(id));
-        if (readonlyAPI) {
-            const manifest = JSON.parse(readonlyAPI.manifest);
-            let APIInformation, APIChangelog;
-            for (const file of readonlyAPI.files) {
-                switch (file.type) {
-                    case 'Preamble Markdown File':
-                        APIInformation = file.content;
-                        break;
-                    case 'Changelog Markdown File':
-                        APIChangelog = file.content;
-                        break;
-                    default:
-                        break;
+
+        const key = `readonlyAPI-${id}`;
+
+        const processApiDetail = (readonlyAPI: ReadOnlyAPIDetail) => {
+            if (readonlyAPI) {
+                const manifest = JSON.parse(readonlyAPI.manifest);
+                let APIInformation, APIChangelog;
+                for (const file of readonlyAPI.files) {
+                    switch (file.type) {
+                        case 'Preamble Markdown File':
+                            APIInformation = file.content;
+                            break;
+                        case 'Changelog Markdown File':
+                            APIChangelog = file.content;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                let markdown: MarkdownIndex | undefined;
+                if (APIInformation || APIChangelog) {
+                    markdown = {
+                        APIInformation,
+                        APIChangelog,
+                    };
+                }
+                const preparedReadOnlyAPI = this.prepareReadonlyAPI(
+                    manifest,
+                    readonlyAPI,
+                    markdown,
+                );
+
+                if (preparedReadOnlyAPI) {
+                    const apiStoreObject = { ...readonlyAPI, content: preparedReadOnlyAPI.json };
+                    this.readonlyAPIStore[readonlyAPI.id] = {
+                        api: apiStoreObject,
+                        menus: preparedReadOnlyAPI.menus,
+                        markdown,
+                    };
+                    this.currentReadonlyAPI = this.readonlyAPIStore[readonlyAPI.id];
+                    return true;
                 }
             }
-            let markdown: MarkdownIndex | undefined;
-            if (APIInformation || APIChangelog) {
-                markdown = {
-                    APIInformation,
-                    APIChangelog,
-                };
-            }
-            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, markdown);
+        };
 
-            if (preparedReadOnlyAPI) {
-                const apiStoreObject = { ...readonlyAPI, content: preparedReadOnlyAPI.json };
-                this.readonlyAPIStore[readonlyAPI.id] = {
-                    api: apiStoreObject,
-                    menus: preparedReadOnlyAPI.menus,
-                    markdown,
-                };
-                this.currentReadonlyAPI = this.readonlyAPIStore[readonlyAPI.id];
-                return true;
-            }
+        firstValueFrom(this.db.getByKey('requestCache', key)).then(
+            (res: { value: ReadOnlyAPIDetail }) => processApiDetail(res?.value),
+        );
+
+        const apiDetail = await firstValueFrom(this.api.getReadOnlyAPI(id));
+
+        if (apiDetail) {
+            this.db.update('requestCache', { key, value: apiDetail }).subscribe();
         }
-        return false;
+
+        return !!processApiDetail(apiDetail);
     }
 
     prepareReadonlyAPI(

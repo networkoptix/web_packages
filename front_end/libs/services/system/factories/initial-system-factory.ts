@@ -34,12 +34,12 @@ const classes = {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const getBaseSystem = (version: SystemVersion, systemId: string) => {
+const getBaseSystem = (version: SystemVersion, systemId: string, build: string) => {
     if (!AllSystemVersions.includes(version)) {
         version = 0;
     }
     const SystemClass: (typeof classes)[SystemVersion] = classes[version];
-    return new SystemClass(systemId);
+    return new SystemClass(systemId, build);
 };
 
 type SystemClasses = ReturnType<typeof getBaseSystem>;
@@ -53,6 +53,7 @@ export function nxSystemFactory(
     serverId?: string,
     userId?: string,
     version?: number,
+    build?: string,
 ): SystemClasses & BaseModules {
     const nxSystemOld = new NxSystemOldModule(
         currentUserEmail,
@@ -60,8 +61,9 @@ export function nxSystemFactory(
         serverId,
         userId,
         version,
+        build,
     );
-    const baseSystem = getBaseSystem(version as SystemVersion, systemId).with(nxSystemOld);
+    const baseSystem = getBaseSystem(version as SystemVersion, systemId, build).with(nxSystemOld);
 
     /**
      * NxSystemOldModule needs quiet a bit of refactoring to remove some manager properties.

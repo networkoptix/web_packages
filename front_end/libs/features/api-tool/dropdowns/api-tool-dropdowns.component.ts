@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 import { isUUID } from '@utils/general';
@@ -111,6 +114,10 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                     name: APIType.displayName,
                     disabled,
                 });
+                const key = this.getCacheKey();
+                if (key) {
+                    this.db.update('menuCache', { key, value: this.types }).subscribe();
+                }
                 if (this.openAPIJSONService.currentType === APIType.type) {
                     this.type = this.types[this.types.length - 1];
                 }
@@ -193,13 +200,33 @@ export class NxAPIToolDropdownsComponent implements OnInit {
             });
     }
 
-    onSystemChange(system: SystemDropdownItem): void {
+    async onSystemChange(system: SystemDropdownItem): Promise<void> {
         if (isUUID(system.value)) {
             this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
+            const cacheKey = this.getCacheKey();
+            this.types = cacheKey
+                ? await firstValueFrom(this.db.getByKey('menuCache', cacheKey)).then(
+                      (res: { value?: TypeDropdownItem[] }) => res?.value || [],
+                  )
+                : [];
+            if (this.types.length) {
+                this.type =
+                    findExistingItem(
+                        this.types,
+                        this.openAPIJSONService.currentType ||
+                            this.openAPIJSONService.defaultTypeValue,
+                    ) || this.types[0];
+            }
         } else {
             this.resetDropdowns();
-            this.readonlyAPIService.setReadonlyAPI(parseInt(system.value));
+            const usingReadonly = await this.readonlyAPIService.setReadonlyAPI(
+                parseInt(system.value),
+            );
+
+            if (usingReadonly) {
+                this.APIToolSystemService.currentSystem = undefined;
+            }
         }
     }
 
@@ -210,6 +237,18 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     onTypeChange(type: TypeDropdownItem): void {
         this.openAPIJSONService.setAPIType(this.server?.value, type.value);
     }
+
+    getCacheKey(): string | undefined {
+        const build =
+            this.APIToolSystemService.currentSystem?.build || nxConfig.system?.version?.minor;
+        if (!build) {
+            return undefined;
+        }
+
+        return ['type-dropdown', build].join('-');
+    }
+
+    db = inject(NgxIndexedDBService);
 
     resetDropdowns = (): void => {
         this.servers = [];

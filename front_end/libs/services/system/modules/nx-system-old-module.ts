@@ -221,6 +221,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         serverId?: string,
         userId?: string,
         version?: number,
+        public build?: string,
     ) {
         super();
         const injector = NxSystemBase.INJECTOR;

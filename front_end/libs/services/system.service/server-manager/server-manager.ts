@@ -1,3 +1,4 @@
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
@@ -5,6 +6,7 @@ import { environment } from '@environments/environment';
 import { APIDoc } from '@pages/api-tool/api-tool-types';
 import type { Logger } from '@pages/systems/settings/servers/logger/logger.component.types';
 import type { APIDocType, LegacyMenuManifest, MenuManifest } from '@services/nx-config/base-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
 import type { GetLicenses, StorageAnalytics } from '@services/system-api.aggregated-types';
@@ -20,6 +22,33 @@ import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemServer, ModuleInfo } from '../system-types';
+
+function VersionCache(
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    target: ServerManager,
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    propertyKey: keyof ServerManager,
+    descriptor: PropertyDescriptor,
+) {
+    const originalMethod = descriptor.value;
+    descriptor.value = async function (...args) {
+        const build = this.system.build || nxConfig.system?.version?.minor;
+        if (!build) {
+            return originalMethod.apply(this, args);
+        }
+        const db = NxSystemBase.INJECTOR.get(NgxIndexedDBService);
+        const key = ['api-tool-cache', build, propertyKey, ...args].join('-');
+        const existing = await firstValueFrom(db.getByKey('requestCache', key))
+            .then((res: { key: string; value: unknown }) => res?.value)
+            .catch();
+        if (existing) {
+            return existing;
+        }
+        const result = await originalMethod.apply(this, args);
+        firstValueFrom(db.update('requestCache', { key, value: result }));
+        return result;
+    };
+}
 
 type PartialSystem = Pick<
     NxSystemOldModule,
@@ -73,6 +102,7 @@ export class ServerManager {
     private systemId: string;
     private cloudApi: NxCloudApiService;
     private system: PartialSystem;
+    public version: number;
 
     constructor(system: PartialSystem) {
         const injector = NxSystemBase.INJECTOR;
@@ -438,19 +468,23 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
+    @VersionCache
     getApiDoc(type: APIDocType = 'main'): Promise<APIDoc | undefined> {
         return this.mediaserver.getApiDoc(type);
     }
 
+    @VersionCache
     fetchApiToolJSON(route: string): Promise<APIDoc | undefined> {
         return this.mediaserver.fetchApiToolJSON(route);
     }
 
+    @VersionCache
     getApiToolManifest(): Promise<MenuManifest | undefined | LegacyMenuManifest> {
         const mediaServer = this.mediaserver as NxSystemRestAPI;
         return mediaServer.getAPIToolManifest();
     }
 
+    @VersionCache
     getApiMarkdownFile(fileName: string): Promise<string | undefined> {
         const mediaServer = this.mediaserver as NxSystemRestAPI;
         return mediaServer.getApiMarkdownFile(fileName);

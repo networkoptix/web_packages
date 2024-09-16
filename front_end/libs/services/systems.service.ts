@@ -236,6 +236,7 @@ export class NxSystemsService {
         return sortedSystems.map<NxSystemInfo>(system => {
             const versionMatch = system.version.match(/(\d*\.\d*)\.\d*\.\d*/);
             const version = parseFloat(versionMatch?.[1] ?? '0');
+            const build = system.version;
             const useRest = Math.floor(version) > 4;
 
             if (isUserSystem(system)) {
@@ -246,6 +247,7 @@ export class NxSystemsService {
                     canMerge: isMine,
                     version,
                     useRest,
+                    build,
                 };
 
                 this.checkMerge(systemInfo);
@@ -258,6 +260,7 @@ export class NxSystemsService {
                     canMerge: false,
                     version,
                     useRest,
+                    build,
                 };
             }
         });

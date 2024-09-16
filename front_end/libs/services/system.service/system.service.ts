@@ -140,6 +140,7 @@ export class NxSystemService {
                 serverId,
                 undefined,
                 cloudSystemInfo?.version || version,
+                cloudSystemInfo?.build,
             );
 
             if (cloudSystemInfo?.version) {

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
@@ -14,6 +15,7 @@ import {
     MenuManifest,
     MenuStructure,
 } from '@services/nx-config/base-config';
+import { nxConfig } from '@services/nx-config/config';
 import { apiTool } from '@static-variables';
 import { findMenuNode } from '@utils/nx';
 
@@ -110,10 +112,26 @@ export class NxOpenAPIJSONService {
         this._activeNode = node;
     }
 
+    private db = inject(NgxIndexedDBService);
+
+    createCurrentMenuKey() {
+        const build = this.APIToolService.currentSystem?.build || nxConfig.system?.version?.minor;
+        if (!build) {
+            return undefined;
+        }
+        return ['api-tool-menu', build].join('-');
+    }
+
     get menuNodes() {
         return this.menuSubject.value.nodes;
     }
     set menuNodes(content: MenuNodeWithParent[]) {
+        if (content && this.APIToolService.currentSystem) {
+            const key = this.createCurrentMenuKey();
+            if (key) {
+                this.db.update('menuCache', { key, value: content }).subscribe();
+            }
+        }
         this.menuSubject.next({
             title: 'API',
             description: '',
@@ -163,8 +181,17 @@ export class NxOpenAPIJSONService {
                 untilDestroyed(this),
                 filter(loading => !!loading),
             )
-            .subscribe(() => {
+            .subscribe(async () => {
                 this.menuNodes = undefined; // trigger preloader
+                const key = this.createCurrentMenuKey();
+                const cached = key
+                    ? await firstValueFrom(this.db.getByKey('menuCache', key))
+                          .then((res: { value: MenuNodeWithParent[] }) => res?.value)
+                          .catch()
+                    : undefined;
+                if (cached && !this.menuNodes) {
+                    this.menuNodes = cached; // trigger preloader
+                }
             });
 
         this.readonlyAPIService.currentReadonlyAPI$
