@@ -2059,7 +2059,7 @@
     "x32": "x32",
     "x64": "x64",
     "you": "sen",
-    "{ charsOverLimit, plural, one{# character} other{# characters}} over limit": "{ charsOverLimit, plural, one{# character} other{# characters}} over limit",
+    "{ charsOverLimit, plural, one{# character} other{# characters}} over limit": "{ charsOverLimit, plural, one{# karakter} other{# karakter}} limitin üzerinde",
     "{ email } already has access to a higher level": "{ email } zaten daha yüksek bir düzeyde erişime sahip",
     "{ email } has access to { folder } as { role }. Permissions will be overwritten.": "{ email }, { role } olarak { folder } için erişime sahip. İzinlerin üzerine yazılacak.",
     "{ email } permissions for { folder } will be overwritten": "{ folder } için { email } izinlerinin üzerine yazılacak",
