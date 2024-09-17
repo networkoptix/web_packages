@@ -1,6 +1,5 @@
 import {
     ConnectionPositionPair,
-    FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConnectionPosition,
     OverlayRef,
@@ -8,6 +7,7 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -73,6 +73,21 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     /** The element to attach the tooltip to */
     _attachTarget = input<HTMLElement>(this.self.nativeElement, { alias: 'tooltipOrigin' });
 
+    /** Whether to create the overlay immediately or wait until first open */
+    _overlayLoad = input<'eager' | 'lazy'>('eager', { alias: 'tooltipOverlayLoad' });
+
+    _disabled = input<boolean, unknown>(false, {
+        transform: booleanAttribute,
+        alias: 'tooltipDisabled',
+    });
+    private disabled = computed<boolean>(() => this._disabled() || !this._content());
+    protected _disabledEffect = effect(() => {
+        const [disabled, manualOverride] = [this.disabled(), this.manualOverride()];
+        if (disabled && !manualOverride) {
+            this._close(0);
+        }
+    });
+
     /** Open and close triggers for the tooltip
      *
      * - `hover`: Open on mouse enter/close on mouse leave (default)
@@ -98,13 +113,24 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     private triggerOnClick = computed(() => this.trigger() === 'click');
     private triggerOnFocus = computed(() => this.trigger() === 'focus');
 
-    /** Full manual control. Will override triggers, delays, and autohide */
+    /** Full manual control. Will override disable, triggers, delays, and autohide */
     _manualOpenState = input<boolean | undefined, boolean>(undefined, {
         alias: 'tooltipOpen',
         transform: identity,
     });
     private manualOverride = computed<boolean>(() => this._manualOpenState() !== undefined);
     @Output() tooltipOpenChange = new EventEmitter<boolean>();
+    protected _manualOpenEffect = effect(() => {
+        const state = this._manualOpenState();
+        if (state === undefined) {
+            return;
+        }
+        if (state) {
+            untracked(() => this._open());
+        } else if (!state) {
+            untracked(() => this._close());
+        }
+    });
 
     private defaultDelay = [0, 0] as [number, number];
     /** How long to wait after a trigger to open/close the tooltip in ms.
@@ -242,8 +268,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     /** Clicks outside the overlay */
     @Output() tooltipOutsideClick = new EventEmitter<unknown>();
 
-    private overlayRef: OverlayRef;
-    private position: FlexibleConnectedPositionStrategy;
+    private overlayRef?: OverlayRef;
     protected portal = new ComponentPortal(NxTooltipV2Component);
 
     private open$ = new BehaviorSubject<[number, number] | null>(null);
@@ -261,48 +286,8 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     constructor(
         private overlay: Overlay,
         private self: ElementRef<HTMLElement>,
+        private destroyRef: DestroyRef,
     ) {
-        this.overlayRef = overlay.create({
-            scrollStrategy: overlay.scrollStrategies.reposition(),
-        });
-        this.overlayRef
-            .outsidePointerEvents()
-            .pipe(takeUntilDestroyed())
-            .subscribe(({ timeStamp, target }) => {
-                if (!this._opened()) {
-                    return;
-                }
-
-                this.tooltipOutsideClick.emit(target);
-
-                setTimeout(() => {
-                    /* Hack to check if the click is on the origin element, compensate for fuzzing
-                    https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#reduced_time_precision */
-                    const clickedHost = Math.abs(timeStamp - this.lastHostClick) < 5;
-                    if (this.triggerOnClick() && !clickedHost) {
-                        this.close();
-                    }
-                });
-            });
-        this.overlayRef
-            .attachments()
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this._opened.set(true);
-                this.tooltipOpenChange.emit(true);
-                this.open$.next(null);
-                this.autohide$.next(this.autohideTemp);
-            });
-        this.overlayRef
-            .detachments()
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this._opened.set(false);
-                this.tooltipOpenChange.emit(false);
-                this.close$.next(null);
-                this.autohide$.next(0);
-            });
-
         this.open$
             .pipe(
                 takeUntilDestroyed(),
@@ -319,7 +304,20 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
             )
             .subscribe(autohide => {
                 this.autohideTemp = autohide;
-                this.openOverlay();
+                if (this._opened()) {
+                    return;
+                }
+                const overlayRef = this.overlayRef ?? this.initializeOverlay();
+                const component = overlayRef.attach(this.portal);
+                component.setInput('content', this._content());
+                component.setInput('withArrow', this._withArrow());
+                component.setInput('theme', this._theme());
+                component.instance.click.subscribe(() => {
+                    this.tooltipComponentClick.emit();
+                    if (this.triggerOnClick()) {
+                        this.close();
+                    }
+                });
             });
         this.close$
             .pipe(
@@ -333,7 +331,10 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
                 ),
             )
             .subscribe(() => {
-                this.closeOverlay();
+                if (!this._opened()) {
+                    return;
+                }
+                this.overlayRef!.detach();
             });
 
         this.autohide$
@@ -349,44 +350,93 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
             });
     }
 
-    ngAfterViewInit(): void {
-        this.position = this.overlay
+    private initializeOverlay(): OverlayRef {
+        const positionStrategy = this.overlay
             .position()
             .flexibleConnectedTo(this._attachTarget())
             .withPush(true)
             .withPositions(this.overlayPositions());
-        this.overlayRef.updatePositionStrategy(this.position);
+        const overlayRef = this.overlay.create({
+            scrollStrategy: this.overlay.scrollStrategies.reposition(),
+            positionStrategy,
+        });
+        overlayRef
+            .outsidePointerEvents()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ timeStamp, target }) => {
+                if (!this._opened()) {
+                    return;
+                }
+
+                this.tooltipOutsideClick.emit(target);
+
+                setTimeout(() => {
+                    /* Hack to check if the click is on the origin element, compensate for fuzzing
+                    https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#reduced_time_precision */
+                    const clickedHost = Math.abs(timeStamp - this.lastHostClick) < 5;
+                    if (this.triggerOnClick() && !clickedHost) {
+                        this.close();
+                    }
+                });
+            });
+        overlayRef
+            .attachments()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this._opened.set(true);
+                this.tooltipOpenChange.emit(true);
+                this.open$.next(null);
+                this.autohide$.next(this.autohideTemp);
+            });
+        overlayRef
+            .detachments()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this._opened.set(false);
+                this.tooltipOpenChange.emit(false);
+                this.close$.next(null);
+                this.autohide$.next(0);
+            });
+        this.overlayRef = overlayRef;
+        return overlayRef;
+    }
+
+    ngAfterViewInit(): void {
+        if (this._overlayLoad() === 'eager') {
+            this.initializeOverlay();
+        }
     }
 
     ngOnDestroy(): void {
-        this.overlayRef.dispose();
-    }
-
-    private openOverlay(): void {
-        if (this._opened()) {
-            return;
-        }
-        const component = this.overlayRef.attach(this.portal);
-        component.setInput('content', this._content());
-        component.setInput('withArrow', this._withArrow());
-        component.setInput('theme', this._theme());
-        component.instance.click.subscribe(() => {
-            this.tooltipComponentClick.emit();
-            if (this.triggerOnClick()) {
-                this.close();
-            }
-        });
-    }
-    private closeOverlay(): void {
-        if (!this._opened()) {
-            return;
-        }
-        this.overlayRef.detach();
+        this.overlayRef?.dispose();
     }
 
     /* Public API */
     public opened = this._opened.asReadonly();
     public open(delay: number | undefined = undefined, autohide: number = NaN): void {
+        if (!this.disabled()) {
+            this._open(delay, autohide);
+        }
+    }
+    public close(delay: number = NaN): void {
+        if (!this.disabled()) {
+            this._close(delay);
+        }
+    }
+    public toggle(): void {
+        if (!this._opened()) {
+            this.open();
+        } else {
+            this.close();
+        }
+    }
+    /** Trick the scroll strategy into updating the tooltip position */
+    public updatePosition(): void {
+        document.dispatchEvent(new Event('scroll'));
+    }
+    /* /Public API */
+
+    private _open(delay: number | undefined = undefined, autohide: number = NaN): void {
         const delay_ = delay ?? this.openDelay();
         const autohide_ = isNaN(autohide) ? this.autohide() : autohide;
         if (!this._opened()) {
@@ -406,7 +456,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
             }
         }
     }
-    public close(delay: number = NaN): void {
+    private _close(delay: number = NaN): void {
         delay = isNaN(delay) ? this.closeDelay() : delay;
         if (!this._opened()) {
             if (this.open$.value === null) {
@@ -424,18 +474,6 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
                 }
             }
         }
-    }
-    public toggle(): void {
-        if (!this._opened()) {
-            this.open();
-        } else {
-            this.close();
-        }
-    }
-
-    /** Trick the scroll strategy into updating the tooltip position */
-    public updatePosition(): void {
-        document.dispatchEvent(new Event('scroll'));
     }
 
     @HostListener('mouseenter') protected onMouseEnter(): void {
@@ -466,16 +504,4 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
             this.toggle();
         }
     }
-
-    protected _manualOpenEffect = effect(() => {
-        const state = this._manualOpenState();
-        if (state === undefined) {
-            return;
-        }
-        if (state) {
-            untracked(() => this.open());
-        } else if (!state) {
-            untracked(() => this.close());
-        }
-    });
 }

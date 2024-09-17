@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Observable, finalize, map, noop, of, take, timer } from 'rxjs';
 
 import { ExampleCustomTooltipDirective } from '@directives/tooltip-v2/custom/example-custom-tooltip/example-custom-tooltip.directive';
@@ -12,9 +13,10 @@ import { MS } from '@utils/general';
     templateUrl: 'tooltip-sandbox.component.html',
     styleUrls: ['tooltip-sandbox.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxTooltipV2Directive, ExampleCustomTooltipDirective],
+    imports: [CommonModule, FormsModule, NxTooltipV2Directive, ExampleCustomTooltipDirective],
 })
-export class NxTooltipSandboxComponent implements OnInit, AfterViewInit {
+export class NxTooltipSandboxComponent {
+    disabled = false;
     onLoadManualOpen = false;
 
     verticalPositions: TooltipPosition[] = [
@@ -109,20 +111,18 @@ export class NxTooltipSandboxComponent implements OnInit, AfterViewInit {
     constructor(private self: ElementRef<HTMLElement>) {
         // The CDK overlay doesn't respond to non-scroll movement from content pop
         const int = window.setInterval(() => {
-            if (document.querySelector('.menu-level-two')) {
+            if (
+                document.querySelector('cdk-accordion-item') &&
+                document.querySelector('nx-header-level-two')
+            ) {
+                this.pushBuffer =
+                    document.documentElement.offsetWidth -
+                    this.self.nativeElement.getBoundingClientRect().x -
+                    10 -
+                    this.pushDelta;
                 this.onLoadManualOpen = true;
                 clearInterval(int);
             }
-        }, 1000);
-    }
-
-    ngOnInit(): void {}
-
-    ngAfterViewInit(): void {
-        this.pushBuffer =
-            document.documentElement.offsetWidth -
-            this.self.nativeElement.getBoundingClientRect().x -
-            10 -
-            this.pushDelta;
+        }, 500);
     }
 }

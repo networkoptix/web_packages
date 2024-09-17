@@ -154,7 +154,7 @@
                             <nx-select-v2
                                 [ngModel]="getRowRoleId(row)"
                                 (ngModelChange)="updateRole(row, $event)"
-                                (close)="openedRoleTooltip?.close(0); openedRoleTooltip = undefined"
+                                #roleSelect
                             >
                                 @for (role of roles$$(); track role.id) {
                                     <ng-template #tooltipContent>
@@ -168,13 +168,10 @@
                                     <nx-select-item
                                         [value]="role.id"
                                         nxTooltipV2
-                                        #roleSelectTooltip="nxTooltipV2"
+                                        [tooltipDisabled]="roleSelect.dropdownClosed$$()"
                                         [tooltipContent]="tooltipContent"
                                         [tooltipPositions]="['N', 'center']"
                                         tooltipTheme="contrast"
-                                        (tooltipOpenChange)="
-                                            $event ? (openedRoleTooltip = roleSelectTooltip) : null
-                                        "
                                     >
                                         <nx-search-highlight
                                             [text]="permissionName(role.id)"
