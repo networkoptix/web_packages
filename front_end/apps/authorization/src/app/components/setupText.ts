@@ -32,7 +32,7 @@ export function setupText(type?: string): TemplateText {
     };
 
     if (type === 'email') {
-        connect.subHeader = auth.connectSubheader;
+        delete connect.subHeader;
         delete login.subHeader;
         delete passwordApply.subHeader;
     }
