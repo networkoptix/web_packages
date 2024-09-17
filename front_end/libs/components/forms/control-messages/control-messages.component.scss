@@ -1,10 +1,11 @@
-@use "sass-rem/rem" as sass_rem;
+@use 'theme_variables_common' as vars;
 
 :host {
     position: relative;
     display: block;
-    min-height: calc(sass_rem.rem(19.5px) * var(--spacing-lines));
-    // 1.5 line-height * 13px font-size
+    font-size: 0.8125rem; // Match body
+    line-height: 1.5; // Match messages
+    min-height: calc(1.5 * vars.$font-size-base * var(--spacing-lines));
 }
 
 .preset-container {

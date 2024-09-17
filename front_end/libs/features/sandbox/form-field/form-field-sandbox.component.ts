@@ -7,7 +7,7 @@ import { NxAsyncSubmitButtonComponent } from '@components/forms/buttons/async-su
 import { NxResetButtonComponent } from '@components/forms/buttons/reset-button/reset-button.component';
 import { NxSubmitButtonComponent } from '@components/forms/buttons/submit-button/submit-button.component';
 import {
-    NxErrorMatches,
+    NX_BASE_ERROR_MATCHES,
     errorMatcherFactory,
 } from '@components/forms/form-field/error-state-matcher';
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
@@ -50,7 +50,7 @@ export class NxFormFieldSandboxComponent {
                 control.value.match(/a/i) ? { letterA: true } : null,
         ],
     });
-    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
+    emailErrorMatcher = errorMatcherFactory(NX_BASE_ERROR_MATCHES, {
         onChange: ['letterA'],
     });
     emailFormGroup = new FormGroup({

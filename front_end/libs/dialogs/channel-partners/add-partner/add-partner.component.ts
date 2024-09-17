@@ -7,10 +7,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { NxControlMessageComponent } from '@components/forms/control-messages/control-message/control-message.component';
 import { NxControlMessagesComponent } from '@components/forms/control-messages/control-messages.component';
-import {
-    errorMatcherFactory,
-    NxErrorMatches,
-} from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldComponent } from '@components/forms/form-field/form-field.component';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxLabelComponent } from '@components/forms/label/label.component';
@@ -44,9 +40,6 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 })
 export class AddPartnerModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
-
-    nameErrorMatcher = errorMatcherFactory(NxErrorMatches.text(true));
-    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(true));
 
     nameControl = new FormControl('', {
         validators: NxValidators.text(),

@@ -5,10 +5,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import {
-    errorMatcherFactory,
-    NxErrorMatches,
-} from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
@@ -85,8 +81,6 @@ export class NxFilterUsersModalContent extends ModalBase<DT['return']> {
         validators: NxValidators.email(),
         nonNullable: true,
     });
-
-    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(false));
 
     filterByRoleId$$ = formControlValueSignal(this.roleIdControl);
 
