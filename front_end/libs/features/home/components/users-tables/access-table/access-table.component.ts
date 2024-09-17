@@ -1,6 +1,6 @@
 import { Component, Output, computed, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { escape } from 'lodash-es';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
@@ -100,6 +100,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     ];
     protected setArrange = ['groupId', 'accessLevel', 'roles', 'delete'];
     router = inject(Router);
+    activatedRoute = inject(ActivatedRoute);
     selectedCount$$ = computed(() => this.checkAllContainer$$()?.toggledCount$$());
     selectedGroups$$ = computed(
         () =>
@@ -291,16 +292,13 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                         groupIds,
                     );
 
-                    const partnerId = this.routerState.partnerId();
-                    const orgId = this.routerState.organizationId();
-
-                    this.router
-                        .navigate([
-                            `/home/channel-partners/${partnerId}/organization/${orgId}/users`,
-                        ])
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    if (this.accessTableRecords$$().length === this.selectedCount$$()) {
+                        this.router
+                            .navigate(['users'], { relativeTo: this.activatedRoute })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
                 }
             });
     }
