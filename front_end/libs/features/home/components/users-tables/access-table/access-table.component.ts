@@ -1,6 +1,6 @@
 import { Component, Output, ViewChild, computed, forwardRef, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { escape } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
@@ -105,6 +105,7 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     checkAllContainer$$ = toSignal(this.checkAllContainer, { initialValue: null });
     routerState = inject(ChannelPartnersRouteState);
     router = inject(Router);
+    activatedRoute = inject(ActivatedRoute);
     @ViewChild(forwardRef(() => 'containerRef')) set setContainerRef(
         checkAllContainerRef: NxCheckAllContainerDirective,
     ) {
@@ -301,16 +302,13 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                         groupIds,
                     );
 
-                    const partnerId = this.routerState.partnerId();
-                    const orgId = this.routerState.organizationId();
-
-                    this.router
-                        .navigate([
-                            `/home/channel-partners/${partnerId}/organization/${orgId}/users`,
-                        ])
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    if (this.accessTableRecords$$().length === this.selectedCount$$()) {
+                        this.router
+                            .navigate(['users'], { relativeTo: this.activatedRoute })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
                 }
             });
     }
