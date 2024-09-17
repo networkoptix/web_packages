@@ -284,7 +284,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             errorState = CameraError.custom;
         }
 
-        if (availableTransports?.length === 0) {
+        if (!errorState && availableTransports?.length === 0) {
             errorState = CameraError.noFormat;
         }
 
@@ -301,11 +301,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         };
     });
 
-    stopOnNoAccess = effect(() => {
-        if (this.state$$().noAccess) {
-            this.playback.stop();
-        }
-    });
+    stopOnNoAccess = effect(
+        () => {
+            if (this.state$$().noAccess) {
+                this.playback.stop();
+            }
+        },
+        { allowSignalWrites: true },
+    );
 
     // Removes the error state when changing mode, transport or quality.
     playbackState$$ = toSignal(

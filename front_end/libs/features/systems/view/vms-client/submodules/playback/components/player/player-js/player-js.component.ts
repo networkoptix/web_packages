@@ -158,10 +158,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
-        if (
-            this.videoView &&
-            (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)
-        ) {
+        if (this.videoView && (changes.mode || changes.sourceUrl || changes.paused)) {
             if (this.sourceUrl) {
                 this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';
             }
