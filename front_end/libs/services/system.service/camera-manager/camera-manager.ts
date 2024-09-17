@@ -9,9 +9,9 @@ import type { CameraValues } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     cleanIdLegacy,
+    extractVideoLayout,
     KeyFilter,
     MS,
-    extractVideoLayout,
     parseDewarpingParams,
 } from '@utils/general';
 
@@ -19,21 +19,22 @@ import type { ServerManager } from '../server-manager/server-manager';
 
 import type * as APT from './add-params.types';
 import {
-    MotionType,
-    RecordingSettings,
-    StreamQuality,
-    RecordingType,
-    TimeDetail,
-    RecordingModes,
-    NxSystemCamera,
-    TaskUpdate,
-    CameraUpdate,
-    SaveCameraUserAttributes,
-    RecordingStatus,
     CameraStatus,
-    PreprocessCamera,
+    CameraUpdate,
+    Capabilities,
     DeviceType,
+    MotionType,
+    NxSystemCamera,
+    PreprocessCamera,
+    RecordingModes,
+    RecordingSettings,
+    RecordingStatus,
+    RecordingType,
+    SaveCameraUserAttributes,
     ScheduleTask,
+    StreamQuality,
+    TaskUpdate,
+    TimeDetail,
 } from './camera-manager-types';
 
 type PartialSystem = Pick<
@@ -115,6 +116,7 @@ export class CameraManager {
             defaultRatio,
             motionLowResEnabled,
             audioSupported,
+            capabilities,
         } = this.parseParameters(camera);
 
         const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
@@ -194,6 +196,7 @@ export class CameraManager {
             model,
             url,
             typeId,
+            capabilities,
             systemId: this.system.id,
             get accessToken(): string {
                 return getAccessToken();
@@ -230,7 +233,13 @@ export class CameraManager {
         camera: PreprocessCamera,
     ): Pick<
         NxSystemCamera,
-        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps' | 'audioSupported'
+        | 'parameters'
+        | 'credentials'
+        | 'previewUrl'
+        | 'defaultRatio'
+        | 'maxFps'
+        | 'audioSupported'
+        | 'capabilities'
     > &
         Pick<RecordingSettings, 'motionLowResEnabled'> {
         let credentials: NxSystemCamera['credentials'];
@@ -344,6 +353,11 @@ export class CameraManager {
         const audioSupported =
             !!parameters.isAudioSupported || !!parameters.mediaCapabilities?.hasAudio;
 
+        let capabilities: Capabilities[] | [] = [];
+        if ('capabilities' in camera && typeof camera.capabilities === 'string') {
+            capabilities = camera.capabilities.split('|') as Capabilities[];
+        }
+
         return {
             parameters,
             credentials,
@@ -352,6 +366,7 @@ export class CameraManager {
             defaultRatio,
             motionLowResEnabled,
             audioSupported,
+            capabilities,
         };
     }
 

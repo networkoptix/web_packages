@@ -141,6 +141,7 @@ export interface NxSystemCamera {
     accessToken: string;
     getAccessToken: () => string;
     typeId: string;
+    capabilities: Capabilities[] | [];
 
     // Compatibility patches
     parentId: string; // serverId
@@ -266,6 +267,34 @@ export enum StreamQuality {
     HIGH = 'high',
     BEST = 'highest',
     VARIOUS = 'various',
+}
+
+// This is recommend to be used for the newest devices api calls
+// Not guaranteed to be available for older api calls
+export const enum Capabilities {
+    noCapabilities = 'noCapabilities',
+    primaryStreamSoftMotion = 'primaryStreamSoftMotion',
+    inputPort = 'inputPort',
+    outputPort = 'outputPort',
+    shareIp = 'shareIp',
+    audioTransmit = 'audioTransmit',
+    remoteArchive = 'remoteArchive',
+    setUserPassword = 'setUserPassword',
+    isDefaultPassword = 'isDefaultPassword',
+    isOldFirmware = 'isOldFirmware',
+    customMediaUrl = 'customMediaUrl',
+    isPlaybackSpeedSupported = 'isPlaybackSpeedSupported',
+    synchronousChannel = 'synchronousChannel',
+    dualStreamingForLiveOnly = 'dualStreamingForLiveOnly',
+    customMediaPorts = 'customMediaPorts',
+    absoluteTimestamps = 'absoluteTimestamps',
+    fixedQuality = 'fixedQuality',
+    multicastStreaming = 'multicastStreaming',
+    boundToServer = 'boundToServer',
+    dontAutoOpen = 'dontAutoOpen',
+    noAnalytics = 'noAnalytics',
+    isOnvif = 'isOnvif',
+    isIntercom = 'isIntercom',
 }
 
 export interface TimeDetail {
