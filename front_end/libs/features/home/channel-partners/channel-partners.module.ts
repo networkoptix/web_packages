@@ -11,7 +11,7 @@ import { nxConfig } from '@services/nx-config/config';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
-import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
+import { NxInformationV2Component } from '../components/information-v2/information-v2.component';
 import { NxSupportV2Component } from '../components/information-v2/support-v2/support-v2.component';
 import { NxChannelPartnersSettingsComponent } from '../components/settings/channel-partners-settings/channel-partners-settings.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
@@ -72,13 +72,18 @@ const CPRoutes: Routes = withTabReporterResolver([
                 component: NxSubchannelsComponent,
                 canActivate: [cpTabGuard],
             },
+            // {
+            //     path: 'information',
+            //     canActivate: [cpTabGuard],
+            //     component: NxChannelPartnerInformationComponent,
+            //     canDeactivate: [
+            //         (component: NxChannelPartnerInformationComponent) => !component.busy$$(),
+            //     ],
+            // },
             {
                 path: 'information',
                 canActivate: [cpTabGuard],
-                component: NxChannelPartnerInformationComponent,
-                canDeactivate: [
-                    (component: NxChannelPartnerInformationComponent) => !component.busy$$(),
-                ],
+                component: NxInformationV2Component,
             },
             {
                 path: 'users',

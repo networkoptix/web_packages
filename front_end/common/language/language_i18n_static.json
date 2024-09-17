@@ -1418,7 +1418,40 @@
                 "phones": "Phone",
                 "emails": "Email",
                 "custom": "Custom"
-            }
+            },
+            "editHeader": {
+                "sites": "Sites",
+                "phones": "Phone numbers",
+                "emails": "Emails",
+                "custom": "Custom"
+            },
+            "editPrimaryLabel": {
+                "sites": "Site",
+                "phones": "Phone",
+                "emails": "Email",
+                "custom": "Label"
+            },
+            "editSecondaryLabel": {
+                "phones": "Description (optional)",
+                "emails": "Description (optional)",
+                "custom": "Value"
+            },
+            "emptyText": {
+                "sites": "You haven't added any sites yet",
+                "phones": "You haven't added any phone numbers yet",
+                "emails": "You haven't added any emails yet",
+                "custom": "You haven't added any custom information yet"
+            },
+            "uniqueError": {
+                "sites": "URLs must be unique",
+                "phones": "Phone numbers must be unique",
+                "emails": "Emails must be unique",
+                "custom": "Labels must be unique"
+            },
+            "labelRequired": "Label is required",
+            "labelPattern": "Label can only contain letters",
+            "valueRquired": "Value is required",
+            "valuePattern": "Value can only contain letters and numbers"
         }
     },
     "channelPartnerReports": {

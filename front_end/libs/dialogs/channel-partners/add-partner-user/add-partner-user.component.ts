@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import {
-    NxErrorMatches,
+    NX_BASE_ERROR_MATCHES,
     errorMatcherFactory,
 } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
@@ -61,7 +61,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
             NxValidators.forbidden(this.backendRejected, 'backendReject'),
         ],
     });
-    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
+    emailErrorMatcher = errorMatcherFactory(NX_BASE_ERROR_MATCHES, {
         onChange: ['selfAdd', 'existingUser', 'backendReject'],
     });
 

@@ -7,6 +7,8 @@ import { AsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxAsyncSubmitButtonComponent } from '../buttons/async-submit-button/async-submit-button.component';
 import { NxResetButtonComponent } from '../buttons/reset-button/reset-button.component';
 
+import type { NxFormResetFn } from './apply-v3.types';
+
 @Component({
     selector: 'nx-apply-v3',
     templateUrl: 'apply-v3.component.html',
@@ -21,6 +23,7 @@ import { NxResetButtonComponent } from '../buttons/reset-button/reset-button.com
 })
 export class NxApplyV3Component<T> {
     action = input.required<AsyncAction<T>>();
+    resetFn = input<NxFormResetFn>();
     actionButtonJustify = input<'start' | 'end'>('start');
     protected actionButtonFlexOrder = computed<0 | 1>(() =>
         this.actionButtonJustify() === 'start' ? 0 : 1,

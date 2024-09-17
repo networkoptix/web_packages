@@ -1,9 +1,6 @@
 import type { FormGroupDirective, NgControl } from '@angular/forms';
 
 import { environment } from '@environments/environment';
-import { staticImplements } from '@utils/general';
-
-import { ControlPresets } from '../validators';
 
 /** State of a form control, usually a validation error.
  *
@@ -18,7 +15,7 @@ export interface ControlState {
  *
  * The first matching error from a control's validators array will be selected (ordering matters).
  */
-export type ErrorMatcher = (control: NgControl, form: FormGroupDirective) => ControlState | null;
+export type ErrorMatcherFn = (control: NgControl, form: FormGroupDirective) => ControlState | null;
 
 /** Sets of triggers to display errors.
  *
@@ -34,49 +31,29 @@ interface ErrorMatches {
     onSubmit?: string[];
 }
 
-@staticImplements<{ [P in ControlPresets]: () => ErrorMatches }>()
-export class NxErrorMatches {
-    static text(required = true): ErrorMatches {
-        return {
-            onChange: ['maxlength'],
-            onSubmit: required ? ['required'] : [],
-        };
-    }
-    static email(required = true): ErrorMatches {
-        return {
-            ...NxErrorMatches.text(required),
-            onBlur: ['pattern'],
-        };
-    }
-    static phone(required = true): ErrorMatches {
-        return {
-            onBlur: ['pattern'],
-            onSubmit: required ? ['required'] : [],
-        };
-    }
-    static url(required = true): ErrorMatches {
-        return {
-            onBlur: ['pattern'],
-            onSubmit: required ? ['required'] : [],
-        };
-    }
-}
+/** Base matches for a text input */
+export const NX_BASE_ERROR_MATCHES = {
+    onChange: ['maxlength'],
+    onBlur: ['pattern'],
+    onSubmit: ['required'],
+} satisfies ErrorMatches;
 
 /** Factory to produce error matcher functions.
  *
- * At least one set of triggers is required. Multiple sets will be composed.
+ * Defaults to the base set of matches for a text input. Multiple sets will be composed.
  *
  * Matching should follow the general pattern:
  * 1. Show errors that will not be resolved by further input immediately.
- *    This includes forbidden emails and max length errors.
+ *    This includes forbidden value and max length errors.
  * 2. Show errors that can be caused by incomplete user input on blur.
  *    This includes pattern and min length errors.
- * 3. Show required errors on submit. So far this is the only error design wants shown on submit.
+ * 3. Show required errors and errors that involve multiple inputs on submit.
+ *    This includes unique value errors.
  */
 export function errorMatcherFactory(
-    trigger: ErrorMatches,
+    trigger: ErrorMatches = NX_BASE_ERROR_MATCHES,
     ...others: ErrorMatches[]
-): ErrorMatcher {
+): ErrorMatcherFn {
     const changeErrors: string[] = [];
     const blurErrors: string[] = [];
     const submitErrors: string[] = [];

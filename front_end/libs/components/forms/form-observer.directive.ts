@@ -10,7 +10,8 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { FormGroupDirective } from '@angular/forms';
+import { FormGroup, FormGroupDirective, isFormArray, isFormGroup } from '@angular/forms';
+import { size } from 'lodash-es';
 import { Observable, Subject, combineLatest, map } from 'rxjs';
 
 import { writeOnlySignal } from '@utils/nx';
@@ -19,8 +20,7 @@ import type { NxFormFieldComponent } from './form-field/form-field.component';
 
 type UnknownRecord = Record<string, unknown>;
 
-type CompareFn = (a: unknown, b: unknown) => boolean;
-const strictEquality: CompareFn = (a, b): boolean => a === b;
+type CompareFn = (a: unknown, b: unknown, formGroup?: FormGroup) => boolean;
 
 /** Directive for tracking form state and changes.
  *
@@ -32,8 +32,8 @@ const strictEquality: CompareFn = (a, b): boolean => a === b;
     standalone: true,
 })
 export class NxFormObserverDirective implements OnInit {
-    initialValue = signal<UnknownRecord>({});
-    initialValue$ = toObservable(this.initialValue);
+    private initialValue = signal<UnknownRecord>({});
+    private initialValue$ = toObservable(this.initialValue);
 
     /** Value to compare against for form changes and to revert to on reset.
      *
@@ -44,11 +44,39 @@ export class NxFormObserverDirective implements OnInit {
     }
     @Output() initialFormValueChange = this.initialValue$;
 
+    /** Recursively check FormControl values for equality */
+    private formGroupStrictEquality(
+        current: UnknownRecord,
+        initial: UnknownRecord,
+        formGroup: FormGroup,
+    ): boolean {
+        return (
+            size(current) === size(initial) &&
+            Object.keys(current).every(k => {
+                const currentControl = formGroup.controls[k];
+                if (isFormGroup(currentControl)) {
+                    const currentValue = current[k] as UnknownRecord;
+                    const initialValue = initial[k] as UnknownRecord;
+                    return this.formGroupStrictEquality(currentValue, initialValue, currentControl);
+                } else if (isFormArray(currentControl)) {
+                    const currentValue = current[k] as unknown[];
+                    const initialValue = initial[k] as unknown[];
+                    return (
+                        currentValue.length === initialValue.length &&
+                        currentValue.every((_, i) => currentValue[i] === initialValue[i])
+                    );
+                } else {
+                    return current[k] === initial[k];
+                }
+            })
+        );
+    }
+
     /** Function to use to compare individual form control values.
      *
      * Defaults to `===` strict equality.
      */
-    compareFn = input<CompareFn>(strictEquality);
+    compareFn = input<CompareFn>(this.formGroupStrictEquality);
     formChanged = signal<boolean>(false);
     formDisabled = signal<boolean>(false);
 
@@ -69,9 +97,7 @@ export class NxFormObserverDirective implements OnInit {
         combineLatest([this.form.valueChanges as Observable<UnknownRecord>, this.initialValue$])
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(([value, initial]) => {
-                this.formChanged.set(
-                    Object.keys(value).some(k => !this.compareFn()(value[k], initial[k])),
-                );
+                this.formChanged.set(!this.compareFn()(value, initial, this.form.control));
             });
 
         this.form

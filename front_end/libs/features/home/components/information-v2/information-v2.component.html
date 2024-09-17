@@ -1,0 +1,256 @@
+<nx-information-v2-stepper [(selectedIndex)]="stepIndex">
+    <cdk-step #emptyStep>
+        <nx-page-generic-placeholder-v2>
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirPageV2Placeholder + 'no_info.svg'"
+                [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+                [applyClass]="true"
+            ></svg-icon>
+            <div
+                class="title"
+                translate
+            >
+                No Information
+            </div>
+            <div
+                class="message"
+                translate
+            >
+                You haven't added any information yet.
+            </div>
+            <div class="button-container">
+                <button
+                    type="button"
+                    class="button btn btn-default"
+                    (click)="toEditStep()"
+                    translate
+                >
+                    Add Information
+                </button>
+            </div>
+        </nx-page-generic-placeholder-v2>
+    </cdk-step>
+    <cdk-step #viewStep>
+        <nx-information-v2-view
+            [information]="information()"
+            (edit)="toEditStep()"
+        ></nx-information-v2-view>
+    </cdk-step>
+    <cdk-step #editStep>
+        <div class="edit-step">
+            <div class="edit-step__note">
+                <svg-icon
+                    [src]="icons.dirTextButtons + 'info.svg'"
+                    [svgStyle]="{ 'width.px': '21', 'height.px': '21' }"
+                ></svg-icon>
+                <span translate
+                    >This information will be visible to your employees as well as to your partners
+                    and organizations</span
+                >
+            </div>
+            <form
+                class="edit-step__block"
+                [formGroup]="formGroup"
+                nxFormObserver
+                #observer="nxFormObserver"
+                [(initialFormValue)]="initialFormValue"
+            >
+                <div class="edit-step__section">
+                    <ng-container
+                        [ngTemplateOutlet]="sectionHeader"
+                        [ngTemplateOutletContext]="{
+                            text: headers.sites | translate,
+                            addFn: addSites
+                        }"
+                    ></ng-container>
+                    <div formArrayName="sites">
+                        @for (control of sitesFormArray.controls; track controlIds.get(control)) {
+                            <div class="edit-step__section-row">
+                                <nx-form-field [errorMatcher]="primaryErrorMatcher">
+                                    <label
+                                        nx-label
+                                        [for]="'sites-primary-' + $index"
+                                        >{{ primaryLabels.sites | translate }}</label
+                                    >
+                                    <input
+                                        nx-input
+                                        [id]="'sites-primary-' + $index"
+                                        type="url"
+                                        [formControlName]="$index"
+                                    />
+                                    <nx-control-messages
+                                        pattern="url"
+                                        required="url"
+                                    >
+                                        <nx-control-message
+                                            key="uniqueArrayValue"
+                                            [text]="uniqueError.sites | translate"
+                                        ></nx-control-message>
+                                    </nx-control-messages>
+                                </nx-form-field>
+                                <ng-container
+                                    [ngTemplateOutlet]="deleteBtnContainer"
+                                    [ngTemplateOutletContext]="{
+                                        deleteFn: deleteSites,
+                                        index: $index
+                                    }"
+                                ></ng-container>
+                                <div class="row-flex-spacer"></div>
+                            </div>
+                        } @empty {
+                            <span>{{ emptyText.sites | translate }}</span>
+                        }
+                    </div>
+                </div>
+                @for (section of doubleSections | keyvalue: noSort; track $index) {
+                    <div
+                        class="edit-step__section"
+                        *ngrxLet="section.key | as: DoubleKeyType as key"
+                    >
+                        <ng-container
+                            [ngTemplateOutlet]="sectionHeader"
+                            [ngTemplateOutletContext]="{
+                                text: headers[key] | translate,
+                                addFn: addFunctions[key]
+                            }"
+                        ></ng-container>
+                        <div
+                            *ngrxLet="section.value as inputs"
+                            [formArrayName]="key"
+                        >
+                            @for (
+                                control of formGroup.controls[key].controls;
+                                track controlIds.get(control)
+                            ) {
+                                @if ($even) {
+                                    <div class="edit-step__section-row">
+                                        <nx-form-field
+                                            [errorMatcher]="primaryErrorMatcher"
+                                            *ngrxLet="inputs.primary as primary"
+                                        >
+                                            <label
+                                                nx-label
+                                                [for]="key + '-primary-' + $index"
+                                                >{{ primaryLabels[key] | translate }}</label
+                                            >
+                                            <input
+                                                nx-input
+                                                [id]="key + '-primary-' + $index"
+                                                [type]="primary.type || 'text'"
+                                                [formControlName]="$index"
+                                            />
+                                            <nx-control-messages
+                                                [pattern]="primary.type || undefined"
+                                                [required]="primary.type || undefined"
+                                            >
+                                                @for (
+                                                    message of primary.messages;
+                                                    track message.key
+                                                ) {
+                                                    <nx-control-message
+                                                        [key]="message.key"
+                                                        [text]="message.text | translate"
+                                                    ></nx-control-message>
+                                                }
+                                            </nx-control-messages>
+                                        </nx-form-field>
+                                        <nx-form-field
+                                            [errorMatcher]="secondaryErrorMatcher"
+                                            *ngrxLet="inputs.secondary as secondary"
+                                        >
+                                            <label
+                                                nx-label
+                                                [for]="key + '-secondary-' + ($index + 1)"
+                                                >{{ secondaryLabels[key] | translate }}</label
+                                            >
+                                            <input
+                                                nx-input
+                                                [id]="key + '-secondary-' + ($index + 1)"
+                                                [formControlName]="$index + 1"
+                                            />
+                                            <nx-control-messages>
+                                                @for (
+                                                    message of secondary.messages;
+                                                    track message.key
+                                                ) {
+                                                    <nx-control-message
+                                                        [key]="message.key"
+                                                        [text]="message.text | translate"
+                                                    ></nx-control-message>
+                                                }
+                                            </nx-control-messages>
+                                        </nx-form-field>
+                                        <ng-container
+                                            [ngTemplateOutlet]="deleteBtnContainer"
+                                            [ngTemplateOutletContext]="{
+                                                deleteFn: deleteFunctions[key],
+                                                index: $index
+                                            }"
+                                        ></ng-container>
+                                    </div>
+                                }
+                            } @empty {
+                                <span>{{ emptyText[key] | translate }}</span>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="edit-step__block-footer">
+                    <nx-apply-v3
+                        [action]="saveInfoAction"
+                        [resetFn]="reset"
+                        unchangedBehavior="hidden"
+                    ></nx-apply-v3>
+                    <button
+                        nx-reset-button
+                        [resetFn]="back"
+                        [text]="'Back' | translate"
+                    ></button>
+                </div>
+            </form>
+        </div>
+    </cdk-step>
+</nx-information-v2-stepper>
+
+<ng-template
+    #sectionHeader
+    let-text="text"
+    let-addFn="addFn"
+>
+    <div class="edit-step__section-header">
+        <h4>{{ text }}</h4>
+        <button
+            [disabled]="observer.formDisabled()"
+            type="button"
+            data-escape-global-style
+            (click)="addFn()"
+        >
+            <svg-icon [src]="icons.dir + 'plus.svg'"></svg-icon>
+        </button>
+    </div>
+    <hr />
+</ng-template>
+
+<ng-template
+    #deleteBtnContainer
+    let-deleteFn="deleteFn"
+    let-index="index"
+>
+    <div class="delete-btn-container">
+        <!-- Dummy form field for spacing -->
+        <label nx-label>{{ '\u200b' }}</label>
+        <input
+            nx-input
+            [formControl]="_dummyControl"
+        />
+        <button
+            [disabled]="observer.formDisabled()"
+            type="button"
+            data-escape-global-style
+            (click)="deleteFn(index)"
+        >
+            <svg-icon [src]="icons.dir + 'delete.svg'"></svg-icon>
+        </button>
+    </div>
+</ng-template>

@@ -24,12 +24,7 @@ import { NxControlMessagesComponent as NxMessages } from '../control-messages/co
 import { NxFormObserverDirective } from '../form-observer.directive';
 import { NxLabelComponent } from '../label/label.component';
 
-import {
-    ControlState,
-    ErrorMatcher,
-    NxErrorMatches,
-    errorMatcherFactory,
-} from './error-state-matcher';
+import { ControlState, ErrorMatcherFn, errorMatcherFactory } from './error-state-matcher';
 import { NxFormFieldControlDirective as NxControlDirective } from './form-field-control.directive';
 import { NxFormFieldToken } from './form-field.token';
 
@@ -53,7 +48,7 @@ import { NxFormFieldToken } from './form-field.token';
  *    sets for common use cases like email validation.
  * 2. Create an error matcher function for the control using `errorMatcherFactory` and
  *    pass it as an input to the field. This is what tells the field when to display
- *    specific errors. Like `NxValidators`, the `NxErrorMatches` class contains common use cases.
+ *    specific errors. `NX_BASE_ERROR_MATCHES` contains the base matches for text inputs.
  * 3. Add messages to be displayed for errors with `nx-control-message` elements. The key input
  *    should match the error key. There are certain preset messages in `nx-control-messages`
  *    that cannot be overridden.
@@ -78,9 +73,9 @@ export class NxFormFieldComponent implements AfterContentInit, OnDestroy {
      *
      * See `error-state-matcher.ts`.
      *
-     * Defaults to `NxErrorMatches.text()` matchter.
+     * Defaults to the matches in `NX_BASE_ERROR_MATCHES`.
      */
-    errorMatcher = input<ErrorMatcher>(errorMatcherFactory(NxErrorMatches.text()));
+    errorMatcher = input<ErrorMatcherFn>(errorMatcherFactory());
 
     @ContentChild(NxLabelComponent) protected set _label(label: NxLabelComponent) {
         this.hasLabel.set(!!label);

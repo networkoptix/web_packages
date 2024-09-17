@@ -1,0 +1,106 @@
+@use 'resets';
+@use 'theme_generator' as tg;
+
+@use 'components/forms/forms';
+
+@use './information-v2.scss' as info;
+
+@include tg.generate-theme-vars((
+    '--hr-color': 7,
+), ':host');
+
+:host {
+    height: 100%;
+    overflow-y: auto;
+    font-size: 0.875rem;
+}
+
+h4 {
+    margin-bottom: 0;
+}
+
+.edit-step {
+    width: 43rem;
+
+    &__note {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        span {
+            max-width: 30em;
+            color: var(--subtext-color);
+            line-height: 1.25;
+        }
+    }
+
+    &__block {
+        border-radius: var(--block-bdrs);
+        background-color: var(--block-bg);
+        padding: var(--block-padding);
+
+        hr {
+            @include resets.horizontal-rule();
+            border-color: var(--hr-color);
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+    }
+
+    &__section {
+        position: relative;
+
+        @at-root .edit-step__section + .edit-step__section {
+            margin-top: 1rem;
+        }
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            button {
+                @include info.information-icon-btn();
+            }
+        }
+
+        &-row {
+            display: flex;
+            gap: 0.5rem;
+
+            nx-form-field,
+            .row-flex-spacer {
+                flex: 1;
+            }
+
+            .delete-btn-container {
+                align-self: flex-start;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: forms.$form-field-margin;
+                width: 2rem;
+
+                label,
+                input {
+                    visibility: hidden;
+                }
+
+                button {
+                    @include info.information-icon-btn();
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                }
+            }
+        }
+    }
+
+    &__block-footer {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+    }
+}

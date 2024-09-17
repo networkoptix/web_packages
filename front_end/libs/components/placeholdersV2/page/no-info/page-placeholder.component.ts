@@ -9,10 +9,7 @@ import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
 
-/* Usage
-
- */
-
+/** @deprecated */
 @Component({
     selector: 'nx-page-placeholder-no-info',
     templateUrl: 'page-placeholder.component.html',

@@ -4,4 +4,7 @@
     [action]="action()"
     [type]="formChanged() ? 'submit' : 'button'"
 ></button>
-<button nx-reset-button></button>
+<button
+    nx-reset-button
+    [resetFn]="resetFn()"
+></button>

@@ -28,7 +28,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
 
 import {
-    NxErrorMatches,
+    NX_BASE_ERROR_MATCHES,
     errorMatcherFactory,
 } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
@@ -141,7 +141,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
         ],
     });
     private email = formControlValueSignal(this.emailControl);
-    emailErrorMatcher = errorMatcherFactory(NxErrorMatches.email(), {
+    emailErrorMatcher = errorMatcherFactory(NX_BASE_ERROR_MATCHES, {
         onChange: ['selfAdd', 'backendReject'],
     });
     private selfAddState = toSignal(
