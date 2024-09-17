@@ -178,12 +178,12 @@ export class NxOrgTreeSelectorComponent
     }
 
     ngOnInit(): void {
+        this.openFolders.add(this.organization().id);
         this.groups().forEach(group => {
             this.visibleFolders.add(group.id); // Top level should always be visible
             this.parseGroup(group, 0, null);
         });
         this.folderSearchResults.set(this.flatGroups);
-        this.toggleFolderOpen(this.organization().id);
 
         // Opens all folders for easier testing
         // this.folderSearchResults().forEach(g => {
@@ -279,6 +279,9 @@ export class NxOrgTreeSelectorComponent
 
     setHighlightedFolderState(newState: boolean): void {
         if (this.highlightIndex === -1) {
+            if (this.openFolders.has(this.organization().id) !== newState) {
+                this.toggleOrganizationOpen();
+            }
             return;
         }
 
@@ -294,8 +297,17 @@ export class NxOrgTreeSelectorComponent
         this.updateFolderState(highlightedId, newState);
     }
 
-    toggleFolderOpen(groupId: string, forceOpen = false): void {
-        const newState = forceOpen || !this.openFolders.has(groupId);
+    toggleOrganizationOpen(): void {
+        const id = this.organization().id;
+        if (this.openFolders.has(id)) {
+            this.openFolders.delete(id);
+        } else {
+            this.openFolders.add(id);
+        }
+    }
+
+    toggleFolderOpen(groupId: string): void {
+        const newState = !this.openFolders.has(groupId);
         this.updateFolderState(groupId, newState);
     }
 
@@ -409,6 +421,9 @@ export class NxOrgTreeSelectorComponent
         for (let i = 0; i < this.flatGroups.length; i++) {
             const group = this.flatGroups[i];
             if (searches.some(s => caseInsensitiveSearch(group.name, s))) {
+                if (!this.openFolders.has(this.organization().id)) {
+                    this.openFolders.add(this.organization().id);
+                }
                 /* Parent lookbehind: when matching a nested item, we also want
                 to show all of its parents, but not any of the match's siblings
                 or parent's siblings unless they also match. In the worst case where
@@ -433,7 +448,9 @@ export class NxOrgTreeSelectorComponent
                 }
                 while (upTraversal.length) {
                     const upTraversalItem = this.flatGroups[upTraversal.pop()!];
-                    this.toggleFolderOpen(upTraversalItem.id, true);
+                    if (!this.openFolders.has(upTraversalItem.id)) {
+                        this.updateFolderState(upTraversalItem.id, true);
+                    }
                     results.push(upTraversalItem);
                 }
 

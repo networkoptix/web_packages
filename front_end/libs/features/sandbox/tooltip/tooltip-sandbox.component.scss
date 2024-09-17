@@ -1,3 +1,5 @@
+@use 'resets';
+
 h2:not(:first-of-type) {
     margin-top: 1rem;
 }
@@ -113,6 +115,25 @@ button:focus {
     gap: 5rem;
 
     padding: 2rem 0 3rem 0;
+
+    label {
+        @include resets.label();
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .button-and-square {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .square-empty {
+        height: 20px;
+        width: 20px;
+        border: 1px solid var(--brand-core);
+    }
 }
 .hover-example {
     padding: 0.5rem;

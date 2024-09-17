@@ -104,7 +104,6 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
         () => new Map(this.selectedOrgUsers$$()?.map((user: UserRecord) => [user.email, user])),
     );
 
-    openedRoleTooltip?: NxTooltipV2Directive;
     currAccessLevel = this.currentOrg$$()?.channelPartnerAccessLevel;
 
     getRowRoleId(user: UserRecord): string {

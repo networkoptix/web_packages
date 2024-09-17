@@ -152,11 +152,22 @@
 
 <h2>Triggers</h2>
 <div class="triggers-container">
+    <label data-escape-global-style
+        >Disabled
+        <input
+            type="checkbox"
+            [(ngModel)]="disabled"
+            [ngModelOptions]="{
+                standalone: true
+            }"
+    /></label>
+
     <div
         class="hover-example"
         nxTooltipV2
         tooltipContent="Must give us pause. There's the respect"
         [tooltipPositions]="['S', 'start']"
+        [tooltipDisabled]="disabled"
     >
         Hover
     </div>
@@ -165,6 +176,7 @@
         tooltipContent="That makes Calamity of so long life:"
         tooltipTrigger="focus"
         [tooltipPositions]="['N', 'start']"
+        [tooltipDisabled]="disabled"
     >
         Focus
     </button>
@@ -173,27 +185,38 @@
         tooltipContent="For who would bear the Whips and Scorns of time,"
         tooltipTrigger="click"
         [tooltipPositions]="['S', 'start']"
+        [tooltipDisabled]="disabled"
     >
         Click
     </button>
 
-    <button
-        nxTooltipV2
-        tooltipContent="The Oppressor's wrong, the proud man's Contumely,"
-        tooltipTrigger="none"
-        #byMethod="nxTooltipV2"
-        (click)="byMethod.toggle()"
-        [tooltipOrigin]="nonTriggerOrigin"
-        [tooltipPositions]="['E', 'center']"
-    >
-        Method
-    </button>
+    <div class="button-and-square">
+        <button
+            nxTooltipV2
+            tooltipContent="The Oppressor's wrong, the proud man's Contumely,"
+            tooltipTrigger="none"
+            #byMethod="nxTooltipV2"
+            (click)="byMethod.toggle()"
+            [tooltipOrigin]="nonTriggerOrigin"
+            [tooltipPositions]="['N', 'start']"
+            [tooltipDisabled]="disabled"
+        >
+            Method
+        </button>
+        <div
+            #nonTriggerOrigin
+            class="gray-square"
+            (click)="byMethod.opened() ? byMethod.close() : byMethod.open()"
+            [ngStyle]="{ cursor: 'pointer' }"
+        ></div>
+    </div>
+
     <div
-        #nonTriggerOrigin
-        class="gray-square"
-        (click)="byMethod.opened() ? byMethod.close() : byMethod.open()"
-        [ngStyle]="{ cursor: 'pointer' }"
+        class="square-empty"
+        nxTooltipV2
+        tooltipContent=""
     ></div>
+    <!-- Won't open with no content -->
 </div>
 
 <h2>Timing</h2>
