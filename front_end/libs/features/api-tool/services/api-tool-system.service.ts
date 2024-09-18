@@ -112,7 +112,7 @@ export class NxAPIToolSystemService {
     }
     set currentSystem(system: NxSystem) {
         this._currentSystem = system;
-        if (this.currentSystemId !== system.id) {
+        if (system && this.currentSystemId !== system.id) {
             this.currentSystemId = system.id;
         }
     }

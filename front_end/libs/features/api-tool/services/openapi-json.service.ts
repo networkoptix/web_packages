@@ -310,7 +310,7 @@ export class NxOpenAPIJSONService {
         }
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
-        // this.currentMarkdown = readonlyAPI.markdown;
+        this.currentMarkdown = readonlyAPI.markdown;
         this.setMenuNodes(readonlyAPI.menus[1]);
     };
 
