@@ -46,7 +46,8 @@ from cloud.logger import downgrade_requests
 conf = get_init_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 CI = os.getenv('CI', False)
-PRIVATE_CLOUD = os.getenv('PRIVATE_CLOUD', False)
+INSTANCE_CONFIG = os.getenv('INSTANCE_CONFIG', '')
+IS_PRIVATE_CLOUD = INSTANCE_CONFIG == 'private-1'
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
