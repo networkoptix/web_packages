@@ -1,12 +1,12 @@
 import {
-    ContentChildren,
-    Directive,
-    HostListener,
-    QueryList,
     booleanAttribute,
     computed,
+    ContentChildren,
+    Directive,
     effect,
+    HostListener,
     input,
+    QueryList,
     signal,
 } from '@angular/core';
 

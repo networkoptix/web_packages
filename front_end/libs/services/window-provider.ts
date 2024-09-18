@@ -1,4 +1,4 @@
-import { InjectionToken, FactoryProvider } from '@angular/core';
+import { FactoryProvider, InjectionToken } from '@angular/core';
 
 // global window type is not Window, but Window & typeof globalThis
 // Most of the time just "Window" is ok, but sometimes "& typeof globalThis"

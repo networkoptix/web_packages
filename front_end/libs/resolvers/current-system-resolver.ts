@@ -1,4 +1,4 @@
-import { Injector, inject } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 import { NxSystem } from '@services/system.service/system';

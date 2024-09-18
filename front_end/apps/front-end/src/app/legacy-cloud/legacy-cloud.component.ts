@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ViewEncapsulation,
-    ViewChild,
     ElementRef,
-    ViewContainerRef,
-    OnInit,
     HostBinding,
+    OnInit,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ActivationEnd,
     ActivationStart,
-    Event as RouterEvent,
     GuardsCheckEnd,
     GuardsCheckStart,
     Router,
+    Event as RouterEvent,
     RouterModule,
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

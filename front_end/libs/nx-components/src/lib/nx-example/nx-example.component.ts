@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    booleanAttribute,
     computed,
     effect,
     input,

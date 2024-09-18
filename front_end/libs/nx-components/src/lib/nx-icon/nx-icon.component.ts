@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    booleanAttribute,
     computed,
     effect,
     input,
@@ -12,20 +12,20 @@ import { capitalize, flow, memoize } from 'lodash-es';
 import { switchMap } from 'rxjs';
 
 import {
-    NxIconOrName,
-    SvgTransform,
-    getIcon,
-    fullWidth,
-    fullHeight,
-    removeInlineStyles,
     extractAllColors,
-    NxIcons,
-    NxIconNames,
+    fullHeight,
+    fullWidth,
+    getIcon,
     normalizeClassNames,
+    NxIconNames,
+    NxIconOrName,
+    NxIcons,
+    removeInlineStyles,
+    SvgTransform,
 } from 'nx-icons';
 
 import { BaseComponent } from '../base-component';
-import { GeneratedTheme, generateCssVariableName, isHexString } from '../theme-provider';
+import { generateCssVariableName, GeneratedTheme, isHexString } from '../theme-provider';
 
 import { NxApplyActionTargetDirective } from './nx-apply-action-classes-target.directive';
 

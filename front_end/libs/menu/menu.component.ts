@@ -1,15 +1,15 @@
 import {
+    booleanAttribute,
     Component,
     ElementRef,
+    EventEmitter,
     Input,
     OnChanges,
     OnInit,
-    ViewChild,
-    ViewEncapsulation,
-    EventEmitter,
     Output,
     Renderer2,
-    booleanAttribute,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,11 +28,11 @@ import { menus } from '../variables/static-variables';
 
 import { NxMenuService } from './menu.service';
 import type {
-    ContentToggle,
     Content,
+    ContentToggle,
     Level1Item,
-    Level2Item,
     Level2Button,
+    Level2Item,
     Level3Item,
 } from './menu.types';
 

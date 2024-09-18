@@ -1,5 +1,5 @@
 /** Swagger on {{cloudInstance}}/cs/v1/docs/api/v1/swagger/index.html */
-import { uuid, int, email, url } from '../base-cloud-service-api.types';
+import { email, int, url, uuid } from '../base-cloud-service-api.types';
 
 export interface StorageId {
     storageId: uuid;

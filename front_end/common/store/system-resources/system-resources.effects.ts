@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Observable, concatMap, forkJoin, map, tap } from 'rxjs';
+import { concatMap, forkJoin, map, Observable, tap } from 'rxjs';
 
 import { NxSystemService } from '@services/system.service/system.service';
 
 import {
     LoadPartialSystemResources,
     RefreshSystemResources,
-    SystemResourceTypeEnums,
     SystemResources,
     SystemResourcesTypeMap,
+    SystemResourceTypeEnums,
 } from './system-resources.types';
 
 import { SystemResourcesActions } from '.';

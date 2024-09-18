@@ -3,33 +3,33 @@ import { CdkStepper, CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+    AfterViewInit,
     Component,
-    Inject,
+    computed,
+    effect,
+    ElementRef,
     forwardRef,
     inject,
-    computed,
-    ViewChild,
-    effect,
-    untracked,
+    Inject,
     signal,
-    AfterViewInit,
-    ElementRef,
+    untracked,
+    ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
+    FormControl,
+    FormGroup,
     FormsModule,
     ReactiveFormsModule,
     Validators,
-    FormControl,
-    FormGroup,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
 
 import {
-    NX_BASE_ERROR_MATCHES,
     errorMatcherFactory,
+    NX_BASE_ERROR_MATCHES,
 } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';

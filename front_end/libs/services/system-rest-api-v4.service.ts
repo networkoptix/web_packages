@@ -8,7 +8,7 @@ import { NxHealthService } from '@pages/health/health.service';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { UnauthorizedCallback } from './system-api.types';
-import { BookmarkV4, BookmarksParams } from './system-api.types/devices.types';
+import { BookmarksParams, BookmarkV4 } from './system-api.types/devices.types';
 import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
 import { NxUriCacheService } from './uri-cache.service';
 

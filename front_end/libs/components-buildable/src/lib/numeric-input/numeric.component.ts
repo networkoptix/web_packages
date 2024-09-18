@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
+    ElementRef,
     EventEmitter,
     forwardRef,
     Input,
     OnInit,
     Output,
     ViewChild,
-    ElementRef,
-    booleanAttribute,
 } from '@angular/core';
 import {
     ControlValueAccessor,

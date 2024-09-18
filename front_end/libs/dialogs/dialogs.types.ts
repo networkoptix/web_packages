@@ -15,21 +15,21 @@ import type {
     ChannelPartner,
     ChannelPartnerUser,
     CloudSystem,
-    RegularServiceDetailDialogResponse,
+    ExpiringServiceDetailDialogResponse,
     Group,
     GroupItem,
     Organization,
     OrganizationUser,
+    RegularServiceDetailDialogResponse,
     ServiceQuantities,
     State,
     SystemItem,
     SystemService,
-    ExpiringServiceDetailDialogResponse,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
+    AgreementInfo,
     CloudResponse,
     SystemTransferInfo,
-    AgreementInfo,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import { BookmarkV4 } from '@services/system-api.types/devices.types';

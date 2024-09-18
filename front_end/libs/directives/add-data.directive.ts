@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, OnChanges } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 import { NgChanges } from '@utils/ng-changes';
 

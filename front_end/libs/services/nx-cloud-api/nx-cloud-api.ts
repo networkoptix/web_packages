@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
 import {
-    EMPTY,
-    of,
-    from,
     BehaviorSubject,
-    throwError,
     defer,
-    forkJoin,
+    EMPTY,
     firstValueFrom,
+    forkJoin,
+    from,
+    of,
+    throwError,
 } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
@@ -40,7 +40,7 @@ import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
-import { DownloadReleases, AgreementInfo } from './nx-cloud-api.types';
+import { AgreementInfo, DownloadReleases } from './nx-cloud-api.types';
 
 type ResponseTypes = 'arraybuffer' | 'blob' | 'text' | 'json';
 

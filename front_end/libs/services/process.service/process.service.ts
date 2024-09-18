@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 
 import { NxToastService } from '@services/toast.service';
 
 import { NxSessionService } from '../session.service';
 
-import { ProcessSettings, Handler, logError, Process } from './process';
+import { Handler, logError, Process, ProcessSettings } from './process';
 
 /** @deprecated */
 @Injectable({

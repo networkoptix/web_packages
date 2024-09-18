@@ -1,23 +1,23 @@
 import { Location } from '@angular/common';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
-import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, Observable, of, Subject, throwError } from 'rxjs';
 import {
     catchError,
     flatMap,
     map,
     mergeMap,
     retryWhen,
-    timeout,
-    tap,
     share,
-    switchMap,
-    throttleTime,
-    startWith,
     shareReplay,
+    startWith,
+    switchMap,
+    tap,
+    throttleTime,
+    timeout,
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -27,11 +27,11 @@ import { LegacyNewUser, LegacyUser, Role, SystemUser } from '@services/system-us
 import { cleanIdLegacy } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
+    defaultHashFunction,
     memoizeAsync,
     memoizeAsyncLong,
     memoizeAsyncMedium,
     memoizeAsyncPersistent,
-    defaultHashFunction,
     memoizeAsyncShort,
 } from '@utils/memoize';
 
@@ -58,13 +58,13 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, LegacyMenuManifest, MenuManifest } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type {
-    AggregatedUsers,
-    ViewMediaServersAndCameras,
-    CamerasAndServerTimes,
     AggregatedResp,
-    StorageAnalytics,
+    AggregatedUsers,
+    CamerasAndServerTimes,
     GetLicenses,
     HealthReport,
+    StorageAnalytics,
+    ViewMediaServersAndCameras,
 } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
 import {
@@ -76,23 +76,23 @@ import {
     UnauthorizedCallback,
 } from './system-api.types';
 import {
-    Ec2CameraHistoryItems,
     ec2CameraEx,
+    Ec2CameraHistoryItems,
     Ec2RecordedTimePeriodsResp,
 } from './system-api.types/devices.types';
 import { EventRule } from './system-api.types/events.types';
 import { PtzCommand } from './system-api.types/layouts.types';
 import {
     ConfigureParams,
-    ModuleInformation,
-    RebuildArchiveResponse,
-    ServerHardareIdsResp,
-    TimeOfServers,
     ec2Storage,
     LogLevel,
+    ModuleInformation,
+    RebuildArchiveResponse,
     RestartServer,
-    StaticWebContentInfo,
+    ServerHardareIdsResp,
     StaticWebContentDownload,
+    StaticWebContentInfo,
+    TimeOfServers,
 } from './system-api.types/servers.types';
 import {
     Alarms,

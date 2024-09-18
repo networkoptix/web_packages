@@ -1,7 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { bootstrapProviders, bootstrapConfig } from '@common/bootstrap';
+import { bootstrapConfig, bootstrapProviders } from '@common/bootstrap';
 import { environment } from '@common/environments/environment';
 import { DynamicConfig } from '@services/nx-config/dynamic-config';
 

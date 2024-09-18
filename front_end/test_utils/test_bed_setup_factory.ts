@@ -10,13 +10,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { TranslateModule, TranslateCompiler } from '@ngx-translate/core';
+import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import {
-    SessionStorageService,
-    NgxWebstorageModule,
     InMemoryStorageStrategy,
+    NgxWebstorageModule,
+    SessionStorageService,
     StrategyCacheService,
 } from 'ngx-webstorage';
 import * as patchWindow from 'test_utils/patch_window';

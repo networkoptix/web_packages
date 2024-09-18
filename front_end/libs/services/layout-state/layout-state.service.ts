@@ -1,28 +1,28 @@
 /* eslint-disable nx/ban-global-variables */
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import {
+    effect,
     Injectable,
     Injector,
-    TemplateRef,
-    effect,
     runInInjectionContext,
     signal,
+    TemplateRef,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { createSelector, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
-    Observable,
-    Subject,
     animationFrameScheduler,
     combineLatest,
     distinctUntilChanged,
     fromEvent,
     map,
+    Observable,
     of,
     shareReplay,
     skip,
     startWith,
+    Subject,
     switchMap,
     take,
     takeWhile,
@@ -46,7 +46,7 @@ import { CrossSystemLayoutSerializer } from '@services/nx-cloud-api/cloud-servic
 import { DocHandler } from '@services/nx-cloud-api/cloud-services/doc-db/doc-handler';
 import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
-import { LayoutItem, Layout } from '@services/system-api.types/layouts.types';
+import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { SystemResourcesActions, SystemResourcesSelectors } from '@store/system-resources';
 import {

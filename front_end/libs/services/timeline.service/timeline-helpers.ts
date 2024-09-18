@@ -1,11 +1,11 @@
 import { isEqual } from 'lodash-es';
 import {
-    Observable,
     catchError,
     combineLatest,
     defer,
     distinctUntilChanged,
     map,
+    Observable,
     of,
     repeat,
     scan,
@@ -21,11 +21,11 @@ import { cleanId, dirtyId } from '@utils/general';
 
 import {
     CameraAndSystemId,
+    CameraAndSystemIds,
     PeriodDetailByMainAndOther,
-    TimePeriod,
     TimelineState,
     TimeLineSystemsProxy,
-    CameraAndSystemIds,
+    TimePeriod,
 } from './timeline-service.types';
 
 export const separatePeriodsByMainAndOtherCameras = (

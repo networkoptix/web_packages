@@ -1,7 +1,7 @@
-import { Directive, ElementRef, Signal, effect, inject } from '@angular/core';
+import { Directive, effect, ElementRef, inject, Signal } from '@angular/core';
 
 import { fontColorsCommon } from '../styles/fonts';
-import { CssColorVariables, ThemeOptions, stepCount } from '../theme-provider/color-types';
+import { CssColorVariables, stepCount, ThemeOptions } from '../theme-provider/color-types';
 import { createComponentVariablesEvent } from '../theme-provider/events';
 import { NxThemeProviderService } from '../theme-provider/theme-provider.service';
 

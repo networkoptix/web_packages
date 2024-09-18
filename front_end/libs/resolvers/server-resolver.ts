@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
-import { firstValueFrom, catchError } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service/system.service';

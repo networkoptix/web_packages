@@ -2,9 +2,9 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     inject,
     input,
-    EventEmitter,
     Output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
+import { computed, Directive, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { bindCallback, defer, map, repeat, startWith, switchMap, timer } from 'rxjs';
 

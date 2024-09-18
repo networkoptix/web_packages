@@ -1,15 +1,15 @@
 import {
+    booleanAttribute,
     Directive,
     ElementRef,
     EventEmitter,
-    Output,
+    Input,
     OnDestroy,
     OnInit,
-    Input,
-    booleanAttribute,
+    Output,
 } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { IntersectionStatus } from './nx-intersection.directive.types';
 

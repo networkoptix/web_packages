@@ -1,4 +1,4 @@
-import { Observable, Subject, firstValueFrom, race, timer } from 'rxjs';
+import { firstValueFrom, Observable, race, Subject, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { ToastType } from '@components/toast-container/toast.types';

@@ -1,5 +1,5 @@
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { Component, Renderer2, Inject } from '@angular/core';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Component, Inject, Renderer2 } from '@angular/core';
 import { defer, switchMap } from 'rxjs';
 
 import type { CloudStorage as DT } from '@dialogs/dialogs.types';

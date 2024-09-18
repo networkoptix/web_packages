@@ -1,4 +1,4 @@
-import { of, type Observable, timer, map } from 'rxjs';
+import { map, type Observable, of, timer } from 'rxjs';
 
 import staticLang from '@language_static';
 import type { Translatable } from '@pipes/nx-translate.types';

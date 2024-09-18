@@ -1,4 +1,4 @@
-import { waitForAsync, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { NxPollService } from '@services/poll.service';

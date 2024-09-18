@@ -1,10 +1,10 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     Directive,
     ElementRef,
     Input,
     OnChanges,
-    booleanAttribute,
 } from '@angular/core';
 
 import { NgChanges } from '@utils/ng-changes';

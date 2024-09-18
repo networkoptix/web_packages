@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    ElementRef,
     EventEmitter,
     Input,
     OnChanges,
@@ -8,7 +9,6 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';

@@ -1,7 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
+import { Component, ElementRef, forwardRef, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';

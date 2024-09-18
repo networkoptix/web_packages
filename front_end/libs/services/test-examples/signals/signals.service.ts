@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 @Injectable({

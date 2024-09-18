@@ -12,9 +12,9 @@ import { nxConfig } from '@services/nx-config/config';
 import {
     CameraProjection,
     DewarpingParams,
+    DewarpingParamsCapable,
     FisheyeCameraMount,
     FisheyeCameraMountCompatibility,
-    DewarpingParamsCapable,
     SupportedCameraProjection,
 } from '@services/system.service/camera-manager/camera-manager-types';
 

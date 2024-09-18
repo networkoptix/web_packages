@@ -1,10 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import {
     BehaviorSubject,
-    Observable,
     distinctUntilChanged,
     map,
+    Observable,
     shareReplay,
     switchMap,
     timer,
@@ -19,8 +19,8 @@ import {
 import { createTimeLineSystemsProxy } from './timeline-proxy-factories';
 import {
     CameraAndSystemId,
-    PeriodDetailByMainAndOther,
     CameraAndSystemIds,
+    PeriodDetailByMainAndOther,
     SubscriberCount,
 } from './timeline-service.types';
 

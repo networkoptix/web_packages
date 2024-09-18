@@ -3,8 +3,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@language_static';
-import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
+import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';
 
 /** @deprecated */
 @Injectable({
@@ -132,12 +132,12 @@ export class NxValidators {
         };
     }
 
-    uniqueEmail(existingEmails: Map<String, UserRecord>): ValidatorFn {
+    uniqueEmail(existingEmails: Map<string, UserRecord>): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const error = {
                 existingEmail: true,
                 msg: this.translate.instant(this.LANG.customValidatorMsg.emailNotUnique),
-            }
+            };
             if (!control.value) {
                 return null;
             }

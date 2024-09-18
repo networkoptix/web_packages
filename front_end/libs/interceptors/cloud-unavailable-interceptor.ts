@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError, timer, Observable } from 'rxjs';
+import { Observable, throwError, timer } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
 import { ToastType } from '@components/toast-container/toast.types';

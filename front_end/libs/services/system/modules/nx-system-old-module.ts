@@ -2,13 +2,13 @@ import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     BehaviorSubject,
-    Subscription,
-    Observable,
-    forkJoin,
     firstValueFrom,
-    Subject,
-    timer,
+    forkJoin,
+    Observable,
     ReplaySubject,
+    Subject,
+    Subscription,
+    timer,
 } from 'rxjs';
 import {
     auditTime,
@@ -34,14 +34,14 @@ import { PermissionManagerModule } from '@services/system/modules/resource-manag
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { NxSystemAPIService } from '@services/system-api.service';
 import {
+    ActionParams,
+    EventCondition,
     EventRule,
     EventTypes,
     RawRule,
-    ActionParams,
-    EventCondition,
 } from '@services/system-api.types/events.types';
 import { PtzCommand } from '@services/system-api.types/layouts.types';
-import { SystemConfigSettings, MergeInfo } from '@services/system-api.types/system.types';
+import { MergeInfo, SystemConfigSettings } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';

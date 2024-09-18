@@ -3,9 +3,9 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnInit,
     Output,
-    OnChanges,
     ViewChild,
 } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
@@ -20,7 +20,7 @@ import { ModuleInformation } from '@services/system-api.types/servers.types';
 import { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { MergeSystem, MergeDropdownItem, MergeState } from '../merge.refactor.component.types';
+import type { MergeDropdownItem, MergeState, MergeSystem } from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-select-system-component',

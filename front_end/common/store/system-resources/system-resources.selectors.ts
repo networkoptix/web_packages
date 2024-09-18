@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { MemoizedSelector, createSelector } from '@ngrx/store';
+import { createSelector, MemoizedSelector } from '@ngrx/store';
 import { memoize } from 'lodash-es';
 
 import { systemResourcesFeature } from './system-resources.feature';
 import {
-    SystemResourceState,
     SystemResources,
+    SystemResourceState,
     SystemResourcesTypeMap,
 } from './system-resources.types';
 

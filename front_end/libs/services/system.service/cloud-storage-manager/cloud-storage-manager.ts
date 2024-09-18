@@ -1,12 +1,12 @@
 import {
     BehaviorSubject,
-    switchMap,
-    filter,
     catchError,
-    shareReplay,
-    Observable,
+    filter,
     from,
     map,
+    Observable,
+    shareReplay,
+    switchMap,
     throwError,
 } from 'rxjs';
 

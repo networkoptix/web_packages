@@ -1,6 +1,6 @@
 import { memoize } from 'lodash-es';
 
-import type { NxIconsBase, NxIconNames } from './types';
+import type { NxIconNames, NxIconsBase } from './types';
 
 export const getIcon = memoize(
     <IconName extends NxIconNames>(name: IconName): Promise<NxIconsBase[`nxIcon${IconName}`]> =>

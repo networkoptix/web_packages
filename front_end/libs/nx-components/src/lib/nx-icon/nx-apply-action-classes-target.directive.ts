@@ -1,4 +1,4 @@
-import { Directive, ElementRef, booleanAttribute, inject, input } from '@angular/core';
+import { booleanAttribute, Directive, ElementRef, inject, input } from '@angular/core';
 
 import { NxApplyActionParentDirective } from './nx-apply-action-classes-parent.directive';
 @Directive({

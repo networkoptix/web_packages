@@ -1,13 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import {
+    AfterViewInit,
     Component,
+    computed,
     Inject,
+    OnInit,
     Renderer2,
     ViewChild,
-    OnInit,
-    AfterViewInit,
-    computed,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';

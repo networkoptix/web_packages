@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { firstValueFrom, combineLatest, forkJoin, Observable } from 'rxjs';
+import { combineLatest, firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
@@ -12,7 +12,7 @@ import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/s
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { cleanId } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
-import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
+import { type NxRecursiveKeyMap, type NxRecursivePick, ZERO_ID } from '@utils/nx';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type {
@@ -31,8 +31,8 @@ import {
     RebuildArchiveResponse,
     ServerHardareIdsResp,
     ServerTime,
-    StaticWebContentInfo,
     StaticWebContentDownload,
+    StaticWebContentInfo,
 } from './system-api.types/servers.types';
 import { ValuesReply } from './system-api.types/system.types';
 import { NxSystemRestAPI } from './system-rest-api.service';

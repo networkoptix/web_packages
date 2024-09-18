@@ -1,4 +1,4 @@
-import { Injectable, effect, inject, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { hsl } from 'color-convert';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
@@ -6,12 +6,12 @@ import { BehaviorSubject } from 'rxjs';
 import themeCssVars from '@common/styles/theme-css-vars.json';
 import {
     CssColorVariables,
+    generateCssVariableName,
     HslaString,
     NxThemeProviderService,
     Opacity,
     ShadeRange,
     ThemeWithOptions,
-    generateCssVariableName,
 } from 'nx-components';
 
 import { nxConfig } from './config';

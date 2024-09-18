@@ -15,23 +15,23 @@ import type { ArrayType, KeyFilter } from '@utils/general';
 import type { MenuManifest } from './nx-config/base-config';
 import { NormalResponse, Param, ServerDocumentation } from './system-api.types';
 import type {
-    Ec2CameraHistoryItems,
-    ec2CameraEx,
-    Ec2RecordedTimePeriodsResp,
     DeviceV1Full,
     DeviceV2Full,
+    ec2CameraEx,
+    Ec2CameraHistoryItems,
+    Ec2RecordedTimePeriodsResp,
 } from './system-api.types/devices.types';
 import type { EventRule } from './system-api.types/events.types';
 import type { Licence } from './system-api.types/licenses.types';
 import type {
-    ModuleInformation,
-    ServerHardareIdsResp,
     ec2MediaServer,
     ec2MediaServerEx,
     ec2Storage,
-    TimeOfServers,
+    ModuleInformation,
     RestV1ServerFull,
     RestV2ServerFull,
+    ServerHardareIdsResp,
+    TimeOfServers,
 } from './system-api.types/servers.types';
 import {
     Alarms,

@@ -5,16 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../base-component';
 import { generateCssVariableName } from '../theme-provider/color-generator';
 import {
-    ThemeColors,
-    shades,
-    opacityMap,
-    Shades,
-    OpacityValues,
-    Opacity,
-    themeColors,
-    generatedThemeColors,
     GeneratedThemeColors,
+    generatedThemeColors,
     IntRange,
+    Opacity,
+    opacityMap,
+    OpacityValues,
+    Shades,
+    shades,
+    themeColors,
+    ThemeColors,
 } from '../theme-provider/color-types';
 import {
     baseColorStorybookEventName,

@@ -1,17 +1,17 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
 import { background, textColor } from '../styles/core';
 
 import { ColorGenerator, withGeneratedColors } from './color-generator';
 import {
     GeneratedTheme,
+    HexString,
+    initialOptions,
+    initialTheme,
+    ThemeColors,
+    ThemeDefinition,
     ThemeOptions,
     ThemeWithOptions,
-    initialTheme,
-    initialOptions,
-    ThemeColors,
-    HexString,
-    ThemeDefinition,
 } from './color-types';
 import { createThemeUpdateEvent, themePatchEventName, themeResetEventName } from './events';
 

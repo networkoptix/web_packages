@@ -18,7 +18,7 @@ import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
-import { FORM_STATE, iState, WIZARD_STATE, SECURITY_LEVEL } from '../types/wizard-state.types';
+import { FORM_STATE, iState, SECURITY_LEVEL, WIZARD_STATE } from '../types/wizard-state.types';
 
 interface BindResponse {
     id: string;

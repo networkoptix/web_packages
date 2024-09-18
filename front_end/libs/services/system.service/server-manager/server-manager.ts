@@ -19,12 +19,12 @@ import { EventParams } from '@services/system-api.types/events.types';
 import { Licence } from '@services/system-api.types/licenses.types';
 import type {
     LogLevel,
-    RebuildArchiveResponse,
-    ModuleInformationReply,
     ModuleInformation,
+    ModuleInformationReply,
+    RebuildArchiveResponse,
     RestartServer,
-    StaticWebContentInfo,
     StaticWebContentDownload,
+    StaticWebContentInfo,
 } from '@services/system-api.types/servers.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';

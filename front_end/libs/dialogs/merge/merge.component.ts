@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, ViewChild, ChangeDetectorRef, ElementRef, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -35,7 +35,7 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxUserSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons, servers } from '@static-variables';
-import { cleanIp, strSplice, assignFrom, alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, assignFrom, cleanIp, strSplice } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';

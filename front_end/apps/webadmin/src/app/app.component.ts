@@ -1,19 +1,19 @@
 import {
-    Component,
-    HostListener,
-    ViewEncapsulation,
-    ViewChild,
-    ElementRef,
-    ViewContainerRef,
     AfterViewInit,
+    Component,
+    ElementRef,
+    HostListener,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ActivationEnd,
     ActivationStart,
-    Event as RouterEvent,
     GuardsCheckEnd,
     GuardsCheckStart,
     Router,
+    Event as RouterEvent,
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';

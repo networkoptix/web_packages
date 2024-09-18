@@ -7,19 +7,19 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    booleanAttribute,
+    computed,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     EventEmitter,
     HostListener,
+    input,
     OnDestroy,
     Output,
-    TemplateRef,
-    booleanAttribute,
-    computed,
-    effect,
-    input,
     signal,
+    TemplateRef,
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,7 +30,7 @@ import { environment } from '@environments/environment';
 import { cdkOriginPosition, cdkOverlayPosition } from '@utils/nx';
 
 import { NxTooltipV2Component } from './tooltip-v2.component';
-import type { TooltipTrigger, TooltipPosition, TooltipTheme } from './tooltip-v2.types';
+import type { TooltipPosition, TooltipTheme, TooltipTrigger } from './tooltip-v2.types';
 
 const horzToVert = {
     start: 'top',

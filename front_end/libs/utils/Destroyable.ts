@@ -1,4 +1,4 @@
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 /**
  * Provides generic way to clean up observables.

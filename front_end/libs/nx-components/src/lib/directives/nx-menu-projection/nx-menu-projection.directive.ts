@@ -1,11 +1,11 @@
 import {
-    Directive,
-    TemplateRef,
-    ViewContainerRef,
     booleanAttribute,
+    Directive,
     effect,
     inject,
     input,
+    TemplateRef,
+    ViewContainerRef,
 } from '@angular/core';
 import { NEVER } from 'rxjs';
 

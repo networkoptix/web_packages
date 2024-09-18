@@ -1,30 +1,30 @@
-import { Hct, TonalPalette, argbFromRgb } from '@material/material-color-utilities';
+import { argbFromRgb, Hct, TonalPalette } from '@material/material-color-utilities';
 import { hex, hsl } from 'color-convert';
 import { HSL } from 'color-convert/conversions';
 import { clamp, memoize } from 'lodash-es';
 import stringify from 'safe-stable-stringify';
 
 import {
+    CssColorVariable,
     CssColorVariables,
     GeneratedTheme,
-    Percentage,
-    HslaString,
-    Opacity,
-    Shades,
-    ThemeColors,
-    ThemeColorsWithShade,
-    ThemeColorsWithoutShade,
-    ThemeDefinition,
-    isThemeColorWithoutShade,
-    Hue,
-    shades,
-    opacityMap,
-    ThemeOptions,
-    CssColorVariable,
-    highContrastShades,
-    ShadeValues,
-    ThemeWithGeneratedAndOptions,
     HexString,
+    highContrastShades,
+    HslaString,
+    Hue,
+    isThemeColorWithoutShade,
+    Opacity,
+    opacityMap,
+    Percentage,
+    shades,
+    Shades,
+    ShadeValues,
+    ThemeColors,
+    ThemeColorsWithoutShade,
+    ThemeColorsWithShade,
+    ThemeDefinition,
+    ThemeOptions,
+    ThemeWithGeneratedAndOptions,
 } from './color-types';
 
 const hash = (...args: unknown[]): string => stringify(args);

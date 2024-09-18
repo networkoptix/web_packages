@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
+    computed,
+    effect,
     ElementRef,
     Inject,
     OnDestroy,
     OnInit,
-    ViewChild,
     signal,
-    effect,
-    computed,
+    ViewChild,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -43,7 +43,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
-import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanIdLegacy } from '@utils/general';
+import { alphabeticalSort, assignFrom, cleanIdLegacy, cleanIp, strSplice } from '@utils/general';
 import { makeProxy } from '@utils/signals';
 import { servers } from '@variables/static-variables';
 

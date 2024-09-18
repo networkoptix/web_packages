@@ -1,7 +1,7 @@
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual, cloneDeep, isArray } from 'lodash-es';
+import { cloneDeep, isArray, isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest as combineLatestFrom, Subject } from 'rxjs';
 import { combineLatest, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -14,7 +14,7 @@ import { NxProcessService } from '../process.service';
 import { Process } from '../process.service/process';
 
 import { extNgForm } from './apply.service.type';
-import { Watcher, SectionWatcher, FormWatcher } from './watcher';
+import { FormWatcher, SectionWatcher, Watcher } from './watcher';
 
 @UntilDestroy()
 @Injectable({

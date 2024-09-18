@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
+    CanActivateFn,
     Router,
     RouterStateSnapshot,
-    CanActivateFn,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 

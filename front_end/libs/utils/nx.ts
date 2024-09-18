@@ -18,9 +18,9 @@ import type { IStepOption } from 'ngx-ui-tour-md-menu';
 
 import staticLang from '@language_static';
 import type {
-    TranslateObject,
-    Translatable,
     SingleTranslateObject,
+    Translatable,
+    TranslateObject,
 } from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
 import type { OrgSystem, System, UserSystem } from '@services/nx-cloud-api/nx-cloud-api.types';

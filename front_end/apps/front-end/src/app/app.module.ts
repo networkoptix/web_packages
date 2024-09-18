@@ -1,7 +1,7 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { Location, PathLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import {
     HTTP_INTERCEPTORS,
     provideHttpClient,
@@ -28,8 +28,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
-    TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG,
+    TranslateMessageFormatCompiler,
 } from 'ngx-translate-messageformat-compiler';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';

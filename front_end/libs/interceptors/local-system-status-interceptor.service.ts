@@ -1,10 +1,10 @@
 import {
+    HttpErrorResponse,
+    HttpEvent,
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
     HttpResponse,
-    HttpErrorResponse,
-    HttpEvent,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

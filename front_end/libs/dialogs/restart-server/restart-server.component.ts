@@ -1,10 +1,10 @@
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { timer } from 'rxjs';
-import { delayWhen, retryWhen, map, tap, mergeMap } from 'rxjs/operators';
+import { delayWhen, map, mergeMap, retryWhen, tap } from 'rxjs/operators';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';

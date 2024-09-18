@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
-    Component,
+    booleanAttribute,
     ChangeDetectionStrategy,
+    Component,
     computed,
     input,
-    booleanAttribute,
 } from '@angular/core';
 
 import { NxIconOrName } from 'nx-icons';

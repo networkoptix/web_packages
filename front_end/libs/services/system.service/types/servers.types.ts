@@ -1,7 +1,7 @@
 import type {
+    ec2MediaServerEx,
     OsInfo,
     RestV1ServerFull,
-    ec2MediaServerEx,
 } from '@services/system-api.types/servers.types';
 import type { WithIpAndPort } from '@utils/nx';
 

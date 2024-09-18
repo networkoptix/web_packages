@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 import staticLang from '@language_static';
 import { NxSessionService } from '@services/session.service';
 import { NxSystemService } from '@services/system.service/system.service';
-import { servers, redirect } from '@static-variables';
+import { redirect, servers } from '@static-variables';
 
 @Injectable()
 export class UnauthorizedUserInterceptor implements HttpInterceptor {

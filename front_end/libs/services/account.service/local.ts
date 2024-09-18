@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { firstValueFrom, Subject } from 'rxjs';
-import { tap, catchError, debounceTime, filter, switchMap, shareReplay } from 'rxjs/operators';
+import { catchError, debounceTime, filter, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { UserSession } from '@services/system-api.types/users.types';

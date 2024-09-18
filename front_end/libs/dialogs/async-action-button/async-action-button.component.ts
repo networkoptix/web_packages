@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
+    computed,
     DestroyRef,
+    effect,
     EventEmitter,
+    inject,
+    input,
     Input,
     OnInit,
     Optional,
     Output,
-    booleanAttribute,
-    computed,
-    effect,
-    inject,
-    input,
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

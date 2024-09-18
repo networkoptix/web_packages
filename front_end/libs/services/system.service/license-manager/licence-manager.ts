@@ -1,15 +1,15 @@
 import { chunk } from 'lodash-es';
 import {
     BehaviorSubject,
+    catchError,
+    combineLatest,
+    filter,
     map,
     Observable,
     shareReplay,
     switchMap,
-    filter,
-    tap,
-    catchError,
-    combineLatest,
     take,
+    tap,
 } from 'rxjs';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -30,11 +30,11 @@ import { NxSystem } from '../system';
 
 import { mapLicenseKeyInfo } from './license-manager-utils';
 import {
-    ProcessedLicenseKey,
     CLOUD_STORAGE_STATES,
+    LicenseKeyInfo,
     LicenseTagInfo,
     LicenseTranslationBaseKeys,
-    LicenseKeyInfo,
+    ProcessedLicenseKey,
 } from './license-manager.types';
 
 export class LicenseManager extends Destroyable {

@@ -1,41 +1,41 @@
 /* eslint-disable @angular-eslint/no-host-metadata-property */
 import { CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
-import { TemplatePortal, PortalModule } from '@angular/cdk/portal';
+import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    EffectRef,
-    Output,
-    TemplateRef,
-    ViewContainerRef,
-    booleanAttribute,
     computed,
     effect,
+    EffectRef,
     inject,
     input,
     model,
+    Output,
     signal,
+    TemplateRef,
     untracked,
+    ViewContainerRef,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationStart, Router } from '@angular/router';
 import { clamp } from 'lodash-es';
 import {
+    combineLatest,
+    distinctUntilChanged,
+    filter,
     fromEvent,
     map,
     merge,
     of,
-    timer,
-    switchMap,
-    startWith,
-    combineLatest,
-    distinctUntilChanged,
-    filter,
     shareReplay,
-    tap,
+    startWith,
     Subject,
+    switchMap,
+    tap,
+    timer,
 } from 'rxjs';
 
 import { BaseComponent } from '../base-component';
