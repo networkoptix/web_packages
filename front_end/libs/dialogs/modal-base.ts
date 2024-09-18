@@ -1,5 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { signal, effect } from '@angular/core';
+import { effect, signal } from '@angular/core';
 
 export class ModalBase<R> {
     get closable(): boolean {

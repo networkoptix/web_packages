@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, signal, computed } from '@angular/core';
+import { Component, computed, Input, signal } from '@angular/core';
 
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { NxLevel3ItemComponent } from '@menu/level-3/level-3-item.component';

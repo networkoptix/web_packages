@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { firstValueFrom, Observable, combineLatest, map } from 'rxjs';
+import { combineLatest, firstValueFrom, map, Observable } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';

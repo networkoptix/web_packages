@@ -7,6 +7,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
+    booleanAttribute,
     Directive,
     ElementRef,
     HostListener,
@@ -16,7 +17,6 @@ import {
     OnInit,
     TemplateRef,
     ViewContainerRef,
-    booleanAttribute,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';

@@ -2,13 +2,13 @@ import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     BehaviorSubject,
-    Subscription,
-    Observable,
-    forkJoin,
     firstValueFrom,
-    Subject,
-    timer,
+    forkJoin,
+    Observable,
     ReplaySubject,
+    Subject,
+    Subscription,
+    timer,
 } from 'rxjs';
 import {
     auditTime,
@@ -42,14 +42,14 @@ import { updateInterval } from '@static-variables';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 
 import {
+    ActionParams,
+    EventCondition,
     EventRule,
     EventTypes,
+    MergeInfo,
     PtzCommand,
     RawRule,
     SystemConfigSettings,
-    MergeInfo,
-    ActionParams,
-    EventCondition,
 } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';

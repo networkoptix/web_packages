@@ -2,7 +2,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, signal, forwardRef, WritableSignal, computed } from '@angular/core';
+import { Component, computed, forwardRef, Inject, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,8 +27,8 @@ import { OrgPermissions } from '@pages/home/store/permissions/permissions.types'
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type {
-    Organization,
     CloudSystem,
+    Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';

@@ -1,12 +1,12 @@
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { DOCUMENT, CommonModule } from '@angular/common';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { firstValueFrom, timer } from 'rxjs';
-import { delayWhen, retryWhen, map } from 'rxjs/operators';
+import { delayWhen, map, retryWhen } from 'rxjs/operators';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';

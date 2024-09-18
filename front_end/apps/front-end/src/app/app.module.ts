@@ -1,8 +1,8 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { Location, PathLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
-import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CommonModule, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
@@ -22,8 +22,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
-    TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG,
+    TranslateMessageFormatCompiler,
 } from 'ngx-translate-messageformat-compiler';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';

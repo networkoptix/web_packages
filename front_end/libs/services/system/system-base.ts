@@ -2,7 +2,7 @@ import { Injector } from '@angular/core';
 
 import { NxSystemModuleBase } from './system-module';
 import { SystemVersion } from './system-version';
-import { SupportedVersionsBase, StaticModule, SystemVersionBase } from './types';
+import { StaticModule, SupportedVersionsBase, SystemVersionBase } from './types';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 interface GenericConstructor<T = {}> {

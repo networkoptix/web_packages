@@ -8,7 +8,7 @@
  * @author Andrew Wu
  */
 
-import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/utils';
 
 import { createRule, isUntypedValue } from './utils';
 

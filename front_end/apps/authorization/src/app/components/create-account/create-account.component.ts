@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    ElementRef,
     EventEmitter,
+    Inject,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
     ViewChild,
-    Inject,
-    ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';

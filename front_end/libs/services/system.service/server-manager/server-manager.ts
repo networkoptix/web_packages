@@ -21,7 +21,7 @@ import { setServerIpAndPort } from '@utils/nx';
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
-import { NxSystemServer, ModuleInfo } from '../system-types';
+import { ModuleInfo, NxSystemServer } from '../system-types';
 
 function VersionCache(
     // eslint-disable-next-line @typescript-eslint/no-use-before-define

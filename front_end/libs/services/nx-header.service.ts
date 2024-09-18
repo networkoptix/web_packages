@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd } from '@angular/router';
-import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 

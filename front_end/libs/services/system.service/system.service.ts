@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, catchError, forkJoin, from, map, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, from, map, Observable, switchMap } from 'rxjs';
 
 import { SystemResourcesActions, SystemResourcesTypes } from '@common/store/system-resources';
 import { environment } from '@environments/environment';

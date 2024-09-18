@@ -1,7 +1,7 @@
-import { Injector, computed, runInInjectionContext, signal } from '@angular/core';
+import { computed, Injector, runInInjectionContext, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { identity } from 'lodash-es';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { filter, map, take, timeout } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -13,14 +13,14 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
-    SystemUser,
+    CloudUserCompat,
     CurrentUser,
     Permissions,
+    RestV3User,
     Role,
+    SystemUser,
     UserGroup,
     UserType,
-    RestV3User,
-    CloudUserCompat,
 } from '@services/system-user.types';
 import { DefaultUserGroups } from '@services/system.service/user-manager/default-groups';
 import { cleanId, cleanIdLegacy } from '@utils/general';

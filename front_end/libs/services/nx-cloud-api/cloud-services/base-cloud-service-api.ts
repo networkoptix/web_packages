@@ -3,7 +3,7 @@ import { Injector } from '@angular/core';
 import { catchError, Observable, switchMap } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { WINDOWS_PROVIDERS, WINDOW } from '@services/window-provider';
+import { WINDOW, WINDOWS_PROVIDERS } from '@services/window-provider';
 import { staticImplements } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 

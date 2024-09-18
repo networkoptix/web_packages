@@ -5,13 +5,13 @@
  */
 
 import type {
+    TmplAstBoundText,
     TmplAstElement,
     TmplAstText,
-    TmplAstBoundText,
 } from '@angular-eslint/bundled-angular-compiler';
-import type { RuleFixer, RuleFix } from '@typescript-eslint/utils/ts-eslint';
+import type { RuleFix, RuleFixer } from '@typescript-eslint/utils/ts-eslint';
 
-import { TMPL_AST_NODES, sourceSpanToLoc } from './template-utils';
+import { sourceSpanToLoc, TMPL_AST_NODES } from './template-utils';
 import type { WithType } from './template-utils';
 import { createRule } from './utils';
 

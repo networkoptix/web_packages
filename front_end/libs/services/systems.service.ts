@@ -1,17 +1,17 @@
-import { Injectable, computed } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
 import {
-    of,
-    Observable,
-    timer,
-    firstValueFrom,
     combineLatest,
-    Subject,
-    merge,
     filter,
+    firstValueFrom,
+    merge,
+    Observable,
+    of,
+    Subject,
+    timer,
     withLatestFrom,
 } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';

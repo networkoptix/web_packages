@@ -2,19 +2,19 @@ import { DomPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
+    booleanAttribute,
     Component,
+    computed,
+    effect,
     ElementRef,
     EventEmitter,
+    forwardRef,
+    input,
     Input,
     OnDestroy,
     Output,
-    ViewChild,
-    booleanAttribute,
-    computed,
-    effect,
-    forwardRef,
-    input,
     signal,
+    ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';

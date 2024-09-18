@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Route, UrlSegment, UrlTree, Router } from '@angular/router';
+import { Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { Build } from '@services/nx-cloud-api/nx-cloud-api.types';

@@ -1,5 +1,5 @@
 /** Swagger on {{licenseServerInstance}}/nxlicensed/api-docs-internal */
-import { uuid, int, email, datetime } from '../base-cloud-service-api.types';
+import { datetime, email, int, uuid } from '../base-cloud-service-api.types';
 
 export interface Id {
     id: uuid;

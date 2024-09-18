@@ -1,6 +1,6 @@
 import type { WithIpAndPort } from '@utils/nx';
 
-import type { OsInfo, RestV1ServerFull, ec2MediaServerEx } from '../system-api.types';
+import type { ec2MediaServerEx, OsInfo, RestV1ServerFull } from '../system-api.types';
 
 import type { MediaStream } from './camera-manager/add-params.types';
 

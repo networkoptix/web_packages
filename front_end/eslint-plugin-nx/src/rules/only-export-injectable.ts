@@ -11,7 +11,7 @@
 
 import { TSESTree } from '@typescript-eslint/utils';
 
-import { createRule, decoratorName, decoratorHasCall } from './utils';
+import { createRule, decoratorHasCall, decoratorName } from './utils';
 import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------

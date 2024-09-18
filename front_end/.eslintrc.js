@@ -94,6 +94,8 @@ module.exports = {
                 'prefer-regex-literals': 'off',
 
                 'import/no-default-export': 'error',
+
+                // import plugin handles paths, eslint base handles members
                 'import/order': [
                     'error',
                     {
@@ -111,6 +113,19 @@ module.exports = {
                         pathGroupsExcludedImportTypes: ['internal'],
                         'newlines-between': 'always',
                         alphabetize: { order: 'asc' },
+                    },
+                ],
+            },
+        },
+        {
+            files: ['*.?(m)js', '*.ts'],
+            excludedFiles: ['libs/components/**', 'libs/features/**'],
+            rules: {
+                'sort-imports': [
+                    'error',
+                    {
+                        ignoreCase: true,
+                        ignoreDeclarationSort: true,
                     },
                 ],
             },

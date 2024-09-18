@@ -6,7 +6,7 @@ import {
     HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 const REDIRECT_HEADER = 'Relay-Redirects-Followed';
 const MAX_REDIRECT = 10;

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Observable, catchError, from, map, switchMap } from 'rxjs';
+import { catchError, from, map, Observable, switchMap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxCloudApiService } from '@services/nx-cloud-api/nx-cloud-api';

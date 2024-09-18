@@ -8,14 +8,14 @@ import {
     Router,
 } from '@angular/router';
 import { cloneDeep } from 'lodash-es';
-import { Observable, filter, map, shareReplay, startWith } from 'rxjs';
+import { filter, map, Observable, shareReplay, startWith } from 'rxjs';
 
 import {
     MutationType,
     ParamState,
     ParamStateHandler,
-    UpdateParams,
     RecursivePartial,
+    UpdateParams,
 } from './param-state.types';
 
 @Injectable({

@@ -2,10 +2,10 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
-    OnChanges,
     ViewChild,
 } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';

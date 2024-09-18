@@ -3,33 +3,33 @@ import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
 
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import type {
+    CameraValues,
+    ChangedIdReturned,
     ec2CameraEx,
     ServerTime,
-    ChangedIdReturned,
-    CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { cleanIdLegacy, KeyFilter, MS, extractVideoLayout } from '@utils/general';
+import { cleanIdLegacy, extractVideoLayout, KeyFilter, MS } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 
 import type * as APT from './add-params.types';
 import {
-    MotionType,
-    RecordingSettings,
-    StreamQuality,
-    RecordingType,
-    TimeDetail,
-    RecordingModes,
-    NxSystemCamera,
-    TaskUpdate,
-    CameraUpdate,
-    SaveCameraUserAttributes,
-    RecordingStatus,
     CameraStatus,
-    PreprocessCamera,
+    CameraUpdate,
     DeviceType,
+    MotionType,
+    NxSystemCamera,
+    PreprocessCamera,
+    RecordingModes,
+    RecordingSettings,
+    RecordingStatus,
+    RecordingType,
+    SaveCameraUserAttributes,
     ScheduleTask,
+    StreamQuality,
+    TaskUpdate,
+    TimeDetail,
 } from './camera-manager-types';
 
 type PartialSystem = Pick<

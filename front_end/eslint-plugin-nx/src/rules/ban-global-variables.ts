@@ -4,9 +4,9 @@
  * @author Andrew Wu
  */
 
-import { TSESTree, AST_NODE_TYPES, TSESLint } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, TSESLint, TSESTree } from '@typescript-eslint/utils';
 
-import { createRule, decoratorHasCall, decoratorName, Decorator } from './utils';
+import { createRule, Decorator, decoratorHasCall, decoratorName } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers

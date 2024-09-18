@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    Inject,
-    SkipSelf,
-    ViewChild,
     computed,
     effect,
+    ElementRef,
     forwardRef,
     inject,
+    Inject,
     input,
+    SkipSelf,
+    ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LetDirective } from '@ngrx/component';

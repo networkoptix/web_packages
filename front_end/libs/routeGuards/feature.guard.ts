@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import {
-    Route,
-    UrlSegment,
     ActivatedRouteSnapshot,
-    UrlTree,
-    Router,
     CanActivateFn,
     CanMatchFn,
+    Route,
+    Router,
+    UrlSegment,
+    UrlTree,
 } from '@angular/router';
 
 import { nxConfig } from '@services/nx-config/config';

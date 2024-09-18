@@ -14,8 +14,8 @@ import {
 } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import {
-    LicenseTranslationBaseKeys,
     LicenseTagInfo,
+    LicenseTranslationBaseKeys,
 } from '@services/system.service/license-manager/license-manager.types';
 import { assignFrom } from '@utils/general';
 

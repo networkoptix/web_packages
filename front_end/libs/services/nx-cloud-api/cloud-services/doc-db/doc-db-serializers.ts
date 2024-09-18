@@ -1,8 +1,8 @@
 import { identity } from 'lodash-es';
 
 import {
-    toCrossSystemLayoutPayload,
     fromCrossSystemLayoutPayload,
+    toCrossSystemLayoutPayload,
 } from '@services/layout-state/store/shared/utils';
 
 export abstract class AbstractDocSerializer<DataType, DocType> {

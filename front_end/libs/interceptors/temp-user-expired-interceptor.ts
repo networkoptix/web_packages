@@ -1,5 +1,5 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import { NxSessionService } from '@services/session.service';
 import { UserType } from '@services/system-user.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { servers, redirect } from '@static-variables';
+import { redirect, servers } from '@static-variables';
 
 @Injectable()
 export class TempUserExpiredInterceptor implements HttpInterceptor {

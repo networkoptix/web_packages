@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { combineLatest, Observable, interval } from 'rxjs';
+import { combineLatest, interval, Observable } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@language_static';

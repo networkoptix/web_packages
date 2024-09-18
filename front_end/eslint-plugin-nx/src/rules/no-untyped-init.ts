@@ -8,9 +8,9 @@
  * @author Andrew Wu
  */
 
-import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/utils';
 
-import { createRule, isUntypedValue, decoratorName, decoratorHasCall } from './utils';
+import { createRule, decoratorHasCall, decoratorName, isUntypedValue } from './utils';
 import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------

@@ -3,9 +3,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { isEqual, uniq } from 'lodash-es';
 import {
-    EMPTY,
     catchError,
     distinctUntilChanged,
+    EMPTY,
     filter,
     firstValueFrom,
     from,

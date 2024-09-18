@@ -2,7 +2,7 @@ import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types';
 import { dirtyId } from '@utils/general';
 
-import { UnsavedLayoutState, LayoutTypes, UnsavedState } from '../shared/types/layout-state.types';
+import { LayoutTypes, UnsavedLayoutState, UnsavedState } from '../shared/types/layout-state.types';
 import { hashItem } from '../shared/utils';
 
 export const createNewUnsavedCrossSystemLayout = (

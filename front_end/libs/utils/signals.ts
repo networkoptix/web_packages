@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { identity } from 'lodash-es';
-import { Observable, debounceTime } from 'rxjs';
+import { debounceTime, Observable } from 'rxjs';
 
 import { NxParamStateService } from '@services/param-state/param-state.service';
 

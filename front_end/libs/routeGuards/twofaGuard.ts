@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    RouterStateSnapshot,
-    Router,
     CanActivateFn,
+    Router,
+    RouterStateSnapshot,
 } from '@angular/router';
 import { lastValueFrom, Observable, switchMap, take } from 'rxjs';
 

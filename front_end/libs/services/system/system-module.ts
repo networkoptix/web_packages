@@ -3,7 +3,7 @@ import { Injector } from '@angular/core';
 import { staticImplements } from '@utils/general';
 
 import { SystemVersion } from './system-version';
-import { SupportedVersionsBase, StaticModule } from './types';
+import { StaticModule, SupportedVersionsBase } from './types';
 
 /**
  * Base class for all system system module classes. This class is used by NxSystemBase to check if a system module is compatible with a system version.

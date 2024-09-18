@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular/core';
 
 import type { Size } from './nx-resize.directive.types';
 

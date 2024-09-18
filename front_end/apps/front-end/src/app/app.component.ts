@@ -1,20 +1,20 @@
 import {
     Component,
-    HostListener,
-    ViewEncapsulation,
-    ViewChild,
     ElementRef,
-    ViewContainerRef,
+    HostListener,
     OnInit,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ActivationEnd,
     ActivationStart,
-    Event as RouterEvent,
     GuardsCheckEnd,
     GuardsCheckStart,
-    Router,
     NavigationEnd,
+    Router,
+    Event as RouterEvent,
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

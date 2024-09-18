@@ -10,7 +10,7 @@ import type {
     TmplAstTextAttribute,
 } from '@angular-eslint/bundled-angular-compiler';
 
-import { TMPL_AST_NODES, sourceSpanToLoc } from './template-utils';
+import { sourceSpanToLoc, TMPL_AST_NODES } from './template-utils';
 import type { WithParent, WithType } from './template-utils';
 import { createRule } from './utils';
 

@@ -2,13 +2,13 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject } from '@angular/core';
 import {
-    Validators,
-    ValidationErrors,
+    AbstractControl,
     FormControl,
     FormGroup,
-    AbstractControl,
     FormsModule,
     ReactiveFormsModule,
+    ValidationErrors,
+    Validators,
 } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,7 +29,7 @@ import { Process } from '@services/process.service/process';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxToastService } from '@services/toast.service';
 import { responseOk } from '@static-variables';
-import { cleanIdLegacy, assignFrom } from '@utils/general';
+import { assignFrom, cleanIdLegacy } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

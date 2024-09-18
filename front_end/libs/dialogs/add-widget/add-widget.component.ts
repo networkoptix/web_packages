@@ -25,7 +25,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
-import { assignFrom, delayInitial, alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, assignFrom, delayInitial } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;
 type DashboardDropdownItem = DropdownItem<string>;

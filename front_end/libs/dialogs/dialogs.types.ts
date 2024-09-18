@@ -14,16 +14,16 @@ import type {
     ChannelPartner,
     ChannelPartnerUser,
     CloudSystem,
-    RegularServiceDetailDialogResponse,
+    ExpiringServiceDetailDialogResponse,
     Group,
     GroupItem,
     Organization,
     OrganizationUser,
+    RegularServiceDetailDialogResponse,
     ServiceQuantities,
     State,
     SystemItem,
     SystemService,
-    ExpiringServiceDetailDialogResponse,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type {
     CloudResponse,

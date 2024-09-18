@@ -1,5 +1,5 @@
 import { Directive, forwardRef } from '@angular/core';
-import { AbstractControl, Validator, NG_VALIDATORS } from '@angular/forms';
+import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 
 @Directive({
     selector: '[nxUrlValidator]',

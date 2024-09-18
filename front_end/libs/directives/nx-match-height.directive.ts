@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Inject } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Inject, Input, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

@@ -1,5 +1,5 @@
-import { shareReplay, Observable, filter } from 'rxjs';
-import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { filter, Observable, shareReplay } from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { JsonRpcMessage, JsonRpcRequest } from '../types';
 

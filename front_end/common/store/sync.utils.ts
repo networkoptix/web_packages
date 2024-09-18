@@ -1,4 +1,4 @@
-import { ActionCreator, ReducerTypes, createAction, on, props } from '@ngrx/store';
+import { ActionCreator, createAction, on, props, ReducerTypes } from '@ngrx/store';
 
 /**
  * This action is used to sync the state between browser contexts.

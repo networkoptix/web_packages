@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding,
-    TemplateRef,
     computed,
+    HostBinding,
+    HostListener,
     input,
     OnDestroy,
-    HostListener,
+    TemplateRef,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 

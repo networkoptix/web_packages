@@ -1,4 +1,4 @@
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';

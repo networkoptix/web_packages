@@ -5,9 +5,9 @@ import { map, Observable } from 'rxjs';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { ChannelPartnersApi as CpApi } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api';
 import {
-    OrgRoleIds,
     type ChannelPartner,
     type Organization,
+    OrgRoleIds,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { alphaNumericSort } from '@utils/general';
