@@ -19,7 +19,7 @@
     "(cancel)": "(i̇ptal)",
     "(change)": "(değiştir)",
     "(copy)": "(kopyala)",
-    "(if %VMS_NAME% has been already setup)": "(if %VMS_NAME% zaten ayarlanmış)",
+    "(if %VMS_NAME% has been already setup)": "(%VMS_NAME% zaten kurulu ise)",
     "(log all information available)": "(Detaylar: Kullanılabilir tüm bilgileri günlükle)",
     "(log disabled)": "(günlük devre dışı)",
     "(log errors only)": "(yalnızca günlük hataları)",
