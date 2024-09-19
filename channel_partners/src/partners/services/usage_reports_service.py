@@ -588,14 +588,15 @@ def usage_list_sort_key(row: RegularUsageDetailRecord | ExpiringUsageDetailRecor
     return parser.parse(row[key]).timestamp()
 
 
-def get_used_by_incr(usage_detail: RegularUsageDetailRecord) -> int:
+def get_used_by_incr(usage_detail: RegularUsageDetailRecord | ExpiringUsageDetailRecord) -> int:
     """
     Returns the increment for the used_by field in the report.
     The increment is 1 if any of rates or channels is not equal 0, otherwise 0.
+    Note. Expiring services reports contain only channels, rates are missing.
     """
-    if any([usage_detail['monthly_rate'],
-            usage_detail['daily_rate'],
-            usage_detail['channels']]):
+    if any([usage_detail.get('monthly_rate'),
+            usage_detail.get('daily_rate'),
+            usage_detail.get('channels')]):
         return 1
     return 0
 
@@ -1035,7 +1036,7 @@ class OrganizationReportsService:
                 expiration_date=report['expiration_date']
             )
             summary['channels'] += system_service_dict['channels']
-            summary['systems'] += 1
+            summary['systems'] += get_used_by_incr(report)
             if system_service_dict['expiration_date']:
                 expirations.add(system_service_dict['expiration_date'])
             systems.append(system_service_dict)
@@ -1582,7 +1583,7 @@ class ChannelPartnerReportsService:
                                and usage_row['expiration_date'] != TotalUsageDate
                         ]
                     )
-                    summary['organizations'] += 1
+                    summary['organizations'] += get_used_by_incr(total_usage)
                 else:
                     logger.debug(
                         "Building expiring service summary for channel partner from sub entity report",
@@ -1600,7 +1601,7 @@ class ChannelPartnerReportsService:
                                and usage_row['expiration_date'] != TotalUsageDate
                         ]
                     )
-                    summary['channel_partners'] += 1
+                    summary['channel_partners'] += get_used_by_incr(total_usage)
                 summary['channels'] += sub_entity_service_dict['channels']
                 sub_entities.append(sub_entity_service_dict)
 
