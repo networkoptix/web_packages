@@ -3,4 +3,4 @@ Halo, {{message.userFullName}}
 Status partner {{message.partner_name}} diubah menjadi {{message.status_name}}.
 Fungsionalitas sekarang tersedia sepenuhnya.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+Lihat di %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
