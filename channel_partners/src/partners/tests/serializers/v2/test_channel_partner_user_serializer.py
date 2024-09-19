@@ -84,13 +84,12 @@ class TestChannelPartnerUserSerializer:
         serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
         assert serializer.is_valid(), "Serializer should be valid for new user email"
 
-    def test_create_channel_partner_to_user_relationship(self):
+    def test_create_channel_partner_to_user_relationship(self, mock_mark_organization_user):
         data = {
             'email': self.user.email,
             'title': 'New Title',
             "roleId": self.cp_admin_role
         }
-
         serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
         assert serializer.is_valid(), "Serializer should be valid"
 
@@ -100,6 +99,7 @@ class TestChannelPartnerUserSerializer:
         assert instance.title == 'New Title', "Title should be set correctly"
 
         self.mock_notification.assert_called_once()
+        mock_mark_organization_user.asser_called_once_with(self.user.email)
 
     def test_serializer_with_invalid_data(self):
         serializer_data = {
@@ -220,16 +220,18 @@ class TestChannelPartnerUserSerializer:
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
         self.mock_notification.assert_not_called()
 
-    def test_changing_second_admin_role(self, channel_partner_factory,
-                                      cp_user_factory, arf, mock_post_notification):
+    def test_changing_second_admin_role(self, channel_partner_factory, cp_user_factory,
+                                        arf, mock_post_notification, mock_mark_organization_user):
         cp = channel_partner_factory()
         user = cp_user_factory(channel_partner=cp)
+        mock_mark_organization_user.asser_called_once_with(user.user.email)
         self.request.user = user
         context = {
             "channel_partner": cp,
             "request": self.request,
         }
         other_user = cp_user_factory(channel_partner=cp)
+        assert mock_mark_organization_user.call_count == 2
 
         data = {
             'email': other_user.user.email,
@@ -240,7 +242,7 @@ class TestChannelPartnerUserSerializer:
         assert serializer.is_valid() is True
         serializer.save()
         self.mock_notification.assert_not_called()
-
+        assert mock_mark_organization_user.call_count == 2
 
     def test_changing_only_admin_role_2_users(self, channel_partner_factory,
                                         cp_user_factory, arf, mock_post_notification):
@@ -261,3 +263,21 @@ class TestChannelPartnerUserSerializer:
         assert serializer.is_valid() is False
         assert serializer.errors['roleId'][0] == 'It is impossible to change role for the only administrator.'
         self.mock_notification.assert_not_called()
+
+    def test_existing_cps_user(self, cp_user_factory, channel_partner_factory,
+                               mock_mark_organization_user):
+        other_cp = channel_partner_factory()
+        user = cp_user_factory(channel_partner=other_cp)
+        mock_mark_organization_user.asser_called_once_with(user.user.email)
+
+        data = {
+            'email': user.user.email,
+            'title': 'New Title',
+            "roleId": self.cp_admin_role,
+        }
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is True
+        serializer.save()
+        self.mock_notification.assert_called_once()
+        assert mock_mark_organization_user.call_count == 1
+

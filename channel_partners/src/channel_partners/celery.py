@@ -24,6 +24,7 @@ app.autodiscover_tasks([
     'partners.tasks.cloud_user_full_name',
     'partners.tasks.usage_reports',
     'partners.tasks.service_reports_export',
+    'partners.tasks.user_flags',
 ])
 
 

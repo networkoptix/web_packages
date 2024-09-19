@@ -62,6 +62,7 @@ from partners.tasks.services import (
     organization_systems_negation_task,
 )
 from partners.tasks.states import expire_confirmation
+from partners.tasks.user_flags import mark_organization_user
 from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
     cp_direct_children_count,
@@ -301,6 +302,11 @@ class CloudUser(VersionMixin, models.Model):
             | Q(path__overlap=Subquery(group_memberships_ids)
             )
         ).distinct()
+
+    def has_relationship(self) -> bool:
+        return (self.organizationtouser_set.only('id')
+                .union(self.channelpartnertouser_set.only('id'))
+                .exists())
 
 
 class CloudHost(models.Model):
@@ -1331,6 +1337,17 @@ class ChannelPartnerToUser(models.Model):
             GinIndex(name="channelpartnertouser_roles_gin", fields=['roles'], opclasses=['array_ops'])
         ]
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new_user_relation = False
+        if self._state.adding:
+            if not self.user.has_relationship():
+                new_user_relation = True
+        super().save(force_insert, force_update, using, update_fields)
+        if new_user_relation:
+            mark_organization_user.delay(email=self.user.email)
+
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
@@ -2125,7 +2142,13 @@ class OrganizationToUser(models.Model):
     def save(self, *args, **kwargs):
         if self.system_group and OrganizationRoles.ORGANIZATION_ADMINISTRATOR in self.roles:
             raise ValidationError('Group user cannot be added with "Organization Administrator" role')
+        new_user_relation = False
+        if self._state.adding:
+            if not self.user.has_relationship():
+                new_user_relation = True
         super(OrganizationToUser, self).save(*args, **kwargs)
+        if new_user_relation:
+            mark_organization_user.delay(email=self.user.email)
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)

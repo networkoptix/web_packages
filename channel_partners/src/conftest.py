@@ -971,3 +971,12 @@ def basic_auth_credentials():
         credentials = f"{username}:{password}".encode('utf-8')
         return base64.b64encode(credentials).decode('utf-8')
     return get_basic_auth_header
+
+
+@pytest.fixture()
+def mock_mark_organization_user(mocker):
+    return mocker.patch('partners.tasks.user_flags.mark_organization_user.delay')
+
+@pytest.fixture(autouse=True)
+def auto_mock_mark_organization_user(request, mock_mark_organization_user):
+    mock_mark_organization_user.return_value = MagicMock()
