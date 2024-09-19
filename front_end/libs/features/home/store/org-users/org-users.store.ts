@@ -253,10 +253,10 @@ export const OrgUsersStore = signalStore(
             groupsStore = inject(GroupsStore),
             routerStateStore = inject(ChannelPartnersRouteState),
         ) => {
-            const updateGroupCache = (groupId: string): void => {
+            const updateGroupCache = (groupId: string = ''): void => {
                 const orgId = routerStateStore.organizationId();
                 iif(
-                    () => groupId !== routerStateStore.organizationId(),
+                    () => !!groupId,
                     chpService
                         .getGroupUsersWithAccess(groupId)
                         .pipe(map(users => mapGroupUsers(users))),
@@ -647,6 +647,18 @@ export const OrgUsersStore = signalStore(
                         next: users => {
                             store.setUsers(users as OrgUser[]);
                             patchState(store, { initialized: true });
+                            patchState(
+                                store,
+                                setEntity(
+                                    {
+                                        id:
+                                            routerStateStore.groupId() ||
+                                            routerStateStore.organizationId(),
+                                        users: users as OrgUser[],
+                                    },
+                                    { collection: usersCacheEntity.collection },
+                                ),
+                            );
                         },
                         error: () => {},
                     }),
@@ -698,7 +710,7 @@ export const OrgUsersStore = signalStore(
                     ),
                     map(([{ email }, { groupId }, refreshUsers]) => {
                         if (email || refreshUsers) {
-                            store.updateGroupCache(routerStateStore.organizationId());
+                            store.updateGroupCache();
                         }
                         return groupId;
                     }),
@@ -713,16 +725,22 @@ export const OrgUsersStore = signalStore(
                 searchQuery: searchQuery$$,
                 searchFilters: searchFilters$$,
                 currentGroupUsersEntities: entities$$,
+                usersCacheEntities: cachedEntities$$,
             },
             store = inject(Store),
+            routerStateStore = inject(ChannelPartnersRouteState),
         ) => ({
             filteredRecords$$: computed(() => {
                 if (!entities$$().length) {
                     return undefined; // avoid showing "No data" msg.
                 }
                 const currentOrg$$ = store.selectSignal(selectCurrentOrganization);
+                const currentEntityId = routerStateStore.groupId() ?? currentOrg$$()?.id;
+                const records: OrgUser[] = (
+                    cachedEntities$$().find(entity => entity.id === currentEntityId)?.users ??
+                    entities$$()
+                ).sort(alphaNumericSort(record => record.email));
                 const currentOrgName = currentOrg$$().name;
-                const records = entities$$().sort(alphaNumericSort(record => record.email));
                 const search = searchQuery$$();
                 const filters = searchFilters$$() as Record<string, string>;
                 let filteredRecords: OrgUser[] = records;
