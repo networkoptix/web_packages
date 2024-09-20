@@ -32,6 +32,7 @@ RUN poetry config virtualenvs.create false && poetry install --no-dev --no-root 
 FROM pypackages as runtime
 
 COPY cloud.py /app/app
+COPY logging_config.py /app/app
 COPY notification_provider /app/app/notification_provider
 COPY notification_receiver /app/app/notification_receiver
 COPY docker/entrypoint.sh /app/

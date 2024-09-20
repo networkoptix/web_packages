@@ -3,13 +3,12 @@ import json
 import pickle
 from typing import Tuple
 
+import redis.asyncio as redis
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from quart import Quart, request, abort, Response
 
-
-from marshmallow import Schema, fields, ValidationError, validate, EXCLUDE
-import redis.asyncio as redis
-
 from cloud import CloudAPI
+from logging_config import setup_logging, clear_loggers
 
 
 class QuartCustom(Quart):
@@ -125,32 +124,49 @@ async def send_notification():
         system_id = auth_id
         if not targets:
             return {'targets': ['Must not be empty for system notification']}, 400
-        filtered_targets = await filter_targets(request.authorization['username'], request.authorization['password'], targets)
+
+        auth = request.authorization
+        filtered_targets = await filter_targets(auth['username'], auth['password'], targets)
+
         message = json.dumps({'systemId': system_id, 'notification': notification})
         await asyncio.gather(*(redis_client.publish(target, message) for target in filtered_targets))
         return {'validatedTargets': list(filtered_targets)}
+
     elif auth_type == 'user':
         user_email = auth_id
         message = json.dumps({'userId': user_email, 'notification': notification})
+
         await redis_client.publish(user_email, message)
         return {'validatedTargets': [user_email]}
+
+
+"""
+I don't like how this configures the logging, but Quart adds additional handlers after app's initialization
+"""
 
 
 @app.before_serving
 async def startup():
     app.cloud = await CloudAPI.create()
+    setup_logging(app)
+    app.logger.info("Application startup complete")
+
+
+@app.before_first_request
+async def setup():
+    clear_loggers()
 
 
 @app.after_serving
 async def shutdown():
     app.shutting_down = True
     await app.cloud.close()
+    app.logger.info("Application shutdown complete")
 
 
 @app.route('/api/v1/ping', methods=['GET'])
 def ping():
     return 'pong'
-
 
 if __name__ == "__main__":
     app.run(port=5001)

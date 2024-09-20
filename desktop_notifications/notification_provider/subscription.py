@@ -61,7 +61,7 @@ async def start_listening(socket_queue, provider_protocol):
     # await provider_protocol.send_listener_established(email)
 
 
-async def stop_lisening(email, socket_queue):
+async def stop_listening(email, socket_queue):
     from main import redis_pubsub
     remove_from_email_queue(email, socket_queue)
     if email not in email_queues:
