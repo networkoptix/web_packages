@@ -146,8 +146,7 @@ def read_db_email_file(asset: Asset, customization_name: str, filename: str,
             dr_val = cloud_name
 
         if ds.name == '%NX_CONNECT_URL%' and not dr_val:
-            dr_val = get_customization_config(customization_name)['cloud_portal']
-
+            dr_val = get_customization_config(customization_name)['cloud_portal']["url"]
         template = template.replace(ds.name, dr_val)
     return template
 

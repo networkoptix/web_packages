@@ -275,6 +275,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if INSTANCE_NAME != 'prod':
+    MIDDLEWARE.insert(0, 'channel_partners.middleware.broken_service_middleware')
+
 ROOT_URLCONF = 'channel_partners.urls'
 
 TEMPLATES = [
@@ -314,6 +317,8 @@ DATABASES = {
 WAFFLE_CACHE_NAME = 'waffle-redis'
 WAFFLE_LOCAL_CACHE_NAME = 'waffle-local'
 LOGGING_SWITCH_NAME = "logging_debug_active"
+WAFFLE_CREATE_MISSING_FLAGS = True
+WAFFLE_CREATE_MISSING_SWITCHES = True
 
 # Cache
 REDIS_CACHE_BACKEND = "nx_django_redis.redis_cache.RedisSyncBackend"
