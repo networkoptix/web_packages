@@ -2,4 +2,4 @@ Bonjour, {{message.userFullName}}
 
 {{message.sharer_name}} a partagé l'accès au partenaire de distribution "{{message.partner_name}}" avec vous.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+Voir sur le portail %NX_CONNECT_NAME% : %NX_CONNECT_URL%
