@@ -1,5 +1,14 @@
 @use "typography";
 @use "resets";
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+'--org-tree-item-selected-text-color': ('dark': -1, 'light': -1),
+    '--org-tree-item-selected-background-color':('dark': 7, 'light': 7),
+    '--org-tree-back-btn-text-color': ('dark': -1, 'light': -1),
+    '--org-tree-input-placeholder': ('dark': -16, 'light': -16),
+    '--org-tree-item-text-color': ('dark': -10, 'light': -10),
+), ':host');
 
 :host {
     display: flex;
@@ -77,7 +86,7 @@
 
             &.org-tree__item--selected {
                 svg path {
-                    fill: var(--dropdown-item-selected-color);
+                    fill: var(--org-tree-item-selected-text-color);
                 }
             }
 
@@ -100,7 +109,7 @@
             height: 25px;
             cursor: pointer;
             border-radius: 2px;
-            color: var(--dropdown-item-color);
+            color: var(--org-tree-item-text-color);
             text-wrap: nowrap;
             margin-bottom: 6px;
 
@@ -115,13 +124,13 @@
 
             &:hover:not(.org-tree__item--disabled):not(.org-tree__item--selected),
             &--highlight {
-                background-color: var(--dropdown-item-hover-bg);
-                color: var(--dropdown-item-hover-color);
+                background-color: var(--org-tree-item-selected-background-color);
+                color: var(--org-tree-item-selected-text-color);
             }
 
             &.org-tree__item--selected {
-                background-color: var(--dropdown-item-selected-bg);
-                color: var(--dropdown-item-selected-color);
+                background-color: var(--org-tree-item-selected-background-color);
+                color: var(--org-tree-item-selected-text-color);
             }
 
             &.org-tree__item--disabled {

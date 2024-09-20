@@ -32,6 +32,7 @@ import { BehaviorSubject, filter, NEVER, switchMap, takeUntil, timer } from 'rxj
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { throttle } from '@decorators/throttle';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import type {
     GroupItem,
@@ -70,6 +71,7 @@ import type { OrgTreeItem, OrgTreeStatusMap } from './org-tree-selector.types';
         },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxOrgTreeSelectorComponent
     implements ControlValueAccessor, Validator, OnInit, AfterViewInit
